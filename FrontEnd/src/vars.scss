@@ -1,0 +1,52 @@
+@import '~primer-support';
+
+$link-text: #82b1ff;
+$warning: #ffc780;
+$error: #ff8a80;
+$info: #7685d5;
+$input-hover-border: #4c5480;
+$primary-button-background: #536dfe;
+$primary-button-background-hover: #455ff5;
+$primary-button-border: #3d5afe;
+$primary-button-text: #ffffff;
+$secondary-button-background: #2e2f39;
+$secondary-button-background-hover: #31313b;
+$secondary-button-border: #41476b;
+$secondary-button-text: #ffffff;
+$button-disabled: #414249;
+$button-disabled-text: #c5c5c5;
+$panel-border: #41476b;
+$panel-background: #282932;
+$panel-header-background: #282932;
+$highlighted-selector-border: #7785d5;
+
+// PrimerCSS
+$black: #21222c;
+$border: 1px solid $panel-border;
+$bg-blue: #384AFF;
+$bg-blue-light: #F7F8FC;
+$bg-gray: #90a4ae;
+$bg-green: #21b66f;
+$text-blue: #384AFF;
+$text-red: #ff8a80;
+$blue-100: #DCE2FF;
+$gray: $bg-gray;
+$text-gray: $gray;
+$blue: #7685d5;
+$blue-900: #41476b;
+$gray-dark: #282a32;
+$bg-gray-dark: $gray-dark;
+
+$border-radius: 4px;
+
+$body-font-size: 14px;
+$body-line-height: 1.4;
+$h1-size: 28px;
+$h2-size: 24px;
+$h3-size: 20px;
+$h4-size: 18px;
+
+$font-weight-normal: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+$font-weight-bold: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+$body-font: $font-weight-normal;
+$font-mktg: $font-weight-bold;

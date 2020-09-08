@@ -1,0 +1,40 @@
+{
+  "name": "Sigh-finance-protocol",
+  "version": "0.1.0",
+  "description": "The Sigh Money Market with yield farming to hedge risk",
+  "main": "index.js",
+  "scripts": {
+    "migrate": "truffle migrate",
+    "compile": "rm -r build && truffle compile",
+    "coverage": "NETWORK_ID=1002 RPC_NODE_URI=http://127.0.0.1:6545 COVERAGE=true truffle run coverage",
+    "test": "truffle compile && truffle test",
+    "test_only": "truffle test",
+    "deploy": "truffle migrate --network=$NETWORK --reset",
+    "deploy_kovan": "NETWORK=kovan npm run deploy",
+    "deploy_mainnet": "NETWORK=mainnet npm run deploy",
+    "deploy_test": "NETWORK=development npm run deploy",
+    "node": "ganache-cli --port 8545 -l 0x1fffffffffffff -i 5777 -g 1 --allowUnlimitedContractSize",
+    "console": "if node -v | grep -E \"v(12|13)\" > /dev/null; then flags=\"-n --experimental-repl-await\"; fi; npx $flags saddle console",
+    "lint": "./script/lint",
+    "repl": "./scenario/script/repl",
+    "profile": "yarn test tests/gasProfiler.js"
+  },
+  "repository": "https://github.com/cryptowhaler/Liqui_Finance_Protocol.git",
+  "author": "Sigh Finance",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "bignumber.js": "8.0.1",
+    "jest-diff": "^24.9.0",
+    "jest-junit": "^6.4.0",
+    "solium": "^1.2.5",
+    "solparse": "^2.2.8"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.1.0",
+    "eth-saddle": "^0.1.17"
+  },
+  "resolutions": {
+    "scrypt.js": "https://registry.npmjs.org/@compound-finance/ethereumjs-wallet/-/ethereumjs-wallet-0.6.3.tgz",
+    "**/ganache-core": "github:compound-finance/ganache-core.git#jflatow/unbreak-fork"
+  }
+}
