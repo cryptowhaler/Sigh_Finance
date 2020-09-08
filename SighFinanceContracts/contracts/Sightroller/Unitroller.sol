@@ -3,8 +3,8 @@ pragma solidity ^0.5.16;
 import "../ErrorReporter.sol";
 import "./SightrollerStorage.sol";
 /**
- * @title GsightrollerCore
- * @dev Storage for the Gsightroller is at this address, while execution is delegated to the `SightrollerImplementation`.
+ * @title SightrollerCore
+ * @dev Storage for the Sightroller is at this address, while execution is delegated to the `SightrollerImplementation`.
  * CTokens should reference this contract as their Gsightroller.
  */
 contract Unitroller is UnitrollerAdminStorage, SightrollerErrorReporter {

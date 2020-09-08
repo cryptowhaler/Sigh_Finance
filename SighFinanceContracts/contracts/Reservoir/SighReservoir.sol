@@ -6,7 +6,7 @@ pragma solidity ^0.5.16;
  * @dev This contract must be poked via the `drip()` function every so often.
  * @author SighFinance
  */
-contract Reservoir {
+contract SighReservoir {
 
   /// @notice The block number when the Reservoir started (immutable)
   uint public dripStart;
@@ -63,6 +63,14 @@ contract Reservoir {
     token_.transfer(target_, toDrip_);
 
     return toDrip_;
+  }
+
+  function getSighAddress() external view returns (address) {
+    return address(token);
+  }
+
+  function getTargetAddress() external view returns (address) {
+    return address(target);
   }
 
   /* Internal helper functions for safe math */
