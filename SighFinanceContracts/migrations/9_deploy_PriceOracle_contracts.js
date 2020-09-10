@@ -3,7 +3,7 @@
 
     module.exports = function(deployer) {
 
-        const sightrollerAddress = '';
-        deployer.deploy(SimplePriceOracle_,sightrollerAddress);
+        // const sightrollerAddress = '';
+        // deployer.deploy(SimplePriceOracle_,sightrollerAddress);
     };
     

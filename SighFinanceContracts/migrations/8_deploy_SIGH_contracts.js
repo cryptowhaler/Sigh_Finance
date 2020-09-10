@@ -3,6 +3,6 @@
 
 module.exports = function(deployer) {
 
-    const sightrollerAddress = '';
-    deployer.deploy(SIGH_,sightrollerAddress);
+    // const sightrollerAddress = '';
+    // deployer.deploy(SIGH_,sightrollerAddress);
 };
