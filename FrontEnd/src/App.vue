@@ -4,12 +4,8 @@
     <!-- <div v-else> -->
       <Topnav />
       <div class="d-flex flex-row pb-6"  :style="ui.sidebarIsOpen && 'max-height: 100vh'" >
-        <div
-          class="shell d-block d-xl-none"
-          :class="ui.sidebarIsOpen && 'sidebar-is-open'"
-          @click="toggleSidebar"
-        />
-        <Sidebar :key="$router.currentRoute.fullPath" />
+        <div  class="shell d-block d-xl-none"  :class="ui.sidebarIsOpen && 'sidebar-is-open'" @click="toggleSidebar" />
+        <!-- <Sidebar :key="$router.currentRoute.fullPath" /> -->
         <router-view id="view" class="flex-auto" />
       </div>
     <!-- </div> -->
@@ -44,7 +40,7 @@ export default {
   margin-top: 80px;
 
   @media (min-width: $width-xl) {
-    margin-left: 264px;
+    margin-left: 0px;   //    margin-left: 264px;
   }
 }
 

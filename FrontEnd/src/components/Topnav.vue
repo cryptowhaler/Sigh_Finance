@@ -8,7 +8,7 @@
         <!-- LOGO and 'Balancer' Name -->
         <router-link :to="{ name: 'home' }" class="d-inline-block text-blue d-flex" style="padding-top: 2px;">
           <img
-            src="~/@/assets/logo.svg"
+            src="~/@/assets/logo.png"
             class="mr-2 v-align-middle"
             width="32"
             height="32"
