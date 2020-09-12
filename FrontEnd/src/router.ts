@@ -12,10 +12,13 @@ import PoolSwaps from '@/views/Pool/Swaps.vue';
 import PoolShares from '@/views/Pool/Shares.vue';
 import PoolAbout from '@/views/Pool/About.vue';
 
+import mainPage from '@/components/LandingPage/mainPage.vue';
+
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
-  { path: '/', name: 'home', component: Home },
+  { path: '/', name: 'home', component: mainPage },
+  // { path: '/', name: 'home', component: Home },
   { path: '/private', name: 'private', component: Private },
   { path: '/my-pools', name: 'my-pools', component: MyPools },
   { path: '/setup', name: 'setup', component: Setup },
