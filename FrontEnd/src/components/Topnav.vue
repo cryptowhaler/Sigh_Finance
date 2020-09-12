@@ -16,43 +16,44 @@
           <span
             class="d-inline-block text-white"
             style="letter-spacing: 1px; font-size: 16px;"
-            v-text="'Sigh Finance'"
+            v-text="'SIGH Finance | Engineered to be Profitable'"
           />
         </router-link>
       </div>
+
       <!-- Wallets -->
-      <div :key="web3.account">
+      <!-- <div :key="web3.account"> -->
         <!-- If logged in -->
-        <template v-if="$auth.isAuthenticated && !wrongNetwork">
+        <!-- <template v-if="$auth.isAuthenticated && !wrongNetwork">
           <UiButton @click="modalOpen = true" :loading="loading">
             <Avatar :address="web3.account" size="16" class="mr-2 ml-n1" />
             <span v-if="web3.name" v-text="web3.name" />
             <span v-else v-text="_shorten(web3.account)" />
           </UiButton>
-        </template>
+        </template> -->
         <!-- If wrong network -->
-        <UiButton v-if="web3.injectedLoaded && wrongNetwork" class="button-red">
+        <!-- <UiButton v-if="web3.injectedLoaded && wrongNetwork" class="button-red">
           <Icon name="warning" class="ml-n2 mr-1 v-align-middle" />
           Wrong network
-        </UiButton>
+        </UiButton> -->
         <!-- If not logged in -->
-        <UiButton  v-if="showLogin"  @click="modalOpen = true"  :loading="loading"  class="button-primary">
+        <!-- <UiButton  v-if="showLogin"  @click="modalOpen = true"  :loading="loading"  class="button-primary">
           Connect wallet
-        </UiButton>
+        </UiButton> -->
         <!-- About Button -->
-        <UiButton @click="modalAboutOpen = true" class="ml-2 hide-sm">
+        <!-- <UiButton @click="modalAboutOpen = true" class="ml-2 hide-sm">
           <span v-text="'About'" class="ml-n1 mr-n1" />
         </UiButton>
-      </div>
+      </div> -->
     </div>
     <!-- POP UP when clicked on Connect Wallet (when not logged in) / Address (when logged in) button -->
-    <ModalAccount
+    <!-- <ModalAccount
       :open="modalOpen"
       @close="modalOpen = false"
       @login="handleLogin"
-    />
+    /> -->
     <!-- POP UP when clicked on About Button -->
-    <ModalAbout :open="modalAboutOpen" @close="modalAboutOpen = false" />
+    <!-- <ModalAbout :open="modalAboutOpen" @close="modalAboutOpen = false" /> -->
   </nav>
 </template>
 
