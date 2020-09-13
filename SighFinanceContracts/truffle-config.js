@@ -38,7 +38,7 @@ module.exports = {
    */
 
   // Directory to which the compiled contracts are  exported after compilation
-  contracts_build_directory: '../FrontEnd/src/helpers/contracts',
+  contracts_build_directory: '../FrontEnd/src/contracts',
 
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
