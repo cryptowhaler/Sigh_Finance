@@ -3,6 +3,8 @@ import Vuex from 'vuex';
 import {
   dateToDisplayTime,
 } from '@/utils/utility';
+import Web3 from 'web3';
+
 // import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from "constants";
 
 Vue.use(Vuex);
@@ -85,7 +87,15 @@ const store = new Vuex.Store({
     buyPrice: 0,
     sellPrice: 0,
     precision: 0.0001,
+
+
+    web3: {} ,  //WEB3 INSTANCE
+    web3Account: '',
+    networkId: '',
+
   },
+
+
   getters: {
     username(state) {     //Added
       return state.username;
@@ -466,9 +476,60 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    toggleTheme({
-      state,
-    }, themeMode) {
+
+    async loadWeb3() {
+
+      if (window.ethereum) {
+        state.web3 = new Web3(window.ethereum);
+        // console.log(web3);
+        try {        // Request account access if needed
+          await window.ethereum.enable();
+          return state.web3;
+        } 
+        catch (error) {
+          console.log('NOT enabled');        
+          console.error(error);
+        }
+      }
+      // // For older version dapp browsers ...
+      else if (window.web3) {      //   // Use Mist / MetaMask's provider.
+        state.web3 = window.web3;
+        console.log('Injected web3 detected.', window.web3);
+        return state.web3;
+      }
+      // If the provider is not found, it will default to the local network ...
+      else {
+        const provider = new Web3.providers.HttpProvider('http://127.0.0.1:7545');  //CONNECTING TO GANACHE
+        state.web3 = new Web3(provider);
+        console.log('No web3 instance injected, using Local web3.');
+        return state.web3;
+      }
+    },
+
+    async getBlockchainData() {
+      const web3 = state.web3;
+      const accounts = await web3.eth.getAccounts();
+      console.log(accounts);
+      state.web3Account = accounts[0];  // connected account of the user
+      const networkId = await web3.eth.net.getId(); 
+      console.log(networkId);
+      state.networkId = networkId;    // network Id
+     },
+
+    //  import DaiToken from '../abis/daitoken.json'
+    //  const daiTokenData = DaiToken.networks[networkId]; // address of teh contract if it is deployed on current network Id
+    //  if (daiTokenData) {
+    //    const daiToken = new web3.eth.Contract(DaiToken.abi, daiTokenData.address); // creating a web3 version for interacting with the contract
+    //    daiBalance = await daiToken.methods.balanceOf(state.web3Account).call();
+    //    state.DaiBalance = daiTokenBalance.toString();
+    //  }
+    //  else {
+    //    window.alert('DAI token not deployed on the network');
+    //  }
+
+
+
+    toggleTheme({state,}, themeMode) {
       state.themeMode = themeMode;
       const themeObj = Object.keys(state.theme[themeMode]);
       for (let i = 0; i < themeObj.length; i++) {
@@ -476,6 +537,7 @@ const store = new Vuex.Store({
       }
     },
   },
+
 });
 
 

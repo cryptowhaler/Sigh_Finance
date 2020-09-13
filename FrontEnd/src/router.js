@@ -11,6 +11,8 @@ import EventBus, {  EventNames,} from '@/eventBuses/default';
 import Landing from '@/components/Trade/Landing.vue';
 import mainPage from '@/components/Landing/mainPage.vue'; //CHARTING LIBRARY
 
+import newPage from '@/components/new/newPage.vue';
+
 
 // import TradeModalMobile from '@/components/TradeModalMobile/TradeModalMobile';
 
@@ -22,41 +24,49 @@ const vueRouter = new Router({
     name: 'Landing Page',
     component: mainPage,
     meta: {
-      pageTitle: 'LifeOrDream.Studio | Fin-Tech to propel Space-Tech',
+      pageTitle: 'SIGH FINANCE | An Engineered Liquidity mining Pipeline',
+    },
+  },
+  {
+    path: '/',
+    name: 'Landing Page',
+    component: mainPage,
+    meta: {
+      pageTitle: 'SIGH FINANCE | An Engineered Liquidity mining Pipeline',
     },
   },
   //TV CONTAINER - TRADING_VIEW (below)
           {
             path: '/Trade',        //MOBILE - ACTIVE ORDERS SIDE BAR
-            name: 'LifeOrDream.Studio | Trade-Alogs',
+            name: 'SIGH FINANCE | SIGH FINANCE',
             component: Landing,
             meta: {
-              pageTitle: 'Trade-Alogs | Invest/Hedge with Trading Strategies',
+              pageTitle: 'SIGH FINANCE | An Engineered Liquidity mining Pipeline',
             },
           },
   //TV CONTAINER - TRADING_VIEW (above)
            {
              path: '/active-orders',        //MOBILE - ACTIVE ORDERS SIDE BAR
-             name: 'Trade-Alogs | Active Orders',
+             name: 'SIGH FINANCE | Active Orders',
              component: ActiveOrdersMobile,
              meta: {
-               pageTitle: 'Trade-Alogs | Active Orders',
+               pageTitle: 'SIGH FINANCE | Active Orders',
              },
            },
            {
             path: '/recent-trades',       //MOBILE - RECENT TRADES SIDE BAR
-            name: 'Trade-Alogs | Recent Trades',
+            name: 'SIGH FINANCE | Recent Trades',
             component: RecentTradesMobile,
             meta: {
-              pageTitle: 'Trade-Alogs | Recent Trades',
+              pageTitle: 'SIGH FINANCE | Recent Trades',
             },
           },
           {
             path: '/positions',       //MOBILE - POSITIONS SIDE BAR
-            name: 'Trade-Alogs | Positions',
+            name: 'SIGH FINANCE | Positions',
             component: PositionsMobile,
             meta: {
-              pageTitle: 'Trade-Alogs | Positions',
+              pageTitle: 'SIGH FINANCE | Positions',
             },
           },
 
@@ -72,7 +82,7 @@ const vueRouter = new Router({
              path: '/balance',
              component: BalanceTransfer,
              meta: {
-               pageTitle: 'TRADE-ALOGS | Balance Information',
+               pageTitle: 'SIGH FINANCE | Balance Information',
                needLogin: false,
              },
              children: [{
@@ -80,7 +90,7 @@ const vueRouter = new Router({
                name: 'wallet-summary-vega',
                component: SummaryVega,
                meta: {
-                 pageTitle: 'TRADE-ALOGS |  Balance Information',
+                 pageTitle: 'SIGH FINANCE |  Balance Information',
                  needLogin: false,
                },
              }, ],
@@ -90,7 +100,7 @@ const vueRouter = new Router({
              name: 'history',
              component: History,
              meta: {
-               pageTitle: 'TRADE-ALOGS | Account History',
+               pageTitle: 'SIGH FINANCE | Account History',
                needLogin: false,
              },
 
