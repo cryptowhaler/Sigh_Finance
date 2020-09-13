@@ -7,6 +7,6 @@
 
 module.exports = function(deployer) {
 
-    deployer.deploy(Sightroller_);
-    deployer.deploy(Unitroller_);
+    // deployer.deploy(Sightroller_);
+    // deployer.deploy(Unitroller_);
 };

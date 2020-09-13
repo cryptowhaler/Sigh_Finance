@@ -22,6 +22,13 @@ export default {
         price: undefined,         //price
         moe: 'market',
       },
+
+        cash: undefined,
+        borrows: undefined,
+        reserves: undefined,
+        reserveMantissa: undefined,
+
+
       showLoader: false,
       statusCode: 'operational',
       watcher: '',
@@ -55,26 +62,29 @@ export default {
   // },
 
   methods: {
-    // pairChange() {
-    //   this.$store.commit('addLoaderTask', 3, false);
-    //   // // console.log(this.$store.getters.getSelectedPairExchanges, "lovish");
-    //   // this.$store.commit('setAvailableExchanges');
-    //   ExchangeDataEventBus.$emit('change-symbol',this.$store.state.selectedPair);
-    // },
-    // changeSymbol() {
-    //   this.formData.exc = 'auto';
-    // },
-    // getStatus() {
-    //   // if (exc === 'auto') {
-    //   //   this.statusCode = this.$store.getters.getAutoStatus;
-    //   // } else {
-    //   this.statusCode = this.$store.getters.getVegaExchangeStatus;
-    //   // }
-    // },
-    // async getFees() {
-    //   this.fees.maker = fees.data.maker;
-    //   this.fees.taker = fees.data.taker;
-    // },
+
+    async whitepaperInterestRate(type) {
+      console.log('cash = ' + cash);
+      console.log('borrows = ' + borrows);
+      console.log('reserves' + reserves);
+      console.log('reservesMantissa' + reserveMantissa);
+
+      if (type == 'utilization') {
+
+      }
+
+      if (type == 'borrow') {
+        
+      }
+
+      if (type == 'supply') {
+        
+      }
+
+
+    },
+
+
     confirmTrade(buyOrSell) {   //Called when we press Buy/Sell. Performs validation. If valid, Confirm/Cancel buttons displayed.
       this.formData.bos = buyOrSell;
       let validationErrors = [];

@@ -7,8 +7,8 @@ const SafeMath_ = artifacts.require("SafeMath");
 
 module.exports = function(deployer) {
 
-    deployer.deploy(SighLens_);
-    deployer.deploy(Exponential_);
-    deployer.deploy(ABDKMath64x64_);
-    deployer.deploy(SafeMath_);
+    // deployer.deploy(SighLens_);
+    // deployer.deploy(Exponential_);
+    // deployer.deploy(ABDKMath64x64_);
+    // deployer.deploy(SafeMath_);
 };

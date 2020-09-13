@@ -19,12 +19,12 @@
 // require("ts-node/register"); // eslint-disable-line
 // require("dotenv-flow").config(); // eslint-disable-line
 // ==============================================================================================================
-const HDWalletProvider = require('truffle-hdwallet-provider')
+// const HDWalletProvider = require('truffle-hdwallet-provider')
 
-require('dotenv').config()
-const wallet = process.env.RopstenWallet;
-const privateKey = process.env.RopstenPrivateKey; 
-const projectId = process.env.ProjectId;
+// require('dotenv').config()
+// const wallet = process.env.RopstenWallet;
+// const privateKey = process.env.RopstenPrivateKey; 
+// const projectId = process.env.ProjectId;
 
 module.exports = {
   /**
@@ -59,23 +59,23 @@ module.exports = {
       port: 7545,   
       network_id: '*',
     },
-    ropsten: {
-      provider: function() {
-        return new HDWalletProvider(privateKey,"https://ropsten.infura.io/v3/" + projectId)
-      },
-      network_id: 3,
-      gas: 4000000,      //make sure this gas allocation isn't over 4M, which is the max
-      from: wallet,
-    },
-    live: {
-      provider: () => {
-        // This part will be parameters like MNEMONIC - is private key to deploy
-        // RPC_URL - is the Ethereum node I will deploy
-        return new HDWalletProvider(process.env.MNEMONIC, process.env.RPC_URL)
-      },
-      network_id: '*',
-      skipDryRun: true,
-    },    
+    // ropsten: {
+    //   provider: function() {
+    //     return new HDWalletProvider(privateKey,"https://ropsten.infura.io/v3/" + projectId)
+    //   },
+    //   network_id: 3,
+    //   gas: 4000000,      //make sure this gas allocation isn't over 4M, which is the max
+    //   from: wallet,
+    // },
+    // live: {
+    //   provider: () => {
+    //     // This part will be parameters like MNEMONIC - is private key to deploy
+    //     // RPC_URL - is the Ethereum node I will deploy
+    //     return new HDWalletProvider(process.env.MNEMONIC, process.env.RPC_URL)
+    //   },
+    //   network_id: '*',
+    //   skipDryRun: true,
+    // },    
     coverage: {
       host: "127.0.0.1",
       port: 6545,

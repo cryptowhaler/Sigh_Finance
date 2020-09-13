@@ -10,14 +10,14 @@ module.exports = function(deployer) {
     const delay = 2*6501;
 
     // DEPLOYS TIMELOCK CONTRACT - WORKING
-    deployer.deploy(Timelock_,admin,delay);
-    timelock = await Timelock_.deployed(); // gets the deployed timelock contract
+    // deployer.deploy(Timelock_,admin,delay);
+    // timelock = await Timelock_.deployed(); // gets the deployed timelock contract
 
-    deployer.deploy(GSigh_,admin);
-    gsigh = await GSigh_.deployed(); // gets the deployed gsigh contract
+    // deployer.deploy(GSigh_,admin);
+    // gsigh = await GSigh_.deployed(); // gets the deployed gsigh contract
     
     
-    deployer.deploy(GovernorAlpha_,timelock.address ,gsigh.address ,admin);
+    // deployer.deploy(GovernorAlpha_,timelock.address ,gsigh.address ,admin);
      
 
     // deployer.deploy(GSigh_,admin);  // DEPLOYS TIMELOCK CONTRACT - WORKING

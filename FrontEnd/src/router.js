@@ -28,9 +28,9 @@ const vueRouter = new Router({
     },
   },
   {
-    path: '/',
-    name: 'Landing Page',
-    component: mainPage,
+    path: '/test',
+    name: 'Testing',
+    component: newPage,
     meta: {
       pageTitle: 'SIGH FINANCE | An Engineered Liquidity mining Pipeline',
     },

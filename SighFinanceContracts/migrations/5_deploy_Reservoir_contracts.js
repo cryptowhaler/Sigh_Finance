@@ -9,8 +9,8 @@ module.exports = function(deployer) {
     const SighAddress = '0x16C000467d2463d3E4c9c15702dE9C82187Bb8fe';
     const UnitrollerAddress = '0x16C000467d2463d3E4c9c15702dE9C82187Bb8fe';
 
-    deployer.deploy(GSighReservoir_,54645,GSighAddress,UnitrollerAddress);
-    deployer.deploy(SighReservoir_,54645,SighAddress,UnitrollerAddress);
+    // deployer.deploy(GSighReservoir_,54645,GSighAddress,UnitrollerAddress);
+    // deployer.deploy(SighReservoir_,54645,SighAddress,UnitrollerAddress);
 
 };
 

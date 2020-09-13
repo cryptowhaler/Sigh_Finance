@@ -5,6 +5,10 @@ import {
 } from '@/utils/utility';
 import Web3 from 'web3';
 
+import whitePaperInterestRateModel from '@/contracts/WhitePaperInterestRateModel.json';
+import jumpRateModel from '@/contracts/JumpRateModel.json';
+import jumpRateModelV2 from '@/contracts/JumpRateModelV2.json';
+
 // import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from "constants";
 
 Vue.use(Vuex);
@@ -480,21 +484,27 @@ const store = new Vuex.Store({
     async loadWeb3() {
 
       if (window.ethereum) {
-        state.web3 = new Web3(window.ethereum);
-        // console.log(web3);
-        try {        // Request account access if needed
-          await window.ethereum.enable();
-          return state.web3;
-        } 
-        catch (error) {
-          console.log('NOT enabled');        
-          console.error(error);
-        }
+        const provider = new Web3.providers.HttpProvider('http://127.0.0.1:7545');  //CONNECTING TO GANACHE
+        state.web3 = new Web3(provider);
+
+        // state.web3 = new Web3(window.ethereum);
+        console.log(state.web3);
+        // try {        // Request account access if needed
+        //   await window.ethereum.enable();
+        //   return state.web3;
+        // } 
+        // catch (error) {
+        //   console.log('NOT enabled');        
+        //   console.error(error);
+        // }
       }
       // // For older version dapp browsers ...
       else if (window.web3) {      //   // Use Mist / MetaMask's provider.
-        state.web3 = window.web3;
-        console.log('Injected web3 detected.', window.web3);
+        const provider = new Web3.providers.HttpProvider('http://127.0.0.1:7545');  //CONNECTING TO GANACHE
+        state.web3 = new Web3(provider);
+
+        // state.web3 = window.web3;
+        // console.log('Injected web3 detected.', window.web3);
         return state.web3;
       }
       // If the provider is not found, it will default to the local network ...
@@ -515,6 +525,37 @@ const store = new Vuex.Store({
       console.log(networkId);
       state.networkId = networkId;    // network Id
      },
+
+     async whitePaperModelUtilRate(cash, borrows, reserves) {
+       const web3 = state.web3;
+       const whitePaperModel = whitePaperInterestRateModel.networks[state.networkId];
+       if (whitePaperModel) {
+         const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi, whitePaperModel.address );
+         utilRate = await interestRateModel.methods.utilizationRate(cash,borrows,reserves).call();
+         console.log( 'UTIL RATE - ' + utilRate);
+       }
+     },
+
+     async whitePaperModelBorrowRate(cash, borrows, reserves) {
+      const web3 = state.web3;
+      const whitePaperModel = whitePaperInterestRateModel.networks[state.networkId];
+      if (whitePaperModel) {
+        const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi, whitePaperModel.address );
+        utilRate = await interestRateModel.methods.getBorrowRate(cash,borrows,reserves).call();
+        console.log( 'BORROW RATE - ' + utilRate);
+      }
+    },
+
+    async whitePaperModelSupplyRate(cash, borrows, reserves, reserveMantissa) {
+      const web3 = state.web3;
+      const whitePaperModel = whitePaperInterestRateModel.networks[state.networkId];
+      if (whitePaperModel) {
+        const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi, whitePaperModel.address );
+        utilRate = await interestRateModel.methods.getSupplyRate(cash,borrows,reserves,reserveMantissa).call();
+        console.log( 'SUPPLY RATE - ' + utilRate);
+      }
+    },
+
 
     //  import DaiToken from '../abis/daitoken.json'
     //  const daiTokenData = DaiToken.networks[networkId]; // address of teh contract if it is deployed on current network Id
