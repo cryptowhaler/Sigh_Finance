@@ -1,0 +1,22 @@
+<div class="limit-order">
+    <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
+
+    <!-- <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
+        <div>
+            <span class="dot" :class="statusCode" :title="statusCode"></span>
+        </div>         
+    </div>  -->
+        <!-- IMPLEMENTING - IOC, FOK, GTC, GTT -->
+        <div class="cs-tab-3  uk-position-relative " style=" padding-left: 30px; padding-right: 50px; padding-top: 12px;">
+            <div id="subtab-limit" :title-link-class="'tab-title-class'">
+                <tab-bar :mobileDropdown=false :tabs=tabs @tab-change="activeTabChange" />
+            </div>
+            <keep-alive>
+                <FOK-Limit-Order v-if="activeTab === 'FOK'" />
+                <IOC-Limit-Order v-if="activeTab === 'IOC'" />
+                <GTC-Limit-Order v-if="activeTab === 'GTC'" />
+                <!-- <GTT-Limit-Order v-if="activeTab === 'GTT'" /> -->
+            </keep-alive>
+        </div>
+    </div>
+</div>

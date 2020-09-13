@@ -1,0 +1,53 @@
+<div v-if="$store.getters.isLoggedIn"  class="active-orders">
+    <div style="text-align:center;" class="accordionToggleButton">Active Orders
+    </div>
+    <div>
+        <div id="activeTrades">
+            <div id="recentSimplebar"  data-simplebar-auto-hide="false">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Market</th>
+                            <th>Size</th>
+                            <!-- <th>Fee</th> -->
+                            <th>Remaining</th>
+                            <th>Price</th>
+                            <th>Side</th>
+                            <th>Order Exec. Type</th>
+                            <th>Created At</th>
+                            <th>Status</th>
+                            <th>Cancel</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="order in orders">
+                            <!-- <td width="50">{{ order.id }}</td> -->
+                            <td class="bg-ebony-clay c-white">{{ order.market }}</td>
+                            <td class="c-green">{{ order.size }}</td>
+                            <td class="c-red">{{ order.remaining }}</td>
+                            <td class="c-green">{{ Number(order.price)/100000 }}</td>
+                            <td v-bind:class="{ 'c-green': order.side == 'Buy', 'c-red': order.side == 'Sell' }">{{ order.side }}</td>
+                            <td>{{ order.orderExecType }}</td>
+                            <td>{{ order.creationTime }}</td>
+                            <td class="c-green">{{ order.status }}</td>
+                            <td>
+                                <a @click=cancelOrder(order) href="javascript:undefined" class="fs14 os-semibold c-white">
+                                    <span class="mr5Close">Cancel</span>
+                                    <!-- <i class="icons8-delete"></i> -->
+                                </a>
+                            </td>
+                        </tr>
+                        <div v-if="orders.length!=0" >
+                        <tr>
+                            <button class="btn" v-on:click="cancelAllOrders()">CANCEL ALL ORDERS</button>
+                            <br> <br>
+                        </tr>
+                        </div>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>

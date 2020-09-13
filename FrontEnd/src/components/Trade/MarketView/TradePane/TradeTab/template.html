@@ -1,0 +1,23 @@
+<div id="landing-trade-tab">
+    <div class="buy-sell-tab-dropdown uk-position-top-right">
+        <!-- Pair change (Dropdown), the new selected pair gets stored directly in store.state.seletedPair, and an event is emitted in Vue.JS -->
+        <div class="form-elm select" style="width: 100px;">
+            <select class="form-ctrl select2-single" @change=marketChange v-model=selectedMarket>
+                <!-- Options dropdown loaded with available pairs from DropDown -->
+                <option v-for="val in $store.getters.markets" :key=val.id :value=val>
+                    {{ val.data.name }}
+                </option>
+            </select>
+        </div>
+    </div>
+    <!-- Tabbing between Market/Limit -->
+    <div class="cs-tab-1 uk-position-relative ">
+        <tab-bar :mobileDropdown=false marketDropdown="false" :tabs=tabs @tab-change="activeTabChange" />
+        <keep-alive>
+        <market-order v-if="activeTab === 'Invest'" />
+        <limit-order v-else-if="activeTab === 'Hedge'" />
+        <!-- <stop-limit-order v-else-if="activeTab === 'Stop Limit'" />
+        <stop-market-order v-else-if="activeTab === 'Stop Market'" /> -->
+    </keep-alive>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+<div class="crypto-withdrawls ui-tabs ui-widget ui-widget-content">
+    <form  @submit.prevent=withdrawCrypto>
+        <!-- AMOUNT  -->
+        <vk-grid class=f1-form-grid>
+            <div class="uk-width-1-1">
+                <div class="form-grp">
+                    <div class="form-elm">
+                        <input class="form-ctrl" type="text" placeholder="Amount" v-model="formValue.amount" />
+                    </div>
+                </div>
+            </div>
+        </vk-grid>
+        <!-- ADDRESS -->
+        <vk-grid class=f1-form-grid>
+            <div class="uk-width-1-1">
+                <div class="form-grp">
+                    <div class="form-elm">
+                        <input class="form-ctrl" type="text" placeholder="Receiving Address" v-model="formValue.recievingAddress" />
+                    </div>
+                </div>
+            </div>
+        </vk-grid>
+        <!-- COIN SYMBOLS -->
+        <vk-grid class=f1-form-grid>
+            <div class="uk-width-1-1">
+                <ul class="uk-subnav gap15">
+                    <li v-for="(coinSymbol, index) of supportedCoins" :key=coinSymbol>
+                        <div class="cr1" style="line-height: 14px;">
+                            <input type="radio" name="grp-a" :id=getGrpId(index) class="cr-input" v-model="formValue.coin" :value=coinSymbol>
+                            <label :for=getGrpId(index) class="cr-label">{{coinSymbol}}</label>&nbsp;
+                            <span class="dot" :class="getStatus(coinSymbol)" style="float:right;"></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </vk-grid>
+        <!-- Withdrawl Fee -->
+        <vk-grid class="f1-form-grid">
+                <div class="uk-width-1-1">
+                        <div style="color: var(--primary-text-color);" class="">Withdrawal Fee: &nbsp; {{ withdrawalFee }} {{ formValue.coin.toUpperCase() }}</div>
+                    </div>
+            <div class="uk-width-1-1">
+                <!-- Button -->
+                <vk-button class="pl40 pr40" @click='withdrawCrypto'>Withdraw</vk-button>
+            </div> 
+        </vk-grid>
+    </form>
+
+</div>

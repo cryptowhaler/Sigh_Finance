@@ -1,0 +1,70 @@
+<div class="positions"  v-if="$store.getters.isLoggedIn">
+    <div  style="text-align:center;" class="accordionToggleButton">Positions
+    </div>
+    <div>
+        <!-- <div class="uk-visible@m"> -->
+            <div id="activeTrades" :class="{'closed': open}">
+                <div id="recentSimplebar" data-simplebar data-simplebar-auto-hide="false" >
+                    <table>
+                        <thead class="uk-visible">
+                            <tr>
+                                <!-- <th width="50">ID</th> -->
+                                <th>Market</th>
+                                <th>Average Entry Price</th>
+                                <th>Open Volume</th>
+                                <th>Realised PNL</th>
+                                <th>Unrealised PNL</th>
+                                <th>Maintenance Level Margin</th>
+                                <!-- <th width="100">Buy/Sell</th> -->
+                                <th>Search Level Margin</th>
+                                <th>Exit Position</th>
+                                <th>Cancel All Orders</th>
+                                <th>Exit & Cancel</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for=" position in positions_array">
+                                <td class="bg-ebony-clay c-white">{{ position.value.market_name }}</td>
+                                <td class="">{{ position.value.averageEntryPrice }}</td>
+                                <td v-bind:class="{'c-green': position.value.openVolume >= 0, 'c-red': 0 > position.value.openVolume }" >{{ position.value.openVolume }}</td>
+                                <td v-bind:class="{'c-green': position.value.realisedPNL >= 0, 'c-red': 0 > position.value.realisedPNL }">{{ position.value.realisedPNL }}</td>
+                                <td v-bind:class="{'c-green': position.value.unrealisedPNL >= 0, 'c-red': 0 > position.value.unrealisedPNL }">{{ position.value.unrealisedPNL }}</td>
+                                <td class="c-pancho">{{ position.value.maintenanceLevel }}</td>
+                                <td  class="c-pancho">{{ position.value.searchLevel }}</td>
+                                <td>
+                                    <a @click=closePosition(position.value) href="javascript:undefined" class="fs14 os-semibold c-white">
+                                        <span class="mr5Close">Close</span>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a @click=cancelAllOrders(position.value) href="javascript:undefined" class="fs14 os-semibold c-white">
+                                        <span class="mr5Close">Cancel All</span>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a @click=closePositionAndCancelOrders(position.value) href="javascript:undefined" class="fs14 os-semibold c-white">
+                                        <span class="mr5Close">Close & Cancel All</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            <div v-if="positions_array.length!=0" >
+                            <tr>
+                                <td>
+                                    <button class="btn" v-on:click="closeAllPositions()">EXIT ALL POSITIONS</button>
+                                </td>
+                            <!-- </tr>
+                            <tr> -->
+                                <td>
+                                    <button class="btn2" v-on:click="closeAllPositionsAndCancelAllOrders()">EXIT ALL POSITIONS & CANCEL ALL ORDERS</button>
+                                </td>
+                            </tr>
+                            <br>
+                            </div>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <!-- </div> -->
+    </div>
+
+</div>

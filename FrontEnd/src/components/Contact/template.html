@@ -1,0 +1,51 @@
+<div class="contact"  >
+    <div class="uk-margin-medium-top uk-visible@m" >
+        <div class="loginbox">
+            <!-- <img src="login.png" class="user"> -->
+            <!-- <h2>Enter Credentials</h2>> -->
+            <form @submit.prevent="handleSubmit" name="CONTACT_FORM" method="post" data-netlify="true" data-netlify-honeypot="bot-field">
+                <input type="hidden" name="form-name" value="CONTACT_FORM" />
+                <p>Name: </p>
+                <input type="text" name="name" v-model="form.name"  placeholder="Enter Your Name">
+                <p>Email Address: </p>
+                <input type="email" name="emailAddress" v-model="form.emailAddress"  placeholder="Enter Your Email Address">
+                <p>Phone Number: </p>
+                <input type="number" name="phoneNumber" v-model="form.phoneNumber"  placeholder="Enter Your Contact Number">
+                <p>Message: </p>
+                <textarea class= "textarea" name="message" style="padding: 51px 10px;" v-model="form.message"  placeholder="Enter Your Message" > </textarea>
+                <!-- <input style="padding: 51px 20px;" type="text" name="" v-model="message"  placeholder="Enter Your Message"> -->
+                <p>
+                    <!-- v-on:click="executelogin" -->
+                    <button class="btn btn-rounded" >SUBMIT</button>
+                </p>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="uk-margin-medium-top uk-hidden@m" id="mobileDropdown">
+        <div class="loginboxMobile" style="padding-top: 111px;">
+            <form @submit.prevent="handleSubmit"  class="formMobileLogin" name="CONTACT_FORM" method="post" data-netlify="true" data-netlify-honeypot="bot-field">
+                <input type="hidden" name="form-name" value="CONTACT_FORM" />
+                <p style="text-align: center;">Name: </p>
+                <input style="text-align: center;" type="text" name="" v-model="form.name"  placeholder="Enter Your Name">
+                <p style="text-align: center;">Email Address: </p>
+                <input style="text-align: center;" type="email" name="" v-model="form.emailAddress"  placeholder="Enter Your Email Address">
+                <p style="text-align: center;">Phone Number: </p>
+                <input style="text-align: center;" type="number" name="" v-model="form.phoneNumber"  placeholder="Enter Your Contact Number">
+                <p style="text-align: center;">Message: </p>
+                <textarea class= "textarea" name="message" style=" padding: 51px 10px;" v-model="form.message"  placeholder="Enter Your Message" > </textarea>
+                <!-- <input style="text-align: center; padding: 51px 20px;" type="text" name="" v-model="message"  placeholder="Enter Your Message"> -->
+                <p>
+                    <button class="btnMOBILE" >SUBMIT</button>
+                </p>
+            </form>
+            <!-- <button class="btnMOBILE" >SUBMIT</button> -->
+
+        </div>  
+    </div>
+</div>
+
+
+
+

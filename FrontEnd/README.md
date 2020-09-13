@@ -1,31 +1,22 @@
-# Balancer Pool Management
+# LIFEORDREAM.STUDIO - Current Product Development -> TradeAlogs : TRADING AND ORDER MANAGEMENT - UI
+1. Currently, it gets datastream from Vega Protocol (testnet) - Add Backend which will interact with trading strategies and will feed data to the UI.
 
-Pool management interface for users to add and remove liquidity to Balancer pools.
+## TO-DO (Immeditate)
+1. Add contact form (pop up layout) - DONE - Need to add automatic pop-up close upon submission 
 
-## Project setup
-```
-npm install
-```
+## TO-DO (Comprehensive List)
+1. Buttons formatting (Mobile)
+2. Buttons formatting (Positions, Active orders, Trade Tab)
+3. Remove DOM duplicate keys error
+4. Order Book (Improve)
+5. Subscriptions null error (should run only when on that page)
+6. Login pop-Up add logo or alien emoji 
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
+For Running UI Locally...
+  ```
+$ cd TradeAlogs-UI
+$ npm install
+$ npm run serve
 ```
 
-auth.ts --> Wallets / Connectors added to vue
-
-Tokens are listed in 'assets/generated/pm/' node module files
-
-Components/Modal/Account --> pop up when clicked on connect wallet / address when logged in
-Components/Modal/About --> pop up when clicked on About
-
+Within the terminal you will be given a link http://localhost.... open the link and trade

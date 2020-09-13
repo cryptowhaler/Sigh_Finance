@@ -1,0 +1,35 @@
+<div v-if="$store.getters.isLoggedIn"  class="recent-trades">
+    <div style="text-align:center;" class="accordionToggleButton">
+        Recent Trades
+    </div>
+    <div>
+        <div id="activeTrades">
+            <div id="recentSimplebar" data-simplebar data-simplebar-auto-hide="false">
+                <table style="height:fit-content;">
+                    <thead>
+                        <tr>
+                            <!-- <th width="50">ID</th> -->
+                            <th>Market</th>
+                            <th>Size</th>
+                            <th>Price</th>
+                            <th>Total Price</th>                            
+                            <th>Buy/Sell</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="trade in trades">
+                            <td class="bg-ebony-clay c-white">{{ trade.marketName }}</td>
+                            <td class="c-green">{{ trade.size }}</td>
+                            <td class="c-green">{{ (trade.price).toFixed(5) }}</td>
+                            <td>{{ ((trade.price)*(trade.size)).toFixed(5) }}</td>
+                            <td v-bind:class="{ 'c-green': trade.aggressor == 'Buy', 'c-red': trade.aggressor == 'Sell' }">{{ trade.aggressor }}</td>
+                            <td>{{ trade.createdAt }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>

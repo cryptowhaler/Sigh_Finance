@@ -1,0 +1,51 @@
+<div class="livetrades noHorizontal" style="padding: 0 0 15px">
+    <div class="uk-panel">
+        <!-- Live trades heading -->
+        <h3 class="uk-panel-title uk-text-center" style="font-size:14px !important;">Live Trades</h3>
+    </div>
+    <template v-if="!showLoader">
+        <div class="noShow noHorizontal"> 
+            <div id="hello" data-simplebar data-simplebar-auto-hide="false" :style="{ height: tableHeight }">
+                <table>
+                    <thead class="uk-visible">
+                        <!-- live trades Bar heading -->
+                        <tr>
+                            <td class="uk-text-left">Aggressor</td>
+                            <td class="uk-text-center">Average Entry Price</td>
+                            <td class="uk-text-right">Volume</td>
+                            <td class="uk-text-right">Profit (%)</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- live trades content -->
+                        <tr v-for="trade in trades">
+                            <td class="uk-text-left" v-bind:class="{'c-green': trade.aggressor === 'Buy', 'c-red': trade.aggressor === 'Sell' }">{{trade.aggressor}}</td>
+                            <td class="uk-text-center c-cyan">{{(Number(trade.price)/100000).toFixed(3)}}</td>
+                            <td class="uk-text-right">{{trade.size}}</td>
+                            <td class="uk-text-right c-green">{{(Number(trade.size)/2.1).toFixed(2)}} %</td>
+                            <!-- <td class="uk-text-right">{{(trade.createdAt).slice(11,19)}}-{{(trade.createdAt).slice(20,22)}}</td> -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </template>
+<!-- LOADER (SPINNER) -->
+    <template v-else>
+        <spinner mTop="calc(100% - 30px)" />
+    </template>
+    <!-- <div id="hello" v-if="showLoader" data-simplebar data-simplebar-auto-hide="false" :style="{ height: tableHeight }">
+        <table>
+            <thead class="uk-hidden">
+                <tr>
+                    <td class="uk-test-left">Price </td>
+                    <td class="uk-text-center">Volume</td>
+                    <td class="uk-text-right">Timestamp</td>
+                </tr>
+            </thead>
+            <tbody>
+                <spinner />
+            </tbody>
+        </table>
+    </div> -->
+</div>

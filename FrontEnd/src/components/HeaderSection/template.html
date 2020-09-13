@@ -1,0 +1,136 @@
+<div class="header-section">
+
+    <div id="mobile-header-wrap">
+        <div id="mobile-header" data-uk-sticky>
+            <div class="page-mask sidemenu-trigger" v-bind:class="{ active: $store.getters.sidebarOpen, close: $store.getters.sidebarOpen  }"></div>
+            <div class="header-links">
+                <router-link to="/" class="logo">
+                    <img style="float: left; padding-top: 2%; max-width: 42%;" src="./SIGH_.png" alt="SIGH.FINANCE">
+                </router-link>
+                <a href="javascript:undefined" class="sidemenu-trigger" @click="onTriggerClick">
+                    <i class="icons8-menu fs24 c-white"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- Mobile Header End -->
+
+    <!-- Desktop Header -->
+    <div id="header-wrap">
+        <vk-sticky>
+            <header id="header">
+                <div class="page-mask sidemenu-trigger" v-bind:class="{ active: $store.getters.sidebarOpen, close: $store.getters.sidebarOpen }"></div>
+
+                <div class="header-market-links uk-clearfix" style="background-color: black;">
+
+                    <!-- ACTUAL HEADER - Displaying exchange logo, Selected pair and live TradePrice -->
+                    <div class="header-market-link-group uk-clearfix">
+                        <div class="header-market-link-label uk-clearfix">
+                            <router-link to="/" class="logo">
+                                <img style="float: left; padding-top: 2%; max-width: 100%;" src="./SIGH_.png" alt="SIGH.FINANCE">
+                            </router-link>
+                        </div>
+                        <!-- <div class="header-market-link-label">{{ $store.getters.formattedSelectedExchange }}</div>  -->
+
+                        <!-- <div class="header-market-link uk-clearfix" v-if="$store.getters.isLoggedIn"   >
+                            <div class="price-title">{{$store.state.selectedVegaMarketSummary}}</div> -->
+
+                            <!-- <div class="price-title">{{ $store.state.selectedPair }}</div> -->
+                            <!-- <div class="price">
+                                <span>{{Math.abs($store.state.liveTradePrice) }}</span>
+                                <label>{{$store.state.selectedVegaMarketquoteName}}</label> -->
+                                <!-- <label>{{ $store.state.selectedVegaMarketName.substring(4,7) }}</label> -->
+                                <!-- <label>{{ $store.state.selectedVegaMarketName.split('V')[1] }}</label> -->
+                            <!-- </div>
+                        </div> -->
+                        <!-- </div> -->
+
+                        <!-- Navigation Bar -->
+                        <!-- <div class="header-market-link-group uk-clearfix"> -->
+                        <div class="navbar">
+                            
+                            <!-- LANDING PAGE -->
+                            <!-- <router-link to="/Trade" v-bind:class="{ active: $route.path === '/Trade' }">
+                                <span>Trade</span>
+                            </router-link> -->
+
+                            <!-- LANDING PAGE -->
+                            <!-- <router-link to="/mainPage" v-bind:class="{ active: $route.path === '/mainPage' }">
+                                <span>mainPage</span>
+                            </router-link> -->
+
+                            <!-- MARKETS -->
+                            <!-- <router-link to="/markets" v-bind:class="{ active: $route.path === '/markets' }">
+                                <span>Markets</span>
+                            </router-link> -->
+
+                            <!-- FUNDS DropDown : Deposit || Withdrawl [IF ONLY LOGGEG IN] -->
+                            <!-- <div class="dropdown" v-if="$store.getters.isLoggedIn && $store.getters.themeMode === 'default'">
+                                <button class="dropbtn"> Funds  <i class="fa fa-caret-down"></i></button>
+                                <div class="dropdown-content">
+                                    <a href="javascript:undefined" @click="showDepositModal"><span>Deposit</span></a>
+                                    <a href="javascript:undefined" @click="showWithdrawlModal"><span>Withdraw</span></a>                                    
+                                </div>
+                            </div>
+                            <router-link to="/balance" v-bind:class="{ active: $route.path.startsWith('/balance') }" v-if="$store.getters.isLoggedIn && $store.getters.themeMode === 'default'">
+                                <span>Wallet</span>
+                            </router-link>
+                            <router-link to="/history" v-bind:class="{ active: $route.path.startsWith('/history') }" v-if="$store.getters.isLoggedIn && $store.getters.themeMode === 'default'">
+                                <span>History</span>
+                            </router-link>                               -->
+                            <!-- LOGOUT [IF ONLY LOGGEG IN] -->                            
+                            <div>
+                                <a href="javascript:undefined" @click="showContactModal"><span>Contact</span></a> 
+                            </div>
+                            <!-- <div>
+                                <a href="javascript:undefined" v-if="$store.getters.isLoggedIn && $store.getters.themeMode === 'default'" @click="showLogoutModal"><span>Logout</span></a> 
+                            </div> -->
+
+                            <!-- LOGIN [IF ONLY LOGGED OUT]-->
+                            <!-- <div >
+                                <a href="javascript:undefined" v-if="!$store.getters.isLoggedIn && $store.getters.themeMode === 'default'" @click="showLoginModal"><span>Login</span></a>
+                            </div> -->
+                            <!-- PROFILE DropDown : Settings || History || Refresh Balances [IF ONLY LOGGED IN]
+                            <div class="dropdown" v-if="$store.getters.isLoggedIn && $store.getters.themeMode === 'default'">
+                                <button class="dropbtn"> Profile <i class="fa fa-caret-down"></i></button>
+                                <div class="dropdown-content">
+                                    <router-link to="/settings" v-bind:class="{active: $route.path.startsWith('/settings')}">Settings</router-link>
+                                    <router-link to="/history" v-bind:class="{ active: $route.path.startsWith('/history') }"><span>History</span></router-link>
+                                    <a href="javascript:undefined" @click="refreshBalances"> <span>Refresh Balances</span> </a>
+                                </div>
+                            </div>
+
+                             WALLETS [IF ONLY LOGGED IN] -->
+
+                             <!-- <div id="statusDiv" style="color:var(--primary-text-color);">
+                                <span class="dot" :class='serverStatusCode'>
+                                </span>&nbsp;&nbsp;&nbsp;&nbsp;{{ getServerStatus() }}
+                            </div> -->
+                             <div class="col-auto pr-lg-0">
+                                <div class="header-social-icon d-none d-md-inline-block">
+                                    <!-- <a href="https://www.facebook.com/block42.network/" title="Facebook" target="_blank">
+                                        <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                                    </a> -->
+                                    <a href="https://twitter.com/SighFinance" title="Twitter" target="_blank">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                    <!-- <a href="https://www.linkedin.com/company/block42-network/" title="Linkedin" target="_blank">
+                                        <i class="fab fa-linkedin"></i>
+                                    </a>                           -->
+                                    <!-- <a href="https://www.instagram.com/_block42/" title="Instagram" target="_blank">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>                           -->
+                                </div>
+                            </div>
+        
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </header>
+        </vk-sticky>
+    </div>
+</div>

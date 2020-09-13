@@ -1,0 +1,18 @@
+<vk-modal :show="show" @clickOut="closeModal" @keyEsc="closeModal" @update:show=updateShow @keyup="handleKeyUp">
+    <vk-modal-close @click=closeModal  />
+    <h3 v-if="internalComponent === 'deposit'" style="text-align: center;" class="fs20 mb20 os-semibold c-white uk-text-uppercase">{{internalComponent}}</h3>
+    <h3 v-if="internalComponent === 'withdrawal'" style="text-align: center;" class="fs20 mb20 os-semibold c-white uk-text-uppercase">{{internalComponent}}</h3>
+    <h3 v-if="internalComponent === 'vega-login'"  style="text-align: center;" class="fs20 mb20  c-white uk-text-uppercase">Trade-Alogs (Beta Version) : Login</h3>
+    <h3 v-if="internalComponent === 'vega-logout'" style="text-align: center;" class="fs20 mb20 c-white uk-text-uppercase">Trade-Alogs (Beta Version) : Logout</h3>
+    <h3 v-if="internalComponent === 'contact'" style="text-align: center;" class="fs20 mb20 c-white uk-text-uppercase">CONTACT FORM</h3>
+
+    <deposit v-if="internalComponent === 'deposit'" class="ui-tabs ui-widget ui-widget-content" />
+    <withdrawl v-else-if="internalComponent === 'withdrawal'" class="ui-tabs ui-widget ui-widget-content" />
+    
+    
+    <vega-login v-else-if="internalComponent === 'vega-login'" class="i-widget ui-widget-content" />
+    <vega-logout v-else-if="internalComponent === 'vega-logout'" class="i-widget ui-widget-content" />
+
+    <contact v-else-if="internalComponent === 'contact'" class="i-widget ui-widget-content" />
+
+</vk-modal>

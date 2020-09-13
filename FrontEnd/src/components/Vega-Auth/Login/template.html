@@ -1,0 +1,39 @@
+<div class="vega-login">
+    <div class="uk-margin-medium-top uk-visible@m">
+        <div class="loginbox">
+            <!-- <img src="login.png" class="user"> -->
+            <!-- <h2>Enter Credentials</h2>> -->
+            <form>
+            <p>Name: </p>
+                <input type="text" name="" v-model="name"  placeholder="Enter Your Name">
+                <p>Wallet Key: </p>
+                <input type="text" name="" v-model="wallet"  placeholder="Enter Your Wallet Key">
+                <p>Passphrase: </p>
+                <input type="password" name="" v-model="passphrase"  placeholder="Enter Your Secret Passphrase">
+            </form>
+            <button class="btn btn-rounded " v-on:click="executelogin">LOG IN</button>
+        </div>
+    </div>
+
+
+    <div class="uk-margin-medium-top uk-hidden@m" id="mobileDropdown">
+        <div class="loginboxMobile">
+            <!-- <img src="login.png" class="user"> -->
+            <!-- <h2>Enter Credentials</h2>> -->
+            <form class="formMobileLogin" >
+            <p style="text-align: center;" >Name: </p>
+                <input style="text-align: center;" type="text" name="" v-model="name"  placeholder="Enter Your Name">
+                <p style="text-align: center;">Wallet Key: </p>
+                <input style="text-align: center;" type="text" name="" v-model="wallet"  placeholder="Enter Your Wallet Key">
+                <p style="text-align: center;">Passphrase: </p>
+                <input style="text-align: center;" type="password" name="" v-model="passphrase"  placeholder="Enter Your Secret Passphrase">
+            </form>
+            <button class="btnMOBILE" v-on:click="executelogin">LOG IN</button>
+
+        </div>  
+    </div>
+</div>
+
+
+
+

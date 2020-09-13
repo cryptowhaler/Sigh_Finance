@@ -1,0 +1,98 @@
+<div id="tab-a3 noHorizontal" class="tikertab-content"> 
+    <div class="sv-table-wrapper ticker-table cs-table-1">
+                 <!-- Pair change (Dropdown), the new selected pair gets stored directly in store.state.seletedPair, and an event is emitted in Vue.JS -->
+        <div class="form-elm select" style="width: 100px;">
+            <label for="province" accesskey="s">SELECT PUBKEY</label>
+            <select name="province" id="province" class="form-ctrl select2-single" @change=PubKeyChange v-model=selectedPubKey>
+                <!-- Options dropdown loaded with available pairs from DropDown -->
+                <option style="padding: 20%;" v-for="val in pubkeys" :key=val :value=val>
+                    {{ val }}
+                </option>
+            </select>
+        </div>
+
+        <table class="sv-table display nowrap" style="width:100%" data-scroll-y="291px">
+            <thead>
+                <tr>
+                    <th class="uk-text-center">Currency</th>
+                    <th class="uk-text-center">Available</th>
+                    <th class="uk-text-center">Blocked</th>
+                    <th class="uk-text-center">Total</th>
+                </tr>
+            </thead>
+            <div id="simpleBarContainer" data-simplebar data-simplebar-auto-hide="false">
+                <tbody>
+                    <tr>
+                        <td class="uk-text-center">BTC</td>
+                        <td class="uk-text-center">0.24</td>
+                        <td class="uk-text-center">0.33</td>
+                        <td class="uk-text-center">0.57</td>
+                    </tr>
+                    <tr>
+                        <td class="uk-text-center">VUSD</td>
+                        <td class="uk-text-center">4.32</td>
+                        <td class="uk-text-center">1.72</td>
+                        <td class="uk-text-center">6.04</td>
+                    </tr>
+                    <!-- <tr>
+                        <td class="uk-text-center">DAI</td>
+                        <td class="uk-text-center">700</td>
+                        <td class="uk-text-center">300</td>
+                        <td class="uk-text-center">1000</td>
+                    </tr> -->
+                    <!-- <tr v-for="ledger in balance">
+                        <td>{{ledger.currency}}({{ledger.wallet_type}})</td>
+                        <td class="uk-text-right">{{ledger.avail_bal}}</td>
+                        <td class="uk-text-right">{{ledger.locked_bal}}</td>
+                        <td class="uk-text-right">{{ledger.total_bal}}</td>
+                    </tr> -->
+                </tbody>
+            </div>
+        </table>
+        <br>
+        <div v-if=showMarginInfo> 
+            <table>
+                <tr>
+                    <td>Margin Gross Balance: </td>
+                </tr>
+                <tr>
+                    <td>Margin Tradeable Balance:</td>
+                </tr>
+            </table>
+            <fieldset>
+                    <legend>General Margin info</legend>
+            <table>
+                    <tr>
+                            <td>UnRealized PNL (VUSD): </td> 
+                            <td v-bind:class="{'c-green': this.$store.getters.totalUnrealizedPNL_VUSD >= 0, 'c-red': 0 > this.$store.getters.totalUnrealizedPNL_VUSD }">{{this.$store.getters.totalUnrealizedPNL_VUSD.toFixed(5)}} </td>
+                    </tr>
+                    <tr>
+                            <td>Realized PNL (VUSD): </td> 
+                            <td v-bind:class="{'c-green': this.$store.getters.totalRealizedPNL_VUSD >= 0, 'c-red': 0 > this.$store.getters.totalRealizedPNL_VUSD }">{{this.$store.getters.totalRealizedPNL_VUSD.toFixed(5)}} </td>                          
+                    </tr>
+                    <tr>
+                        <td>UnRealized PNL (BTC): </td> 
+                        <td v-bind:class="{'c-green': this.$store.getters.totalUnrealizedPNL_BTC >= 0, 'c-red': 0 > this.$store.getters.totalUnrealizedPNL_BTC }">{{this.$store.getters.totalUnrealizedPNL_BTC.toFixed(5)}} </td>
+                    </tr>
+                    <tr>
+                            <td>Realized PNL (BTC): </td> 
+                            <td v-bind:class="{'c-green': this.$store.getters.totalRealizedPNL_BTC >= 0, 'c-red': 0 > this.$store.getters.totalRealizedPNL_BTC }">{{this.$store.getters.totalRealizedPNL_BTC.toFixed(5)}} </td>                          
+                    </tr>
+
+                    <!-- <tr>
+                            <td>Margin Net:</td>
+                    </tr> -->
+                    <tr>
+                            <td>Margin Balance:</td>
+                    </tr>
+                    <tr>
+                        <td>Margin Required:</td>
+                    </tr>
+            </table>
+        </fieldset>
+        </div>
+    </div>
+    <!-- <div v-if=showLoader  class="center">
+            <img width="75px" src="https://image.ibb.co/dc02hd/30.gif" />
+    </div> -->
+</div>

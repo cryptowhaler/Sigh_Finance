@@ -1,0 +1,31 @@
+<div class="cash-withdrawls">
+    <form @submit.prevent=withdrawCash>
+        <vk-grid class=f1-form-grid>
+            <div class="uk-width-1-1">
+                <div class="form-grp">
+                    <div class="form-elm">
+                        <input class="form-ctrl" type="text" placeholder="Amount" v-model="formValue.amount" />
+                    </div>
+                </div>
+            </div>
+        </vk-grid>
+        <br>
+        <br>
+        <div class="uk-width-1-1">
+        <vk-button class="pl40 pr40" @click='withdrawCash'>Withdraw</vk-button>
+        </div>
+
+        <!-- <table>
+            <tr>
+                <td>
+                    <input type="number" min=0 v-model="formValue.amount" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Withdraw" />
+                </td>
+            </tr>
+        </table> -->
+    </form>
+</div>

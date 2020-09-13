@@ -1,0 +1,103 @@
+<div class="sidemenu uk-text-center" v-bind:class="{ open: $store.getters.sidebarOpen }">
+    <div class="main">
+        <ul class="uk-list mb0">
+            <li class="sidemenu-trigger uk-visible@m" v-bind:class="{ close: !$store.getters.sidebarOpen }">
+                <a href="javascript:undefined" @click="onTriggerClick">
+                    <span>
+                        <i class="icons8-right"></i>
+                    </span>
+                    <span>&nbsp;</span>
+                </a>
+            </li>
+            <!-- <li class="mt0">
+                <router-link to="/Trade" v-bind:class="{ active: $route.path === '/Trade' }">
+                    <span>
+                        <i class="icons8-home-2"></i>
+                    </span>
+                    <span>Trade</span>
+                </router-link>
+            </li> -->
+            <!-- <li class="mt0">
+                <router-link to="/history" v-if="$store.getters.isLoggedIn"
+                    v-bind:class="{ active: $route.path.startsWith('/history') }">
+                    <span>
+                        <i class="icons8-time-machine"></i>
+                    </span>
+                    <span>History</span>
+                </router-link>
+            </li> -->
+            <!-- <li class="mt0">
+                <router-link to="/positions" v-if="$store.getters.isLoggedIn"
+                    v-bind:class="{ active: $route.path.startsWith('/positions') }">
+                    <span>
+                        <i class="icons8-time-machine"></i>
+                    </span>
+                    <span>Positions</span>
+                </router-link>
+            </li>             
+
+            <li class="mt0">
+                <router-link to="/active-orders" v-if="$store.getters.isLoggedIn"
+                    v-bind:class="{ active: $route.path.startsWith('/active-orders') }">
+                    <span>
+                        <i class="icons8-time-machine"></i>
+                    </span>
+                    <span>Active Orders</span>
+                </router-link>
+            </li> 
+            
+            <li class="mt0">
+                <router-link to="/recent-trades" v-if="$store.getters.isLoggedIn"
+                    v-bind:class="{ active: $route.path.startsWith('/recent-trades') }">
+                    <span>
+                        <i class="icons8-time-machine"></i>
+                    </span>
+                    <span>Recent Trades</span>
+                </router-link>
+            </li>             
+
+            <li class="mt0">
+                <a href="javascript:undefined" v-if="$store.getters.isLoggedIn" @click="showDepositModal">
+                    <span>
+                        <i class="icons8-donate"></i>
+                    </span>
+                    <span>Deposit</span>
+                </a>
+            </li>
+            <li class="mt0">
+                <a href="javascript:undefined" v-if="$store.getters.isLoggedIn" @click="showWithdrawlModal">
+                    <span>
+                        <i class="icons8-donate"></i>
+                    </span>
+                    <span>Withdraw</span>
+                </a>
+            </li>
+
+            <li class="mt0">
+                <a href="javascript:undefined" v-if="$store.getters.isLoggedIn" @click="logout">
+                    <span>
+                        <i class="icons8-logout-rounded-up-2"></i>
+                    </span>
+                    <span>Logout</span>
+                </a>
+            </li>
+            <li class="mt0">
+                <a href="javascript:undefined" v-if="!$store.getters.isLoggedIn" @click="login">
+                    <span>
+                        <i class="icons8-logout-rounded-up-2"></i>
+                    </span>
+                    <span>Login</span>
+                </a>
+            </li> -->
+            <li class="mt0">
+                <a href="javascript:undefined" @click="contact">
+                    <span>
+                        <i class="icons8-logout-rounded-up-2"></i>
+                    </span>
+                    <span>CONTACT</span>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</div>

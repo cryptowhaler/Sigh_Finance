@@ -1,0 +1,70 @@
+<div class="history">
+    <h1 class="fs20 os-regular c-white p20 m0 uk-text-uppercase">History</h1>
+    <form class="pl20 pr20">
+        <div>
+            <div id="tab-a4" class="settingstab-content">
+            </div>
+        </div>
+    </form>
+    <div v-if="vegaFlag">
+        <div class="uk-visible@m">
+            <vk-tabs class="pl20 pr20">
+                <!-- Orders -->
+                <vk-tabs-item title="Orders">
+                    <div class="dropdown">
+                        <div class="dropbtn" style="text-transform: capitalize;">TRADE-ALOGS</div> 
+                    </div>
+                    <vega-orders-history></vega-orders-history>
+                </vk-tabs-item>
+                <!-- Trading -->
+                <vk-tabs-item title="Trading">
+                    <div class="dropdown">
+                        <div class="dropbtn" style="text-transform: capitalize;">TRADE-ALOGS</div> 
+                    </div>
+                    <vega-trading-history></vega-trading-history>
+                </vk-tabs-item>
+                <!-- Positions -->
+                <!-- <vk-tabs-item title="Positions">
+                    <div class="dropdown">
+                        <div class="dropbtn" style="text-transform: capitalize;">VEGA</div> 
+                    </div>
+                    <vega-positions-history></vega-positions-history>
+                </vk-tabs-item> -->
+                <!-- Deposits -->
+                <vk-tabs-item title="Deposits ">
+                    <div class="dropdown">
+                        <div class="dropbtn" style="text-transform: capitalize;">TRADE-ALOGS</div> 
+                    </div>
+                    <vega-deposit-history></vega-deposit-history>
+                </vk-tabs-item>
+                <!-- Withdrawls -->
+                <vk-tabs-item title="Withdrawal">
+                    <div class="dropdown">
+                        <div class="dropbtn" style="text-transform: capitalize;">TRADE-ALOGS</div> 
+                    </div>
+                    <div>
+                        <vega-pending-withdrawal-history></vega-pending-withdrawal-history>
+                    </div>
+                </vk-tabs-item>
+
+            </vk-tabs>
+            <!-- FOR MOBILE -->
+        </div>
+        <div class="uk-hidden@m" id="mobileDropdown">
+            <vk-button id="tabBarDropdown" mode='click'>{{ vegaActiveTab }}</vk-button>
+            <vk-dropdown :delayHide=1>
+                <vk-nav-dropdown>
+                    <vk-nav-item v-for="tab of vegaTabs" :key="tab" :title="tab" @click="onDropDownvegaTabChange(tab)"></vk-nav-item>
+                </vk-nav-dropdown>
+            </vk-dropdown>
+            <div class="dropdown">
+                <div class="dropbtn" style="text-transform: capitalize;">TRADE-ALOGS</div> 
+            </div>
+            <vega-orders-history v-if="vegaActiveTab === 'Orders'"></vega-orders-history>
+            <vega-trading-history v-if="vegaActiveTab === 'Trading'"></vega-trading-history>
+            <!-- <vega-positions-history v-if="vegaActiveTab === 'Positions'"></vega-positions-history> -->
+            <vega-deposit-history v-if="vegaActiveTab === 'Deposits'"></vega-deposit-history>
+            <vega-pending-withdrawal-history v-if="vegaActiveTab === 'Withdrawal'"></vega-pending-withdrawal-history>
+        </div>
+    </div>
+</div>

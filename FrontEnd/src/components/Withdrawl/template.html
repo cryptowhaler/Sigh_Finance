@@ -1,0 +1,18 @@
+<div class="withdrawl">
+    <div class="uk-margin-medium-top">
+        <h2>Trade-Alogs (Beta Version) currently doesn't support this feature.</h2>
+        <br>
+    </div>
+    
+    <tab-bar :tabs="tabs" @tab-change="onTabChange" />
+    <crypto-withdrawls v-if="activeTab === 'Crypto'" />  
+    <cash-withdrawls v-if="activeTab === 'Cash'" />        
+
+    <!-- <div class="uk-hidden@m" id="mobileDropdown">
+        <h2>Trade-Alogs (Beta Version) currently doesn't support this feature.</h2>
+        <br>
+        <tab-bar :tabs="tabs" @tab-change="onTabChange" />
+        <crypto-withdrawls v-if="activeTab === 'Crypto'" />  
+        <cash-withdrawls v-if="activeTab === 'Cash'" />        
+    </div> -->
+</div>
