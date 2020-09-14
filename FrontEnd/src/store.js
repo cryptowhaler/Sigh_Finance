@@ -9,6 +9,7 @@ import whitePaperInterestRateModel from '@/contracts/WhitePaperInterestRateModel
 import jumpRateModelV2 from '@/contracts/JumpRateModelV2.json';
 import sighReservoir_ from '@/contracts/SighReservoir.json';
 import SIGH from '@/contracts/SIGH.json';
+import Sightroller from '@/contracts/Sightroller.json';
 
 // import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from "constants";
 
@@ -1183,7 +1184,381 @@ const store = new Vuex.Store({
     }
   },  
 
- // SIGH_TOKEN FUNCTIONS (END)
+  // SIGH_TOKEN FUNCTIONS (END)
+
+  // SIGHTROLLER FUNCTIONS (START)
+
+  //Returns the List of markets the user has entered
+  sightroller_getAssetsIn: async ({commit,state}, {account}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      const getAssetsIn = SIGHTROLLER_Contract.methods.getAssetsIn(account).call();
+      console.log(getAssetsIn);
+    }
+  },
+
+  //Checks if the user has entered the given market
+  sightroller_checkMembership: async ({commit,state}, {account,token}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      const checkMembership = SIGHTROLLER_Contract.methods.checkMembership(account,token).call();
+      console.log(checkMembership);
+    }
+  },
+
+  // User provides a list of markets (array) that he wants to enter
+  sightroller_enterMarkets: async ({commit,state}, { markets }) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.enterMarkets(markets).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // User provides the market that he wants to exit
+  sightroller_exitMarket: async ({commit,state}, { market }) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.exitMarket(market).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // Checking if Mint is allowed. We update GSighSupplyIndex and distribute GSigh
+  sightroller_mintAllowed: async ({commit,state}, { market,minter,mintAmount }) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.mintAllowed(market,minter,mintAmount).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // Dummy function. For extensibility purposes. 
+  // actualMintAmount (The amount of the underlying asset being minted)
+  // mintTokens (The number of tokens being minted)
+  sightroller_mintVerify: async ({commit,state}, { market,minter,actualMintAmount,mintTokens}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.mintVerify(market,minter,actualMintAmount,mintTokens).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // Checking if Redeem is allowed. We update GSighSupplyIndex and distribute GSigh
+  // redeemTokens (The number of cTokens to exchange for the underlying asset in the market)
+  sightroller_redeemAllowed: async ({commit,state}, { market,redeemer,redeemTokens }) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.redeemAllowed(market,redeemer,redeemTokens).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // Dummy function. For extensibility purposes. 
+  // actualRedeemAmount (The amount of the underlying asset being minted)
+  // redeemTokens (The number of tokens being minted)
+  sightroller_redeemVerify: async ({commit,state}, { market,minter,actualRedeemAmount,redeemTokens}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.redeemVerify(market,minter,actualRedeemAmount,redeemTokens).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+    // Checking if Redeem is allowed. We update GSighSupplyIndex and distribute GSigh
+  // borrowAmount (The amount of underlying the account would borrow)
+  sightroller_borrowAllowed: async ({commit,state}, { market,borrower,borrowAmount }) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.borrowAllowed(market,borrower,borrowAmount).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // Dummy function. For extensibility purposes. 
+  // borrowAmount (The amount of underlying the account would borrow)
+  sightroller_borrowVerify: async ({commit,state}, { market,borrower,borrowAmount}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.borrowVerify(market,borrower,borrowAmount).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+    // Checking if Redeem is allowed. We update GSighSupplyIndex and distribute GSigh
+  // repayAmount (The amount of the underlying asset the account would repay)
+  sightroller_repayBorrowAllowed: async ({commit,state}, { market,payer,borrower,repayAmount }) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.repayBorrowAllowed(market,payer,borrower,repayAmount).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // Dummy function. For extensibility purposes. 
+  // actualRepayAmount (The amount of underlying the account would repay)
+  sightroller_repayBorrowVerify: async ({commit,state}, { market,payer,borrower,actualRepayAmount,borrowerIndex}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.repayBorrowVerify(market,payer,borrower,actualRepayAmount,borrowerIndex).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+      // Checking if Redeem is allowed. We update GSighSupplyIndex and distribute GSigh
+  // repayAmount (The amount of the underlying asset the account would repay)
+  sightroller_liquidateBorrowAllowed: async ({commit,state}, { marketBorrowed,marketCollateral,liquidator,borrower,repayAmount }) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.liquidateBorrowAllowed(marketBorrowed,marketCollateral,liquidator,borrower,repayAmount).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // Dummy function. For extensibility purposes. 
+  // actualRepayAmount (The amount of underlying the account would repay)
+  // seizeTokens (The number of collateral market's tokens to seize)
+  sightroller_liquidateBorrowVerify: async ({commit,state}, { marketBorrowed,marketCollateral,liquidator,borrower,repayAmount,seizeTokens}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.liquidateBorrowVerify(marketBorrowed,marketCollateral,liquidator,borrower,repayAmount,seizeTokens).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+      // Checking if Redeem is allowed. We update GSighSupplyIndex and distribute GSigh
+  // seizeTokens (The number of collateral tokens to seize)
+  sightroller_seizeAllowed: async ({commit,state}, {marketCollateral,marketBorrowed,liquidator,borrower,seizeTokens }) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.seizeAllowed(marketCollateral,marketBorrowed,liquidator,borrower,seizeTokens ).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // Dummy function. For extensibility purposes. 
+  // actualRepayAmount (The amount of underlying the account would repay)
+  sightroller_seizeVerify: async ({commit,state}, { marketCollateral,marketBorrowed,liquidator,borrower,seizeTokens }) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.seizeVerify(marketCollateral,marketBorrowed,liquidator,borrower,seizeTokens ).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+      // Checking if Redeem is allowed. We update GSighSupplyIndex and distribute GSigh
+  // transferTokens (The number of cTokens to transfer)
+  sightroller_transferAllowed: async ({commit,state}, { market,src,dst,transferTokens }) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.transferAllowed(market,src,dst,transferTokens).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // Dummy function. For extensibility purposes. 
+  // transferTokens (The number of cTokens to transfer)
+  sightroller_transferVerify: async ({commit,state}, { market,src,dst,transferTokens}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.transferVerify(market,src,dst,transferTokens).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  sightroller_getAccountLiquidity: async ({commit,state}, { account}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      const getAccountLiquidity = SIGHTROLLER_Contract.methods.getAccountLiquidity(account).call();
+      console.log(getAccountLiquidity);
+    }
+  },
+
+  // redeemTokens - The number of tokens to hypothetically redeem
+  // borrowAmount -  The amount of underlying to hypothetically borrow
+  sightroller_getHypotheticalAccountLiquidity: async ({commit,state}, { account,market,redeemTokens,borrowAmount}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      const getAccountLiquidity = SIGHTROLLER_Contract.methods.getHypotheticalAccountLiquidity(account,market,redeemTokens,borrowAmount).call();
+      console.log(getAccountLiquidity);
+    }
+  },  
+
+
+  // actualRepayAmount -- The amount of cTokenBorrowed underlying to convert into cTokenCollateral tokens
+  sightroller_liquidateCalculateSeizeTokens: async ({commit,state}, { marketBorrowed,marketCollateral,actualRepayAmount}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      const getAccountLiquidity = SIGHTROLLER_Contract.methods.liquidateCalculateSeizeTokens(marketBorrowed,marketCollateral,actualRepayAmount).call();
+      console.log(getAccountLiquidity);
+    }
+  },  
+  
+  
 
 
 
@@ -1196,7 +1571,7 @@ const store = new Vuex.Store({
 
 
 
-
+  
 
 
 

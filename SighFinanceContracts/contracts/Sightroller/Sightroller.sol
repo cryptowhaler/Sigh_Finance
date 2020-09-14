@@ -122,7 +122,6 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
         uint[] memory results = new uint[](len);
         for (uint i = 0; i < len; i++) {
             CToken cToken = CToken(cTokens[i]);
-
             results[i] = uint(addToMarketInternal(cToken, msg.sender));
         }
 
