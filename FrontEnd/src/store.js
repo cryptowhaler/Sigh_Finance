@@ -558,7 +558,7 @@ const store = new Vuex.Store({
       if (whitePaperModel) {
         const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi, whitePaperModel.address );
         console.log(interestRateModel);
-        interestRateModel.methods.setBaseParameters(baseRatePerYear,multiplierPerYear).send({from: state.web3Account,gas: 100,})
+        interestRateModel.methods.setBaseParameters(baseRatePerYear,multiplierPerYear).send({from: state.web3Account})
         .then(receipt => { 
           console.log(receipt);
           })
@@ -570,7 +570,6 @@ const store = new Vuex.Store({
         console.log('Contract not deployed');
       }
     },
-
     
     whitePaperModelUtilRate: async ({commit,state},{cash, borrows, reserves}) => {
       const web3 = state.web3;
@@ -614,55 +613,57 @@ const store = new Vuex.Store({
       }
     },
 
-    //  WHITEPAPER_INTEREST_RATE_MODEL CONTRACT CALLS (END)
-
-    //  JUMP_INTEREST_RATE_MODEL CONTRACT CALLS (START)
-
-    jumpModelUtilRate: async ({commit,state},{cash, borrows, reserves}) => {
+    whitePaperModelgetBaseRatePerBlock: async ({commit,state}) => {
       const web3 = state.web3;
       console.log(web3);
-      const jumpModel = jumpRateModel.networks[state.networkId];
-      console.log(jumpModel);
-      if (jumpModel) {
-        const jumpModel_ = new web3.eth.Contract(jumpRateModel.abi, jumpModel.address );
-        console.log(jumpModel_);
-        const utilRate = await jumpModel_.methods.utilizationRate(cash,borrows,reserves).call();        
-        console.log( 'UTIL RATE - ' + utilRate);
-      }
-      else {
-
+      const whitePaperModel = whitePaperInterestRateModel.networks[state.networkId];
+      console.log(whitePaperModel);
+      if (whitePaperModel) {
+        const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi, whitePaperModel.address );
+        console.log(interestRateModel);
+        const baseRatePerBlock = await interestRateModel.methods.baseRatePerBlock().call();
+        console.log( 'baseRatePerBlock - ' + baseRatePerBlock);
       }
     },
 
-    jumpModelBorrowRate: async ({commit,state},{cash, borrows, reserves}) => {
-     const web3 = state.web3;
-     console.log(web3);
-     const jumpModel = jumpRateModel.networks[state.networkId];
-     console.log(jumpModel);
-     if (jumpModel) {
-       const jumpModel_ = new web3.eth.Contract(jumpRateModel.abi, jumpModel.address );
-       console.log(jumpModel_);
-       const borrowRate = await jumpModel_.methods.getBorrowRate(cash,borrows,reserves).call();
-       console.log( 'BORROW RATE - ' + borrowRate);
-     }
-   },
+    whitePaperModelgetMultiplierPerBlock: async ({commit,state}) => {
+      const web3 = state.web3;
+      console.log(web3);
+      const whitePaperModel = whitePaperInterestRateModel.networks[state.networkId];
+      console.log(whitePaperModel);
+      if (whitePaperModel) {
+        const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi, whitePaperModel.address );
+        console.log(interestRateModel);
+        const multiplierPerBlock = await interestRateModel.methods.multiplierPerBlock().call();
+        console.log( 'multiplierPerBlock - ' + multiplierPerBlock);
+      }
+    },
 
-    jumpModelSupplyRate: async ({commit,state},{cash, borrows, reserves, reserveMantissa}) => {
-     const web3 = state.web3;
-     console.log(web3);
-     const jumpModel = jumpRateModel.networks[state.networkId];
-     console.log(jumpModel);
-     if (jumpModel) {
-       const jumpModel_ = new web3.eth.Contract(jumpRateModel.abi, jumpModel.address );
-       console.log(jumpModel_);
-       const supplyRate = await jumpModel_.methods.getSupplyRate(cash,borrows,reserves,reserveMantissa).call();
-       console.log( 'SUPPLY RATE - ' + supplyRate);
-     }
-   },
 
-   //  JUMP_INTEREST_RATE_MODEL CONTRACT CALLS (END)
+    //  WHITEPAPER_INTEREST_RATE_MODEL CONTRACT CALLS (END)
 
     //  JUMP_INTEREST_RATE_MODEL__V2 CONTRACT CALLS (START)
+
+    jumpV2ModelChangeBaseParamters: async ({commit,state},{baseRatePerYear, multiplierPerYear,jumpMultiplierPerYear,kink_}) => {
+      const web3 = state.web3;
+      console.log(web3);
+      const jumpModelV2 = jumpRateModelV2.networks[state.networkId];
+      console.log(jumpModelV2);
+      if (jumpModelV2) {
+        const interestRateModel = new web3.eth.Contract(jumpRateModelV2.abi, jumpModelV2.address );
+        console.log(interestRateModel);
+        interestRateModel.methods.updateJumpRateModel(baseRatePerYear,multiplierPerYear,jumpMultiplierPerYear,kink_).send({from: state.web3Account})
+        .then(receipt => { 
+          console.log(receipt);
+          })
+        .catch(error => {
+          console.log(error);
+        })
+      }
+      else {
+        console.log('Contract not deployed');
+      }
+    },
 
     jumpV2ModelUtilRate: async ({commit,state},{cash, borrows, reserves}) => {
       const web3 = state.web3;
@@ -705,6 +706,58 @@ const store = new Vuex.Store({
        console.log( 'SUPPLY RATE - ' + supplyRate);
      }
    },
+
+   jumpV2ModelgetBaseRatePerBlock: async ({commit,state}) => {
+    const web3 = state.web3;
+    console.log(web3);
+    const jumpModelV2 = jumpRateModelV2.networks[state.networkId];
+    console.log(jumpModelV2);
+    if (jumpModelV2) {
+      const interestRateModel = new web3.eth.Contract(jumpRateModelV2.abi, jumpModelV2.address );
+      console.log(interestRateModel);
+      const baseRatePerBlock = await interestRateModel.methods.baseRatePerBlock().call();
+      console.log( 'baseRatePerBlock - ' + baseRatePerBlock);
+    }
+  },
+
+  jumpV2ModelgetMultiplierPerBlock: async ({commit,state}) => {
+    const web3 = state.web3;
+    console.log(web3);
+    const jumpModelV2 = jumpRateModelV2.networks[state.networkId];
+    console.log(jumpModelV2);
+    if (jumpModelV2) {
+      const interestRateModel = new web3.eth.Contract(jumpRateModelV2.abi, jumpModelV2.address );
+      console.log(interestRateModel);
+      const multiplierPerBlock = await interestRateModel.methods.multiplierPerBlock().call();
+      console.log( 'multiplierPerBlock - ' + multiplierPerBlock);
+    }
+  },
+
+  jumpV2ModelgetJumpMultiplierPerBlock: async ({commit,state}) => {
+    const web3 = state.web3;
+    console.log(web3);
+    const jumpModelV2 = jumpRateModelV2.networks[state.networkId];
+    console.log(jumpModelV2);
+    if (jumpModelV2) {
+      const interestRateModel = new web3.eth.Contract(jumpRateModelV2.abi, jumpModelV2.address );
+      console.log(interestRateModel);
+      const jumpMultiplierPerBlock = await interestRateModel.methods.jumpMultiplierPerBlock().call();
+      console.log( 'jumpMultiplierPerBlock - ' + jumpMultiplierPerBlock);
+    }
+  },
+
+  jumpV2ModelgetKink: async ({commit,state}) => {
+    const web3 = state.web3;
+    console.log(web3);
+    const jumpModelV2 = jumpRateModelV2.networks[state.networkId];
+    console.log(jumpModelV2);
+    if (jumpModelV2) {
+      const interestRateModel = new web3.eth.Contract(jumpRateModelV2.abi, jumpModelV2.address );
+      console.log(interestRateModel);
+      const kink = await interestRateModel.methods.kink().call();
+      console.log( 'kink - ' + kink);
+    }
+  },
 
    //  JUMP_INTEREST_RATE_MODEL___V2 CONTRACT CALLS (END)
 

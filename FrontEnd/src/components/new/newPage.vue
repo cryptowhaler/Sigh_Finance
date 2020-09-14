@@ -52,7 +52,10 @@ export default {
 
   methods: {
 
-    ...mapActions(['whitePaperModelChangeBaseParamters','whitePaperModelUtilRate','whitePaperModelBorrowRate','whitePaperModelSupplyRate','jumpModelUtilRate', 'jumpModelBorrowRate', 'jumpModelSupplyRate', 'jumpV2ModelUtilRate', 'jumpV2ModelBorrowRate', 'jumpV2ModelSupplyRate']),
+    ...mapActions(['whitePaperModelChangeBaseParamters','whitePaperModelUtilRate','whitePaperModelBorrowRate','whitePaperModelSupplyRate',
+    'whitePaperModelgetBaseRatePerBlock','whitePaperModelgetMultiplierPerBlock','jumpV2ModelChangeBaseParamters', 'jumpV2ModelUtilRate', 
+    'jumpV2ModelBorrowRate', 'jumpV2ModelSupplyRate', 'jumpV2ModelgetBaseRatePerBlock', 'jumpV2ModelgetMultiplierPerBlock',
+    'jumpV2ModelgetJumpMultiplierPerBlock','jumpV2ModelgetKink']),
 
     async whitepaperInterestRate(type) {
       console.log(type);
@@ -78,6 +81,13 @@ export default {
       if (type == 'supply') {
         this.whitePaperModelSupplyRate({cash : this.cash,borrows: this.borrows, reserves: this.reserves, reserveMantissa: this.reserveMantissa});                
       }
+      if (type == 'baseRatePerBlock') {
+        this.whitePaperModelgetBaseRatePerBlock();                
+      }
+      if (type == 'multiplierPerBlock') {
+        this.whitePaperModelgetMultiplierPerBlock();                
+      }
+
     },
 
     async jumpInterestRate_V2(type) {
@@ -87,17 +97,31 @@ export default {
       console.log('reserves' + this.reserves);
       console.log('reservesMantissa' + this.reserveMantissa);
 
+      if (type == 'changeParameters') {
+        this.jumpV2ModelChangeBaseParamters({baseRatePerYear: this.baseRatePerYear, multiplierPerYear: this.multiplierPerYear,jumpMultiplierPerYear: this.jumpMultiplierPerYear,kink_ : this.kink_});
+      }
       if (type == 'utilization') {
         this.jumpV2ModelUtilRate({cash : this.cash,borrows: this.borrows, reserves: this.reserves});
       }
-
       if (type == 'borrow') {
         this.jumpV2ModelBorrowRate({cash : this.cash,borrows: this.borrows, reserves: this.reserves});        
       }
-
       if (type == 'supply') {
         this.jumpV2ModelSupplyRate({cash : this.cash,borrows: this.borrows, reserves: this.reserves, reserveMantissa: this.reserveMantissa});                
       }
+      if (type == 'baseRatePerBlock') {
+        this.jumpV2ModelgetBaseRatePerBlock();                
+      }
+      if (type == 'multiplierPerBlock') {
+        this.jumpV2ModelgetMultiplierPerBlock();                
+      }
+      if (type == 'jumpMultiplierPerBlock') {
+        this.jumpV2ModelgetJumpMultiplierPerBlock();                
+      }
+      if (type == 'kink') {
+        this.jumpV2ModelgetKink();                
+      }
+
     },
 
 

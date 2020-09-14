@@ -52,7 +52,7 @@ contract JumpRateModelV2 is InterestRateModel {
      * @param owner_ The address of the owner, i.e. the Timelock contract (which has the ability to update parameters directly)
      */
     constructor(uint baseRatePerYear, uint multiplierPerYear, uint jumpMultiplierPerYear, uint kink_, address owner_) public {
-        owner = owner_;
+        owner = msg.sender;
 
         updateJumpRateModelInternal(baseRatePerYear,  multiplierPerYear, jumpMultiplierPerYear, kink_);
     }

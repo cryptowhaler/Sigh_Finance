@@ -35,14 +35,45 @@
             </div>
         </div>
     </div>
+
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="jumpMultiplierPerYear" v-model="jumpMultiplierPerYear">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="kink_" v-model="kink_">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    
     <button class="uk-button uk-button-green" @click="whitepaperInterestRate('changeParameters')">Whitepaper Interest Rate Model - changeParameters</button>
+    <button class="uk-button uk-button-green" @click="whitepaperInterestRate('baseRatePerBlock')">Whitepaper Interest Rate Model - baseRatePerBlock</button>
+    <button class="uk-button uk-button-green" @click="whitepaperInterestRate('multiplierPerBlock')">Whitepaper Interest Rate Model - multiplierPerBlock</button>
+
+    <button class="uk-button uk-button-green" @click="jumpInterestRate_V2('changeParameters')">Jump_V2 Interest Rate Model - changeParameters</button>
+    <button class="uk-button uk-button-green" @click="jumpInterestRate_V2('baseRatePerBlock')">Jump_V2 Interest Rate Model - baseRatePerBlock</button>
+    <button class="uk-button uk-button-green" @click="jumpInterestRate_V2('multiplierPerBlock')">Jump_V2 Interest Rate Model - multiplierPerBlock</button>
+    <button class="uk-button uk-button-green" @click="jumpInterestRate_V2('jumpMultiplierPerBlock')">Jump_V2 Interest Rate Model - jumpMultiplierPerBlock</button>
+    <button class="uk-button uk-button-green" @click="jumpInterestRate_V2('kink')">Jump_V2 Interest Rate Model - kink</button>
 
 
     <div class="uk-grid uk-grid-small f1-form-grid">
         <div class="uk-width-1-1">
             <div class="form-grp">
                 <div class="form-elm">
-                    <input class="form-ctrl" type="text" placeholder="Cash" v-model="cash">
+                    <input class="form-ctrl" type="text" placeholder="Cash (in USD)" v-model="cash">
                     <span> _ </span>
                 </div>                
             </div>
@@ -53,7 +84,7 @@
         <div class="uk-width-1-1">
             <div class="form-grp">
                 <div class="form-elm">
-                    <input class="form-ctrl" type="text" placeholder="Borrows" v-model="borrows">
+                    <input class="form-ctrl" type="text" placeholder="Borrows (in USD)" v-model="borrows">
                     <span> _ </span>
                 </div>                
             </div>
@@ -64,7 +95,7 @@
         <div class="uk-width-1-1">
             <div class="form-grp">
                 <div class="form-elm">
-                    <input class="form-ctrl" type="text" placeholder="reserves" v-model="reserves">
+                    <input class="form-ctrl" type="text" placeholder="reserves (in USD)" v-model="reserves">
                     <span> _ </span>
                 </div>                
             </div>
