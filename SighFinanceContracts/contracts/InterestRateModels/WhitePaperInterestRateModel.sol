@@ -28,16 +28,32 @@ contract WhitePaperInterestRateModel is InterestRateModel {
      */
     uint public baseRatePerBlock;
 
+    address public admin;
+
     /**
      * @notice Construct an interest rate model
      * @param baseRatePerYear The approximate target base APR, as a mantissa (scaled by 1e18)
      * @param multiplierPerYear The rate of increase in interest rate wrt utilization (scaled by 1e18)
      */
     constructor(uint baseRatePerYear, uint multiplierPerYear) public {
+
+        admin = msg.sender;
+        setConstructorParametersInternal(baseRatePerYear,multiplierPerYear);
+
+    }
+
+    function setBaseParameters(uint baseRatePerYear, uint multiplierPerYear) external {
+        require(admin == msg.sender, 'This function can only be called by the Admin');
+        setConstructorParametersInternal(baseRatePerYear,multiplierPerYear);
+    }
+
+    function setConstructorParametersInternal(uint baseRatePerYear, uint multiplierPerYear) internal {
+
         baseRatePerBlock = baseRatePerYear.div(blocksPerYear);
         multiplierPerBlock = multiplierPerYear.div(blocksPerYear);
 
         emit NewInterestParams(baseRatePerBlock, multiplierPerBlock);
+
     }
 
     /**

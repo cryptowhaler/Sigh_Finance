@@ -98,7 +98,8 @@ contract JumpRateModelV2 is InterestRateModel {
 
         if (util <= kink) {
             return util.mul(multiplierPerBlock).div(1e18).add(baseRatePerBlock);
-        } else {
+        } 
+        else {
             uint normalRate = kink.mul(multiplierPerBlock).div(1e18).add(baseRatePerBlock);
             uint excessUtil = util.sub(kink);
             return excessUtil.mul(jumpMultiplierPerBlock).div(1e18).add(normalRate);

@@ -257,6 +257,8 @@ const store = new Vuex.Store({
       return state.precision;
     },
   },
+
+
   mutations: {
     updateusername(state,name) {  //Added
       state.username = name;
@@ -478,17 +480,36 @@ const store = new Vuex.Store({
     precisionMap(state, map) {
       state.precision = map;
     },
+    // SIGH FINANCE DEVELOPMENTS
+    SET_WEB3(state, payload) {
+      state.web3 = payload;
+      console.log(payload);
+      console.log(state.web3);
+    },
+    SET_ACCOUNT(state, payload) {
+      state.web3Account = payload;
+      console.log(payload);
+      console.log(state.web3Account);
+    },
+    SET_NETWORK_ID(state, payload) {
+      state.networkId = payload;
+      console.log(payload);
+      console.log(state.networkId);
+    }
+
   },
+
+
   actions: {
 
-    async loadWeb3() {
-
+    // CONNECTS TO WEB3 NETWORK (GANACHE/KOVAN/ETHEREUM/BSC ETC)
+    loadWeb3: async ({ commit }) => {
       if (window.ethereum) {
         const provider = new Web3.providers.HttpProvider('http://127.0.0.1:7545');  //CONNECTING TO GANACHE
-        state.web3 = new Web3(provider);
-
+        const web3 = new Web3(provider);
+        commit('SET_WEB3',web3);
         // state.web3 = new Web3(window.ethereum);
-        console.log(state.web3);
+
         // try {        // Request account access if needed
         //   await window.ethereum.enable();
         //   return state.web3;
@@ -501,60 +522,199 @@ const store = new Vuex.Store({
       // // For older version dapp browsers ...
       else if (window.web3) {      //   // Use Mist / MetaMask's provider.
         const provider = new Web3.providers.HttpProvider('http://127.0.0.1:7545');  //CONNECTING TO GANACHE
-        state.web3 = new Web3(provider);
-
+        const web3 = new Web3(provider);
+        commit('SET_WEB3',web3);
         // state.web3 = window.web3;
         // console.log('Injected web3 detected.', window.web3);
-        return state.web3;
+        return web3;
       }
       // If the provider is not found, it will default to the local network ...
       else {
         const provider = new Web3.providers.HttpProvider('http://127.0.0.1:7545');  //CONNECTING TO GANACHE
-        state.web3 = new Web3(provider);
+        const web3 = new Web3(provider);
+        commit('SET_WEB3',web3);
         console.log('No web3 instance injected, using Local web3.');
-        return state.web3;
+        return web3;
       }
     },
 
-    async getBlockchainData() {
+    // SETS ACCOUNT AND NETWORK ID
+    getBlockchainData: async ({commit,state}) => {
       const web3 = state.web3;
       const accounts = await web3.eth.getAccounts();
       console.log(accounts);
-      state.web3Account = accounts[0];  // connected account of the user
+      commit('SET_ACCOUNT',accounts[0]);
       const networkId = await web3.eth.net.getId(); 
-      console.log(networkId);
-      state.networkId = networkId;    // network Id
+      commit('SET_NETWORK_ID',networkId);
      },
 
-     async whitePaperModelUtilRate(cash, borrows, reserves) {
-       const web3 = state.web3;
-       const whitePaperModel = whitePaperInterestRateModel.networks[state.networkId];
-       if (whitePaperModel) {
-         const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi, whitePaperModel.address );
-         utilRate = await interestRateModel.methods.utilizationRate(cash,borrows,reserves).call();
-         console.log( 'UTIL RATE - ' + utilRate);
-       }
-     },
+    //  WHITEPAPER_INTEREST_RATE_MODEL CONTRACT CALLS (START)
 
-     async whitePaperModelBorrowRate(cash, borrows, reserves) {
+    whitePaperModelChangeBaseParamters: async ({commit,state},{baseRatePerYear, multiplierPerYear}) => {
       const web3 = state.web3;
+      console.log(web3);
       const whitePaperModel = whitePaperInterestRateModel.networks[state.networkId];
+      console.log(whitePaperModel);
       if (whitePaperModel) {
         const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi, whitePaperModel.address );
-        utilRate = await interestRateModel.methods.getBorrowRate(cash,borrows,reserves).call();
-        console.log( 'BORROW RATE - ' + utilRate);
+        console.log(interestRateModel);
+        interestRateModel.methods.setBaseParameters(baseRatePerYear,multiplierPerYear).send({from: state.web3Account,gas: 100,})
+        .then(receipt => { 
+          console.log(receipt);
+          })
+        .catch(error => {
+          console.log(error);
+        })
+      }
+      else {
+        console.log('Contract not deployed');
       }
     },
 
-    async whitePaperModelSupplyRate(cash, borrows, reserves, reserveMantissa) {
+    
+    whitePaperModelUtilRate: async ({commit,state},{cash, borrows, reserves}) => {
       const web3 = state.web3;
+      console.log(web3);
       const whitePaperModel = whitePaperInterestRateModel.networks[state.networkId];
+      console.log(whitePaperModel);
       if (whitePaperModel) {
         const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi, whitePaperModel.address );
-        utilRate = await interestRateModel.methods.getSupplyRate(cash,borrows,reserves,reserveMantissa).call();
-        console.log( 'SUPPLY RATE - ' + utilRate);
+        console.log(interestRateModel);
+        const utilRate = await interestRateModel.methods.utilizationRate(cash,borrows,reserves).call();        
+        console.log( 'UTIL RATE - ' + utilRate);
+      }
+      else {
+        console.log('Contract not deployed');
       }
     },
+ 
+     whitePaperModelBorrowRate: async ({commit,state},{cash, borrows, reserves}) => {
+      const web3 = state.web3;
+      console.log(web3);
+      const whitePaperModel = whitePaperInterestRateModel.networks[state.networkId];
+      console.log(whitePaperModel);
+      if (whitePaperModel) {
+        const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi, whitePaperModel.address );
+        console.log(interestRateModel);
+        const borrowRate = await interestRateModel.methods.getBorrowRate(cash,borrows,reserves).call();
+        console.log( 'BORROW RATE - ' + borrowRate);
+      }
+    },
+
+    whitePaperModelSupplyRate: async ({commit,state},{cash, borrows, reserves, reserveMantissa}) => {
+      const web3 = state.web3;
+      console.log(web3);
+      const whitePaperModel = whitePaperInterestRateModel.networks[state.networkId];
+      console.log(whitePaperModel);
+      if (whitePaperModel) {
+        const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi, whitePaperModel.address );
+        console.log(interestRateModel);
+        const supplyRate = await interestRateModel.methods.getSupplyRate(cash,borrows,reserves,reserveMantissa).call();
+        console.log( 'SUPPLY RATE - ' + supplyRate);
+      }
+    },
+
+    //  WHITEPAPER_INTEREST_RATE_MODEL CONTRACT CALLS (END)
+
+    //  JUMP_INTEREST_RATE_MODEL CONTRACT CALLS (START)
+
+    jumpModelUtilRate: async ({commit,state},{cash, borrows, reserves}) => {
+      const web3 = state.web3;
+      console.log(web3);
+      const jumpModel = jumpRateModel.networks[state.networkId];
+      console.log(jumpModel);
+      if (jumpModel) {
+        const jumpModel_ = new web3.eth.Contract(jumpRateModel.abi, jumpModel.address );
+        console.log(jumpModel_);
+        const utilRate = await jumpModel_.methods.utilizationRate(cash,borrows,reserves).call();        
+        console.log( 'UTIL RATE - ' + utilRate);
+      }
+      else {
+
+      }
+    },
+
+    jumpModelBorrowRate: async ({commit,state},{cash, borrows, reserves}) => {
+     const web3 = state.web3;
+     console.log(web3);
+     const jumpModel = jumpRateModel.networks[state.networkId];
+     console.log(jumpModel);
+     if (jumpModel) {
+       const jumpModel_ = new web3.eth.Contract(jumpRateModel.abi, jumpModel.address );
+       console.log(jumpModel_);
+       const borrowRate = await jumpModel_.methods.getBorrowRate(cash,borrows,reserves).call();
+       console.log( 'BORROW RATE - ' + borrowRate);
+     }
+   },
+
+    jumpModelSupplyRate: async ({commit,state},{cash, borrows, reserves, reserveMantissa}) => {
+     const web3 = state.web3;
+     console.log(web3);
+     const jumpModel = jumpRateModel.networks[state.networkId];
+     console.log(jumpModel);
+     if (jumpModel) {
+       const jumpModel_ = new web3.eth.Contract(jumpRateModel.abi, jumpModel.address );
+       console.log(jumpModel_);
+       const supplyRate = await jumpModel_.methods.getSupplyRate(cash,borrows,reserves,reserveMantissa).call();
+       console.log( 'SUPPLY RATE - ' + supplyRate);
+     }
+   },
+
+   //  JUMP_INTEREST_RATE_MODEL CONTRACT CALLS (END)
+
+    //  JUMP_INTEREST_RATE_MODEL__V2 CONTRACT CALLS (START)
+
+    jumpV2ModelUtilRate: async ({commit,state},{cash, borrows, reserves}) => {
+      const web3 = state.web3;
+      console.log(web3);
+      const jumpModelV2 = jumpRateModelV2.networks[state.networkId];
+      console.log(jumpModelV2);
+      if (jumpModelV2) {
+        const jumpModel_V2 = new web3.eth.Contract(jumpRateModelV2.abi, jumpModelV2.address );
+        console.log(jumpModel_V2);
+        const utilRate = await jumpModel_V2.methods.utilizationRate(cash,borrows,reserves).call();        
+        console.log( 'UTIL RATE - ' + utilRate);
+      }
+      else {
+
+      }
+    },
+
+    jumpV2ModelBorrowRate: async ({commit,state},{cash, borrows, reserves}) => {
+     const web3 = state.web3;
+     console.log(web3);
+     const jumpModelV2 = jumpRateModelV2.networks[state.networkId];
+     console.log(jumpModelV2);
+     if (jumpModelV2) {
+       const jumpModel_V2 = new web3.eth.Contract(jumpRateModelV2.abi, jumpModelV2.address );
+       console.log(jumpModel_V2);
+       const borrowRate = await jumpModel_V2.methods.getBorrowRate(cash,borrows,reserves).call();
+       console.log( 'BORROW RATE - ' + borrowRate);
+     }
+   },
+
+    jumpV2ModelSupplyRate: async ({commit,state},{cash, borrows, reserves, reserveMantissa}) => {
+     const web3 = state.web3;
+     console.log(web3);
+     const jumpModelV2 = jumpRateModelV2.networks[state.networkId];
+     console.log(jumpModelV2);
+     if (jumpModelV2) {
+       const jumpModel_V2 = new web3.eth.Contract(jumpRateModelV2.abi, jumpModelV2.address );
+       console.log(jumpModel_V2);
+       const supplyRate = await jumpModel_V2.methods.getSupplyRate(cash,borrows,reserves,reserveMantissa).call();
+       console.log( 'SUPPLY RATE - ' + supplyRate);
+     }
+   },
+
+   //  JUMP_INTEREST_RATE_MODEL___V2 CONTRACT CALLS (END)
+
+
+
+
+
+
+
+
 
 
     //  import DaiToken from '../abis/daitoken.json'

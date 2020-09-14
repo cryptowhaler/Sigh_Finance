@@ -4,6 +4,7 @@
 import VegaProtocolService from '@/services/VegaProtocolService';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import { stringArrayToHtmlList, } from '@/utils/utility';
+import {mapState,mapActions,} from 'vuex';
 
 export default {
   name: 'FOK-Limit-Order',
@@ -22,7 +23,10 @@ export default {
         price: undefined,         //price
         moe: 'market',
       },
-
+        baseRatePerYear: undefined,
+        multiplierPerYear: undefined,
+        jumpMultiplierPerYear: undefined,
+        kink_: undefined,
         cash: undefined,
         borrows: undefined,
         reserves: undefined,
@@ -45,7 +49,63 @@ export default {
   // },
 
 
-  
+
+  methods: {
+
+    ...mapActions(['whitePaperModelChangeBaseParamters','whitePaperModelUtilRate','whitePaperModelBorrowRate','whitePaperModelSupplyRate','jumpModelUtilRate', 'jumpModelBorrowRate', 'jumpModelSupplyRate', 'jumpV2ModelUtilRate', 'jumpV2ModelBorrowRate', 'jumpV2ModelSupplyRate']),
+
+    async whitepaperInterestRate(type) {
+      console.log(type);
+      console.log('cash = ' + this.cash);
+      console.log('borrows = ' + this.borrows);
+      console.log('reserves' + this.reserves);
+      console.log('reservesMantissa' + this.reserveMantissa);
+      console.log('baseRatePerYear' + this.baseRatePerYear);
+      console.log('multiplierPerYear' + this.multiplierPerYear);
+
+      if (type == 'changeParameters') {
+        this.whitePaperModelChangeBaseParamters({baseRatePerYear: this.baseRatePerYear, multiplierPerYear: this.multiplierPerYear });
+      }
+
+      if (type == 'utilization') {
+        this.whitePaperModelUtilRate({cash : this.cash,borrows: this.borrows, reserves: this.reserves});
+      }
+
+      if (type == 'borrow') {
+        this.whitePaperModelBorrowRate({cash : this.cash,borrows: this.borrows, reserves: this.reserves});        
+      }
+
+      if (type == 'supply') {
+        this.whitePaperModelSupplyRate({cash : this.cash,borrows: this.borrows, reserves: this.reserves, reserveMantissa: this.reserveMantissa});                
+      }
+    },
+
+    async jumpInterestRate_V2(type) {
+      console.log(type);
+      console.log('cash = ' + this.cash);
+      console.log('borrows = ' + this.borrows);
+      console.log('reserves' + this.reserves);
+      console.log('reservesMantissa' + this.reserveMantissa);
+
+      if (type == 'utilization') {
+        this.jumpV2ModelUtilRate({cash : this.cash,borrows: this.borrows, reserves: this.reserves});
+      }
+
+      if (type == 'borrow') {
+        this.jumpV2ModelBorrowRate({cash : this.cash,borrows: this.borrows, reserves: this.reserves});        
+      }
+
+      if (type == 'supply') {
+        this.jumpV2ModelSupplyRate({cash : this.cash,borrows: this.borrows, reserves: this.reserves, reserveMantissa: this.reserveMantissa});                
+      }
+    },
+
+
+
+
+
+  },
+
   created() {
     this.changeVegaMarket = (newMarket) => {       //Changing Selected Vega Market
       this.formData.vegaMarketName = newMarket.Name;
@@ -61,86 +121,6 @@ export default {
   //   // this.getStatus('auto');
   // },
 
-  methods: {
-
-    async whitepaperInterestRate(type) {
-      console.log('cash = ' + cash);
-      console.log('borrows = ' + borrows);
-      console.log('reserves' + reserves);
-      console.log('reservesMantissa' + reserveMantissa);
-
-      if (type == 'utilization') {
-
-      }
-
-      if (type == 'borrow') {
-        
-      }
-
-      if (type == 'supply') {
-        
-      }
-
-
-    },
-
-
-    confirmTrade(buyOrSell) {   //Called when we press Buy/Sell. Performs validation. If valid, Confirm/Cancel buttons displayed.
-      this.formData.bos = buyOrSell;
-      let validationErrors = [];
-      this.validateQty(validationErrors, 'Amount', this.formData.amount);
-      this.validateQty(validationErrors, 'Price', this.formData.price);
-      if (validationErrors.length) {this.$showErrorMsg({message: stringArrayToHtmlList(validationErrors),});
-      } 
-      else {this.showConfirm = true;}
-    },
-
-    validateQty(errorsArray, placeholder, value) {    //Checks if the values entered are valid
-      if (!value || Number(value) === 0) {errorsArray.push(`${placeholder} is required.`);
-      } 
-      else if ((value && Number.isNaN(Number(value))) || Number(value) < 0) {
-        errorsArray.push(`${placeholder} is not valid.`);
-      }
-    },
-
-    cancelTrade() {       //When we press Cancel button
-      this.formData.amount = undefined;
-      this.formData.price = undefined;
-      this.showConfirm = false;
-    },
-
-    async makeTrade() {   //When we press make Trade. Shows Loader
-      // console.log('FOK Test2 ' + this.formData.amount);
-      this.showLoader = true;
-      let t1 = this.$store.getters.selectedVegaMarketName;
-      let t2 = this.$store.getters.selectedVegaMarketId;
-      // console.log( 'In Store ' + t1 + ' ' + t2); //checking market
-      // console.log( 'In OrderPanel ' + this.formData.vegaMarketName+ ' ' + this.formData.vegaMarketId); //checking market
-      //      this.formData.pair = this.$store.getters.selectedmarketid;    // Selected market ID
-      //Make Call
-      const response = await  VegaProtocolService.submitOrder_limit(this.formData.vegaMarketId,this.formData.amount,this.formData.bos,'LIMIT','FOK',parseInt(this.formData.price*100000), this.$store.state.selectedVegaMarketquoteName);
-      setTimeout(() => {
-        if(!response) {   //TimeOut Limit
-          this.formData.amount = undefined;
-          this.formData.price = undefined;
-          this.showConfirm = false;
-          this.showLoader = false;
-          this.$showErrorMsg({message: 'Timeout exceeded.',});
-        }
-      },15000);
-      this.formData.amount = undefined;
-      this.formData.price = undefined;
-      this.showConfirm = false;
-
-      if (response.status == 200) {     //If Successful
-        this.$showSuccessMsg({message: this.formData.vegaMarketName + ' - ' + response.message,});
-      } 
-      else {                          //If failed.
-        this.$showErrorMsg({message: response.message,});
-      }
-      this.showLoader = false;
-    },
-  },
 
   destroyed() {
     clearInterval(this.watcher);

@@ -43,6 +43,8 @@ import Notifications from 'vue-notification';
 import Datetime from 'vue-datetime';
 // You need a specific loader for CSS files
 import 'vue-datetime/dist/vue-datetime.css';
+import {mapState,mapActions,} from 'vuex';
+
  
 Vue.use(Datetime);
 Vue.use(Vuikit);
@@ -89,6 +91,9 @@ export default {
     localStorage.shouldOpen = true;
     ExchangeDataEventBus.$emit('ticker-connect');
     this.getMarkets();
+
+    this.loadWeb3();
+    this.getBlockchainData();
   },
 
   mounted() {
@@ -119,6 +124,9 @@ export default {
 
 
   methods: {
+
+    ...mapActions(['loadWeb3','getBlockchainData']),
+
     async fetchConfigs() {
       this.$store.commit('addLoaderTask', 1, false);
       this.$store.commit('removeLoaderTask', 1);
