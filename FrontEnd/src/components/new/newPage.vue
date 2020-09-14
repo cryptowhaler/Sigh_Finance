@@ -23,6 +23,7 @@ export default {
         price: undefined,         //price
         moe: 'market',
       },
+      // InterestRateVariables
         baseRatePerYear: undefined,
         multiplierPerYear: undefined,
         jumpMultiplierPerYear: undefined,
@@ -31,6 +32,17 @@ export default {
         borrows: undefined,
         reserves: undefined,
         reserveMantissa: undefined,
+        // ReservoirVariables
+        dripRate: undefined,
+        targetAddress: undefined,
+        // SIGH Token Variables
+        recepient: undefined,
+        amount: undefined,
+        spender: undefined,
+        sender: undefined,
+        addedValue: undefined,
+        subtractedValue: undefined,
+        newReservoir: undefined,
 
 
       showLoader: false,
@@ -55,7 +67,9 @@ export default {
     ...mapActions(['whitePaperModelChangeBaseParamters','whitePaperModelUtilRate','whitePaperModelBorrowRate','whitePaperModelSupplyRate',
     'whitePaperModelgetBaseRatePerBlock','whitePaperModelgetMultiplierPerBlock','jumpV2ModelChangeBaseParamters', 'jumpV2ModelUtilRate', 
     'jumpV2ModelBorrowRate', 'jumpV2ModelSupplyRate', 'jumpV2ModelgetBaseRatePerBlock', 'jumpV2ModelgetMultiplierPerBlock',
-    'jumpV2ModelgetJumpMultiplierPerBlock','jumpV2ModelgetKink']),
+    'jumpV2ModelgetJumpMultiplierPerBlock','jumpV2ModelgetKink'         ,        'sighReservoirBeginDripping','sighReservoirChangeDripRate', 
+     'sighReservoirDrip','sighReservoirGetSighTokenAddress','sighReservoirgetTargetAddress','sighReservoirgetDripStart','sighReservoirgetdripRate'
+     , 'sighReservoirgetlastDripBlockNumber','sighReservoirgettotalDrippedAmount','sighReservoirgetadmin'      ]),
 
     async whitepaperInterestRate(type) {
       console.log(type);
@@ -121,8 +135,148 @@ export default {
       if (type == 'kink') {
         this.jumpV2ModelgetKink();                
       }
-
     },
+
+    async sighReservoir(type) {
+      console.log(type);
+      console.log('dripRate = ' + this.dripRate);
+      console.log('targetAddress = ' + this.targetAddress);
+
+      if (type == 'BeginDripping') {
+        this.sighReservoirBeginDripping({dripRate: this.dripRate, targetAddress: this.targetAddress});
+      }
+      if (type == 'ChangeDripRate') {
+        this.sighReservoirChangeDripRate({dripRate: this.dripRate});
+      }
+      if (type == 'Drip') {
+        this.sighReservoirDrip();        
+      }
+      if (type == 'RecentlyDrippedAmount') {
+        this.sighReservoirDrip();        
+      }
+      if (type == 'gettotalDrippedAmount') {
+        this.sighReservoirgettotalDrippedAmount();                
+      }
+      if (type == 'getdripRate') {
+        this.sighReservoirgetdripRate();                
+      }
+      if (type == 'getlastDripBlockNumber') {
+        this.sighReservoirgetlastDripBlockNumber();                
+      }
+      if (type == 'GetSighTokenAddress') {
+        this.sighReservoirGetSighTokenAddress();                
+      }
+      if (type == 'getTargetAddress') {
+        this.sighReservoirgetTargetAddress();                
+      }
+      if (type == 'GetDripStart') {
+        this.sighReservoirgetDripStart();                
+      }
+      if (type == 'getadmin') {
+        this.sighReservoirgetadmin();                
+      }
+    },
+
+    async sighTokens(type) {
+      console.log(type);
+      console.log('recepient = ' + this.recepient);
+      console.log('amount = ' + this.amount);
+      console.log('spender = ' + this.spender);
+      console.log('sender = ' + this.sender);
+      console.log('addedValue = ' + this.addedValue);
+      console.log('subtractedValue = ' + this.subtractedValue);
+      console.log('newReservoir = ' + this.newReservoir);      
+
+      if (type == 'initMinting') {
+        this.sighInitMinting();
+      }
+      if (type == 'sightransfer') {
+        this.sightransfer({recepient: this.recepient, amount: this.amount});
+      }
+      if (type == 'sighapprove') {
+        this.sighapprove({spender: this.spender, amount: this.amount});        
+      }
+      if (type == 'sightransferFrom') {
+        this.sightransferFrom({sender: this.sender, amount: this.amount});        
+      }
+      if (type == 'sighincreaseAllowance') {
+        this.sighincreaseAllowance({spender: this.spender, addedValue: this.addedValue});                
+      }
+      if (type == 'sighdecreaseAllowance') {
+        this.sighdecreaseAllowance({spender: this.spender, subtractedValue: this.subtractedValue});                
+      }
+      if (type == 'sighMintCoins') {
+        this.sighMintCoins();                
+      }
+      if (type == 'sighchangeReservoir') {
+        this.sighchangeReservoir({newReservoir: this.newReservoir});                
+      }
+
+      if (type == 'sighgetRecentyMintedAmount') {
+        this.sighgetRecentyMintedAmount();                
+      }
+      if (type == 'sighgetRecentMinter') {
+        this.sighgetRecentMinter();                
+      }
+      if (type == 'sighgetCurrentCycle') {
+        this.sighgetCurrentCycle();                
+      }
+      if (type == 'sighgetCurrentEra') {
+        this.sighgetCurrentEra();                
+      }
+      if (type == 'sighgetallowance') {
+        this.sighgetallowance();                
+      }
+      if (type == 'sighgetbalanceOf') {
+        this.sighgetbalanceOf();                
+      }
+      if (type == 'sigh_getTotalSupply') {
+        this.sigh_getTotalSupply();                
+      }
+      if (type == 'sighIsMintingActivated') {
+        this.sighIsMintingActivated();                
+      }
+      if (type == 'sighgetStart_Time') {
+        this.sighgetStart_Time();                
+      }
+      if (type == 'sighgetdecimals') {
+        this.sighgetdecimals();                
+      }
+      if (type == 'sighgetsymbol') {
+        this.sighgetsymbol();                
+      }
+      if (type == 'sighgetname') {
+        this.sighgetname();                
+      }
+    },
+
+    async sightroller(type) {
+      console.log(type);
+      console.log('recepient = ' + this.recepient);
+      console.log('amount = ' + this.amount);
+      console.log('spender = ' + this.spender);
+      console.log('sender = ' + this.sender);
+      console.log('addedValue = ' + this.addedValue);
+      console.log('subtractedValue = ' + this.subtractedValue);
+      console.log('newReservoir = ' + this.newReservoir);      
+
+      if (type == 'initMinting') {
+        this.sighInitMinting();
+      }
+      if (type == 'sightransfer') {
+        this.sightransfer({recepient: this.recepient, amount: this.amount});
+      }
+      if (type == 'sighapprove') {
+        this.sighapprove({spender: this.spender, amount: this.amount});        
+      }
+      if (type == 'sightransferFrom') {
+        this.sightransferFrom({sender: this.sender, amount: this.amount});        
+      }
+    }
+
+
+
+
 
 
 

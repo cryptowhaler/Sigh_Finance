@@ -6,8 +6,9 @@ import {
 import Web3 from 'web3';
 
 import whitePaperInterestRateModel from '@/contracts/WhitePaperInterestRateModel.json';
-import jumpRateModel from '@/contracts/JumpRateModel.json';
 import jumpRateModelV2 from '@/contracts/JumpRateModelV2.json';
+import sighReservoir_ from '@/contracts/SighReservoir.json';
+import SIGH from '@/contracts/SIGH.json';
 
 // import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from "constants";
 
@@ -761,6 +762,428 @@ const store = new Vuex.Store({
 
    //  JUMP_INTEREST_RATE_MODEL___V2 CONTRACT CALLS (END)
 
+    // SIGH_TOKEN RESERVOIR BASED FUNCTIONS (START)
+
+  sighReservoirBeginDripping: async ({commit,state}, {dripRate,targetAddress}) => {
+        const web3 = state.web3;
+        const sighReservoir = sighReservoir_.networks[state.networkId];
+        console.log(sighReservoir);
+        if (sighReservoir) {
+          sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
+          console.log(sighReservoirContract);
+          sighReservoirContract.methods.beginDripping(dripRate,targetAddress).send({from: state.web3Account})
+          .then(receipt => {
+            console.log(receipt);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+        }
+    },
+
+  sighReservoirChangeDripRate: async ({commit,state}, {dripRate}) => {
+      const web3 = state.web3;
+      const sighReservoir = sighReservoir_.networks[state.networkId];
+      console.log(sighReservoir);
+      if (sighReservoir) {
+        sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
+        console.log(sighReservoirContract);
+        sighReservoirContract.methods.changeDripRate(dripRate).send({from: state.web3Account})
+        .then(receipt => {
+          console.log(receipt);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      }
+  },
+
+  sighReservoirDrip: async ({commit,state}) => {
+    const web3 = state.web3;
+    const sighReservoir = sighReservoir_.networks[state.networkId];
+    console.log(sighReservoir);
+    if (sighReservoir) {
+      sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
+      console.log(sighReservoirContract);
+      sighReservoirContract.methods.drip().send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  sighReservoirGetSighTokenAddress: async ({commit,state}) => {
+    const web3 = state.web3;
+    const sighReservoir = sighReservoir_.networks[state.networkId];
+    console.log(sighReservoir);
+    if (sighReservoir) {
+      sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
+      console.log(sighReservoirContract);
+      const sighAddress = await sighReservoirContract.methods.getSighAddress().call();
+      console.log(sighAddress);
+    }
+  },
+
+  sighReservoirgetTargetAddress: async ({commit,state}) => {
+    const web3 = state.web3;
+    const sighReservoir = sighReservoir_.networks[state.networkId];
+    console.log(sighReservoir);
+    if (sighReservoir) {
+      sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
+      console.log(sighReservoirContract);
+      const targetAddress = await sighReservoirContract.methods.getTargetAddress().call();
+      console.log(targetAddress);
+    }
+  },
+
+  sighReservoirgetDripStart: async ({commit,state}) => {
+    const web3 = state.web3;
+    const sighReservoir = sighReservoir_.networks[state.networkId];
+    console.log(sighReservoir);
+    if (sighReservoir) {
+      sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
+      console.log(sighReservoirContract);
+      const dripStart = await sighReservoirContract.methods.dripStart().call();
+      console.log(dripStart);
+    }
+  },
+
+  sighReservoirgetdripRate: async ({commit,state}) => {
+    const web3 = state.web3;
+    const sighReservoir = sighReservoir_.networks[state.networkId];
+    console.log(sighReservoir);
+    if (sighReservoir) {
+      sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
+      console.log(sighReservoirContract);
+      const dripRate = await sighReservoirContract.methods.dripRate().call();
+      console.log(dripRate);
+    }
+  },
+
+  sighReservoirgetlastDripBlockNumber: async ({commit,state}) => {
+    const web3 = state.web3;
+    const sighReservoir = sighReservoir_.networks[state.networkId];
+    console.log(sighReservoir);
+    if (sighReservoir) {
+      sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
+      console.log(sighReservoirContract);
+      const lastDripBlockNumber = await sighReservoirContract.methods.lastDripBlockNumber().call();
+      console.log(lastDripBlockNumber);
+    }
+  },
+
+  sighReservoirgetcurrentlyDrippedAmount: async ({commit,state}) => {
+    const web3 = state.web3;
+    const sighReservoir = sighReservoir_.networks[state.networkId];
+    console.log(sighReservoir);
+    if (sighReservoir) {
+      sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
+      console.log(sighReservoirContract);
+      const currentlyDrippedAmount = await sighReservoirContract.methods.currentlyDrippedAmount().call();
+      console.log(currentlyDrippedAmount);
+    }
+  },
+
+  sighReservoirgetadmin: async ({commit,state}) => {
+    const web3 = state.web3;
+    const sighReservoir = sighReservoir_.networks[state.networkId];
+    console.log(sighReservoir);
+    if (sighReservoir) {
+      sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
+      console.log(sighReservoirContract);
+      const admin = await sighReservoirContract.methods.admin().call();
+      console.log(admin);
+    }
+  },
+
+  // SIGH_TOKEN RESERVOIR BASED FUNCTIONS (END)
+
+  // SIGH_TOKEN FUNCTIONS (START)
+
+  sighInitMinting: async ({commit,state}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      SIGH_Contract.methods.initMinting().send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  sightransfer: async ({commit,state}, {recepient,amount}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      SIGH_Contract.methods.transfer(recepient,amount).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  sighapprove: async ({commit,state}, {spender,amount}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      SIGH_Contract.methods.approve(spender,amount).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  sightransferFrom: async ({commit,state}, {sender,amount}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      SIGH_Contract.methods.transferFrom(sender,amount).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  sighincreaseAllowance: async ({commit,state}, {spender,addedValue}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      SIGH_Contract.methods.increaseAllowance(spender,addedValue).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  sighdecreaseAllowance: async ({commit,state}, {spender,subtractedValue}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      SIGH_Contract.methods.decreaseAllowance(spender,subtractedValue).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  sighMintCoins: async ({commit,state}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      SIGH_Contract.methods.mintCoins().send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  sighchangeReservoir: async ({commit,state},{newReservoir}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      SIGH_Contract.methods.changeReservoir(newReservoir).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  sighgetRecentyMintedAmount: async ({commit,state}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      const getRecentyMintedAmount = SIGH_Contract.methods.getRecentyMintedAmount().call();
+      console.log(getRecentyMintedAmount);
+    }
+  },
+
+  sighgetRecentMinter: async ({commit,state}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      const getRecentMinter = SIGH_Contract.methods.getRecentMinter().call();
+      console.log(getRecentMinter);
+    }
+  },
+
+  sighgetCurrentCycle: async ({commit,state}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      const getCurrentCycle = SIGH_Contract.methods.getCurrentCycle().call();
+      console.log(getCurrentCycle);
+    }
+  },
+
+  sighgetCurrentEra: async ({commit,state}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      const getCurrentEra = SIGH_Contract.methods.getCurrentEra().call();
+      console.log(getCurrentEra);
+    }
+  },
+
+  sighgetallowance: async ({commit,state}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      const allowance = SIGH_Contract.methods.allowance().call();
+      console.log(allowance);
+    }
+  },
+
+  sighgetbalanceOf: async ({commit,state}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      const balanceOf = SIGH_Contract.methods.balanceOf().call();
+      console.log(balanceOf);
+    }
+  },
+
+  sigh_getTotalSupply: async ({commit,state}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      const totalSupply = SIGH_Contract.methods.totalSupply().call();
+      console.log(totalSupply);
+    }
+  },
+
+  sighIsMintingActivated: async ({commit,state}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      const isMintingActivated = SIGH_Contract.methods.isMintingActivated().call();
+      console.log(isMintingActivated);
+    }
+  },
+
+  sighgetStart_Time: async ({commit,state}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      const start_Time = SIGH_Contract.methods.start_Time().call();
+      console.log(start_Time);
+    }
+  },
+
+  sighgetdecimals: async ({commit,state}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      const decimals = SIGH_Contract.methods.decimals().call();
+      console.log(decimals);
+    }
+  },
+
+  sighgetsymbol: async ({commit,state}) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      const symbol = SIGH_Contract.methods.symbol().call();
+      console.log(symbol);
+    }
+  },
+  
+  sighgetname: async ({commit,state},) => {
+    const web3 = state.web3;
+    const SIGH_ = SIGH.networks[state.networkId];
+    console.log(SIGH_);
+    if (SIGH_) {
+      SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
+      console.log(SIGH_Contract);
+      const name = SIGH_Contract.methods.name().call();
+      console.log(name);
+    }
+  },  
+
+ // SIGH_TOKEN FUNCTIONS (END)
 
 
 
@@ -770,16 +1193,10 @@ const store = new Vuex.Store({
 
 
 
-    //  import DaiToken from '../abis/daitoken.json'
-    //  const daiTokenData = DaiToken.networks[networkId]; // address of teh contract if it is deployed on current network Id
-    //  if (daiTokenData) {
-    //    const daiToken = new web3.eth.Contract(DaiToken.abi, daiTokenData.address); // creating a web3 version for interacting with the contract
-    //    daiBalance = await daiToken.methods.balanceOf(state.web3Account).call();
-    //    state.DaiBalance = daiTokenBalance.toString();
-    //  }
-    //  else {
-    //    window.alert('DAI token not deployed on the network');
-    //  }
+
+
+
+
 
 
 

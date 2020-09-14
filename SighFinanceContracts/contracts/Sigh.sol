@@ -18,21 +18,22 @@ contract SIGH is Context, IERC20 {
     mapping (address => mapping (address => uint256)) private _allowances;
 
     uint256 private constant INITIAL_SUPPLY = 5 * 10**6 * 10**18; // 5 Million (with 18 decimals)
-    uint256 private CURRENT_SUPPLY = INITIAL_SUPPLY ;
-    bool private mintingActivated = false;
+    uint256 public CURRENT_SUPPLY = INITIAL_SUPPLY ;
+    bool public mintingActivated = false;
 
-    address private SighTroller;
-    address private prevSighTroller;
+    address public Reservoir;
+    address public prevReservoir;
 
 
-    uint256 private constant CYCLE_SECONDS = 86400;  // 24*60*60 (i.e seconds in 1 day )
-    uint256 private constant FINAL_CYCLE = 3711; // 10 years (3650 days) + 60 days
-    uint256 private Current_Cycle; 
-    uint256 private Current_Era;
-    uint256 private currentDivisibilityFactor;
-    uint256 private previousMintTimeStamp;
-    uint256 private recentlyMintedAmount;
-    address private recentMinter;
+    uint256 public constant CYCLE_SECONDS = 86400;  // 24*60*60 (i.e seconds in 1 day )
+    uint256 public constant FINAL_CYCLE = 3711; // 10 years (3650 days) + 60 days
+    uint256 public Current_Cycle; 
+    uint256 public Current_Era;
+    uint256 public currentDivisibilityFactor;
+    uint256 public previousMintTimeStamp;
+    uint256 public recentlyMintedAmount;
+    address public recentMinter;
+    bool public isReservoirSet;
 
     mapping ( uint256 => uint256 ) private mintHistory;
 
@@ -45,23 +46,20 @@ contract SIGH is Context, IERC20 {
     }
 
     Era[11] private _eras;
-    uint256 private _startTime;
+    uint256 public _startTime;
 
-    string private _name;
-    string private _symbol;
-    uint8 private _decimals;
+    string public _name;
+    string public _symbol;
+    uint8 public _decimals;
 
     event coinsMinted(uint256 cycle, uint256 Era, address minter, uint256 amountMinted, uint256 current_supply, uint256 block_number, uint timestamp);
-    event SighTrollerChanged(address prevSighTroller, address newSighTroller, uint256 blockNumber);
-
-
+    event ReservoirChanged(address prevReservoir, address newReservoir, uint256 blockNumber);
 
     // constructing  
-    constructor (address _sighTroller) public {
+    constructor () public {
         _name = 'SIGH FINANCE';
         _symbol = 'SIGH';
         _decimals = 18;
-        SighTroller = _sighTroller;
         _owner = _msgSender();
         balances[_msgSender()] = INITIAL_SUPPLY;
         recentMinter = _owner;
@@ -73,6 +71,7 @@ contract SIGH is Context, IERC20 {
 
     function initMinting() public returns (bool) {
         require(_msgSender() == _owner,"Mining can only be initialized by the owner." );
+        require( isReservoirSet , "Reservoir needs to be set before the Eras can begin" );
         _initEras();
         _startTime = now;
         mintingActivated = true;
@@ -126,6 +125,7 @@ contract SIGH is Context, IERC20 {
         return balances[account];
     }
 
+    // Transfer made by the address owner himself
     function transfer(address recipient, uint256 amount) public  returns (bool) {
         _transfer(_msgSender(), recipient, amount);
         return true;
@@ -135,12 +135,13 @@ contract SIGH is Context, IERC20 {
         return _allowances[owner][spender];
     }
 
-    // Approve for allowance
+    // Address owners Approve a spender for allowance
     function approve(address spender, uint256 amount) public  returns (bool) {
         _approve(_msgSender(), spender, amount);
         return true;
     }
 
+    // User with allowance calls the transfer function
     function transferFrom(address sender, address recipient, uint256 amount) public  returns (bool) {
         _transfer(sender, recipient, amount);
         _approve(sender, _msgSender(), _allowances[sender][_msgSender()].sub(amount, "ERC20: transfer amount exceeds allowance"));
@@ -213,7 +214,7 @@ contract SIGH is Context, IERC20 {
         uint256 newCoins = CURRENT_SUPPLY.div(_eras[Current_Era].divisibilityFactor);  // Calculate the number of new tokens to be minted.
         CURRENT_SUPPLY += newCoins;
         balances[_msgSender()] += 500 * 10**18;         // 500 coins given to caller for calling the mint successfully
-        balances[SighTroller] += newCoins - (500 * 10**18);     //newly minted coins provided to SighTroller
+        balances[Reservoir] += newCoins - (500 * 10**18);     //newly minted coins provided to Reservoir
         recentMinter = _msgSender();
         recentlyMintedAmount = newCoins;
         mintHistory[Current_Cycle] = newCoins;
@@ -223,17 +224,16 @@ contract SIGH is Context, IERC20 {
         return true;        
     }
 
-    function changeSighTroller(address newSighTroller) public returns (bool) {
-        require(_msgSender() == _owner, "Only the Admin can change SighTroller");
-        prevSighTroller = SighTroller;
-        SighTroller = newSighTroller;
-        emit SighTrollerChanged(prevSighTroller, SighTroller, block.number );
+    function changeReservoir(address newReservoir) public returns (bool) {
+        require(_msgSender() == _owner, "Only the Admin can change Reservoir");
+
+        prevReservoir = Reservoir;
+        Reservoir = newReservoir;
+        if (!isReservoirSet) {
+            isReservoirSet = true;
+        }        
+        emit ReservoirChanged(prevReservoir, Reservoir, block.number );
         return true;
-    }
-
-
-    function _getSupply() public view returns(uint256) {
-        return CURRENT_SUPPLY;
     }
 
     // Returns the current ERA

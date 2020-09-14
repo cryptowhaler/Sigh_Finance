@@ -127,5 +127,160 @@
     <button class="uk-button uk-button-green" @click="jumpInterestRate_V2('borrow')">Jump_V2 Interest Rate Model - getBorrowRate</button>
     <button class="uk-button uk-button-green" @click="jumpInterestRate_V2('supply')">Jump_V2 Interest Rate Model - getSupplyRate</button>
     
+    <br>
+    <br>
+    <br>
+    <br>
+<!-- SIGH RESERVOIR CONTRACT -->
+<!-- SIGH RESERVOIR CONTRACT -->
+<!-- SIGH RESERVOIR CONTRACT -->
+<!-- SIGH RESERVOIR CONTRACT -->
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <h1 style="color: aliceblue;"> SIGH RESERVOIR </h1>
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="dripRate" v-model="dripRate">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="targetAddress (SighTroller)" v-model="targetAddress">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <button class="uk-button uk-button-green" @click="sighReservoir('BeginDripping')">Sigh Reservoir - BeginDripping</button>
+    <button class="uk-button uk-button-green" @click="sighReservoir('ChangeDripRate')">Sigh Reservoir - ChangeDripRate</button>
+    <button class="uk-button uk-button-green" @click="sighReservoir('Drip')">Sigh Reservoir - Drip</button>
+    <button class="uk-button uk-button-green" @click="sighReservoir('RecentlyDrippedAmount')">Sigh Reservoir - RecentlyDrippedAmount</button>
+    <button class="uk-button uk-button-green" @click="sighReservoir('gettotalDrippedAmount')">Sigh Reservoir - gettotalDrippedAmount</button>
+    <button class="uk-button uk-button-green" @click="sighReservoir('getdripRate')">Sigh Reservoir - getdripRate</button>
+    <button class="uk-button uk-button-green" @click="sighReservoir('getlastDripBlockNumber')">Sigh Reservoir - getlastDripBlockNumber</button>
+    <button class="uk-button uk-button-green" @click="sighReservoir('GetSighTokenAddress')">Sigh Reservoir - GetSighTokenAddress</button>
+    <button class="uk-button uk-button-green" @click="sighReservoir('getTargetAddress')">Sigh Reservoir - getTargetAddress</button>
+    <button class="uk-button uk-button-green" @click="sighReservoir('GetDripStart')">Sigh Reservoir - GetDripStart</button>
+    <button class="uk-button uk-button-green" @click="sighReservoir('getadmin')">Sigh Reservoir - getadmin</button>
+
+    <br>
+    <br>
+    <br>
+    <br>
+<!-- SIGH TOKEN CONTRACT -->
+<!-- SIGH TOKEN CONTRACT -->
+<!-- SIGH TOKEN CONTRACT -->
+<!-- SIGH TOKEN CONTRACT -->
+<!-- SIGH TOKEN CONTRACT -->
+
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <h1 style="color: aliceblue;"> SIGH TOKEN </h1>
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="recepient" v-model="recepient">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="amount" v-model="amount">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="spender" v-model="spender">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="sender" v-model="sender">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="addedValue" v-model="addedValue">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="subtractedValue" v-model="subtractedValue">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="newReservoir" v-model="newReservoir">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <button class="uk-button uk-button-green" @click="sighTokens('BeginDripping')">SIGH Tokens - initMinting</button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sightransfer')">SIGH Tokens - sightransfer (recepient,amount) </button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sighapprove')">SIGH Tokens - sighapprove (spender,amount)  </button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sightransferFrom')">SIGH Tokens - sightransferFrom (sender,amount) </button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sighincreaseAllowance')">SIGH Tokens - sighincreaseAllowance (spender,addedValue) </button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sighdecreaseAllowance')">SIGH Tokens - sighdecreaseAllowance (spender,subtractedValue)  </button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sighMintCoins')">SIGH Tokens - sighMintCoins</button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sighchangeReservoir')">SIGH Tokens - sighchangeReservoir  (newReservoir)  </button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sighgetRecentyMintedAmount')">SIGH Tokens - sighgetRecentyMintedAmount</button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sighgetRecentMinter')">SIGH Tokens - sighgetRecentMinter</button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sighgetCurrentCycle')">SIGH Tokens - sighgetCurrentCycle</button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sighgetCurrentEra')">SIGH Tokens - sighgetCurrentEra</button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sighgetallowance')">SIGH Tokens - sighgetallowance</button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sighgetbalanceOf')">SIGH Tokens - sighgetbalanceOf</button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sigh_getTotalSupply')">SIGH Tokens - sigh_getTotalSupply</button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sighIsMintingActivated')">SIGH Tokens - sighIsMintingActivated</button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sighgetStart_Time')">SIGH Tokens - sighgetStart_Time</button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sighgetdecimals')">SIGH Tokens - sighgetdecimals</button>
+    <button class="uk-button uk-button-green" @click="sighTokens('sighgetname')">SIGH Tokens - sighgetname</button>
+
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <h1 style="color: aliceblue;"> SIGHTROLLER </h1>
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="recepient" v-model="recepient">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+
+
 
 </div>
