@@ -687,24 +687,58 @@
     <br>
     <br>
     <br>
-<!-- cToken CONTRACT -->
-<!-- cToken CONTRACT -->
-<!-- cToken CONTRACT -->
-<!-- cToken CONTRACT -->
-<!-- cToken CONTRACT -->
+<!-- UNITROLLER CONTRACT -->
+<!-- UNITROLLER CONTRACT -->
+<!-- UNITROLLER CONTRACT -->
+<!-- UNITROLLER CONTRACT -->
+<!-- UNITROLLER CONTRACT -->
 
     <div class="uk-grid uk-grid-small f1-form-grid">
-        <h1 style="color: aliceblue;"> cToken </h1>
+        <h1 style="color: aliceblue;"> UNITROLLER </h1>
         <div class="uk-width-1-1">
             <div class="form-grp">
                 <div class="form-elm">
-                    <input class="form-ctrl" type="text" placeholder="account" v-model="account">
+                    <input class="form-ctrl" type="text" placeholder="newPendingImplementation" v-model="newPendingImplementation">
                     <span> _ </span>
                 </div>                
             </div>
         </div>
     </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="newPendingAdmin" v-model="newPendingAdmin">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <button class="uk-button uk-button-green" @click="unitroller('setPendingImplementation')">UNITROLLER - setPendingImplementation (newPendingImplementation) </button>
+    <button class="uk-button uk-button-green" @click="unitroller('acceptImplementation')">UNITROLLER - acceptImplementation</button>
+    <button class="uk-button uk-button-green" @click="unitroller('setPendingAdmin')">UNITROLLER - setPendingAdmin (newPendingAdmin) </button>
+    <button class="uk-button uk-button-green" @click="unitroller('acceptAdmin')">UNITROLLER - acceptAdmin</button>
 
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>    <br>
+    <br>
+    <br>
+    <br>    <br>
+    <br>
+    <br>
+    <br>    <br>
+    <br>
+    <br>
+    <br>    <br>
+    <br>
+    <br>
+    <br>
 
 
 

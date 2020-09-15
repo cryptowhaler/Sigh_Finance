@@ -49,7 +49,7 @@ contract Unitroller is UnitrollerAdminStorage, SightrollerErrorReporter {
     }
 
     /**
-    * @notice Accepts new implementation of Gsightroller. msg.sender must be pendingImplementation
+    * @notice Accepts new implementation of sightroller. msg.sender must be pendingImplementation
     * @dev Admin function for new implementation to accept it's role as implementation
     * @return uint 0=success, otherwise a failure (see ErrorReporter.sol for details)
     */

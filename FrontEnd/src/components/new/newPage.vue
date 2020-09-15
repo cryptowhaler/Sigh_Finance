@@ -484,8 +484,29 @@ export default {
       if (type == 'getGSighAddress') {
         this.sightroller__getGSighAddress();        
       }
-    }
+    },
 
+    // **********************
+    // unitroller
+    // **********************
+    async unitroller(type) {
+      console.log(type);
+      console.log(newPendingImplementation);
+      console.log(newPendingAdmin);
+
+      if (type == 'setPendingImplementation') {
+        this.unitroller___setPendingImplementation({newPendingImplementation: this.newPendingImplementation});        
+      }
+      if (type == 'acceptImplementation') {
+        this.unitroller_acceptImplementation();        
+      }      
+      if (type == 'setPendingAdmin') {
+        this.unitroller_setPendingAdmin({newPendingAdmin: this.newPendingAdmin});        
+      }
+      if (type == 'acceptAdmin') {
+        this.unitroller_acceptAdmin();        
+      }
+    }
 
 
 

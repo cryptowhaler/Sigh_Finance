@@ -10,6 +10,7 @@ import jumpRateModelV2 from '@/contracts/JumpRateModelV2.json';
 import sighReservoir_ from '@/contracts/SighReservoir.json';
 import SIGH from '@/contracts/SIGH.json';
 import Sightroller from '@/contracts/Sightroller.json';
+import Unitroller from '@/contracts/Unitroller.json';
 
 // import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from "constants";
 
@@ -551,6 +552,13 @@ const store = new Vuex.Store({
      },
 
     //  WHITEPAPER_INTEREST_RATE_MODEL CONTRACT CALLS (START)
+    //********************** 
+    //********************** 
+    //********************** 
+    //********************** 
+    //********************** 
+    //********************** 
+    //********************** 
 
     whitePaperModelChangeBaseParamters: async ({commit,state},{baseRatePerYear, multiplierPerYear}) => {
       const web3 = state.web3;
@@ -643,7 +651,14 @@ const store = new Vuex.Store({
 
 
     //  WHITEPAPER_INTEREST_RATE_MODEL CONTRACT CALLS (END)
-
+    //********************** 
+    //********************** 
+    //********************** 
+    //********************** 
+    //********************** 
+    //********************** 
+    //********************** 
+    //********************** 
     //  JUMP_INTEREST_RATE_MODEL__V2 CONTRACT CALLS (START)
 
     jumpV2ModelChangeBaseParamters: async ({commit,state},{baseRatePerYear, multiplierPerYear,jumpMultiplierPerYear,kink_}) => {
@@ -761,8 +776,16 @@ const store = new Vuex.Store({
     }
   },
 
-   //  JUMP_INTEREST_RATE_MODEL___V2 CONTRACT CALLS (END)
-
+    //  JUMP_INTEREST_RATE_MODEL___V2 CONTRACT CALLS (END)
+    //********************** 
+    //********************** 
+    //********************** 
+    //********************** 
+    //********************** 
+    //********************** 
+    //********************** 
+    //********************** 
+    //********************** 
     // SIGH_TOKEN RESERVOIR BASED FUNCTIONS (START)
 
   sighReservoirBeginDripping: async ({commit,state}, {dripRate,targetAddress}) => {
@@ -901,7 +924,13 @@ const store = new Vuex.Store({
   },
 
   // SIGH_TOKEN RESERVOIR BASED FUNCTIONS (END)
-
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
   // SIGH_TOKEN FUNCTIONS (START)
 
   sighInitMinting: async ({commit,state}) => {
@@ -1185,7 +1214,13 @@ const store = new Vuex.Store({
   },  
 
   // SIGH_TOKEN FUNCTIONS (END)
-
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
   // SIGHTROLLER FUNCTIONS (START)
 
   //Returns the List of markets the user has entered
@@ -1931,6 +1966,104 @@ const store = new Vuex.Store({
     }
   },
   
+  // SIGHTROLLER FUNCTIONS (END)
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  // UNITROLLER FUNCTIONS (START)
+
+  // Can be called by Admin. Used to set new 'pendingSightrollerImplementation'
+  unitroller___setPendingImplementation: async ({commit,state}, { newPendingImplementation}) => {
+    const web3 = state.web3;
+    const Unitroller_ = Unitroller.networks[state.networkId];
+    console.log(Unitroller_);
+    if (Sightroller_) {
+      UNITROLLER_Contract = new web3.eth.Contract(Unitroller.abi, Unitroller_.address);
+      console.log(UNITROLLER_Contract);
+      UNITROLLER_Contract.methods._setPendingImplementation(newPendingImplementation).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+  
+  // Can be called by pendingSightrollerImplementation. Used to accept the responsibility.
+  unitroller_acceptImplementation: async ({commit,state}) => {
+    const web3 = state.web3;
+    const Unitroller_ = Unitroller.networks[state.networkId];
+    console.log(Unitroller_);
+    if (Sightroller_) {
+      UNITROLLER_Contract = new web3.eth.Contract(Unitroller.abi, Unitroller_.address);
+      console.log(UNITROLLER_Contract);
+      UNITROLLER_Contract.methods._acceptImplementation().send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // Begins transfer of admin rights. The newPendingAdmin must call `_acceptAdmin` to finalize the transfer.
+  unitroller_setPendingAdmin: async ({commit,state}, { newPendingAdmin}) => {
+    const web3 = state.web3;
+    const Unitroller_ = Unitroller.networks[state.networkId];
+    console.log(Unitroller_);
+    if (Sightroller_) {
+      UNITROLLER_Contract = new web3.eth.Contract(Unitroller.abi, Unitroller_.address);
+      console.log(UNITROLLER_Contract);
+      UNITROLLER_Contract.methods._setPendingAdmin(newPendingAdmin).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // Accepts transfer of admin rights. msg.sender must be pendingAdmin
+  unitroller_acceptAdmin: async ({commit,state}) => {
+    const web3 = state.web3;
+    const Unitroller_ = Unitroller.networks[state.networkId];
+    console.log(Unitroller_);
+    if (Sightroller_) {
+      UNITROLLER_Contract = new web3.eth.Contract(Unitroller.abi, Unitroller_.address);
+      console.log(UNITROLLER_Contract);
+      UNITROLLER_Contract.methods._acceptAdmin().send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // UNITROLLER FUNCTIONS (END)
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+
+
+
+
+
+
+
+
 
 
 
