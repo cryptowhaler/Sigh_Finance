@@ -10,19 +10,7 @@ export default {
   name: 'FOK-Limit-Order',
   data() {
     return {
-      showConfirm: false,
-      formData: {
-        pair: 'BTC/USD',
-        type: 'limit',
-        exc: 'vegaProtocol',
-        vegaMarketName: this.$store.state.selectedVegaMarketName,
-        vegaMarketId: this.$store.state.selectedVegaMarketId,
-        bos: 'Buy',
-        selectedmarketid: 'LBXRA65PN4FN5HBWRI2YBCOYDG2PBGYU',
-        amount: undefined,        //amount
-        price: undefined,         //price
-        moe: 'market',
-      },
+      
       // InterestRateVariables
         baseRatePerYear: undefined,
         multiplierPerYear: undefined,
@@ -43,6 +31,16 @@ export default {
         addedValue: undefined,
         subtractedValue: undefined,
         newReservoir: undefined,
+        // SIGHTROLLER Variables
+
+
+
+
+
+
+
+
+
 
 
       showLoader: false,
@@ -67,9 +65,12 @@ export default {
     ...mapActions(['whitePaperModelChangeBaseParamters','whitePaperModelUtilRate','whitePaperModelBorrowRate','whitePaperModelSupplyRate',
     'whitePaperModelgetBaseRatePerBlock','whitePaperModelgetMultiplierPerBlock','jumpV2ModelChangeBaseParamters', 'jumpV2ModelUtilRate', 
     'jumpV2ModelBorrowRate', 'jumpV2ModelSupplyRate', 'jumpV2ModelgetBaseRatePerBlock', 'jumpV2ModelgetMultiplierPerBlock',
-    'jumpV2ModelgetJumpMultiplierPerBlock','jumpV2ModelgetKink'         ,        'sighReservoirBeginDripping','sighReservoirChangeDripRate', 
+    'jumpV2ModelgetJumpMultiplierPerBlock','jumpV2ModelgetKink'         
+    ,        'sighReservoirBeginDripping','sighReservoirChangeDripRate', 
      'sighReservoirDrip','sighReservoirGetSighTokenAddress','sighReservoirgetTargetAddress','sighReservoirgetDripStart','sighReservoirgetdripRate'
-     , 'sighReservoirgetlastDripBlockNumber','sighReservoirgettotalDrippedAmount','sighReservoirgetadmin'      ]),
+     , 'sighReservoirgetlastDripBlockNumber','sighReservoirgettotalDrippedAmount','sighReservoirgetadmin'   
+     
+     ]),
 
     async whitepaperInterestRate(type) {
       console.log(type);
@@ -252,13 +253,56 @@ export default {
 
     async sightroller(type) {
       console.log(type);
-      console.log('recepient = ' + this.recepient);
-      console.log('amount = ' + this.amount);
-      console.log('spender = ' + this.spender);
-      console.log('sender = ' + this.sender);
-      console.log('addedValue = ' + this.addedValue);
-      console.log('subtractedValue = ' + this.subtractedValue);
-      console.log('newReservoir = ' + this.newReservoir);      
+      console.log('account = ' + this.account);
+      console.log('token = ' + this.token);
+      console.log('markets = ' + this.markets);
+      console.log('market = ' + this.market);
+      console.log('minter = ' + this.minter);
+      console.log('mintAmount = ' + this.mintAmount);
+      console.log('actualMintAmount = ' + this.actualMintAmount);      
+      console.log('mintTokens = ' + this.mintTokens);      
+      console.log('redeemer = ' + this.redeemer);      
+      console.log('redeemTokens = ' + this.redeemTokens);      
+      console.log('actualRedeemAmount = ' + this.actualRedeemAmount);      
+      console.log('borrower = ' + this.borrower);      
+      console.log('borrowAmount = ' + this.borrowAmount);      
+      console.log('payer = ' + this.payer);      
+      console.log('repayAmount = ' + this.repayAmount);      
+      console.log('actualRepayAmount = ' + this.actualRepayAmount);      
+      console.log('borrowerIndex = ' + this.borrowerIndex);      
+      console.log('marketBorrowed = ' + this.marketBorrowed);      
+      console.log('marketCollateral = ' + this.marketCollateral);      
+      console.log('liquidator = ' + this.liquidator);      
+      console.log('seizeTokens = ' + this.seizeTokens);      
+      console.log('src = ' + this.src);      
+      console.log('dst = ' + this.dst);      
+      console.log('transferTokens = ' + this.transferTokens);      
+      console.log('newPriceOracle = ' + this.newPriceOracle);      
+      console.log('newCloseFactorMantissa = ' + this.newCloseFactorMantissa);      
+
+      console.log('newCollateralFactorMantissa = ' + this.newCollateralFactorMantissa);      
+      console.log('newMaxAssets = ' + this.newMaxAssets);      
+      console.log('newLiquidationIncentiveMantissa = ' + this.newLiquidationIncentiveMantissa);      
+      console.log('supportMarket = ' + this.supportMarket);      
+      console.log('newPauseGuardian = ' + this.newPauseGuardian);      
+      console.log('boolstate = ' + this.boolstate);      
+      console.log('unitroller = ' + this.unitroller);      
+      console.log('holder = ' + this.holder);      
+      console.log('borrowers = ' + this.borrowers);      
+
+      console.log('gsighRate_ = ' + this.gsighRate_);      
+      console.log('suppliers = ' + this.suppliers);      
+      console.log('suppliers = ' + this.suppliers);      
+      console.log('suppliers = ' + this.suppliers);      
+      console.log('suppliers = ' + this.suppliers);      
+      console.log('suppliers = ' + this.suppliers);      
+      console.log('suppliers = ' + this.suppliers);      
+      console.log('suppliers = ' + this.suppliers);      
+      console.log('suppliers = ' + this.suppliers);      
+
+
+
+
 
       if (type == 'initMinting') {
         this.sighInitMinting();

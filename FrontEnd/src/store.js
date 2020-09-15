@@ -1558,20 +1558,383 @@ const store = new Vuex.Store({
     }
   },  
   
+
+  // transferTokens (The number of cTokens to transfer)
+  sightroller_setPriceOracle: async ({commit,state}, { newPriceOracle}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.setPriceOracle(newPriceOracle).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // transferTokens (The number of cTokens to transfer)
+  sightroller_setCloseFactor: async ({commit,state}, { newCloseFactorMantissa}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.setCloseFactor(newCloseFactorMantissa).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // transferTokens (The number of cTokens to transfer)
+  sightroller_setCollateralFactor: async ({commit,state}, { market,  newCollateralFactorMantissa }) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.setCollateralFactor(market,  newCollateralFactorMantissa).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+  
+  // transferTokens (The number of cTokens to transfer)
+  sightroller_setMaxAssets: async ({commit,state}, { newMaxAssets}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.setMaxAssets(newMaxAssets).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+  
+  // transferTokens (The number of cTokens to transfer)
+  sightroller_setLiquidationIncentive: async ({commit,state}, { newLiquidationIncentiveMantissa}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.setLiquidationIncentive(newLiquidationIncentiveMantissa).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+  
+  // transferTokens (The number of cTokens to transfer)
+  sightroller_supportMarket: async ({commit,state}, { supportMarket}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.supportMarket(supportMarket).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+  
+  // transferTokens (The number of cTokens to transfer)
+  sightroller_setPauseGuardian: async ({commit,state}, { newPauseGuardian}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.setPauseGuardian(newPauseGuardian).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+  
+  // transferTokens (The number of cTokens to transfer)
+  sightroller_setMintPaused: async ({commit,state}, { market, boolstate}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.setMintPaused( market, boolstate).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+
+  // transferTokens (The number of cTokens to transfer)
+  sightroller_setBorrowPaused: async ({commit,state}, { market, boolstate}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.setBorrowPaused(market, boolstate).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // transferTokens (The number of cTokens to transfer)
+  sightroller_setTransferPaused: async ({commit,state}, { boolstate}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.setTransferPaused(boolstate).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+  
+  // transferTokens (The number of cTokens to transfer)
+  sightroller_setSeizePaused: async ({commit,state}, { boolstate}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.setSeizePaused(boolstate).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+  
+  // Unitroller is the storage Implementation (Function calls get redirected here from there)
+  // When new Functionality contract is being initiated (Sightroller Contract needs to be updated), we use this function
+  // It is used to make the new implementation to be accepted by calling a function from Unitroller.
+  sightroller__become: async ({commit,state}, { unitroller}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods._become(unitroller).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+  
+  // transferTokens (The number of cTokens to transfer)
+  sightroller_refreshGsighSpeeds: async ({commit,state}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.refreshGsighSpeeds().send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+  
+  // Claim all the Gsigh accrued by holder in the specified markets
+  sightroller_claimGSigh: async ({commit,state}, { holder, markets}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.claimGSigh(holder, markets).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+  
+  // transferTokens (The number of cTokens to transfer)
+  sightroller_claimGSigh: async ({commit,state}, { holders,markets,borrowers,suppliers }) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.claimGSigh(holders,markets,borrowers,suppliers).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // ADMIN FUNCTIONS (SIGHTROLLER)
+  // ADMIN FUNCTIONS (SIGHTROLLER)
+  // ADMIN FUNCTIONS (SIGHTROLLER)
+  // ADMIN FUNCTIONS (SIGHTROLLER)
+
+  // transferTokens (The number of cTokens to transfer)
+  sightroller_setGsighRate: async ({commit,state}, { gsighRate_}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods.setGsighRate(gsighRate_).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+
+  // transferTokens (The number of cTokens to transfer)
+  sightroller__addGsighMarkets: async ({commit,state}, { markets}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods._addGsighMarkets(markets).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // transferTokens (The number of cTokens to transfer)
+  sightroller__dropGsighMarket: async ({commit,state}, { market}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      SIGHTROLLER_Contract.methods._dropGsighMarket(market).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // Return all of the markets
+  sightroller__getAllMarkets: async ({commit,state}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      const ret = await SIGHTROLLER_Contract.methods.getAllMarkets().call();
+      console.log(ret);
+    }
+  },
+  
+  // Return all of the markets
+  sightroller__getBlockNumber: async ({commit,state}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      const ret =  SIGHTROLLER_Contract.methods.getBlockNumber().call();
+      console.log(ret);
+    }
+  },
+
+  // transferTokens (The number of cTokens to transfer)
+  sightroller__getGSighAddress: async ({commit,state} ) => {
+    const web3 = state.web3;
+    const Sightroller_ = Sightroller.networks[state.networkId];
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      const ret =  SIGHTROLLER_Contract.methods.getGSighAddress().call();
+      console.log(ret);
+    }
+  },
   
 
 
 
 
-
-
-
-
-
-
-
-
-  
 
 
 

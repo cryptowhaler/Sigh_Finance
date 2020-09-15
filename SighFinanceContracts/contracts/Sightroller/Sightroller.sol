@@ -1038,6 +1038,9 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
 
     // Differnces with sightrollerG3.sol start here
 
+  // Unitroller is the storage Implementation (Function calls get redirected here from there)
+  // When new Functionality contract is being initiated (Sightroller Contract needs to be updated), we use this function
+  // It is used to make the new implementation to be accepted by calling a function from Unitroller.
     function _become(Unitroller unitroller) public {
         require(msg.sender == unitroller.admin(), "only unitroller admin can change brains");
         require(unitroller._acceptImplementation() == 0, "change not authorized");
@@ -1074,6 +1077,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
 
         Exp memory totalUtility = Exp({mantissa: 0});
         Exp[] memory utilities = new Exp[](allMarkets_.length);
+        
         for (uint i = 0; i < allMarkets_.length; i++) {
             CToken cToken = allMarkets_[i];
             if (markets[address(cToken)].isGsighed) {
@@ -1123,8 +1127,8 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
         uint blockNumber = getBlockNumber();
         uint deltaBlocks = sub_(blockNumber, uint(borrowState.block));
         if (deltaBlocks > 0 && borrowSpeed > 0) {
-            uint borrowAmount = div_(CToken(cToken).totalBorrows(), marketBorrowIndex);
             uint gsighAccrued = mul_(deltaBlocks, borrowSpeed);
+            uint borrowAmount = div_(CToken(cToken).totalBorrows(), marketBorrowIndex);
             Double memory ratio = borrowAmount > 0 ? fraction(gsighAccrued, borrowAmount) : Double({mantissa: 0});
             Double memory index = add_(Double({mantissa: borrowState.index}), ratio);
             gsighBorrowState[cToken] = GsighMarketState({  index: safe224(index.mantissa, "new index exceeds 224 bits"), block: safe32(blockNumber, "block number exceeds 32 bits") });
