@@ -1202,14 +1202,14 @@ const store = new Vuex.Store({
   },
 
   //Checks if the user has entered the given market
-  sightroller_checkMembership: async ({commit,state}, {account,token}) => {
+  sightroller_checkMembership: async ({commit,state}, {account,market}) => {
     const web3 = state.web3;
     const Sightroller_ = Sightroller.networks[state.networkId];
     console.log(Sightroller_);
     if (Sightroller_) {
       SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      const checkMembership = SIGHTROLLER_Contract.methods.checkMembership(account,token).call();
+      const checkMembership = SIGHTROLLER_Contract.methods.checkMembership(account,market).call();
       console.log(checkMembership);
     }
   },
@@ -1815,7 +1815,7 @@ const store = new Vuex.Store({
   },
   
   // transferTokens (The number of cTokens to transfer)
-  sightroller_claimGSigh: async ({commit,state}, { holders,markets,borrowers,suppliers }) => {
+  sightroller_claimGSigh_bs: async ({commit,state}, { holders,markets,borrowers,suppliers }) => {
     const web3 = state.web3;
     const Sightroller_ = Sightroller.networks[state.networkId];
     console.log(Sightroller_);
