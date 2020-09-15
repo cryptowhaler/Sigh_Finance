@@ -322,8 +322,8 @@ export default {
       console.log(type);
       console.log('account = ' + this.account);
       console.log('token = ' + this.token);
-      console.log('markets = ' + this.markets);
       console.log('market = ' + this.market);
+      console.log('markets = ' + this.markets);
       console.log('minter = ' + this.minter);
       console.log('mintAmount = ' + this.mintAmount);
       console.log('actualMintAmount = ' + this.actualMintAmount);      
@@ -346,7 +346,6 @@ export default {
       console.log('transferTokens = ' + this.transferTokens);      
       console.log('newPriceOracle = ' + this.newPriceOracle);      
       console.log('newCloseFactorMantissa = ' + this.newCloseFactorMantissa);      
-
       console.log('newCollateralFactorMantissa = ' + this.newCollateralFactorMantissa);      
       console.log('newMaxAssets = ' + this.newMaxAssets);      
       console.log('newLiquidationIncentiveMantissa = ' + this.newLiquidationIncentiveMantissa);      
@@ -381,7 +380,7 @@ export default {
         this.sightroller_redeemAllowed({market: this.market,redeemer: this.redeemer,redeemTokens: this.redeemTokens});        
       }
       if (type == 'redeemVerify') {
-        this.sightroller_redeemVerify({market: this.market, minter: this.minter, actualRedeemAmount: this.actualRedeemAmount, redeemTokens: this.redeemTokens});        
+        this.sightroller_redeemVerify({market: this.market, redeemer: this.redeemer, actualRedeemAmount: this.actualRedeemAmount, redeemTokens: this.redeemTokens});        
       }
       if (type == 'borrowAllowed') {
         this.sightroller_borrowAllowed({market: this.market,borrower: this.borrower,borrowAmount: this.borrowAmount});        

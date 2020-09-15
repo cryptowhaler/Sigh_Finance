@@ -269,17 +269,445 @@
     <button class="uk-button uk-button-green" @click="sighTokens('sighgetdecimals')">SIGH Tokens - sighgetdecimals</button>
     <button class="uk-button uk-button-green" @click="sighTokens('sighgetname')">SIGH Tokens - sighgetname</button>
 
+    <br>
+    <br>
+    <br>
+    <br>
+<!-- SIGHTROLLER CONTRACT -->
+<!-- SIGHTROLLER CONTRACT -->
+<!-- SIGHTROLLER CONTRACT -->
+<!-- SIGHTROLLER CONTRACT -->
+<!-- SIGHTROLLER CONTRACT -->
+
     <div class="uk-grid uk-grid-small f1-form-grid">
         <h1 style="color: aliceblue;"> SIGHTROLLER </h1>
         <div class="uk-width-1-1">
             <div class="form-grp">
                 <div class="form-elm">
-                    <input class="form-ctrl" type="text" placeholder="recepient" v-model="recepient">
+                    <input class="form-ctrl" type="text" placeholder="account" v-model="account">
                     <span> _ </span>
                 </div>                
             </div>
         </div>
     </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="token" v-model="token">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="market" v-model="market">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="markets" v-model="markets">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="minter" v-model="minter">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="mintAmount" v-model="mintAmount">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="actualMintAmount" v-model="actualMintAmount">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="mintTokens" v-model="mintTokens">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="redeemer" v-model="redeemer">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="redeemTokens" v-model="redeemTokens">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="actualRedeemAmount" v-model="actualRedeemAmount">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="borrower" v-model="borrower">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="borrowAmount" v-model="borrowAmount">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="payer" v-model="payer">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="repayAmount" v-model="repayAmount">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="actualRepayAmount" v-model="actualRepayAmount">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="borrowerIndex" v-model="borrowerIndex">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="marketBorrowed" v-model="marketBorrowed">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="marketCollateral" v-model="marketCollateral">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="liquidator" v-model="liquidator">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="seizeTokens" v-model="seizeTokens">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="src" v-model="src">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="dst" v-model="dst">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="transferTokens" v-model="transferTokens">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="newPriceOracle" v-model="newPriceOracle">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="newCloseFactorMantissa" v-model="newCloseFactorMantissa">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="newCollateralFactorMantissa" v-model="newCollateralFactorMantissa">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="newMaxAssets" v-model="newMaxAssets">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="newLiquidationIncentiveMantissa" v-model="newLiquidationIncentiveMantissa">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="supportMarket" v-model="supportMarket">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="newPauseGuardian" v-model="newPauseGuardian">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="boolstate" v-model="boolstate">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="unitroller" v-model="unitroller">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="holder" v-model="holder">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="borrowers" v-model="borrowers">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="gsighRate_" v-model="gsighRate_">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <button class="uk-button uk-button-green" @click="sightroller('getAssetsIn')">SIGHTROLLER - getAssetsIn (account) </button>
+    <button class="uk-button uk-button-green" @click="sightroller('checkMembership')">SIGHTROLLER - checkMembership (account,market) </button>
+    <button class="uk-button uk-button-green" @click="sightroller('enterMarkets')">SIGHTROLLER - enterMarkets (markets)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('exitMarket')">SIGHTROLLER - exitMarket (market)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('mintAllowed')">SIGHTROLLER - mintAllowed (market,,minter,mintAmount)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('mintVerify')">SIGHTROLLER - mintVerify (market,,minter,actualMintAmount,mintTokens)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('redeemAllowed')">SIGHTROLLER - redeemAllowed (market,,redeemer,redeemTokens)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('redeemVerify')">SIGHTROLLER - redeemVerify (market,redeemer,actualRedeemAmount,redeemTokens)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('borrowAllowed')">SIGHTROLLER - borrowAllowed (market,borrower,borrowAmount)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('borrowVerify')">SIGHTROLLER - borrowVerify (market,borrower,borrowAmount)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('repayBorrowAllowed')">SIGHTROLLER - repayBorrowAllowed (market,payer,borrower,repayAmount)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('repayBorrowVerify')">SIGHTROLLER - repayBorrowVerify (market,payer,borrower,actualRepayAmount,borrowerIndex)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('liquidateBorrowAllowed')">SIGHTROLLER - liquidateBorrowAllowed (marketBorrowed,marketCollateral,, liquidator, borrower , repayAmount)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('liquidateBorrowVerify')">SIGHTROLLER - liquidateBorrowVerify (marketBorrowed,marketCollateral,, liquidator, borrower , repayAmount ,seizeTokens)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('seizeAllowed')">SIGHTROLLER - seizeAllowed (marketCollateral,marketBorrowed, liquidator, borrower , repayAmount)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('seizeVerify')">SIGHTROLLER - seizeVerify (marketCollateral,marketBorrowed, liquidator, borrower , repayAmount ,seizeTokens )  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('transferAllowed')">SIGHTROLLER - transferAllowed (market,src,dst,transferTokens)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('transferVerify')">SIGHTROLLER - transferVerify (market,src,dst,transferTokens )  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('getAccountLiquidity')">SIGHTROLLER - getAccountLiquidity (account)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('getHypotheticalAccountLiquidity')">SIGHTROLLER - getHypotheticalAccountLiquidity (account,market, redeemTokens,borrowAmount )  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('liquidateCalculateSeizeTokens')">SIGHTROLLER - liquidateCalculateSeizeTokens (marketBorrowed,marketCollateral,actualRepayAmount,  )  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('setPriceOracle')">SIGHTROLLER - setPriceOracle (newPriceOracle)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('setCloseFactor')">SIGHTROLLER - setCloseFactor (newCloseFactorMantissa)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('setCollateralFactor')">SIGHTROLLER - setCollateralFactor (market,newCollateralFactorMantissa)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('setMaxAssets')">SIGHTROLLER - setMaxAssets (newMaxAssets)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('setLiquidationIncentive')">SIGHTROLLER - setLiquidationIncentive (newLiquidationIncentiveMantissa)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('supportMarket')">SIGHTROLLER - supportMarket (supportMarket)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('setPauseGuardian')">SIGHTROLLER - setPauseGuardian (newPauseGuardian)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('setMintPaused')">SIGHTROLLER - setMintPaused (market,boolstate)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('setBorrowPaused')">SIGHTROLLER - setBorrowPaused (market,boolstate)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('setTransferPaused')">SIGHTROLLER - setTransferPaused (boolstate)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('setSeizePaused')">SIGHTROLLER - setSeizePaused (boolstate)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('__become')">SIGHTROLLER - __become (unitroller)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('refreshGsighSpeeds')">SIGHTROLLER - refreshGsighSpeeds</button>
+    <button class="uk-button uk-button-green" @click="sightroller('claimGSigh')">SIGHTROLLER - claimGSigh (holders,markets)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('claimGSigh_bs')">SIGHTROLLER - claimGSigh_bs (holders,markets,borrowers,suppliers)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('setGsighRate')">SIGHTROLLER - setGsighRate (gsighRate_)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('addGsighMarkets')">SIGHTROLLER - addGsighMarkets (markets)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('dropGsighMarket')">SIGHTROLLER - dropGsighMarket (market)  </button>
+    <button class="uk-button uk-button-green" @click="sightroller('getAllMarkets')">SIGHTROLLER - getAllMarkets</button>
+    <button class="uk-button uk-button-green" @click="sightroller('getBlockNumber')">SIGHTROLLER - getBlockNumber</button>
+    <button class="uk-button uk-button-green" @click="sightroller('getGSighAddress')">SIGHTROLLER - getGSighAddress</button>
+
+    <br>
+    <br>
+    <br>
+    <br>
+<!-- cToken CONTRACT -->
+<!-- cToken CONTRACT -->
+<!-- cToken CONTRACT -->
+<!-- cToken CONTRACT -->
+<!-- cToken CONTRACT -->
+
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <h1 style="color: aliceblue;"> cToken </h1>
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="account" v-model="account">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+
+
+
+
 
 
 

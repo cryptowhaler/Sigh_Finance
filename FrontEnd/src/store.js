@@ -1310,14 +1310,14 @@ const store = new Vuex.Store({
   // Dummy function. For extensibility purposes. 
   // actualRedeemAmount (The amount of the underlying asset being minted)
   // redeemTokens (The number of tokens being minted)
-  sightroller_redeemVerify: async ({commit,state}, { market,minter,actualRedeemAmount,redeemTokens}) => {
+  sightroller_redeemVerify: async ({commit,state}, { market,redeemer,actualRedeemAmount,redeemTokens}) => {
     const web3 = state.web3;
     const Sightroller_ = Sightroller.networks[state.networkId];
     console.log(Sightroller_);
     if (Sightroller_) {
       SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.redeemVerify(market,minter,actualRedeemAmount,redeemTokens).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.redeemVerify(market,redeemer,actualRedeemAmount,redeemTokens).send({from: state.web3Account})
       .then(receipt => {
         console.log(receipt);
       })
