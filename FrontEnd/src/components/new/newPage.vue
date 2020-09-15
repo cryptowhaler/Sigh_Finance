@@ -86,6 +86,16 @@ export default {
         delegatee : undefined,
         gsigh_blockNumber : undefined,
 
+        // GOVERNOR ALPHA Variables
+        p_targets : undefined,
+        p_values : undefined,
+        p_signatures : undefined,
+        p_calldatas : undefined,
+        p_description : undefined,
+        proposalId : undefined,
+        bool_support : undefined,
+        gov_newPendingAdmin : undefined,
+        gov_eta : undefined,
 
 
 
@@ -134,7 +144,11 @@ export default {
 
       'unitroller___setPendingImplementation','unitroller_acceptImplementation','unitroller_setPendingAdmin','unitroller_acceptAdmin',
 
-     'gsigh_allowance','gsigh_balanceOf','gsigh_approve','gsigh_transfer','gsigh_transferFrom','gsigh_delegate','gsigh_getCurrentVotes','gsigh_getPriorVotes'
+     'gsigh_allowance','gsigh_balanceOf','gsigh_approve','gsigh_transfer','gsigh_transferFrom','gsigh_delegate','gsigh_getCurrentVotes','gsigh_getPriorVotes',
+
+      'governorAlpha_quorumVotes','governorAlpha_proposalThreshold','governorAlpha_proposalMaxOperations','governorAlpha_votingDelay','governorAlpha_votingPeriod',
+      'governorAlpha_proposalCount','governorAlpha_propose','governorAlpha_queue','governorAlpha_execute','governorAlpha_cancel','governorAlpha_castVote','governorAlpha_getActions',
+      'governorAlpha_getReceipt','governorAlpha_state','governorAlpha__acceptAdmin','governorAlpha__abdicate','governorAlpha__queueSetTimelockPendingAdmin','governorAlpha__executeSetTimelockPendingAdmin'
      ]),
 
 
@@ -559,13 +573,81 @@ export default {
       if (type == 'gsigh_getPriorVotes') {
         this.gsigh_getPriorVotes({gsigh_holder: this.gsigh_holder, gsigh_blockNumber: this.gsigh_blockNumber});        
       }   
-    }
+    },
 
+    // **********************
+    // GOVERNOR ALPHA
+    // **********************
 
+    async governor_alpha(type) {
+      console.log(type);
+      console.log('p_targets' + this.p_targets);
+      console.log('p_values' + this.p_values);
+      console.log('p_signatures' + this.p_signatures);
+      console.log('p_calldatas' + this.p_calldatas);
+      console.log('p_description' + this.p_description);
+      console.log('proposalId' + this.proposalId);
+      console.log('bool_support' + this.bool_support);
+      console.log('gov_newPendingAdmin' + this.gov_newPendingAdmin);
+      console.log('gov_eta' + this.gov_eta);
 
-
-
+      if (type == 'quorumVotes') {
+        this.governorAlpha_quorumVotes();        
+      }
+      if (type == 'proposalThreshold') {
+        this.governorAlpha_proposalThreshold();        
+      }      
+      if (type == 'proposalMaxOperations') {
+        this.governorAlpha_proposalMaxOperations();        
+      }      
+      if (type == 'votingDelay') {
+        this.governorAlpha_votingDelay();        
+      }      
+      if (type == 'votingPeriod') {
+        this.governorAlpha_votingPeriod();        
+      }      
+      if (type == 'proposalCount') {
+        this.governorAlpha_proposalCount();        
+      }            
+      if (type == '__acceptAdmin') {
+        this.governorAlpha__acceptAdmin();        
+      }      
+      if (type == '__abdicate') {
+        this.governorAlpha__abdicate();        
+      }   
+      if (type == '__queueSetTimelockPendingAdmin') {
+        this.governorAlpha__queueSetTimelockPendingAdmin({gov_newPendingAdmin: this.gov_newPendingAdmin,gov_eta: this.gov_eta});        
+      }   
+      if (type == '__executeSetTimelockPendingAdmin') {
+        this.governorAlpha__executeSetTimelockPendingAdmin({gov_newPendingAdmin: this.gov_newPendingAdmin,gov_eta: this.gov_eta});        
+      } 
+      if (type == 'state') {
+        this.governorAlpha_state({proposalId: this.proposalId});        
+      }          
+      if (type == 'getReceipt') {
+        this.governorAlpha_getReceipt({proposalId: this.proposalId});        
+      }          
+      if (type == 'getActions') {
+        this.governorAlpha_getActions({proposalId: this.proposalId});        
+      }          
+      if (type == 'castVote') {
+        this.governorAlpha_castVote({proposalId: this.proposalId, bool_support: this.bool_support});        
+      }          
+      if (type == 'cancel') {
+        this.governorAlpha_cancel({proposalId: this.proposalId});        
+      }          
+      if (type == 'execute') {
+        this.governorAlpha_execute({proposalId: this.proposalId});        
+      }          
+      if (type == 'queue') {
+        this.governorAlpha_queue({proposalId: this.proposalId});        
+      }          
+      if (type == 'propose') {
+        this.governorAlpha_propose({p_targets : this.p_targets, p_values : this.p_values ,p_signatures : this.p_signatures ,p_calldatas : this.p_calldatas , p_description : this.p_description });        
+      }          
+    },
   },
+
 
   created() {
     this.changeVegaMarket = (newMarket) => {       //Changing Selected Vega Market

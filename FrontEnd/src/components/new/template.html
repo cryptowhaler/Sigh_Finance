@@ -810,6 +810,127 @@
     <button class="uk-button uk-button-green" @click="gsigh_token('gsigh_getCurrentVotes')">GSIGH TOKEN - gsigh_getCurrentVotes (gsigh_holder) </button>
     <button class="uk-button uk-button-green" @click="gsigh_token('gsigh_getPriorVotes')">GSIGH TOKEN - gsigh_getPriorVotes (gsigh_holder, gsigh_blockNumber) </button>
 
+    <br>
+    <br>
+    <br>
+    <br>
+
+<!-- GOVERNOR ALPHA CONTRACT -->
+<!-- GOVERNOR ALPHA CONTRACT -->
+<!-- GOVERNOR ALPHA CONTRACT -->
+<!-- GOVERNOR ALPHA CONTRACT -->
+<!-- GOVERNOR ALPHA CONTRACT -->
+
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <h1 style="color: aliceblue;"> GOVERNOR ALPHA </h1>
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="p_targets" v-model="p_targets">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="p_values" v-model="p_values">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="p_signatures" v-model="p_signatures">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="p_calldatas" v-model="p_calldatas">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="p_description" v-model="p_description">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="proposalId" v-model="proposalId">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="bool_support" v-model="bool_support">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="gov_newPendingAdmin" v-model="gov_newPendingAdmin">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="gov_eta" v-model="gov_eta">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <button class="uk-button uk-button-green" @click="governor_alpha('quorumVotes')">GOVERNOR ALPHA - quorumVotes </button>
+    <button class="uk-button uk-button-green" @click="governor_alpha('proposalThreshold')">GOVERNOR ALPHA - proposalThreshold </button>
+    <button class="uk-button uk-button-green" @click="governor_alpha('proposalMaxOperations')">GOVERNOR ALPHA - proposalMaxOperations </button>
+    <button class="uk-button uk-button-green" @click="governor_alpha('votingDelay')">GOVERNOR ALPHA - votingDelay </button>
+    <button class="uk-button uk-button-green" @click="governor_alpha('votingPeriod')">GOVERNOR ALPHA - votingPeriod </button>
+    <button class="uk-button uk-button-green" @click="governor_alpha('proposalCount')">GOVERNOR ALPHA - proposalCount </button>
+    <button class="uk-button uk-button-green" @click="governor_alpha('__acceptAdmin')">GOVERNOR ALPHA - __acceptAdmin </button>
+    <button class="uk-button uk-button-green" @click="governor_alpha('__abdicate')">GOVERNOR ALPHA - __abdicate </button>
+    <button class="uk-button uk-button-green" @click="governor_alpha('__queueSetTimelockPendingAdmin')">GOVERNOR ALPHA - __queueSetTimelockPendingAdmin (gov_newPendingAdmin,gov_eta) </button>
+    <button class="uk-button uk-button-green" @click="governor_alpha('__executeSetTimelockPendingAdmin')">GOVERNOR ALPHA - __executeSetTimelockPendingAdmin (gov_newPendingAdmin,gov_eta) </button>
+    <button class="uk-button uk-button-green" @click="governor_alpha('state')">GOVERNOR ALPHA - state (proposalId) </button>
+    <button class="uk-button uk-button-green" @click="governor_alpha('getReceipt')">GOVERNOR ALPHA - getReceipt (proposalId) </button>
+
+    <button class="uk-button uk-button-green" @click="governor_alpha('getActions')">GOVERNOR ALPHA - getActions (proposalId) </button>
+    <button class="uk-button uk-button-green" @click="governor_alpha('castVote')">GOVERNOR ALPHA - castVote (proposalId,bool_support) </button>
+    <button class="uk-button uk-button-green" @click="governor_alpha('cancel')">GOVERNOR ALPHA - cancel (proposalId) </button>
+    <button class="uk-button uk-button-green" @click="governor_alpha('execute')">GOVERNOR ALPHA - execute (proposalId) </button>
+    <button class="uk-button uk-button-green" @click="governor_alpha('queue')">GOVERNOR ALPHA - queue (proposalId) </button>
+    <button class="uk-button uk-button-green" @click="governor_alpha('propose')">GOVERNOR ALPHA - propose (p_targets,p_values,p_signatures,p_calldatas,p_description) </button>
 
 
     <br>

@@ -12,6 +12,7 @@ import SIGH from '@/contracts/SIGH.json';
 import Sightroller from '@/contracts/Sightroller.json';
 import Unitroller from '@/contracts/Unitroller.json';
 import GSigh from '@/contracts/GSigh.json';
+import GovernorAlpha from '@/contracts/GovernorAlpha.json';
 
 // import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from "constants";
 
@@ -2201,7 +2202,308 @@ const store = new Vuex.Store({
   //   }
   // },
 
+  // UNITROLLER FUNCTIONS (END)
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  // GOVERNOR ALPHA FUNCTIONS (START)
 
+  governorAlpha_quorumVotes: async ({commit,state}) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.quorumVotes().call();
+      console.log(ret);
+    }
+  },
+
+  governorAlpha_proposalThreshold: async ({commit,state}) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.proposalThreshold().call();
+      console.log(ret);
+    }
+  },
+
+  governorAlpha_proposalMaxOperations: async ({commit,state}) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.proposalMaxOperations().call();
+      console.log(ret);
+    }
+  },
+
+  governorAlpha_votingDelay: async ({commit,state}) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.votingDelay().call();
+      console.log(ret);
+    }
+  },
+
+  governorAlpha_votingPeriod: async ({commit,state}) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.votingPeriod().call();
+      console.log(ret);
+    }
+  },
+
+  governorAlpha_proposalCount: async ({commit,state}) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.proposalCount().call();
+      console.log(ret);
+    }
+  },
+  
+  governorAlpha_propose: async ({commit,state},{p_targets,p_values,p_signatures,p_calldatas,p_description}  ) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.propose(p_targets,p_values,p_signatures,p_calldatas,p_description).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // Add proposal to the queue
+  governorAlpha_queue: async ({commit,state},{proposalId}  ) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.queue(proposalId).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // Execute the proposal
+  governorAlpha_execute: async ({commit,state},{proposalId}  ) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.execute(proposalId).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },  
+
+  // Cancel the proposal
+  governorAlpha_cancel: async ({commit,state},{proposalId}  ) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.cancel(proposalId).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },  
+
+  // enter a Vote
+  governorAlpha_castVote: async ({commit,state},{proposalId,bool_support}  ) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.castVote(proposalId,bool_support).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },  
+
+  // governorAlpha_castVoteBySig: async ({commit,state},{proposalId,bool_support,v,r,s}  ) => {
+  //   const web3 = state.web3;
+  //   const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+  //   console.log(GovernorAlpha_);
+  //   if (GovernorAlpha_) {
+  //     GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+  //     console.log(GovernorAlpha_Contract);
+  //     const ret = GovernorAlpha_Contract.methods.castVoteBySig(proposalId,bool_support).send({from: state.web3Account})
+  //     .then(receipt => {
+  //       console.log(receipt);
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     })
+  //   }
+  // }, 
+
+  governorAlpha_getActions: async ({commit,state},{proposalId}) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.getActions(proposalId).call();
+      console.log(ret);
+    }
+  },
+
+  governorAlpha_getReceipt: async ({commit,state},{proposalId}) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.getReceipt(proposalId).call();
+      console.log(ret);
+    }
+  },  
+
+  governorAlpha_state: async ({commit,state},{proposalId}) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.state(proposalId).call();
+      console.log(ret);
+    }
+  },    
+
+
+  governorAlpha__acceptAdmin: async ({commit,state} ) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.__acceptAdmin().send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },  
+
+  governorAlpha__abdicate: async ({commit,state} ) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.__abdicate().send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },    
+
+  governorAlpha__queueSetTimelockPendingAdmin: async ({commit,state},{gov_newPendingAdmin,gov_eta} ) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.__queueSetTimelockPendingAdmin({gov_newPendingAdmin,gov_eta}).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },   
+
+  governorAlpha__executeSetTimelockPendingAdmin: async ({commit,state},{gov_newPendingAdmin,gov_eta} ) => {
+    const web3 = state.web3;
+    const GovernorAlpha_ = GovernorAlpha.networks[state.networkId];
+    console.log(GovernorAlpha_);
+    if (GovernorAlpha_) {
+      GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
+      console.log(GovernorAlpha_Contract);
+      const ret = GovernorAlpha_Contract.methods.__executeSetTimelockPendingAdmin({gov_newPendingAdmin,gov_eta}).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },     
+
+  // GOVERNOR ALPHA FUNCTIONS (END)
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  // GOVERNOR ALPHA FUNCTIONS (START)
 
 
 
