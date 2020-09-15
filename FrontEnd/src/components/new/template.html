@@ -723,6 +723,99 @@
     <br>
     <br>
     <br>
+
+<!-- GSIGH TOKEN CONTRACT -->
+<!-- GSIGH TOKEN CONTRACT -->
+<!-- GSIGH TOKEN CONTRACT -->
+<!-- GSIGH TOKEN CONTRACT -->
+<!-- GSIGH TOKEN CONTRACT -->
+
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <h1 style="color: aliceblue;"> GSIGH TOKEN </h1>
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="gsigh_holder" v-model="gsigh_holder">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="gsigh_spender" v-model="gsigh_spender">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="gsigh_amount" v-model="gsigh_amount">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="gsigh_destination" v-model="gsigh_destination">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="gsigh_source" v-model="gsigh_source">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="delegatee" v-model="delegatee">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="gsigh_blockNumber" v-model="gsigh_blockNumber">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <button class="uk-button uk-button-green" @click="gsigh_token('gsigh_allowance')">GSIGH TOKEN - gsigh_allowance (gsigh_holder, gsigh_spender ) </button>
+    <button class="uk-button uk-button-green" @click="gsigh_token('gsigh_balanceOf')">GSIGH TOKEN - gsigh_balanceOf (gsigh_holder) </button>
+    <button class="uk-button uk-button-green" @click="gsigh_token('gsigh_approve')">GSIGH TOKEN - gsigh_approve (gsigh_spender, gsigh_amount ) </button>
+    <button class="uk-button uk-button-green" @click="gsigh_token('gsigh_transfer')">GSIGH TOKEN - gsigh_transfer (gsigh_destination, gsigh_amount ) </button>
+    <button class="uk-button uk-button-green" @click="gsigh_token('gsigh_transferFrom')">GSIGH TOKEN - gsigh_transferFrom (gsigh_source, gsigh_destination, gsigh_amount ) </button>
+    <button class="uk-button uk-button-green" @click="gsigh_token('gsigh_delegate')">GSIGH TOKEN - gsigh_delegate (delegatee) </button>
+    <button class="uk-button uk-button-green" @click="gsigh_token('gsigh_getCurrentVotes')">GSIGH TOKEN - gsigh_getCurrentVotes (gsigh_holder) </button>
+    <button class="uk-button uk-button-green" @click="gsigh_token('gsigh_getPriorVotes')">GSIGH TOKEN - gsigh_getPriorVotes (gsigh_holder, gsigh_blockNumber) </button>
+
+
+
+    <br>
+    <br>
+    <br>
+    <br>
     <br>
     <br>
     <br>

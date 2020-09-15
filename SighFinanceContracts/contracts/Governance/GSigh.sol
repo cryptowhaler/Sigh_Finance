@@ -103,7 +103,8 @@ contract GSigh {
         uint96 amount;
         if (rawAmount == uint(-1)) {
             amount = uint96(-1);
-        } else {
+        } 
+        else {
             amount = safe96(rawAmount, "GSigh::approve: amount exceeds 96 bits");
         }
 

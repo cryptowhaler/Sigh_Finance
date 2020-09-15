@@ -11,6 +11,7 @@ import sighReservoir_ from '@/contracts/SighReservoir.json';
 import SIGH from '@/contracts/SIGH.json';
 import Sightroller from '@/contracts/Sightroller.json';
 import Unitroller from '@/contracts/Unitroller.json';
+import GSigh from '@/contracts/GSigh.json';
 
 // import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from "constants";
 
@@ -2056,6 +2057,150 @@ const store = new Vuex.Store({
   //********************** 
   //********************** 
   //********************** 
+  // GSIGH TOKEN FUNCTIONS (START)
+
+  // Get the number of tokens `gsigh_spender` is approved to spend on behalf of `gsigh_holder`
+  gsigh_allowance: async ({commit,state},{gsigh_holder,gsigh_spender}) => {
+    const web3 = state.web3;
+    const GSigh_ = GSigh.networks[state.networkId];
+    console.log(GSigh_);
+    if (GSigh_) {
+      GSigh_Contract = new web3.eth.Contract(GSigh.abi, GSigh_.address);
+      console.log(GSigh_Contract);
+      const ret = GSigh_Contract.methods.allowance(gsigh_holder,gsigh_spender).call();
+      console.log(ret);
+    }
+  },
+
+  // Get the number of tokens held by the `gsigh_holder`
+  gsigh_balanceOf: async ({commit,state},{gsigh_holder}) => {
+    const web3 = state.web3;
+    const GSigh_ = GSigh.networks[state.networkId];
+    console.log(GSigh_);
+    if (GSigh_) {
+      GSigh_Contract = new web3.eth.Contract(GSigh.abi, GSigh_.address);
+      console.log(GSigh_Contract);
+      const ret = GSigh_Contract.methods.balanceOf(gsigh_holder).call();
+      console.log(ret);
+    }
+  },
+
+  // Approve `gsigh_spender` to transfer up to `gsigh_amount` from `msg.sender`
+  gsigh_approve: async ({commit,state},{gsigh_spender, gsigh_amount}) => {
+    const web3 = state.web3;
+    const GSigh_ = GSigh.networks[state.networkId];
+    console.log(GSigh_);
+    if (GSigh_) {
+      GSigh_Contract = new web3.eth.Contract(GSigh.abi, GSigh_.address);
+      console.log(GSigh_Contract);
+      GSigh_Contract.methods.approve(gsigh_spender, gsigh_amount).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // Transfer `gsigh_amount` tokens from `msg.sender` to `gsigh_destination`
+  gsigh_transfer: async ({commit,state},{gsigh_destination, gsigh_amount}) => {
+    const web3 = state.web3;
+    const GSigh_ = GSigh.networks[state.networkId];
+    console.log(GSigh_);
+    if (GSigh_) {
+      GSigh_Contract = new web3.eth.Contract(GSigh.abi, GSigh_.address);
+      console.log(GSigh_Contract);
+      GSigh_Contract.methods.transfer(gsigh_destination, gsigh_amount).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // Transfer `gsigh_amount` tokens from `msg.sender` to `gsigh_destination`
+  gsigh_transferFrom: async ({commit,state},{gsigh_source,gsigh_destination, gsigh_amount}) => {
+    const web3 = state.web3;
+    const GSigh_ = GSigh.networks[state.networkId];
+    console.log(GSigh_);
+    if (GSigh_) {
+      GSigh_Contract = new web3.eth.Contract(GSigh.abi, GSigh_.address);
+      console.log(GSigh_Contract);
+      GSigh_Contract.methods.transferFrom(gsigh_source,gsigh_destination, gsigh_amount).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // Delegate votes from `msg.sender` to `delegatee`
+  gsigh_delegate: async ({commit,state},{delegatee}) => {
+    const web3 = state.web3;
+    const GSigh_ = GSigh.networks[state.networkId];
+    console.log(GSigh_);
+    if (GSigh_) {
+      GSigh_Contract = new web3.eth.Contract(GSigh.abi, GSigh_.address);
+      console.log(GSigh_Contract);
+      GSigh_Contract.methods.delegate(delegatee).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+
+  // Gets the current votes balance for `gsigh_holder`
+  gsigh_getCurrentVotes: async ({commit,state},{gsigh_holder}) => {
+    const web3 = state.web3;
+    const GSigh_ = GSigh.networks[state.networkId];
+    console.log(GSigh_);
+    if (GSigh_) {
+      GSigh_Contract = new web3.eth.Contract(GSigh.abi, GSigh_.address);
+      console.log(GSigh_Contract);
+      const ret = GSigh_Contract.methods.getCurrentVotes(gsigh_holder).call();
+      console.log(ret);
+    }
+  },
+
+  // Determine the prior number of votes for an account as of a block number
+  gsigh_getPriorVotes: async ({commit,state},{gsigh_holder,gsigh_blockNumber}) => {
+    const web3 = state.web3;
+    const GSigh_ = GSigh.networks[state.networkId];
+    console.log(GSigh_);
+    if (GSigh_) {
+      GSigh_Contract = new web3.eth.Contract(GSigh.abi, GSigh_.address);
+      console.log(GSigh_Contract);
+      const ret = GSigh_Contract.methods.getPriorVotes(gsigh_holder,gsigh_blockNumber).call();
+      console.log(ret);
+    }
+  },
+
+  // // Delegates votes from signatory to `delegatee`
+  // gsigh_delegateBySig: async ({commit,state},{delegatee,nonce,expiry     }) => {
+  //   const web3 = state.web3;
+  //   const GSigh_ = GSigh.networks[state.networkId];
+  //   console.log(GSigh_);
+  //   if (GSigh_) {
+  //     GSigh_Contract = new web3.eth.Contract(GSigh.abi, GSigh_.address);
+  //     console.log(GSigh_Contract);
+  //     GSigh_Contract.methods.delegateBySig(delegatee).send({from: state.web3Account})
+  //     .then(receipt => {
+  //       console.log(receipt);
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  //   }
+  // },
+
 
 
 

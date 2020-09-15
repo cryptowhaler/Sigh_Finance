@@ -73,8 +73,18 @@ export default {
         borrowers: undefined,                        
         gsighRate_: undefined,   
 
+        // UNITROLLER Variables
+        newPendingImplementation : undefined,
+        newPendingAdmin : undefined,
 
-
+        // GSIGH TOKEN Variables
+        gsigh_holder : undefined,
+        gsigh_spender : undefined,
+        gsigh_amount : undefined,
+        gsigh_destination : undefined,
+        gsigh_source : undefined,
+        delegatee : undefined,
+        gsigh_blockNumber : undefined,
 
 
 
@@ -121,7 +131,10 @@ export default {
      'sightroller_setMintPaused','sightroller_setBorrowPaused','sightroller_setTransferPaused','sightroller_setSeizePaused','sightroller__become','sightroller_refreshGsighSpeeds',
      'sightroller_claimGSigh','sightroller_claimGSigh_bs','sightroller_setGsighRate','sightroller__addGsighMarkets','sightroller__dropGsighMarket','sightroller__getAllMarkets',
      'sightroller__getBlockNumber','sightroller__getGSighAddress',
-     
+
+      'unitroller___setPendingImplementation','unitroller_acceptImplementation','unitroller_setPendingAdmin','unitroller_acceptAdmin',
+
+     'gsigh_allowance','gsigh_balanceOf','gsigh_approve','gsigh_transfer','gsigh_transferFrom','gsigh_delegate','gsigh_getCurrentVotes','gsigh_getPriorVotes'
      ]),
 
 
@@ -491,8 +504,8 @@ export default {
     // **********************
     async unitroller(type) {
       console.log(type);
-      console.log(newPendingImplementation);
-      console.log(newPendingAdmin);
+      console.log('newPendingImplementation' + this.newPendingImplementation);
+      console.log('newPendingAdmin' + this.newPendingAdmin);
 
       if (type == 'setPendingImplementation') {
         this.unitroller___setPendingImplementation({newPendingImplementation: this.newPendingImplementation});        
@@ -506,10 +519,47 @@ export default {
       if (type == 'acceptAdmin') {
         this.unitroller_acceptAdmin();        
       }
+    },
+
+    // **********************
+    // GSIGH TOKEN
+    // **********************
+
+    async gsigh_token(type) {
+      console.log(type);
+      console.log('gsigh_holder' + this.gsigh_holder);
+      console.log('gsigh_spender' + this.gsigh_spender);
+      console.log('gsigh_amount' + this.gsigh_amount);
+      console.log('gsigh_destination' + this.gsigh_destination);
+      console.log('gsigh_source' + this.gsigh_source);
+      console.log('delegatee' + this.delegatee);
+      console.log('gsigh_blockNumber' + this.gsigh_blockNumber);
+
+      if (type == 'gsigh_allowance') {
+        this.gsigh_allowance({gsigh_holder: this.gsigh_holder, gsigh_spender: this.gsigh_spender});        
+      }
+      if (type == 'gsigh_balanceOf') {
+        this.gsigh_balanceOf({gsigh_holder: this.gsigh_holder});        
+      }      
+      if (type == 'gsigh_approve') {
+        this.gsigh_approve({gsigh_spender: this.gsigh_spender, gsigh_amount: this.gsigh_amount});        
+      }
+      if (type == 'gsigh_transfer') {
+        this.gsigh_transfer({gsigh_destination: this.gsigh_destination, gsigh_amount: this.gsigh_amount});        
+      }
+      if (type == 'gsigh_transferFrom') {
+        this.gsigh_transferFrom({gsigh_source: this.gsigh_source, gsigh_destination: this.gsigh_destination, gsigh_amount: this.gsigh_amount});        
+      }        
+      if (type == 'gsigh_delegate') {
+        this.gsigh_delegate({delegatee: this.delegatee});        
+      }   
+      if (type == 'gsigh_getCurrentVotes') {
+        this.gsigh_getCurrentVotes({gsigh_holder: this.gsigh_holder});        
+      }   
+      if (type == 'gsigh_getPriorVotes') {
+        this.gsigh_getPriorVotes({gsigh_holder: this.gsigh_holder, gsigh_blockNumber: this.gsigh_blockNumber});        
+      }   
     }
-
-
-
 
 
 
