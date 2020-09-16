@@ -15,6 +15,8 @@ import GSigh from '@/contracts/GSigh.json';
 import GovernorAlpha from '@/contracts/GovernorAlpha.json';
 import Timelock from '@/contracts/Timelock.json';
 import GSighReservoir from '@/contracts/GSighReservoir.json';
+import SighLens from '@/contracts/SighLens.json';
+import CErc20 from '@/contracts/CErc20.json';
 
 // import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from "constants";
 
@@ -2792,7 +2794,758 @@ const store = new Vuex.Store({
   //********************** 
   //********************** 
   //********************** 
-  // GSIGH RESERVOIR FUNCTIONS (START)
+  // SIGHLENS FUNCTIONS (START)
+
+  // return all the data for a cToken (Market)
+  SighLens_cTokenMetadata: async ({commit,state},{ cTokenAddress } ) => {
+    const web3 = state.web3;
+    const SighLens_ = SighLens.networks[state.networkId];
+    console.log(SighLens_);
+    if (SighLens_) {
+      SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
+      console.log(SighLens_Contract);
+      const ret = SighLens_Contract.methods.cTokenMetadata({cTokenAddress}).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  }, 
+
+  // --> it reuturns a list of ctoken metadata for a list of cTokens 
+  SighLens_cTokenMetadataAll: async ({commit,state},{ cTokenAddressArray } ) => {
+    const web3 = state.web3;
+    const SighLens_ = SighLens.networks[state.networkId];
+    console.log(SighLens_);
+    if (SighLens_) {
+      SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
+      console.log(SighLens_Contract);
+      const ret = SighLens_Contract.methods.cTokenMetadataAll({cTokenAddressArray}).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  }, 
+
+  // --> returns balance information for a cToken for an account
+  SighLens_cTokenBalances: async ({commit,state},{ cTokenAddress, sighlens_amount } ) => {
+    const web3 = state.web3;
+    const SighLens_ = SighLens.networks[state.networkId];
+    console.log(SighLens_);
+    if (SighLens_) {
+      SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
+      console.log(SighLens_Contract);
+      const ret = SighLens_Contract.methods.cTokenBalances({cTokenAddress, sighlens_amount}).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  }, 
+
+  // --> returns balance information for a list of cToken markets for an account
+  SighLens_cTokenBalancesAll: async ({commit,state},{ cTokenAddressArray, sighlens_amount } ) => {
+    const web3 = state.web3;
+    const SighLens_ = SighLens.networks[state.networkId];
+    console.log(SighLens_);
+    if (SighLens_) {
+      SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
+      console.log(SighLens_Contract);
+      const ret = SighLens_Contract.methods.cTokenBalancesAll({cTokenAddressArray, sighlens_amount}).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  }, 
+
+  // --> get underlying price for a cToken
+  SighLens_cTokenUnderlyingPrice: async ({commit,state},{ cTokenAddress  } ) => {
+    const web3 = state.web3;
+    const SighLens_ = SighLens.networks[state.networkId];
+    console.log(SighLens_);
+    if (SighLens_) {
+      SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
+      console.log(SighLens_Contract);
+      const ret = SighLens_Contract.methods.cTokenUnderlyingPrice({cTokenAddress }).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  }, 
+
+  // --> get underlying price for a list of cTokens
+  SighLens_cTokenUnderlyingPriceAll: async ({commit,state},{ cTokenAddressArray } ) => {
+    const web3 = state.web3;
+    const SighLens_ = SighLens.networks[state.networkId];
+    console.log(SighLens_);
+    if (SighLens_) {
+      SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
+      console.log(SighLens_Contract);
+      const ret = SighLens_Contract.methods.cTokenUnderlyingPriceAll({cTokenAddressArray }).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },   
+
+  // --> returns the liquidity and shortfall amount for a user's account by checking from Sightroller
+  SighLens_getAccountLimits: async ({commit,state},{ sighlens_sightroller,sighlens_account  } ) => {
+    const web3 = state.web3;
+    const SighLens_ = SighLens.networks[state.networkId];
+    console.log(SighLens_);
+    if (SighLens_) {
+      SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
+      console.log(SighLens_Contract);
+      const ret = SighLens_Contract.methods.getAccountLimits({ sighlens_sightroller,sighlens_account  }).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },    
+
+  // --> gets the voting history on proposals for the account
+  SighLens_getGovReceipts: async ({commit,state},{ sighlens_governor, sighlens_account, sighlens_proposalIds  } ) => {
+    const web3 = state.web3;
+    const SighLens_ = SighLens.networks[state.networkId];
+    console.log(SighLens_);
+    if (SighLens_) {
+      SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
+      console.log(SighLens_Contract);
+      SighLens_Contract.methods.getGovReceipts({  sighlens_governor, sighlens_account, sighlens_proposalIds }).call();
+      console.log(ret);
+    }
+  },    
+
+  // --> gets the information on proposals
+  SighLens_getGovProposals: async ({commit,state},{ sighlens_governor, sighlens_proposalIds  } ) => {
+    const web3 = state.web3;
+    const SighLens_ = SighLens.networks[state.networkId];
+    console.log(SighLens_);
+    if (SighLens_) {
+      SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
+      console.log(SighLens_Contract);
+      SighLens_Contract.methods.getGovProposals({  sighlens_governor, sighlens_proposalIds }).call();
+      console.log(ret);
+    }
+  },    
+
+  // --> gets the information on the balance, votes available, votes delegated for the account
+  SighLens_getGSighBalanceMetadata: async ({commit,state},{ sighlens_gsigh_address, sighlens_account  } ) => {
+    const web3 = state.web3;
+    const SighLens_ = SighLens.networks[state.networkId];
+    console.log(SighLens_);
+    if (SighLens_) {
+      SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
+      console.log(SighLens_Contract);
+      SighLens_Contract.methods.getGSighBalanceMetadata({  sighlens_gsigh_address, sighlens_account }).call();
+      console.log(ret);
+    }
+  },    
+
+  // --> gets the information on votes based on block numbers
+  SighLens_getGSighVotes: async ({commit,state},{ sighlens_gsigh_address, sighlens_account , sighlens_blockNumbers } ) => {
+    const web3 = state.web3;
+    const SighLens_ = SighLens.networks[state.networkId];
+    console.log(SighLens_);
+    if (SighLens_) {
+      SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
+      console.log(SighLens_Contract);
+      SighLens_Contract.methods.getGSighVotes({  sighlens_gsigh_address, sighlens_account, sighlens_blockNumbers }).call();
+      console.log(ret);
+    }
+  },   
+
+  // --> returns the liquidity and shortfall amount for a user's account by checking from Sightroller
+  SighLens_getGSighBalanceMetadataExt: async ({commit,state},{ sighlens_gsigh_address, sighlens_sightroller, sighlens_account  } ) => {
+    const web3 = state.web3;
+    const SighLens_ = SighLens.networks[state.networkId];
+    console.log(SighLens_);
+    if (SighLens_) {
+      SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
+      console.log(SighLens_Contract);
+      const ret = SighLens_Contract.methods.getGSighBalanceMetadataExt({ sighlens_gsigh_address, sighlens_sightroller, sighlens_account  }).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },  
+  
+  // GSIGH RESERVOIR FUNCTIONS (END)
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  // CERC20 MARKET FUNCTIONS (START)
+
+  // --> Initialize the new money market
+  cERC20_initialize: async ({commit,state},{ cer20_underlying, cer20_sightroller, cer20_interestRateModel_,cer20_interestRateModel_,cer20_initialExchangeRateMantissa,cer20_name, cer20_symbol, cer20_decimals  } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.initialize({ cer20_underlying, cer20_sightroller, cer20_interestRateModel_,cer20_interestRateModel_,cer20_initialExchangeRateMantissa,cer20_name, cer20_symbol, cer20_decimals   }).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  }, 
+
+  // --> Sender supplies assets into the market and receives cTokens in exchange
+  cERC20_mint: async ({commit,state},{ cer20_mintAmount } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.mint({ cer20_mintAmount }).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  }, 
+
+  // --> Sender redeems cTokens in exchange for the underlying asset
+  cERC20_redeem: async ({commit,state},{ cer20_redeemTokens } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.redeem({ cer20_redeemTokens }).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },   
+
+  // --> Sender redeems cTokens in exchange for a specified amount of underlying asset
+  cERC20_redeemUnderlying: async ({commit,state},{ cer20_redeemAmount } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.redeemUnderlying({ cer20_redeemAmount }).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // --> Sender borrows assets from the protocol to their own address
+  cERC20_borrow: async ({commit,state},{ cer20_borrowAmount } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.borrow({ cer20_borrowAmount }).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+
+  // --> Sender repays their own borrow
+  cERC20_repayBorrow: async ({commit,state},{ cer20_repayAmount } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.repayBorrow({ cer20_repayAmount }).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // --> Sender repays a borrow belonging to borrower
+  cERC20_repayBorrowBehalf: async ({commit,state},{ cer20_borrower, cer20_repayAmount } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.repayBorrowBehalf({ cer20_borrower, cer20_repayAmount }).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // --> The sender liquidates the borrowers collateral.
+  cERC20_liquidateBorrow: async ({commit,state},{ cer20_borrower,  cer20_repayAmount, cer20_cTokenCollateral  } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.liquidateBorrow({ cer20_borrower,  cer20_repayAmount, cer20_cTokenCollateral }).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // --> The sender liquidates the borrowers collateral.
+  cERC20_addReserves: async ({commit,state},{ cer20_addAmount} ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods._addReserves({ cer20_addAmount }).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // --> Transfer `amount` tokens from `msg.sender` to `dst`
+  cERC20_transfer: async ({commit,state},{ cer20_dst, cer20_amount } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.transfer({ cer20_dst, cer20_amount }).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // --> Transfer `amount` tokens from `src` to `dst`
+  cERC20_transferFrom: async ({commit,state},{ cer20_src, cer20_dst, cer20_amount } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.transferFrom({ cer20_src, cer20_dst, cer20_amount }).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // --> Approve `spender` to transfer up to `amount` from `src`
+  cERC20_approve: async ({commit,state},{ cer20_spender, cer20_amount } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.approve({ cer20_spender, cer20_amount }).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // --> Get the underlying balance of the `owner`
+  cERC20_balanceOfUnderlying: async ({commit,state},{ cer20_owner } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.balanceOfUnderlying({ cer20_owner }).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // --> Returns the current total borrows plus accrued interest for the Market
+  cERC20_totalBorrowsCurrent: async ({commit,state} ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.totalBorrowsCurrent().send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // --> Accrue interest to updated borrowIndex and then calculate account's borrow balance using the updated borrowIndex
+  cERC20_borrowBalanceCurrent: async ({commit,state}, {cer20_account } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.borrowBalanceCurrent(cer20_account).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // --> Accrue interest then return the up-to-date exchange rate
+  cERC20_exchangeRateCurrent: async ({commit,state}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.exchangeRateCurrent().send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // --> Applies accrued interest to total borrows and reserves
+  cERC20_accrueInterest: async ({commit,state}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.accrueInterest().send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // -->  Get the current allowance from `owner` for `spender`
+  cERC20_allowance: async ({commit,state}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.allowance().call();
+      console.log(ret);
+    }
+  },
+
+  // -->  Get the token balance of the `owner`
+  cERC20_balanceOf: async ({commit,state},{cer20_owner}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.balanceOf(cer20_owner).call();
+      console.log(ret);
+    }
+  },
+
+  // -->  Get the token balance of the `owner`
+  cERC20_getAccountSnapshot: async ({commit,state},{cer20_account}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.getAccountSnapshot(cer20_account).call();
+      console.log(ret);
+    }
+  },
+
+  // -->  Returns the current per-block borrow interest rate for this cToken
+  cERC20_borrowRatePerBlock: async ({commit,state}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.borrowRatePerBlock().call();
+      console.log(ret);
+    }
+  },
+
+  // -->  Returns the current per-block supply interest rate for this cToken
+  cERC20_supplyRatePerBlock: async ({commit,state}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.supplyRatePerBlock().call();
+      console.log(ret);
+    }
+  },
+
+  // -->  Returns the current per-block supply interest rate for this cToken
+  cERC20_borrowBalanceStored: async ({commit,state},{cer20_account}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.borrowBalanceStored(cer20_account).call();
+      console.log(ret);
+    }
+  },
+
+  // -->  Calculates the exchange rate from the underlying to the CToken.
+  // This function does not accrue interest before calculating the exchange rate
+  cERC20_exchangeRateStored: async ({commit,state}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.exchangeRateStored().call();
+      console.log(ret);
+    }
+  },
+
+  // Get cash balance of this cToken in the underlying asset
+  cERC20_getCash: async ({commit,state}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.getCash().call();
+      console.log(ret);
+    }
+  },
+
+  // --> Transfers collateral tokens (this market) to the liquidator.
+  cERC20_seize: async ({commit,state}, { cerc20_liquidator, cerc20_borrower, cerc20_seizeTokens  }) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.seize(cerc20_liquidator, cerc20_borrower, cerc20_seizeTokens ).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // --> Begins transfer of admin rights. The newPendingAdmin must call `_acceptAdmin` to finalize the transfer.
+  cERC20_setPendingAdmin: async ({commit,state}, { cerc20_newPendingAdmin}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods._setPendingAdmin( cerc20_newPendingAdmin ).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // --> Accepts transfer of admin rights. msg.sender must be pendingAdmin
+  cERC20_acceptAdmin: async ({commit,state}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods._acceptAdmin().send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // --> Sets a new sightroller for the market
+  cERC20_setSightroller: async ({commit,state}, {cerc20_newSightroller}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods._setSightroller(cerc20_newSightroller).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // --> accrues interest and sets a new reserve factor for the protocol using _setReserveFactorFresh
+  cERC20_setReserveFactor: async ({commit,state}, {cerc20_newReserveFactorMantissa}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods._setReserveFactor(cerc20_newReserveFactorMantissa).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // -->  Accrues interest and reduces reserves by transferring to admin
+  cERC20_reduceReserves: async ({commit,state}, {cerc20_reduceAmount}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods._reduceReserves(cerc20_reduceAmount).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // -->  accrues interest and updates the interest rate model using _setInterestRateModelFresh
+  cERC20_setInterestRateModel: async ({commit,state}, {cerc20_newInterestRateModel}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods._setInterestRateModel(cerc20_newInterestRateModel).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+
+
+
+
+
+
 
 
     toggleTheme({state,}, themeMode) {

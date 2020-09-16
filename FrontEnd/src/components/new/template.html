@@ -1080,6 +1080,120 @@
     <br>
     <br>
     <br>
+
+<!-- SIGHLENS CONTRACT -->
+<!-- SIGHLENS CONTRACT -->
+<!-- SIGHLENS CONTRACT -->
+<!-- SIGHLENS CONTRACT -->
+<!-- SIGHLENS CONTRACT -->
+
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <h1 style="color: aliceblue;"> SIGHLENS </h1>
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="cTokenAddress" v-model="cTokenAddress">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="cTokenAddressArray" v-model="cTokenAddressArray">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="sighlens_amount" v-model="sighlens_amount">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="sighlens_sightroller" v-model="sighlens_sightroller">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="sighlens_account" v-model="sighlens_account">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="sighlens_governor" v-model="sighlens_governor">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="sighlens_proposalIds" v-model="sighlens_proposalIds">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="sighlens_gsigh_address" v-model="sighlens_gsigh_address">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="sighlens_blockNumbers" v-model="sighlens_blockNumbers">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <button class="uk-button uk-button-green" @click="sighlens('cTokenMetadata')">SIGHLENS - cTokenMetadata (cTokenAddress) </button>
+    <button class="uk-button uk-button-green" @click="sighlens('cTokenMetadataAll')">SIGHLENS - cTokenMetadataAll (cTokenAddressArray) </button>
+    <button class="uk-button uk-button-green" @click="sighlens('cTokenBalances')">SIGHLENS  - cTokenBalances (cTokenAddress, sighlens_amount) </button>
+    <button class="uk-button uk-button-green" @click="sighlens('cTokenBalancesAll')">SIGHLENS  - cTokenBalancesAll (cTokenAddressArray,sighlens_amount ) </button>
+    <button class="uk-button uk-button-green" @click="sighlens('cTokenUnderlyingPrice')">SIGHLENS - cTokenUnderlyingPrice (cTokenAddress ) </button>
+    <button class="uk-button uk-button-green" @click="sighlens('cTokenUnderlyingPriceAll')">SIGHLENS - cTokenUnderlyingPriceAll (cTokenAddressArray ) </button>
+    <button class="uk-button uk-button-green" @click="sighlens('getAccountLimits')">SIGHLENS  - getAccountLimits (sighlens_sightroller,sighlens_account ) </button>
+    <button class="uk-button uk-button-green" @click="sighlens('getGovProposals')">SIGHLENS  - getGovProposals (sighlens_governor,sighlens_account, sighlens_proposalIds ) </button>
+    <button class="uk-button uk-button-green" @click="sighlens('getGSighBalanceMetadata')">SIGHLENS  - getGSighBalanceMetadata (sighlens_gsigh_address, sighlens_account ) </button>
+    <button class="uk-button uk-button-green" @click="sighlens('getGSighVotes')">SIGHLENS  - getGSighVotes (sighlens_gsigh_address, sighlens_account, sighlens_blockNumbers ) </button>
+    <button class="uk-button uk-button-green" @click="sighlens('getGSighBalanceMetadataExt')">SIGHLENS  - getGSighBalanceMetadataExt (sighlens_gsigh_address, sighlens_sightroller, sighlens_account ) </button>
+
+    <br>
+    <br>
+    <br>
+    <br>
     <br>
     <br>
     <br>

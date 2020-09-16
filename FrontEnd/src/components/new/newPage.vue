@@ -111,6 +111,18 @@ export default {
         gsigh_dripRate_ : undefined,
         gsigh_target_ : undefined,
 
+        // SIGHLENS Variables
+        cTokenAddress : undefined,
+        cTokenAddressArray : undefined,
+        sighlens_amount : undefined,
+        sighlens_sightroller : undefined,
+        sighlens_account : undefined,
+        sighlens_governor : undefined,
+        sighlens_proposalIds : undefined,
+        sighlens_gsigh_address : undefined,
+        sighlens_blockNumbers : undefined,
+
+
 
 
 
@@ -167,6 +179,11 @@ export default {
 
       'GSighReservoir_beginDripping','GSighReservoir_changeDripRate','GSighReservoir_drip','GSighReservoir_getGSighAddress','GSighReservoir_getTargetAddress','GSighReservoir_lastDripBlockNumber',
       'GSighReservoir_totalDrippedAmount','GSighReservoir_recentlyDrippedAmount','GSighReservoir_dripRate','GSighReservoir_dripStart','GSighReservoir_admin',
+
+      'SighLens_cTokenMetadata','SighLens_cTokenMetadataAll','SighLens_cTokenBalances','SighLens_cTokenBalancesAll','SighLens_cTokenUnderlyingPrice','SighLens_cTokenUnderlyingPriceAll',
+      'SighLens_getAccountLimits','SighLens_getGovReceipts','SighLens_getGovProposals','SighLens_getGSighBalanceMetadata','SighLens_getGSighVotes','SighLens_getGSighBalanceMetadataExt',
+
+
      ]),
 
 
@@ -720,7 +737,6 @@ export default {
     // GSIGH RESERVOIR
     // **********************
 
-
     async gsighReservoir(type) {
       console.log(type);
       console.log('gsigh_dripRate_' + this.gsigh_dripRate_);
@@ -761,6 +777,60 @@ export default {
       }
   },
 
+    // **********************
+    // SIGHLENS
+    // **********************
+
+    async sighlens(type) {
+      console.log(type);
+      console.log('cTokenAddress' + this.cTokenAddress);
+      console.log('cTokenAddressArray' + this.cTokenAddressArray);
+      console.log('sighlens_amount' + this.sighlens_amount);
+      console.log('sighlens_sightroller' + this.sighlens_sightroller);
+      console.log('sighlens_account' + this.sighlens_account);
+      console.log('sighlens_governor' + this.sighlens_governor);
+      console.log('sighlens_proposalIds' + this.sighlens_proposalIds);
+      console.log('sighlens_gsigh_address' + this.sighlens_gsigh_address);
+      console.log('sighlens_blockNumbers' + this.sighlens_blockNumbers);
+
+      if (type == 'cTokenMetadata') {
+        this.SighLens_cTokenMetadata({cTokenAddress: this.cTokenAddress });        
+      }
+      if (type == 'cTokenMetadataAll') {
+        this.SighLens_cTokenMetadataAll({cTokenAddressArray: this.cTokenAddressArray });        
+      }
+      if (type == 'cTokenBalances') {
+        this.SighLens_cTokenBalances({ cTokenAddress: this.cTokenAddress, sighlens_amount: this.sighlens_amount });        
+      }
+      if (type == 'cTokenBalancesAll') {
+        this.SighLens_cTokenBalancesAll({ cTokenAddressArray: this.cTokenAddressArray, sighlens_amount: this.sighlens_amount  });        
+      }
+      if (type == 'cTokenUnderlyingPrice') {
+        this.SighLens_cTokenUnderlyingPrice({cTokenAddress: this.cTokenAddress });        
+      }
+      if (type == 'cTokenUnderlyingPriceAll') {
+        this.SighLens_cTokenUnderlyingPriceAll({cTokenAddressArray: this.cTokenAddressArray });        
+      }
+      if (type == 'getAccountLimits') {
+        this.SighLens_getAccountLimits({sighlens_sightroller: this.sighlens_sightroller, sighlens_account: this.sighlens_account });        
+      }
+      if (type == 'getGovProposals') {
+        this.SighLens_getGovReceipts({sighlens_governor: this.sighlens_governor, sighlens_account: this.sighlens_account, sighlens_proposalIds: this.sighlens_proposalIds });        
+      }
+      if (type == 'getGSighBalanceMetadata') {
+        this.SighLens_getGSighBalanceMetadata({sighlens_gsigh_address: this.sighlens_gsigh_address, sighlens_account: this.sighlens_account });        
+      }
+      if (type == 'getGSighVotes') {
+        this.SighLens_getGSighVotes({sighlens_gsigh_address: this.sighlens_gsigh_address, sighlens_account: this.sighlens_account, sighlens_blockNumbers: this.sighlens_blockNumbers });        
+      }
+      if (type == 'getGSighBalanceMetadataExt') {
+        this.SighLens_getGSighBalanceMetadataExt({sighlens_gsigh_address: this.sighlens_gsigh_address, sighlens_sightroller: this.sighlens_sightroller, sighlens_account: this.sighlens_account });        
+      }
+    }
+
+    // **********************
+    // CERC20 MARKET
+    // **********************
 
 
 
@@ -768,7 +838,8 @@ export default {
 
 
 
-  
+
+
 },
 
   created() {
