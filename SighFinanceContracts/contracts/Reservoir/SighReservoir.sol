@@ -37,15 +37,16 @@ contract SighReservoir {
   constructor(EIP20Interface token_) public {
     admin = msg.sender;
     token = token_;
+    dripped == 0    
   }
 
   function beginDripping (uint dripRate_, address target_ ) public returns (bool) {
     require(admin == msg.sender,"Dripping can only be initialized by the Admin");
+    require(dripped == 0,"Dripping can only be initialized once");
     dripStart = block.number;
     lastDripBlockNumber = dripStart;
     dripRate = dripRate_;
     target = target_;
-    dripped = 0;
     return true;
   }
 

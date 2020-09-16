@@ -1031,7 +1031,49 @@
     <button class="uk-button uk-button-green" @click="timelock_governance('cancelTransaction')">TIMELOCK GOVERNANCE - cancelTransaction (timelock_target, timelock_value , timelock_signature , timelock_data , timelock_eta ) </button>
     <button class="uk-button uk-button-green" @click="timelock_governance('executeTransaction')">TIMELOCK GOVERNANCE - executeTransaction (timelock_target, timelock_value , timelock_signature , timelock_data , timelock_eta , timeLock_EthValueInWei ) </button>
 
+    <br>
+    <br>
+    <br>
+    <br>
 
+<!-- GSIGH RESERVOIR CONTRACT -->
+<!-- GSIGH RESERVOIR CONTRACT -->
+<!-- GSIGH RESERVOIR CONTRACT -->
+<!-- GSIGH RESERVOIR CONTRACT -->
+<!-- GSIGH RESERVOIR CONTRACT -->
+
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <h1 style="color: aliceblue;"> GSIGH RESERVOIR </h1>
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="gsigh_dripRate_" v-model="gsigh_dripRate_">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="gsigh_target_" v-model="gsigh_target_">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <button class="uk-button uk-button-green" @click="gsighReservoir('beginDripping')">GSIGH RESERVOIR  - beginDripping (gsigh_dripRate_, gsigh_target_) </button>
+    <button class="uk-button uk-button-green" @click="gsighReservoir('changeDripRate')">GSIGH RESERVOIR  - changeDripRate (gsigh_dripRate_) </button>
+    <button class="uk-button uk-button-green" @click="gsighReservoir('drip')">GSIGH RESERVOIR  - drip </button>
+    <button class="uk-button uk-button-green" @click="gsighReservoir('getGSighAddress')">GSIGH RESERVOIR  - getGSighAddress </button>
+    <button class="uk-button uk-button-green" @click="gsighReservoir('getTargetAddress')">GSIGH RESERVOIR  - getTargetAddress </button>
+    <button class="uk-button uk-button-green" @click="gsighReservoir('lastDripBlockNumber')">GSIGH RESERVOIR  - lastDripBlockNumber </button>
+    <button class="uk-button uk-button-green" @click="gsighReservoir('totalDrippedAmount')">GSIGH RESERVOIR  - totalDrippedAmount </button>
+    <button class="uk-button uk-button-green" @click="gsighReservoir('recentlyDrippedAmount')">GSIGH RESERVOIR  - recentlyDrippedAmount </button>
+    <button class="uk-button uk-button-green" @click="gsighReservoir('dripRate')">GSIGH RESERVOIR  - dripRate </button>
+    <button class="uk-button uk-button-green" @click="gsighReservoir('dripStart')">GSIGH RESERVOIR  - dripStart </button>
+    <button class="uk-button uk-button-green" @click="gsighReservoir('admin')">GSIGH RESERVOIR  - admin </button>
 
 
     <br>

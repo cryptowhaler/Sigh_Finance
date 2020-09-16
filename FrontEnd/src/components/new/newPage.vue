@@ -21,7 +21,7 @@ export default {
         reserves: undefined,
         reserveMantissa: undefined,
 
-        // ReservoirVariables
+        // SIGH Reservoir Variables
         dripRate: undefined,
         targetAddress: undefined,
 
@@ -107,6 +107,9 @@ export default {
         timelock_eta : undefined,
         timeLock_EthValueInWei : undefined,
 
+        // GSIGH RESERVOIR Variables
+        gsigh_dripRate_ : undefined,
+        gsigh_target_ : undefined,
 
 
 
@@ -161,6 +164,9 @@ export default {
       'governorAlpha_getReceipt','governorAlpha_state','governorAlpha__acceptAdmin','governorAlpha__abdicate','governorAlpha__queueSetTimelockPendingAdmin','governorAlpha__executeSetTimelockPendingAdmin',
 
       'Timelock__setDelay','Timelock__setPendingAdmin','Timelock__acceptAdmin','Timelock__queueTransaction','Timelock__cancelTransaction','Timelock__executeTransaction',
+
+      'GSighReservoir_beginDripping','GSighReservoir_changeDripRate','GSighReservoir_drip','GSighReservoir_getGSighAddress','GSighReservoir_getTargetAddress','GSighReservoir_lastDripBlockNumber',
+      'GSighReservoir_totalDrippedAmount','GSighReservoir_recentlyDrippedAmount','GSighReservoir_dripRate','GSighReservoir_dripStart','GSighReservoir_admin',
      ]),
 
 
@@ -710,7 +716,60 @@ export default {
       }
   },
 
+    // **********************
+    // GSIGH RESERVOIR
+    // **********************
+
+
+    async gsighReservoir(type) {
+      console.log(type);
+      console.log('gsigh_dripRate_' + this.gsigh_dripRate_);
+      console.log('gsigh_target_' + this.gsigh_target_);
+
+      if (type == 'beginDripping') {
+        this.GSighReservoir_beginDripping({gsigh_dripRate_: this.gsigh_dripRate_, gsigh_target_ : this.gsigh_target_ });        
+      }
+      if (type == 'changeDripRate') {
+        this.GSighReservoir_changeDripRate({gsigh_dripRate_: this.gsigh_dripRate_});        
+      }
+      if (type == 'drip') {
+        this.GSighReservoir_drip();        
+      }
+      if (type == 'getGSighAddress') {
+        this.GSighReservoir_getGSighAddress();        
+      }
+      if (type == 'getTargetAddress') {
+        this.GSighReservoir_getTargetAddress();        
+      }
+      if (type == 'lastDripBlockNumber') {
+        this.GSighReservoir_lastDripBlockNumber();        
+      }
+      if (type == 'totalDrippedAmount') {
+        this.GSighReservoir_totalDrippedAmount();        
+      }
+      if (type == 'recentlyDrippedAmount') {
+        this.GSighReservoir_recentlyDrippedAmount();        
+      }
+      if (type == 'dripRate') {
+        this.GSighReservoir_dripRate();        
+      }
+      if (type == 'dripStart') {
+        this.GSighReservoir_dripStart();        
+      }
+      if (type == 'admin') {
+        this.GSighReservoir_admin();        
+      }
   },
+
+
+
+
+
+
+
+
+  
+},
 
   created() {
     this.changeVegaMarket = (newMarket) => {       //Changing Selected Vega Market

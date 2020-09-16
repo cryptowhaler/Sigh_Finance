@@ -14,6 +14,7 @@ import Unitroller from '@/contracts/Unitroller.json';
 import GSigh from '@/contracts/GSigh.json';
 import GovernorAlpha from '@/contracts/GovernorAlpha.json';
 import Timelock from '@/contracts/Timelock.json';
+import GSighReservoir from '@/contracts/GSighReservoir.json';
 
 // import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from "constants";
 
@@ -909,7 +910,7 @@ const store = new Vuex.Store({
     if (sighReservoir) {
       sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
       console.log(sighReservoirContract);
-      const currentlyDrippedAmount = await sighReservoirContract.methods.currentlyDrippedAmount().call();
+      const currentlyDrippedAmount = await sighReservoirContract.methods.recentlyDrippedAmount().call();
       console.log(currentlyDrippedAmount);
     }
   },
@@ -2203,7 +2204,7 @@ const store = new Vuex.Store({
   //   }
   // },
 
-  // UNITROLLER FUNCTIONS (END)
+  // GSIGH FUNCTIONS (END)
   //********************** 
   //********************** 
   //********************** 
@@ -2504,7 +2505,7 @@ const store = new Vuex.Store({
   //********************** 
   //********************** 
   //********************** 
-  // Timelock FUNCTIONS (START)
+  // TIMELOCK FUNCTIONS (START)
 
   // Set the delay (between Min & Max) [only by Admin]
   Timelock__setDelay: async ({commit,state},{timelock_delay_} ) => {
@@ -2615,18 +2616,183 @@ const store = new Vuex.Store({
     }
   }, 
     
+  // TIMELOCK FUNCTIONS (END)
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  // GSIGH RESERVOIR FUNCTIONS (START)
 
+    // Called by Admin to begin GSIGH's dripping from the Reservoir
+    GSighReservoir_beginDripping: async ({commit,state},{gsigh_dripRate_,gsigh_target_} ) => {
+      const web3 = state.web3;
+      const GSighReservoir_ = GSighReservoir.networks[state.networkId];
+      console.log(GSighReservoir_);
+      if (GSighReservoir_) {
+        GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
+        console.log(GSighReservoir_Contract);
+        const ret = GSighReservoir_Contract.methods.beginDripping({gsigh_dripRate_,gsigh_target_}).send({from: state.web3Account})
+        .then(receipt => {
+          console.log(receipt);
+        })
+        .catch(error => {
+          console.log(error);
+        })
+      }
+    }, 
 
+    // Called by Admin to change Drip Rate
+    GSighReservoir_changeDripRate: async ({commit,state},{gsigh_dripRate_} ) => {
+      const web3 = state.web3;
+      const GSighReservoir_ = GSighReservoir.networks[state.networkId];
+      console.log(GSighReservoir_);
+      if (GSighReservoir_) {
+        GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
+        console.log(GSighReservoir_Contract);
+        const ret = GSighReservoir_Contract.methods.changeDripRate({gsigh_dripRate_}).send({from: state.web3Account})
+        .then(receipt => {
+          console.log(receipt);
+        })
+        .catch(error => {
+          console.log(error);
+        })
+      }
+    },     
 
+    // Called by Admin to begin GSIGH's dripping from the Reservoir
+    GSighReservoir_drip: async ({commit,state}) => {
+      const web3 = state.web3;
+      const GSighReservoir_ = GSighReservoir.networks[state.networkId];
+      console.log(GSighReservoir_);
+      if (GSighReservoir_) {
+        GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
+        console.log(GSighReservoir_Contract);
+        GSighReservoir_Contract.methods.drip().send({from: state.web3Account})
+        .then(receipt => {
+          console.log(receipt);
+        })
+        .catch(error => {
+          console.log(error);
+        })
+      }
+    }, 
 
+    // Get the GSigh's Contract address
+    GSighReservoir_getGSighAddress: async ({commit,state}) => {
+      const web3 = state.web3;
+      const GSighReservoir_ = GSighReservoir.networks[state.networkId];
+      console.log(GSighReservoir_);
+      if (GSighReservoir_) {
+        GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
+        console.log(GSighReservoir_Contract);
+        const ret = GSighReservoir_Contract.methods.getGSighAddress().call()
+        console.log(ret);
+      }
+    },     
 
+    // Get the Sightroller's Contract address
+    GSighReservoir_getTargetAddress: async ({commit,state}) => {
+      const web3 = state.web3;
+      const GSighReservoir_ = GSighReservoir.networks[state.networkId];
+      console.log(GSighReservoir_);
+      if (GSighReservoir_) {
+        GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
+        console.log(GSighReservoir_Contract);
+        const ret = GSighReservoir_Contract.methods.getTargetAddress().call()
+        console.log(ret);
+      }
+    },     
 
+    // Get the lastDripBlockNumber (block number when the most recent drip took place)
+    GSighReservoir_lastDripBlockNumber: async ({commit,state}) => {
+      const web3 = state.web3;
+      const GSighReservoir_ = GSighReservoir.networks[state.networkId];
+      console.log(GSighReservoir_);
+      if (GSighReservoir_) {
+        GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
+        console.log(GSighReservoir_Contract);
+        const ret = GSighReservoir_Contract.methods.lastDripBlockNumber().call()
+        console.log(ret);
+      }
+    },     
 
+    // Get the totalDrippedAmount (total GSigh dripped)
+    GSighReservoir_totalDrippedAmount: async ({commit,state}) => {
+      const web3 = state.web3;
+      const GSighReservoir_ = GSighReservoir.networks[state.networkId];
+      console.log(GSighReservoir_);
+      if (GSighReservoir_) {
+        GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
+        console.log(GSighReservoir_Contract);
+        const ret = GSighReservoir_Contract.methods.totalDrippedAmount().call()
+        console.log(ret);
+      }
+    },     
 
+    // Get the recentlyDrippedAmount (recent GSigh dripped)
+    GSighReservoir_recentlyDrippedAmount: async ({commit,state}) => {
+      const web3 = state.web3;
+      const GSighReservoir_ = GSighReservoir.networks[state.networkId];
+      console.log(GSighReservoir_);
+      if (GSighReservoir_) {
+        GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
+        console.log(GSighReservoir_Contract);
+        const ret = GSighReservoir_Contract.methods.recentlyDrippedAmount().call()
+        console.log(ret);
+      }
+    },     
 
+    // Get current Drip Rate
+    GSighReservoir_dripRate: async ({commit,state}) => {
+      const web3 = state.web3;
+      const GSighReservoir_ = GSighReservoir.networks[state.networkId];
+      console.log(GSighReservoir_);
+      if (GSighReservoir_) {
+        GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
+        console.log(GSighReservoir_Contract);
+        const ret = GSighReservoir_Contract.methods.dripRate().call()
+        console.log(ret);
+      }
+    }, 
+    
+    // Get dripStart
+    GSighReservoir_dripStart: async ({commit,state}) => {
+      const web3 = state.web3;
+      const GSighReservoir_ = GSighReservoir.networks[state.networkId];
+      console.log(GSighReservoir_);
+      if (GSighReservoir_) {
+        GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
+        console.log(GSighReservoir_Contract);
+        const ret = GSighReservoir_Contract.methods.dripStart().call()
+        console.log(ret);
+      }
+    }, 
 
-
-
+    // Get Admin
+    GSighReservoir_admin: async ({commit,state}) => {
+      const web3 = state.web3;
+      const GSighReservoir_ = GSighReservoir.networks[state.networkId];
+      console.log(GSighReservoir_);
+      if (GSighReservoir_) {
+        GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
+        console.log(GSighReservoir_Contract);
+        const ret = GSighReservoir_Contract.methods.admin().call()
+        console.log(ret);
+      }
+    },     
+  
+  // GSIGH RESERVOIR FUNCTIONS (END)
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  //********************** 
+  // GSIGH RESERVOIR FUNCTIONS (START)
 
 
     toggleTheme({state,}, themeMode) {

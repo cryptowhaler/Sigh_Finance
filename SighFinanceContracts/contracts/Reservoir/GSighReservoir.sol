@@ -23,18 +23,45 @@ contract GSighReservoir {
   /// @notice Amount that has already been dripped
   uint public dripped;
 
+  uint public lastDripBlockNumber;    
+
+  uint public totalDrippedAmount; // Dripped Amount till now
+
+  uint public recentlyDrippedAmount;  // Amount recently Dripped
+
+  address public admin;
+
+  bool public isDripAllowed = false; 
+
   /**
     * @notice Constructs a Reservoir
     * @param dripRate_ Numer of tokens per block to drip
     * @param token_ The token to drip
     * @param target_ The recipient of dripped tokens
     */
-  constructor(uint dripRate_, EIP20Interface token_, address target_) public {
-    dripStart = block.number;
-    dripRate = dripRate_;
-    token = token_;
-    target = target_;
+  constructor(EIP20Interface token_) public {
+    admin = msg.sender;
+    token = token_;   
     dripped = 0;
+  }
+
+  function beginDripping (uint dripRate_, address target_ ) public returns (bool) {
+    require(admin == msg.sender,"Dripping can only be initialized by the Admin");
+    require(!isDripAllowed,"Dripping can only be initialized once");
+    dripStart = block.number;
+    lastDripBlockNumber = dripStart;
+    dripRate = dripRate_;
+    target = target_;
+    isDripAllowed = true;
+    return true;
+  }
+
+  function changeDripRate (uint dripRate_,) public returns (bool) {
+    require(admin == msg.sender,"Drip rate can only be changed by the Admin");
+    require(!isDripAllowed,"Dripping needs to be activated first.");
+    uint drippedAmount = dripInternal();
+    dripRate = dripRate_;
+    return true;
   }
 
   /**
@@ -43,27 +70,24 @@ contract GSighReservoir {
     * @return The amount of tokens dripped in this call
     */
   function drip() public returns (uint) {
-    // First, read storage into memory
+    require(isDripAllowed,'Dripping has not been initialized by the Admin')
+    uint drippedAmount = dripInternal();
+    return drippedAmount;
+  }
+
+  function dripInternal() internal returns (uint) {
     EIP20Interface token_ = token;
     uint reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
-    uint dripRate_ = dripRate;
-    uint dripStart_ = dripStart;
-    uint dripped_ = dripped;
-    address target_ = target;
     uint blockNumber_ = block.number;
-
-    // Next, calculate intermediate values
-    uint dripTotal_ = mul(dripRate_, blockNumber_ - dripStart_, "dripTotal overflow");
-    uint deltaDrip_ = sub(dripTotal_, dripped_, "deltaDrip underflow");
+    uint deltaDrip_ = mul(dripRate, blockNumber_ - lastDripBlockNumber, "dripTotal overflow");
     uint toDrip_ = min(reservoirBalance_, deltaDrip_);
-    uint drippedNext_ = add(dripped_, toDrip_, "tautological");
-
-    // Finally, write new `dripped` value and transfer tokens to target
-    dripped = drippedNext_;
     token_.transfer(target_, toDrip_);
-
+    lastDripBlockNumber = blockNumber_ // setting the block number when the Drip is made
+    uint prevDrippedAmount = totalDrippedAmount;
+    recentlyDrippedAmount = toDrip_;
+    totalDrippedAmount = add(prevDrippedAmount,toDrip_,"Overflow");
     return toDrip_;
-  }
+  } 
 
   function getGSighAddress() external view returns (address) {
     return address(token);
