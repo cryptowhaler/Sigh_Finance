@@ -97,6 +97,16 @@ export default {
         gov_newPendingAdmin : undefined,
         gov_eta : undefined,
 
+        // TIMELOCK Variables
+        timelock_delay_ : undefined,
+        timelock_pendingAdmin_ : undefined,
+        timelock_target : undefined,
+        timelock_value : undefined,
+        timelock_signature : undefined,
+        timelock_data : undefined,
+        timelock_eta : undefined,
+        timeLock_EthValueInWei : undefined,
+
 
 
 
@@ -148,7 +158,9 @@ export default {
 
       'governorAlpha_quorumVotes','governorAlpha_proposalThreshold','governorAlpha_proposalMaxOperations','governorAlpha_votingDelay','governorAlpha_votingPeriod',
       'governorAlpha_proposalCount','governorAlpha_propose','governorAlpha_queue','governorAlpha_execute','governorAlpha_cancel','governorAlpha_castVote','governorAlpha_getActions',
-      'governorAlpha_getReceipt','governorAlpha_state','governorAlpha__acceptAdmin','governorAlpha__abdicate','governorAlpha__queueSetTimelockPendingAdmin','governorAlpha__executeSetTimelockPendingAdmin'
+      'governorAlpha_getReceipt','governorAlpha_state','governorAlpha__acceptAdmin','governorAlpha__abdicate','governorAlpha__queueSetTimelockPendingAdmin','governorAlpha__executeSetTimelockPendingAdmin',
+
+      'Timelock__setDelay','Timelock__setPendingAdmin','Timelock__acceptAdmin','Timelock__queueTransaction','Timelock__cancelTransaction','Timelock__executeTransaction',
      ]),
 
 
@@ -516,7 +528,7 @@ export default {
     // **********************
     // unitroller
     // **********************
-    async unitroller(type) {
+    async unitrollerfunctions(type) {
       console.log(type);
       console.log('newPendingImplementation' + this.newPendingImplementation);
       console.log('newPendingAdmin' + this.newPendingAdmin);
@@ -646,8 +658,59 @@ export default {
         this.governorAlpha_propose({p_targets : this.p_targets, p_values : this.p_values ,p_signatures : this.p_signatures ,p_calldatas : this.p_calldatas , p_description : this.p_description });        
       }          
     },
+
+    // **********************
+    // TIMELOCK
+    // **********************
+
+    async timelock_governance(type) {
+      console.log(type);
+      console.log('timelock_delay_' + this.timelock_delay_);
+      console.log('timelock_pendingAdmin_' + this.timelock_pendingAdmin_);
+      console.log('timelock_target' + this.timelock_target);
+      console.log('timelock_value' + this.timelock_value);
+      console.log('timelock_signature' + this.timelock_signature);
+      console.log('timelock_data' + this.timelock_data);
+      console.log('timelock_eta' + this.timelock_eta);
+      console.log('timeLock_EthValueInWei' + this.timeLock_EthValueInWei);
+
+      if (type == 'setDelay') {
+        this.Timelock__setDelay({timelock_delay_: this.timelock_delay_});        
+      }
+      if (type == 'setPendingAdmin') {
+        this.Timelock__setPendingAdmin({timelock_pendingAdmin_: this.timelock_pendingAdmin_});        
+      }
+      if (type == 'acceptAdmin') {
+        this.Timelock__acceptAdmin();        
+      }
+      if (type == 'queueTransaction') {
+        this.Timelock__queueTransaction({ timelock_target: this.timelock_target, 
+                                          timelock_value: this.timelock_value, 
+                                          timelock_signature: this.timelock_signature, 
+                                          timelock_data: this.timelock_data ,
+                                          timelock_eta: this.timelock_eta   
+                                          });        
+      }
+      if (type == 'cancelTransaction') {
+        this.Timelock__cancelTransaction({  timelock_target: this.timelock_target, 
+                                            timelock_value: this.timelock_value, 
+                                            timelock_signature: this.timelock_signature, 
+                                            timelock_data: this.timelock_data ,
+                                            timelock_eta: this.timelock_eta  
+                                          });        
+      }
+      if (type == 'executeTransaction') {
+        this.Timelock__executeTransaction({ timelock_target: this.timelock_target, 
+                                            timelock_value: this.timelock_value, 
+                                            timelock_signature: this.timelock_signature, 
+                                            timelock_data: this.timelock_data ,
+                                            timelock_eta: this.timelock_eta, 
+                                            timeLock_EthValueInWei : this.timeLock_EthValueInWei 
+                                            });        
+      }
   },
 
+  },
 
   created() {
     this.changeVegaMarket = (newMarket) => {       //Changing Selected Vega Market
@@ -669,6 +732,7 @@ export default {
     clearInterval(this.watcher);
     ExchangeDataEventBus.$off('change-vega-market', this.changeVegaMarket);    
   },
+
 };
 </script>
 

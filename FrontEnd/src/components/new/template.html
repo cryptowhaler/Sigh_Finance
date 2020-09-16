@@ -714,10 +714,10 @@
             </div>
         </div>
     </div>
-    <button class="uk-button uk-button-green" @click="unitroller('setPendingImplementation')">UNITROLLER - setPendingImplementation (newPendingImplementation) </button>
-    <button class="uk-button uk-button-green" @click="unitroller('acceptImplementation')">UNITROLLER - acceptImplementation</button>
-    <button class="uk-button uk-button-green" @click="unitroller('setPendingAdmin')">UNITROLLER - setPendingAdmin (newPendingAdmin) </button>
-    <button class="uk-button uk-button-green" @click="unitroller('acceptAdmin')">UNITROLLER - acceptAdmin</button>
+    <button class="uk-button uk-button-green" @click="unitrollerfunctions('setPendingImplementation')">UNITROLLER - setPendingImplementation (newPendingImplementation) </button>
+    <button class="uk-button uk-button-green" @click="unitrollerfunctions('acceptImplementation')">UNITROLLER - acceptImplementation</button>
+    <button class="uk-button uk-button-green" @click="unitrollerfunctions('setPendingAdmin')">UNITROLLER - setPendingAdmin (newPendingAdmin) </button>
+    <button class="uk-button uk-button-green" @click="unitrollerfunctions('acceptAdmin')">UNITROLLER - acceptAdmin</button>
 
     <br>
     <br>
@@ -931,6 +931,107 @@
     <button class="uk-button uk-button-green" @click="governor_alpha('execute')">GOVERNOR ALPHA - execute (proposalId) </button>
     <button class="uk-button uk-button-green" @click="governor_alpha('queue')">GOVERNOR ALPHA - queue (proposalId) </button>
     <button class="uk-button uk-button-green" @click="governor_alpha('propose')">GOVERNOR ALPHA - propose (p_targets,p_values,p_signatures,p_calldatas,p_description) </button>
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+<!-- TIMELOCK CONTRACT -->
+<!-- TIMELOCK CONTRACT -->
+<!-- TIMELOCK CONTRACT -->
+<!-- TIMELOCK CONTRACT -->
+<!-- TIMELOCK CONTRACT -->
+
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <h1 style="color: aliceblue;"> TIMELOCK </h1>
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="timelock_delay_" v-model="timelock_delay_">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="timelock_pendingAdmin_" v-model="timelock_pendingAdmin_">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="timelock_target" v-model="timelock_target">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="timelock_value" v-model="timelock_value">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="timelock_signature" v-model="timelock_signature">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="timelock_data" v-model="timelock_data">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="timelock_eta" v-model="timelock_eta">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="timeLock_EthValueInWei" v-model="timeLock_EthValueInWei">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <button class="uk-button uk-button-green" @click="timelock_governance('setDelay')">TIMELOCK GOVERNANCE - setDelay (timelock_delay_) </button>
+    <button class="uk-button uk-button-green" @click="timelock_governance('setPendingAdmin')">TIMELOCK GOVERNANCE - setPendingAdmin (timelock_pendingAdmin_) </button>
+    <button class="uk-button uk-button-green" @click="timelock_governance('acceptAdmin')">TIMELOCK GOVERNANCE - acceptAdmin  </button>
+    <button class="uk-button uk-button-green" @click="timelock_governance('queueTransaction')">TIMELOCK GOVERNANCE - queueTransaction (timelock_target,timelock_value , timelock_signature , timelock_data , timelock_eta ) </button>
+    <button class="uk-button uk-button-green" @click="timelock_governance('cancelTransaction')">TIMELOCK GOVERNANCE - cancelTransaction (timelock_target, timelock_value , timelock_signature , timelock_data , timelock_eta ) </button>
+    <button class="uk-button uk-button-green" @click="timelock_governance('executeTransaction')">TIMELOCK GOVERNANCE - executeTransaction (timelock_target, timelock_value , timelock_signature , timelock_data , timelock_eta , timeLock_EthValueInWei ) </button>
+
+
 
 
     <br>

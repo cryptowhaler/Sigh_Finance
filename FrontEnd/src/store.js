@@ -13,6 +13,7 @@ import Sightroller from '@/contracts/Sightroller.json';
 import Unitroller from '@/contracts/Unitroller.json';
 import GSigh from '@/contracts/GSigh.json';
 import GovernorAlpha from '@/contracts/GovernorAlpha.json';
+import Timelock from '@/contracts/Timelock.json';
 
 // import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from "constants";
 
@@ -2503,7 +2504,117 @@ const store = new Vuex.Store({
   //********************** 
   //********************** 
   //********************** 
-  // GOVERNOR ALPHA FUNCTIONS (START)
+  // Timelock FUNCTIONS (START)
+
+  // Set the delay (between Min & Max) [only by Admin]
+  Timelock__setDelay: async ({commit,state},{timelock_delay_} ) => {
+    const web3 = state.web3;
+    const Timelock_ = Timelock.networks[state.networkId];
+    console.log(Timelock_);
+    if (Timelock_) {
+      Timelock_Contract = new web3.eth.Contract(Timelock.abi, Timelock_.address);
+      console.log(Timelock_Contract);
+      const ret = Timelock_Contract.methods.setDelay({timelock_delay_}).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  }, 
+  
+    // Called by Admin to set the pendingAdmin
+    Timelock__setPendingAdmin: async ({commit,state},{timelock_pendingAdmin_} ) => {
+      const web3 = state.web3;
+      const Timelock_ = Timelock.networks[state.networkId];
+      console.log(Timelock_);
+      if (Timelock_) {
+        Timelock_Contract = new web3.eth.Contract(Timelock.abi, Timelock_.address);
+        console.log(Timelock_Contract);
+        const ret = Timelock_Contract.methods.setPendingAdmin({timelock_pendingAdmin_}).send({from: state.web3Account})
+        .then(receipt => {
+          console.log(receipt);
+        })
+        .catch(error => {
+          console.log(error);
+        })
+      }
+    }, 
+    
+
+    // Called by pendingAdmin to be accepted as new Admin
+  Timelock__acceptAdmin: async ({commit,state}) => {
+    const web3 = state.web3;
+    const Timelock_ = Timelock.networks[state.networkId];
+    console.log(Timelock_);
+    if (Timelock_) {
+      Timelock_Contract = new web3.eth.Contract(Timelock.abi, Timelock_.address);
+      console.log(Timelock_Contract);
+      const ret = Timelock_Contract.methods.acceptAdmin().send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  },
+
+  // Called by Admin to Queue a transaction
+  Timelock__queueTransaction: async ({commit,state},{timelock_target,timelock_value,timelock_signature,timelock_data,timelock_eta} ) => {
+    const web3 = state.web3;
+    const Timelock_ = Timelock.networks[state.networkId];
+    console.log(Timelock_);
+    if (Timelock_) {
+      Timelock_Contract = new web3.eth.Contract(Timelock.abi, Timelock_.address);
+      console.log(Timelock_Contract);
+      const ret = Timelock_Contract.methods.queueTransaction({timelock_target,timelock_value,timelock_signature,timelock_data,timelock_eta}).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  }, 
+  
+    // Called by Admin to Queue a transaction
+  Timelock__cancelTransaction: async ({commit,state},{timelock_target,timelock_value,timelock_signature,timelock_data,timelock_eta} ) => {
+    const web3 = state.web3;
+    const Timelock_ = Timelock.networks[state.networkId];
+    console.log(Timelock_);
+    if (Timelock_) {
+      Timelock_Contract = new web3.eth.Contract(Timelock.abi, Timelock_.address);
+      console.log(Timelock_Contract);
+      const ret = Timelock_Contract.methods.cancelTransaction({timelock_target,timelock_value,timelock_signature,timelock_data,timelock_eta}).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  }, 
+  
+    // Called by Admin to Execute a transaction  
+  Timelock__executeTransaction: async ({commit,state},{timelock_target,timelock_value,timelock_signature,timelock_data,timelock_eta,EthValueInWei = 0} ) => {
+    const web3 = state.web3;
+    const Timelock_ = Timelock.networks[state.networkId];
+    console.log(Timelock_);
+    if (Timelock_) {
+      Timelock_Contract = new web3.eth.Contract(Timelock.abi, Timelock_.address);
+      console.log(Timelock_Contract);
+      const ret = Timelock_Contract.methods.executeTransaction({timelock_target,timelock_value,timelock_signature,timelock_data,timelock_eta}).send({from: state.web3Account,value: EthValueInWei})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  }, 
+    
 
 
 
