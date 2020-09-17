@@ -35,9 +35,7 @@ contract GSighReservoir {
 
   /**
     * @notice Constructs a Reservoir
-    * @param dripRate_ Numer of tokens per block to drip
     * @param token_ The token to drip
-    * @param target_ The recipient of dripped tokens
     */
   constructor(EIP20Interface token_) public {
     admin = msg.sender;
@@ -56,10 +54,9 @@ contract GSighReservoir {
     return true;
   }
 
-  function changeDripRate (uint dripRate_,) public returns (bool) {
+  function changeDripRate (uint dripRate_) public returns (bool) {
     require(admin == msg.sender,"Drip rate can only be changed by the Admin");
     require(!isDripAllowed,"Dripping needs to be activated first.");
-    uint drippedAmount = dripInternal();
     dripRate = dripRate_;
     return true;
   }
@@ -70,7 +67,7 @@ contract GSighReservoir {
     * @return The amount of tokens dripped in this call
     */
   function drip() public returns (uint) {
-    require(isDripAllowed,'Dripping has not been initialized by the Admin')
+    require(isDripAllowed,'Dripping has not been initialized by the Admin');
     uint drippedAmount = dripInternal();
     return drippedAmount;
   }
@@ -81,8 +78,8 @@ contract GSighReservoir {
     uint blockNumber_ = block.number;
     uint deltaDrip_ = mul(dripRate, blockNumber_ - lastDripBlockNumber, "dripTotal overflow");
     uint toDrip_ = min(reservoirBalance_, deltaDrip_);
-    token_.transfer(target_, toDrip_);
-    lastDripBlockNumber = blockNumber_ // setting the block number when the Drip is made
+    token_.transfer(target, toDrip_);
+    lastDripBlockNumber = blockNumber_; // setting the block number when the Drip is made
     uint prevDrippedAmount = totalDrippedAmount;
     recentlyDrippedAmount = toDrip_;
     totalDrippedAmount = add(prevDrippedAmount,toDrip_,"Overflow");

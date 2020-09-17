@@ -28,31 +28,34 @@ contract SighReservoir {
 
   address public admin;
 
+  bool public isDripAllowed = false;  
+
   /**
     * @notice Constructs a Reservoir
-    * @param dripRate_ Numer of tokens per block to drip
     * @param token_ The token to drip
-    * @param target_ The recipient of dripped tokens
     */
   constructor(EIP20Interface token_) public {
     admin = msg.sender;
     token = token_;
-    dripped == 0    
+    totalDrippedAmount = 0;
+    recentlyDrippedAmount = 0;
+
   }
 
   function beginDripping (uint dripRate_, address target_ ) public returns (bool) {
     require(admin == msg.sender,"Dripping can only be initialized by the Admin");
-    require(dripped == 0,"Dripping can only be initialized once");
+    require(!isDripAllowed,"Dripping can only be initialized once");
     dripStart = block.number;
     lastDripBlockNumber = dripStart;
     dripRate = dripRate_;
+    isDripAllowed = true;
     target = target_;
     return true;
   }
 
-  function changeDripRate (uint dripRate_,) public returns (bool) {
+  function changeDripRate (uint dripRate_) public returns (bool) {
     require(admin == msg.sender,"Drip rate can only be changed by the Admin");
-    uint drippedAmount = dripInternal();
+    require(!isDripAllowed,"Dripping needs to be activated first.");
     dripRate = dripRate_;
     return true;
   }
@@ -63,6 +66,7 @@ contract SighReservoir {
     * @return The amount of tokens dripped in this call
     */
   function drip() public returns (uint) {
+    require(isDripAllowed,'Dripping has not been initialized by the Admin');    
     uint drippedAmount = dripInternal();
     return drippedAmount;
   }
@@ -73,8 +77,8 @@ contract SighReservoir {
     uint blockNumber_ = block.number;
     uint deltaDrip_ = mul(dripRate, blockNumber_ - lastDripBlockNumber, "dripTotal overflow");
     uint toDrip_ = min(reservoirBalance_, deltaDrip_);
-    token_.transfer(target_, toDrip_);
-    lastDripBlockNumber = blockNumber_ // setting the block number when the Drip is made
+    token_.transfer(target, toDrip_);
+    lastDripBlockNumber = blockNumber_; // setting the block number when the Drip is made
     uint prevDrippedAmount = totalDrippedAmount;
     recentlyDrippedAmount = toDrip_;
     totalDrippedAmount = add(prevDrippedAmount,toDrip_,"Overflow");

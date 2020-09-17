@@ -152,7 +152,7 @@ contract SighLens {
         uint underlyingPrice;
     }
 
-    function cTokenUnderlyingPrice(CToken cToken) public returns (CTokenUnderlyingPrice memory) {
+    function cTokenUnderlyingPrice(CToken cToken) public view returns (CTokenUnderlyingPrice memory) {
         SighLensInterface sightroller = SighLensInterface(address(cToken.sightroller()));
         PriceOracle priceOracle = sightroller.oracle();
 
@@ -181,7 +181,7 @@ contract SighLens {
         uint shortfall;
     }
 
-    function getAccountLimits(SighLensInterface sightroller, address account) public returns (AccountLimits memory) {
+    function getAccountLimits(SighLensInterface sightroller, address account) public view returns (AccountLimits memory) {
         (uint errorCode, uint liquidity, uint shortfall) = sightroller.getAccountLiquidity(account);
         require(errorCode == 0);
 

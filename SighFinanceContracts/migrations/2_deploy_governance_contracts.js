@@ -1,13 +1,19 @@
-
 const JumpRateModelV2_ = artifacts.require("JumpRateModelV2");          // constructor(uint baseRatePerYear, uint multiplierPerYear, uint jumpMultiplierPerYear, uint kink_)
 const WhitePaperInterestRateModel_ = artifacts.require("WhitePaperInterestRateModel");          //     constructor(uint baseRatePerYear, uint multiplierPerYear) 
 
 const GSigh_  = artifacts.require("GSigh");                                         // constructor(address account)  *address of the account to which the amount is transferred*
 const Timelock_ = artifacts.require("Timelock");            // constructor(address admin_, uint delay_) 
-const GovernorAlpha_  = artifacts.require("GovernorAlpha");             // deployer.deploy(GovernorAlpha_,timelock.address ,gsigh.address ,admin);
+const GovernorAlpha_  = artifacts.require("GovernorAlpha");             //   constructor(EIP20Interface token_) 
+
 const GSighReservoir_ = artifacts.require("GSighReservoir");
 
 const SighLens_ = artifacts.require("SighLens");
+
+const Sightroller_ = artifacts.require("Sightroller");          //       constructor() 
+const Unitroller_ = artifacts.require("Unitroller");           //     constructor() 
+const SIGH_ = artifacts.require("SIGH");            //        constructor () 
+const SighReservoir_ = artifacts.require("SighReservoir");            //   constructor(EIP20Interface token_) 
+
 
 
 module.exports = function(deployer) {
@@ -24,6 +30,16 @@ module.exports = function(deployer) {
     // ******** INTEREST RATE MODELS **************
     deployer.deploy(JumpRateModelV2_,    baseRatePerYear,multiplierPerYear,jumpMultiplierPerYear,kink_);  
     deployer.deploy(WhitePaperInterestRateModel_,     baseRatePerYear,multiplierPerYear);
+
+    // ******** SIGHTROLLER & UNITROLLER CONTRACTS ( THE MAIN LOGIC HANDLING CONTRACTS ON A PLATFORM SPECIFIC LEVEL )  **************
+    deployer.deploy(Sightroller_);          // Deployer address is the Admin
+    deployer.deploy(Unitroller_);           // Deployer address is the Admin
+
+    // ******** SIGH & SIGH RESERVOIR CONTRACTS  **************
+    deployer.deploy(SIGH_);          // Deployer address is the Admin *Initial Supply is assigned to this address* 
+    sigh = await SIGH_.deployed();                                            // gets the deployed gsigh contract
+
+    deployer.deploy(SighReservoir_, sigh.address);  // Reservoir contract for the SIGH Token
 
     // ******** GOVERNANCE RELATED CONTRACTS (GSIGH , GOVERNANCE ALPHA , TIMELOCK, GSIGH RESERVOIR) **************
     deployer.deploy(GSigh_,admin);                                              // admin is the user / contract to which all the amount is transferred
@@ -45,16 +61,6 @@ module.exports = function(deployer) {
 
 
 
-
-
-    // DEPLOYS TIMELOCK CONTRACT - WORKING
-
-    
-    
-     
-
-    // web3.utils.fromWei()
-    // web3.utils.toWei()
 
   };
 
