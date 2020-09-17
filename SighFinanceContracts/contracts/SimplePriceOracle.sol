@@ -15,7 +15,8 @@ contract SimplePriceOracle is PriceOracle {
         } 
         else {
             // getting the address of the underlying ERC20 token and fetching its price from prices mapping
-            return prices[address(CErc20(address(cToken)).underlying())];
+            return 4242424242;
+            //prices[address(CErc20(address(cToken)).underlying())];
         }
     }
 
