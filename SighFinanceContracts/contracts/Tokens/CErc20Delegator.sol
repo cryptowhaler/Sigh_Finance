@@ -19,8 +19,9 @@ contract CErc20Delegator is CTokenInterface, CErc20Interface, CDelegatorInterfac
      * @param decimals_ ERC-20 decimal precision of this token
      * @param admin_ Address of the administrator of this token
      * @param implementation_ The address of the implementation the contract delegates to
-     * @param becomeImplementationData The encoded args for becomeImplementation
      */
+         //  * @param becomeImplementationData The encoded args for becomeImplementation
+
     constructor(address underlying_,
                 SightrollerInterface sightroller_,
                 InterestRateModel interestRateModel_,
@@ -29,8 +30,8 @@ contract CErc20Delegator is CTokenInterface, CErc20Interface, CDelegatorInterfac
                 string memory symbol_,
                 uint8 decimals_,
                 address payable admin_,
-                address implementation_,
-                bytes memory becomeImplementationData) public {
+                address implementation_
+             ) public {         //   bytes memory becomeImplementationData
         // Creator of the contract is admin during initialization
         admin = msg.sender;
 
@@ -45,7 +46,7 @@ contract CErc20Delegator is CTokenInterface, CErc20Interface, CDelegatorInterfac
                                                             decimals_));
 
         // New implementations always get set via the settor (post-initialize)
-        _setImplementation(implementation_, false, becomeImplementationData);
+        _setImplementation(implementation_, false);     // , becomeImplementationData``
 
         // Set the proper admin now that initialization is done
         admin = admin_;
@@ -55,9 +56,9 @@ contract CErc20Delegator is CTokenInterface, CErc20Interface, CDelegatorInterfac
      * @notice Called by the admin to update the implementation of the delegator
      * @param implementation_ The address of the new implementation for delegation
      * @param allowResign Flag to indicate whether to call _resignImplementation on the old implementation
-     * @param becomeImplementationData The encoded bytes data to be passed to _becomeImplementation
      */
-    function _setImplementation(address implementation_, bool allowResign, bytes memory becomeImplementationData) public {
+        //   * @param becomeImplementationData The encoded bytes data to be passed to _becomeImplementation
+    function _setImplementation(address implementation_, bool allowResign) public {          //   , bytes memory becomeImplementationData
         require(msg.sender == admin, "CErc20Delegator::_setImplementation: Caller must be admin");
 
         if (allowResign) {
@@ -67,7 +68,7 @@ contract CErc20Delegator is CTokenInterface, CErc20Interface, CDelegatorInterfac
         address oldImplementation = implementation;
         implementation = implementation_;
 
-        delegateToImplementation(abi.encodeWithSignature("_becomeImplementation(bytes)", becomeImplementationData));
+        delegateToImplementation( abi.encodeWithSignature("_becomeImplementation()") );      // , becomeImplementationData)
 
         emit NewImplementation(oldImplementation, implementation);
     }

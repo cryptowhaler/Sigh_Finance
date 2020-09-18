@@ -15,11 +15,11 @@ contract CErc20Delegate is CErc20, CDelegateInterface {
 
     /**
      * @notice Called by the delegator on a delegate to initialize it for duty
-     * @param data The encoded bytes data for any initialization
      */
-    function _becomeImplementation(bytes memory data) public {
+        //   * @param data The encoded bytes data for any initialization
+    function _becomeImplementation() public {    //   bytes memory data
         // Shh -- currently unused
-        data;
+        // data;
 
         // Shh -- we don't ever want this hook to be marked pure
         if (false) {

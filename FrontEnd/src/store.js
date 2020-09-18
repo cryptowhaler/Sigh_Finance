@@ -18,6 +18,8 @@ import GSighReservoir from '@/contracts/GSighReservoir.json';
 import SighLens from '@/contracts/SighLens.json';
 import CErc20 from '@/contracts/CErc20.json';
 
+// import SetProtocol from 'setprotocol.js';
+
 // import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from "constants";
 
 Vue.use(Vuex);
@@ -3003,14 +3005,14 @@ const store = new Vuex.Store({
   // CERC20 MARKET FUNCTIONS (START)
 
   // --> Initialize the new money market
-  cERC20_initialize: async ({commit,state},{ cer20_underlying, cer20_sightroller, cer20_interestRateModel_,cer20_interestRateModel_,cer20_initialExchangeRateMantissa,cer20_name, cer20_symbol, cer20_decimals  } ) => {
+  cERC20_initialize: async ({commit,state},{ cer20_underlying, cer20_sightroller , cer20_interestRateModel_, cer20_initialExchangeRateMantissa,cer20_name, cer20_symbol, cer20_decimals  } ) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
       CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.initialize({ cer20_underlying, cer20_sightroller, cer20_interestRateModel_,cer20_interestRateModel_,cer20_initialExchangeRateMantissa,cer20_name, cer20_symbol, cer20_decimals   }).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.initialize({ cer20_underlying, cer20_sightroller, cer20_interestRateModel_, cer20_initialExchangeRateMantissa,cer20_name, cer20_symbol, cer20_decimals   }).send({from: state.web3Account})
       .then(receipt => {
         console.log(receipt);
       })

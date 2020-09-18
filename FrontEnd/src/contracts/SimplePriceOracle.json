@@ -130,9 +130,9 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"asset\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"previousPriceMantissa\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"requestedPriceMantissa\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newPriceMantissa\",\"type\":\"uint256\"}],\"name\":\"PricePosted\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"asset\",\"type\":\"address\"}],\"name\":\"assetPrices\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"contract CToken\",\"name\":\"cToken\",\"type\":\"address\"}],\"name\":\"getUnderlyingPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isPriceOracle\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"asset\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"name\":\"setDirectPrice\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"contract CToken\",\"name\":\"cToken\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"underlyingPriceMantissa\",\"type\":\"uint256\"}],\"name\":\"setUnderlyingPrice\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SimplePriceOracle.sol\":\"SimplePriceOracle\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ErrorReporter.sol\":{\"keccak256\":\"0xecacd5920a722868d343c2577f569636d452d99e5002a29034ccac3dc2359d7f\",\"urls\":[\"bzz-raw://7f8b7c017754046178211d452c6d96fdf6e026fa76d00afb001afb4c1ca81953\",\"dweb:/ipfs/QmSG3rLMdyYTMq7C7ZsPX53B23zGZRB9ifAX3S3qCnpG5p\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/InterestRateModels/InterestRateModel.sol\":{\"keccak256\":\"0xb516fd3b78e7f3f4d1631b8dd50d167da4d73ca870cd09d67efcffdea2ed3b05\",\"urls\":[\"bzz-raw://3427725de8a149882669f60a3fbf179f4ef9ee97723ca47e91f39b8818b548d3\",\"dweb:/ipfs/QmWimP2MCejqdsER2SNBmQSinAM4mtjUHY14KwBtS8rE2Q\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Math/CarefulMath.sol\":{\"keccak256\":\"0x0647348f27e41d22555d99eebd217dee02a4d737df6accd7cce5347a7487c7de\",\"urls\":[\"bzz-raw://08882d26c11a6d240949a5afba79a74694a8b651093c05c5ae4cc359a0181c22\",\"dweb:/ipfs/QmVXb1tDswuhMRNuDLajzohdkvx2kBmqu1Rxn1BAKUfhkV\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Math/Exponential.sol\":{\"keccak256\":\"0xaa59feeb5759614eb9a9af023f843e5e638f4cff7df0060c2f8b2b804d13db7f\",\"urls\":[\"bzz-raw://dca42502fe6f9edc87a73491663c985181c91921ee2db53dc72bd05ab939d681\",\"dweb:/ipfs/QmbiGFW5x1WA6V9nzQrs868cHzcz1W5X9GiMPKK4TFR7qp\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/PriceOracle.sol\":{\"keccak256\":\"0xca16b0fff74ee5d5b4cd64fb5957d669a22e6d15d57308a60b514174dce55d58\",\"urls\":[\"bzz-raw://4be856df7dc9c9b973e9c4e07f43dc8733fe64b1bc88a113cb2db8ca4b86007c\",\"dweb:/ipfs/QmVNREv5YubsUnGpDrXXEhee9e6BY3b6RYHxGkXd6cZYEo\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Sightroller/SightrollerInterface.sol\":{\"keccak256\":\"0xc32a0616c6a3bc2a252a8a42be7b159c6c15da7fec23ed8c62f8dd83ab965c63\",\"urls\":[\"bzz-raw://a4c6e06f1e34b0a248253ff9eb50503d75d8a98dfb0d137d6d37c8d4075a8f19\",\"dweb:/ipfs/QmaAgB56NU8fZmiTjxZHj7xTD28vURjaaiZJEj8TidU5Yd\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SimplePriceOracle.sol\":{\"keccak256\":\"0xc20d20569fb9f40e535d3a0b0cbcb81ef657cd357e47a37dcffc2abe2ed72e89\",\"urls\":[\"bzz-raw://56a2689c0feec58033a1b3329ba9b76e966694a2c92dd74ba941b1226470fcb7\",\"dweb:/ipfs/QmQFGhBh8phV2Rq9ur8imgGaD4U5A554dvqjQm5wmeTTWR\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CErc20.sol\":{\"keccak256\":\"0xf1eafdb19a4155e4973f7afc834c398a3a2abfd80083006de0c6ea2687e4de7e\",\"urls\":[\"bzz-raw://6c6142d61ce3da0e2c38c934d6e1a9bc9f669ddd87cc02b5a37fc7ad16378f97\",\"dweb:/ipfs/QmeZvuTYWYhse47fW1mTfoxxTGg7GvU9Q1Av42G8HDqrjP\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CToken.sol\":{\"keccak256\":\"0xfb9ff80b893b2706c256e5a30224d6177daba81222c2f7f6417029f5569e52fd\",\"urls\":[\"bzz-raw://7aadfd9d6f0cd575565d8e255eae51bdcbb76ac9769fdf61a81d9bdda48a820b\",\"dweb:/ipfs/QmXuPYknit7BmWQt81SFo1ykEgeQhenU1XBM4F5cmtnMw2\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CTokenInterfaces.sol\":{\"keccak256\":\"0x4d2d19e0c5541576d0727e9450bc32b19cadd080143adb30aea242cfa8366ce7\",\"urls\":[\"bzz-raw://ffb762f3107b8f4f6f5c7132e7cf5b628f34b54263c6c61ae2cb5b3545114265\",\"dweb:/ipfs/QmeMDaZ3Zs8pfFEbn9yNaqvwqaTve9EChum4kbphf7oQq7\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin/EIP20Interface.sol\":{\"keccak256\":\"0xfd8ed2eac6d0b4d9ee6b32628ba68bae17544b66f190a5f7ce0c6ad024579dc8\",\"urls\":[\"bzz-raw://701be308137fe36f221f1d7c815247a272638df40917e7d1456b3b16e8402897\",\"dweb:/ipfs/QmPDkPoKiWXMjwpGa65JHBjo5NH8AA3q1nMhsewfUZHjpx\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin/EIP20NonStandardInterface.sol\":{\"keccak256\":\"0x9719f12e4b80b51147ac195553a198cf8b0c516e7e4d04fc324a23ed15cbafb2\",\"urls\":[\"bzz-raw://50c3ba49b80106c88b0171390aa4127edc86f7b29607abe3dc6d08eaefebf837\",\"dweb:/ipfs/QmP6AHNmFdwYwWUeHnhYi3drCQy4dpnnqUbkMeU3oAtokj\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b50610530806100206000396000f3fe608060405234801561001057600080fd5b50600436106100575760003560e01c806309a8acb01461005c578063127ffda01461008a5780635e9a523c146100b657806366331bba146100ee578063fc57d4df1461010a575b600080fd5b6100886004803603604081101561007257600080fd5b506001600160a01b038135169060200135610130565b005b610088600480360360408110156100a057600080fd5b506001600160a01b0381351690602001356101a8565b6100dc600480360360208110156100cc57600080fd5b50356001600160a01b031661028a565b60408051918252519081900360200190f35b6100f66102a9565b604080519115158252519081900360200190f35b6100dc6004803603602081101561012057600080fd5b50356001600160a01b03166102ae565b6001600160a01b038216600081815260208181526040918290205482519384529083015281810183905260608201839052517fdd71a1d19fcba687442a1d5c58578f1e409af71a79d10fd95a4d66efd8fa9ae79181900360800190a16001600160a01b03909116600090815260208190526040902055565b6000826001600160a01b0316636f307dc36040518163ffffffff1660e01b815260040160206040518083038186803b1580156101e357600080fd5b505afa1580156101f7573d6000803e3d6000fd5b505050506040513d602081101561020d57600080fd5b50516001600160a01b038116600081815260208181526040918290205482519384529083015281810185905260608201859052519192507fdd71a1d19fcba687442a1d5c58578f1e409af71a79d10fd95a4d66efd8fa9ae7919081900360800190a16001600160a01b031660009081526020819052604090205550565b6001600160a01b0381166000908152602081905260409020545b919050565b600181565b60006103f5826001600160a01b03166395d89b416040518163ffffffff1660e01b815260040160006040518083038186803b1580156102ec57600080fd5b505afa158015610300573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f19168201604052602081101561032957600080fd5b810190808051604051939291908464010000000082111561034957600080fd5b90830190602082018581111561035e57600080fd5b825164010000000081118282018810171561037857600080fd5b82525081516020918201929091019080838360005b838110156103a557818101518382015260200161038d565b50505050905090810190601f1680156103d25780820380516001836020036101000a031916815260200191505b506040818101905260048152630c68aa8960e31b60208201529250610414915050565b156104095750670de0b6b3a76400006102a4565b5063fcde41b26102a4565b6000816040516020018082805190602001908083835b602083106104495780518252601f19909201916020918201910161042a565b6001836020036101000a03801982511681845116808217855250505050505090500191505060405160208183030381529060405280519060200120836040516020018082805190602001908083835b602083106104b75780518252601f199092019160209182019101610498565b6001836020036101000a038019825116818451168082178552505050505050905001915050604051602081830303815290604052805190602001201490509291505056fea265627a7a723158204ddb938b3bce4b498f70348cddd4e6b53b73ddedfadd72520bdbc9ba5ab1405964736f6c63430005100032",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100575760003560e01c806309a8acb01461005c578063127ffda01461008a5780635e9a523c146100b657806366331bba146100ee578063fc57d4df1461010a575b600080fd5b6100886004803603604081101561007257600080fd5b506001600160a01b038135169060200135610130565b005b610088600480360360408110156100a057600080fd5b506001600160a01b0381351690602001356101a8565b6100dc600480360360208110156100cc57600080fd5b50356001600160a01b031661028a565b60408051918252519081900360200190f35b6100f66102a9565b604080519115158252519081900360200190f35b6100dc6004803603602081101561012057600080fd5b50356001600160a01b03166102ae565b6001600160a01b038216600081815260208181526040918290205482519384529083015281810183905260608201839052517fdd71a1d19fcba687442a1d5c58578f1e409af71a79d10fd95a4d66efd8fa9ae79181900360800190a16001600160a01b03909116600090815260208190526040902055565b6000826001600160a01b0316636f307dc36040518163ffffffff1660e01b815260040160206040518083038186803b1580156101e357600080fd5b505afa1580156101f7573d6000803e3d6000fd5b505050506040513d602081101561020d57600080fd5b50516001600160a01b038116600081815260208181526040918290205482519384529083015281810185905260608201859052519192507fdd71a1d19fcba687442a1d5c58578f1e409af71a79d10fd95a4d66efd8fa9ae7919081900360800190a16001600160a01b031660009081526020819052604090205550565b6001600160a01b0381166000908152602081905260409020545b919050565b600181565b60006103f5826001600160a01b03166395d89b416040518163ffffffff1660e01b815260040160006040518083038186803b1580156102ec57600080fd5b505afa158015610300573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f19168201604052602081101561032957600080fd5b810190808051604051939291908464010000000082111561034957600080fd5b90830190602082018581111561035e57600080fd5b825164010000000081118282018810171561037857600080fd5b82525081516020918201929091019080838360005b838110156103a557818101518382015260200161038d565b50505050905090810190601f1680156103d25780820380516001836020036101000a031916815260200191505b506040818101905260048152630c68aa8960e31b60208201529250610414915050565b156104095750670de0b6b3a76400006102a4565b5063fcde41b26102a4565b6000816040516020018082805190602001908083835b602083106104495780518252601f19909201916020918201910161042a565b6001836020036101000a03801982511681845116808217855250505050505090500191505060405160208183030381529060405280519060200120836040516020018082805190602001908083835b602083106104b75780518252601f199092019160209182019101610498565b6001836020036101000a038019825116818451168082178552505050505050905001915050604051602081830303815290604052805190602001201490509291505056fea265627a7a723158204ddb938b3bce4b498f70348cddd4e6b53b73ddedfadd72520bdbc9ba5ab1405964736f6c63430005100032",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"asset\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"previousPriceMantissa\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"requestedPriceMantissa\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newPriceMantissa\",\"type\":\"uint256\"}],\"name\":\"PricePosted\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"asset\",\"type\":\"address\"}],\"name\":\"assetPrices\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"contract CToken\",\"name\":\"cToken\",\"type\":\"address\"}],\"name\":\"getUnderlyingPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isPriceOracle\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"asset\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"name\":\"setDirectPrice\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"contract CToken\",\"name\":\"cToken\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"underlyingPriceMantissa\",\"type\":\"uint256\"}],\"name\":\"setUnderlyingPrice\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SimplePriceOracle.sol\":\"SimplePriceOracle\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ErrorReporter.sol\":{\"keccak256\":\"0xecacd5920a722868d343c2577f569636d452d99e5002a29034ccac3dc2359d7f\",\"urls\":[\"bzz-raw://7f8b7c017754046178211d452c6d96fdf6e026fa76d00afb001afb4c1ca81953\",\"dweb:/ipfs/QmSG3rLMdyYTMq7C7ZsPX53B23zGZRB9ifAX3S3qCnpG5p\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/InterestRateModels/InterestRateModel.sol\":{\"keccak256\":\"0xb516fd3b78e7f3f4d1631b8dd50d167da4d73ca870cd09d67efcffdea2ed3b05\",\"urls\":[\"bzz-raw://3427725de8a149882669f60a3fbf179f4ef9ee97723ca47e91f39b8818b548d3\",\"dweb:/ipfs/QmWimP2MCejqdsER2SNBmQSinAM4mtjUHY14KwBtS8rE2Q\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Math/CarefulMath.sol\":{\"keccak256\":\"0x0647348f27e41d22555d99eebd217dee02a4d737df6accd7cce5347a7487c7de\",\"urls\":[\"bzz-raw://08882d26c11a6d240949a5afba79a74694a8b651093c05c5ae4cc359a0181c22\",\"dweb:/ipfs/QmVXb1tDswuhMRNuDLajzohdkvx2kBmqu1Rxn1BAKUfhkV\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Math/Exponential.sol\":{\"keccak256\":\"0xaa59feeb5759614eb9a9af023f843e5e638f4cff7df0060c2f8b2b804d13db7f\",\"urls\":[\"bzz-raw://dca42502fe6f9edc87a73491663c985181c91921ee2db53dc72bd05ab939d681\",\"dweb:/ipfs/QmbiGFW5x1WA6V9nzQrs868cHzcz1W5X9GiMPKK4TFR7qp\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/PriceOracle.sol\":{\"keccak256\":\"0xca16b0fff74ee5d5b4cd64fb5957d669a22e6d15d57308a60b514174dce55d58\",\"urls\":[\"bzz-raw://4be856df7dc9c9b973e9c4e07f43dc8733fe64b1bc88a113cb2db8ca4b86007c\",\"dweb:/ipfs/QmVNREv5YubsUnGpDrXXEhee9e6BY3b6RYHxGkXd6cZYEo\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Sightroller/SightrollerInterface.sol\":{\"keccak256\":\"0xc32a0616c6a3bc2a252a8a42be7b159c6c15da7fec23ed8c62f8dd83ab965c63\",\"urls\":[\"bzz-raw://a4c6e06f1e34b0a248253ff9eb50503d75d8a98dfb0d137d6d37c8d4075a8f19\",\"dweb:/ipfs/QmaAgB56NU8fZmiTjxZHj7xTD28vURjaaiZJEj8TidU5Yd\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SimplePriceOracle.sol\":{\"keccak256\":\"0xc20d20569fb9f40e535d3a0b0cbcb81ef657cd357e47a37dcffc2abe2ed72e89\",\"urls\":[\"bzz-raw://56a2689c0feec58033a1b3329ba9b76e966694a2c92dd74ba941b1226470fcb7\",\"dweb:/ipfs/QmQFGhBh8phV2Rq9ur8imgGaD4U5A554dvqjQm5wmeTTWR\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CErc20.sol\":{\"keccak256\":\"0xf1eafdb19a4155e4973f7afc834c398a3a2abfd80083006de0c6ea2687e4de7e\",\"urls\":[\"bzz-raw://6c6142d61ce3da0e2c38c934d6e1a9bc9f669ddd87cc02b5a37fc7ad16378f97\",\"dweb:/ipfs/QmeZvuTYWYhse47fW1mTfoxxTGg7GvU9Q1Av42G8HDqrjP\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CToken.sol\":{\"keccak256\":\"0xfb9ff80b893b2706c256e5a30224d6177daba81222c2f7f6417029f5569e52fd\",\"urls\":[\"bzz-raw://7aadfd9d6f0cd575565d8e255eae51bdcbb76ac9769fdf61a81d9bdda48a820b\",\"dweb:/ipfs/QmXuPYknit7BmWQt81SFo1ykEgeQhenU1XBM4F5cmtnMw2\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CTokenInterfaces.sol\":{\"keccak256\":\"0x2ad76eb92f25980603fe536e7af20c5d7e8aa21d2ce72147aac1ffa6f2d468e9\",\"urls\":[\"bzz-raw://109809645b7dcac33fd3f2ebbb78da09497c871b903b18ba783f60a0e239e8df\",\"dweb:/ipfs/QmXBEvtSkTqnbu9vg7WeYq8JLv8fQ86g7wMALVmLCNkt2z\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin/EIP20Interface.sol\":{\"keccak256\":\"0xfd8ed2eac6d0b4d9ee6b32628ba68bae17544b66f190a5f7ce0c6ad024579dc8\",\"urls\":[\"bzz-raw://701be308137fe36f221f1d7c815247a272638df40917e7d1456b3b16e8402897\",\"dweb:/ipfs/QmPDkPoKiWXMjwpGa65JHBjo5NH8AA3q1nMhsewfUZHjpx\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin/EIP20NonStandardInterface.sol\":{\"keccak256\":\"0x9719f12e4b80b51147ac195553a198cf8b0c516e7e4d04fc324a23ed15cbafb2\",\"urls\":[\"bzz-raw://50c3ba49b80106c88b0171390aa4127edc86f7b29607abe3dc6d08eaefebf837\",\"dweb:/ipfs/QmP6AHNmFdwYwWUeHnhYi3drCQy4dpnnqUbkMeU3oAtokj\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610530806100206000396000f3fe608060405234801561001057600080fd5b50600436106100575760003560e01c806309a8acb01461005c578063127ffda01461008a5780635e9a523c146100b657806366331bba146100ee578063fc57d4df1461010a575b600080fd5b6100886004803603604081101561007257600080fd5b506001600160a01b038135169060200135610130565b005b610088600480360360408110156100a057600080fd5b506001600160a01b0381351690602001356101a8565b6100dc600480360360208110156100cc57600080fd5b50356001600160a01b031661028a565b60408051918252519081900360200190f35b6100f66102a9565b604080519115158252519081900360200190f35b6100dc6004803603602081101561012057600080fd5b50356001600160a01b03166102ae565b6001600160a01b038216600081815260208181526040918290205482519384529083015281810183905260608201839052517fdd71a1d19fcba687442a1d5c58578f1e409af71a79d10fd95a4d66efd8fa9ae79181900360800190a16001600160a01b03909116600090815260208190526040902055565b6000826001600160a01b0316636f307dc36040518163ffffffff1660e01b815260040160206040518083038186803b1580156101e357600080fd5b505afa1580156101f7573d6000803e3d6000fd5b505050506040513d602081101561020d57600080fd5b50516001600160a01b038116600081815260208181526040918290205482519384529083015281810185905260608201859052519192507fdd71a1d19fcba687442a1d5c58578f1e409af71a79d10fd95a4d66efd8fa9ae7919081900360800190a16001600160a01b031660009081526020819052604090205550565b6001600160a01b0381166000908152602081905260409020545b919050565b600181565b60006103f5826001600160a01b03166395d89b416040518163ffffffff1660e01b815260040160006040518083038186803b1580156102ec57600080fd5b505afa158015610300573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f19168201604052602081101561032957600080fd5b810190808051604051939291908464010000000082111561034957600080fd5b90830190602082018581111561035e57600080fd5b825164010000000081118282018810171561037857600080fd5b82525081516020918201929091019080838360005b838110156103a557818101518382015260200161038d565b50505050905090810190601f1680156103d25780820380516001836020036101000a031916815260200191505b506040818101905260048152630c68aa8960e31b60208201529250610414915050565b156104095750670de0b6b3a76400006102a4565b5063fcde41b26102a4565b6000816040516020018082805190602001908083835b602083106104495780518252601f19909201916020918201910161042a565b6001836020036101000a03801982511681845116808217855250505050505090500191505060405160208183030381529060405280519060200120836040516020018082805190602001908083835b602083106104b75780518252601f199092019160209182019101610498565b6001836020036101000a038019825116818451168082178552505050505050905001915050604051602081830303815290604052805190602001201490509291505056fea265627a7a723158204f5dde63dfc176ee1d755841699400b62e9d024fa6862914d22fdf0353807fdb64736f6c63430005100032",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100575760003560e01c806309a8acb01461005c578063127ffda01461008a5780635e9a523c146100b657806366331bba146100ee578063fc57d4df1461010a575b600080fd5b6100886004803603604081101561007257600080fd5b506001600160a01b038135169060200135610130565b005b610088600480360360408110156100a057600080fd5b506001600160a01b0381351690602001356101a8565b6100dc600480360360208110156100cc57600080fd5b50356001600160a01b031661028a565b60408051918252519081900360200190f35b6100f66102a9565b604080519115158252519081900360200190f35b6100dc6004803603602081101561012057600080fd5b50356001600160a01b03166102ae565b6001600160a01b038216600081815260208181526040918290205482519384529083015281810183905260608201839052517fdd71a1d19fcba687442a1d5c58578f1e409af71a79d10fd95a4d66efd8fa9ae79181900360800190a16001600160a01b03909116600090815260208190526040902055565b6000826001600160a01b0316636f307dc36040518163ffffffff1660e01b815260040160206040518083038186803b1580156101e357600080fd5b505afa1580156101f7573d6000803e3d6000fd5b505050506040513d602081101561020d57600080fd5b50516001600160a01b038116600081815260208181526040918290205482519384529083015281810185905260608201859052519192507fdd71a1d19fcba687442a1d5c58578f1e409af71a79d10fd95a4d66efd8fa9ae7919081900360800190a16001600160a01b031660009081526020819052604090205550565b6001600160a01b0381166000908152602081905260409020545b919050565b600181565b60006103f5826001600160a01b03166395d89b416040518163ffffffff1660e01b815260040160006040518083038186803b1580156102ec57600080fd5b505afa158015610300573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f19168201604052602081101561032957600080fd5b810190808051604051939291908464010000000082111561034957600080fd5b90830190602082018581111561035e57600080fd5b825164010000000081118282018810171561037857600080fd5b82525081516020918201929091019080838360005b838110156103a557818101518382015260200161038d565b50505050905090810190601f1680156103d25780820380516001836020036101000a031916815260200191505b506040818101905260048152630c68aa8960e31b60208201529250610414915050565b156104095750670de0b6b3a76400006102a4565b5063fcde41b26102a4565b6000816040516020018082805190602001908083835b602083106104495780518252601f19909201916020918201910161042a565b6001836020036101000a03801982511681845116808217855250505050505090500191505060405160208183030381529060405280519060200120836040516020018082805190602001908083835b602083106104b75780518252601f199092019160209182019101610498565b6001836020036101000a038019825116818451168082178552505050505050905001915050604051602081830303815290604052805190602001201490509291505056fea265627a7a723158204f5dde63dfc176ee1d755841699400b62e9d024fa6862914d22fdf0353807fdb64736f6c63430005100032",
   "sourceMap": "85:1513:21:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;85:1513:21;;;;;;;",
   "deployedSourceMap": "85:1513:21:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;85:1513:21;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1082:158;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;;;;;;1082:158:21;;;;;;;;:::i;:::-;;703:373;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;;;;;;703:373:21;;;;;;;;:::i;1307:102::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;1307:102:21;-1:-1:-1;;;;;1307:102:21;;:::i;:::-;;;;;;;;;;;;;;;;163:41:13;;;:::i;:::-;;;;;;;;;;;;;;;;;;291:401:21;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;291:401:21;-1:-1:-1;;;;;291:401:21;;:::i;1082:158::-;-1:-1:-1;;;;;1174:13:21;;:6;:13;;;;;;;;;;;;;1155:47;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;1212:13:21;;;:6;:13;;;;;;;;;;:21;1082:158::o;703:373::-;793:13;832:6;-1:-1:-1;;;;;817:34:21;;:36;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;817:36:21;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;817:36:21;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;817:36:21;-1:-1:-1;;;;;956:13:21;;:6;:13;;;817:36;956:13;;;;;;;;;937:83;;;;;;;;;;;;;;;;;;;;;;817:36;;-1:-1:-1;937:83:21;;;;;;;;;;-1:-1:-1;;;;;1030:13:21;:6;:13;;;;;;;;;;:39;-1:-1:-1;703:373:21:o;1307:102::-;-1:-1:-1;;;;;1389:13:21;;1366:4;1389:13;;;;;;;;;;;1307:102;;;;:::o;163:41:13:-;200:4;163:41;:::o;291:401:21:-;355:4;375:39;390:6;-1:-1:-1;;;;;390:13:21;;:15;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;390:15:21;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;390:15:21;;;;;;39:16:-1;36:1;17:17;2:54;101:4;390:15:21;80::-1;;;-1:-1;;76:31;65:43;;120:4;113:20;13:2;5:11;;2:2;;;29:1;26;19:12;2:2;390:15:21;;;;;;;;;;;;;19:11:-1;14:3;11:20;8:2;;;44:1;41;34:12;8:2;62:21;;;;123:4;114:14;;138:31;;;135:2;;;182:1;179;172:12;135:2;213:10;;261:11;244:29;;285:43;;;282:58;-1:-1;233:115;230:2;;;361:1;358;351:12;230:2;372:25;;-1:-1;390:15:21;;420:4:-1;411:14;;;;390:15:21;;;;;411:14:-1;390:15:21;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;90:11;;;84:18;71:11;;;64:39;52:2;45:10;8:100;;;12:14;390:15:21;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;390:15:21;375:39;;;;;;;;-1:-1:-1;;;375:39:21;;;;390:15;-1:-1:-1;375:14:21;;-1:-1:-1;;375:39:21:i;:::-;371:315;;;-1:-1:-1;437:4:21;430:11;;371:315;-1:-1:-1;596:10:21;589:17;;1415:181;1496:4;1584:1;1566:21;;;;;;;;;;;;;;;36:153:-1;66:2;61:3;58:11;36:153;;176:10;;164:23;;-1:-1;;139:12;;;;98:2;89:12;;;;114;36:153;;;274:1;267:3;263:2;259:12;254:3;250:22;246:30;315:4;311:9;305:3;299:10;295:26;356:4;350:3;344:10;340:21;389:7;380;377:20;372:3;365:33;3:399;;;1566:21:21;;;;;;;;;;;49:4:-1;39:7;30;26:21;22:32;13:7;6:49;1566:21:21;;;1556:32;;;;;;1548:1;1530:21;;;;;;;;;;;;;;;36:153:-1;66:2;61:3;58:11;36:153;;176:10;;164:23;;-1:-1;;139:12;;;;98:2;89:12;;;;114;36:153;;;274:1;267:3;263:2;259:12;254:3;250:22;246:30;315:4;311:9;305:3;299:10;295:26;356:4;350:3;344:10;340:21;389:7;380;377:20;372:3;365:33;3:399;;;1530:21:21;;;;;;;;;;;49:4:-1;39:7;30;26:21;22:32;13:7;6:49;1530:21:21;;;1520:32;;;;;;:68;1512:77;;1415:181;;;;:::o",
   "source": "pragma solidity ^0.5.16;\n\nimport \"./PriceOracle.sol\";\nimport \"./Tokens/CErc20.sol\";\n\ncontract SimplePriceOracle is PriceOracle {\n\n    mapping(address => uint) prices;\n\n    event PricePosted(address asset, uint previousPriceMantissa, uint requestedPriceMantissa, uint newPriceMantissa);\n\n    function getUnderlyingPrice(CToken cToken) public view returns (uint) {\n        if (compareStrings(cToken.symbol(), \"cETH\")) {\n            return 1e18;\n        } \n        else {\n            // getting the address of the underlying ERC20 token and fetching its price from prices mapping\n            return 4242424242;\n            //prices[address(CErc20(address(cToken)).underlying())];\n        }\n    }\n\n    \n    function setUnderlyingPrice(CToken cToken, uint underlyingPriceMantissa) public {\n        address asset = address(CErc20(address(cToken)).underlying());               // getting the address of the underlying ERC20 token \n        emit PricePosted(asset, prices[asset], underlyingPriceMantissa, underlyingPriceMantissa);\n        prices[asset] = underlyingPriceMantissa;\n    }\n\n    function setDirectPrice(address asset, uint price) public {\n        emit PricePosted(asset, prices[asset], price, price);\n        prices[asset] = price;\n    }\n\n    // v1 price oracle interface for use as backing of proxy\n    function assetPrices(address asset) external view returns (uint) {\n        return prices[asset];\n    }\n\n    function compareStrings(string memory a, string memory b) internal pure returns (bool) {\n        return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));\n    }\n}\n",
@@ -408,7 +408,7 @@
                             "referencedDeclaration": 12677,
                             "src": "390:6:21",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_CToken_$17710",
+                              "typeIdentifier": "t_contract$_CToken_$17700",
                               "typeString": "contract CToken"
                             }
                           },
@@ -419,7 +419,7 @@
                           "lValueRequested": false,
                           "memberName": "symbol",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 17720,
+                          "referencedDeclaration": 17710,
                           "src": "390:13:21",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$__$returns$_t_string_memory_$",
@@ -584,7 +584,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_CToken_$17710",
+                    "typeIdentifier": "t_contract$_CToken_$17700",
                     "typeString": "contract CToken"
                   },
                   "typeName": {
@@ -592,10 +592,10 @@
                     "id": 12676,
                     "name": "CToken",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 17710,
+                    "referencedDeclaration": 17700,
                     "src": "319:6:21",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_CToken_$17710",
+                      "typeIdentifier": "t_contract$_CToken_$17700",
                       "typeString": "contract CToken"
                     }
                   },
@@ -707,7 +707,7 @@
                                     "referencedDeclaration": 12698,
                                     "src": "832:6:21",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_contract$_CToken_$17710",
+                                      "typeIdentifier": "t_contract$_CToken_$17700",
                                       "typeString": "contract CToken"
                                     }
                                   }
@@ -715,7 +715,7 @@
                                 "expression": {
                                   "argumentTypes": [
                                     {
-                                      "typeIdentifier": "t_contract$_CToken_$17710",
+                                      "typeIdentifier": "t_contract$_CToken_$17700",
                                       "typeString": "contract CToken"
                                     }
                                   ],
@@ -786,7 +786,7 @@
                           "lValueRequested": false,
                           "memberName": "underlying",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 18073,
+                          "referencedDeclaration": 18063,
                           "src": "817:34:21",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -1073,7 +1073,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_CToken_$17710",
+                    "typeIdentifier": "t_contract$_CToken_$17700",
                     "typeString": "contract CToken"
                   },
                   "typeName": {
@@ -1081,10 +1081,10 @@
                     "id": 12697,
                     "name": "CToken",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 17710,
+                    "referencedDeclaration": 17700,
                     "src": "731:6:21",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_CToken_$17710",
+                      "typeIdentifier": "t_contract$_CToken_$17700",
                       "typeString": "contract CToken"
                     }
                   },
@@ -1629,7 +1629,7 @@
                                   "name": "abi",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 18872,
+                                  "referencedDeclaration": 18858,
                                   "src": "1530:3:21",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_magic_abi",
@@ -1676,7 +1676,7 @@
                             "name": "keccak256",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 18879,
+                            "referencedDeclaration": 18865,
                             "src": "1520:9:21",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_keccak256_pure$_t_bytes_memory_ptr_$returns$_t_bytes32_$",
@@ -1749,7 +1749,7 @@
                                   "name": "abi",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 18872,
+                                  "referencedDeclaration": 18858,
                                   "src": "1566:3:21",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_magic_abi",
@@ -1796,7 +1796,7 @@
                             "name": "keccak256",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 18879,
+                            "referencedDeclaration": 18865,
                             "src": "1556:9:21",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_keccak256_pure$_t_bytes_memory_ptr_$returns$_t_bytes32_$",
@@ -2227,7 +2227,7 @@
                             "referencedDeclaration": 12677,
                             "src": "390:6:21",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_CToken_$17710",
+                              "typeIdentifier": "t_contract$_CToken_$17700",
                               "typeString": "contract CToken"
                             }
                           },
@@ -2238,7 +2238,7 @@
                           "lValueRequested": false,
                           "memberName": "symbol",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 17720,
+                          "referencedDeclaration": 17710,
                           "src": "390:13:21",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$__$returns$_t_string_memory_$",
@@ -2403,7 +2403,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_CToken_$17710",
+                    "typeIdentifier": "t_contract$_CToken_$17700",
                     "typeString": "contract CToken"
                   },
                   "typeName": {
@@ -2411,10 +2411,10 @@
                     "id": 12676,
                     "name": "CToken",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 17710,
+                    "referencedDeclaration": 17700,
                     "src": "319:6:21",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_CToken_$17710",
+                      "typeIdentifier": "t_contract$_CToken_$17700",
                       "typeString": "contract CToken"
                     }
                   },
@@ -2526,7 +2526,7 @@
                                     "referencedDeclaration": 12698,
                                     "src": "832:6:21",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_contract$_CToken_$17710",
+                                      "typeIdentifier": "t_contract$_CToken_$17700",
                                       "typeString": "contract CToken"
                                     }
                                   }
@@ -2534,7 +2534,7 @@
                                 "expression": {
                                   "argumentTypes": [
                                     {
-                                      "typeIdentifier": "t_contract$_CToken_$17710",
+                                      "typeIdentifier": "t_contract$_CToken_$17700",
                                       "typeString": "contract CToken"
                                     }
                                   ],
@@ -2605,7 +2605,7 @@
                           "lValueRequested": false,
                           "memberName": "underlying",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 18073,
+                          "referencedDeclaration": 18063,
                           "src": "817:34:21",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -2892,7 +2892,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_CToken_$17710",
+                    "typeIdentifier": "t_contract$_CToken_$17700",
                     "typeString": "contract CToken"
                   },
                   "typeName": {
@@ -2900,10 +2900,10 @@
                     "id": 12697,
                     "name": "CToken",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 17710,
+                    "referencedDeclaration": 17700,
                     "src": "731:6:21",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_CToken_$17710",
+                      "typeIdentifier": "t_contract$_CToken_$17700",
                       "typeString": "contract CToken"
                     }
                   },
@@ -3448,7 +3448,7 @@
                                   "name": "abi",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 18872,
+                                  "referencedDeclaration": 18858,
                                   "src": "1530:3:21",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_magic_abi",
@@ -3495,7 +3495,7 @@
                             "name": "keccak256",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 18879,
+                            "referencedDeclaration": 18865,
                             "src": "1520:9:21",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_keccak256_pure$_t_bytes_memory_ptr_$returns$_t_bytes32_$",
@@ -3568,7 +3568,7 @@
                                   "name": "abi",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 18872,
+                                  "referencedDeclaration": 18858,
                                   "src": "1566:3:21",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_magic_abi",
@@ -3615,7 +3615,7 @@
                             "name": "keccak256",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 18879,
+                            "referencedDeclaration": 18865,
                             "src": "1556:9:21",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_keccak256_pure$_t_bytes_memory_ptr_$returns$_t_bytes32_$",
@@ -3815,12 +3815,12 @@
         }
       },
       "links": {},
-      "address": "0xf30931B1aF466007f513B0fd9e982529757F1c58",
-      "transactionHash": "0xd4687ef2ada55bd9ec8bc4c71831a57c66b58d691e7b1a344dd805ca81df0c74"
+      "address": "0x9AFc94693AD2FD61ca53716ec505448498A24913",
+      "transactionHash": "0x5ebd725cfa6622245f322fffb751f78169b6c401becbaf43d34fbf5ca2cb0fb6"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-17T13:25:42.743Z",
+  "updatedAt": "2020-09-18T06:09:14.177Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
