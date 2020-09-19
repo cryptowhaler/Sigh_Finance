@@ -9,7 +9,7 @@
         <img :alt="help_center" style="padding-left: 42px;" src="~@/assets/images/help-center.svg"/>
       </div>
       <div v-if="!noIcon" class="support-label">
-        <h5 style="color: white">{{customer_support}}</h5>
+        <h5 style="color: black">{{customer_support}}</h5>
       </div>
       <p v-else>{{customer_support}}</p>
     </div>

@@ -92,8 +92,8 @@ export default {
     ExchangeDataEventBus.$emit('ticker-connect');
     this.getMarkets();
 
-    this.loadWeb3();
-    this.getBlockchainData();
+    // this.loadWeb3();
+    // this.getBlockchainData();
   },
 
   mounted() {

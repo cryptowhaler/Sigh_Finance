@@ -1,23 +1,23 @@
 $prefix: "../../../assets";
 
-@font-face {
-    font-family: "Curry-Coin";
-    src: url($prefix + "/icon8/Curry-Coin.eot");
-    src: url($prefix + "/icon8/Curry-Coin.eot?#iefix") format("embedded-opentype"),
-    url($prefix + "/icon8/Curry-Coin.woff2") format("woff2"),
-    url($prefix + "/icon8/Curry-Coin.woff") format("woff"),
-    url($prefix + "/icon8/Curry-Coin.ttf") format("truetype"),
-    url($prefix + "/icon8/Curry-Coin.svg#Curry-Coin") format("svg");
-    font-weight: normal;
-    font-style: normal;
-  }
+// @font-face {
+//     font-family: "Curry-Coin";
+//     src: url($prefix + "/icon8/Curry-Coin.eot");
+//     src: url($prefix + "/icon8/Curry-Coin.eot?#iefix") format("embedded-opentype"),
+//     url($prefix + "/icon8/Curry-Coin.woff2") format("woff2"),
+//     url($prefix + "/icon8/Curry-Coin.woff") format("woff"),
+//     url($prefix + "/icon8/Curry-Coin.ttf") format("truetype"),
+//     url($prefix + "/icon8/Curry-Coin.svg#Curry-Coin") format("svg");
+//     font-weight: normal;
+//     font-style: normal;
+//   }
   
-  @media screen and (-webkit-min-device-pixel-ratio:0) {
-    @font-face {
-      font-family: "Curry-Coin";
-      src: url($prefix + "/icon8/Curry-Coin.svg#Curry-Coin") format("svg");
-    }
-  }
+  // @media screen and (-webkit-min-device-pixel-ratio:0) {
+  //   @font-face {
+  //     font-family: "Curry-Coin";
+  //     src: url($prefix + "/icon8/Curry-Coin.svg#Curry-Coin") format("svg");
+  //   }
+  // }
   
   [data-icons8]:before { content: attr(data-icons8); }
   

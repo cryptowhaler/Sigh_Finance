@@ -93,14 +93,14 @@
     max-height: 400px;
   }
   .qa-text {
-    // padding: 30px;
+    padding: 30px;
     background-color: $light-grey-1;
     border: 1px solid $light-grey-4;
     border-radius: 5px;
-    // margin-top: 15px;
+    margin-top: 15px;
     line-height: 24px;
     @media all and (max-width: $mobile-width) {
-      // padding: 20px;
+      padding: 20px;
     }
   }
 } // .qa__contents--content
