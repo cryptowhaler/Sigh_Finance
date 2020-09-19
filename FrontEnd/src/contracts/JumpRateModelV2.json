@@ -8144,12 +8144,12 @@
         }
       },
       "links": {},
-      "address": "0xBE78bFF4563d580e920b37764A467fde423A92b9",
-      "transactionHash": "0x29966671ec51177b11bb404c5357db909d76393d7688504c86f11fc4757f032a"
+      "address": "0x87Cf4ab31d42dbbEFD115403dD7debB6f6c29C60",
+      "transactionHash": "0xae0d734957241de380a903993d04c4931a0af575bce3aa0ebb8be4d9a9931624"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-18T07:59:37.181Z",
+  "updatedAt": "2020-09-19T13:15:46.582Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "SighFinance (modified by Dharma Labs)",

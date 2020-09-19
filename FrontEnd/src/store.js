@@ -3,21 +3,21 @@ import Vuex from 'vuex';
 import {
   dateToDisplayTime,
 } from '@/utils/utility';
-// import Web3 from 'web3';
-// import SetProtocol from 'setprotocol.js'; // SET PROTOCOL SDK
+import Web3 from 'web3';
+import SetProtocol from 'setprotocol.js'; // SET PROTOCOL SDK
 
-// import whitePaperInterestRateModel from '@/contracts/WhitePaperInterestRateModel.json';
-// import jumpRateModelV2 from '@/contracts/JumpRateModelV2.json';
-// import sighReservoir_ from '@/contracts/SighReservoir.json';
-// import SIGH from '@/contracts/SIGH.json';
-// import Sightroller from '@/contracts/Sightroller.json';
-// import Unitroller from '@/contracts/Unitroller.json';
-// import GSigh from '@/contracts/GSigh.json';
-// import GovernorAlpha from '@/contracts/GovernorAlpha.json';
-// import Timelock from '@/contracts/Timelock.json';
-// import GSighReservoir from '@/contracts/GSighReservoir.json';
-// import SighLens from '@/contracts/SighLens.json';
-// import CErc20 from '@/contracts/CErc20.json';
+import whitePaperInterestRateModel from '@/contracts/WhitePaperInterestRateModel.json';
+import jumpRateModelV2 from '@/contracts/JumpRateModelV2.json';
+import sighReservoir_ from '@/contracts/SighReservoir.json';
+import SIGH from '@/contracts/SIGH.json';
+import Sightroller from '@/contracts/Sightroller.json';
+import Unitroller from '@/contracts/Unitroller.json';
+import GSigh from '@/contracts/GSigh.json';
+import GovernorAlpha from '@/contracts/GovernorAlpha.json';
+import Timelock from '@/contracts/Timelock.json';
+import GSighReservoir from '@/contracts/GSighReservoir.json';
+import SighLens from '@/contracts/SighLens.json';
+import CErc20 from '@/contracts/CErc20.json';
 
 // import SetProtocol from 'setprotocol.js';
 
@@ -514,7 +514,7 @@ const store = new Vuex.Store({
 
   actions: {
 
-    /*
+    
 
     // CONNECTS TO WEB3 NETWORK (GANACHE/KOVAN/ETHEREUM/BSC ETC)
     loadWeb3: async ({ commit }) => {
@@ -3544,9 +3544,6 @@ const store = new Vuex.Store({
       })
     }
   },
-
-*/
-
 
 
 

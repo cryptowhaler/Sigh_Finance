@@ -58,7 +58,7 @@ module.exports = {
       host: '127.0.0.1',
       port: 7545,   
       network_id: '*',
-      gas: 6721075,
+      gas: 6721974,
       gasPrice: 1,
     },
     // ropsten: {

@@ -13427,12 +13427,12 @@
         }
       },
       "links": {},
-      "address": "0x59Db66b46eb4fb3324b9B280E766C8563f027b1b",
-      "transactionHash": "0xbfdfbbdcd6f44c8d17272199357b4e9c6a5c3754a4c545965c64fb7851743224"
+      "address": "0x2BFecA16715E719B3212A7eb31fddaA5A7cAa5DF",
+      "transactionHash": "0x07b789fce9cb18f4bd8d71c1bdfbc78d593c663c038be9780542df060e32009d"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-18T07:59:37.252Z",
+  "updatedAt": "2020-09-19T13:15:46.658Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
