@@ -1,6 +1,7 @@
 #ChainLink #Hackathon #ChainLinkHackathon
 
-![Copy of SIGH FINANCE LOGO (2)](https://user-images.githubusercontent.com/53361416/93666400-89620a00-fa9b-11ea-8dd3-35fd2ea4c236.png)
+![SIGH FINANCE LOGO (2)](https://user-images.githubusercontent.com/53361416/93666418-b31b3100-fa9b-11ea-84fd-0d8b5a973643.png)
+
 
 ## Inspiration
 I have been interested in the Blockchain space for long (you can read my articles either on my blog - cryptowhaler.github.io or on Medium - medium.com/@cryptowhaler ) but was initially more inclined towards its use-cases within the institutional financial space. However, now i am of the opinion that the emerging crypto assets market is a much better place to innovate, will grow much faster, and is most probably the only place where you can create monetary structures which can help make space exploratory missions a profitable undertaking.
