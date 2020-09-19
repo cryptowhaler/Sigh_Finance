@@ -12108,12 +12108,12 @@
         }
       },
       "links": {},
-      "address": "0x2da933A265a38402760FaD500c6d985A2D4E76a8",
-      "transactionHash": "0x376e3ec2fccad5f7d431db94d47298c84357f66ad8de2b85018506f23e0d08ef"
+      "address": "0x90DA71245641CaC3038B7e5e00A8c63dE2330998",
+      "transactionHash": "0x9a28c638718be6fd3dc94013ef477da073566d6184ffe2cfd04e8814ffe36e27"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-18T06:09:14.654Z",
+  "updatedAt": "2020-09-18T07:59:37.683Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "SighFinance",

@@ -8899,12 +8899,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xA6b6776Bf3E0bb8b2DB3B0209842268B098BBeC6",
-      "transactionHash": "0xc470fa13bba5294a18a37868681dcf4fead920f2c9497ea30c0acbf4974303d3"
+      "address": "0x73741A02c2f3446d7FB51bADA524C6795B155E4D",
+      "transactionHash": "0xd52fc706511885613633ab793a456bbeabd6ee8d84f44c2c7072a0cd8834d29b"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-18T06:09:14.267Z",
+  "updatedAt": "2020-09-18T07:59:37.305Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "SighFinance",

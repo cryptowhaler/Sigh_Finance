@@ -90,7 +90,63 @@ module.exports = function(deployer) {
 
     let cEther = await CEther_.deployed();
     await deployer.deploy(Maximillion_,   cEther.address); // it calls the borrowBalanceCurrent() function of cEther contract
+
+
+
+    //  ******************** GETTING ADDRESSES OF THE DEPLOYED CONTRACTS **************************
+    let JumpRateModelV2___ = await JumpRateModelV2_.deployed();                                           
+    console.log( 'JumpRateModelV2___ ' +  JumpRateModelV2___.address);
+
+    let WhitePaperInterestRateModel___ = await WhitePaperInterestRateModel_.deployed();                                           
+    console.log( 'WhitePaperInterestRateModel___ ' +  WhitePaperInterestRateModel___.address);
+
+    let SimplePriceOracle____ = await SimplePriceOracle_.deployed();                                           
+    console.log( 'SimplePriceOracle____ ' +  SimplePriceOracle____.address);
+
+    let Sightroller_____ = await Sightroller_.deployed();                                           
+    console.log( 'Sightroller_____ ' +  Sightroller_____.address);
+
+    let Unitroller_____ = await Unitroller_.deployed();                                           
+    console.log( 'Unitroller____ ' +  Unitroller_____.address);
+
+    let SIGH____ = await SIGH_.deployed();                                           
+    console.log( 'SIGH____ ' +  SIGH____.address);
+
+    let SighReservoir_____ = await SighReservoir_.deployed();                                           
+    console.log( 'SighReservoir_ ' +  SighReservoir_.address);
+
+    let GSigh___ = await GSigh_.deployed();                                           
+    console.log( 'GSigh___ ' +  GSigh___.address);
+
+    let GSighReservoir____ = await GSighReservoir_.deployed();                                           
+    console.log( 'GSighReservoir____ ' +  GSighReservoir____.address);
+
+    let Timelock____ = await Timelock_.deployed();                                           
+    console.log( 'Timelock____ ' +  Timelock____.address);
     
+    let GovernorAlpha____ = await GovernorAlpha_.deployed();                                           
+    console.log( 'GovernorAlpha____ ' +  GovernorAlpha____.address);
+
+    let SighLens___ = await SighLens_.deployed();                                           
+    console.log( 'SighLens___ ' +  SighLens___.address);
+
+    let CErc20Delegate_____ = await CErc20Delegate_.deployed();                                           
+    console.log( 'CErc20Delegate_____ ' +  CErc20Delegate_____.address);
+
+    let CErc20Delegator___ = await CErc20Delegator_.deployed();                                           
+    console.log( 'CErc20Delegator___ ' +  CErc20Delegator___.address);
+
+    let CErc20Immutable_____ = await CErc20Immutable_.deployed();                                           
+    console.log( 'CErc20Immutable_____ ' +  CErc20Immutable_____.address);
+
+    let CEther____ = await CEther_.deployed();                                           
+    console.log( 'CEther____ ' +  CEther____.address);
+
+    let Maximillion_____ = await Maximillion_.deployed();                                           
+    console.log( 'Maximillion_ ' +  Maximillion_____.address);
+
+
+
   })
 
   };

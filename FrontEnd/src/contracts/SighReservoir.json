@@ -8934,12 +8934,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x92515db4f14E10c4D95cDc364Dd20154D65ab49D",
-      "transactionHash": "0xbf5b5086569da72926ea6ed73d782021e9d4a8317f454b9bac5e00f489c2bd18"
+      "address": "0xAd0F0b37020a10ce31D32D5771a136118BdE0647",
+      "transactionHash": "0xca0179ce99ccae8b26821b55c4cc17bf64b0d411daf7802635d025f57ae0ff9d"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-18T06:09:14.613Z",
+  "updatedAt": "2020-09-18T07:59:37.635Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "SighFinance",

@@ -1,5 +1,8 @@
 
 @import '../assets/scss/base/mixins.scss';
+@import '~@/assets/scss/Global-desktop';
+@import '~@/assets/scss/Global-tablet';
+@import '~@/assets/scss/Global-mobile';
 
 .page-wrapper {
   position: relative;

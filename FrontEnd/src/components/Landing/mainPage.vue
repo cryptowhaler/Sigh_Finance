@@ -6,12 +6,15 @@ import EventBus, { EventNames, } from '@/eventBuses/default';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import ModalBox from '@/components/ModalBox/ModalBox.vue';
 
+import FAQs from '@/components/FaqsContainer';
+
 export default {
   name: 'mainPage',
 
   components: {
     Spinner,
     ModalBox,
+    faqs: FAQs,
   },
 
   props: {

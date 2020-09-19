@@ -151,7 +151,7 @@ export default {
     'jumpV2ModelgetJumpMultiplierPerBlock','jumpV2ModelgetKink'         
     ,        'sighReservoirBeginDripping','sighReservoirChangeDripRate', 
      'sighReservoirDrip','sighReservoirGetSighTokenAddress','sighReservoirgetTargetAddress','sighReservoirgetDripStart','sighReservoirgetdripRate'
-     , 'sighReservoirgetlastDripBlockNumber','sighReservoirgettotalDrippedAmount','sighReservoirgetadmin',
+     , 'sighReservoirgetlastDripBlockNumber','sighReservoirgetcurrentlyDrippedAmount','sighReservoirgetadmin',
      
      'sighInitMinting','sightransfer','sighapprove','sightransferFrom','sighincreaseAllowance','sighdecreaseAllowance','sighMintCoins',
      'sighchangeReservoir','sighgetRecentyMintedAmount','sighgetRecentMinter','sighgetCurrentCycle','sighgetCurrentEra','sighgetallowance',
@@ -279,8 +279,8 @@ export default {
       if (type == 'RecentlyDrippedAmount') {
         this.sighReservoirDrip();        
       }
-      if (type == 'gettotalDrippedAmount') {
-        this.sighReservoirgettotalDrippedAmount();                
+      if (type == 'getcurrentlyDrippedAmount') {
+        this.sighReservoirgetcurrentlyDrippedAmount();                
       }
       if (type == 'getdripRate') {
         this.sighReservoirgetdripRate();                

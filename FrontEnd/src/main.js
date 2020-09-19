@@ -6,6 +6,11 @@ import store from './store';
 import LocalStorage, { Keys,VegaKeys,} from '@/utils/localStorage.js';
 import EventBus, { EventNames, } from '@/eventBuses/default';
 import { uuidv4, } from './utils/utility';
+
+import BootstrapVue from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
+
 import '@vuikit/theme';
 import '@/assets/scss/base/icons.scss';
 import ApolloClient from 'apollo-client';     //Apollo GraphQL
@@ -56,6 +61,10 @@ const client = new ApolloClient({
 });
 
 Vue.use(VueApollo);
+
+/* Init Bootstrap */
+Vue.use(BootstrapVue);
+
 
 const apolloProvider = new VueApollo({  //holds the Apollo client instances that can then be used by all the child components
   defaultClient: client,

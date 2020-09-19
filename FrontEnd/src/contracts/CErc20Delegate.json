@@ -3255,12 +3255,12 @@
         }
       },
       "links": {},
-      "address": "0xc873897A3d9C416583d6Ad058a2562864fFd1B74",
-      "transactionHash": "0xd41090d940e465e9658862dfcd66c6d13cea5a0e4759cfc9e0c87adb6f03c4ad"
+      "address": "0xf554843fbeea343259dD0c6243c9D6823FEa919E",
+      "transactionHash": "0x036a318f108ddadeec2d3f92165fb886bdf99303f51f0b6b2348d43093a1f6d0"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-18T06:09:14.622Z",
+  "updatedAt": "2020-09-18T07:59:37.645Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "SighFinance",

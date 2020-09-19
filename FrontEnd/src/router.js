@@ -24,7 +24,7 @@ const vueRouter = new Router({
     name: 'Landing Page',
     component: mainPage,
     meta: {
-      pageTitle: 'SIGH FINANCE | An Engineered Liquidity mining Pipeline',
+      pageTitle: 'SIGH Finance | A money-market protocol with an Engineered Liquidity mining Pipeline addressing the volatility problem pertaining to crypto assets.',
     },
   },
   {
@@ -32,41 +32,41 @@ const vueRouter = new Router({
     name: 'Testing',
     component: newPage,
     meta: {
-      pageTitle: 'SIGH FINANCE | An Engineered Liquidity mining Pipeline',
+      pageTitle: 'SIGH Finance | A money-market protocol with an Engineered Liquidity mining Pipeline addressing the volatility problem pertaining to crypto assets.',
     },
   },
   //TV CONTAINER - TRADING_VIEW (below)
           {
             path: '/Trade',        //MOBILE - ACTIVE ORDERS SIDE BAR
-            name: 'SIGH FINANCE | SIGH FINANCE',
+            name: 'SIGH Finance | SIGH Finance',
             component: Landing,
             meta: {
-              pageTitle: 'SIGH FINANCE | An Engineered Liquidity mining Pipeline',
+              pageTitle: 'SIGH Finance | A money-market protocol with an Engineered Liquidity mining Pipeline addressing the volatility problem pertaining to crypto assets.',
             },
           },
   //TV CONTAINER - TRADING_VIEW (above)
            {
              path: '/active-orders',        //MOBILE - ACTIVE ORDERS SIDE BAR
-             name: 'SIGH FINANCE | Active Orders',
+             name: 'SIGH Finance | Active Orders',
              component: ActiveOrdersMobile,
              meta: {
-               pageTitle: 'SIGH FINANCE | Active Orders',
+               pageTitle: 'SIGH Finance | Active Orders',
              },
            },
            {
             path: '/recent-trades',       //MOBILE - RECENT TRADES SIDE BAR
-            name: 'SIGH FINANCE | Recent Trades',
+            name: 'SIGH Finance | Recent Trades',
             component: RecentTradesMobile,
             meta: {
-              pageTitle: 'SIGH FINANCE | Recent Trades',
+              pageTitle: 'SIGH Finance | Recent Trades',
             },
           },
           {
             path: '/positions',       //MOBILE - POSITIONS SIDE BAR
-            name: 'SIGH FINANCE | Positions',
+            name: 'SIGH Finance | Positions',
             component: PositionsMobile,
             meta: {
-              pageTitle: 'SIGH FINANCE | Positions',
+              pageTitle: 'SIGH Finance | Positions',
             },
           },
 
@@ -82,7 +82,7 @@ const vueRouter = new Router({
              path: '/balance',
              component: BalanceTransfer,
              meta: {
-               pageTitle: 'SIGH FINANCE | Balance Information',
+               pageTitle: 'SIGH Finance | Balance Information',
                needLogin: false,
              },
              children: [{
@@ -90,7 +90,7 @@ const vueRouter = new Router({
                name: 'wallet-summary-vega',
                component: SummaryVega,
                meta: {
-                 pageTitle: 'SIGH FINANCE |  Balance Information',
+                 pageTitle: 'SIGH Finance |  Balance Information',
                  needLogin: false,
                },
              }, ],
@@ -100,7 +100,7 @@ const vueRouter = new Router({
              name: 'history',
              component: History,
              meta: {
-               pageTitle: 'SIGH FINANCE | Account History',
+               pageTitle: 'SIGH Finance | Account History',
                needLogin: false,
              },
 

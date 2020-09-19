@@ -31,11 +31,7 @@ import { CoreState } from "../lib/CoreState.sol";
  * The CoreAccounting contract interfaces with the vault and transfer proxies for
  * storage of tokenized assets.
  */
-contract CoreAccounting is
-    CoreState,
-    CoreOperationState,
-    ReentrancyGuard
-{
+contract CoreAccounting is CoreState, CoreOperationState, ReentrancyGuard {
     // Use SafeMath library for all uint256 arithmetic
     using SafeMath for uint256;
 
