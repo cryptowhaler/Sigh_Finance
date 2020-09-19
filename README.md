@@ -9,10 +9,10 @@ SIGH Finance is essentially a money market protocol, with certain differences & 
 1. We are adding another token, SIGH, which is inflationary in nature (1% per day initially for 96 days, then 0.5% for a year which gets halved every year for 10 years)
 2. The SIGH tokens are added to a reserve contract, which drips these tokens at a certain rate per block (can be modified)
 3. The SIGH tokens are distributed among the supported markets based upon their performance (% losses / % gains, calculated daily), where the markets which have made any losses are allocated SIGH token distribution rate for the next 24 hours which can compensate for the losses made.
-The protocol fee (% of the interest rate) and the inflationary SIGH supply is further used to buy crypto assets (WBTC/WETH/LINK/SIGH among others) from the market and add them to the treasury.
-4. The funds from the treasury are used as reserves and to buyback SIGH tokens from the market at regular intervals which can then be redistributed among the loss bearing markets.
-5. The treasury funds, while acting as an investment fund, should act as a cover for the decrease in SIGH token's inflation rate over the years, that is, for example, the BTC purchased during the initial years should be more than enough to balance out the value of SIGH tokens available via inflation when compensating investors against market losses in the future.
-6. The governance token, GSIGH, has similar distribution mechanism as COMP of compound, and will be used for deciding upon future course of action through voting.
+4. The protocol fee (% of the interest rate) and the inflationary SIGH supply is further used to buy crypto assets (WBTC/WETH/LINK/SIGH among others) from the market and add them to the treasury.
+5. The funds from the treasury are used as reserves and to buyback SIGH tokens from the market at regular intervals which can then be redistributed among the loss bearing markets.
+6. The treasury funds, while acting as an investment fund, should act as a cover for the decrease in SIGH token's inflation rate over the years, that is, for example, the BTC purchased during the initial years should be more than enough to balance out the value of SIGH tokens available via inflation when compensating investors against market losses in the future.
+7. The governance token, GSIGH, has similar distribution mechanism as COMP of compound, and will be used for deciding upon future course of action through voting.
 
 **Version - 2** (These additions will be made but it may be difficult to do so within the Hackathon's time-frame)
 
