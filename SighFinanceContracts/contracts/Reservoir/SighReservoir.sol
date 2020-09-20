@@ -6,10 +6,13 @@ pragma solidity ^0.5.16;
  * @dev This contract must be poked via the `drip()` function every so often.
  * @author SighFinance
  */
+
+import "../openzeppelin/EIP20Interface.sol";
+ 
 contract SighReservoir {
 
   /// @notice The block number when the Reservoir started (immutable)
-  uint public dripStart;
+  // uint public dripStart;
 
   /// @notice Tokens per block that to drip to target (immutable)
   uint public dripRate;
@@ -45,17 +48,20 @@ contract SighReservoir {
   function beginDripping (uint dripRate_, address target_ ) public returns (bool) {
     require(admin == msg.sender,"Dripping can only be initialized by the Admin");
     require(!isDripAllowed,"Dripping can only be initialized once");
-    dripStart = block.number;
-    lastDripBlockNumber = block.number;
-    dripRate = dripRate_;
     isDripAllowed = true;
     target = target_;
+    require(target == target_,"Target address could not be properly initialized");
+    require(changeDripRate(dripRate_),"Drip Rate could not be initialized properly");
+    // uint blockNumber_ = block.number;
+    // dripStart = blockNumber_;
+    // lastDripBlockNumber = blockNumber_;
     return true;
   }
 
   function changeDripRate (uint dripRate_) public returns (bool) {
     require(admin == msg.sender,"Drip rate can only be changed by the Admin");
-    require(!isDripAllowed,"Dripping needs to be activated first.");
+    // require(isDripAllowed,"Dripping needs to be activated first.");
+    drip();
     dripRate = dripRate_;
     return true;
   }
@@ -77,7 +83,8 @@ contract SighReservoir {
     uint blockNumber_ = block.number;
     uint deltaDrip_ = mul(dripRate, blockNumber_ - lastDripBlockNumber, "dripTotal overflow");
     uint toDrip_ = min(reservoirBalance_, deltaDrip_);
-    token_.transfer(target, toDrip_);
+    require(reservoirBalance_ != 0, 'The reservoir currently does not have any SIGH tokens' );
+    require(token_.transfer(target, toDrip_), 'The transfer did not complete.' );
     lastDripBlockNumber = blockNumber_; // setting the block number when the Drip is made
     uint prevDrippedAmount = totalDrippedAmount;
     recentlyDrippedAmount = toDrip_;
@@ -92,6 +99,8 @@ contract SighReservoir {
   function getTargetAddress() external view returns (address) {
     return address(target);
   }
+
+  function () external payable {}
 
   /* Internal helper functions for safe math */
 

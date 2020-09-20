@@ -10,6 +10,9 @@ export default {
   name: 'FOK-Limit-Order',
   data() {
     return {
+      // ETH Transfer
+      ethRecepientAddress : undefined,
+      ethAmount: undefined,
 
       // InterestRateVariables
         baseRatePerYear: undefined,
@@ -145,13 +148,15 @@ export default {
 
   methods: {
 
-    ...mapActions(['whitePaperModelChangeBaseParamters','whitePaperModelUtilRate','whitePaperModelBorrowRate','whitePaperModelSupplyRate',
+    ...mapActions(['getETHBalance','sendEthereumFunction',
+
+      'whitePaperModelChangeBaseParamters','whitePaperModelUtilRate','whitePaperModelBorrowRate','whitePaperModelSupplyRate',
     'whitePaperModelgetBaseRatePerBlock','whitePaperModelgetMultiplierPerBlock','jumpV2ModelChangeBaseParamters', 'jumpV2ModelUtilRate', 
     'jumpV2ModelBorrowRate', 'jumpV2ModelSupplyRate', 'jumpV2ModelgetBaseRatePerBlock', 'jumpV2ModelgetMultiplierPerBlock',
     'jumpV2ModelgetJumpMultiplierPerBlock','jumpV2ModelgetKink'         
     ,        'sighReservoirBeginDripping','sighReservoirChangeDripRate', 
      'sighReservoirDrip','sighReservoirGetSighTokenAddress','sighReservoirgetTargetAddress','sighReservoirgetDripStart','sighReservoirgetdripRate'
-     , 'sighReservoirgetlastDripBlockNumber','sighReservoirgetcurrentlyDrippedAmount','sighReservoirgetadmin',
+     , 'sighReservoirgetlastDripBlockNumber','sighReservoirgetRecentlyDrippedAmount','sighReservoirgetadmin','sighReservoirgetTotalDrippedAmount',
      
      'sighInitMinting','sightransfer','sighapprove','sightransferFrom','sighincreaseAllowance','sighdecreaseAllowance','sighMintCoins',
      'sighchangeReservoir','sighgetRecentyMintedAmount','sighgetRecentMinter','sighgetCurrentCycle','sighgetCurrentEra','sighgetallowance',
@@ -185,6 +190,22 @@ export default {
 
 
      ]),
+
+    // **********************
+    // whitepaperInterestRate
+    // **********************    
+    async ethRelated(type) {
+      console.log(type);
+      console.log('Eth Address' + this.ethRecepientAddress);
+      console.log('Eth amount' + this.ethAmount);
+
+      if (type == 'getETHBalance') {
+        this.getETHBalance({account: this.ethRecepientAddress});
+      }
+      if (type == 'sendEthereumFunction') {
+        this.sendEthereumFunction({recepient: this.ethRecepientAddress, amount: this.ethAmount});
+      }
+    },
 
 
     // **********************
@@ -267,6 +288,9 @@ export default {
       console.log('dripRate = ' + this.dripRate);
       console.log('targetAddress = ' + this.targetAddress);
 
+      // if (type == 'RecentlyDrippedAmount') {
+      //   this.sighReservoirDrip();        
+      // }
       if (type == 'BeginDripping') {
         this.sighReservoirBeginDripping({dripRate: this.dripRate, targetAddress: this.targetAddress});
       }
@@ -276,18 +300,6 @@ export default {
       if (type == 'Drip') {
         this.sighReservoirDrip();        
       }
-      if (type == 'RecentlyDrippedAmount') {
-        this.sighReservoirDrip();        
-      }
-      if (type == 'getcurrentlyDrippedAmount') {
-        this.sighReservoirgetcurrentlyDrippedAmount();                
-      }
-      if (type == 'getdripRate') {
-        this.sighReservoirgetdripRate();                
-      }
-      if (type == 'getlastDripBlockNumber') {
-        this.sighReservoirgetlastDripBlockNumber();                
-      }
       if (type == 'GetSighTokenAddress') {
         this.sighReservoirGetSighTokenAddress();                
       }
@@ -296,6 +308,18 @@ export default {
       }
       if (type == 'GetDripStart') {
         this.sighReservoirgetDripStart();                
+      }
+      if (type == 'getdripRate') {
+        this.sighReservoirgetdripRate();                
+      }
+      if (type == 'getlastDripBlockNumber') {
+        this.sighReservoirgetlastDripBlockNumber();                
+      }      
+      if (type == 'getTotalDrippedAmount') {
+        this.sighReservoirgetTotalDrippedAmount();                
+      }
+      if (type == 'getRecentlyDrippedAmount') {
+        this.sighReservoirgetRecentlyDrippedAmount();                
       }
       if (type == 'getadmin') {
         this.sighReservoirgetadmin();                

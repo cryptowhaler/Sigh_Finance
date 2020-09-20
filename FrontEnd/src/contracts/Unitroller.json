@@ -6905,12 +6905,12 @@
         }
       },
       "links": {},
-      "address": "0xB225E1Df7AaBd1565A419332ab0879c4801c6a21",
-      "transactionHash": "0x3a804903f7c5ad16a6cf2a4da114efc353c1c5fe1e188a6e6704f3bc467d795c"
+      "address": "0xd8ca220EF0Dda7276BFB9Ca920956327d0aA5CA0",
+      "transactionHash": "0x58ea95d8b1d86ca1a6a2f1e40a3d7e66c5a3e64852b535f7747af7f01de037fb"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-19T14:33:58.233Z",
+  "updatedAt": "2020-09-20T07:40:06.110Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Storage for the Sightroller is at this address, while execution is delegated to the `SightrollerImplementation`. CTokens should reference this contract as their Gsightroller.",

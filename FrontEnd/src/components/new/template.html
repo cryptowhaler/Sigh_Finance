@@ -11,6 +11,33 @@
     </div>
 
 
+<!--  ETHEREUM (ETH) FUNCTIONS -->
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <h1 style="color: aliceblue;"> ETHEREUM RELATED (SEND ETH, GetBalance) </h1>
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="ethRecepientAddress" v-model="ethRecepientAddress">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="ethAmount" v-model="ethAmount">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+
+    <button class="uk-button uk-button-green" @click="ethRelated('getETHBalance')">ethRelated - getETHBalance</button>
+    <button class="uk-button uk-button-green" @click="ethRelated('sendEthereumFunction')">ethRelated- sendEthereumFunction</button>
+
     <!-- WHITEPAPER INTEREST RATE MODEL -->
 
     <div class="uk-grid uk-grid-small f1-form-grid">
@@ -159,8 +186,8 @@
     <button class="uk-button uk-button-green" @click="sighReservoir('BeginDripping')">Sigh Reservoir - BeginDripping</button>
     <button class="uk-button uk-button-green" @click="sighReservoir('ChangeDripRate')">Sigh Reservoir - ChangeDripRate</button>
     <button class="uk-button uk-button-green" @click="sighReservoir('Drip')">Sigh Reservoir - Drip</button>
-    <button class="uk-button uk-button-green" @click="sighReservoir('RecentlyDrippedAmount')">Sigh Reservoir - RecentlyDrippedAmount</button>
-    <button class="uk-button uk-button-green" @click="sighReservoir('getcurrentlyDrippedAmount')">Sigh Reservoir - getcurrentlyDrippedAmount</button>
+    <button class="uk-button uk-button-green" @click="sighReservoir('getTotalDrippedAmount')">Sigh Reservoir - getTotalDrippedAmount</button>
+    <button class="uk-button uk-button-green" @click="sighReservoir('getRecentlyDrippedAmount')">Sigh Reservoir - getRecentlyDrippedAmount</button>
     <button class="uk-button uk-button-green" @click="sighReservoir('getdripRate')">Sigh Reservoir - getdripRate</button>
     <button class="uk-button uk-button-green" @click="sighReservoir('getlastDripBlockNumber')">Sigh Reservoir - getlastDripBlockNumber</button>
     <button class="uk-button uk-button-green" @click="sighReservoir('GetSighTokenAddress')">Sigh Reservoir - GetSighTokenAddress</button>

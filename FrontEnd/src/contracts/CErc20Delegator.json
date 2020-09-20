@@ -17069,12 +17069,12 @@
         }
       },
       "links": {},
-      "address": "0x8A5892e8D08fe1bA4094F87D7B6DED21C7feD9D3",
-      "transactionHash": "0x4c7e9524fe3c31c6582b1be6e15a18d0057be86dcdd248e4a6e0056e79d337ae"
+      "address": "0x601C28fa4A04D8c41EEa1BdD003e3353d4DfaFDE",
+      "transactionHash": "0x5580f39aacd40278504f461e462a93cef73db2efbc7fe4d9913b9884d9d401b3"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-19T14:33:58.474Z",
+  "updatedAt": "2020-09-20T07:40:06.441Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "SighFinance",

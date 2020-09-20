@@ -1,9 +1,10 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {
-  dateToDisplayTime,
-} from '@/utils/utility';
+import {dateToDisplayTime,} from '@/utils/utility';
 import Web3 from 'web3';
+
+const EthereumTx = require("ethereumjs-tx").Transaction;
+
 import SetProtocol from 'setprotocol.js'; // SET PROTOCOL SDK
 
 import whitePaperInterestRateModel from '@/contracts/WhitePaperInterestRateModel.json';
@@ -562,6 +563,53 @@ const store = new Vuex.Store({
       commit('SET_NETWORK_ID',networkId);
      },
 
+    //********************** 
+    //********************** 
+    //********************** 
+    //  SEND ETHEREUM TO AN ADDRESS
+    //********************** 
+    //********************** 
+    //********************** 
+
+    // working
+    sendEthereumFunction: async ({commit,state},{recepient, amount}) => {
+      const web3 = state.web3;
+      console.log(web3);
+      var send = web3.eth.sendTransaction({from:state.web3Account, to:recepient, value:amount});
+
+      // let details = {"to": recepient, "value": web3.utils.toHex(web3.utils.toWei(amount.toString(), 'ether'))};
+      // const transaction = new EthereumTx(details);
+      // let privateKey = '8259f0f96d82c3a696c0fb4310f22df498674782834c4068d6d2c5b49acd7cc2';
+      // let privKey = Buffer('8259f0f96d82c3a696c0fb4310f22df498674782834c4068d6d2c5b49acd7cc2', 'hex')
+      // transaction.sign(privKey);
+      // const serializedTx = transaction.serialize();
+      // web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex')).on('receipt', console.log);
+    },
+
+    getETHBalance: async ({commit,state},{account}) => {
+      const web3 = state.web3;
+      console.log(web3);
+      // let weiBalance = web3.eth.getBalance(account).toNumber();
+      let weiBalance = web3.eth.getBalance(account)
+      .then(balance => {
+        console.log(balance);
+      })
+      .catch(er => {
+        console.log(er);
+      });
+
+      // console.log('ETH Balance IN WEI ' + weiBalance);
+      // let EthBalance = web3.fromWei(weiBalance, 'ether');
+      // console.log('ETH Balance IN ETH ' + EthBalance);
+    },
+
+
+
+
+
+
+
+
     //  WHITEPAPER_INTEREST_RATE_MODEL CONTRACT CALLS (START)
     //********************** 
     //********************** 
@@ -911,7 +959,7 @@ const store = new Vuex.Store({
     }
   },
 
-  sighReservoirgetcurrentlyDrippedAmount: async ({commit,state}) => {
+  sighReservoirgetRecentlyDrippedAmount: async ({commit,state}) => {
     const web3 = state.web3;
     const sighReservoir = sighReservoir_.networks[state.networkId];
     console.log(sighReservoir);
@@ -922,7 +970,17 @@ const store = new Vuex.Store({
       console.log(currentlyDrippedAmount);
     }
   },
-
+  sighReservoirgetTotalDrippedAmount: async ({commit,state}) => {
+    const web3 = state.web3;
+    const sighReservoir = sighReservoir_.networks[state.networkId];
+    console.log(sighReservoir);
+    if (sighReservoir) {
+      let sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
+      console.log(sighReservoirContract);
+      const currentlyDrippedAmount = await sighReservoirContract.methods.totalDrippedAmount().call();
+      console.log(currentlyDrippedAmount);
+    }
+  },
   sighReservoirgetadmin: async ({commit,state}) => {
     const web3 = state.web3;
     const sighReservoir = sighReservoir_.networks[state.networkId];
