@@ -3815,12 +3815,12 @@
         }
       },
       "links": {},
-      "address": "0xb9d3216a7F0fc1e721e76d32E728ff868c83D522",
-      "transactionHash": "0x7ce06228852b4de8a6fb1299b9ed0abf0db021d3893b9fc177b0d1c1a8f19307"
+      "address": "0x42ccE70A96247B0BF04fbe1d72d7AEfAE305E435",
+      "transactionHash": "0x741ba9626e2ffa655f324321c95d8210233773c00de2a31354f477b6307d8136"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-20T07:40:04.547Z",
+  "updatedAt": "2020-09-20T13:34:35.743Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

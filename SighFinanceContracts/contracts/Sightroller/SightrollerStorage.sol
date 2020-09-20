@@ -81,6 +81,10 @@ contract SightrollerV2Storage is SightrollerV1Storage {
 
         /// @notice Whether or not this market receives Gsigh
         bool isGsighed;
+
+        /// @notice Whether or not this market receives SIGH
+        bool isSighed;
+
     }
 
     /**
@@ -143,4 +147,43 @@ contract SightrollerV3Storage is SightrollerV2Storage {
 
     /// @notice The Gsigh accrued but not yet transferred to each user
     mapping(address => uint) public gsighAccrued;
+}
+
+
+contract SightrollerV4Storage is SightrollerV3Storage {
+
+    struct SighMarketState {
+
+        // uint256 totalSighDistributed;
+
+        // uint256 recentSighDistributed;
+
+        /// @notice The market's last updated Index
+        uint224 index;
+
+        /// @notice The block number the index was last updated at
+        uint32 block;
+    }
+
+
+    /// @notice The rate at which the flywheel distributes SIGH, per block. Calculated Daily
+    uint public sighRate;
+
+    /// @notice The portion of SighRate that each market currently receives, is adjusted every hour
+    mapping(address => uint) public sighSpeeds;
+
+    /// @notice The SIGH market supply state for each market
+    mapping(address => SighMarketState) public sighSupplyState;
+
+    /// @notice The SIGH market borrow state for each market
+    mapping(address => SighMarketState) public sighBorrowState;
+
+    /// @notice The SIGH borrow index for each market for each supplier as of the last time they accrued SIGH
+    mapping(address => mapping(address => uint)) public sighSupplierIndex;
+
+    /// @notice The SIGH borrow index for each market for each borrower as of the last time they accrued SIGH
+    mapping(address => mapping(address => uint)) public sighBorrowerIndex;
+
+    /// @notice The SIGH accrued but not yet transferred to each user
+    mapping(address => uint) public sighAccrued;
 }

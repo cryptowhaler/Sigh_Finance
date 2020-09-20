@@ -35,6 +35,18 @@ const vueRouter = new Router({
       pageTitle: 'SIGH Finance | A money-market protocol with an Engineered Liquidity mining Pipeline addressing the volatility problem pertaining to crypto assets.',
     },
   },
+  // { path: '/', name: 'home', component: Home },
+  // {
+  //   path: '/pool/:id',
+  //   component: Pool,
+  //   children: [
+  //     { path: '', name: 'pool', component: PoolTokens },
+  //     { path: 'swaps', name: 'pool-swaps', component: PoolSwaps },
+  //     { path: 'shares', name: 'pool-shares', component: PoolShares },
+  //     { path: 'about', name: 'pool-about', component: PoolAbout }
+  //   ]
+  // },
+
   //TV CONTAINER - TRADING_VIEW (below)
           {
             path: '/Trade',        //MOBILE - ACTIVE ORDERS SIDE BAR

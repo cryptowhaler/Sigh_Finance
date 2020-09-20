@@ -2081,12 +2081,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xa28a9bDE391c6ac040f82b8e89217301fC33DBF8",
-      "transactionHash": "0xb11c002707e93321d568ac6ef2c9e8e86e6f225d61328bd5b39d75172831389e"
+      "address": "0x02344Bcd383b9EAE6Aa58c99C16790e96C5a0C04",
+      "transactionHash": "0xc9976048ba72bd72728e9027d2f0800dc76f3950ca229d487e397cd44e948fcd"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-20T07:40:06.520Z",
+  "updatedAt": "2020-09-20T13:34:36.466Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "SighFinance",

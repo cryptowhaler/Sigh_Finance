@@ -192,7 +192,7 @@ export default {
      ]),
 
     // **********************
-    // whitepaperInterestRate
+    // EHTEREUM RELATED FUNCTIONS
     // **********************    
     async ethRelated(type) {
       console.log(type);
@@ -767,10 +767,10 @@ export default {
       console.log('gsigh_target_' + this.gsigh_target_);
 
       if (type == 'beginDripping') {
-        this.GSighReservoir_beginDripping({gsigh_dripRate_: this.gsigh_dripRate_, gsigh_target_ : this.gsigh_target_ });        
+        this.GSighReservoir_beginDripping( {gsigh_dripRate_ : this.gsigh_dripRate_ , gsigh_target_ : this.gsigh_target_ });        
       }
       if (type == 'changeDripRate') {
-        this.GSighReservoir_changeDripRate({gsigh_dripRate_: this.gsigh_dripRate_});        
+        this.GSighReservoir_changeDripRate({gsigh_dripRate_ : this.gsigh_dripRate_});        
       }
       if (type == 'drip') {
         this.GSighReservoir_drip();        

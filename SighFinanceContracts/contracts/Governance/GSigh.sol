@@ -69,8 +69,8 @@ contract GSigh is Context, IERC20 {
 
     /**
      * @notice Creating the contract
-     * @param account The initial account to grant all the tokens
      */
+     //     * @param account The initial account to grant all the tokens
     constructor() public {
         balances[_msgSender()] = uint96(totalSupply);
         emit Transfer(address(0), _msgSender() , totalSupply);

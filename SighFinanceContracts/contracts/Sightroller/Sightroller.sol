@@ -8,12 +8,13 @@ import "../Governance/GSigh.sol";
 import "./SightrollerInterface.sol";
 import "./SightrollerStorage.sol";
 import "./Unitroller.sol";
+import "../Sigh.sol";
 
 /**
  * @title SighFinance's Sightroller Contract
  * @author SighFinance
  */
-contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerErrorReporter, Exponential {
+contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerErrorReporter, Exponential {
     
     /// @notice Emitted when an admin supports a market
     event MarketListed(CToken cToken);
@@ -960,7 +961,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
 
         cToken.isCToken(); // Sanity check to make sure its really a CToken
 
-        markets[address(cToken)] = Market({isListed: true, isGsighed: false, collateralFactorMantissa: 0});
+        markets[address(cToken)] = Market({isListed: true, isGsighed: false, isSighed: false, collateralFactorMantissa: 0});
 
         _addMarketInternal(address(cToken));
 
@@ -1312,6 +1313,344 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
     }
 
     /**
+     * @notice Return the address of the Gsigh token
+     * @return The address of GSIGH
+     */
+    function getGSighAddress() public view returns (address) {
+        return 0xc00e94Cb662C3520282E6f5717214004A7f26888;
+    }
+
+    /*** SIGH ***/
+    /*** SIGH ***/
+    /*** SIGH ***/
+    /*** SIGH ***/
+    /*** SIGH ***/
+    /*** SIGH ***/
+    /*** SIGH ***/
+    /*** SIGH ***/
+    /*** SIGH ***/
+    /*** SIGH ***/
+    /*** SIGH ***/
+    /*** SIGH ***/
+    /*** SIGH ***/
+    /*** SIGH ***/
+
+    /// @notice The initial Sigh index for a market
+    uint224 public constant sighInitialIndex = 1e36;
+
+    /// @notice The threshold above which the flywheel transfers Gsigh, in wei
+    uint public constant sighClaimThreshold = 0.1e18;
+
+    /// @notice Emitted when SIGH rate is changed
+    event NewSighRate(uint oldSighRate, uint newSighRate);
+
+    /// @notice Emitted when market Sighed status is changed
+    event MarketSighed(CToken cToken, bool isSighed);
+
+    /// @notice Emitted when Sigh is distributed to a supplier
+    event DistributedSupplierSigh(CToken indexed cToken, address indexed supplier, uint gsighDelta, uint gsighSupplyIndex);
+
+    /// @notice Emitted when Sigh is distributed to a borrower
+    event DistributedBorrowerSigh(CToken indexed cToken, address indexed borrower, uint gsighDelta, uint gsighBorrowIndex);
+
+    /// @notice Emitted when a new SIGH speed is calculated for a market
+    event SighSpeedUpdated(CToken indexed cToken, uint newSpeed);
+
+
+    /**
+     * @notice Recalculate and update SIGH speeds for all SIGH markets
+     */
+
+    /**
+     * @notice Set the amount of Sigh distributed per block
+     * @param sighRate_ The amount of Sigh wei per block to distribute
+     */
+    function _setSighRate(uint sighRate_) public {
+        require(adminOrInitializing(), "only admin can change Sigh rate");
+
+        uint oldSighRate = sighRate;
+        sighRate = sighRate_;
+        emit NewSighRate(oldSighRate, sighRate_);
+
+        // refreshGsighSpeedsInternal();
+    }
+
+    function updateSighSpeeds(uint speeds) public {
+        require(msg.sender == tx.origin, "only externally owned accounts may refresh speeds");
+        updateSighSpeedsInternal();
+    }
+
+    function updateSighSpeedsInternal() internal {
+        CToken[] memory allMarkets_ = allMarkets;
+
+        for (uint i = 0; i < allMarkets_.length; i++) {
+            CToken cToken = allMarkets_[i];
+            Exp memory borrowIndex = Exp({mantissa: cToken.borrowIndex()});
+            updateSighSupplyIndex(address(cToken));
+            updateSighBorrowIndex(address(cToken), borrowIndex);
+        }
+
+        Exp memory totalLosses = Exp({mantissa: 0});
+        Exp[] memory losses = new Exp[](allMarkets_.length);
+        
+        for (uint i = 0; i < allMarkets_.length; i++) {
+            CToken cToken = allMarkets_[i];
+            if (markets[address(cToken)].isSighed) {
+                Exp memory assetPrice = Exp({mantissa: oracle.getUnderlyingPrice(cToken)});
+                Exp memory loss = mul_(assetPrice, cToken.totalBorrows());
+                losses[i] = loss;
+                totalLosses = add_(totalLosses, loss);
+            }
+        }
+
+        for (uint i = 0; i < allMarkets_.length; i++) {
+            CToken cToken = allMarkets[i];
+            uint newSpeed = totalLosses.mantissa > 0 ? mul_(sighRate, div_(losses[i], totalLosses)) : 0;
+            sighSpeeds[address(cToken)] = newSpeed;
+            emit SighSpeedUpdated(cToken, newSpeed);
+        }
+    }
+
+    /**
+     * @notice Accrue SIGH to the market by updating the supply index
+     * @param cToken The market whose supply index to update
+     */
+    function updateSighSupplyIndex(address cToken) internal {
+        SighMarketState storage supplyState = sighSupplyState[cToken];
+        uint supplySpeed = sighSpeeds[cToken];
+        uint blockNumber = getBlockNumber();
+        uint deltaBlocks = sub_(blockNumber, uint(supplyState.block));
+        if (deltaBlocks > 0 && supplySpeed > 0) {
+            uint supplyTokens = CToken(cToken).totalSupply();
+            uint sighAccrued = mul_(deltaBlocks, supplySpeed);
+            Double memory ratio = supplyTokens > 0 ? fraction(sighAccrued, supplyTokens) : Double({mantissa: 0});
+            Double memory index = add_(Double({mantissa: supplyState.index}), ratio);
+            sighSupplyState[cToken] = SighMarketState({ index: safe224(index.mantissa, "new index exceeds 224 bits"), block: safe32(blockNumber, "block number exceeds 32 bits")});
+        } 
+        else if (deltaBlocks > 0) {
+            supplyState.block = safe32(blockNumber, "block number exceeds 32 bits");
+        }
+    }
+
+    /**
+     * @notice Accrue SIGH to the market by updating the borrow index
+     * @param cToken The market whose borrow index to update
+     */
+    function updateSighBorrowIndex(address cToken, Exp memory marketBorrowIndex) internal {
+        SighMarketState storage borrowState = sighBorrowState[cToken];
+        uint borrowSpeed = sighSpeeds[cToken];
+        uint blockNumber = getBlockNumber();
+        uint deltaBlocks = sub_(blockNumber, uint(borrowState.block));
+        if (deltaBlocks > 0 && borrowSpeed > 0) {
+            uint sighAccrued = mul_(deltaBlocks, borrowSpeed);
+            uint borrowAmount = div_(CToken(cToken).totalBorrows(), marketBorrowIndex);
+            Double memory ratio = borrowAmount > 0 ? fraction(sighAccrued, borrowAmount) : Double({mantissa: 0});
+            Double memory index = add_(Double({mantissa: borrowState.index}), ratio);
+            sighBorrowState[cToken] = SighMarketState({  index: safe224(index.mantissa, "new index exceeds 224 bits"), block: safe32(blockNumber, "block number exceeds 32 bits") });
+        } 
+        else if (deltaBlocks > 0) {
+            borrowState.block = safe32(blockNumber, "block number exceeds 32 bits");
+        }
+    }
+
+    /**
+     * @notice Calculate SIGH accrued by a supplier and possibly transfer it to them
+     * @param cToken The market in which the supplier is interacting
+     * @param supplier The address of the supplier to distribute SIGH to
+     */
+    function distributeSupplierSigh(address cToken, address supplier, bool distributeAll) internal {
+        SighMarketState storage supplyState = sighSupplyState[cToken];
+        Double memory supplyIndex = Double({mantissa: supplyState.index});
+        Double memory supplierIndex = Double({mantissa: sighSupplierIndex[cToken][supplier]});
+        sighSupplierIndex[cToken][supplier] = supplyIndex.mantissa;
+
+        if (supplierIndex.mantissa == 0 && supplyIndex.mantissa > 0) {
+            supplierIndex.mantissa = sighInitialIndex;
+        }
+
+        Double memory deltaIndex = sub_(supplyIndex, supplierIndex);
+        uint supplierTokens = CToken(cToken).balanceOf(supplier);
+        uint supplierDelta = mul_(supplierTokens, deltaIndex);
+        uint supplierAccrued = add_(sighAccrued[supplier], supplierDelta);
+        sighAccrued[supplier] = transferSigh(supplier, supplierAccrued, distributeAll ? 0 : sighClaimThreshold);
+        emit DistributedSupplierSigh(CToken(cToken), supplier, supplierDelta, supplyIndex.mantissa);
+    }
+
+    /**
+     * @notice Calculate SIGH accrued by a borrower and possibly transfer it to them
+     * @dev Borrowers will not begin to accrue until after the first interaction with the protocol.
+     * @param cToken The market in which the borrower is interacting
+     * @param borrower The address of the borrower to distribute SIGH to
+     */
+    function distributeBorrowerSigh(address cToken, address borrower, Exp memory marketBorrowIndex, bool distributeAll) internal {
+        SighMarketState storage borrowState = sighBorrowState[cToken];
+        Double memory borrowIndex = Double({mantissa: borrowState.index});
+        Double memory borrowerIndex = Double({mantissa: sighBorrowerIndex[cToken][borrower]});
+        sighBorrowerIndex[cToken][borrower] = borrowIndex.mantissa;
+
+        if (borrowerIndex.mantissa > 0) {
+            Double memory deltaIndex = sub_(borrowIndex, borrowerIndex);
+            uint borrowerAmount = div_(CToken(cToken).borrowBalanceStored(borrower), marketBorrowIndex);
+            uint borrowerDelta = mul_(borrowerAmount, deltaIndex);
+            uint borrowerAccrued = add_(sighAccrued[borrower], borrowerDelta);
+            sighAccrued[borrower] = transferSigh(borrower, borrowerAccrued, distributeAll ? 0 : sighClaimThreshold);
+            emit DistributedBorrowerSigh(CToken(cToken), borrower, borrowerDelta, borrowIndex.mantissa);
+        }
+    }
+
+    /**
+     * @notice Transfer SIGH to the user, if they are above the threshold
+     * @dev Note: If there is not enough SIGH, we do not perform the transfer all.
+     * @param user The address of the user to transfer SIGH to
+     * @param userAccrued The amount of SIGH to (possibly) transfer
+     * @return The amount of SIGH which was NOT transferred to the user
+     */
+    function transferSigh(address user, uint userAccrued, uint threshold) internal returns (uint) {
+        if (userAccrued >= threshold && userAccrued > 0) {
+            SIGH sigh = SIGH(getSIGHAddress());
+            uint sighRemaining = sigh.balanceOf(address(this));
+            if (userAccrued <= sighRemaining) {
+                sigh.transfer(user, userAccrued);
+                return 0;
+            }
+        }
+        return userAccrued;
+    }
+
+    /**
+     * @notice Claim all the SIGH accrued by holder in all markets
+     * @param holder The address to claim SIGH for
+     */
+    function claimSigh(address holder) public {
+        return claimSigh(holder, allMarkets);
+    }
+
+    /**
+     * @notice Claim all the Sigh accrued by holder in the specified markets
+     * @param holder The address to claim Sigh for
+     * @param cTokens The list of markets to claim Sigh in
+     */
+    function claimSigh(address holder, CToken[] memory cTokens) public {
+        address[] memory holders = new address[](1);
+        holders[0] = holder;
+        claimSigh(holders, cTokens, true, true);
+    }
+
+    /**
+     * @notice Claim all Sigh accrued by the holders
+     * @param holders The addresses to claim Sigh for
+     * @param cTokens The list of markets to claim Sigh in
+     * @param borrowers Whether or not to claim Sigh earned by borrowing
+     * @param suppliers Whether or not to claim Sigh earned by supplying
+     */
+    function claimSigh(address[] memory holders, CToken[] memory cTokens, bool borrowers, bool suppliers) public {
+        for (uint i = 0; i < cTokens.length; i++) {
+            CToken cToken = cTokens[i];
+            require(markets[address(cToken)].isListed, "market must be listed");
+            if (borrowers == true) {
+                Exp memory borrowIndex = Exp({mantissa: cToken.borrowIndex()});
+                updateSighBorrowIndex(address(cToken), borrowIndex);
+                for (uint j = 0; j < holders.length; j++) {
+                    distributeBorrowerSigh(address(cToken), holders[j], borrowIndex, true);
+                }
+            }
+            if (suppliers == true) {
+                updateSighSupplyIndex(address(cToken));
+                for (uint j = 0; j < holders.length; j++) {
+                    distributeSupplierSigh(address(cToken), holders[j], true);
+                }
+            }
+        }
+    }
+
+
+
+    /*** SIGH Distribution Admin ***/
+    /*** SIGH Distribution Admin ***/
+    /*** SIGH Distribution Admin ***/
+    /*** SIGH Distribution Admin ***/
+    /*** SIGH Distribution Admin ***/
+    /*** SIGH Distribution Admin ***/
+    /*** SIGH Distribution Admin ***/
+    /*** SIGH Distribution Admin ***/
+
+
+    /**
+     * @notice Add markets to sighMarkets, allowing them to earn sigh in the flywheel
+     * @param cTokens The addresses of the markets to add
+     */
+    function _addSighMarkets(address[] memory cTokens) public {
+        require(adminOrInitializing(), "only admin can add Gsigh market");
+
+        for (uint i = 0; i < cTokens.length; i++) {
+            _addSighMarketInternal(cTokens[i]);
+        }
+
+        // refreshSighSpeedsInternal();   
+    }
+
+    function _addSighMarketInternal(address cToken) internal {
+        Market storage market = markets[cToken];
+        require(market.isListed == true, "Sigh market is not listed");
+        require(market.isSighed == false, "Sigh market already added");
+
+        market.isSighed = true;
+        emit MarketSighed(CToken(cToken), true);
+
+        if (sighSupplyState[cToken].index == 0 && sighSupplyState[cToken].block == 0) {
+            sighSupplyState[cToken] = SighMarketState({ index: sighInitialIndex, block: safe32(getBlockNumber(), "block number exceeds 32 bits") });
+        }
+
+        if (sighBorrowState[cToken].index == 0 && sighBorrowState[cToken].block == 0) {
+            sighBorrowState[cToken] = SighMarketState({ index: sighInitialIndex, block: safe32(getBlockNumber(), "block number exceeds 32 bits") });
+        }
+    }
+
+
+    /**
+     * @notice Remove a market from sighMarkets, preventing it from earning SIGH in the flywheel
+     * @param cToken The address of the market to drop
+     */
+    function _dropSIGHMarket(address cToken) public {
+        require(msg.sender == admin, "only admin can drop SIGH market");
+
+        Market storage market = markets[cToken];
+        require(market.isSighed == true, "market is not a SIGH market");
+
+        market.isSighed = false;
+        emit MarketSighed(CToken(cToken), false);
+
+        // refreshSIGHSpeedsInternal();
+    }
+
+    /**
+     * @notice Return the address of the Sigh token
+     * @return The address of SIGH
+     */
+    function getSIGHAddress() public view returns (address) {
+        return 0xc00e94Cb662C3520282E6f5717214004A7f26888;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
      * @notice Return all of the markets
      * @dev The automatic getter may be used to access an individual market.
      * @return The list of market addresses
@@ -1324,11 +1663,28 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
         return block.number;
     }
 
-    /**
-     * @notice Return the address of the Gsigh token
-     * @return The address of GSIGH
-     */
-    function getGSighAddress() public view returns (address) {
-        return 0xc00e94Cb662C3520282E6f5717214004A7f26888;
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

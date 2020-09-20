@@ -43,7 +43,7 @@ contract GSighReservoir {
     dripped = 0;
   }
 
-  function beginDripping (uint dripRate_, address target_ ) public returns (bool) {
+  function beginDripping (uint dripRate_ , address target_ ) public returns (bool) {
     require(admin == msg.sender,"Dripping can only be initialized by the Admin");
     require(!isDripAllowed,"Dripping can only be initialized once");
     isDripAllowed = true;

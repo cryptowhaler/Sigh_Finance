@@ -2697,14 +2697,14 @@ const store = new Vuex.Store({
   // GSIGH RESERVOIR FUNCTIONS (START)
 
     // Called by Admin to begin GSIGH's dripping from the Reservoir
-    GSighReservoir_beginDripping: async ({commit,state},{gsigh_dripRate_,gsigh_target_} ) => {
+    GSighReservoir_beginDripping: async ({commit,state},{gsigh_dripRate_ , gsigh_target_} ) => {
       const web3 = state.web3;
       const GSighReservoir_ = GSighReservoir.networks[state.networkId];
       console.log(GSighReservoir_);
       if (GSighReservoir_) {
         let GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
         console.log(GSighReservoir_Contract);
-        const ret = GSighReservoir_Contract.methods.beginDripping({gsigh_dripRate_, gsigh_target_}).send({from: state.web3Account, gas:3000000})
+        GSighReservoir_Contract.methods.beginDripping(gsigh_dripRate_, gsigh_target_).send({from: state.web3Account, gas:3000000})
         .then(receipt => {
           console.log(receipt);
         })
@@ -2713,7 +2713,7 @@ const store = new Vuex.Store({
         })
       }
     }, 
-
+ 
     // Called by Admin to change Drip Rate
     GSighReservoir_changeDripRate: async ({commit,state},{gsigh_dripRate_} ) => {
       const web3 = state.web3;
@@ -2722,7 +2722,7 @@ const store = new Vuex.Store({
       if (GSighReservoir_) {
         let GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
         console.log(GSighReservoir_Contract);
-        const ret = GSighReservoir_Contract.methods.changeDripRate({gsigh_dripRate_}).send({from: state.web3Account})
+        GSighReservoir_Contract.methods.changeDripRate(gsigh_dripRate_).send({from: state.web3Account})
         .then(receipt => {
           console.log(receipt);
         })
