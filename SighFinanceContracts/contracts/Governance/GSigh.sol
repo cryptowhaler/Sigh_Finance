@@ -1,7 +1,11 @@
 pragma solidity ^0.5.16;
 pragma experimental ABIEncoderV2;
 
-contract GSigh {
+import "../openzeppelin/Context.sol";
+import "../openzeppelin/IERC20.sol";
+
+
+contract GSigh is Context, IERC20 {
 
     // ****** PARAMETERS & EVENTS ******
 
@@ -47,10 +51,10 @@ contract GSigh {
         uint96 votes;
     }
 
-    /// @notice The standard EIP-20 transfer event
+    //  @notice The standard EIP-20 transfer event
     event Transfer(address indexed from, address indexed to, uint256 amount);
 
-    /// @notice The standard EIP-20 approval event
+    // @notice The standard EIP-20 approval event
     event Approval(address indexed owner, address indexed spender, uint256 amount);
 
     /// @notice An event thats emitted when an account changes its delegate
@@ -67,9 +71,9 @@ contract GSigh {
      * @notice Creating the contract
      * @param account The initial account to grant all the tokens
      */
-    constructor(address account) public {
-        balances[account] = uint96(totalSupply);
-        emit Transfer(address(0), account, totalSupply);
+    constructor() public {
+        balances[_msgSender()] = uint96(totalSupply);
+        emit Transfer(address(0), _msgSender() , totalSupply);
     }
 
     /**

@@ -855,7 +855,7 @@ const store = new Vuex.Store({
         if (sighReservoir) {
           let sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
           console.log(sighReservoirContract);
-          sighReservoirContract.methods.beginDripping(dripRate,targetAddress).send({from: state.web3Account})
+          sighReservoirContract.methods.beginDripping(dripRate,targetAddress).send({from: state.web3Account, gas:3000000})
           .then(receipt => {
             console.log(receipt);
           })
@@ -872,7 +872,7 @@ const store = new Vuex.Store({
       if (sighReservoir) {
         let sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
         console.log(sighReservoirContract);
-        sighReservoirContract.methods.changeDripRate(dripRate).send({from: state.web3Account})
+        sighReservoirContract.methods.changeDripRate(dripRate).send({from: state.web3Account, gas:3000000})
         .then(receipt => {
           console.log(receipt);
         })
@@ -889,7 +889,7 @@ const store = new Vuex.Store({
     if (sighReservoir) {
       let sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
       console.log(sighReservoirContract);
-      sighReservoirContract.methods.drip().send({from: state.web3Account})
+      sighReservoirContract.methods.drip().send({from: state.web3Account, gas:3000000})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1010,7 +1010,7 @@ const store = new Vuex.Store({
     if (SIGH_) {
       let SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
       console.log(SIGH_Contract);
-      SIGH_Contract.methods.initMinting().send({from: state.web3Account})
+      SIGH_Contract.methods.initMinting().send({from: state.web3Account, gas:3000000})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1112,7 +1112,7 @@ const store = new Vuex.Store({
     if (SIGH_) {
       let SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
       console.log(SIGH_Contract);
-      SIGH_Contract.methods.mintCoins().send({from: state.web3Account})
+      SIGH_Contract.methods.mintCoins().send({from: state.web3Account, gas:3000000})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2704,7 +2704,7 @@ const store = new Vuex.Store({
       if (GSighReservoir_) {
         let GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
         console.log(GSighReservoir_Contract);
-        const ret = GSighReservoir_Contract.methods.beginDripping({gsigh_dripRate_,gsigh_target_}).send({from: state.web3Account})
+        const ret = GSighReservoir_Contract.methods.beginDripping({gsigh_dripRate_, gsigh_target_}).send({from: state.web3Account, gas:3000000})
         .then(receipt => {
           console.log(receipt);
         })
@@ -2740,7 +2740,7 @@ const store = new Vuex.Store({
       if (GSighReservoir_) {
         let GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
         console.log(GSighReservoir_Contract);
-        GSighReservoir_Contract.methods.drip().send({from: state.web3Account})
+        GSighReservoir_Contract.methods.drip().send({from: state.web3Account, gas:3000000})
         .then(receipt => {
           console.log(receipt);
         })

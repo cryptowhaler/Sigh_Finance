@@ -57,7 +57,7 @@ module.exports = function(deployer) {
     await deployer.deploy(SighReservoir_, sigh.address);  // Reservoir contract for the SIGH Token
 
     // ******** GOVERNANCE RELATED CONTRACTS (GSIGH , GOVERNANCE ALPHA , TIMELOCK, GSIGH RESERVOIR) **************
-    await deployer.deploy(GSigh_,admin);                                              // admin is the user / contract to which all the amount is transferred
+    await deployer.deploy(GSigh_);                                              // admin is the user / contract to which all the amount is transferred
     let gsigh = await  GSigh_.deployed();                                            // gets the deployed gsigh contract
 
     await deployer.deploy(GSighReservoir_, gsigh.address);  // Reservoir contract for the Governance Token

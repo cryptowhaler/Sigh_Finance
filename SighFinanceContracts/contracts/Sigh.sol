@@ -25,7 +25,7 @@ contract SIGH is Context, IERC20 {
     address public prevReservoir;
 
 
-    uint256 public constant CYCLE_SECONDS = 2;//86400;  // 24*60*60 (i.e seconds in 1 day )
+    uint256 public constant CYCLE_SECONDS = 86400;  // 24*60*60 (i.e seconds in 1 day )
     uint256 public constant FINAL_CYCLE = 3711; // 10 years (3650 days) + 60 days
     uint256 public Current_Cycle; 
     uint256 public Current_Era;

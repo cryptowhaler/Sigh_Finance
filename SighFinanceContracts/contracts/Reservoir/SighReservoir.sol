@@ -52,15 +52,11 @@ contract SighReservoir {
     target = target_;
     require(target == target_,"Target address could not be properly initialized");
     require(changeDripRate(dripRate_),"Drip Rate could not be initialized properly");
-    // uint blockNumber_ = block.number;
-    // dripStart = blockNumber_;
-    // lastDripBlockNumber = blockNumber_;
     return true;
   }
 
   function changeDripRate (uint dripRate_) public returns (bool) {
     require(admin == msg.sender,"Drip rate can only be changed by the Admin");
-    // require(isDripAllowed,"Dripping needs to be activated first.");
     drip();
     dripRate = dripRate_;
     return true;
