@@ -46,7 +46,7 @@ contract SighReservoir {
     require(admin == msg.sender,"Dripping can only be initialized by the Admin");
     require(!isDripAllowed,"Dripping can only be initialized once");
     dripStart = block.number;
-    lastDripBlockNumber = dripStart;
+    lastDripBlockNumber = block.number;
     dripRate = dripRate_;
     isDripAllowed = true;
     target = target_;

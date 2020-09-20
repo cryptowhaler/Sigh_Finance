@@ -571,6 +571,7 @@ const store = new Vuex.Store({
     //********************** 
     //********************** 
 
+    // working
     whitePaperModelChangeBaseParamters: async ({commit,state},{baseRatePerYear, multiplierPerYear}) => {
       const web3 = state.web3;
       console.log(web3);
@@ -591,7 +592,7 @@ const store = new Vuex.Store({
         console.log('Contract not deployed');
       }
     },
-    
+        // working
     whitePaperModelUtilRate: async ({commit,state},{cash, borrows, reserves}) => {
       const web3 = state.web3;
       console.log(web3);
@@ -995,14 +996,14 @@ const store = new Vuex.Store({
     }
   },
 
-  sightransferFrom: async ({commit,state}, {sender,amount}) => {
+  sightransferFrom: async ({commit,state}, {sender,recepient,amount}) => {
     const web3 = state.web3;
     const SIGH_ = SIGH.networks[state.networkId];
     console.log(SIGH_);
     if (SIGH_) {
       let SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
       console.log(SIGH_Contract);
-      SIGH_Contract.methods.transferFrom(sender,amount).send({from: state.web3Account})
+      SIGH_Contract.methods.transferFrom(sender,recepient,amount).send({from: state.web3Account})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1128,30 +1129,31 @@ const store = new Vuex.Store({
     }
   },
 
-  sighgetallowance: async ({commit,state}) => {
+  sighgetallowance: async ({commit,state},{owner,spender}) => {
     const web3 = state.web3;
     const SIGH_ = SIGH.networks[state.networkId];
     console.log(SIGH_);
     if (SIGH_) {
       let SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
       console.log(SIGH_Contract);
-      const allowance = SIGH_Contract.methods.allowance().call();
+      const allowance = SIGH_Contract.methods.allowance(owner,spender).call();
       console.log(allowance);
     }
   },
 
-  sighgetbalanceOf: async ({commit,state}) => {
+  sighgetbalanceOf: async ({commit,state}, {account} )  => {
     const web3 = state.web3;
     const SIGH_ = SIGH.networks[state.networkId];
     console.log(SIGH_);
     if (SIGH_) {
       let SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
       console.log(SIGH_Contract);
-      const balanceOf = SIGH_Contract.methods.balanceOf().call();
+      const balanceOf = SIGH_Contract.methods.balanceOf(account).call();
       console.log(balanceOf);
     }
   },
 
+  //working
   sigh_getTotalSupply: async ({commit,state}) => {
     const web3 = state.web3;
     const SIGH_ = SIGH.networks[state.networkId];
@@ -1188,6 +1190,7 @@ const store = new Vuex.Store({
     }
   },
 
+  //working
   sighgetdecimals: async ({commit,state}) => {
     const web3 = state.web3;
     const SIGH_ = SIGH.networks[state.networkId];
@@ -1200,6 +1203,7 @@ const store = new Vuex.Store({
     }
   },
 
+  //working
   sighgetsymbol: async ({commit,state}) => {
     const web3 = state.web3;
     const SIGH_ = SIGH.networks[state.networkId];
@@ -1212,6 +1216,7 @@ const store = new Vuex.Store({
     }
   },
   
+  //working
   sighgetname: async ({commit,state},) => {
     const web3 = state.web3;
     const SIGH_ = SIGH.networks[state.networkId];

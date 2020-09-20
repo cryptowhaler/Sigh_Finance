@@ -33,7 +33,7 @@ contract SIGH is Context, IERC20 {
     uint256 public previousMintTimeStamp;
     uint256 public recentlyMintedAmount;
     address public recentMinter;
-    bool public isReservoirSet;
+    bool public isReservoirSet = false;
 
     mapping ( uint256 => uint256 ) private mintHistory;
 
@@ -57,7 +57,7 @@ contract SIGH is Context, IERC20 {
 
     // constructing  
     constructor () public {
-        _name = 'SIGH FINANCE';
+        _name = 'SIGH';
         _symbol = 'SIGH';
         _decimals = 18;
         _owner = _msgSender();
@@ -104,6 +104,7 @@ contract SIGH is Context, IERC20 {
     }
 
     function start_Time() external view returns(uint256) {
+        require(mintingActivated, 'Minting has not been activated yet.');
         return _startTime;
     }
 
@@ -181,19 +182,17 @@ contract SIGH is Context, IERC20 {
 
     // checks if minting can be done right now
     function isMintingPossible() private view returns (bool) {
-        require(mintingActivated, "Minting has not been activated by the owner yet.");
-        require(Current_Cycle < 3711, "All Eras have been Completed. No new Minting possible." );
-        require(_getElapsedSeconds(previousMintTimeStamp,now) > CYCLE_SECONDS, "A day has not elapsed since previous mint." );
-        return true;
+        if ( mintingActivated && Current_Cycle < 3711 && _getElapsedSeconds(previousMintTimeStamp,now) > CYCLE_SECONDS ) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     // FUNCTION TO MINT NEW COINS - CAN BE CALLED BY ANYONE ONCE THE MINTING IS ACTIVATED
     function mintCoins() external returns (bool) {
-
-        if ( !isMintingPossible() ) {
-            return false;
-        }
-
+        require(isMintingPossible(), 'Minting is yet to be initiated by the Admin.');
         return mintNewCoins();
     }
 

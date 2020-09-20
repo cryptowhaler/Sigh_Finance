@@ -325,7 +325,7 @@ export default {
         this.sighapprove({spender: this.spender, amount: this.amount});        
       }
       if (type == 'sightransferFrom') {
-        this.sightransferFrom({sender: this.sender, amount: this.amount});        
+        this.sightransferFrom({sender: this.sender, recepient: this.recepient, amount: this.amount});        
       }
       if (type == 'sighincreaseAllowance') {
         this.sighincreaseAllowance({spender: this.spender, addedValue: this.addedValue});                
@@ -352,10 +352,10 @@ export default {
         this.sighgetCurrentEra();                
       }
       if (type == 'sighgetallowance') {
-        this.sighgetallowance();                
+        this.sighgetallowance({owner: this.recepient, spender: this.spender });                
       }
       if (type == 'sighgetbalanceOf') {
-        this.sighgetbalanceOf();                
+        this.sighgetbalanceOf({account: this.recepient });                
       }
       if (type == 'sigh_getTotalSupply') {
         this.sigh_getTotalSupply();                
