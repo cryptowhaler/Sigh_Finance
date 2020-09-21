@@ -747,6 +747,10 @@
     <button class="uk-button uk-button-green" @click="unitrollerfunctions('setPendingAdmin')">UNITROLLER - setPendingAdmin (newPendingAdmin) </button>
     <button class="uk-button uk-button-green" @click="unitrollerfunctions('acceptAdmin')">UNITROLLER - acceptAdmin</button>
 
+    <button class="uk-button uk-button-green" @click="unitrollerfunctions('getAdmin')">UNITROLLER - getAdmin</button>
+    <button class="uk-button uk-button-green" @click="unitrollerfunctions('PendingSightrollerImplementation')">UNITROLLER - PendingSightrollerImplementation</button>
+    <button class="uk-button uk-button-green" @click="unitrollerfunctions('SightrollerImplementation')">UNITROLLER - SightrollerImplementation</button>
+
     <br>
     <br>
     <br>
@@ -1108,6 +1112,338 @@
     <br>
     <br>
     <br>
+
+<!-- CERC20 CONTRACT -->
+<!-- CERC20 CONTRACT -->
+<!-- CERC20 CONTRACT -->
+<!-- CERC20 CONTRACT -->
+<!-- CERC20 CONTRACT -->
+<!-- CERC20 CONTRACT -->
+<!-- CERC20 CONTRACT -->
+
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <h1 style="color: aliceblue;"> CERC20 </h1>
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_underlying" v-model="cer20_underlying">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_sightroller" v-model="cer20_sightroller">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_interestRateModel_" v-model="cer20_interestRateModel_">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_initialExchangeRateMantissa" v-model="cer20_initialExchangeRateMantissa">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_name" v-model="cer20_name">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_symbol" v-model="cer20_symbol">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_decimals" v-model="cer20_decimals">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_mintAmount" v-model="cer20_mintAmount">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_redeemTokens" v-model="cer20_redeemTokens">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_redeemAmount" v-model="cer20_redeemAmount">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_borrowAmount" v-model="cer20_borrowAmount">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_borrower" v-model="cer20_borrower">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_repayAmount" v-model="cer20_repayAmount">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_cTokenCollateral" v-model="cer20_cTokenCollateral">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_addAmount" v-model="cer20_addAmount">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_src" v-model="cer20_src">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_dst" v-model="cer20_dst">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_amount" v-model="cer20_amount">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_spender" v-model="cer20_spender">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_owner" v-model="cer20_owner">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cer20_account" v-model="cer20_account">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cerc20_liquidator" v-model="cerc20_liquidator">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cerc20_seizeTokens" v-model="cerc20_seizeTokens">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cerc20_newPendingAdmin" v-model="cerc20_newPendingAdmin">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cerc20_newSightroller" v-model="cerc20_newSightroller">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cerc20_newReserveFactorMantissa" v-model="cerc20_newReserveFactorMantissa">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cerc20_reduceAmount" v-model="cerc20_reduceAmount">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+<div class="uk-grid uk-grid-small f1-form-grid">
+    <div class="uk-width-1-1">
+        <div class="form-grp">
+            <div class="form-elm">
+                <input class="form-ctrl" type="text" placeholder="cerc20_newInterestRateModel" v-model="cerc20_newInterestRateModel">
+                <span> _ </span>
+            </div>                
+        </div>
+    </div>
+</div>
+
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_initialize')">cERC20Market  - cERC20_initialize (cer20_underlying, cer20_sightroller, cer20_interestRateModel_, cer20_initialExchangeRateMantissa, cer20_name, cer20_symbol ,  cer20_decimals ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_mint')">cERC20Market  - cERC20_mint (cer20_mintAmount ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_redeem')">cERC20Market  - cERC20_redeem (cer20_redeemTokens ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_redeemUnderlying')">cERC20Market  - cERC20_redeemUnderlying (cer20_redeemAmount ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_borrow')">cERC20Market  - cERC20_borrow (cer20_borrowAmount ) </button>
+
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_repayBorrow')">cERC20Market  - cERC20_repayBorrow (cer20_repayAmount ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_repayBorrowBehalf')">cERC20Market  - cERC20_repayBorrowBehalf (cer20_borrower , cer20_repayAmount ,  ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_liquidateBorrow')">cERC20Market  - cERC20_liquidateBorrow (cer20_borrower , cer20_repayAmount , cer20_cTokenCollateral ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_addReserves')">cERC20Market  - cERC20_addReserves (cer20_borrowAmount ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_transfer')">cERC20Market  - cERC20_transfer (cer20_dst , cer20_amount ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_transferFrom')">cERC20Market  - cERC20_transferFrom (cer20_src , cer20_dst , cer20_amount ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_approve')">cERC20Market  - cERC20_approve (cer20_spender , cer20_amount ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_balanceOfUnderlying')">cERC20Market  - cERC20_balanceOfUnderlying (cer20_owner ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_borrowBalanceCurrent')">cERC20Market  - cERC20_borrowBalanceCurrent (cer20_account ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_balanceOf')">cERC20Market  - cERC20_balanceOf (cer20_owner ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_getAccountSnapshot')">cERC20Market  - cERC20_getAccountSnapshot (cer20_account ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_borrowBalanceStored')">cERC20Market  - cERC20_borrowBalanceStored (cer20_account ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_seize')">cERC20Market  - cERC20_seize (cerc20_liquidator , cerc20_borrower ,  cerc20_seizeTokens) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_setPendingAdmin')">cERC20Market  - cERC20_setPendingAdmin (cerc20_newPendingAdmin ) </button>
+
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_setSightroller')">cERC20Market  - cERC20_setSightroller (cerc20_newSightroller ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_setReserveFactor')">cERC20Market  - cERC20_setReserveFactor (cerc20_newReserveFactorMantissa ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_reduceReserves')">cERC20Market  - cERC20_reduceReserves (cerc20_reduceAmount ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_setInterestRateModel')">cERC20Market  - cERC20_setInterestRateModel (cerc20_newPendingAdmin ) </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_acceptAdmin')">cERC20Market  - cERC20_acceptAdmin </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_exchangeRateStored')">cERC20Market  - cERC20_exchangeRateStored  </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_getCash')">cERC20Market  - cERC20_getCash  </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_borrowRatePerBlock')">cERC20Market  - cERC20_borrowRatePerBlock  </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_supplyRatePerBlock')">cERC20Market  - cERC20_supplyRatePerBlock  </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_exchangeRateCurrent')">cERC20Market  - cERC20_exchangeRateCurrent  </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_accrueInterest')">cERC20Market  - cERC20_accrueInterest  </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_allowance')">cERC20Market  - cERC20_allowance  </button>
+<button class="uk-button uk-button-green" @click="cERC20Market('cERC20_totalBorrowsCurrent')">cERC20Market  - cERC20_totalBorrowsCurrent  </button>
+
+
+<br>
+<br>
+<br>
+<br>
+
 
 <!-- SIGHLENS CONTRACT -->
 <!-- SIGHLENS CONTRACT -->

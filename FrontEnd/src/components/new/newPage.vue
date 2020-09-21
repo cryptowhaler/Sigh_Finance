@@ -125,6 +125,35 @@ export default {
         sighlens_gsigh_address : undefined,
         sighlens_blockNumbers : undefined,
 
+        // cERC20 Variables
+        cer20_underlying : undefined,
+        cer20_sightroller : undefined,
+        cer20_interestRateModel_ : undefined,
+        cer20_initialExchangeRateMantissa : undefined,
+        cer20_name : undefined,
+        cer20_symbol : undefined,
+        cer20_decimals : undefined,
+        cer20_mintAmount : undefined,
+        cer20_redeemTokens : undefined,
+        cer20_redeemAmount : undefined,
+        cer20_borrowAmount : undefined,
+        cer20_borrower : undefined,
+        cer20_repayAmount : undefined,
+        cer20_cTokenCollateral : undefined,
+        cer20_addAmount : undefined,
+        cer20_src : undefined,
+        cer20_dst : undefined,
+        cer20_amount : undefined,
+        cer20_spender : undefined,
+        cer20_owner : undefined,
+        cer20_account : undefined,
+        cerc20_liquidator : undefined,
+        cerc20_seizeTokens: undefined,
+        cerc20_newPendingAdmin: undefined,
+        cerc20_newSightroller: undefined,
+        cerc20_newReserveFactorMantissa: undefined,
+        cerc20_reduceAmount: undefined,
+        cerc20_newInterestRateModel: undefined,
 
 
 
@@ -172,7 +201,8 @@ export default {
      'sightroller_claimGSigh','sightroller_claimGSigh_bs','sightroller_setGsighRate','sightroller__addGsighMarkets','sightroller__dropGsighMarket','sightroller__getAllMarkets',
      'sightroller__getBlockNumber','sightroller__getGSighAddress',
 
-      'unitroller___setPendingImplementation','unitroller_acceptImplementation','unitroller_setPendingAdmin','unitroller_acceptAdmin',
+      'unitroller___setPendingImplementation','unitroller_acceptImplementation','unitroller_setPendingAdmin','unitroller_acceptAdmin','unitroller_getAdmin','unitroller_getPendingSightrollerImplementation',
+      'unitroller_getSightrollerImplementation',
 
      'gsigh_allowance','gsigh_balanceOf','gsigh_approve','gsigh_transfer','gsigh_transferFrom','gsigh_delegate','gsigh_getCurrentVotes','gsigh_getPriorVotes',
 
@@ -187,6 +217,11 @@ export default {
 
       'SighLens_cTokenMetadata','SighLens_cTokenMetadataAll','SighLens_cTokenBalances','SighLens_cTokenBalancesAll','SighLens_cTokenUnderlyingPrice','SighLens_cTokenUnderlyingPriceAll',
       'SighLens_getAccountLimits','SighLens_getGovReceipts','SighLens_getGovProposals','SighLens_getGSighBalanceMetadata','SighLens_getGSighVotes','SighLens_getGSighBalanceMetadataExt',
+
+      'cERC20_initialize','cERC20_mint','cERC20_redeem','cERC20_redeemUnderlying','cERC20_borrow','cERC20_repayBorrow','cERC20_repayBorrowBehalf','cERC20_liquidateBorrow','cERC20_addReserves','cERC20_transfer',
+      'cERC20_transferFrom','cERC20_approve','cERC20_balanceOfUnderlying','cERC20_totalBorrowsCurrent','cERC20_borrowBalanceCurrent','cERC20_exchangeRateCurrent','cERC20_accrueInterest','cERC20_allowance',
+      'cERC20_balanceOf','cERC20_getAccountSnapshot','cERC20_borrowRatePerBlock','cERC20_supplyRatePerBlock','cERC20_borrowBalanceStored','cERC20_exchangeRateStored','cERC20_getCash','cERC20_seize','cERC20_setPendingAdmin',
+      'cERC20_acceptAdmin','cERC20_setSightroller','cERC20_setReserveFactor','cERC20_reduceReserves','cERC20_setInterestRateModel'
 
 
      ]),
@@ -592,6 +627,16 @@ export default {
       if (type == 'acceptAdmin') {
         this.unitroller_acceptAdmin();        
       }
+      if (type == 'getAdmin') {
+        this.unitroller_getAdmin();        
+      }
+      if (type == 'PendingSightrollerImplementation') {
+        this.unitroller_getPendingSightrollerImplementation();        
+      }
+      if (type == 'SightrollerImplementation') {
+        this.unitroller_getSightrollerImplementation();        
+      }
+
     },
 
     // **********************
@@ -850,21 +895,153 @@ export default {
       if (type == 'getGSighBalanceMetadataExt') {
         this.SighLens_getGSighBalanceMetadataExt({sighlens_gsigh_address: this.sighlens_gsigh_address, sighlens_sightroller: this.sighlens_sightroller, sighlens_account: this.sighlens_account });        
       }
-    }
+    },
 
     // **********************
     // CERC20 MARKET
     // **********************
 
+    async cERC20Market(type) {
+      console.log(type);
+      console.log('cer20_underlying' + this.cer20_underlying);
+      console.log('cer20_sightroller' + this.cer20_sightroller);
+      console.log('cer20_interestRateModel_' + this.cer20_interestRateModel_);
+      console.log('cer20_initialExchangeRateMantissa' + this.cer20_initialExchangeRateMantissa);
+      console.log('cer20_name' + this.cer20_name);
+      console.log('cer20_symbol' + this.cer20_symbol);
+      console.log('cer20_decimals' + this.cer20_decimals);
+      console.log('cer20_mintAmount' + this.cer20_mintAmount);
+      console.log('cer20_redeemTokens' + this.cer20_redeemTokens);
+
+      console.log('cer20_redeemAmount' + this.cer20_redeemAmount);
+      console.log('cer20_borrowAmount' + this.cer20_borrowAmount);
+      console.log('cer20_borrower' + this.cer20_borrower);
+      console.log('cer20_repayAmount' + this.cer20_repayAmount);
+      console.log('cer20_cTokenCollateral' + this.cer20_cTokenCollateral);
+      console.log('cer20_addAmount' + this.cer20_addAmount);
+      console.log('cer20_src' + this.cer20_src);
+      console.log('cer20_dst' + this.cer20_dst);
+      console.log('cer20_amount' + this.cer20_amount);
+      console.log('cer20_spender' + this.cer20_spender);
+      console.log('cer20_owner' + this.cer20_owner);
+      console.log('cer20_account' + this.cer20_account);
+      console.log('cerc20_liquidator' + this.cerc20_liquidator);
+      console.log('cerc20_seizeTokens' + this.cerc20_seizeTokens);
+      console.log('cerc20_newPendingAdmin' + this.cerc20_newPendingAdmin);
+
+      console.log('cerc20_newSightroller' + this.cerc20_newSightroller);
+      console.log('cerc20_newReserveFactorMantissa' + this.cerc20_newReserveFactorMantissa);
+      console.log('cerc20_reduceAmount' + this.cerc20_reduceAmount);
+      console.log('cerc20_newInterestRateModel' + this.cerc20_newInterestRateModel);
 
 
 
+      if (type == 'cERC20_initialize') {
+        this.cERC20_initialize({cer20_underlying: this.cer20_underlying , 
+        cer20_sightroller: this.cer20_sightroller , 
+        cer20_interestRateModel_: this.cer20_interestRateModel_ , 
+        cer20_initialExchangeRateMantissa: this.cer20_initialExchangeRateMantissa , 
+        cer20_name: this.cer20_name ,
+        cer20_symbol: this.cer20_symbol ,
+        cer20_decimals: this.cer20_decimals
+         });        
+      }
 
-
-
-
-
-},
+      if (type == 'cERC20_mint') {
+        this.cERC20_mint({cer20_mintAmount: this.cer20_mintAmount});        
+      }
+      if (type == 'cERC20_redeem') {
+        this.cERC20_redeem({cer20_redeemTokens: this.cer20_redeemTokens });        
+      }
+      if (type == 'cERC20_redeemUnderlying') {
+        this.cERC20_redeemUnderlying({ cer20_redeemAmount: this.cer20_redeemAmount });        
+      }
+      if (type == 'cERC20_borrow') {
+        this.cERC20_borrow({ cer20_borrowAmount: this.cer20_borrowAmount });        
+      }
+      if (type == 'cERC20_repayBorrow') {
+        this.cERC20_repayBorrow({cer20_repayAmount: this.cer20_repayAmount });        
+      }
+      if (type == 'cERC20_repayBorrowBehalf') {
+        this.cERC20_repayBorrowBehalf({cer20_borrower: this.cer20_borrower, cer20_repayAmount: this.cer20_repayAmount  });        
+      }
+      if (type == 'cERC20_liquidateBorrow') {
+        this.cERC20_liquidateBorrow({cer20_borrower: this.cer20_borrower, cer20_repayAmount: this.cer20_repayAmount, cer20_cTokenCollateral: this.cer20_cTokenCollateral });        
+      }
+      if (type == 'cERC20_addReserves') {
+        this.cERC20_addReserves({cer20_addAmount: this.cer20_addAmount });        
+      }
+      if (type == 'cERC20_transfer') {
+        this.cERC20_transfer({cer20_dst: this.cer20_dst , cer20_amount: this.cer20_amount  });        
+      }
+      if (type == 'cERC20_transferFrom') {
+        this.cERC20_transferFrom({cer20_src: this.cer20_src , cer20_dst: this.cer20_dst , cer20_amount: this.cer20_amount  });        
+      }
+      if (type == 'cERC20_approve') {
+        this.cERC20_approve({cer20_spender: this.cer20_spender , cer20_amount: this.cer20_amount  });        
+      }
+      if (type == 'cERC20_balanceOfUnderlying') {
+        this.cERC20_balanceOfUnderlying({cer20_owner: this.cer20_owner  });        
+      }
+      if (type == 'cERC20_borrowBalanceCurrent') {
+        this.cERC20_borrowBalanceCurrent({cer20_account: this.cer20_account});        
+      }
+      if (type == 'cERC20_balanceOf') {
+        this.cERC20_balanceOf( {cer20_owner: this.cer20_owner });        
+      }
+      if (type == 'cERC20_getAccountSnapshot') {
+        this.cERC20_getAccountSnapshot( {cer20_account: this.cer20_account } );        
+      }
+      if (type == 'cERC20_borrowBalanceStored') {
+        this.cERC20_borrowBalanceStored( {cer20_account: this.cer20_account } );        
+      }
+      if (type == 'cERC20_seize') {
+        this.cERC20_seize( {cerc20_liquidator: this.cerc20_liquidator, cerc20_borrower: this.cerc20_borrower, cerc20_seizeTokens: this.cerc20_seizeTokens } );        
+      }
+      if (type == 'cERC20_setPendingAdmin') {
+        this.cERC20_setPendingAdmin( {cerc20_newPendingAdmin: this.cerc20_newPendingAdmin } );        
+      }
+      if (type == 'cERC20_setSightroller') {
+        this.cERC20_setSightroller( {cerc20_newSightroller : this.cerc20_newSightroller} );        
+      }
+      if (type == 'cERC20_setReserveFactor') {
+        this.cERC20_setReserveFactor( {cerc20_newReserveFactorMantissa: this.cerc20_newReserveFactorMantissa} );        
+      }
+      if (type == 'cERC20_reduceReserves') {
+        this.cERC20_reduceReserves( {cerc20_reduceAmount: this.cerc20_reduceAmount} );        
+      }
+      if (type == 'cERC20_setInterestRateModel') {
+        this.cERC20_setInterestRateModel( {cerc20_newInterestRateModel: this.cerc20_newInterestRateModel} );        
+      } 
+      if (type == 'cERC20_acceptAdmin') {
+        this.cERC20_acceptAdmin( );        
+      }
+      if (type == 'cERC20_exchangeRateStored') {
+        this.cERC20_exchangeRateStored( );        
+      }
+      if (type == 'cERC20_getCash') {
+        this.cERC20_getCash( );        
+      }
+      if (type == 'cERC20_borrowRatePerBlock') {
+        this.cERC20_borrowRatePerBlock( );        
+      }
+      if (type == 'cERC20_supplyRatePerBlock') {
+        this.cERC20_supplyRatePerBlock( );        
+      }
+      if (type == 'cERC20_exchangeRateCurrent') {
+        this.cERC20_exchangeRateCurrent( );        
+      }
+      if (type == 'cERC20_accrueInterest') {
+        this.cERC20_accrueInterest( );        
+      }
+      if (type == 'cERC20_allowance') {
+        this.cERC20_allowance( );        
+      }
+      if (type == 'cERC20_totalBorrowsCurrent') {
+        this.cERC20_totalBorrowsCurrent( );        
+      }
+    },
+  },
 
   created() {
     this.changeVegaMarket = (newMarket) => {       //Changing Selected Vega Market

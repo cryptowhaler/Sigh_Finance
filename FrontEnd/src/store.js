@@ -884,6 +884,7 @@ const store = new Vuex.Store({
     if (sighReservoir) {
       let sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
       console.log(sighReservoirContract);
+      console.log(state.web3Account);
       sighReservoirContract.methods.drip().send({from: state.web3Account, gas:3000000})
       .then(receipt => {
         console.log(receipt);
@@ -2050,7 +2051,7 @@ const store = new Vuex.Store({
     const web3 = state.web3;
     const Unitroller_ = Unitroller.networks[state.networkId];
     console.log(Unitroller_);
-    if (Sightroller_) {
+    if (Unitroller_) {
       let UNITROLLER_Contract = new web3.eth.Contract(Unitroller.abi, Unitroller_.address);
       console.log(UNITROLLER_Contract);
       UNITROLLER_Contract.methods._setPendingImplementation(newPendingImplementation).send({from: state.web3Account})
@@ -2068,7 +2069,7 @@ const store = new Vuex.Store({
     const web3 = state.web3;
     const Unitroller_ = Unitroller.networks[state.networkId];
     console.log(Unitroller_);
-    if (Sightroller_) {
+    if (Unitroller_) {
       let UNITROLLER_Contract = new web3.eth.Contract(Unitroller.abi, Unitroller_.address);
       console.log(UNITROLLER_Contract);
       UNITROLLER_Contract.methods._acceptImplementation().send({from: state.web3Account})
@@ -2086,7 +2087,7 @@ const store = new Vuex.Store({
     const web3 = state.web3;
     const Unitroller_ = Unitroller.networks[state.networkId];
     console.log(Unitroller_);
-    if (Sightroller_) {
+    if (Unitroller_) {
       let UNITROLLER_Contract = new web3.eth.Contract(Unitroller.abi, Unitroller_.address);
       console.log(UNITROLLER_Contract);
       UNITROLLER_Contract.methods._setPendingAdmin(newPendingAdmin).send({from: state.web3Account})
@@ -2104,7 +2105,7 @@ const store = new Vuex.Store({
     const web3 = state.web3;
     const Unitroller_ = Unitroller.networks[state.networkId];
     console.log(Unitroller_);
-    if (Sightroller_) {
+    if (Unitroller_) {
       let UNITROLLER_Contract = new web3.eth.Contract(Unitroller.abi, Unitroller_.address);
       console.log(UNITROLLER_Contract);
       UNITROLLER_Contract.methods._acceptAdmin().send({from: state.web3Account})
@@ -2116,6 +2117,45 @@ const store = new Vuex.Store({
       });
     }
   },
+
+  // Accepts transfer of admin rights. msg.sender must be pendingAdmin
+  unitroller_getAdmin: async ({commit,state}) => {
+    const web3 = state.web3;
+    const Unitroller_ = Unitroller.networks[state.networkId];
+    console.log(Unitroller_);
+    if (Unitroller_) {
+      let UNITROLLER_Contract = new web3.eth.Contract(Unitroller.abi, Unitroller_.address);
+      console.log(UNITROLLER_Contract);
+      let ret = UNITROLLER_Contract.methods.admin().call();
+      console.log(ret);
+    }
+  },
+
+  // Accepts transfer of admin rights. msg.sender must be pendingAdmin
+  unitroller_getPendingSightrollerImplementation: async ({commit,state}) => {
+    const web3 = state.web3;
+    const Unitroller_ = Unitroller.networks[state.networkId];
+    console.log(Unitroller_);
+    if (Unitroller_) {
+      let UNITROLLER_Contract = new web3.eth.Contract(Unitroller.abi, Unitroller_.address);
+      console.log(UNITROLLER_Contract);
+      let ret = UNITROLLER_Contract.methods.pendingSightrollerImplementation().call();
+      console.log(ret);
+    }
+  },  
+
+  // Accepts transfer of admin rights. msg.sender must be pendingAdmin
+  unitroller_getSightrollerImplementation: async ({commit,state}) => {
+    const web3 = state.web3;
+    const Unitroller_ = Unitroller.networks[state.networkId];
+    console.log(Unitroller_);
+    if (Unitroller_) {
+      let UNITROLLER_Contract = new web3.eth.Contract(Unitroller.abi, Unitroller_.address);
+      console.log(UNITROLLER_Contract);
+      let ret = UNITROLLER_Contract.methods.sightrollerImplementation().call();
+      console.log(ret);      
+    }
+  }, 
 
   // UNITROLLER FUNCTIONS (END)
   //********************** 
