@@ -518,38 +518,33 @@ const store = new Vuex.Store({
     
 
     // CONNECTS TO WEB3 NETWORK (GANACHE/KOVAN/ETHEREUM/BSC ETC)
-    loadWeb3: async ({ commit }) => {
+    loadWeb3: async ({ commit , state}) => {
+        // const provider = new Web3.providers.HttpProvider('http://127.0.0.1:7545');  //CONNECTING TO GANACHE
+        // const web3 = new Web3(provider);
+        // commit('SET_WEB3',web3);
       if (window.ethereum) {
-        const provider = new Web3.providers.HttpProvider('http://127.0.0.1:7545');  //CONNECTING TO GANACHE
-        const web3 = new Web3(provider);
-        commit('SET_WEB3',web3);
-        // state.web3 = new Web3(window.ethereum);
-
-        // try {        // Request account access if needed
-        //   await window.ethereum.enable();
-        //   return state.web3;
-        // } 
-        // catch (error) {
-        //   console.log('NOT enabled');        
-        //   console.error(error);
-        // }
+        state.web3 = new Web3(window.ethereum);
+        try {        // Request account access if needed
+          await window.ethereum.enable();
+          return state.web3;
+        } 
+        catch (error) {
+          console.log('NOT enabled');        
+          console.error(error);
+        }
       }
       // // For older version dapp browsers ...
       else if (window.web3) {      //   // Use Mist / MetaMask's provider.
-        const provider = new Web3.providers.HttpProvider('http://127.0.0.1:7545');  //CONNECTING TO GANACHE
-        const web3 = new Web3(provider);
-        commit('SET_WEB3',web3);
-        // state.web3 = window.web3;
-        // console.log('Injected web3 detected.', window.web3);
-        return web3;
+        state.web3 = window.web3;
+        console.log('Injected web3 detected.', window.web3);
+        return state.web3;
       }
       // If the provider is not found, it will default to the local network ...
       else {
         const provider = new Web3.providers.HttpProvider('http://127.0.0.1:7545');  //CONNECTING TO GANACHE
-        const web3 = new Web3(provider);
-        commit('SET_WEB3',web3);
+        state.web3 = new Web3(provider);        
         console.log('No web3 instance injected, using Local web3.');
-        return web3;
+        return state.web3;
       }
     },
 

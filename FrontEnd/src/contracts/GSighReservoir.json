@@ -9207,6 +9207,12 @@
     "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
   },
   "networks": {
+    "42": {
+      "events": {},
+      "links": {},
+      "address": "0x81b2D9e4732299b26e6EE16a1D5B9CaC08139735",
+      "transactionHash": "0x10f614f0eb24e8f29f440d59901c4eeb40f6092ec898a9f6c6b3815d3e939505"
+    },
     "5777": {
       "events": {},
       "links": {},
@@ -9215,7 +9221,7 @@
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-20T13:34:35.859Z",
+  "updatedAt": "2020-09-20T14:45:41.463Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "SighFinance",

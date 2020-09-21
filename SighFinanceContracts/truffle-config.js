@@ -11,7 +11,7 @@
  *
  */
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+// const HDWalletProvider = require('@truffle-hdwallet-provider');
 // const infuraKey = "fj4jll3k.....";
 //
 // const fs = require('fs');
@@ -19,12 +19,13 @@
 // require("ts-node/register"); // eslint-disable-line
 // require("dotenv-flow").config(); // eslint-disable-line
 // ==============================================================================================================
-// const HDWalletProvider = require('truffle-hdwallet-provider')
+const HDWalletProvider = require('truffle-hdwallet-provider')
 
-// require('dotenv').config()
-// const wallet = process.env.RopstenWallet;
-// const privateKey = process.env.RopstenPrivateKey; 
-// const projectId = process.env.ProjectId;
+// Library for using environment variables
+require('dotenv').config()
+const wallet = process.env.KovanWallet;
+const privateKey = process.env.KovanPrivateKey; 
+const projectId = process.env.ProjectId;
 
 module.exports = {
   /**
@@ -60,6 +61,15 @@ module.exports = {
       network_id: '*',
       gas: 6721974,
       gasPrice: 1,
+    },
+    kovan: {
+      provider: function() {
+        return new HDWalletProvider(privateKey,"https://kovan.infura.io/v3/" + projectId)
+      },
+      host: "127.0.0.1",
+      network_id: 42,
+      gas: 11000000,
+      from: wallet,
     },
     // ropsten: {
     //   provider: function() {

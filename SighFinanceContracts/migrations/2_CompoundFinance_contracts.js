@@ -41,111 +41,49 @@ module.exports = function(deployer) {
 
 
     // ******** INTEREST RATE MODELS  & PRICE ORACLE **************
-    await deployer.deploy(JumpRateModelV2_,    baseRatePerYear,multiplierPerYear,jumpMultiplierPerYear,kink_);  
-    await deployer.deploy(WhitePaperInterestRateModel_,     baseRatePerYear,multiplierPerYear);
-    // await deployer.deploy(SimplePriceOracle_);
+    // await deployer.deploy(JumpRateModelV2_,    baseRatePerYear,multiplierPerYear,jumpMultiplierPerYear,kink_);  
+    // await deployer.deploy(WhitePaperInterestRateModel_,     baseRatePerYear,multiplierPerYear);
 
     // ******** SIGHTROLLER & UNITROLLER CONTRACTS ( THE MAIN LOGIC HANDLING CONTRACTS ON A PLATFORM SPECIFIC LEVEL )  **************
-    // await deployer.deploy(Sightroller_);          // Deployer address is the Admin
-    await deployer.deploy(Unitroller_);           // Deployer address is the Admin
+    // await deployer.deploy(Unitroller_);           // Deployer address is the Admin
 
-    // ******** SIGH & SIGH RESERVOIR CONTRACTS  **************
-    await deployer.deploy(SIGH_);          // Deployer address is the Admin *Initial Supply is assigned to this address* 
-    let sigh = await SIGH_.deployed();                                            // gets the deployed gsigh contract
-    console.log(sigh.address);
+    // // ******** SIGH & SIGH RESERVOIR CONTRACTS  **************
+    // await deployer.deploy(SIGH_);          // Deployer address is the Admin *Initial Supply is assigned to this address* 
+    // let sigh = await SIGH_.deployed();                                            // gets the deployed gsigh contract
+    // console.log(sigh.address);
 
-    await deployer.deploy(SighReservoir_, sigh.address);  // Reservoir contract for the SIGH Token
+    // await deployer.deploy(SighReservoir_, sigh.address);  // Reservoir contract for the SIGH Token
 
-    // ******** GOVERNANCE RELATED CONTRACTS (GSIGH , GOVERNANCE ALPHA , TIMELOCK, GSIGH RESERVOIR) **************
-    await deployer.deploy(GSigh_);                                              // admin is the user / contract to which all the amount is transferred
-    let gsigh = await  GSigh_.deployed();                                            // gets the deployed gsigh contract
+    // // ******** GOVERNANCE RELATED CONTRACTS (GSIGH , GOVERNANCE ALPHA , TIMELOCK, GSIGH RESERVOIR) **************
+    // await deployer.deploy(GSigh_);                                              // admin is the user / contract to which all the amount is transferred
+    // let gsigh = await  GSigh_.deployed();                                            // gets the deployed gsigh contract
 
-    await deployer.deploy(GSighReservoir_, gsigh.address);  // Reservoir contract for the Governance Token
+    // await deployer.deploy(GSighReservoir_, gsigh.address);  // Reservoir contract for the Governance Token
 
-    // await deployer.deploy(Timelock_,       guardian, delay);
-    // let timelock = await Timelock_.deployed();                                       // gets the deployed timelock contract
+    // //  ******************** GETTING ADDRESSES OF THE DEPLOYED CONTRACTS **************************
+    // //  ******************** GETTING ADDRESSES OF THE DEPLOYED CONTRACTS **************************
+    // //  ******************** GETTING ADDRESSES OF THE DEPLOYED CONTRACTS **************************
 
-    // await deployer.deploy(GovernorAlpha_,    timelock.address , gsigh.address , guardian);
+    // let JumpRateModelV2___ = await JumpRateModelV2_.deployed();                                           
+    // console.log( 'JumpRateModelV2___ ' +  JumpRateModelV2___.address);
 
-    // ******** SIGHLENS CONTRACT (EACH FUNCTION IS A TRANSACTION TO EXTRACT DATA FROM THE PROTOCOL) **************
-    // await deployer.deploy(SighLens_);
+    // let WhitePaperInterestRateModel___ = await WhitePaperInterestRateModel_.deployed();                                           
+    // console.log( 'WhitePaperInterestRateModel___ ' +  WhitePaperInterestRateModel___.address);
 
-    // ******** ERC20 MARKET CONTRACTS ( Based on Delegate & Delegator Schema) **************
-    // await deployer.deploy(CErc20Delegate_); // the cERC20 implementation contract
+    // let Unitroller_____ = await Unitroller_.deployed();                                           
+    // console.log( 'Unitroller____ ' +  Unitroller_____.address);
 
-    // let sightroller = await Sightroller_.deployed();
-    // let interestRateModel = await WhitePaperInterestRateModel_.deployed();
-    // let cERC20_implementation = await CErc20Delegate_.deployed();
-    // console.log(cERC20_implementation.address);
+    // let SIGH____ = await SIGH_.deployed();                                           
+    // console.log( 'SIGH____ ' +  SIGH____.address);
 
-    // let underlying_erc20_token_address_1 = sigh.address;
+    // let SighReservoir_____ = await SighReservoir_.deployed();                                           
+    // console.log( 'SighReservoir_ ' +  SighReservoir_____.address);
 
-    // await deployer.deploy(CErc20Delegator_,     underlying_erc20_token_address_1, sightroller.address, interestRateModel.address, initialExchangeRateMantissa_erc20_token_1, 'cTesting1_Flexi', 'cTest_F', 18, admin, cERC20_implementation.address ); // the cERC20 implementation contract
-
-    // ******** ERC20 MARKET CONTRACTS ( Immutabile design) **************
-    // await deployer.deploy(CErc20Immutable_,     underlying_erc20_token_address_1, sightroller.address, interestRateModel.address, initialExchangeRateMantissa_erc20_token_1, 'cTesting1_Immutable', 'cTest_I', 18, admin   ); // the cERC20 implementation + storage contract
-
-    // ******** cETHER MARKET CONTRACTS **************
-    // await deployer.deploy(CEther_,        sightroller.address, interestRateModel.address, initialExchangeRateMantissa_erc20_token_1, 'cETH_Testing', 'cETH_I', 18, admin  ); // the cETHER implementation + storage contract
-
-    // let cEther = await CEther_.deployed();
-    // await deployer.deploy(Maximillion_,   cEther.address); // it calls the borrowBalanceCurrent() function of cEther contract
-
-
-
-    //  ******************** GETTING ADDRESSES OF THE DEPLOYED CONTRACTS **************************
-    let JumpRateModelV2___ = await JumpRateModelV2_.deployed();                                           
-    console.log( 'JumpRateModelV2___ ' +  JumpRateModelV2___.address);
-
-    let WhitePaperInterestRateModel___ = await WhitePaperInterestRateModel_.deployed();                                           
-    console.log( 'WhitePaperInterestRateModel___ ' +  WhitePaperInterestRateModel___.address);
-
-    // let SimplePriceOracle____ = await SimplePriceOracle_.deployed();                                           
-    // console.log( 'SimplePriceOracle____ ' +  SimplePriceOracle____.address);
-
-    // let Sightroller_____ = await Sightroller_.deployed();                                           
-    // console.log( 'Sightroller_____ ' +  Sightroller_____.address);
-
-    let Unitroller_____ = await Unitroller_.deployed();                                           
-    console.log( 'Unitroller____ ' +  Unitroller_____.address);
-
-    let SIGH____ = await SIGH_.deployed();                                           
-    console.log( 'SIGH____ ' +  SIGH____.address);
-
-    let SighReservoir_____ = await SighReservoir_.deployed();                                           
-    console.log( 'SighReservoir_ ' +  SighReservoir_.address);
-
-    let GSigh___ = await GSigh_.deployed();                                           
-    console.log( 'GSigh___ ' +  GSigh___.address);
+    // let GSigh___ = await GSigh_.deployed();                                           
+    // console.log( 'GSigh___ ' +  GSigh___.address);
 
     // let GSighReservoir____ = await GSighReservoir_.deployed();                                           
     // console.log( 'GSighReservoir____ ' +  GSighReservoir____.address);
-
-    // let Timelock____ = await Timelock_.deployed();                                           
-    // console.log( 'Timelock____ ' +  Timelock____.address);
-    
-    // let GovernorAlpha____ = await GovernorAlpha_.deployed();                                           
-    // console.log( 'GovernorAlpha____ ' +  GovernorAlpha____.address);
-
-    // let SighLens___ = await SighLens_.deployed();                                           
-    // console.log( 'SighLens___ ' +  SighLens___.address);
-
-    // let CErc20Delegate_____ = await CErc20Delegate_.deployed();                                           
-    // console.log( 'CErc20Delegate_____ ' +  CErc20Delegate_____.address);
-
-    // let CErc20Delegator___ = await CErc20Delegator_.deployed();                                           
-    // console.log( 'CErc20Delegator___ ' +  CErc20Delegator___.address);
-
-    // let CErc20Immutable_____ = await CErc20Immutable_.deployed();                                           
-    // console.log( 'CErc20Immutable_____ ' +  CErc20Immutable_____.address);
-
-    // let CEther____ = await CEther_.deployed();                                           
-    // console.log( 'CEther____ ' +  CEther____.address);
-
-    // let Maximillion_____ = await Maximillion_.deployed();                                           
-    // console.log( 'Maximillion_ ' +  Maximillion_____.address);
-
-
 
   })
 

@@ -75,6 +75,7 @@ contract SIGH is Context, IERC20 {
         _initEras();
         _startTime = now;
         mintingActivated = true;
+        previousMintTimeStamp = now;
     }
 
     function _initEras() private {
@@ -104,7 +105,7 @@ contract SIGH is Context, IERC20 {
     }
 
     function start_Time() external view returns(uint256) {
-        require(mintingActivated, 'Minting has not been activated yet.');
+        // require(mintingActivated, 'Minting has not been activated yet.');
         return _startTime;
     }
 
@@ -181,9 +182,13 @@ contract SIGH is Context, IERC20 {
     }
 
     // checks if minting can be done right now
-    function isMintingPossible() private view returns (bool) {
+    function isMintingPossible() private returns (bool) {
         if ( mintingActivated && Current_Cycle < 3711 && _getElapsedSeconds(previousMintTimeStamp,now) > CYCLE_SECONDS ) {
+        uint256 cycle = _getCycle(_startTime,now);
+        if ( cycle > Current_Cycle ) {
+            Current_Cycle = cycle;  // CURRENT CYCLE IS UPDATED 
             return true;
+        }
         }
         else {
             return false;
@@ -199,16 +204,11 @@ contract SIGH is Context, IERC20 {
     // 
     function mintNewCoins() private returns (bool) {
 
-        uint256 cycle = _getCycle(_startTime,now);
-        require( cycle > Current_Cycle,"Minting has been completed for this Cycle." );
-        Current_Cycle = cycle;  // CURRENT CYCLE IS UPDATED 
 
         // IF THE ERA HAS CHANGED
         if ( Current_Era < _CalculateCurrentEra() ) {
             Current_Era += 1; // ERA IS UPDATED
         }
-
-        require( Current_Era <= 10, "All the Eras have been Completed. No new Minting possible." );
 
         uint256 newCoins = CURRENT_SUPPLY.div(_eras[Current_Era].divisibilityFactor);  // Calculate the number of new tokens to be minted.
         CURRENT_SUPPLY += newCoins;

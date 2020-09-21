@@ -6800,6 +6800,114 @@
     "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
   },
   "networks": {
+    "42": {
+      "events": {
+        "0x45b96fe442630264581b197e84bbada861235052c5a1aadfff9ea4e40a969aa0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "error",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "info",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "detail",
+              "type": "uint256"
+            }
+          ],
+          "name": "Failure",
+          "type": "event"
+        },
+        "0xf9ffabca9c8276e99321725bcb43fb076a6c66a54b7f21c4e8146d8519b417dc": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "oldAdmin",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "newAdmin",
+              "type": "address"
+            }
+          ],
+          "name": "NewAdmin",
+          "type": "event"
+        },
+        "0xd604de94d45953f9138079ec1b82d533cb2160c906d1076d1f7ed54befbca97a": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "oldImplementation",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "newImplementation",
+              "type": "address"
+            }
+          ],
+          "name": "NewImplementation",
+          "type": "event"
+        },
+        "0xca4f2f25d0898edd99413412fb94012f9e54ec8142f9b093e7720646a95b16a9": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "oldPendingAdmin",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "newPendingAdmin",
+              "type": "address"
+            }
+          ],
+          "name": "NewPendingAdmin",
+          "type": "event"
+        },
+        "0xe945ccee5d701fc83f9b8aa8ca94ea4219ec1fcbd4f4cab4f0ea57c5c3e1d815": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "oldPendingImplementation",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "newPendingImplementation",
+              "type": "address"
+            }
+          ],
+          "name": "NewPendingImplementation",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x0b1834DB6C4B58Ea28f7a299a78BE1D23d20C92D",
+      "transactionHash": "0xdd196f227b6a6a46971ebcb6cb2f83f9c93a58bdf022846c5e52d0aa7416cbaa"
+    },
     "5777": {
       "events": {
         "0x45b96fe442630264581b197e84bbada861235052c5a1aadfff9ea4e40a969aa0": {
@@ -6910,7 +7018,7 @@
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-20T13:34:36.228Z",
+  "updatedAt": "2020-09-20T14:45:41.767Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Storage for the Sightroller is at this address, while execution is delegated to the `SightrollerImplementation`. CTokens should reference this contract as their Gsightroller.",

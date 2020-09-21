@@ -739,7 +739,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 20040,
+                        "referencedDeclaration": 20030,
                         "src": "1904:3:5",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -1036,7 +1036,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 20040,
+                            "referencedDeclaration": 20030,
                             "src": "2676:3:5",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -1112,10 +1112,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        20043,
-                        20044
+                        20033,
+                        20034
                       ],
-                      "referencedDeclaration": 20044,
+                      "referencedDeclaration": 20034,
                       "src": "2668:7:5",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -4641,7 +4641,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 20040,
+                        "referencedDeclaration": 20030,
                         "src": "1904:3:5",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -4938,7 +4938,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 20040,
+                            "referencedDeclaration": 20030,
                             "src": "2676:3:5",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -5014,10 +5014,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        20043,
-                        20044
+                        20033,
+                        20034
                       ],
-                      "referencedDeclaration": 20044,
+                      "referencedDeclaration": 20034,
                       "src": "2668:7:5",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -8109,6 +8109,44 @@
     "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
   },
   "networks": {
+    "42": {
+      "events": {
+        "0x6960ab234c7ef4b0c9197100f5393cfcde7c453ac910a27bd2000aa1dd4c068d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "baseRatePerBlock",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "multiplierPerBlock",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "jumpMultiplierPerBlock",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "kink",
+              "type": "uint256"
+            }
+          ],
+          "name": "NewInterestParams",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xF6a284Aecf132aD4E523F974802a32D20290B43b",
+      "transactionHash": "0x18eb6af67bd5aa5d3245689283486c4bc20b6335438f173a9567ec30bcb71854"
+    },
     "5777": {
       "events": {
         "0x6960ab234c7ef4b0c9197100f5393cfcde7c453ac910a27bd2000aa1dd4c068d": {
@@ -8149,8 +8187,7 @@
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-20T13:34:35.717Z",
-  "networkType": "ethereum",
+  "updatedAt": "2020-09-21T05:04:32.355Z",
   "devdoc": {
     "author": "SighFinance (modified by Dharma Labs)",
     "methods": {
