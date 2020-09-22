@@ -59,9 +59,9 @@ export default {
 
   mounted() {
     this.userwalletConnected = () => this.getRecentTrades();
-    this.userLogoutListener = () => this.setTradesEmpty();
-    EventBus.$on(EventNames.userLogin, this.userwalletConnected);
-    EventBus.$on(EventNames.userLogout, this.userLogoutListener);
+    this.userWalletDisconnectedListener = () => this.setTradesEmpty();
+    EventBus.$on(EventNames.userWalletConnected, this.userwalletConnected);
+    EventBus.$on(EventNames.userWalletDisconnected, this.userWalletDisconnectedListener);
   },
 
   // computed: {
@@ -149,8 +149,8 @@ export default {
   },
 
   destroyed() {
-    EventBus.$off(EventNames.userLogin, this.userwalletConnected);
-    EventBus.$off(EventNames.userLogout, this.userLogoutListener);
+    EventBus.$off(EventNames.userWalletConnected, this.userwalletConnected);
+    EventBus.$off(EventNames.userWalletDisconnected, this.userWalletDisconnectedListener);
   },
 };
 </script>

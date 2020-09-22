@@ -24,9 +24,9 @@ export default {
   
   mounted() {
     this.userwalletConnected = () => this.setpubkeys();
-    this.userLogoutListener = () => this.setpubkeysEmpty();
-    EventBus.$on(EventNames.userLogin, this.userwalletConnected);
-    EventBus.$on(EventNames.userLogout, this.userLogoutListener);
+    this.userWalletDisconnectedListener = () => this.setpubkeysEmpty();
+    EventBus.$on(EventNames.userWalletConnected, this.userwalletConnected);
+    EventBus.$on(EventNames.userWalletDisconnected, this.userWalletDisconnectedListener);
   },
 
   methods: {
@@ -50,8 +50,8 @@ export default {
   },
 
   destroyed() {
-    EventBus.$off(EventNames.userLogin, this.userwalletConnected);
-    EventBus.$off(EventNames.userLogout, this.userLogoutListener);
+    EventBus.$off(EventNames.userWalletConnected, this.userwalletConnected);
+    EventBus.$off(EventNames.userWalletDisconnected, this.userWalletDisconnectedListener);
   },
 };
 </script>

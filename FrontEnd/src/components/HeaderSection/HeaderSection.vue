@@ -38,7 +38,7 @@ export default {
       }
     },
     logout() {
-      EventBus.$emit(EventNames.userLogout);
+      EventBus.$emit(EventNames.userWalletDisconnected);
       this.$showSuccessMsg({
         message: 'Connected Successfully',
       });

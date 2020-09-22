@@ -35,7 +35,7 @@ export default {
           if (this.response.status == 200) {
             // console.log(this.response.status, this.response.msg); 
             this.$emit('modal-closed');            
-            EventBus.$emit(EventNames.userLogin, { username: this.name,}); //User has logged in (event)
+            EventBus.$emit(EventNames.userWalletConnected, { username: this.name,}); //User has logged in (event)
             this.$showSuccessMsg({ message: 'Logged In Successfully',});
           } else {
             // console.log(this.response.status, this.response.msg); 

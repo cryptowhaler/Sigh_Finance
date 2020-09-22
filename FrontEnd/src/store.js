@@ -539,37 +539,45 @@ const store = new Vuex.Store({
         state.web3 = new Web3(window.ethereum);
         try {        // Request account access if needed
           await window.ethereum.enable();
-          return state.web3;
+          return true;
         } 
         catch (error) {
           console.log('NOT enabled');        
           console.error(error);
+          return false;
         }
       }
       // // For older version dapp browsers ...
       else if (window.web3) {      //   // Use Mist / MetaMask's provider.
         state.web3 = window.web3;
         console.log('Injected web3 detected.', window.web3);
-        return state.web3;
+        return true;
       }
       // If the provider is not found, it will default to the local network ...
       else {
         const provider = new Web3.providers.HttpProvider('http://127.0.0.1:7545');  //CONNECTING TO GANACHE
         state.web3 = new Web3(provider);        
         console.log('No web3 instance injected, using Local web3.');
-        return state.web3;
+        return true;
       }
     },
 
     // SETS ACCOUNT AND NETWORK ID
     getBlockchainData: async ({commit,state}) => {
       const web3 = state.web3;
-      const accounts = await web3.eth.getAccounts();
-      console.log(accounts);
-      commit('SET_ACCOUNT',accounts[0]);
-      commit('isWalletConnected',true);
-      const networkId = await web3.eth.net.getId(); 
-      commit('SET_NETWORK_ID',networkId);
+      if (web3) {
+        const accounts = await web3.eth.getAccounts();
+        console.log(accounts);
+        if (accounts) {
+          commit('SET_ACCOUNT',accounts[0]);
+          commit('isWalletConnected',true);  
+          const networkId = await web3.eth.net.getId(); 
+          commit('SET_NETWORK_ID',networkId);  
+          return accounts[0];
+        }
+        return '';
+      }
+      return '';
      },
 
     //********************** 

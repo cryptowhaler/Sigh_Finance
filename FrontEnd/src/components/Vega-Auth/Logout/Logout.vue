@@ -20,7 +20,7 @@ export default {
       if (this.res) {
         if (this.res.status == 200) {
           // console.log(this.res.status, this.res.msg);                
-          EventBus.$emit(EventNames.userLogout);               //User has logged out (event)
+          EventBus.$emit(EventNames.userWalletDisconnected);               //User has logged out (event)
           this.$showSuccessMsg({ message: 'Logged Out Successfully',});
         } 
         else {

@@ -33,9 +33,9 @@ export default {
 
   created() {
     this.userwalletConnected = () => this.getRecentTrades();
-    this.userLogoutListener = () => this.setTradesEmpty();
-    EventBus.$on(EventNames.userLogin, this.userwalletConnected);
-    EventBus.$on(EventNames.userLogout, this.userLogoutListener);
+    this.userWalletDisconnectedListener = () => this.setTradesEmpty();
+    EventBus.$on(EventNames.userWalletConnected, this.userwalletConnected);
+    EventBus.$on(EventNames.userWalletDisconnected, this.userWalletDisconnectedListener);
     EventBus.$on(EventNames.pubKeyChanged,this.userwalletConnected);  //to handle change in pubKey        
   },
 
@@ -112,8 +112,8 @@ export default {
   },
 
   destroyed() {
-    EventBus.$off(EventNames.userLogin, this.userwalletConnected);
-    EventBus.$off(EventNames.userLogout, this.userLogoutListener);
+    EventBus.$off(EventNames.userWalletConnected, this.userwalletConnected);
+    EventBus.$off(EventNames.userWalletDisconnected, this.userWalletDisconnectedListener);
     EventBus.$on(EventNames.pubKeyChanged,this.userwalletConnected);  //to handle change in pubKey        
   },
 

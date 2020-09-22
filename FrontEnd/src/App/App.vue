@@ -1,15 +1,15 @@
 <template>
   <div id="app">
-    <header-section @show-deposit-modal="toggleDepositModal" @show-withdrawl-modal="toggleWithdrawlModal" @show-login-modal="toggleLoginModal" @show-logout-modal="toggleLogoutModal" @show-contact-modal="toggleContactModal" />
+    <header-section @show-deposit-modal="toggleDepositModal" @show-withdrawl-modal="toggleWithdrawlModal" @show-contact-modal="toggleContactModal" />
 
      <div class="uk-hidden@m">
-    <side-menu @show-deposit-modal="toggleDepositModal" @show-withdrawl-modal="toggleWithdrawlModal"  @show-login-modal="toggleLoginModal" @show-logout-modal="toggleLogoutModal" @show-contact-modal="toggleContactModal"  />
+    <side-menu @show-deposit-modal="toggleDepositModal" @show-withdrawl-modal="toggleWithdrawlModal"  @show-contact-modal="toggleContactModal"  />
     </div>
 
     <modal-box internalComponent="deposit" :show='depositModalShown' @modal-closed='toggleDepositModal' />
     <modal-box internalComponent="withdrawal"  :show='withdrawlModalShown' @modal-closed='toggleWithdrawlModal' />
-    <modal-box internalComponent="vega-login"  :show='loginModalShown' @modal-closed='toggleLoginModal' />
-    <modal-box internalComponent="vega-logout" :show='logoutModalShown' @modal-closed='toggleLogoutModal' />
+    <!-- <modal-box internalComponent="vega-login"  :show='loginModalShown' @modal-closed='toggleLoginModal' />
+    <modal-box internalComponent="vega-logout" :show='logoutModalShown' @modal-closed='toggleLogoutModal' /> -->
     <!-- <modal-box internalComponent="vega-logout" :show='logoutModalShown' @modal-closed='toggleLogoutModal' /> -->
     <modal-box internalComponent="contact" :show='contactModalShown' @modal-closed='toggleContactModal' />
 
@@ -92,32 +92,31 @@ export default {
     ExchangeDataEventBus.$emit('ticker-connect');
     this.getMarkets();
 
-    this.loadWeb3();
-    this.getBlockchainData();
+    this.handleWeb3();
+    // this.loadWeb3();
+    // this.getBlockchainData();
   },
 
   mounted() {
     this.walletConnected = body => this.fetchConfigsLogin(body.username);     //Login 
 
-    this.logoutListener = body => this.fetchConfigsLogout();     //Logout
+    this.WalletDisconnectedListener = body => this.fetchConfigsLogout();     //Logout
     this.sessionExpiryListener = () => {
       if (LocalStorage.isUserLoggedIn()) {
-        this.$showErrorMsg({
-          message: 'Your session has expired. Please login again.',
-        });
+        this.$showErrorMsg({message: 'Your session has expired. Please login again.',});
       }
-      EventBus.$emit(EventNames.userLogout);
+      EventBus.$emit(EventNames.userWalletDisconnected);
     };
   
-    EventBus.$on(EventNames.userLogin, this.walletConnected);           //AUTH
-    EventBus.$on(EventNames.userLogout, this.logoutListener);           //AUTH
+    EventBus.$on(EventNames.userWalletConnected, this.walletConnected);           //AUTH
+    EventBus.$on(EventNames.userWalletDisconnected, this.WalletDisconnectedListener);           //AUTH
     EventBus.$on(EventNames.userSessionExpired, this.sessionExpiryListener);  //AUTH
   },
 
 
   destroyed() {       //SESSION DESTROYED 
-    EventBus.$off(EventNames.userLogin, this.walletConnected);
-    EventBus.$off(EventNames.userLogout, this.logoutListener);           //AUTH    
+    EventBus.$off(EventNames.userWalletConnected, this.walletConnected);
+    EventBus.$off(EventNames.userWalletDisconnected, this.WalletDisconnectedListener);           //AUTH    
     EventBus.$off(EventNames.userSessionExpired, this.sessionExpiryListener);
   },
 
@@ -125,6 +124,18 @@ export default {
   methods: {
 
     ...mapActions(['loadWeb3','getBlockchainData']),
+
+    async handleWeb3() {
+      let web3loaded = this.loadWeb3();
+      console.log(web3loaded);
+      if (web3loaded) {
+       let walletConnected = this.getBlockchainData();
+       console.log(walletConnected);
+       if (walletConnected != '') {
+          EventBus.$emit(EventNames.userWalletConnected, { username: walletConnected,}); //User has logged in (event)
+       }
+      }
+    },
 
     async fetchConfigs() {
       this.$store.commit('addLoaderTask', 1, false);

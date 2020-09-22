@@ -84,9 +84,9 @@ export default {
 
   mounted() {
     this.userwalletConnected = () => this.setPubKey();
-    this.userLogoutListener = () => (this.positions = []);
-    EventBus.$on(EventNames.userLogin, this.userwalletConnected);  //GET POSITIONS
-    EventBus.$on(EventNames.userLogout, this.userLogoutListener); //GO EMPTY AGAIN
+    this.userWalletDisconnectedListener = () => (this.positions = []);
+    EventBus.$on(EventNames.userWalletConnected, this.userwalletConnected);  //GET POSITIONS
+    EventBus.$on(EventNames.userWalletDisconnected, this.userWalletDisconnectedListener); //GO EMPTY AGAIN
     EventBus.$on(EventNames.pubKeyChanged,this.userwalletConnected);  //to handle change in pubKey    
   },
 
@@ -177,7 +177,7 @@ export default {
       this.$emit('toggle-open');
     },
 
-    userLogoutListener() {
+    userWalletDisconnectedListener() {
       this.positions_array = [];
       this.positions = [];
       this.$store.commit('totalRealizedPNL',0);
@@ -318,8 +318,8 @@ export default {
   },
 
   destroyed() {
-    EventBus.$off(EventNames.userLogin, this.userwalletConnected);
-    EventBus.$off(EventNames.userLogout, this.userLogoutListener);
+    EventBus.$off(EventNames.userWalletConnected, this.userwalletConnected);
+    EventBus.$off(EventNames.userWalletDisconnected, this.userWalletDisconnectedListener);
     EventBus.$on(EventNames.pubKeyChanged,this.userwalletConnected);  //to handle change in pubKey        
   },
 };

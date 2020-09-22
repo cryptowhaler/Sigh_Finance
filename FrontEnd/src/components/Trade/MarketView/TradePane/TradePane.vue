@@ -36,11 +36,11 @@ export default {
   },
 
   mounted() {
-    EventBus.$on(EventNames.userLogin, () =>
+    EventBus.$on(EventNames.userWalletConnected, () =>
       this.tabBarEventBus.$emit('change-active-tab', 'Balance')
     );
     this.height = this.$refs.tradePane.clientHeight;
-    EventBus.$on(EventNames.userLogout, this.userLogoutListener);
+    EventBus.$on(EventNames.userWalletDisconnected, this.userWalletDisconnectedListener);
   },
 
   methods: {
@@ -55,7 +55,7 @@ export default {
       }
     },
 
-    userLogoutListener() {
+    userWalletDisconnectedListener() {
       this.activeTab = 'Ticker';
       this.tabBarEventBus.$emit('change-active-tab', 'Ticker');
     },
