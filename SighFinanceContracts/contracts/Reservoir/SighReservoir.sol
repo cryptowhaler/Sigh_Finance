@@ -32,7 +32,7 @@ contract SighReservoir {
   address public admin;
 
   bool public isDripAllowed = false;  
-
+  
   /**
     * @notice Constructs a Reservoir
     * @param token_ The token to drip
@@ -85,6 +85,7 @@ contract SighReservoir {
     uint prevDrippedAmount = totalDrippedAmount;
     recentlyDrippedAmount = toDrip_;
     totalDrippedAmount = add(prevDrippedAmount,toDrip_,"Overflow");
+    
     return toDrip_;
   } 
 
