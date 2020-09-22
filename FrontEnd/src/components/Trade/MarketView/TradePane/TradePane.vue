@@ -21,10 +21,10 @@ export default {
 
   data() {
     return {
-      activeTab: 'Ticker',
+      activeTab: 'Account Events',
       tabs: {
-        notLoggedInTabs: ['Ticker','Balance','Trade'],
-        loggedInTabs: ['Ticker','Balance','Trade',],
+        walletNotConnectedTabs: ['Supply / Borrow'],
+        walletConnectedTabs: ['Account Events','Account Balance','Supply / Borrow',],
       },
       height: 0,
       tabBarEventBus: new Vue(),
@@ -37,7 +37,7 @@ export default {
 
   mounted() {
     EventBus.$on(EventNames.userWalletConnected, () =>
-      this.tabBarEventBus.$emit('change-active-tab', 'Balance')
+      this.tabBarEventBus.$emit('change-active-tab', 'Account Balance')
     );
     this.height = this.$refs.tradePane.clientHeight;
     EventBus.$on(EventNames.userWalletDisconnected, this.userWalletDisconnectedListener);
@@ -47,17 +47,17 @@ export default {
     activeTabChange(activeTab) {
       this.activeTab = activeTab;
       let el = document.getElementsByClassName('trade-pane-content')[0];
-      if (activeTab === 'Ticker') {
-        el.style.height = 'calc(50% - 15px)';
+      if (activeTab === 'Account Events') {
+        el.style.height = 'calc(100%)';
       } 
       else {
-        el.style.height = 'auto';
+        el.style.height = 'calc(100%)';
       }
     },
 
     userWalletDisconnectedListener() {
-      this.activeTab = 'Ticker';
-      this.tabBarEventBus.$emit('change-active-tab', 'Ticker');
+      this.activeTab = 'Account Events';
+      this.tabBarEventBus.$emit('change-active-tab', 'Account Events');
     },
   },
   

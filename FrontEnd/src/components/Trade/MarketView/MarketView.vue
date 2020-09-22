@@ -9,12 +9,28 @@ import LiveTrades from './BookPane/LiveTrades/LiveTrades.vue';
 
 export default   {
   name: 'market-view',
+
   components : {
     // PricePane,
     TradePane,
     BookPane,
     LiveTrades,
   },
+
+  data() {
+    return {
+      height: 0,
+    }
+  },
+
+  updated() {
+    this.height = this.$refs.stockChart.clientHeight;
+  },
+
+  mounted() {
+        this.height = this.$refs.stockChart.clientHeight;
+  },
+
   methods :{
     sidebarTrigger(id) {
       switch(id) {

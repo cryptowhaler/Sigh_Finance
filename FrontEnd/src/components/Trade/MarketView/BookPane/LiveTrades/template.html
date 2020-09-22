@@ -1,28 +1,34 @@
-<div class="livetrades noHorizontal" style="padding: 0 0 15px">
+<div class="livetrades noHorizontal" style="padding: 11px 0 15px">
     <div class="uk-panel">
         <!-- Live trades heading -->
-        <h3 class="uk-panel-title uk-text-center" style="font-size:14px !important;">SUPPORTED MONEY MARKETS</h3>
+        <h3 class="uk-panel-title uk-text-center" style="padding-bottom: 15px; font-size: 21px !important;">SUPPORTED MONEY MARKETS</h3>
     </div>
     <template v-if="!showLoader">
         <div class="noShow noHorizontal"> 
             <div id="hello" data-simplebar data-simplebar-auto-hide="false" :style="{ height: tableHeight }">
-                <table>
-                    <thead class="uk-visible">
+                <table >
+                    <thead class="uk-visible" style="font-size: 20px;">
                         <!-- live trades Bar heading -->
                         <tr>
-                            <td class="uk-text-left">Aggressor</td>
-                            <td class="uk-text-center">Average Entry Price</td>
-                            <td class="uk-text-right">Volume</td>
-                            <td class="uk-text-right">Profit (%)</td>
+                            <td class="uk-text-left">Market</td>
+                            <td class="uk-text-center">Total Supply</td>
+                            <td class="uk-text-right">Supply APY</td>
+                            <td class="uk-text-right">Total Borrow</td>
+                            <td class="uk-text-right">Borrow APY</td>
+                            <td class="uk-text-right">Losses Recovered (SIGH)</td>
+                            <td class="uk-text-right">Average Loss (on losing days)</td>
                         </tr>
                     </thead>
                     <tbody>
                         <!-- live trades content -->
                         <tr v-for="trade in trades">
-                            <td class="uk-text-left" v-bind:class="{'c-green': trade.aggressor === 'Buy', 'c-red': trade.aggressor === 'Sell' }">{{trade.aggressor}}</td>
-                            <td class="uk-text-center c-cyan">{{(Number(trade.price)/100000).toFixed(3)}}</td>
-                            <td class="uk-text-right">{{trade.size}}</td>
-                            <td class="uk-text-right c-green">{{(Number(trade.size)/2.1).toFixed(2)}} %</td>
+                            <td class="uk-text-left c-white">{{trade.aggressor}}</td>
+                            <td class="uk-text-center c-white">{{(Number(trade.price)/100000).toFixed(3)}}</td>
+                            <td class="uk-text-right c-white" >{{trade.size}} % </td>
+                            <td class="uk-text-right c-white">{{(Number(trade.size)/2.1).toFixed(2)}} </td>
+                            <td class="uk-text-right c-white">{{(Number(trade.size)/2.1).toFixed(2)}} %</td>
+                            <td class="uk-text-right c-green">{{(Number(trade.size)/2.1).toFixed(2)}} </td>
+                            <td class="uk-text-right c-red">{{(Number(trade.size)/2.1).toFixed(2)}} </td>
                             <!-- <td class="uk-text-right">{{(trade.createdAt).slice(11,19)}}-{{(trade.createdAt).slice(20,22)}}</td> -->
                         </tr>
                     </tbody>
