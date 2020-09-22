@@ -1,0 +1,23 @@
+type NewSIGHMinted @entity {
+    id: ID!
+    currentCycle: BigInt!
+    currentEra: BigInt!
+    minter: Bytes!
+    newCoinsMinted: BigInt!
+    totalSupply: BigInt!
+    blockNumber: BigInt!
+}
+
+type SIGHReservoirChanged @entity {
+    id: ID!
+    PreviousReservoir: Bytes!
+    NewReservoir: Bytes!
+}
+
+# SIGH TOKEN RELATED ENTITIES (END)
+
+type Market @entity {
+    id: ID!
+    PreviousReservoir: Bytes!
+    NewReservoir: Bytes!
+}

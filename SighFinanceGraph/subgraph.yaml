@@ -1,0 +1,97 @@
+specVersion: 0.0.2
+description: SIGH Finance is part of an R&D initiative to develop engineered liquidity mining driven incentive models driven by A.I models on the Blockchain Infrastructure 
+repository : https://github.com/cryptowhaler/Sigh_Finance/SighFinanceGraph
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Sightroller
+    network: kovan
+    source:
+      address: "0x0b1834DB6C4B58Ea28f7a299a78BE1D23d20C92D"
+      abi: Sightroller
+      startBlock: 21054146
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping/sightroller.ts
+      entities:
+        - ActionPaused
+        - ActionPaused1
+        - DistributedBorrowerGsigh
+        - DistributedSupplierGsigh
+        - Failure
+        - GsighSpeedUpdated
+        - MarketEntered
+        - MarketExited
+        - MarketGsighed
+        - MarketListed
+        - NewCloseFactor
+        - NewCollateralFactor
+        - NewGsighRate
+        - NewLiquidationIncentive
+        - NewMaxAssets
+        - NewPauseGuardian
+        - NewPriceOracle
+      abis:
+        - name: Sightroller
+          file: ./abis/Sightroller.json
+      eventHandlers:
+        - event: ActionPaused(string,bool)
+          handler: handleActionPaused
+        - event: ActionPaused(address,string,bool)
+          handler: handleActionPaused1
+        - event: DistributedBorrowerGsigh(indexed address,indexed address,uint256,uint256)
+          handler: handleDistributedBorrowerGsigh
+        - event: DistributedSupplierGsigh(indexed address,indexed address,uint256,uint256)
+          handler: handleDistributedSupplierGsigh
+        - event: Failure(uint256,uint256,uint256)
+          handler: handleFailure
+        - event: GsighSpeedUpdated(indexed address,uint256)
+          handler: handleGsighSpeedUpdated
+        - event: MarketEntered(address,address)
+          handler: handleMarketEntered
+        - event: MarketExited(address,address)
+          handler: handleMarketExited
+        - event: MarketGsighed(address,bool)
+          handler: handleMarketGsighed
+        - event: MarketListed(address)
+          handler: handleMarketListed
+        - event: NewCloseFactor(uint256,uint256)
+          handler: handleNewCloseFactor
+        - event: NewCollateralFactor(address,uint256,uint256)
+          handler: handleNewCollateralFactor
+        - event: NewGsighRate(uint256,uint256)
+          handler: handleNewGsighRate
+        - event: NewLiquidationIncentive(uint256,uint256)
+          handler: handleNewLiquidationIncentive
+        - event: NewMaxAssets(uint256,uint256)
+          handler: handleNewMaxAssets
+        - event: NewPauseGuardian(address,address)
+          handler: handleNewPauseGuardian
+        - event: NewPriceOracle(address,address)
+          handler: handleNewPriceOracle
+  - kind: ethereum/contract
+    name: SIGH
+    network: kovan
+    source:
+      address: "0x58897EB4e8e70eb8133587Ce80b8e56f9248705C"
+      abi: SIGH
+      startBlock: 21040723
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping/sigh.ts
+      entities:
+        - NewSIGHMinted
+        - SIGHReservoirChanged
+      abis:
+      - name: SIGH
+        file: ./abis/SIGH.json
+      eventHandlers:
+        - event: coinsMinted(uint256,uint256,address,uint256,uint256,uint256,uint256)
+          handler: handleCoinsMinted
+        - event: ReservoirChanged(address,address,uint256)
+          handler: handleReservoirChanged
