@@ -6,10 +6,10 @@
     <side-menu @show-deposit-modal="toggleDepositModal" @show-withdrawl-modal="toggleWithdrawlModal"  @show-login-modal="toggleLoginModal" @show-logout-modal="toggleLogoutModal" @show-contact-modal="toggleContactModal"  />
     </div>
 
-    <!-- <modal-box internalComponent="deposit" :show='depositModalShown' @modal-closed='toggleDepositModal' />
+    <modal-box internalComponent="deposit" :show='depositModalShown' @modal-closed='toggleDepositModal' />
     <modal-box internalComponent="withdrawal"  :show='withdrawlModalShown' @modal-closed='toggleWithdrawlModal' />
     <modal-box internalComponent="vega-login"  :show='loginModalShown' @modal-closed='toggleLoginModal' />
-    <modal-box internalComponent="vega-logout" :show='logoutModalShown' @modal-closed='toggleLogoutModal' /> -->
+    <modal-box internalComponent="vega-logout" :show='logoutModalShown' @modal-closed='toggleLogoutModal' />
     <!-- <modal-box internalComponent="vega-logout" :show='logoutModalShown' @modal-closed='toggleLogoutModal' /> -->
     <modal-box internalComponent="contact" :show='contactModalShown' @modal-closed='toggleContactModal' />
 
@@ -81,9 +81,9 @@ export default {
       return this.$store.getters.showLoader;
     },
     
-    isLoggedIn() {
-      return this.$store.getters.isLoggedIn;
-    },
+    isWalletConnected() {
+      return this.$store.getters.isWalletConnected;
+    }
   },
 
 
@@ -97,8 +97,7 @@ export default {
   },
 
   mounted() {
-    // this.loginListener = body => this.fetchConfigs(body.username);
-    this.loginListener = body => this.fetchConfigsLogin(body.username);     //Login 
+    this.walletConnected = body => this.fetchConfigsLogin(body.username);     //Login 
 
     this.logoutListener = body => this.fetchConfigsLogout();     //Logout
     this.sessionExpiryListener = () => {
@@ -110,14 +109,14 @@ export default {
       EventBus.$emit(EventNames.userLogout);
     };
   
-    EventBus.$on(EventNames.userLogin, this.loginListener);           //AUTH
+    EventBus.$on(EventNames.userLogin, this.walletConnected);           //AUTH
     EventBus.$on(EventNames.userLogout, this.logoutListener);           //AUTH
     EventBus.$on(EventNames.userSessionExpired, this.sessionExpiryListener);  //AUTH
   },
 
 
   destroyed() {       //SESSION DESTROYED 
-    EventBus.$off(EventNames.userLogin, this.loginListener);
+    EventBus.$off(EventNames.userLogin, this.walletConnected);
     EventBus.$off(EventNames.userLogout, this.logoutListener);           //AUTH    
     EventBus.$off(EventNames.userSessionExpired, this.sessionExpiryListener);
   },

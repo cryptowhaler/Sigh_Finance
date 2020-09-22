@@ -74,31 +74,7 @@ if (!LocalStorage.get(Keys.pingUuid)) {
   LocalStorage.set(Keys.pingUuid, uuidv4());
 }
 
-EventBus.$on(EventNames.userLogin, () => {    //AUTH Session
-  store.commit('isLoggedIn', true);
-});
-
-EventBus.$on(EventNames.userLogout, () => {           //AUTH Session
-  const wasLoggedIn = store.getters.isLoggedIn;
-  store.commit('isLoggedIn', false);
-  LocalStorage.clearVegaSession();
-  // this.$store.commit
-  if (router.currentRoute.path !== '/' || wasLoggedIn) {
-    router.replace('/').catch(() => {});
-  }
-});
-
-const isLoggedIn = LocalStorage.isUserLoggedIn();   
-const loggedInUser = LocalStorage.get(VegaKeys.name);     //Vega Based
-const mqttKey = LocalStorage.get(Keys.mqtt);
-
 Vue.config.productionTip = false;
-
-// if (!isLoggedIn) {
-//   EventBus.$emit(EventNames.userLogout);
-// } else {
-//   EventBus.$emit(EventNames.userLogin, { username: loggedInUser,mqttKey:mqttKey,});
-// }
 
 new Vue({
   router,
@@ -107,9 +83,4 @@ new Vue({
   render: h => h(App),
 }).$mount('#app');
 
-if (!isLoggedIn) {
-  EventBus.$emit(EventNames.userLogout);
-} else {
-  EventBus.$emit(EventNames.userLogin, {username: loggedInUser,mqttKey:mqttKey, });
-}
 

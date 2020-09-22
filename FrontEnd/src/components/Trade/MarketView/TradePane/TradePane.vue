@@ -23,7 +23,7 @@ export default {
     return {
       activeTab: 'Ticker',
       tabs: {
-        notLoggedInTabs: ['Ticker',],
+        notLoggedInTabs: ['Ticker','Balance','Trade'],
         loggedInTabs: ['Ticker','Balance','Trade',],
       },
       height: 0,

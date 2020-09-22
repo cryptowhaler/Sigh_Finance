@@ -1,5 +1,5 @@
 <!-- // uk-visible@m means it will not be visible in mobiles -->
-<div class="positions uk-visible@m"  v-if="$store.getters.isLoggedIn">
+<div class="positions uk-visible@m"  v-if="$store.getters.isWalletConnected">
     <div v-on:click='toggleOpen' :class="{'opened': open, 'close': open}" style="text-align:center;" class="accordionToggleButton">Positions
     </div>
     <div>

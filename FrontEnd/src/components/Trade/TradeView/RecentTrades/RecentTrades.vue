@@ -19,7 +19,6 @@ export default {
   data() {
     return {
       trades: this.$store.getters.recentTrades,
-      isLoggedIn: false,
       // partiesId: '5946e79a6e21950ea276ea7792d34553347611ee845d57088177c1df99f50633',
       partiesId: VegaKeys.currentActiveKey,
     };
@@ -59,11 +58,11 @@ export default {
 
 
   mounted() {
-    this.userLoginListener = () => this.getRecentTrades();
+    this.userwalletConnected = () => this.getRecentTrades();
     this.userLogoutListener = () => this.setTradesEmpty();
-    EventBus.$on(EventNames.userLogin, this.userLoginListener);
+    EventBus.$on(EventNames.userLogin, this.userwalletConnected);
     EventBus.$on(EventNames.userLogout, this.userLogoutListener);
-    EventBus.$on(EventNames.pubKeyChanged,this.userLoginListener);  //to handle change in pubKey        
+    EventBus.$on(EventNames.pubKeyChanged,this.userwalletConnected);  //to handle change in pubKey        
   },
 
   // computed: {
@@ -153,9 +152,9 @@ export default {
   },
 
   destroyed() {
-    EventBus.$off(EventNames.userLogin, this.userLoginListener);
+    EventBus.$off(EventNames.userLogin, this.userwalletConnected);
     EventBus.$off(EventNames.userLogout, this.userLogoutListener);
-    EventBus.$on(EventNames.pubKeyChanged,this.userLoginListener);  //to handle change in pubKey        
+    EventBus.$on(EventNames.pubKeyChanged,this.userwalletConnected);  //to handle change in pubKey        
   },
 };
 </script>

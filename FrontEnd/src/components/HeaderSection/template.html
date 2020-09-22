@@ -51,6 +51,10 @@
                             
                             <!-- LANDING PAGE -->
                             <router-link to="/test" v-bind:class="{ active: $route.path === '/test' }">
+                                <span>Test</span>
+                            </router-link>
+
+                            <router-link to="/Trade" v-bind:class="{ active: $route.path === '/Trade' }">
                                 <span>Trade</span>
                             </router-link>
 
@@ -87,9 +91,9 @@
                             </div> -->
 
                             <!-- LOGIN [IF ONLY LOGGED OUT]-->
-                            <!-- <div >
+                            <div >
                                 <a href="javascript:undefined" v-if="!$store.getters.isLoggedIn && $store.getters.themeMode === 'default'" @click="showLoginModal"><span>Login</span></a>
-                            </div> -->
+                            </div>
                             <!-- PROFILE DropDown : Settings || History || Refresh Balances [IF ONLY LOGGED IN]
                             <div class="dropdown" v-if="$store.getters.isLoggedIn && $store.getters.themeMode === 'default'">
                                 <button class="dropbtn"> Profile <i class="fa fa-caret-down"></i></button>

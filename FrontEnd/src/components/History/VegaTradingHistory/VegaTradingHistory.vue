@@ -32,11 +32,11 @@ export default {
   },
 
   created() {
-    this.userLoginListener = () => this.getRecentTrades();
+    this.userwalletConnected = () => this.getRecentTrades();
     this.userLogoutListener = () => this.setTradesEmpty();
-    EventBus.$on(EventNames.userLogin, this.userLoginListener);
+    EventBus.$on(EventNames.userLogin, this.userwalletConnected);
     EventBus.$on(EventNames.userLogout, this.userLogoutListener);
-    EventBus.$on(EventNames.pubKeyChanged,this.userLoginListener);  //to handle change in pubKey        
+    EventBus.$on(EventNames.pubKeyChanged,this.userwalletConnected);  //to handle change in pubKey        
   },
 
 
@@ -112,9 +112,9 @@ export default {
   },
 
   destroyed() {
-    EventBus.$off(EventNames.userLogin, this.userLoginListener);
+    EventBus.$off(EventNames.userLogin, this.userwalletConnected);
     EventBus.$off(EventNames.userLogout, this.userLogoutListener);
-    EventBus.$on(EventNames.pubKeyChanged,this.userLoginListener);  //to handle change in pubKey        
+    EventBus.$on(EventNames.pubKeyChanged,this.userwalletConnected);  //to handle change in pubKey        
   },
 
 };

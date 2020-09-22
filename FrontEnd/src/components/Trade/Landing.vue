@@ -4,12 +4,12 @@
 import MarketView from './MarketView/MarketView.vue';
 import TradeView from './TradeView/TradeView.vue';
 // import ExchangeDataEventBus from '@/eventBuses/exchangeData';
-// import Positions from './TradeView/Positions/Positions.vue';
+import Positions from './TradeView/Positions/Positions.vue';
 export default {
   components: {
     MarketView,
     TradeView,
-    // Positions,
+    Positions,
   },
   created() {
     // let self = this;

@@ -24,7 +24,6 @@ export default {
       orders: this.$store.getters.activeOrders,
       tableHeight: '',
       orders_array: [],
-      isLoggedIn: false,
       partiesId: VegaKeys.currentActiveKey,          
       // showLoader:false,
       // snapTaken: false,
@@ -105,11 +104,11 @@ export default {
   // },
 
   mounted() {     //handles Login/Logout
-    this.userLoginListener = () => this.getActiveOrders();
+    this.userwalletConnected = () => this.getActiveOrders();
     this.userLogoutListener = () => (this.deleteOrders());
-    EventBus.$on(EventNames.userLogin, this.userLoginListener);
+    EventBus.$on(EventNames.userLogin, this.userwalletConnected);
     EventBus.$on(EventNames.userLogout, this.userLogoutListener);
-    EventBus.$on(EventNames.pubKeyChanged,this.userLoginListener);  //to handle change in pubKey
+    EventBus.$on(EventNames.pubKeyChanged,this.userwalletConnected);  //to handle change in pubKey
   },
 
   methods: {
@@ -265,9 +264,9 @@ export default {
   },
 
   destroyed() {
-    EventBus.$off(EventNames.userLogin, this.userLoginListener);
+    EventBus.$off(EventNames.userLogin, this.userwalletConnected);
     EventBus.$off(EventNames.userLogout, this.userLogoutListener);
-    EventBus.$off(EventNames.pubKeyChanged,this.userLoginListener);  //to handle change in pubKey    
+    EventBus.$off(EventNames.pubKeyChanged,this.userwalletConnected);  //to handle change in pubKey    
   },
 
 };

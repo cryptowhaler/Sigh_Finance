@@ -2,16 +2,18 @@
 
 
 <script>
-import PricePane from './PricePane/PricePane.vue';
+// import PricePane from './PricePane/PricePane.vue';
 import TradePane from './TradePane/TradePane.vue';
 import BookPane from './BookPane/BookPane.vue';
+import LiveTrades from './BookPane/LiveTrades/LiveTrades.vue';
 
 export default   {
   name: 'market-view',
   components : {
-    PricePane,
+    // PricePane,
     TradePane,
     BookPane,
+    LiveTrades,
   },
   methods :{
     sidebarTrigger(id) {

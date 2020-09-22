@@ -29,7 +29,6 @@ export default {
       markets : [],
       subs_positions: new Map(),
       positions_array: [],
-      isLoggedIn: false,
       partiesId: VegaKeys.currentActiveKey,
       totalRealizedPNL_VUSD: 0,
       totalUnrealizedPNL_VUSD: 0,
@@ -84,11 +83,11 @@ export default {
   },
 
   mounted() {
-    this.userLoginListener = () => this.setPubKey();
+    this.userwalletConnected = () => this.setPubKey();
     this.userLogoutListener = () => (this.positions = []);
-    EventBus.$on(EventNames.userLogin, this.userLoginListener);  //GET POSITIONS
+    EventBus.$on(EventNames.userLogin, this.userwalletConnected);  //GET POSITIONS
     EventBus.$on(EventNames.userLogout, this.userLogoutListener); //GO EMPTY AGAIN
-    EventBus.$on(EventNames.pubKeyChanged,this.userLoginListener);  //to handle change in pubKey    
+    EventBus.$on(EventNames.pubKeyChanged,this.userwalletConnected);  //to handle change in pubKey    
   },
 
   methods: {
@@ -319,9 +318,9 @@ export default {
   },
 
   destroyed() {
-    EventBus.$off(EventNames.userLogin, this.userLoginListener);
+    EventBus.$off(EventNames.userLogin, this.userwalletConnected);
     EventBus.$off(EventNames.userLogout, this.userLogoutListener);
-    EventBus.$on(EventNames.pubKeyChanged,this.userLoginListener);  //to handle change in pubKey        
+    EventBus.$on(EventNames.pubKeyChanged,this.userwalletConnected);  //to handle change in pubKey        
   },
 };
 </script>

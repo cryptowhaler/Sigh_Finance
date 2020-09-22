@@ -155,6 +155,10 @@ export default {
         cerc20_reduceAmount: undefined,
         cerc20_newInterestRateModel: undefined,
 
+        // For Revert Reason Function
+        blockNumber_ : undefined,
+        txhash : undefined,
+
 
 
 
@@ -221,9 +225,10 @@ export default {
       'cERC20_initialize','cERC20_mint','cERC20_redeem','cERC20_redeemUnderlying','cERC20_borrow','cERC20_repayBorrow','cERC20_repayBorrowBehalf','cERC20_liquidateBorrow','cERC20_addReserves','cERC20_transfer',
       'cERC20_transferFrom','cERC20_approve','cERC20_balanceOfUnderlying','cERC20_totalBorrowsCurrent','cERC20_borrowBalanceCurrent','cERC20_exchangeRateCurrent','cERC20_accrueInterest','cERC20_allowance',
       'cERC20_balanceOf','cERC20_getAccountSnapshot','cERC20_borrowRatePerBlock','cERC20_supplyRatePerBlock','cERC20_borrowBalanceStored','cERC20_exchangeRateStored','cERC20_getCash','cERC20_seize','cERC20_setPendingAdmin',
-      'cERC20_acceptAdmin','cERC20_setSightroller','cERC20_setReserveFactor','cERC20_reduceReserves','cERC20_setInterestRateModel'
+      'cERC20_acceptAdmin','cERC20_setSightroller','cERC20_setReserveFactor','cERC20_reduceReserves','cERC20_setInterestRateModel','cERC20_getSightroller',
 
 
+      'getRevertReason'
      ]),
 
     // **********************
@@ -1040,7 +1045,17 @@ export default {
       if (type == 'cERC20_totalBorrowsCurrent') {
         this.cERC20_totalBorrowsCurrent( );        
       }
+      if (type == 'cERC20_sightroller') {
+        this.cERC20_getSightroller( );        
+      }
+
     },
+
+    async revertReason() {
+      console.log('TxHash ' + this.txhash);
+      console.log('blockNumber_ ' + this.blockNumber_);
+      this.getRevertReason({txhash: this.txhash, blockNumber: this.blockNumber_});
+    }
   },
 
   created() {

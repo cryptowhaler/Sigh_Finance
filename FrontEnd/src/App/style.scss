@@ -5,6 +5,7 @@
 @import '~@/assets/scss/Global-mobile';
 
 .page-wrapper {
+  background-color: black;
   position: relative;
   min-height: calc(100vh - 130px);
   @include breakpoint(medium){

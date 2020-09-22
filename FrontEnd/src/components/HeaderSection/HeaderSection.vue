@@ -26,7 +26,7 @@ export default {
     },
 
     getServerStatus() {
-      let data = this.$store.getters.isLoggedIn;
+      let data = this.$store.getters.isWalletConnected;
       // console.log(data);
       if (data) {
         this.serverStatusCode = 'Connected ';
