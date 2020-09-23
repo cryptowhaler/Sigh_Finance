@@ -614,7 +614,7 @@ export class Account extends Entity {
   }
 }
 
-export class AccountCToken extends Entity {
+export class UserAccount_IndividualMarketStats extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -622,17 +622,23 @@ export class AccountCToken extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id !== null, "Cannot save AccountCToken entity without an ID");
+    assert(
+      id !== null,
+      "Cannot save UserAccount_IndividualMarketStats entity without an ID"
+    );
     assert(
       id.kind == ValueKind.STRING,
-      "Cannot save AccountCToken entity with non-string ID. " +
+      "Cannot save UserAccount_IndividualMarketStats entity with non-string ID. " +
         'Considering using .toHex() to convert the "id" to a string.'
     );
-    store.set("AccountCToken", id.toString(), this);
+    store.set("UserAccount_IndividualMarketStats", id.toString(), this);
   }
 
-  static load(id: string): AccountCToken | null {
-    return store.get("AccountCToken", id) as AccountCToken | null;
+  static load(id: string): UserAccount_IndividualMarketStats | null {
+    return store.get(
+      "UserAccount_IndividualMarketStats",
+      id
+    ) as UserAccount_IndividualMarketStats | null;
   }
 
   get id(): string {

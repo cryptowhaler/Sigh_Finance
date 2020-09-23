@@ -148,7 +148,7 @@ type Account @entity {
     "User ETH address"
     id: ID!
     "Array of CTokens user is in"
-    tokens: [AccountCToken!]! @derivedFrom(field: "account")
+    tokens: [UserAccount_IndividualMarketStats!]! @derivedFrom(field: "account")
     "Count user has been liquidated"
     countLiquidated: Int!
     "Count user has liquidated others"
@@ -169,7 +169,7 @@ type Account @entity {
 }
 
 # Stats for an accounts borrow and supply of an asset
-type AccountCToken @entity {
+type UserAccount_IndividualMarketStats @entity {
     "Concatenation of CToken address and user address"
     id: ID!
     "Relation to market"
