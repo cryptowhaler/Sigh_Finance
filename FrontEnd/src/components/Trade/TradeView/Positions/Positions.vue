@@ -5,7 +5,6 @@ import EventBus, { EventNames, } from '@/eventBuses/default';
 import Spinner from '@/components/Spinner/Spinner.vue';
 import {VegaKeys,} from '@/utils/localStorage.js';
 import gql from 'graphql-tag';
-import VegaProtocolService from '@/services/VegaProtocolService';
 import Multiselect from 'vue-multiselect';
 
 export default {
@@ -237,31 +236,31 @@ export default {
     async closePosition(position) {       //CLOSES POSITION FOR THE POSITION OBJECT PASSED
       // console.log(';IN CLOSEPOSITION + ' + position.openVolume + '   ' + Number(position.openVolume) );
 
-      if (Number(position.openVolume) > 0) {     //If having long position
-        // console.log(';IN CLOSEPOSITION');
-        const response = await VegaProtocolService.submitOrder_market(position.marketID,position.openVolume,'Sell','MARKET','FOK'); 
-        if (response.status == 200) {     //If Successful
-          this.$showSuccessMsg({message: position.market_name + ' - ' + response.message,});
-        } 
-        else {                          //If failed.
-          this.$showErrorMsg({message: position.market_name + ' - ' + response.message,});
-          this.$showErrorMsg({message: 'Could\t close position. Please try again',});
-        }
-      }
-      else if (Number(position.openVolume) < 0) {     //If having short position
-        // console.log(';IN CLOSEPOSITION');
-        const response = await VegaProtocolService.submitOrder_market(position.marketID,(Math.abs(Number(position.openVolume))).toString(),'Buy','MARKET','FOK'); 
-        if (response.status == 200) {     //If Successful
-          this.$showSuccessMsg({message: position.market_name + ' - ' + response.message,});
-        } 
-        else {                          //If failed.
-          this.$showErrorMsg({message: position.market_name + ' - ' + response.message,});
-          this.$showErrorMsg({message: 'Could\t close position. Please try again',});
-        }
-      }
-      else if (Number(position.openVolume) == 0 ) {
-          this.$showErrorMsg({message: 'There are no active positions for the selected market',});
-      }
+      // if (Number(position.openVolume) > 0) {     //If having long position
+      //   // console.log(';IN CLOSEPOSITION');
+      //   const response = await VegaProtocolService.submitOrder_market(position.marketID,position.openVolume,'Sell','MARKET','FOK'); 
+      //   if (response.status == 200) {     //If Successful
+      //     this.$showSuccessMsg({message: position.market_name + ' - ' + response.message,});
+      //   } 
+      //   else {                          //If failed.
+      //     this.$showErrorMsg({message: position.market_name + ' - ' + response.message,});
+      //     this.$showErrorMsg({message: 'Could\t close position. Please try again',});
+      //   }
+      // }
+      // else if (Number(position.openVolume) < 0) {     //If having short position
+      //   // console.log(';IN CLOSEPOSITION');
+      //   const response = await VegaProtocolService.submitOrder_market(position.marketID,(Math.abs(Number(position.openVolume))).toString(),'Buy','MARKET','FOK'); 
+      //   if (response.status == 200) {     //If Successful
+      //     this.$showSuccessMsg({message: position.market_name + ' - ' + response.message,});
+      //   } 
+      //   else {                          //If failed.
+      //     this.$showErrorMsg({message: position.market_name + ' - ' + response.message,});
+      //     this.$showErrorMsg({message: 'Could\t close position. Please try again',});
+      //   }
+      // }
+      // else if (Number(position.openVolume) == 0 ) {
+      //     this.$showErrorMsg({message: 'There are no active positions for the selected market',});
+      // }
     },
 
     //Cancels the passed Order
@@ -285,26 +284,26 @@ export default {
         // console.log('Cancel Order preparation successful for order with orderID ' + order.id );
         let blob = data.data.prepareOrderCancel.blob;
 
-        try{                      //SIGNING PREPARED ORDER
-            // console.log(blob);
-            const transactionSign = await VegaProtocolService.signtx(blob,true);  //Propogating the transaction
-            // console.log(transactionSign);
-            if (transactionSign.status == 200) {    //IF SUCCESSFUL
-              let msg = 'Order Cancellation request for orderID: ' + order.id + ' has been successfully signed and propogated into the chain.';
-              // console.log(msg);    
-              this.$showSuccessMsg({message: msg,});                
-            }
-            else {      //Else for signing order
-              let msg = 'Deletion request\'s signature transaction failed. Please try again';
-              // console.log(msg);
-              this.$$showErrorMsg({message: msg});                
-           }
-        }
-        catch (err) {  //catch for signing order
-          let msg = ' Order signature for deletion request returned error. Please try again';
-          // console.log(msg);
-          this.$$showErrorMsg({message: msg});                
-        }
+        // try{                      //SIGNING PREPARED ORDER
+        //     // console.log(blob);
+        //     const transactionSign = await VegaProtocolService.signtx(blob,true);  //Propogating the transaction
+        //     // console.log(transactionSign);
+        //     if (transactionSign.status == 200) {    //IF SUCCESSFUL
+        //       let msg = 'Order Cancellation request for orderID: ' + order.id + ' has been successfully signed and propogated into the chain.';
+        //       // console.log(msg);    
+        //       this.$showSuccessMsg({message: msg,});                
+        //     }
+        //     else {      //Else for signing order
+        //       let msg = 'Deletion request\'s signature transaction failed. Please try again';
+        //       // console.log(msg);
+        //       this.$$showErrorMsg({message: msg});                
+        //    }
+        // }
+        // catch (err) {  //catch for signing order
+        //   let msg = ' Order signature for deletion request returned error. Please try again';
+        //   // console.log(msg);
+        //   this.$$showErrorMsg({message: msg});                
+        // }
       }
       catch(error) {
         // console.log(error);

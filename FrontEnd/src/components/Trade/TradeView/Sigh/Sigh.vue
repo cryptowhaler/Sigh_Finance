@@ -2,9 +2,7 @@
 
 <script>
 import { dateToDisplayDateTime, } from '@/utils/utility';
-import VegaProtocolService from '@/services/VegaProtocolService';
 import EventBus, { EventNames, } from '@/eventBuses/default';
-import {VegaKeys,} from '@/utils/localStorage.js';
 import gql from 'graphql-tag';
 
 export default {
@@ -64,41 +62,7 @@ export default {
     // EventBus.$on(EventNames.pubKeyChanged,this.userwalletConnected);  //to handle change in pubKey        
   },
 
-  // computed: {
-  //   recentTrades() {
-  //     return this.mapRecentTrades(this.$store.getters.recentTrades);
-  //   },
-  // },
-
   methods: {
-    // async getSighSnapshot() {
-    //   console.log('/n  \n  /n   \n check what is hapeening')
-    //   // this.partiesId = '5946e79a6e21950ea276ea7792d34553347611ee845d57088177c1df99f50633';
-    //   this.$store.commit('sighSnapshot',[]);
-    //   this.sigh = [];
-    //   this.partiesId = VegaKeys.currentActiveKey;
-    //   // console.log(this.partiesId);
-    //   const response = await VegaProtocolService.get_trades_by_party(this.partiesId);
-    //   // console.log(response);
-    //   if (response.status == 200) {
-    //     // console.log(response.data);
-    //     for (let i=0;i<response.data.trades.length;i++ ) {
-    //       this.addNewTrade(response.data.trades[i]);
-    //     }
-    //     // console.log(this.$store.getters.recentTrades);
-    //     // console.log(this.trades);
-    //     this.sigh = this.$store.getters.recentTrades;        
-    //     // console.log(this.trades);
-    //   }
-    //   else {
-    //     this.$showErrorMsg({message: 'Something went wrong. Couldn\'t fetch recent Trades',});        
-    //   }
-    // },
-
-    // setTradesEmpty() {
-    //   this.$store.commit('sighSnapshot',[]);
-    //   this.sigh = [];
-    // },
 
     subcribeToSighSnapshot(sigh) {
       // for (let i=0;i<sigh.length;i++) {
@@ -158,22 +122,6 @@ export default {
       }
       return "All Eras Completed"
     },
-
-  
-  // addNewTrade(sigh) {
-  //       let obj = [];
-  //       obj.address = sigh.id;
-  //       obj.currentCycle = sigh.currentCycle;
-  //       obj.currentEra = sigh.currentEra;
-  //       obj.Recentminter = sigh.Recentminter;
-  //       obj.RecentCoinsMinted = sigh.RecentCoinsMinted;
-  //       obj.totalSupply = sigh.totalSupply;
-  //       obj.blockNumberWhenCoinsMinted = sigh.blockNumberWhenCoinsMinted;
-  //       obj.Reservoir = sigh.Reservoir;
-  //       this.$store.commit('sighSnapshot',obj);
-  //       // console.log(this.trades);
-  //   },
-
 
     toggleOpen() {
       this.$emit('toggle-open');

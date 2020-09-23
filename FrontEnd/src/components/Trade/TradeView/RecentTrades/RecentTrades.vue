@@ -2,7 +2,6 @@
 
 <script>
 import { dateToDisplayDateTime, } from '@/utils/utility';
-import VegaProtocolService from '@/services/VegaProtocolService';
 import EventBus, { EventNames, } from '@/eventBuses/default';
 import {VegaKeys,} from '@/utils/localStorage.js';
 import gql from 'graphql-tag';
@@ -78,21 +77,21 @@ export default {
       this.trades = [];
       this.partiesId = VegaKeys.currentActiveKey;
       // console.log(this.partiesId);
-      const response = await VegaProtocolService.get_trades_by_party(this.partiesId);
-      // console.log(response);
-      if (response.status == 200) {
-        // console.log(response.data);
-        for (let i=0;i<response.data.trades.length;i++ ) {
-          this.addNewTrade(response.data.trades[i]);
-        }
-        // console.log(this.$store.getters.recentTrades);
-        // console.log(this.trades);
-        this.trades = this.$store.getters.recentTrades;        
-        // console.log(this.trades);
-      }
-      else {
-        this.$showErrorMsg({message: 'Something went wrong. Couldn\'t fetch recent Trades',});        
-      }
+      // const response = await VegaProtocolService.get_trades_by_party(this.partiesId);
+      // // console.log(response);
+      // if (response.status == 200) {
+      //   // console.log(response.data);
+      //   for (let i=0;i<response.data.trades.length;i++ ) {
+      //     this.addNewTrade(response.data.trades[i]);
+      //   }
+      //   // console.log(this.$store.getters.recentTrades);
+      //   // console.log(this.trades);
+      //   this.trades = this.$store.getters.recentTrades;        
+      //   // console.log(this.trades);
+      // }
+      // else {
+      //   this.$showErrorMsg({message: 'Something went wrong. Couldn\'t fetch recent Trades',});        
+      // }
     },
 
     setTradesEmpty() {

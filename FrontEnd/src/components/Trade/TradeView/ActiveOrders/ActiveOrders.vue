@@ -2,7 +2,6 @@
 
 <script>
 import { dateToDisplayDateTime, } from '@/utils/utility';
-import VegaProtocolService from '@/services/VegaProtocolService';
 import EventBus, { EventNames, } from '@/eventBuses/default';
 import { VegaKeys, } from '../../../../utils/localStorage';
 import gql from 'graphql-tag';
@@ -127,24 +126,24 @@ export default {
       this.partiesId = VegaKeys.currentActiveKey;
       // console.log(this.partiesId);
       // console.log(VegaKeys.currentActiveKey);
-      const response = await VegaProtocolService.get_orders_by_party(this.partiesId);
-      // console.log(response);
-      if (response.status == 200) {
-        // console.log(response.data);
-        for (let i=0; i<response.data.orders.length;i++) {
-          let new_ = this.mapNewOrder_API(response.data.orders[i]);
-          // console.log(new_);
-          // this.orders.unshift(new_);
-          this.$store.commit('addToActiveOrders',new_);
-          // console.log(this.$store.getters.activeOrders);
-        }
-          // console.log(this.orders);
-          this.orders = this.$store.getters.activeOrders;
-          // console.log(this.orders);          
-      }
-      else {
-        this.$showErrorMsg({message: 'Something went wrong. Couldn\'t fetch orders',});        
-      }
+      // const response = await VegaProtocolService.get_orders_by_party(this.partiesId);
+      // // console.log(response);
+      // if (response.status == 200) {
+      //   // console.log(response.data);
+      //   for (let i=0; i<response.data.orders.length;i++) {
+      //     let new_ = this.mapNewOrder_API(response.data.orders[i]);
+      //     // console.log(new_);
+      //     // this.orders.unshift(new_);
+      //     this.$store.commit('addToActiveOrders',new_);
+      //     // console.log(this.$store.getters.activeOrders);
+      //   }
+      //     // console.log(this.orders);
+      //     this.orders = this.$store.getters.activeOrders;
+      //     // console.log(this.orders);          
+      // }
+      // else {
+      //   this.$showErrorMsg({message: 'Something went wrong. Couldn\'t fetch orders',});        
+      // }
     },
 
     deleteOrders() {  //cleaning order history 
@@ -233,26 +232,26 @@ export default {
         // console.log('Cancel Order preparation successful for order with orderID ' + order.id );
         let blob = data.data.prepareOrderCancel.blob;
 
-        try{                      //SIGNING PREPARED ORDER
+        // try{                      //SIGNING PREPARED ORDER
             // console.log(blob);
-            const transactionSign = await VegaProtocolService.signtx(blob,true);  //Propogating the transaction
-            // console.log(transactionSign);
-            if (transactionSign.status == 200) {    //IF SUCCESSFUL
-              let msg = 'Order Cancellation request for orderID: ' + order.id + ' has been successfully signed and propogated into the chain.';
-              // console.log(msg);    
-              this.$showSuccessMsg({message: msg,});                
-            }
-            else {      //Else for signing order
-              let msg = 'Deletion request\'s signature transaction failed. Please try again';
-              // console.log(msg);
-              this.$$showErrorMsg({message: msg});                
-           }
-        }
-        catch (err) {  //catch for signing order
-          let msg = ' Order signature for deletion request returned error. Please try again';
-          // console.log(msg);
-          this.$$showErrorMsg({message: msg});                
-        }
+        //     const transactionSign = await VegaProtocolService.signtx(blob,true);  //Propogating the transaction
+        //     // console.log(transactionSign);
+        //     if (transactionSign.status == 200) {    //IF SUCCESSFUL
+        //       let msg = 'Order Cancellation request for orderID: ' + order.id + ' has been successfully signed and propogated into the chain.';
+        //       // console.log(msg);    
+        //       this.$showSuccessMsg({message: msg,});                
+        //     }
+        //     else {      //Else for signing order
+        //       let msg = 'Deletion request\'s signature transaction failed. Please try again';
+        //       // console.log(msg);
+        //       this.$$showErrorMsg({message: msg});                
+        //    }
+        // }
+        // catch (err) {  //catch for signing order
+        //   let msg = ' Order signature for deletion request returned error. Please try again';
+        //   // console.log(msg);
+        //   this.$$showErrorMsg({message: msg});                
+        // }
       }
       catch(error) {
         // console.log(error);

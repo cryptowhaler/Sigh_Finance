@@ -1,7 +1,6 @@
 <template src="./template.html"></template>
 
 <script>
-import VegaProtocolService from '@/services/VegaProtocolService';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import { stringArrayToHtmlList, } from '@/utils/utility';
 
@@ -128,25 +127,25 @@ export default {
       // console.log( 'IOC In OrderPanel ' + this.formData.vegaMarketName+ ' ' + this.formData.vegaMarketId); //checking market
       //      this.formData.pair = this.$store.getters.selectedmarketid;    // Selected market ID
       //Make Call
-      const response = await  VegaProtocolService.submitOrder_market(this.formData.vegaMarketId,this.formData.amount,this.formData.bos,'MARKET','IOC');
-      setTimeout(() => {
-        if(!response) {   //TimeOut Limit
-          this.formData.amount = undefined;
-          this.formData.price = undefined;
-          this.showConfirm = false;
-          this.$showErrorMsg({message: 'Timeout exceeded.',});
-        }
-      },15000);
-      this.formData.amount = undefined;
-      this.formData.price = undefined;
-      this.showConfirm = false;
+      // const response = await  VegaProtocolService.submitOrder_market(this.formData.vegaMarketId,this.formData.amount,this.formData.bos,'MARKET','IOC');
+      // setTimeout(() => {
+      //   if(!response) {   //TimeOut Limit
+      //     this.formData.amount = undefined;
+      //     this.formData.price = undefined;
+      //     this.showConfirm = false;
+      //     this.$showErrorMsg({message: 'Timeout exceeded.',});
+      //   }
+      // },15000);
+      // this.formData.amount = undefined;
+      // this.formData.price = undefined;
+      // this.showConfirm = false;
 
-      if (response.status == 200) {     //If Successful
-        this.$showSuccessMsg({message: this.formData.vegaMarketName + ' - ' + response.message,});
-      } 
-      else {                          //If failed.
-        this.$showErrorMsg({message: response.message,});
-      }
+      // if (response.status == 200) {     //If Successful
+      //   this.$showSuccessMsg({message: this.formData.vegaMarketName + ' - ' + response.message,});
+      // } 
+      // else {                          //If failed.
+      //   this.$showErrorMsg({message: response.message,});
+      // }
       this.showLoader = false;
     },
   },

@@ -1,7 +1,6 @@
 <template src="./template.html"></template>
 
 <script>
-import VegaProtocolService from '@/services/VegaProtocolService';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import { stringArrayToHtmlList, } from '@/utils/utility';
 import {mapState,mapActions,} from 'vuex';

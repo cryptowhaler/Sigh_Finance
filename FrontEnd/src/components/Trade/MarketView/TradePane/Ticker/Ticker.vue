@@ -2,7 +2,6 @@
 
 <script>
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
-// import VegaProtocolService from '@/services/VegaProtocolService';
 import Spinner from '@/components/Spinner/Spinner.vue';
 import gql from 'graphql-tag';
 

@@ -36,7 +36,7 @@ import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import HeaderSection from '@/components/HeaderSection/HeaderSection.vue';
 import SideMenu from '@/components/SideMenu/SideMenu.vue';
 import ModalBox from '@/components/ModalBox/ModalBox.vue';
-import VegaProtocolService from '@/services/VegaProtocolService';
+// import VegaProtocolService from '@/services/VegaProtocolService';
 import LocalStorage from '@/utils/localStorage.js';
 import Vuikit from 'vuikit';
 import Notifications from 'vue-notification';
@@ -90,7 +90,7 @@ export default {
   async created() {         //STARTS GETTING TICKER DATA WHEN WEBSITE IS LOADED
     localStorage.shouldOpen = true;
     ExchangeDataEventBus.$emit('ticker-connect');
-    this.getMarkets();
+    // this.getMarkets();
 
     this.handleWeb3();
     // this.loadWeb3();
@@ -180,33 +180,33 @@ export default {
     closeBtnClicked() {
       sessionStorage.shouldOpen = true;
     },
-    async getMarkets() {    //getting markets
-      const markets = await VegaProtocolService.get_markets();
-      // console.log(markets);
-      if (markets.status == 200 ) {
-        let marketsData = [];
-        for (let i=0;i<markets.data.markets.length;i++) { 
-          let obj = {};
-          obj.id = markets.data.markets[i].id;
-          obj.data = {};
-          obj.data.name = markets.data.markets[i].name;
-          obj.data.instrument_name = markets.data.markets[i].tradableInstrument.instrument.name;          
-          obj.baseName = markets.data.markets[i].tradableInstrument.instrument.baseName;
-          obj.quoteName = markets.data.markets[i].tradableInstrument.instrument.quoteName;          
-          // console.log(obj);     
-          this.$store.commit('mappedMarkets',obj);        //mapping markets by ID
-          this.$store.commit('mappedMarketsbyName',obj);  //mapping markets by name
-          marketsData.push(obj);    
-        }
-        // console.log(marketsData);
-        this.$store.commit('markets',marketsData);
-        // console.log(this.$store.getters.markets);
-        // console.log(this.$store.getters.mappedMarkets);
-      }
-      else {
-        this.$showErrorMsg({message: 'Couldn\'t fetch Markets data. Some of the features may not function properly',});
-      }
-    },
+    // async getMarkets() {    //getting markets
+    //   const markets = await VegaProtocolService.get_markets();
+    //   // console.log(markets);
+    //   if (markets.status == 200 ) {
+    //     let marketsData = [];
+    //     for (let i=0;i<markets.data.markets.length;i++) { 
+    //       let obj = {};
+    //       obj.id = markets.data.markets[i].id;
+    //       obj.data = {};
+    //       obj.data.name = markets.data.markets[i].name;
+    //       obj.data.instrument_name = markets.data.markets[i].tradableInstrument.instrument.name;          
+    //       obj.baseName = markets.data.markets[i].tradableInstrument.instrument.baseName;
+    //       obj.quoteName = markets.data.markets[i].tradableInstrument.instrument.quoteName;          
+    //       // console.log(obj);     
+    //       this.$store.commit('mappedMarkets',obj);        //mapping markets by ID
+    //       this.$store.commit('mappedMarketsbyName',obj);  //mapping markets by name
+    //       marketsData.push(obj);    
+    //     }
+    //     // console.log(marketsData);
+    //     this.$store.commit('markets',marketsData);
+    //     // console.log(this.$store.getters.markets);
+    //     // console.log(this.$store.getters.mappedMarkets);
+    //   }
+    //   else {
+    //     this.$showErrorMsg({message: 'Couldn\'t fetch Markets data. Some of the features may not function properly',});
+    //   }
+    // },
 
   },
 };
