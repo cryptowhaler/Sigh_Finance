@@ -124,27 +124,6 @@ export default {
     async getActiveOrders() {     //will call vegaProtocolService 
       this.$store.commit('activeOrders',[]);
       this.orders = [];
-      // this.partiesId = VegaKeys.currentActiveKey;
-      // // console.log(this.partiesId);
-      // // console.log(VegaKeys.currentActiveKey);
-      // const response = await VegaProtocolService.get_orders_by_party(this.partiesId);
-      // // console.log(response);
-      // if (response.status == 200) {
-      //   // console.log(response.data);
-      //   for (let i=0; i<response.data.orders.length;i++) {
-      //     let new_ = this.mapNewOrder_API(response.data.orders[i]);
-      //     // console.log(new_);
-      //     // this.orders.unshift(new_);
-      //     this.$store.commit('addToActiveOrders',new_);
-      //     // console.log(this.$store.getters.activeOrders);
-      //   }
-      //     // console.log(this.orders);
-      //     this.orders = this.$store.getters.activeOrders;
-      //     // console.log(this.orders);          
-      // }
-      // else {
-      //   this.$showErrorMsg({message: 'Something went wrong. Couldn\'t fetch orders',});        
-      // }
     },
 
     deleteOrders() {  //cleaning order history 
@@ -216,50 +195,6 @@ export default {
     async cancelOrder(order) {        
       // console.log(order);
       this.$store.commit('addLoaderTask', 1, false);
-      // console.log('in cancel order');
-      // try {
-      //   const data = await this.$apollo.mutate({
-      //       mutation: gql`mutation prepareOrderCancel($id: ID!, $partyId: String!, $marketId: String!) {
-      //       prepareOrderCancel(id:$id, partyId:$partyId,marketId:$marketId) {
-      //         blob
-      //       }
-      //     }`,
-      //     variables: { id:order.id, partyId:this.partiesId, marketId: order.marketID },
-      //   });
-      
-      //   // console.log(data);
-      //   // console.log(data.data);
-      //   // console.log(data.data.prepareOrderCancel.blob);
-      //   // console.log('Cancel Order preparation successful for order with orderID ' + order.id );
-      //   let blob = data.data.prepareOrderCancel.blob;
-
-      //   try{                      //SIGNING PREPARED ORDER
-      //       // console.log(blob);
-      //       const transactionSign = await VegaProtocolService.signtx(blob,true);  //Propogating the transaction
-      //       // console.log(transactionSign);
-      //       if (transactionSign.status == 200) {    //IF SUCCESSFUL
-      //         let msg = 'Order Cancellation request for orderID: ' + order.id + ' has been successfully signed and propogated into the chain.';
-      //         // console.log(msg);    
-      //         this.$showSuccessMsg({message: msg,});                
-      //       }
-      //       else {      //Else for signing order
-      //         let msg = 'Deletion request\'s signature transaction failed. Please try again';
-      //         // console.log(msg);
-      //         this.$$showErrorMsg({message: msg});                
-      //      }
-      //   }
-      //   catch (err) {  //catch for signing order
-      //     let msg = ' Order signature for deletion request returned error. Please try again';
-      //     // console.log(msg);
-      //     this.$$showErrorMsg({message: msg});                
-      //   }
-      // }
-      // catch(error) {
-      //   // console.log(error);
-      //   let msg = ' Order deletion request preparation returned error. Please try again';
-      //   // console.log(msg);
-      //   this.$$showErrorMsg({message: msg});                        
-      // } 
     }
   },
 

@@ -6,6 +6,7 @@ import { UserAccount_IndividualMarketStats, Account, Sightroller, Market, SIGH }
 import { PriceOracle } from '../generated/POLY/PriceOracle'
 import { cToken } from '../generated/POLY/cToken'
 import { cERC20 } from '../generated/POLY/cERC20'
+import { EIP20Interface } from '../generated/LINK/EIP20Interface'
 
 let cUSDCAddress = '0x39aa39c021dfbae8fac545936693ac917d5e7563'
 let cETHAddress = '0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5'
@@ -154,7 +155,7 @@ export function createMarket(marketAddress: string): Market {
   else {
     market = new Market(marketAddress)    
     market.underlyingAddress = contract.underlying()
-    let underlyingContract = cERC20.bind(market.underlyingAddress as Address)
+    let underlyingContract = EIP20Interface.bind(market.underlyingAddress as Address)
     market.underlyingDecimals = underlyingContract.decimals()  
     market.underlyingName = underlyingContract.name()
     market.underlyingSymbol = underlyingContract.symbol()

@@ -47,7 +47,7 @@ dataSources:
     name: LINK
     network: kovan
     source:
-      address: "0xD5475A41dE73d23D3E7EFf5a469F634EdCC3FF00"
+      address: "0x717dD4484e5C6a53F232101652e8fB9eB7654cb3"
       abi: cToken
       startBlock: 21057715
     mapping:
@@ -66,6 +66,8 @@ dataSources:
           file: LINK/abis/PriceOracle.json
         - name: cERC20
           file: LINK/abis/cERC20.json
+        - name: EIP20Interface
+          file: LINK/abis/EIP20Interface.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
