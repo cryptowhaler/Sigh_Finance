@@ -40,16 +40,16 @@ dataSources:
           handler: handleMarketEntered
         - event: MarketExited(address,address)
           handler: handleMarketExited
-        - event: DistributedBorrowerGsigh(indexed address,indexed address,uint256,uint256)
-          handler: handleDistributedBorrowerGsigh
-        - event: DistributedSupplierGsigh(indexed address,indexed address,uint256,uint256)
-          handler: handleDistributedSupplierGsigh
-        - event: GsighSpeedUpdated(indexed address,uint256)
-          handler: handleGsighSpeedUpdated
-        - event: MarketGsighed(address,bool)
-          handler: handleMarketGsighed
-        - event: MarketListed(address)
-          handler: handleMarketListed
+        # - event: DistributedBorrowerGsigh(indexed address,indexed address,uint256,uint256)
+        #   handler: handleDistributedBorrowerGsigh
+        # - event: DistributedSupplierGsigh(indexed address,indexed address,uint256,uint256)
+        #   handler: handleDistributedSupplierGsigh
+        # - event: GsighSpeedUpdated(indexed address,uint256)
+        #   handler: handleGsighSpeedUpdated
+        # - event: MarketGsighed(address,bool)
+        #   handler: handleMarketGsighed
+        # - event: MarketListed(address)
+        #   handler: handleMarketListed
         - event: NewCollateralFactor(address,uint256,uint256)
           handler: handleNewCollateralFactor
         # - event: ActionPaused(string,bool)
@@ -77,6 +77,8 @@ dataSources:
           file: ./abis/ctoken.json
         - name: PriceOracle
           file: ./abis/PriceOracle.json
+        - name: cERC20
+          file: ./abis/cERC20.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
@@ -108,8 +110,6 @@ dataSources:
         #   handler: handleRedeem
         # - event: Approval(indexed address,indexed address,uint256)
         #   handler: handleApproval
-
-
   - kind: ethereum/contract
     name: SIGH
     network: kovan
@@ -123,8 +123,7 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/mapping/sigh.ts
       entities:
-        - NewSIGHMinted
-        - SIGHReservoirChanged
+        - SIGH
       abis:
       - name: SIGH
         file: ./abis/SIGH.json

@@ -2,10 +2,10 @@
 
 // For each division by 10, add one to exponent to truncate one significant figure
 import {Address, BigDecimal, Bytes, BigInt, log } from '@graphprotocol/graph-ts/index'
-import { UserAccount_IndividualMarketStats, Account, Sightroller, Market } from '../generated/schema'
-import { PriceOracle } from '../abis/PriceOracle.json'
-import { ERC20 } from '../abis/cERC20.json'
-import { CToken } from '../abis/cToken.json'
+import { UserAccount_IndividualMarketStats, Account, Sightroller, Market, SIGH } from '../generated/schema'
+import { PriceOracle } from '../generated/POLY/PriceOracle'
+import { cToken } from '../generated/POLY/cToken'
+import { cERC20 } from '../generated/POLY/cERC20'
 
 let cUSDCAddress = '0x39aa39c021dfbae8fac545936693ac917d5e7563'
 let cETHAddress = '0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5'
@@ -88,7 +88,7 @@ export function updateMarket(marketAddress: Address,blockNumber: i32,blockTimest
   // Update Market if it has not been updated this block
   if (market.accrualBlockNumber != blockNumber) {
     let contractAddress = Address.fromString(market.id)
-    let contract = CToken.bind(contractAddress)
+    let contract = cERC20.bind(contractAddress)
 
     // if cETH, we only update USD price
     if (market.id == cETHAddress) {
@@ -139,7 +139,7 @@ export function updateMarket(marketAddress: Address,blockNumber: i32,blockTimest
 // CREATING A MARKET
 export function createMarket(marketAddress: string): Market {
   let market: Market
-  let contract = CToken.bind(Address.fromString(marketAddress))
+  let contract = cERC20.bind(Address.fromString(marketAddress))
 
   // It is CETH, which has a slightly different interface
   if (marketAddress == cETHAddress) {
@@ -154,7 +154,7 @@ export function createMarket(marketAddress: string): Market {
   else {
     market = new Market(marketAddress)    
     market.underlyingAddress = contract.underlying()
-    let underlyingContract = ERC20.bind(market.underlyingAddress as Address)
+    let underlyingContract = cERC20.bind(market.underlyingAddress as Address)
     market.underlyingDecimals = underlyingContract.decimals()  
     market.underlyingName = underlyingContract.name()
     market.underlyingSymbol = underlyingContract.symbol()
@@ -211,4 +211,23 @@ function getTokenPrice(blockNumber: i32, eventAddress: Address, underlyingAddres
   let oracle = PriceOracle.bind(oracleAddress)
   underlyingPrice = oracle.getUnderlyingPrice(eventAddress).toBigDecimal().div(bdFactor)
   return underlyingPrice
+}
+
+
+
+// Creating SIGH  
+// Creating SIGH
+// Creating SIGH
+// Creating SIGH
+export function createSIGH(addressID: string): SIGH {
+  let sigh_token_contract = new SIGH(addressID)
+  sigh_token_contract.currentCycle = new BigInt(0)
+  sigh_token_contract.currentEra = new BigInt(0)
+  sigh_token_contract.Recentminter = Address.fromString('0x0000000000000000000000000000000000000000',)
+  sigh_token_contract.RecentCoinsMinted = new BigInt(0)
+  sigh_token_contract.totalSupply = new BigInt(0)
+  sigh_token_contract.blockNumberWhenCoinsMinted = new BigInt(0)
+  sigh_token_contract.Reservoir = Address.fromString('0x0000000000000000000000000000000000000000',)
+  sigh_token_contract.save()
+  return sigh_token_contract
 }

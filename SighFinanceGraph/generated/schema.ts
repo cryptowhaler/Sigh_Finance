@@ -12,143 +12,6 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class NewSIGHMinted extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id !== null, "Cannot save NewSIGHMinted entity without an ID");
-    assert(
-      id.kind == ValueKind.STRING,
-      "Cannot save NewSIGHMinted entity with non-string ID. " +
-        'Considering using .toHex() to convert the "id" to a string.'
-    );
-    store.set("NewSIGHMinted", id.toString(), this);
-  }
-
-  static load(id: string): NewSIGHMinted | null {
-    return store.get("NewSIGHMinted", id) as NewSIGHMinted | null;
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get currentCycle(): BigInt {
-    let value = this.get("currentCycle");
-    return value.toBigInt();
-  }
-
-  set currentCycle(value: BigInt) {
-    this.set("currentCycle", Value.fromBigInt(value));
-  }
-
-  get currentEra(): BigInt {
-    let value = this.get("currentEra");
-    return value.toBigInt();
-  }
-
-  set currentEra(value: BigInt) {
-    this.set("currentEra", Value.fromBigInt(value));
-  }
-
-  get minter(): Bytes {
-    let value = this.get("minter");
-    return value.toBytes();
-  }
-
-  set minter(value: Bytes) {
-    this.set("minter", Value.fromBytes(value));
-  }
-
-  get newCoinsMinted(): BigInt {
-    let value = this.get("newCoinsMinted");
-    return value.toBigInt();
-  }
-
-  set newCoinsMinted(value: BigInt) {
-    this.set("newCoinsMinted", Value.fromBigInt(value));
-  }
-
-  get totalSupply(): BigInt {
-    let value = this.get("totalSupply");
-    return value.toBigInt();
-  }
-
-  set totalSupply(value: BigInt) {
-    this.set("totalSupply", Value.fromBigInt(value));
-  }
-
-  get blockNumber(): BigInt {
-    let value = this.get("blockNumber");
-    return value.toBigInt();
-  }
-
-  set blockNumber(value: BigInt) {
-    this.set("blockNumber", Value.fromBigInt(value));
-  }
-}
-
-export class SIGHReservoirChanged extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(
-      id !== null,
-      "Cannot save SIGHReservoirChanged entity without an ID"
-    );
-    assert(
-      id.kind == ValueKind.STRING,
-      "Cannot save SIGHReservoirChanged entity with non-string ID. " +
-        'Considering using .toHex() to convert the "id" to a string.'
-    );
-    store.set("SIGHReservoirChanged", id.toString(), this);
-  }
-
-  static load(id: string): SIGHReservoirChanged | null {
-    return store.get("SIGHReservoirChanged", id) as SIGHReservoirChanged | null;
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get PreviousReservoir(): Bytes {
-    let value = this.get("PreviousReservoir");
-    return value.toBytes();
-  }
-
-  set PreviousReservoir(value: Bytes) {
-    this.set("PreviousReservoir", Value.fromBytes(value));
-  }
-
-  get NewReservoir(): Bytes {
-    let value = this.get("NewReservoir");
-    return value.toBytes();
-  }
-
-  set NewReservoir(value: Bytes) {
-    this.set("NewReservoir", Value.fromBytes(value));
-  }
-}
-
 export class Sightroller extends Entity {
   constructor(id: string) {
     super();
@@ -801,5 +664,99 @@ export class UserAccount_IndividualMarketStats extends Entity {
 
   set storedBorrowBalance(value: BigDecimal) {
     this.set("storedBorrowBalance", Value.fromBigDecimal(value));
+  }
+}
+
+export class SIGH extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save SIGH entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save SIGH entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("SIGH", id.toString(), this);
+  }
+
+  static load(id: string): SIGH | null {
+    return store.get("SIGH", id) as SIGH | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get currentCycle(): BigInt {
+    let value = this.get("currentCycle");
+    return value.toBigInt();
+  }
+
+  set currentCycle(value: BigInt) {
+    this.set("currentCycle", Value.fromBigInt(value));
+  }
+
+  get currentEra(): BigInt {
+    let value = this.get("currentEra");
+    return value.toBigInt();
+  }
+
+  set currentEra(value: BigInt) {
+    this.set("currentEra", Value.fromBigInt(value));
+  }
+
+  get Recentminter(): Bytes {
+    let value = this.get("Recentminter");
+    return value.toBytes();
+  }
+
+  set Recentminter(value: Bytes) {
+    this.set("Recentminter", Value.fromBytes(value));
+  }
+
+  get RecentCoinsMinted(): BigInt {
+    let value = this.get("RecentCoinsMinted");
+    return value.toBigInt();
+  }
+
+  set RecentCoinsMinted(value: BigInt) {
+    this.set("RecentCoinsMinted", Value.fromBigInt(value));
+  }
+
+  get totalSupply(): BigInt {
+    let value = this.get("totalSupply");
+    return value.toBigInt();
+  }
+
+  set totalSupply(value: BigInt) {
+    this.set("totalSupply", Value.fromBigInt(value));
+  }
+
+  get blockNumberWhenCoinsMinted(): BigInt {
+    let value = this.get("blockNumberWhenCoinsMinted");
+    return value.toBigInt();
+  }
+
+  set blockNumberWhenCoinsMinted(value: BigInt) {
+    this.set("blockNumberWhenCoinsMinted", Value.fromBigInt(value));
+  }
+
+  get Reservoir(): Bytes {
+    let value = this.get("Reservoir");
+    return value.toBytes();
+  }
+
+  set Reservoir(value: Bytes) {
+    this.set("Reservoir", Value.fromBytes(value));
   }
 }

@@ -1,24 +1,34 @@
-import { BigInt } from "@graphprotocol/graph-ts"
 import { coinsMinted,ReservoirChanged} from "../../generated/SIGH/SIGH"
-import { NewSIGHMinted,SIGHReservoirChanged } from "../../generated/schema"
+import { SIGH } from "../../generated/schema"
+import { createSIGH, } from '../helpers'
 
 export function handleCoinsMinted(event: coinsMinted): void {
+  let sighID = event.address.toHexString()
+  let sigh_contract = SIGH.load(sighID)
 
-  let SIGHMinted = new NewSIGHMinted(event.params.timestamp.toHex())
-  SIGHMinted.currentCycle = event.params.cycle
-  SIGHMinted.currentEra = event.params.Era
-  SIGHMinted.minter = event.params.minter
-  SIGHMinted.newCoinsMinted = event.params.amountMinted
-  SIGHMinted.totalSupply = event.params.current_supply
-  SIGHMinted.blockNumber = event.params.block_number
-  SIGHMinted.save()
+  if (sigh_contract == null) {
+    sigh_contract = createSIGH(sighID)
+  }
+       
+  sigh_contract.currentCycle = event.params.cycle
+  sigh_contract.currentEra = event.params.Era
+  sigh_contract.Recentminter = event.params.minter
+  sigh_contract.RecentCoinsMinted = event.params.amountMinted
+  sigh_contract.totalSupply = event.params.current_supply
+  sigh_contract.blockNumberWhenCoinsMinted = event.params.block_number
+  sigh_contract.save()
 }
 
 export function handleReservoirChanged(event: ReservoirChanged): void {
-  let reservoirChanged = new SIGHReservoirChanged(event.params.blockNumber.toHex())
-  reservoirChanged.PreviousReservoir = event.params.prevReservoir
-  reservoirChanged.NewReservoir = event.params.newReservoir
-  reservoirChanged.save()
+  let sighID = event.address.toHexString()
+  let sigh_contract = SIGH.load(sighID)
+
+  if (sigh_contract == null) {
+    sigh_contract = createSIGH(sighID)
+  }
+
+  sigh_contract.Reservoir = event.params.newReservoir
+  sigh_contract.save()
 }
 
 

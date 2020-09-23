@@ -18,61 +18,75 @@ dataSources:
       language: wasm/assemblyscript
       file: Sightroller/Sightroller.wasm
       entities:
-        - ActionPaused
-        - ActionPaused1
-        - DistributedBorrowerGsigh
-        - DistributedSupplierGsigh
-        - Failure
-        - GsighSpeedUpdated
-        - MarketEntered
-        - MarketExited
-        - MarketGsighed
-        - MarketListed
-        - NewCloseFactor
-        - NewCollateralFactor
-        - NewGsighRate
-        - NewLiquidationIncentive
-        - NewMaxAssets
-        - NewPauseGuardian
-        - NewPriceOracle
+        - Sightroller
+        - Market
+        - UserAccount_IndividualMarketStats
       abis:
         - name: Sightroller
           file: Sightroller/abis/Sightroller.json
       eventHandlers:
-        - event: ActionPaused(string,bool)
-          handler: handleActionPaused
-        - event: ActionPaused(address,string,bool)
-          handler: handleActionPaused1
-        - event: DistributedBorrowerGsigh(indexed address,indexed address,uint256,uint256)
-          handler: handleDistributedBorrowerGsigh
-        - event: DistributedSupplierGsigh(indexed address,indexed address,uint256,uint256)
-          handler: handleDistributedSupplierGsigh
-        - event: Failure(uint256,uint256,uint256)
-          handler: handleFailure
-        - event: GsighSpeedUpdated(indexed address,uint256)
-          handler: handleGsighSpeedUpdated
-        - event: MarketEntered(address,address)
-          handler: handleMarketEntered
-        - event: MarketExited(address,address)
-          handler: handleMarketExited
-        - event: MarketGsighed(address,bool)
-          handler: handleMarketGsighed
-        - event: MarketListed(address)
-          handler: handleMarketListed
         - event: NewCloseFactor(uint256,uint256)
           handler: handleNewCloseFactor
-        - event: NewCollateralFactor(address,uint256,uint256)
-          handler: handleNewCollateralFactor
-        - event: NewGsighRate(uint256,uint256)
-          handler: handleNewGsighRate
         - event: NewLiquidationIncentive(uint256,uint256)
           handler: handleNewLiquidationIncentive
         - event: NewMaxAssets(uint256,uint256)
           handler: handleNewMaxAssets
-        - event: NewPauseGuardian(address,address)
-          handler: handleNewPauseGuardian
         - event: NewPriceOracle(address,address)
           handler: handleNewPriceOracle
+        - event: NewPauseGuardian(address,address)
+          handler: handleNewPauseGuardian
+        - event: NewGsighRate(uint256,uint256)
+          handler: handleNewGsighRate
+        - event: MarketEntered(address,address)
+          handler: handleMarketEntered
+        - event: MarketExited(address,address)
+          handler: handleMarketExited
+        - event: NewCollateralFactor(address,uint256,uint256)
+          handler: handleNewCollateralFactor
+  - kind: ethereum/contract
+    name: POLY
+    network: kovan
+    source:
+      address: "0x5a426CcFA4cc5CA3accbF9e466589a9f7B06169a"
+      abi: cToken
+      startBlock: 7700000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: POLY/POLY.wasm
+      entities:
+        - User
+        - Market
+        - CTokenInfo
+      abis:
+        - name: cToken
+          file: POLY/abis/ctoken.json
+        - name: PriceOracle
+          file: POLY/abis/PriceOracle.json
+        - name: cERC20
+          file: POLY/abis/cERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: AccrueInterest(uint256,uint256,uint256,uint256)
+          handler: handleAccrueInterest
+        - event: Borrow(address,uint256,uint256,uint256)
+          handler: handleBorrow
+        - event: RepayBorrow(address,address,uint256,uint256,uint256)
+          handler: handleRepayBorrow
+        - event: LiquidateBorrow(address,address,uint256,address,uint256)
+          handler: handleLiquidateBorrow
+        - event: NewPendingAdmin(address,address)
+          handler: handleNewPendingAdmin
+        - event: NewAdmin(address,address)
+          handler: handleNewAdmin
+        - event: NewSightroller(address,address)
+          handler: handleNewSightroller
+        - event: NewMarketInterestRateModel(address,address)
+          handler: handleNewMarketInterestRateModel
+        - event: NewReserveFactor(uint256,uint256)
+          handler: handleNewReserveFactor
   - kind: ethereum/contract
     name: SIGH
     network: kovan
@@ -86,8 +100,7 @@ dataSources:
       language: wasm/assemblyscript
       file: SIGH/SIGH.wasm
       entities:
-        - NewSIGHMinted
-        - SIGHReservoirChanged
+        - SIGH
       abis:
         - name: SIGH
           file: SIGH/abis/SIGH.json
