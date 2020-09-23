@@ -180,6 +180,13 @@ export function createMarket(marketAddress: string): Market {
   market.blockTimestamp = 0
   market.borrowIndex = zeroBD
 
+  market.gsighSpeed = BigInt.fromI32(0)
+  market.totalGsighDistributedToSuppliers = BigInt.fromI32(0)
+  market.totalGsighDistributedToBorrowers = BigInt.fromI32(0)
+  market.pendingAdmin = Address.fromString('0x0000000000000000000000000000000000000000',)
+  market.admin = Address.fromString('0x0000000000000000000000000000000000000000',)
+  market.sightroller = Address.fromString('0x0000000000000000000000000000000000000000',)
+
   return market
 }
 

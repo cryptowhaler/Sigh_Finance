@@ -4,6 +4,7 @@
 import RecentTrades from './RecentTrades/RecentTrades.vue';
 import ActiveOrders from './ActiveOrders/ActiveOrders.vue';
 import Positions from './Positions/Positions.vue';
+import Sigh from './Sigh/Sigh.vue';
 
 export default {
   name: 'trade-view',
@@ -11,6 +12,7 @@ export default {
     RecentTrades,
     ActiveOrders,
     Positions,
+    Sigh,
   },
   data() {
     return {

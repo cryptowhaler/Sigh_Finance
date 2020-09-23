@@ -44,7 +44,10 @@ import {
     // with normal transfers, since mint, redeem, and seize transfers will already run updateMarket()
     let marketID = event.address.toHexString()
     let market = Market.load(marketID)
-
+    if (market == null) {
+        market = createMarket(marketID)
+      }
+  
     if (market.accrualBlockNumber != event.block.number.toI32()) {
       market = updateMarket(event.address,event.block.number.toI32(),event.block.timestamp.toI32(),)
     }
@@ -239,6 +242,9 @@ import {
   export function handleNewPendingAdmin(event: NewPendingAdmin): void {
     let marketID = event.address.toHex()
     let market = Market.load(marketID)
+    if (market == null) {
+        market = createMarket(marketID)
+    }  
     market.pendingAdmin = event.params.newPendingAdmin
     market.save()
   }
@@ -248,6 +254,9 @@ import {
   export function handleNewAdmin(event: NewAdmin): void {
     let marketID = event.address.toHex()
     let market = Market.load(marketID)
+    if (market == null) {
+        market = createMarket(marketID)
+    }  
     market.admin = event.params.newAdmin
     market.save()
   }
@@ -257,6 +266,9 @@ import {
   export function handleNewSightroller(event: NewSightroller): void {
     let marketID = event.address.toHex()
     let market = Market.load(marketID)
+    if (market == null) {
+        market = createMarket(marketID)
+    }  
     market.sightroller = event.params.newSightroller
     market.save()
   }
@@ -280,6 +292,9 @@ import {
   export function handleNewReserveFactor(event: NewReserveFactor): void {
     let marketID = event.address.toHex()
     let market = Market.load(marketID)
+    if (market == null) {
+        market = createMarket(marketID)
+    }  
     market.reserveFactor = event.params.newReserveFactorMantissa
     market.save()
   }

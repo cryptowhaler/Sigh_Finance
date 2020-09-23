@@ -1,6 +1,6 @@
 <!-- // uk-visible@m means it will not be visible in mobiles -->
 <div class="positions uk-visible@m"  v-if="$store.getters.isWalletConnected">
-    <div v-on:click='toggleOpen' :class="{'opened': open, 'close': open}" style="text-align:center;" class="accordionToggleButton">Positions
+    <div v-on:click='toggleOpen' :class="{'opened': open, 'close': open}" style="text-align:center;" class="accordionToggleButton"> Money-Markets - Current Holdings
     </div>
     <div>
         <!-- <div class="uk-visible@m"> -->
@@ -10,17 +10,17 @@
                         <thead class="uk-visible">
                             <tr>
                                 <!-- <th width="50">ID</th> -->
-                                <th>Market</th>
-                                <th>Average Entry Price</th>
-                                <th>Open Volume</th>
-                                <th>Realised PNL</th>
-                                <th>Unrealised PNL</th>
-                                <th>Initial Margin</th>
+                                <th>Market Symbol</th>
+                                <th>Market Balance</th>
+                                <th>Total Underlying Supplied</th>
+                                <th>Total Underlying Redeemed</th>
+                                <th> Market Entered </th>
+                                <th>Borrow Balance</th>
                                 <!-- <th width="100">Buy/Sell</th> -->
-                                <th>Search Level Margin</th>
-                                <th>Exit Position</th>
-                                <th>Cancel All Orders</th>
-                                <th>Exit & Cancel</th>
+                                <th>Total Underlying Borrowed</th>
+                                <th>Total Underlying Repaid</th>
+                                <th> Borrow Index</th>
+                                <!-- <th>Exit & Cancel</th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -42,11 +42,11 @@
                                         <span class="mr5Close">Cancel All</span>
                                     </a>
                                 </td>
-                                <td>
+                                <!-- <td>
                                     <a @click=closePositionAndCancelOrders(position.value) href="javascript:undefined" class="fs14 os-semibold c-white">
                                         <span class="mr5Close">Close & Cancel All</span>
                                     </a>
-                                </td>
+                                </td> -->
                             </tr>
                             <div v-if="positions_array.length!=0" >
                             <tr>

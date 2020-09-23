@@ -43,18 +43,18 @@ import '@/assets/css/colors.css';
 
 
 // const header = { Authorization: 'Bearer ' + VegaKeys.token, };
-const vega_subs_link = new WebSocketLink({    //Link for Subscription and defining headers
-  uri: 'wss://n08.n.vega.xyz/query',
+const graphQL_subscription = new WebSocketLink({    //Link for Subscription and defining headers
+  uri: 'wss://api.thegraph.com/subgraphs/name/cryptowhaler/sigh-finance-kovan',
   options: {
     reconnect: true,
-    timeout:150000,
+    timeout:300000,
   },
 });
 
 // subscriptionClient.maxConnectTimeGenerator.duration = () => subscriptionClient.maxConnectTimeGenerator.max
 
 const client = new ApolloClient({
-  link: vega_subs_link,
+  link: graphQL_subscription,
   cache: new InMemoryCache({
     addTypename: true,
   }),
@@ -84,3 +84,28 @@ new Vue({
 }).$mount('#app');
 
 
+
+// {
+//   sightrollers(first: 5) {
+//     id
+//     priceOracle
+//     closeFactor
+//     liquidationIncentive
+//   }
+//   markets(first: 5) {
+//     id
+//     symbol
+//     name
+//     cash
+//   }
+//   sighs {
+//     id
+// 		currentCycle 
+// 		currentEra 
+// 		Recentminter 
+// 		RecentCoinsMinted 
+// 		totalSupply 
+// 		blockNumberWhenCoinsMinted 
+// 		Reservoir 
+//   }
+// }

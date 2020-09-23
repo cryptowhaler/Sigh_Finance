@@ -3255,8 +3255,8 @@
         }
       },
       "links": {},
-      "address": "0x5a426CcFA4cc5CA3accbF9e466589a9f7B06169a",
-      "transactionHash": "0x637acf309400d161535edd8777f034bf18bcf6f673d028dc533d3a544cbdde1d"
+      "address": "0xD5475A41dE73d23D3E7EFf5a469F634EdCC3FF00",
+      "transactionHash": "0x9e4d923cfc732fd32c2f60336efaccfc18cf014f32fe7866541144e418464c08"
     },
     "5777": {
       "events": {
@@ -3673,7 +3673,7 @@
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-21T09:41:53.129Z",
+  "updatedAt": "2020-09-23T07:53:57.484Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "SighFinance",

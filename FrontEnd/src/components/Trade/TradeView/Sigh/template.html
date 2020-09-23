@@ -1,0 +1,46 @@
+<!-- // uk-visible@m means it will not be visible in mobiles -->
+<div v-if="$store.getters.isWalletConnected"  class="sigh uk-visible@m ">
+    <div v-on:click='toggleOpen' style="text-align:center;" class="accordionToggleButton">
+        SIGH - CURRENT SNAPSHOT
+    </div>
+    <div>
+        <div id="activeTrades" :class="{'closed': open}">
+            <div id="recentSimplebar" data-simplebar data-simplebar-auto-hide="false">
+                <table>
+                    <thead>
+                        <tr>
+                            <!-- <th width="50">ID</th> -->
+                            <th>Etherscan</th>
+                            <th>Current Cycle</th>
+                            <th>Current Era</th>
+                            <th>Inflation Rate</th>
+                            <th>Recent Minter</th>                            
+                            <th>Recent Coins Minted</th>
+                            <th>Total Supply</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="sigh_ in sigh">
+                            <td class="c-white">{{ sigh_.address }}</td>
+                            <td class="c-white">{{ sigh_.currentCycle }}</td>
+                            <td class="c-white">{{ sigh_.currentEra }}</td>
+                            <td class="c-white">{{ sigh_.InflationRate }}</td>
+                            <td class="c-white">{{sigh_.Recentminter}}</td>
+                            <td class="c-white">{{ sigh_.RecentCoinsMinted }}</td>
+                            <td class="c-white">{{ sigh_.totalSupply }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- id
+currentCycle 
+currentEra 
+Recentminter 
+RecentCoinsMinted 
+totalSupply 
+Reservoir  -->

@@ -114,6 +114,7 @@ const store = new Vuex.Store({
     web3Account: '',
     networkId: '',
     isWalletConnected: false,
+    sighSnapshot : {},
 
   },
 
@@ -277,6 +278,9 @@ const store = new Vuex.Store({
     precisionSelectedpair(state) {
       return state.precision;
     },
+    sighSnapshot(state) {         // sigh Snapshot
+      return state.sighSnapshot;    
+    }
   },
 
 
@@ -520,8 +524,11 @@ const store = new Vuex.Store({
     },
     isWalletConnected(state, isWalletConnected) {   //WHEN WALLET GETS CONNECTED
       state.isWalletConnected = isWalletConnected;
+    },
+    sighSnapshot(state, payload) {
+      state.sighSnapshot = payload;
+      console.log(state.sighSnapshot);
     }
-
 
   },
 
@@ -3677,6 +3684,30 @@ const store = new Vuex.Store({
       console.log(ret);
     }
   },
+
+  cERC20_getName: async ({commit,state}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.name().call();
+      console.log(ret);
+    }
+  },  
+
+  cERC20_getSymbol: async ({commit,state}) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.symbol().call();
+      console.log(ret);
+    }
+  },  
 
 // *********** ADDITIONAL UTILITY FUNCTIONS *******************
 // *********** ADDITIONAL UTILITY FUNCTIONS *******************

@@ -44,28 +44,28 @@ dataSources:
         - event: NewCollateralFactor(address,uint256,uint256)
           handler: handleNewCollateralFactor
   - kind: ethereum/contract
-    name: POLY
+    name: LINK
     network: kovan
     source:
-      address: "0x5a426CcFA4cc5CA3accbF9e466589a9f7B06169a"
+      address: "0xD5475A41dE73d23D3E7EFf5a469F634EdCC3FF00"
       abi: cToken
-      startBlock: 7700000
+      startBlock: 21057715
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: POLY/POLY.wasm
+      file: LINK/LINK.wasm
       entities:
         - User
         - Market
         - CTokenInfo
       abis:
         - name: cToken
-          file: POLY/abis/ctoken.json
+          file: LINK/abis/ctoken.json
         - name: PriceOracle
-          file: POLY/abis/PriceOracle.json
+          file: LINK/abis/PriceOracle.json
         - name: cERC20
-          file: POLY/abis/cERC20.json
+          file: LINK/abis/cERC20.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
@@ -87,6 +87,10 @@ dataSources:
           handler: handleNewMarketInterestRateModel
         - event: NewReserveFactor(uint256,uint256)
           handler: handleNewReserveFactor
+        - event: Mint(address,uint256,uint256)
+          handler: handleMint
+        - event: Redeem(address,uint256,uint256)
+          handler: handleRedeem
   - kind: ethereum/contract
     name: SIGH
     network: kovan
