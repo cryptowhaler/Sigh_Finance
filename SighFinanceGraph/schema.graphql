@@ -131,6 +131,17 @@ type Market @entity {
 
     "DistributedBorrowerGsigh event"
     totalGsighDistributedToBorrowers: BigInt!
+
+    "NewPendingAdmin event"
+    pendingAdmin: Bytes!
+
+    "NewAdmin event"
+    admin: Bytes!    
+
+    "NewSightroller event"
+    sightroller: Bytes!    
+
+
 }
 
 
@@ -145,13 +156,13 @@ type Market @entity {
 
 # Users within the protocol
 type Account @entity {
-    "User ETH address"
+    "User wallet address"
     id: ID!
-    "Array of CTokens user is in"
+    "Array of markets user is in"
     tokens: [UserAccount_IndividualMarketStats!]! @derivedFrom(field: "account")
-    "Count user has been liquidated"
+    "how many times user has been liquidated"
     countLiquidated: Int!
-    "Count user has liquidated others"
+    "how many times user has liquidated others"
     countLiquidator: Int!
     "True if user has ever borrowed"
     hasBorrowed: Boolean!

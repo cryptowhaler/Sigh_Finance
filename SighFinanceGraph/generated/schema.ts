@@ -545,6 +545,33 @@ export class Market extends Entity {
   set totalGsighDistributedToBorrowers(value: BigInt) {
     this.set("totalGsighDistributedToBorrowers", Value.fromBigInt(value));
   }
+
+  get pendingAdmin(): Bytes {
+    let value = this.get("pendingAdmin");
+    return value.toBytes();
+  }
+
+  set pendingAdmin(value: Bytes) {
+    this.set("pendingAdmin", Value.fromBytes(value));
+  }
+
+  get admin(): Bytes {
+    let value = this.get("admin");
+    return value.toBytes();
+  }
+
+  set admin(value: Bytes) {
+    this.set("admin", Value.fromBytes(value));
+  }
+
+  get sightroller(): Bytes {
+    let value = this.get("sightroller");
+    return value.toBytes();
+  }
+
+  set sightroller(value: Bytes) {
+    this.set("sightroller", Value.fromBytes(value));
+  }
 }
 
 export class Account extends Entity {

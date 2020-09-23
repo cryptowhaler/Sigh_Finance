@@ -3,9 +3,9 @@
 // For each division by 10, add one to exponent to truncate one significant figure
 import {Address, BigDecimal, Bytes, BigInt, log } from '@graphprotocol/graph-ts/index'
 import { UserAccount_IndividualMarketStats, Account, Sightroller, Market } from '../generated/schema'
-import { PriceOracle } from '../types/cREP/PriceOracle'
-import { ERC20 } from '../types/cREP/ERC20'
-import { CToken } from '../types/cREP/CToken'
+import { PriceOracle } from '../abis/PriceOracle.json'
+import { ERC20 } from '../abis/cERC20.json'
+import { CToken } from '../abis/cToken.json'
 
 let cUSDCAddress = '0x39aa39c021dfbae8fac545936693ac917d5e7563'
 let cETHAddress = '0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5'
@@ -72,39 +72,10 @@ export function createAccountIndividualMarketStats(cTokenStatsID: string, symbol
   return AccountIndividualMarketStats
 }
 
-
-
-
-
-
-
-
-
-// A user's Account 
-export function createUserAccount(accountID: string): Account {
-  let account = new Account(accountID)
-  account.countLiquidated = 0
-  account.countLiquidator = 0
-  account.hasBorrowed = false
-  account.save()
-  return account
-}
-
-
-
-// Used for all cERC20 contracts
-function getTokenPrice(blockNumber: i32, eventAddress: Address, underlyingAddress: Address, underlyingDecimals: i32,): BigDecimal {
-  let sightroller = Sightroller.load('1')
-  let oracleAddress = sightroller.priceOracle as Address
-  let underlyingPrice: BigDecimal
-  let mantissaDecimalFactor = 18 - underlyingDecimals + 18
-  let bdFactor = exponentToBigDecimal(mantissaDecimalFactor)
-  let oracle = PriceOracle.bind(oracleAddress)
-  underlyingPrice = oracle.getUnderlyingPrice(eventAddress).toBigDecimal().div(bdFactor)
-  return underlyingPrice
-}
-
-
+// Updating the Market
+// Updating the Market
+// Updating the Market
+// Updating the Market
 // Updating the Market
 export function updateMarket(marketAddress: Address,blockNumber: i32,blockTimestamp: i32,): Market {
   let marketID = marketAddress.toHexString()
@@ -133,10 +104,6 @@ export function updateMarket(marketAddress: Address,blockNumber: i32,blockTimest
     market.totalSupply = contract.totalSupply().toBigDecimal().div(cTokenDecimalsBD)
 
     /* Exchange rate explanation
-       In Practice
-        - If you call the cDAI contract on etherscan it comes back (2.0 * 10^26)
-        - If you call the cUSDC contract on etherscan it comes back (2.0 * 10^14)
-        - The real value is ~0.02. So cDAI is off by 10^28, and cUSDC 10^16
        How to calculate for tokens with different decimals
         - Must div by tokenDecimals, 10^market.underlyingDecimals
         - Must multiply by ctokenDecimals, 10^8
@@ -144,7 +111,6 @@ export function updateMarket(marketAddress: Address,blockNumber: i32,blockTimest
      */
     market.exchangeRate = contract.exchangeRateStored().toBigDecimal().div(exponentToBigDecimal(market.underlyingDecimals)).times(cTokenDecimalsBD).div(mantissaFactorBD).truncate(mantissaFactor)
     market.borrowIndex = contract.borrowIndex().toBigDecimal().div(mantissaFactorBD).truncate(mantissaFactor)
-
     market.reserves = contract.totalReserves().toBigDecimal().div(exponentToBigDecimal(market.underlyingDecimals)).truncate(market.underlyingDecimals)
     market.totalBorrows = contract.totalBorrows().toBigDecimal().div(exponentToBigDecimal(market.underlyingDecimals)).truncate(market.underlyingDecimals)
     market.cash = contract.getCash().toBigDecimal().div(exponentToBigDecimal(market.underlyingDecimals)).truncate(market.underlyingDecimals)
@@ -166,8 +132,11 @@ export function updateMarket(marketAddress: Address,blockNumber: i32,blockTimest
 }
 
 
-
-
+// CREATING A MARKET
+// CREATING A MARKET
+// CREATING A MARKET
+// CREATING A MARKET
+// CREATING A MARKET
 export function createMarket(marketAddress: string): Market {
   let market: Market
   let contract = CToken.bind(Address.fromString(marketAddress))
@@ -197,10 +166,8 @@ export function createMarket(marketAddress: string): Market {
   market.reserves = zeroBD
   market.totalBorrows = zeroBD
   market.totalSupply = zeroBD
-
   market.reserveFactor = BigInt.fromI32(0)
   market.underlyingPriceUSD = zeroBD
-
   market.borrowRate = zeroBD
   market.collateralFactor = zeroBD
   market.exchangeRate = zeroBD
@@ -209,10 +176,39 @@ export function createMarket(marketAddress: string): Market {
   market.numberOfSuppliers = 0
   market.supplyRate = zeroBD
   market.underlyingPrice = zeroBD
-
   market.accrualBlockNumber = 0
   market.blockTimestamp = 0
   market.borrowIndex = zeroBD
 
   return market
+}
+
+
+// Creating A user's Account 
+// Creating A user's Account 
+// Creating A user's Account 
+// Creating A user's Account 
+export function createUserAccount(accountID: string): Account {
+  let account = new Account(accountID)
+  account.countLiquidated = 0
+  account.countLiquidator = 0
+  account.hasBorrowed = false
+  account.save()
+  return account
+}
+
+
+// Used for all cERC20 contracts to get token Price
+// Used for all cERC20 contracts to get token Price
+// Used for all cERC20 contracts to get token Price
+// Used for all cERC20 contracts to get token Price
+function getTokenPrice(blockNumber: i32, eventAddress: Address, underlyingAddress: Address, underlyingDecimals: i32,): BigDecimal {
+  let sightroller = Sightroller.load('1')
+  let oracleAddress = sightroller.priceOracle as Address
+  let underlyingPrice: BigDecimal
+  let mantissaDecimalFactor = 18 - underlyingDecimals + 18
+  let bdFactor = exponentToBigDecimal(mantissaDecimalFactor)
+  let oracle = PriceOracle.bind(oracleAddress)
+  underlyingPrice = oracle.getUnderlyingPrice(eventAddress).toBigDecimal().div(bdFactor)
+  return underlyingPrice
 }
