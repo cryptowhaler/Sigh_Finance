@@ -22,6 +22,8 @@ import SighLens from '@/contracts/SighLens.json';
 import CErc20Impl from '@/contracts/CErc20Delegate.json';      // IMPLEMENTATION CONTRACT (CAN BE UPDATED)
 import CErc20 from '@/contracts/CErc20Delegator.json';   // INTERACTING WITH STORAGE CONTRACT
 
+import SimplePriceOracle from '@/contracts/SimplePriceOracle.json';   // INTERACTING WITH STORAGE CONTRACT
+
 const getRevertReason = require('eth-revert-reason');
 
 // import SetProtocol from 'setprotocol.js';
@@ -1701,7 +1703,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.setPriceOracle(newPriceOracle).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._setPriceOracle(newPriceOracle).send({from: state.web3Account})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1897,7 +1899,7 @@ const store = new Vuex.Store({
   // It is used to make the new implementation to be accepted by calling a function from Unitroller.
   sightroller__become: async ({commit,state}, { unitroller}) => {
     const web3 = state.web3;
-    const Sightroller_ = Unitroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+    const Sightroller_ = Sightroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
     console.log(Sightroller_);
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
@@ -2184,7 +2186,58 @@ const store = new Vuex.Store({
       let ret = UNITROLLER_Contract.methods.sightrollerImplementation().call();
       console.log(ret);      
     }
-  }, 
+  },
+  
+  // transferTokens (The number of cTokens to transfer)
+  sightroller_getPriceOracle: async ({commit,state}) => {
+    const web3 = state.web3;
+    const Sightroller_ = Unitroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+    console.log(Sightroller_);
+    if (Sightroller_) {
+      let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      console.log(SIGHTROLLER_Contract);
+      let error = SIGHTROLLER_Contract.methods.oracle().call(); 
+        console.log(error);
+    }
+  },
+
+    // getUnderlyingPriceFromoracle 
+    sightroller_getUnderlyingPriceFromOracle: async ({commit,state},{cToken}) => {
+      const web3 = state.web3;
+      const Sightroller_ = Unitroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+      console.log(Sightroller_);
+      if (Sightroller_) {
+        let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+        console.log(SIGHTROLLER_Contract);
+        let error = SIGHTROLLER_Contract.methods.getUnderlyingPriceFromoracle(cToken).call(); 
+          console.log(error);
+      }
+    },
+  
+    // gsighRate (The number of cTokens to transfer)
+    sightroller_getGSighRate: async ({commit,state}) => {
+      const web3 = state.web3;
+      const Sightroller_ = Unitroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+      console.log(Sightroller_);
+      if (Sightroller_) {
+        let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+        console.log(SIGHTROLLER_Contract);
+        let error = SIGHTROLLER_Contract.methods.gsighRate().call(); 
+          console.log(error);
+      }
+    }, 
+    
+    sightroller_getSighAddress: async ({commit,state}) => {
+      const web3 = state.web3;
+      const Sightroller_ = Unitroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+      console.log(Sightroller_);
+      if (Sightroller_) {
+        let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+        console.log(SIGHTROLLER_Contract);
+        let error = SIGHTROLLER_Contract.methods.getSighAddress().call(); 
+          console.log(error);
+      }
+    }, 
 
   // UNITROLLER FUNCTIONS (END)
   //********************** 
@@ -3718,6 +3771,21 @@ const store = new Vuex.Store({
 // *********** ADDITIONAL UTILITY FUNCTIONS *******************
 // *********** ADDITIONAL UTILITY FUNCTIONS *******************
 // *********** ADDITIONAL UTILITY FUNCTIONS *******************
+
+
+
+SimplePriceOracle_getUnderlyingPrice: async ({commit,state},{Market_Address}) => {
+  const web3 = state.web3;
+  const PriceOracle_ = SimplePriceOracle.networks[state.networkId];
+  console.log(PriceOracle_);
+  if (PriceOracle_) {
+    let PriceOracle__Contract = new web3.eth.Contract(SimplePriceOracle.abi, PriceOracle_.address);
+    console.log(PriceOracle__Contract);
+    const ret = PriceOracle__Contract.methods.getUnderlyingPrice(Market_Address).call();
+    console.log(ret);
+  }
+}, 
+
 
   getRevertReason: async ({commit,state},{txhash,blockNumber}) => {
 

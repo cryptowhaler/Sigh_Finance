@@ -158,6 +158,8 @@ export default {
         blockNumber_ : undefined,
         txhash : undefined,
 
+        Market_Address : undefined,
+
 
 
 
@@ -202,7 +204,7 @@ export default {
      'sightroller_setCollateralFactor','sightroller_setMaxAssets','sightroller_setLiquidationIncentive','sightroller_supportMarket','sightroller_setPauseGuardian',
      'sightroller_setMintPaused','sightroller_setBorrowPaused','sightroller_setTransferPaused','sightroller_setSeizePaused','sightroller__become','sightroller_refreshGsighSpeeds',
      'sightroller_claimGSigh','sightroller_claimGSigh_bs','sightroller_setGsighRate','sightroller__addGsighMarkets','sightroller__dropGsighMarket','sightroller__getAllMarkets',
-     'sightroller__getBlockNumber','sightroller__getGSighAddress',
+     'sightroller__getBlockNumber','sightroller__getGSighAddress','sightroller_getUnderlyingPriceFromOracle','sightroller_getGSighRate','sightroller_getSighAddress',
 
       'unitroller___setPendingImplementation','unitroller_acceptImplementation','unitroller_setPendingAdmin','unitroller_acceptAdmin','unitroller_getAdmin','unitroller_getPendingSightrollerImplementation',
       'unitroller_getSightrollerImplementation',
@@ -227,7 +229,7 @@ export default {
       'cERC20_acceptAdmin','cERC20_setSightroller','cERC20_setReserveFactor','cERC20_reduceReserves','cERC20_setInterestRateModel','cERC20_getSightroller','cERC20_getName','cERC20_getSymbol',
 
 
-      'getRevertReason'
+      'getRevertReason', 'SimplePriceOracle_getUnderlyingPrice'
      ]),
 
     // **********************
@@ -608,6 +610,15 @@ export default {
       }
       if (type == 'getGSighAddress') {
         this.sightroller__getGSighAddress();        
+      }
+      if (type == 'getUnderlyingPriceFromOracle') {
+        this.sightroller_getUnderlyingPriceFromOracle({cToken : this.market});        
+      }
+      if (type == 'getgsighRate') {
+        this.sightroller_getGSighRate();        
+      }
+      if (type == 'getSighAddress') {
+        this.sightroller_getSighAddress();        
       }
     },
 
@@ -1060,6 +1071,11 @@ export default {
       console.log('TxHash ' + this.txhash);
       console.log('blockNumber_ ' + this.blockNumber_);
       this.getRevertReason({txhash: this.txhash, blockNumber: this.blockNumber_});
+    },
+
+    async getPriceFromOracle() {
+      console.log(this.Market_Address)
+      this.SimplePriceOracle_getUnderlyingPrice({Market_Address : this.Market_Address})
     }
   },
 

@@ -2,6 +2,7 @@
 
 // For each division by 10, add one to exponent to truncate one significant figure
 import {Address, BigDecimal, Bytes, BigInt, log } from '@graphprotocol/graph-ts/index'
+import { log } from '@graphprotocol/graph-ts'
 import { UserAccount_IndividualMarketStats, Account, Sightroller, Market, SIGH } from '../generated/schema'
 import { PriceOracle } from '../generated/POLY/PriceOracle'
 import { cToken } from '../generated/POLY/cToken'
@@ -80,23 +81,29 @@ export function createAccountIndividualMarketStats(cTokenStatsID: string, symbol
 // Updating the Market
 export function updateMarket(marketAddress: Address,blockNumber: i32,blockTimestamp: i32,): Market {
   let marketID = marketAddress.toHexString()
+  log.info('marketID : {}',[marketID] )
   let market = Market.load(marketID)
 
   if (market == null) {
+    log.info('creating market : {}',[marketID] )
     market = createMarket(marketID)
   }
+
+  log.info('Ater creating market : {}',[marketID] )
 
   // Update Market if it has not been updated this block
   if (market.accrualBlockNumber != blockNumber) {
     let contractAddress = Address.fromString(market.id)
     let contract = cERC20.bind(contractAddress)
+    log.info('contractAddress : {}',[contractAddress.toHex()] )
 
     // if cETH, we only update USD price
     if (market.id == cETHAddress) {
       market.underlyingPriceUSD = market.underlyingPrice.truncate(market.underlyingDecimals)
     } 
     else {
-      let tokenPriceEth = getTokenPrice(blockNumber,contractAddress,market.underlyingAddress as Address, market.underlyingDecimals,)
+      log.info('else statement : {}',['blockNumber'] )
+      let tokenPriceEth = getTokenPrice(blockNumber, contractAddress, market.underlyingAddress as Address, market.underlyingDecimals,)
       market.underlyingPrice = tokenPriceEth.truncate(market.underlyingDecimals)
     }
 
@@ -211,13 +218,22 @@ export function createUserAccount(accountID: string): Account {
 // Used for all cERC20 contracts to get token Price
 // Used for all cERC20 contracts to get token Price
 function getTokenPrice(blockNumber: i32, eventAddress: Address, underlyingAddress: Address, underlyingDecimals: i32,): BigDecimal {
+  log.info('getTokenPrice market : {}',['underlyingDecimals'] )
   let sightroller = Sightroller.load('1')
+  if (sightroller == null) {
+    sightroller = createSighTroller()
+  }
+  log.info('sightroller id : {}',[sightroller.id] )
   let oracleAddress = sightroller.priceOracle as Address
+  log.info('oracleAddress market : {}',[oracleAddress.toHexString()] )
   let underlyingPrice: BigDecimal
   let mantissaDecimalFactor = 18 - underlyingDecimals + 18
   let bdFactor = exponentToBigDecimal(mantissaDecimalFactor)
+  log.info('before binding : {}',[oracleAddress.toHexString()] )  
   let oracle = PriceOracle.bind(oracleAddress)
+  log.info('after binding (Market Delegator Address) : {}',[eventAddress.toHexString()] )    
   underlyingPrice = oracle.getUnderlyingPrice(eventAddress).toBigDecimal().div(bdFactor)
+  log.info('after binding (Market underlying price from Oracle) : {}',[underlyingPrice.toString()] )    
   return underlyingPrice
 }
 
@@ -239,3 +255,22 @@ export function createSIGH(addressID: string): SIGH {
   sigh_token_contract.save()
   return sigh_token_contract
 }
+
+// Creating SIGHTROLLER
+// Creating SIGHTROLLER
+// Creating SIGHTROLLER
+// Creating SIGHTROLLER
+export function createSighTroller(): Sightroller {
+  let Sightroller_contract = new Sightroller('1')
+  Sightroller_contract.priceOracle = Address.fromString('0xc4cdDAc0206EB3000a2D4E47470546B6b4ede744',)
+  Sightroller_contract.closeFactor = new BigInt(0)
+  Sightroller_contract.liquidationIncentive = new BigInt(0)
+  Sightroller_contract.maxAssets = new BigInt(0)
+  Sightroller_contract.pauseGuardian = Address.fromString('0xf5376e847EFa1Ea889bfCb03706F414daDE0E82c',)
+  Sightroller_contract.gsighRate = new BigInt(0)
+  Sightroller_contract.save()
+  return Sightroller_contract
+}
+
+
+

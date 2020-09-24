@@ -13,7 +13,7 @@ module.exports = function(deployer) {
     // ******** ERC20 MARKET CONTRACTS ( Based on Delegate & Delegator Schema) **************
     await deployer.deploy(CErc20Delegate_); // the cERC20 implementation contract
 
-    let unitroller = '0x0b1834DB6C4B58Ea28f7a299a78BE1D23d20C92D';
+    let unitroller = '0xD1541249De91AddfDAC9125d44c67b418E5b31F3';
     let whitePaperInterestRateModel = '0x4eC0B0b77163b1aC1A273BC104D33F16A65E926F';
     let cERC20_implementation = await CErc20Delegate_.deployed();
     console.log(cERC20_implementation.address);

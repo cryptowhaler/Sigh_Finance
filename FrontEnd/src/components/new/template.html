@@ -672,17 +672,23 @@
     <button class="uk-button uk-button-green" @click="sightroller('checkMembership')">SIGHTROLLER - checkMembership (account,market) </button>
     <button class="uk-button uk-button-green" @click="sightroller('enterMarkets')">SIGHTROLLER - enterMarkets (markets)  </button>
     <button class="uk-button uk-button-green" @click="sightroller('exitMarket')">SIGHTROLLER - exitMarket (market)  </button>
+    <br>
+
     <button class="uk-button uk-button-green" @click="sightroller('mintAllowed')">SIGHTROLLER - mintAllowed (market,,minter,mintAmount)  </button>
     <button class="uk-button uk-button-green" @click="sightroller('mintVerify')">SIGHTROLLER - mintVerify (market,,minter,actualMintAmount,mintTokens)  </button>
     <button class="uk-button uk-button-green" @click="sightroller('redeemAllowed')">SIGHTROLLER - redeemAllowed (market,,redeemer,redeemTokens)  </button>
     <button class="uk-button uk-button-green" @click="sightroller('redeemVerify')">SIGHTROLLER - redeemVerify (market,redeemer,actualRedeemAmount,redeemTokens)  </button>
     <button class="uk-button uk-button-green" @click="sightroller('borrowAllowed')">SIGHTROLLER - borrowAllowed (market,borrower,borrowAmount)  </button>
+    <br>
+
     <button class="uk-button uk-button-green" @click="sightroller('borrowVerify')">SIGHTROLLER - borrowVerify (market,borrower,borrowAmount)  </button>
     <button class="uk-button uk-button-green" @click="sightroller('repayBorrowAllowed')">SIGHTROLLER - repayBorrowAllowed (market,payer,borrower,repayAmount)  </button>
     <button class="uk-button uk-button-green" @click="sightroller('repayBorrowVerify')">SIGHTROLLER - repayBorrowVerify (market,payer,borrower,actualRepayAmount,borrowerIndex)  </button>
     <button class="uk-button uk-button-green" @click="sightroller('liquidateBorrowAllowed')">SIGHTROLLER - liquidateBorrowAllowed (marketBorrowed,marketCollateral,, liquidator, borrower , repayAmount)  </button>
     <button class="uk-button uk-button-green" @click="sightroller('liquidateBorrowVerify')">SIGHTROLLER - liquidateBorrowVerify (marketBorrowed,marketCollateral,, liquidator, borrower , repayAmount ,seizeTokens)  </button>
     <button class="uk-button uk-button-green" @click="sightroller('seizeAllowed')">SIGHTROLLER - seizeAllowed (marketCollateral,marketBorrowed, liquidator, borrower , repayAmount)  </button>
+    <br>
+
     <button class="uk-button uk-button-green" @click="sightroller('seizeVerify')">SIGHTROLLER - seizeVerify (marketCollateral,marketBorrowed, liquidator, borrower , repayAmount ,seizeTokens )  </button>
     <button class="uk-button uk-button-green" @click="sightroller('transferAllowed')">SIGHTROLLER - transferAllowed (market,src,dst,transferTokens)  </button>
     <button class="uk-button uk-button-green" @click="sightroller('transferVerify')">SIGHTROLLER - transferVerify (market,src,dst,transferTokens )  </button>
@@ -690,6 +696,7 @@
     <button class="uk-button uk-button-green" @click="sightroller('getHypotheticalAccountLiquidity')">SIGHTROLLER - getHypotheticalAccountLiquidity (account,market, redeemTokens,borrowAmount )  </button>
     <button class="uk-button uk-button-green" @click="sightroller('liquidateCalculateSeizeTokens')">SIGHTROLLER - liquidateCalculateSeizeTokens (marketBorrowed,marketCollateral,actualRepayAmount,  )  </button>
     <button class="uk-button uk-button-green" @click="sightroller('setPriceOracle')">SIGHTROLLER - setPriceOracle (newPriceOracle)  </button>
+    <br>
     <button class="uk-button uk-button-green" @click="sightroller('setCloseFactor')">SIGHTROLLER - setCloseFactor (newCloseFactorMantissa)  </button>
     <button class="uk-button uk-button-green" @click="sightroller('setCollateralFactor')">SIGHTROLLER - setCollateralFactor (market,newCollateralFactorMantissa)  </button>
     <button class="uk-button uk-button-green" @click="sightroller('setMaxAssets')">SIGHTROLLER - setMaxAssets (newMaxAssets)  </button>
@@ -700,6 +707,7 @@
     <button class="uk-button uk-button-green" @click="sightroller('setBorrowPaused')">SIGHTROLLER - setBorrowPaused (market,boolstate)  </button>
     <button class="uk-button uk-button-green" @click="sightroller('setTransferPaused')">SIGHTROLLER - setTransferPaused (boolstate)  </button>
     <button class="uk-button uk-button-green" @click="sightroller('setSeizePaused')">SIGHTROLLER - setSeizePaused (boolstate)  </button>
+    <br>
     <button class="uk-button uk-button-green" @click="sightroller('__become')">SIGHTROLLER - __become (unitroller)  </button>
     <button class="uk-button uk-button-green" @click="sightroller('refreshGsighSpeeds')">SIGHTROLLER - refreshGsighSpeeds</button>
     <button class="uk-button uk-button-green" @click="sightroller('claimGSigh')">SIGHTROLLER - claimGSigh (holders,markets)  </button>
@@ -710,7 +718,10 @@
     <button class="uk-button uk-button-green" @click="sightroller('getAllMarkets')">SIGHTROLLER - getAllMarkets</button>
     <button class="uk-button uk-button-green" @click="sightroller('getBlockNumber')">SIGHTROLLER - getBlockNumber</button>
     <button class="uk-button uk-button-green" @click="sightroller('getGSighAddress')">SIGHTROLLER - getGSighAddress</button>
-
+    <br>
+    <button class="uk-button uk-button-green" @click="sightroller('getUnderlyingPriceFromOracle')">SIGHTROLLER - getUnderlyingPriceFromOracle (market) </button>
+    <button class="uk-button uk-button-green" @click="sightroller('getgsighRate')">SIGHTROLLER - getgsighRate </button>
+    <button class="uk-button uk-button-green" @click="sightroller('getSighAddress')">SIGHTROLLER - getSighAddress </button>
     <br>
     <br>
     <br>
@@ -1590,8 +1601,20 @@
                 </div>                
             </div>
         </div>
-    </div>
+    </div>    
     <button class="uk-button uk-button-green" @click="revertReason()">  revertReason </button>
+    <br>
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="Market_Address" v-model="Market_Address">
+                    <span> _ </span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <button class="uk-button uk-button-green" @click="getPriceFromOracle()">  getPriceFromOracle (Market_Address) </button>
 
 
     <br>

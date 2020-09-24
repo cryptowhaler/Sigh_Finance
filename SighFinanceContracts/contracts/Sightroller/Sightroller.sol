@@ -1317,7 +1317,11 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
      * @return The address of GSIGH
      */
     function getGSighAddress() public view returns (address) {
-        return 0xc00e94Cb662C3520282E6f5717214004A7f26888;
+        return 0xd7cee811349e40C5390519a3c80e0Fb25580e6e4;
+    }
+
+    function getSighAddress() public view returns (address) {
+        return 0x58897EB4e8e70eb8133587Ce80b8e56f9248705C;
     }
 
     /*** SIGH ***/
@@ -1647,6 +1651,9 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
         return block.number;
     }
 
+    function getUnderlyingPriceFromoracle(address cToken) public view returns (uint) {
+        return  oracle.getUnderlyingPrice(CToken(cToken)) ; 
+    }
 
 
 
