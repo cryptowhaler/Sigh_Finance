@@ -59,7 +59,7 @@
     width: 0;
   }
   @include breakpoint(xlarge) {
-    width: calc(100% - 890px);
+    width: calc(100% - 796px);
   }
   @media screen and (max-width: 1500px) and (min-width: 1300px) {
     width: calc(100% - 610px);

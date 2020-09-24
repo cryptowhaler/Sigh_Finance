@@ -1,6 +1,6 @@
-<div class="livetrades noHorizontal" style="padding: 11px 0 15px">
+<div class="livemarkets noHorizontal" style="padding: 11px 0 15px">
     <div class="uk-panel">
-        <!-- Live trades heading -->
+        <!-- Live markets heading -->
         <h3 class="uk-panel-title uk-text-center" style="padding-bottom: 15px; font-size: 21px !important;">SUPPORTED MONEY MARKETS</h3>
     </div>
     <template v-if="!showLoader">
@@ -8,28 +8,35 @@
             <div id="hello" data-simplebar data-simplebar-auto-hide="false" :style="{ height: tableHeight }">
                 <table >
                     <thead class="uk-visible">
-                        <!-- live trades Bar heading -->
+                        <!-- live markets Bar heading -->
                         <tr>
-                            <td class="uk-text-left">Market</td>
-                            <td class="uk-text-center">Total Supply</td>
-                            <td class="uk-text-right">Supply APY</td>
-                            <td class="uk-text-right">Total Borrow</td>
-                            <td class="uk-text-right">Borrow APY</td>
-                            <td class="uk-text-right">Losses Recovered (SIGH)</td>
-                            <td class="uk-text-right">Average Loss (on losing days)</td>
+                            <th class="uk-text-center">Market</th>
+                            <th class="uk-text-center">Total Supply</th>
+                            <th class="uk-text-center">Total Borrow</th>
+                            <th class="uk-text-center">Supply APY</th>
+                            <th class="uk-text-center">Borrow APY</th>
+                            <th class="uk-text-center"> Underlying Market </th>
+                            <th class="uk-text-center"> GSigh Speed </th>
+                            <th class="uk-text-center"> Sigh Speed </th>
+                            <th class="uk-text-center"> Exchange Rate </th>
+                            <th class="uk-text-center"> Underlying Price </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- live trades content -->
-                        <tr v-for="trade in trades">
-                            <td class="uk-text-left c-white">{{trade.aggressor}}</td>
-                            <td class="uk-text-center c-white">{{(Number(trade.price)/100000).toFixed(3)}}</td>
-                            <td class="uk-text-right c-white" >{{trade.size}} % </td>
-                            <td class="uk-text-right c-white">{{(Number(trade.size)/2.1).toFixed(2)}} </td>
-                            <td class="uk-text-right c-white">{{(Number(trade.size)/2.1).toFixed(2)}} %</td>
-                            <td class="uk-text-right c-green">{{(Number(trade.size)/2.1).toFixed(2)}} </td>
-                            <td class="uk-text-right c-red">{{(Number(trade.size)/2.1).toFixed(2)}} </td>
-                            <!-- <td class="uk-text-right">{{(trade.createdAt).slice(11,19)}}-{{(trade.createdAt).slice(20,22)}}</td> -->
+                        <!-- live markets content -->
+                        <tr v-for="market in markets">
+                            <td class="uk-text-center c-white">{{ market.symbol }}</td>
+                            <td class="uk-text-center c-white">{{ market.totalSupply }}</td>
+                            <td class="uk-text-center c-white" >{{ market.totalBorrows }} </td>
+                            <td class="uk-text-center c-green">{{(Number(market.supplyRate)*10000000).toFixed(2)}} % </td>
+                            <td class="uk-text-center c-red">{{(Number(market.borrowRate)*10000000).toFixed(2)}} %</td>
+                            <td class="uk-text-center c-white">{{ market.underlyingSymbol }} </td>
+                            <td class="uk-text-center c-green">{{ market.gsighSpeed }} </td>
+                            <td class="uk-text-center c-green">{{ market.sighSpeed }} </td>
+                            <td class="uk-text-center c-white">{{ market.exchangeRate }} </td>
+                            <td class="uk-text-center c-green">{{ Number(market.underlyingPrice)*100000000000 }} </td>
+
+                            <!-- <td class="uk-text-right">{{(market.createdAt).slice(11,19)}}-{{(market.createdAt).slice(20,22)}}</td> -->
                         </tr>
                     </tbody>
                 </table>

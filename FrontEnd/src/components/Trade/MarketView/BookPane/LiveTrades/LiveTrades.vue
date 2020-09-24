@@ -80,6 +80,7 @@ export default {
               console.log(_markets[i]);
               this.handleEachMarket(_markets[i]);
             }
+            this.showLoader = false;
           }
         },
       },
@@ -112,6 +113,10 @@ export default {
       obj.numberOfSuppliers = liveMarket.numberOfSuppliers;
       obj.totalGsighDistributedToSuppliers = liveMarket.totalGsighDistributedToSuppliers;
       obj.totalGsighDistributedToBorrowers = liveMarket.totalGsighDistributedToBorrowers;
+      obj.sighSpeed = liveMarket.gsighSpeed;
+      if (liveMarket.underlyingPrice == '0') {
+        obj.underlyingPrice = liveMarket.underlyingPriceUSD;
+      }
       this.markets.push(obj);
       console.log(this.markets);
       // this.$store.commit('liveMarketPrice', Math.abs((price/100000).toFixed(5)));
