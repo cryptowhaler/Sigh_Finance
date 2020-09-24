@@ -1721,7 +1721,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.setCloseFactor(newCloseFactorMantissa).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._setCloseFactor(newCloseFactorMantissa).send({from: state.web3Account})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1739,7 +1739,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.setCollateralFactor(market,  newCollateralFactorMantissa).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._setCollateralFactor(market,  newCollateralFactorMantissa).send({from: state.web3Account})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1757,7 +1757,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.setMaxAssets(newMaxAssets).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._setMaxAssets(newMaxAssets).send({from: state.web3Account})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1981,7 +1981,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.setGsighRate(gsighRate_).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._setGsighRate(gsighRate_).send({from: state.web3Account})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2238,6 +2238,18 @@ const store = new Vuex.Store({
           console.log(error);
       }
     }, 
+
+    sightroller_getAdmin: async ({commit,state}) => {
+      const web3 = state.web3;
+      const Sightroller_ = Unitroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+      console.log(Sightroller_);
+      if (Sightroller_) {
+        let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+        console.log(SIGHTROLLER_Contract);
+        let error = SIGHTROLLER_Contract.methods.admin().call(); 
+          console.log(error);
+      }
+    },
 
   // UNITROLLER FUNCTIONS (END)
   //********************** 
@@ -3760,6 +3772,18 @@ const store = new Vuex.Store({
       const ret = CErc20_Contract.methods.symbol().call();
       console.log(ret);
     }
+  },
+
+    cERC20_getAdmin: async ({commit,state}) => {
+      const web3 = state.web3;
+      const CErc20_ = CErc20.networks[state.networkId];
+      console.log(CErc20_);
+      if (CErc20_) {
+        let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+        console.log(CErc20_Contract);
+        const ret = CErc20_Contract.methods.admin().call();
+        console.log(ret);
+      }
   },  
 
 // *********** ADDITIONAL UTILITY FUNCTIONS *******************

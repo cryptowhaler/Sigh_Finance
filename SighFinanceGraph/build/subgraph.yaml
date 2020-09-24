@@ -9,7 +9,7 @@ dataSources:
     name: Sightroller
     network: kovan
     source:
-      address: "0x0b1834DB6C4B58Ea28f7a299a78BE1D23d20C92D"
+      address: "0xD1541249De91AddfDAC9125d44c67b418E5b31F3"
       abi: Sightroller
       startBlock: 21054146
     mapping:
@@ -47,7 +47,7 @@ dataSources:
     name: LINK
     network: kovan
     source:
-      address: "0x717dD4484e5C6a53F232101652e8fB9eB7654cb3"
+      address: "0x754A614b8a5a63CbeEb38193F6D12861C876148B"
       abi: cToken
       startBlock: 21057715
     mapping:

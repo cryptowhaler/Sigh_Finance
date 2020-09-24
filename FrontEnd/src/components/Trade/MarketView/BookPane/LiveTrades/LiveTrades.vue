@@ -21,46 +21,64 @@ export default {
       trades: {},
       tableHeight: '',
       showLoader:true,
-      snapTaken: false,
-      marketId: 'RTJVFCMFZZQQLLYVSXTWEN62P6AH6OCN', //this.$store.state.selectedVegaMarketId,
+      markets: [],
+
       
     };
   },
 
   apollo: {
     $subscribe: {
-      trades: {
-        query: gql`subscription name($marketId: String!) {
-                  trades (marketId: $marketId) {
-                      market {
-                        id
-                      }
-                      price
-                      size
-                      aggressor
-                      createdAt
-                  }
-                }`,
+      markets: {
+        query: gql`subscription  {
+          markets {
+              id
+              symbol
+              name
+              exchangeRate
+              underlyingAddress
+              underlyingName
+              underlyingPrice
+              underlyingSymbol
+              underlyingPriceUSD
+              underlyingDecimals
+              totalSupply
+              totalBorrows
+              reserves
+              borrowRate
+              supplyRate
+              collateralFactor
+              numberOfBorrowers
+              numberOfSuppliers
+              interestRateModelAddress
+              accrualBlockNumber
+              blockTimestamp
+              borrowIndex
+              reserveFactor
+              gsighSpeed
+              totalGsighDistributedToSuppliers
+              totalGsighDistributedToBorrowers
+              pendingAdmin
+              admin
+              sightroller
+            }                
+          }`,
 
-        variables() {  return {marketId: this.marketId,};  },
+        // variables() {  return {marketId: this.marketId,};  },
 
         result({data,loading,}) {
+
           if (loading) {
-            // console.log('loading');
-          }
-          let _trades = data.trades;
-          //          // console.log(_trades[0].market.id);
-          if (!this.snapTaken) { 
-            // // console.log(_trades[0].market.id);
-            //            // console.log(_trades);
-            this.snapshotListener(_trades);
-            this.snapTaken = true;
+            console.log('loading');
           }
           else {
-            // // console.log(_trades);
-            for (let i=(_trades.length-1); i>=0;i--) {
-              // // console.log(_trades[i]);
-              this.liveTradeListener(_trades[i]);
+            console.log(data);
+            let _markets = data.markets;
+            console.log(_markets);
+            this.markets = [];
+            for (let i= (_markets.length-1) ; i>=0;i--) {
+              console.log(_markets[i]);
+              this.handleEachMarket(_markets[i]);
             }
           }
         },
@@ -77,50 +95,31 @@ export default {
 
   created() {
 
-    this.snapshotListener = snap => {
-      this.trades = snap;
-      setTimeout(() => {this.showLoader=false;}, 500);
-      const liveTrade = snap[0];
-      let price;
-      if (liveTrade.aggressor == 'Sell') {
-        price = - Number(liveTrade.price);
-      } 
-      else {
-        price = Number(liveTrade.price);
-      }
-      this.$store.commit('liveTradePrice', Math.abs((price/100000).toFixed(5)));
-      this.$store.commit('removeLoaderTask', 1);
+    this.handleEachMarket = liveMarket => {
+      console.log(liveMarket);
+      let obj = [];
+      obj.symbol = liveMarket.symbol;
+      obj.underlyingSymbol = liveMarket.underlyingSymbol;
+      obj.totalSupply = liveMarket.totalSupply;
+      obj.totalBorrows = liveMarket.totalBorrows;
+      obj.supplyRate = liveMarket.supplyRate;
+      obj.borrowRate = liveMarket.borrowRate;
+      obj.gsighSpeed = liveMarket.gsighSpeed;
+      obj.exchangeRate = liveMarket.exchangeRate;
+      obj.underlyingPrice = liveMarket.underlyingPrice;
+      obj.underlyingPriceUSD = liveMarket.underlyingPriceUSD;
+      obj.numberOfBorrowers = liveMarket.numberOfBorrowers;
+      obj.numberOfSuppliers = liveMarket.numberOfSuppliers;
+      obj.totalGsighDistributedToSuppliers = liveMarket.totalGsighDistributedToSuppliers;
+      obj.totalGsighDistributedToBorrowers = liveMarket.totalGsighDistributedToBorrowers;
+      this.markets.push(obj);
+      console.log(this.markets);
+      // this.$store.commit('liveMarketPrice', Math.abs((price/100000).toFixed(5)));
     };
 
-    this.reset = (newMarket) => {
-      this.showLoader=true;
-      this.snapTaken = false;
-      this.trades = {};
-      this.marketId = newMarket.Id;
-      // console.log('New Selected Market being fetched in LiveTrades with Id - ' + this.marketId);
-      this.$store.state.selectedVegaMarketId
-    };
-
-    this.liveTradeListener = liveTrade => {
-      this.trades.unshift(liveTrade);
-      if (this.trades.length > 100) {
-        this.trades.pop();
-      }
-      let price;
-      if (liveTrade.aggressor == 'Sell') {
-        price = -Number(liveTrade.price);
-      } else {
-        price = Number(liveTrade.price);
-      }
-      this.$store.commit('liveTradePrice', Math.abs((price/100000).toFixed(5)));
-    };
-
-    ExchangeDataEventBus.$on('change-vega-market', this.reset);
   },
 
   destroyed() {
-    this.snapTaken = false;
-    ExchangeDataEventBus.$off('change-vega-market', this.reset);
   },
   
 };

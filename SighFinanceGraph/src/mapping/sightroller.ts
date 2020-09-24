@@ -17,7 +17,7 @@ import {
 } from "../../generated/Sightroller/Sightroller"
 
 import { Sightroller, Market } from "../../generated/schema"
-import { mantissaFactorBD, updateUserAccount_IndividualMarketStats } from '../helpers'
+import { mantissaFactorBD, updateUserAccount_IndividualMarketStats , createSighTroller } from '../helpers'
 
 // SIGHTROLLER GLOBAL VARIABLES HANDLING
 // SIGHTROLLER GLOBAL VARIABLES HANDLING
@@ -30,7 +30,7 @@ import { mantissaFactorBD, updateUserAccount_IndividualMarketStats } from '../he
 export function handleNewCloseFactor(event: NewCloseFactor): void {
   let sightroller = Sightroller.load('1')
   if (sightroller == null) {
-    sightroller = new Sightroller('1')
+    sightroller = createSighTroller()
   }
   sightroller.closeFactor = event.params.newCloseFactorMantissa
   sightroller.save()
@@ -39,7 +39,7 @@ export function handleNewCloseFactor(event: NewCloseFactor): void {
 export function handleNewLiquidationIncentive(event: NewLiquidationIncentive): void {
   let sightroller = Sightroller.load('1')
   if (sightroller == null) {
-    sightroller = new Sightroller('1')
+    sightroller = createSighTroller()
   }
   sightroller.liquidationIncentive = event.params.newLiquidationIncentiveMantissa
   sightroller.save()
@@ -48,7 +48,7 @@ export function handleNewLiquidationIncentive(event: NewLiquidationIncentive): v
 export function handleNewMaxAssets(event: NewMaxAssets): void {
   let sightroller = Sightroller.load('1')
   if (sightroller == null) {
-    sightroller = new Sightroller('1')
+    sightroller = createSighTroller()
   }
   sightroller.maxAssets = event.params.newMaxAssets
   sightroller.save()
@@ -57,7 +57,7 @@ export function handleNewMaxAssets(event: NewMaxAssets): void {
 export function handleNewPriceOracle(event: NewPriceOracle): void {
   let sightroller = Sightroller.load('1')
   if (sightroller == null) {
-    sightroller = new Sightroller('1')
+    sightroller = createSighTroller()
   }
   sightroller.priceOracle = event.params.newPriceOracle
   sightroller.save()
@@ -66,7 +66,7 @@ export function handleNewPriceOracle(event: NewPriceOracle): void {
 export function handleNewPauseGuardian(event: NewPauseGuardian): void {
   let sightroller = Sightroller.load('1')
   if (sightroller == null) {
-    sightroller = new Sightroller('1')
+    sightroller = createSighTroller()
   }
   sightroller.pauseGuardian = event.params.newPauseGuardian
   sightroller.save()  
@@ -75,7 +75,7 @@ export function handleNewPauseGuardian(event: NewPauseGuardian): void {
 export function handleNewGsighRate(event: NewGsighRate): void {
   let sightroller = Sightroller.load('1')
   if (sightroller == null) {
-    sightroller = new Sightroller('1')
+    sightroller = createSighTroller()
   }
   sightroller.gsighRate = event.params.newGsighRate
   sightroller.save()
