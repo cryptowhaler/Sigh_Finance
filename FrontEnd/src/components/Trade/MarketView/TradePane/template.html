@@ -10,7 +10,7 @@
             </div>
             <keep-alive>
                 <trade-tab v-if="activeTab === 'Supply / Borrow'" />
-                <ticker v-if="activeTab === 'Account Events'" />
+                <!-- <ticker v-if="activeTab === 'Account Events'" /> -->
                 <balance v-if="activeTab === 'Account Balance'" />
                 <!-- <news v-if="activeTab === 'News'" /> -->
             </keep-alive>
