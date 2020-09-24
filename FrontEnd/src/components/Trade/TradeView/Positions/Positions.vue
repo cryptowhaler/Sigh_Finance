@@ -24,15 +24,15 @@ export default {
   data() {
     return {
       MarketPositions: [],
-      id: this.$store.getters.web3Account.toLowerCase() ,
+      id: this.$store.getters.web3Account,
     };
   },
 
-  // computed: {
-  //   positions() {
-  //     return this.mapActiveOrders(this.$store.getters.positions);
-  //   },
-  // },
+  computed: {
+    walletID() {
+      return this.setWalletID(this.$store.getters.web3Account);
+    },
+  },
 
 
 
@@ -65,17 +65,22 @@ export default {
                     }
                   }`,
 
-        variables() {  return {id: this.id,};  },
+        variables() {  return {id: this.id.toLowerCase(),};  },
 
         result({data,loading,}) {
           if (loading) {
             console.log('loading');
           }
+          else {
           console.log(data);
+          this.id  = this.$store.getters.web3Account;
           console.log(this.id);
+          console.log(this.$store.getters.web3Account);
           let accountData = data.account;
-
-          this.subcribeToMarketPositions(accountData);
+          if (accountData) {
+            this.subcribeToMarketPositions(accountData);
+          }
+          }
         },
       },
     },
@@ -93,7 +98,14 @@ export default {
 
     setWallet() {
       this.id = this.$store.getters.web3Account.toLowerCase();
+      consol.log('setWallet ' + this.id);
     },
+
+    setWalletID( wallet ) {
+      this.id = wallet.toLowerCase();
+      consol.log('setWallet ' + this.id);
+    },
+
 
     subcribeToMarketPositions(accountData) {     
 

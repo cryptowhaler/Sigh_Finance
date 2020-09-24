@@ -118,7 +118,9 @@ const store = new Vuex.Store({
     networkId: '',
     isWalletConnected: false,
     sighSnapshot : {},
-
+    countLiquidated : 0,
+    countLiquidator : 0,
+    hasBorrowed : 0,
   },
 
 
@@ -286,6 +288,15 @@ const store = new Vuex.Store({
     },
     web3Account(state) {         // Account Address
       return state.web3Account;    
+    },    
+    countLiquidated(state) {         // countLiquidated (from market holdings (account subscription) )
+      return state.countLiquidated;    
+    },    
+    countLiquidator(state) {         // countLiquidator  (from market holdings (account subscription) )
+      return state.countLiquidator;    
+    },    
+    hasBorrowed(state) {         // hasBorrowed  (from market holdings (account subscription) )
+      return state.hasBorrowed;    
     }    
   },
 
@@ -534,8 +545,19 @@ const store = new Vuex.Store({
     sighSnapshot(state, payload) {
       state.sighSnapshot = payload;
       console.log(state.sighSnapshot);
+    },
+    countLiquidated(state, payload) {
+      state.countLiquidated = payload;
+      console.log(state.countLiquidated);
+    },
+    countLiquidator(state, payload) {
+      state.countLiquidator = payload;
+      console.log(state.countLiquidator);
+    },
+    hasBorrowed(state, payload) {
+      state.hasBorrowed = payload;
+      console.log(state.hasBorrowed);
     }
-
   },
 
 

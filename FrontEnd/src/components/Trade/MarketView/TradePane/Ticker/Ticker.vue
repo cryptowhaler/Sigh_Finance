@@ -5,25 +5,25 @@ import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import Spinner from '@/components/Spinner/Spinner.vue';
 import gql from 'graphql-tag';
 
-const LIVE_TICKERS = gql`
-subscription {
-  marketData  {
-    market {
-      id
-      name
-      tradableInstrument {
-        instrument {
-          name 
-          baseName
-          quoteName
-        }    
-      }
-    }
-    bestBidPrice
-    bestOfferPrice
-    midPrice
-  }
-}`;
+// const LIVE_TICKERS = gql`
+// subscription {
+//   marketData  {
+//     market {
+//       id
+//       name
+//       tradableInstrument {
+//         instrument {
+//           name 
+//           baseName
+//           quoteName
+//         }    
+//       }
+//     }
+//     bestBidPrice
+//     bestOfferPrice
+//     midPrice
+//   }
+// }`;
 
 export default {
   name: 'ticker',
@@ -43,21 +43,21 @@ export default {
     };
   },
 
-  apollo: {
-    $subscribe: {
-      tickers: {
-        query: LIVE_TICKERS,
-        result(data) {
-          let tickers = data.data.marketData;
-          (this.i)++;
-          // // console.log(tickers);
-          setTimeout(() => {
-            this.addnewTicker(tickers);
-          },(this.i*1000 + 1000)); 
-        }, 
-      },
-    },
-  },
+  // apollo: {
+  //   $subscribe: {
+  //     tickers: {
+  //       query: LIVE_TICKERS,
+  //       result(data) {
+  //         let tickers = data.data.marketData;
+  //         (this.i)++;
+  //         // // console.log(tickers);
+  //         setTimeout(() => {
+  //           this.addnewTicker(tickers);
+  //         },(this.i*1000 + 1000)); 
+  //       }, 
+  //     },
+  //   },
+  // },
 
   created() {
     if (JSON.stringify(this.$store.state.tickerData) == '{}') { //Showing loader initially when page loaded
