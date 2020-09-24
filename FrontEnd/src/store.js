@@ -23,6 +23,7 @@ import CErc20Impl from '@/contracts/CErc20Delegate.json';      // IMPLEMENTATION
 import CErc20 from '@/contracts/CErc20Delegator.json';   // INTERACTING WITH STORAGE CONTRACT
 
 import SimplePriceOracle from '@/contracts/SimplePriceOracle.json';   // INTERACTING WITH STORAGE CONTRACT
+import EIP20NonStandardInterface from '@/contracts/EIP20NonStandardInterface.json'; 
 
 const getRevertReason = require('eth-revert-reason');
 
@@ -3809,6 +3810,37 @@ SimplePriceOracle_getUnderlyingPrice: async ({commit,state},{Market_Address}) =>
     console.log(ret);
   }
 }, 
+
+
+Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
+  const web3 = state.web3;
+  // const ERC20Token = SimplePriceOracle.networks[state.networkId];
+  // console.log(PriceOracle_);
+  // if (PriceOracle_) {
+    let erc20TokenAddress = '0x61eB5a373c4Ec78523602583c049d8563d2C7BCD';
+    let Erc20__Contract = new web3.eth.Contract(EIP20NonStandardInterface.abi, erc20TokenAddress );
+    console.log(Erc20__Contract);
+    Erc20__Contract.methods.approve('0x754A614b8a5a63CbeEb38193F6D12861C876148B', Web3.utils.toWei('1000000000', 'ether') ).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+}, 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   getRevertReason: async ({commit,state},{txhash,blockNumber}) => {

@@ -229,7 +229,7 @@ export default {
       'cERC20_acceptAdmin','cERC20_setSightroller','cERC20_setReserveFactor','cERC20_reduceReserves','cERC20_setInterestRateModel','cERC20_getSightroller','cERC20_getName','cERC20_getSymbol','cERC20_getAdmin',
 
 
-      'getRevertReason', 'SimplePriceOracle_getUnderlyingPrice'
+      'getRevertReason', 'SimplePriceOracle_getUnderlyingPrice', 'Approve_the_transfer_by_Sightroller'
      ]),
 
     // **********************
@@ -1082,8 +1082,17 @@ export default {
     async getPriceFromOracle() {
       console.log(this.Market_Address)
       this.SimplePriceOracle_getUnderlyingPrice({Market_Address : this.Market_Address})
+    },
+
+    async Approve_the_transfer() {
+      // console.log(this.Market_Address)
+      this.Approve_the_transfer_by_Sightroller()
     }
+
+
   },
+
+
 
   created() {
     this.changeVegaMarket = (newMarket) => {       //Changing Selected Vega Market
