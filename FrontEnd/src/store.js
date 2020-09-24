@@ -283,7 +283,10 @@ const store = new Vuex.Store({
     },
     sighSnapshot(state) {         // sigh Snapshot
       return state.sighSnapshot;    
-    }
+    },
+    web3Account(state) {         // Account Address
+      return state.web3Account;    
+    }    
   },
 
 
@@ -583,6 +586,8 @@ const store = new Vuex.Store({
           commit('isWalletConnected',true);  
           const networkId = await web3.eth.net.getId(); 
           commit('SET_NETWORK_ID',networkId);  
+          let lowercase = accounts[0].toLowerCase();
+          console.log( 'LOWER CASE - ' + lowercase );
           return accounts[0];
         }
         return '';
