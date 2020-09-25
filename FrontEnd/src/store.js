@@ -122,10 +122,10 @@ const store = new Vuex.Store({
     countLiquidator : 0,
     hasBorrowed : 0,
     LiveMarkets : [],
-    selectedMarketId : '',
-    selectedMarketSymbol : '',
-    selectedMarketUnderlyingSymbol : '',
-    selectedMarketUnderlyingPriceUSD : 0,
+    selectedMarketId : '0x754A614b8a5a63CbeEb38193F6D12861C876148B',
+    selectedMarketSymbol : 'link',
+    selectedMarketUnderlyingSymbol : 'LINK',
+    selectedMarketUnderlyingPriceUSD : 87,
     selectedMarketExchangeRate : 0,
 
   },
@@ -3288,12 +3288,12 @@ const store = new Vuex.Store({
   // CERC20 MARKET FUNCTIONS (START)
 
   // --> Initialize the new money market
-  cERC20_initialize: async ({commit,state},{ cer20_underlying, cer20_sightroller , cer20_interestRateModel_, cer20_initialExchangeRateMantissa,cer20_name, cer20_symbol, cer20_decimals  } ) => {
+  cERC20_initialize: async ({commit,state},{ MarketAddress, cer20_underlying, cer20_sightroller , cer20_interestRateModel_, cer20_initialExchangeRateMantissa,cer20_name, cer20_symbol, cer20_decimals  } ) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.initialize( cer20_underlying, cer20_sightroller, cer20_interestRateModel_, cer20_initialExchangeRateMantissa,cer20_name, cer20_symbol, cer20_decimals ).send({from: state.web3Account})
       .then(receipt => {
@@ -3306,12 +3306,12 @@ const store = new Vuex.Store({
   }, 
 
   // --> Sender supplies assets into the market and receives cTokens in exchange
-  cERC20_mint: async ({commit,state},{ cer20_mintAmount } ) => {
+  cERC20_mint: async ({commit,state},{ MarketAddress, cer20_mintAmount } ) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.mint( cer20_mintAmount ).send({from: state.web3Account})
       .then(receipt => {
@@ -3324,12 +3324,12 @@ const store = new Vuex.Store({
   }, 
 
   // --> Sender redeems cTokens in exchange for the underlying asset
-  cERC20_redeem: async ({commit,state},{ cer20_redeemTokens } ) => {
+  cERC20_redeem: async ({commit,state},{MarketAddress, cer20_redeemTokens } ) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.redeem( cer20_redeemTokens ).send({from: state.web3Account})
       .then(receipt => {
@@ -3342,12 +3342,12 @@ const store = new Vuex.Store({
   },   
 
   // --> Sender redeems cTokens in exchange for a specified amount of underlying asset
-  cERC20_redeemUnderlying: async ({commit,state},{ cer20_redeemAmount } ) => {
+  cERC20_redeemUnderlying: async ({commit,state},{ MarketAddress, cer20_redeemAmount } ) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.redeemUnderlying( cer20_redeemAmount ).send({from: state.web3Account})
       .then(receipt => {
@@ -3360,12 +3360,12 @@ const store = new Vuex.Store({
   },
 
   // --> Sender borrows assets from the protocol to their own address
-  cERC20_borrow: async ({commit,state},{ cer20_borrowAmount } ) => {
+  cERC20_borrow: async ({commit,state},{ MarketAddress, cer20_borrowAmount } ) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.borrow( cer20_borrowAmount ).send({from: state.web3Account})
       .then(receipt => {
@@ -3379,12 +3379,12 @@ const store = new Vuex.Store({
 
 
   // --> Sender repays their own borrow
-  cERC20_repayBorrow: async ({commit,state},{ cer20_repayAmount } ) => {
+  cERC20_repayBorrow: async ({commit,state},{ MarketAddress,  cer20_repayAmount } ) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.repayBorrow( cer20_repayAmount ).send({from: state.web3Account})
       .then(receipt => {
@@ -3397,12 +3397,12 @@ const store = new Vuex.Store({
   },
 
   // --> Sender repays a borrow belonging to borrower
-  cERC20_repayBorrowBehalf: async ({commit,state},{ cer20_borrower, cer20_repayAmount } ) => {
+  cERC20_repayBorrowBehalf: async ({commit,state},{ MarketAddress, cer20_borrower, cer20_repayAmount } ) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.repayBorrowBehalf(  cer20_borrower, cer20_repayAmount ).send({from: state.web3Account})
       .then(receipt => {
@@ -3415,12 +3415,12 @@ const store = new Vuex.Store({
   },
 
   // --> The sender liquidates the borrowers collateral.
-  cERC20_liquidateBorrow: async ({commit,state},{ cer20_borrower,  cer20_repayAmount, cer20_cTokenCollateral  } ) => {
+  cERC20_liquidateBorrow: async ({commit,state},{ MarketAddress, cer20_borrower,  cer20_repayAmount, cer20_cTokenCollateral  } ) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.liquidateBorrow( cer20_borrower,  cer20_repayAmount, cer20_cTokenCollateral ).send({from: state.web3Account})
       .then(receipt => {
@@ -3433,12 +3433,12 @@ const store = new Vuex.Store({
   },
 
   // --> The sender liquidates the borrowers collateral.
-  cERC20_addReserves: async ({commit,state},{ cer20_addAmount} ) => {
+  cERC20_addReserves: async ({commit,state},{MarketAddress,  cer20_addAmount} ) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods._addReserves( cer20_addAmount ).send({from: state.web3Account})
       .then(receipt => {
@@ -3451,12 +3451,12 @@ const store = new Vuex.Store({
   },
 
   // --> Transfer `amount` tokens from `msg.sender` to `dst`
-  cERC20_transfer: async ({commit,state},{ cer20_dst, cer20_amount } ) => {
+  cERC20_transfer: async ({commit,state},{MarketAddress, cer20_dst, cer20_amount } ) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.transfer( cer20_dst, cer20_amount ).send({from: state.web3Account})
       .then(receipt => {
@@ -3469,12 +3469,12 @@ const store = new Vuex.Store({
   },
 
   // --> Transfer `amount` tokens from `src` to `dst`
-  cERC20_transferFrom: async ({commit,state},{ cer20_src, cer20_dst, cer20_amount } ) => {
+  cERC20_transferFrom: async ({commit,state},{MarketAddress, cer20_src, cer20_dst, cer20_amount } ) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.transferFrom( cer20_src, cer20_dst, cer20_amount ).send({from: state.web3Account})
       .then(receipt => {
@@ -3487,12 +3487,12 @@ const store = new Vuex.Store({
   },
 
   // --> Approve `spender` to transfer up to `amount` from `src`
-  cERC20_approve: async ({commit,state},{ cer20_spender, cer20_amount } ) => {
+  cERC20_approve: async ({commit,state},{ MarketAddress, cer20_spender, cer20_amount } ) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.approve( cer20_spender, cer20_amount ).send({from: state.web3Account})
       .then(receipt => {
@@ -3505,12 +3505,12 @@ const store = new Vuex.Store({
   },
 
   // --> Get the underlying balance of the `owner`
-  cERC20_balanceOfUnderlying: async ({commit,state},{ cer20_owner } ) => {
+  cERC20_balanceOfUnderlying: async ({commit,state},{ MarketAddress, cer20_owner } ) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.balanceOfUnderlying( cer20_owner ).send({from: state.web3Account})
       .then(receipt => {
@@ -3523,12 +3523,12 @@ const store = new Vuex.Store({
   },
 
   // --> Returns the current total borrows plus accrued interest for the Market
-  cERC20_totalBorrowsCurrent: async ({commit,state} ) => {
+  cERC20_totalBorrowsCurrent: async ({commit,state},{MarketAddress} ) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.totalBorrowsCurrent().send({from: state.web3Account})
       .then(receipt => {
@@ -3541,12 +3541,12 @@ const store = new Vuex.Store({
   },
 
   // --> Accrue interest to updated borrowIndex and then calculate account's borrow balance using the updated borrowIndex
-  cERC20_borrowBalanceCurrent: async ({commit,state}, {cer20_account } ) => {
+  cERC20_borrowBalanceCurrent: async ({commit,state}, {MarketAddress, cer20_account } ) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.borrowBalanceCurrent(cer20_account).send({from: state.web3Account})
       .then(receipt => {
@@ -3559,12 +3559,12 @@ const store = new Vuex.Store({
   },
 
   // --> Accrue interest then return the up-to-date exchange rate
-  cERC20_exchangeRateCurrent: async ({commit,state}) => {
+  cERC20_exchangeRateCurrent: async ({commit,state},{MarketAddress}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.exchangeRateCurrent().send({from: state.web3Account})
       .then(receipt => {
@@ -3577,12 +3577,12 @@ const store = new Vuex.Store({
   },
 
   // --> Applies accrued interest to total borrows and reserves
-  cERC20_accrueInterest: async ({commit,state}) => {
+  cERC20_accrueInterest: async ({commit,state},{MarketAddress}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.accrueInterest().send({from: state.web3Account})
       .then(receipt => {
@@ -3595,12 +3595,12 @@ const store = new Vuex.Store({
   },
 
   // -->  Get the current allowance from `owner` for `spender`
-  cERC20_allowance: async ({commit,state}) => {
+  cERC20_allowance: async ({commit,state},{MarketAddress}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.allowance().call();
       console.log(ret);
@@ -3608,12 +3608,12 @@ const store = new Vuex.Store({
   },
 
   // -->  Get the token balance of the `owner`
-  cERC20_balanceOf: async ({commit,state},{cer20_owner}) => {
+  cERC20_balanceOf: async ({commit,state},{MarketAddress, cer20_owner}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.balanceOf(cer20_owner).call();
       console.log(ret);
@@ -3621,12 +3621,12 @@ const store = new Vuex.Store({
   },
 
   // -->  Get the token balance of the `owner`
-  cERC20_getAccountSnapshot: async ({commit,state},{cer20_account}) => {
+  cERC20_getAccountSnapshot: async ({commit,state},{MarketAddress, cer20_account}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.getAccountSnapshot(cer20_account).call();
       console.log(ret);
@@ -3634,12 +3634,12 @@ const store = new Vuex.Store({
   },
 
   // -->  Returns the current per-block borrow interest rate for this cToken
-  cERC20_borrowRatePerBlock: async ({commit,state}) => {
+  cERC20_borrowRatePerBlock: async ({commit,state},{MarketAddress}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.borrowRatePerBlock().call();
       console.log(ret);
@@ -3647,12 +3647,12 @@ const store = new Vuex.Store({
   },
 
   // -->  Returns the current per-block supply interest rate for this cToken
-  cERC20_supplyRatePerBlock: async ({commit,state}) => {
+  cERC20_supplyRatePerBlock: async ({commit,state},{MarketAddress}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.supplyRatePerBlock().call();
       console.log(ret);
@@ -3660,12 +3660,12 @@ const store = new Vuex.Store({
   },
 
   // -->  Returns the current per-block supply interest rate for this cToken
-  cERC20_borrowBalanceStored: async ({commit,state},{cer20_account}) => {
+  cERC20_borrowBalanceStored: async ({commit,state},{MarketAddress, cer20_account}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.borrowBalanceStored(cer20_account).call();
       console.log(ret);
@@ -3674,12 +3674,12 @@ const store = new Vuex.Store({
 
   // -->  Calculates the exchange rate from the underlying to the CToken.
   // This function does not accrue interest before calculating the exchange rate
-  cERC20_exchangeRateStored: async ({commit,state}) => {
+  cERC20_exchangeRateStored: async ({commit,state},{MarketAddress}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.exchangeRateStored().call();
       console.log(ret);
@@ -3687,12 +3687,12 @@ const store = new Vuex.Store({
   },
 
   // Get cash balance of this cToken in the underlying asset
-  cERC20_getCash: async ({commit,state}) => {
+  cERC20_getCash: async ({commit,state},{MarketAddress}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.getCash().call();
       console.log(ret);
@@ -3700,12 +3700,12 @@ const store = new Vuex.Store({
   },
 
   // --> Transfers collateral tokens (this market) to the liquidator.
-  cERC20_seize: async ({commit,state}, { cerc20_liquidator, cerc20_borrower, cerc20_seizeTokens  }) => {
+  cERC20_seize: async ({commit,state}, { MarketAddress, cerc20_liquidator, cerc20_borrower, cerc20_seizeTokens  }) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.seize(cerc20_liquidator, cerc20_borrower, cerc20_seizeTokens ).send({from: state.web3Account})
       .then(receipt => {
@@ -3718,12 +3718,12 @@ const store = new Vuex.Store({
   },
 
   // --> Begins transfer of admin rights. The newPendingAdmin must call `_acceptAdmin` to finalize the transfer.
-  cERC20_setPendingAdmin: async ({commit,state}, { cerc20_newPendingAdmin}) => {
+  cERC20_setPendingAdmin: async ({commit,state}, { MarketAddress, cerc20_newPendingAdmin}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods._setPendingAdmin( cerc20_newPendingAdmin ).send({from: state.web3Account})
       .then(receipt => {
@@ -3736,12 +3736,12 @@ const store = new Vuex.Store({
   },
 
   // --> Accepts transfer of admin rights. msg.sender must be pendingAdmin
-  cERC20_acceptAdmin: async ({commit,state}) => {
+  cERC20_acceptAdmin: async ({commit,state},{MarketAddress}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods._acceptAdmin().send({from: state.web3Account})
       .then(receipt => {
@@ -3754,12 +3754,12 @@ const store = new Vuex.Store({
   },
 
   // --> Sets a new sightroller for the market
-  cERC20_setSightroller: async ({commit,state}, {cerc20_newSightroller}) => {
+  cERC20_setSightroller: async ({commit,state}, {MarketAddress, cerc20_newSightroller}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods._setSightroller(cerc20_newSightroller).send({from: state.web3Account})
       .then(receipt => {
@@ -3772,12 +3772,12 @@ const store = new Vuex.Store({
   },
 
   // --> accrues interest and sets a new reserve factor for the protocol using _setReserveFactorFresh
-  cERC20_setReserveFactor: async ({commit,state}, {cerc20_newReserveFactorMantissa}) => {
+  cERC20_setReserveFactor: async ({commit,state}, {MarketAddress, cerc20_newReserveFactorMantissa}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods._setReserveFactor(cerc20_newReserveFactorMantissa).send({from: state.web3Account})
       .then(receipt => {
@@ -3790,12 +3790,12 @@ const store = new Vuex.Store({
   },
 
   // -->  Accrues interest and reduces reserves by transferring to admin
-  cERC20_reduceReserves: async ({commit,state}, {cerc20_reduceAmount}) => {
+  cERC20_reduceReserves: async ({commit,state}, {MarketAddress, cerc20_reduceAmount}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods._reduceReserves(cerc20_reduceAmount).send({from: state.web3Account})
       .then(receipt => {
@@ -3808,12 +3808,12 @@ const store = new Vuex.Store({
   },
 
   // -->  accrues interest and updates the interest rate model using _setInterestRateModelFresh
-  cERC20_setInterestRateModel: async ({commit,state}, {cerc20_newInterestRateModel}) => {
+  cERC20_setInterestRateModel: async ({commit,state}, {MarketAddress, cerc20_newInterestRateModel}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods._setInterestRateModel(cerc20_newInterestRateModel).send({from: state.web3Account})
       .then(receipt => {
@@ -3826,48 +3826,48 @@ const store = new Vuex.Store({
   },
 
   // -->  accrues interest and updates the interest rate model using _setInterestRateModelFresh
-  cERC20_getSightroller: async ({commit,state}) => {
+  cERC20_getSightroller: async ({commit,state},{MarketAddress}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.sightroller().call();
       console.log(ret);
     }
   },
 
-  cERC20_getName: async ({commit,state}) => {
+  cERC20_getName: async ({commit,state},{MarketAddress}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.name().call();
       console.log(ret);
     }
   },  
 
-  cERC20_getSymbol: async ({commit,state}) => {
+  cERC20_getSymbol: async ({commit,state},{MarketAddress}) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
       const ret = CErc20_Contract.methods.symbol().call();
       console.log(ret);
     }
   },
 
-    cERC20_getAdmin: async ({commit,state}) => {
+    cERC20_getAdmin: async ({commit,state},{MarketAddress}) => {
       const web3 = state.web3;
       const CErc20_ = CErc20.networks[state.networkId];
       console.log(CErc20_);
       if (CErc20_) {
-        let CErc20_Contract = new web3.eth.Contract(CErc20.abi, CErc20_.address);
+        let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
         console.log(CErc20_Contract);
         const ret = CErc20_Contract.methods.admin().call();
         console.log(ret);
@@ -3988,6 +3988,9 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract( CErc20.abi, marketId );
       console.log(CErc20_Contract);
+      console.log(mintAmount.toString(), 'ether');
+      console.log(mintAmount.toString(), 'ether');
+      console.log(mintAmount.toString(), 'ether');
       const ret = CErc20_Contract.methods.mint( Web3.utils.toWei(mintAmount.toString(), 'ether') ).send({from: state.web3Account})
       .then(receipt => {
         console.log(receipt);
@@ -3999,6 +4002,82 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
       })
     }
   }, 
+
+  market_Borrow: async ({commit,state},{ marketId , BorrowAmount } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      let CErc20_Contract = new web3.eth.Contract( CErc20.abi, marketId );
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.borrow( Web3.utils.toWei(BorrowAmount.toString(), 'ether') ).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+        return receipt;        
+      })
+      .catch(error => {
+        console.log(error);
+        return error;        
+      })
+    }
+  }, 
+  
+  market_Repay_Borrow: async ({commit,state},{ marketId , RepayBorrowAmount } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      let CErc20_Contract = new web3.eth.Contract( CErc20.abi, marketId );
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.repayBorrow( Web3.utils.toWei(RepayBorrowAmount.toString(), 'ether') ).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+        return receipt;        
+      })
+      .catch(error => {
+        console.log(error);
+        return error;        
+      })
+    }
+  }, 
+
+  market_RedeemUnderlying: async ({commit,state},{ marketId , RedeemAmount } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      let CErc20_Contract = new web3.eth.Contract( CErc20.abi, marketId );
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.repayBorrow( Web3.utils.toWei(RedeemAmount.toString(), 'ether') ).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+        return receipt;        
+      })
+      .catch(error => {
+        console.log(error);
+        return error;        
+      })
+    }
+  }, 
+
+  market_Redeem: async ({commit,state},{ marketId , RedeemAmount } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      let CErc20_Contract = new web3.eth.Contract( CErc20.abi, marketId );
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.repayBorrow( Web3.utils.toWei(RedeemAmount.toString(), 'ether') ).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+        return receipt;        
+      })
+      .catch(error => {
+        console.log(error);
+        return error;        
+      })
+    }
+  },     
 
 
     toggleTheme({state,}, themeMode) {

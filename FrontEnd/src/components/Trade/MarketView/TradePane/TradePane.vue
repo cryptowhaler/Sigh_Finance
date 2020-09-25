@@ -20,7 +20,7 @@ export default {
       activeTab: 'Supply / Borrow',
       tabs: {
         walletNotConnectedTabs: ['Supply / Borrow'],
-        walletConnectedTabs: ['Account Balance','Supply / Borrow',],
+        walletConnectedTabs: ['Supply / Borrow',],
       },
       height: 0,
       tabBarEventBus: new Vue(),

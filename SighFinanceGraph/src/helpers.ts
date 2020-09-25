@@ -191,11 +191,11 @@ export function createMarket(marketAddress: string): Market {
   market.reserves = zeroBD
   market.totalBorrows = zeroBD
   market.totalSupply = zeroBD
-  market.reserveFactor = BigInt.fromI32(0)
+  market.reserveFactor = contract.reserveFactorMantissa()
   market.underlyingPriceUSD = zeroBD
   market.borrowRate = zeroBD
   market.collateralFactor = zeroBD
-  market.exchangeRate = zeroBD
+  market.exchangeRate = contract.exchangeRateStored().toBigDecimal()
   market.interestRateModelAddress = Address.fromString('0x0000000000000000000000000000000000000000',)
   market.numberOfBorrowers = 0
   market.numberOfSuppliers = 0
@@ -208,9 +208,9 @@ export function createMarket(marketAddress: string): Market {
   market.gsighSpeed = BigInt.fromI32(0)
   market.totalGsighDistributedToSuppliers = BigInt.fromI32(0)
   market.totalGsighDistributedToBorrowers = BigInt.fromI32(0)
-  market.pendingAdmin = Address.fromString('0xf5376e847EFa1Ea889bfCb03706F414daDE0E82c',)
-  market.admin = Address.fromString('0x0000000000000000000000000000000000000000',)
-  market.sightroller = Address.fromString('0x0000000000000000000000000000000000000000',)
+  market.pendingAdmin = contract.pendingAdmin() as Address
+  market.admin = contract.admin() as Address
+  market.sightroller = contract.sightroller() as Address
 
   return market
 }

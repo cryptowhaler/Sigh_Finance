@@ -2086,7 +2086,8 @@
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-24T02:22:00.918Z",
+  "updatedAt": "2020-09-25T11:43:08.229Z",
+  "networkType": "ethereum",
   "devdoc": {
     "author": "SighFinance",
     "methods": {

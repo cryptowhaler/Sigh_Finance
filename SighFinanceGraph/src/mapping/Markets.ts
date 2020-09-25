@@ -19,7 +19,8 @@ import {
   
   import { createMarket, updateMarket, } from '../helpers'
   import {createUserAccount,updateUserAccount_IndividualMarketStats,exponentToBigDecimal,cTokenDecimalsBD,cTokenDecimals,zeroBD,} from '../helpers'
-  
+  import { log } from '@graphprotocol/graph-ts'
+
 
 
 
@@ -53,11 +54,11 @@ import {
     }
   
     let amountUnderlying = market.exchangeRate.times(event.params.amount.toBigDecimal().div(cTokenDecimalsBD),)
-    log.info('handleTransfer : market.exchangeRate : {}',market.exchangeRate )
-    log.info('handleTransfer : event.params.amount.toBigDecimal().div(cTokenDecimalsBD): {}',event.params.amount.toBigDecimal().div(cTokenDecimalsBD) )
-    log.info('handleTransfer : amountUnderlying : {}',amountUnderlying )
+    log.info('handleTransfer : market.exchangeRate : {}',[market.exchangeRate.toString()] )
+    log.info('handleTransfer : event.params.amount.toBigDecimal().div(cTokenDecimalsBD): {}',[event.params.amount.toBigDecimal().div(cTokenDecimalsBD).toString()] )
+    // log.info('handleTransfer : amountUnderlying : {}',amountUnderlying )
     let amountUnderylingTruncated = amountUnderlying.truncate(market.underlyingDecimals)
-    log.info('handleTransfer : amountUnderylingTruncated : {}',amountUnderylingTruncated )
+    // log.info('handleTransfer : amountUnderylingTruncated : {}',[amountUnderylingTruncated.toString()])
   
     let accountFromID = event.params.from.toHex()
   
@@ -73,18 +74,18 @@ import {
       // Update cTokenStats common for all events, and return the stats to update unique values for each event
       let MarketStatsFrom = updateUserAccount_IndividualMarketStats(market.id,market.symbol,accountFromID,event.transaction.hash,event.block.timestamp.toI32(),event.block.number.toI32(),)
   
-      log.info('handleTransfer : cTokenBalance (before) : {}',MarketStatsFrom.cTokenBalance )
+      log.info('handleTransfer : cTokenBalance (before) : {}',[MarketStatsFrom.cTokenBalance.toString()] )
       MarketStatsFrom.cTokenBalance = MarketStatsFrom.cTokenBalance.minus(event.params.amount.toBigDecimal().div(cTokenDecimalsBD).truncate(cTokenDecimals),)
-      log.info('handleTransfer : cTokenBalance (after) : {}',MarketStatsFrom.cTokenBalance )
+      log.info('handleTransfer : cTokenBalance (after) : {}',[MarketStatsFrom.cTokenBalance.toString()] )
 
-      log.info('handleTransfer : MarketStatsFrom.totalUnderlyingRedeemed (before) : {}',MarketStatsFrom.totalUnderlyingRedeemed )      
+      log.info('handleTransfer : MarketStatsFrom.totalUnderlyingRedeemed (before) : {}',[MarketStatsFrom.totalUnderlyingRedeemed.toString()] )      
       MarketStatsFrom.totalUnderlyingRedeemed = MarketStatsFrom.totalUnderlyingRedeemed.plus(amountUnderylingTruncated,)
-      log.info('handleTransfer : MarketStatsFrom.totalUnderlyingRedeemed (after) : {}',MarketStatsFrom.totalUnderlyingRedeemed )
+      log.info('handleTransfer : MarketStatsFrom.totalUnderlyingRedeemed (after) : {}',[MarketStatsFrom.totalUnderlyingRedeemed.toString()] )
       MarketStatsFrom.save()
   
       if (MarketStatsFrom.cTokenBalance.equals(zeroBD)) {
         market.numberOfSuppliers = market.numberOfSuppliers - 1
-        log.info('handleTransfer : market.numberOfSuppliers (after) : {}',market.numberOfSuppliers )
+        // log.info('handleTransfer : market.numberOfSuppliers (after) : {}',[market.numberOfSuppliers.toString()] )
         market.save()
       }
     }
@@ -104,12 +105,12 @@ import {
       // values for each event
       let cTokenStatsTo = updateUserAccount_IndividualMarketStats(market.id,market.symbol,accountToID,event.transaction.hash,event.block.timestamp.toI32(),event.block.number.toI32(),)
   
-      log.info('handleTransfer : cTokenStatsTo.cTokenBalance (before) : {}',cTokenStatsTo.cTokenBalance )
+      log.info('handleTransfer : cTokenStatsTo.cTokenBalance (before) : {}',[cTokenStatsTo.cTokenBalance.toString()] )
       let previousCTokenBalanceTo = cTokenStatsTo.cTokenBalance
       cTokenStatsTo.cTokenBalance = cTokenStatsTo.cTokenBalance.plus(event.params.amount.toBigDecimal().div(cTokenDecimalsBD).truncate(cTokenDecimals),)
-      log.info('handleTransfer : cTokenStatsTo.cTokenBalance (after) : {}',cTokenStatsTo.cTokenBalance )
+      log.info('handleTransfer : cTokenStatsTo.cTokenBalance (after) : {}',[cTokenStatsTo.cTokenBalance.toString() ])
       cTokenStatsTo.totalUnderlyingSupplied = cTokenStatsTo.totalUnderlyingSupplied.plus(amountUnderylingTruncated,)
-      log.info('handleTransfer : cTokenStatsTo.totalUnderlyingSupplied (after) : {}',cTokenStatsTo.totalUnderlyingSupplied )
+      log.info('handleTransfer : cTokenStatsTo.totalUnderlyingSupplied (after) : {}',[cTokenStatsTo.totalUnderlyingSupplied.toString()] )
       cTokenStatsTo.save()
   
       if ( previousCTokenBalanceTo.equals(zeroBD) && !event.params.amount.toBigDecimal().equals(zeroBD)) // checking edge case for transfers of 0) {

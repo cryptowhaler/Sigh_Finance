@@ -2,7 +2,7 @@
 
 <script>
 import TabBar from '@/components/TabBar/TabBar.vue';
-import SupplyOrder from './SupplyOrder/SupplyOrder.vue';
+import Supply from './Supply/Supply.vue';
 import BorrowOrder from './BorrowOrder/BorrowOrder.vue';
 import RedeemComponent from './RedeemOrder/RedeemOrder.vue';
 
@@ -12,7 +12,7 @@ export default {
   name: 'trade-tab',
   components: {
     TabBar,
-    SupplyOrder,
+    Supply,
     BorrowOrder,
     RedeemComponent,
   },

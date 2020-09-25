@@ -18,6 +18,7 @@ import {
 
 import { Sightroller, Market } from "../../generated/schema"
 import { mantissaFactorBD, updateUserAccount_IndividualMarketStats , createSighTroller } from '../helpers'
+import { log } from '@graphprotocol/graph-ts'
 
 // SIGHTROLLER GLOBAL VARIABLES HANDLING
 // SIGHTROLLER GLOBAL VARIABLES HANDLING

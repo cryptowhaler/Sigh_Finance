@@ -48,17 +48,17 @@ module.exports = function(deployer) {
     // await deployer.deploy(Unitroller_);           // Deployer address is the Admin
 
     // // ******** SIGH & SIGH RESERVOIR CONTRACTS  **************
-    // await deployer.deploy(SIGH_);          // Deployer address is the Admin *Initial Supply is assigned to this address* 
-    // let sigh = await SIGH_.deployed();                                            // gets the deployed gsigh contract
-    // console.log(sigh.address);
+    await deployer.deploy(SIGH_);          // Deployer address is the Admin *Initial Supply is assigned to this address* 
+    let sigh = await SIGH_.deployed();                                            // gets the deployed gsigh contract
+    console.log(sigh.address);
 
-    // await deployer.deploy(SighReservoir_, sigh.address);  // Reservoir contract for the SIGH Token
+    await deployer.deploy(SighReservoir_, sigh.address);  // Reservoir contract for the SIGH Token
 
     // // ******** GOVERNANCE RELATED CONTRACTS (GSIGH , GOVERNANCE ALPHA , TIMELOCK, GSIGH RESERVOIR) **************
-    // await deployer.deploy(GSigh_);                                              // admin is the user / contract to which all the amount is transferred
-    // let gsigh = await  GSigh_.deployed();                                            // gets the deployed gsigh contract
+    await deployer.deploy(GSigh_);                                              // admin is the user / contract to which all the amount is transferred
+    let gsigh = await  GSigh_.deployed();                                            // gets the deployed gsigh contract
 
-    // await deployer.deploy(GSighReservoir_, gsigh.address);  // Reservoir contract for the Governance Token
+    await deployer.deploy(GSighReservoir_, gsigh.address);  // Reservoir contract for the Governance Token
 
     // //  ******************** GETTING ADDRESSES OF THE DEPLOYED CONTRACTS **************************
     // //  ******************** GETTING ADDRESSES OF THE DEPLOYED CONTRACTS **************************
@@ -73,17 +73,17 @@ module.exports = function(deployer) {
     // let Unitroller_____ = await Unitroller_.deployed();                                           
     // console.log( 'Unitroller____ ' +  Unitroller_____.address);
 
-    // let SIGH____ = await SIGH_.deployed();                                           
-    // console.log( 'SIGH____ ' +  SIGH____.address);
+    let SIGH____ = await SIGH_.deployed();                                           
+    console.log( 'SIGH____ ' +  SIGH____.address);
 
-    // let SighReservoir_____ = await SighReservoir_.deployed();                                           
-    // console.log( 'SighReservoir_ ' +  SighReservoir_____.address);
+    let SighReservoir_____ = await SighReservoir_.deployed();                                           
+    console.log( 'SighReservoir_ ' +  SighReservoir_____.address);
 
-    // let GSigh___ = await GSigh_.deployed();                                           
-    // console.log( 'GSigh___ ' +  GSigh___.address);
+    let GSigh___ = await GSigh_.deployed();                                           
+    console.log( 'GSigh___ ' +  GSigh___.address);
 
-    // let GSighReservoir____ = await GSighReservoir_.deployed();                                           
-    // console.log( 'GSighReservoir____ ' +  GSighReservoir____.address);
+    let GSighReservoir____ = await GSighReservoir_.deployed();                                           
+    console.log( 'GSighReservoir____ ' +  GSighReservoir____.address);
 
   })
 

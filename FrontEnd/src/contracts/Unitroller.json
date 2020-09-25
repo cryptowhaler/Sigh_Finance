@@ -7018,7 +7018,7 @@
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-24T07:57:56.309Z",
+  "updatedAt": "2020-09-25T11:43:08.164Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Storage for the Sightroller is at this address, while execution is delegated to the `SightrollerImplementation`. CTokens should reference this contract as their Gsightroller.",

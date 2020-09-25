@@ -571,7 +571,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 18953,
+                        "referencedDeclaration": 19015,
                         "src": "1293:3:8",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -797,7 +797,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 18953,
+                            "referencedDeclaration": 19015,
                             "src": "1503:3:8",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -858,10 +858,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        18956,
-                        18957
+                        19018,
+                        19019
                       ],
-                      "referencedDeclaration": 18957,
+                      "referencedDeclaration": 19019,
                       "src": "1486:7:8",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -3410,7 +3410,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 18953,
+                        "referencedDeclaration": 19015,
                         "src": "1293:3:8",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -3636,7 +3636,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 18953,
+                            "referencedDeclaration": 19015,
                             "src": "1503:3:8",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -3697,10 +3697,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        18956,
-                        18957
+                        19018,
+                        19019
                       ],
-                      "referencedDeclaration": 18957,
+                      "referencedDeclaration": 19019,
                       "src": "1486:7:8",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -5975,7 +5975,7 @@
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-24T07:56:12.669Z",
+  "updatedAt": "2020-09-25T12:49:10.264Z",
   "devdoc": {
     "author": "SighFinance",
     "methods": {

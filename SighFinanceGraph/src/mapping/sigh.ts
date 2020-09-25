@@ -1,6 +1,7 @@
 import { coinsMinted,ReservoirChanged} from "../../generated/SIGH/SIGH"
 import { SIGH } from "../../generated/schema"
 import { createSIGH, } from '../helpers'
+import { log } from '@graphprotocol/graph-ts'
 
 export function handleCoinsMinted(event: coinsMinted): void {
   let sighID = event.address.toHexString()

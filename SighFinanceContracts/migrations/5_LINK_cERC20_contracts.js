@@ -1,6 +1,7 @@
 const CErc20Delegate_ = artifacts.require("CErc20Delegate");            //   The implementation cERC20 Contract
 const CErc20Delegator_ = artifacts.require("CErc20Delegator");            //   The storage cERC20 Contract
 const CErc20Immutable_ = artifacts.require("CErc20Immutable");            //   The storage cERC20 Contract
+const BigNumber = require('bignumber.js');
 
 // const CEther_ = artifacts.require("CEther");            //   The storage + implementation cERC20 Contract
 // const Maximillion_ = artifacts.require("Maximillion");            //   The storage + implementation cERC20 Contract
@@ -18,8 +19,8 @@ module.exports = function(deployer) {
     let cERC20_implementation = await CErc20Delegate_.deployed();
     console.log(cERC20_implementation.address);
 
-    let linkTokenAddress = '0x61eB5a373c4Ec78523602583c049d8563d2C7BCD';
-    let initialExchangeRateMantissa = 10000000;
+    let Link_TokenAddress = '0xa36085f69e2889c224210f603d836748e7dc0088';
+    let initialExchangeRateMantissa = new BigNumber( 1000000000000000000 );
     let admin = '0xf5376e847EFa1Ea889bfCb03706F414daDE0E82c';
 
   //   constructor(address underlying_,
@@ -34,7 +35,7 @@ module.exports = function(deployer) {
   //  )
 
 
-    await deployer.deploy(CErc20Delegator_,     linkTokenAddress, unitroller, whitePaperInterestRateModel, initialExchangeRateMantissa , 'link', 'link', 18, admin, cERC20_implementation.address ); // the cERC20 implementation contract
+    await deployer.deploy(CErc20Delegator_,     Link_TokenAddress, unitroller, whitePaperInterestRateModel, initialExchangeRateMantissa , 'S-LINK', 'S-LINK', 18, admin, cERC20_implementation.address ); // the cERC20 implementation contract
 
     // ******** ERC20 MARKET CONTRACTS ( Immutabile design) **************
     // await deployer.deploy(CErc20Immutable_,     underlying_erc20_token_address_1, sightroller.address, interestRateModel.address, initialExchangeRateMantissa_erc20_token_1, 'cTesting1_Immutable', 'cTest_I', 18, admin   ); // the cERC20 implementation + storage contract

@@ -44,7 +44,7 @@ dataSources:
         - event: NewCollateralFactor(address,uint256,uint256)
           handler: handleNewCollateralFactor
   - kind: ethereum/contract
-    name: LINK
+    name: link
     network: kovan
     source:
       address: "0x754A614b8a5a63CbeEb38193F6D12861C876148B"
@@ -54,20 +54,170 @@ dataSources:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: LINK/LINK.wasm
+      file: link/link.wasm
       entities:
         - User
         - Market
         - CTokenInfo
       abis:
         - name: cToken
-          file: LINK/abis/ctoken.json
+          file: link/abis/ctoken.json
         - name: PriceOracle
-          file: LINK/abis/PriceOracle.json
+          file: link/abis/PriceOracle.json
         - name: cERC20
-          file: LINK/abis/cERC20.json
+          file: link/abis/cERC20.json
         - name: EIP20Interface
-          file: LINK/abis/EIP20Interface.json
+          file: link/abis/EIP20Interface.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: AccrueInterest(uint256,uint256,uint256,uint256)
+          handler: handleAccrueInterest
+        - event: Borrow(address,uint256,uint256,uint256)
+          handler: handleBorrow
+        - event: RepayBorrow(address,address,uint256,uint256,uint256)
+          handler: handleRepayBorrow
+        - event: LiquidateBorrow(address,address,uint256,address,uint256)
+          handler: handleLiquidateBorrow
+        - event: NewPendingAdmin(address,address)
+          handler: handleNewPendingAdmin
+        - event: NewAdmin(address,address)
+          handler: handleNewAdmin
+        - event: NewSightroller(address,address)
+          handler: handleNewSightroller
+        - event: NewMarketInterestRateModel(address,address)
+          handler: handleNewMarketInterestRateModel
+        - event: NewReserveFactor(uint256,uint256)
+          handler: handleNewReserveFactor
+        - event: Mint(address,uint256,uint256)
+          handler: handleMint
+        - event: Redeem(address,uint256,uint256)
+          handler: handleRedeem
+  - kind: ethereum/contract
+    name: S-SIGH
+    network: kovan
+    source:
+      address: "0x2414607d3ef95f4730758e7316ad100B9A5084A1"
+      abi: cToken
+      startBlock: 21057715
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: link/link.wasm
+      entities:
+        - User
+        - Market
+        - CTokenInfo
+      abis:
+        - name: cToken
+          file: S-SIGH/abis/ctoken.json
+        - name: PriceOracle
+          file: S-SIGH/abis/PriceOracle.json
+        - name: cERC20
+          file: S-SIGH/abis/cERC20.json
+        - name: EIP20Interface
+          file: S-SIGH/abis/EIP20Interface.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: AccrueInterest(uint256,uint256,uint256,uint256)
+          handler: handleAccrueInterest
+        - event: Borrow(address,uint256,uint256,uint256)
+          handler: handleBorrow
+        - event: RepayBorrow(address,address,uint256,uint256,uint256)
+          handler: handleRepayBorrow
+        - event: LiquidateBorrow(address,address,uint256,address,uint256)
+          handler: handleLiquidateBorrow
+        - event: NewPendingAdmin(address,address)
+          handler: handleNewPendingAdmin
+        - event: NewAdmin(address,address)
+          handler: handleNewAdmin
+        - event: NewSightroller(address,address)
+          handler: handleNewSightroller
+        - event: NewMarketInterestRateModel(address,address)
+          handler: handleNewMarketInterestRateModel
+        - event: NewReserveFactor(uint256,uint256)
+          handler: handleNewReserveFactor
+        - event: Mint(address,uint256,uint256)
+          handler: handleMint
+        - event: Redeem(address,uint256,uint256)
+          handler: handleRedeem
+  - kind: ethereum/contract
+    name: S-GSIGH
+    network: kovan
+    source:
+      address: "0x0Cf1f1b6D6695cd26f32c1831c08B4Ab32506284"
+      abi: cToken
+      startBlock: 21057715
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: link/link.wasm
+      entities:
+        - User
+        - Market
+        - CTokenInfo
+      abis:
+        - name: cToken
+          file: S-GSIGH/abis/ctoken.json
+        - name: PriceOracle
+          file: S-GSIGH/abis/PriceOracle.json
+        - name: cERC20
+          file: S-GSIGH/abis/cERC20.json
+        - name: EIP20Interface
+          file: S-GSIGH/abis/EIP20Interface.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: AccrueInterest(uint256,uint256,uint256,uint256)
+          handler: handleAccrueInterest
+        - event: Borrow(address,uint256,uint256,uint256)
+          handler: handleBorrow
+        - event: RepayBorrow(address,address,uint256,uint256,uint256)
+          handler: handleRepayBorrow
+        - event: LiquidateBorrow(address,address,uint256,address,uint256)
+          handler: handleLiquidateBorrow
+        - event: NewPendingAdmin(address,address)
+          handler: handleNewPendingAdmin
+        - event: NewAdmin(address,address)
+          handler: handleNewAdmin
+        - event: NewSightroller(address,address)
+          handler: handleNewSightroller
+        - event: NewMarketInterestRateModel(address,address)
+          handler: handleNewMarketInterestRateModel
+        - event: NewReserveFactor(uint256,uint256)
+          handler: handleNewReserveFactor
+        - event: Mint(address,uint256,uint256)
+          handler: handleMint
+        - event: Redeem(address,uint256,uint256)
+          handler: handleRedeem
+  - kind: ethereum/contract
+    name: S-LINK
+    network: kovan
+    source:
+      address: "0x65ad52edA20c7De3FA80e8Cd8Ae79f31888E980C"
+      abi: cToken
+      startBlock: 21057715
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: link/link.wasm
+      entities:
+        - User
+        - Market
+        - CTokenInfo
+      abis:
+        - name: cToken
+          file: S-LINK/abis/ctoken.json
+        - name: PriceOracle
+          file: S-LINK/abis/PriceOracle.json
+        - name: cERC20
+          file: S-LINK/abis/cERC20.json
+        - name: EIP20Interface
+          file: S-LINK/abis/EIP20Interface.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer

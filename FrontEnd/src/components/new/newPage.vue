@@ -153,6 +153,7 @@ export default {
         cerc20_newReserveFactorMantissa: undefined,
         cerc20_reduceAmount: undefined,
         cerc20_newInterestRateModel: undefined,
+        CToken_MarketAddress : undefined,
 
         // For Revert Reason Function
         blockNumber_ : undefined,
@@ -952,7 +953,7 @@ export default {
       console.log('cerc20_newReserveFactorMantissa' + this.cerc20_newReserveFactorMantissa);
       console.log('cerc20_reduceAmount' + this.cerc20_reduceAmount);
       console.log('cerc20_newInterestRateModel' + this.cerc20_newInterestRateModel);
-
+      console.log('CToken_MarketAddress' + this.CToken_MarketAddress);
 
 
       if (type == 'cERC20_initialize') {
@@ -967,109 +968,109 @@ export default {
       }
 
       if (type == 'cERC20_mint') {
-        this.cERC20_mint({cer20_mintAmount: this.cer20_mintAmount});        
+        this.cERC20_mint({ MarketAddress: this.CToken_MarketAddress , cer20_mintAmount: this.cer20_mintAmount });        
       }
       if (type == 'cERC20_redeem') {
-        this.cERC20_redeem({cer20_redeemTokens: this.cer20_redeemTokens });        
+        this.cERC20_redeem({ MarketAddress: this.CToken_MarketAddress , cer20_redeemTokens: this.cer20_redeemTokens });        
       }
       if (type == 'cERC20_redeemUnderlying') {
-        this.cERC20_redeemUnderlying({ cer20_redeemAmount: this.cer20_redeemAmount });        
+        this.cERC20_redeemUnderlying({  MarketAddress: this.CToken_MarketAddress , cer20_redeemAmount: this.cer20_redeemAmount });        
       }
       if (type == 'cERC20_borrow') {
-        this.cERC20_borrow({ cer20_borrowAmount: this.cer20_borrowAmount });        
+        this.cERC20_borrow({ MarketAddress: this.CToken_MarketAddress ,  cer20_borrowAmount: this.cer20_borrowAmount });        
       }
       if (type == 'cERC20_repayBorrow') {
-        this.cERC20_repayBorrow({cer20_repayAmount: this.cer20_repayAmount });        
+        this.cERC20_repayBorrow({ MarketAddress: this.CToken_MarketAddress , cer20_repayAmount: this.cer20_repayAmount });        
       }
       if (type == 'cERC20_repayBorrowBehalf') {
-        this.cERC20_repayBorrowBehalf({cer20_borrower: this.cer20_borrower, cer20_repayAmount: this.cer20_repayAmount  });        
+        this.cERC20_repayBorrowBehalf({ MarketAddress: this.CToken_MarketAddress , cer20_borrower: this.cer20_borrower, cer20_repayAmount: this.cer20_repayAmount  });        
       }
       if (type == 'cERC20_liquidateBorrow') {
-        this.cERC20_liquidateBorrow({cer20_borrower: this.cer20_borrower, cer20_repayAmount: this.cer20_repayAmount, cer20_cTokenCollateral: this.cer20_cTokenCollateral });        
+        this.cERC20_liquidateBorrow({ MarketAddress: this.CToken_MarketAddress , cer20_borrower: this.cer20_borrower, cer20_repayAmount: this.cer20_repayAmount, cer20_cTokenCollateral: this.cer20_cTokenCollateral });        
       }
       if (type == 'cERC20_addReserves') {
-        this.cERC20_addReserves({cer20_addAmount: this.cer20_addAmount });        
+        this.cERC20_addReserves({ MarketAddress: this.CToken_MarketAddress , cer20_addAmount: this.cer20_addAmount });        
       }
       if (type == 'cERC20_transfer') {
-        this.cERC20_transfer({cer20_dst: this.cer20_dst , cer20_amount: this.cer20_amount  });        
+        this.cERC20_transfer({ MarketAddress: this.CToken_MarketAddress , cer20_dst: this.cer20_dst , cer20_amount: this.cer20_amount  });        
       }
       if (type == 'cERC20_transferFrom') {
-        this.cERC20_transferFrom({cer20_src: this.cer20_src , cer20_dst: this.cer20_dst , cer20_amount: this.cer20_amount  });        
+        this.cERC20_transferFrom({ MarketAddress: this.CToken_MarketAddress , cer20_src: this.cer20_src , cer20_dst: this.cer20_dst , cer20_amount: this.cer20_amount  });        
       }
       if (type == 'cERC20_approve') {
-        this.cERC20_approve({cer20_spender: this.cer20_spender , cer20_amount: this.cer20_amount  });        
+        this.cERC20_approve({ MarketAddress: this.CToken_MarketAddress , cer20_spender: this.cer20_spender , cer20_amount: this.cer20_amount  });        
       }
       if (type == 'cERC20_balanceOfUnderlying') {
-        this.cERC20_balanceOfUnderlying({cer20_owner: this.cer20_owner  });        
+        this.cERC20_balanceOfUnderlying({ MarketAddress: this.CToken_MarketAddress , cer20_owner: this.cer20_owner  });        
       }
       if (type == 'cERC20_borrowBalanceCurrent') {
-        this.cERC20_borrowBalanceCurrent({cer20_account: this.cer20_account});        
+        this.cERC20_borrowBalanceCurrent({ MarketAddress: this.CToken_MarketAddress , cer20_account: this.cer20_account});        
       }
       if (type == 'cERC20_balanceOf') {
-        this.cERC20_balanceOf( {cer20_owner: this.cer20_owner });        
+        this.cERC20_balanceOf( { MarketAddress: this.CToken_MarketAddress , cer20_owner: this.cer20_owner });        
       }
       if (type == 'cERC20_getAccountSnapshot') {
-        this.cERC20_getAccountSnapshot( {cer20_account: this.cer20_account } );        
+        this.cERC20_getAccountSnapshot( { MarketAddress: this.CToken_MarketAddress , cer20_account: this.cer20_account } );        
       }
       if (type == 'cERC20_borrowBalanceStored') {
-        this.cERC20_borrowBalanceStored( {cer20_account: this.cer20_account } );        
+        this.cERC20_borrowBalanceStored( { MarketAddress: this.CToken_MarketAddress , cer20_account: this.cer20_account } );        
       }
       if (type == 'cERC20_seize') {
-        this.cERC20_seize( {cerc20_liquidator: this.cerc20_liquidator, cerc20_borrower: this.cerc20_borrower, cerc20_seizeTokens: this.cerc20_seizeTokens } );        
+        this.cERC20_seize( { MarketAddress: this.CToken_MarketAddress , cerc20_liquidator: this.cerc20_liquidator, cerc20_borrower: this.cerc20_borrower, cerc20_seizeTokens: this.cerc20_seizeTokens } );        
       }
       if (type == 'cERC20_setPendingAdmin') {
-        this.cERC20_setPendingAdmin( {cerc20_newPendingAdmin: this.cerc20_newPendingAdmin } );        
+        this.cERC20_setPendingAdmin( { MarketAddress: this.CToken_MarketAddress , cerc20_newPendingAdmin: this.cerc20_newPendingAdmin } );        
       }
       if (type == 'cERC20_setSightroller') {
-        this.cERC20_setSightroller( {cerc20_newSightroller : this.cerc20_newSightroller} );        
+        this.cERC20_setSightroller( { MarketAddress: this.CToken_MarketAddress , cerc20_newSightroller : this.cerc20_newSightroller} );        
       }
       if (type == 'cERC20_setReserveFactor') {
-        this.cERC20_setReserveFactor( {cerc20_newReserveFactorMantissa: this.cerc20_newReserveFactorMantissa} );        
+        this.cERC20_setReserveFactor( { MarketAddress: this.CToken_MarketAddress , cerc20_newReserveFactorMantissa: this.cerc20_newReserveFactorMantissa} );        
       }
       if (type == 'cERC20_reduceReserves') {
-        this.cERC20_reduceReserves( {cerc20_reduceAmount: this.cerc20_reduceAmount} );        
+        this.cERC20_reduceReserves( { MarketAddress: this.CToken_MarketAddress , cerc20_reduceAmount: this.cerc20_reduceAmount} );        
       }
       if (type == 'cERC20_setInterestRateModel') {
-        this.cERC20_setInterestRateModel( {cerc20_newInterestRateModel: this.cerc20_newInterestRateModel} );        
+        this.cERC20_setInterestRateModel( { MarketAddress: this.CToken_MarketAddress , cerc20_newInterestRateModel: this.cerc20_newInterestRateModel} );        
       } 
       if (type == 'cERC20_acceptAdmin') {
-        this.cERC20_acceptAdmin( );        
+        this.cERC20_acceptAdmin( { MarketAddress: this.CToken_MarketAddress } );        
       }
       if (type == 'cERC20_exchangeRateStored') {
-        this.cERC20_exchangeRateStored( );        
+        this.cERC20_exchangeRateStored( { MarketAddress: this.CToken_MarketAddress } );        
       }
       if (type == 'cERC20_getCash') {
-        this.cERC20_getCash( );        
+        this.cERC20_getCash( { MarketAddress: this.CToken_MarketAddress });        
       }
       if (type == 'cERC20_borrowRatePerBlock') {
-        this.cERC20_borrowRatePerBlock( );        
+        this.cERC20_borrowRatePerBlock({ MarketAddress: this.CToken_MarketAddress } );        
       }
       if (type == 'cERC20_supplyRatePerBlock') {
-        this.cERC20_supplyRatePerBlock( );        
+        this.cERC20_supplyRatePerBlock( { MarketAddress: this.CToken_MarketAddress });        
       }
       if (type == 'cERC20_exchangeRateCurrent') {
-        this.cERC20_exchangeRateCurrent( );        
+        this.cERC20_exchangeRateCurrent( { MarketAddress: this.CToken_MarketAddress });        
       }
       if (type == 'cERC20_accrueInterest') {
-        this.cERC20_accrueInterest( );        
+        this.cERC20_accrueInterest({ MarketAddress: this.CToken_MarketAddress } );        
       }
       if (type == 'cERC20_allowance') {
-        this.cERC20_allowance( );        
+        this.cERC20_allowance( { MarketAddress: this.CToken_MarketAddress });        
       }
       if (type == 'cERC20_totalBorrowsCurrent') {
-        this.cERC20_totalBorrowsCurrent( );        
+        this.cERC20_totalBorrowsCurrent( { MarketAddress: this.CToken_MarketAddress });        
       }
       if (type == 'cERC20_sightroller') {
-        this.cERC20_getSightroller( );        
+        this.cERC20_getSightroller({ MarketAddress: this.CToken_MarketAddress } );        
       }
       if (type == 'cERC20_getName') {
-        this.cERC20_getName();        
+        this.cERC20_getName({ MarketAddress: this.CToken_MarketAddress });        
       }
       if (type == 'cERC20_getSymbol') {
-        this.cERC20_getSymbol( );        
+        this.cERC20_getSymbol( { MarketAddress: this.CToken_MarketAddress });        
       }
       if (type == 'cERC20_getAdmin') {
-        this.cERC20_getAdmin( );        
+        this.cERC20_getAdmin({ MarketAddress: this.CToken_MarketAddress } );        
       }
     },
 

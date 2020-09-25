@@ -9210,8 +9210,8 @@
     "42": {
       "events": {},
       "links": {},
-      "address": "0x81b2D9e4732299b26e6EE16a1D5B9CaC08139735",
-      "transactionHash": "0x10f614f0eb24e8f29f440d59901c4eeb40f6092ec898a9f6c6b3815d3e939505"
+      "address": "0x4759f7b093b5B9DDB5376FE171379767f7D90A48",
+      "transactionHash": "0xed0d04dd86c20bb428700fe00ca91a50c7c6ab45e9ff1fabda94110495ce0419"
     },
     "5777": {
       "events": {},
@@ -9221,7 +9221,8 @@
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-24T02:22:00.052Z",
+  "updatedAt": "2020-09-25T11:43:08.054Z",
+  "networkType": "ethereum",
   "devdoc": {
     "author": "SighFinance",
     "details": "This contract must be poked via the `drip()` function every so often.",

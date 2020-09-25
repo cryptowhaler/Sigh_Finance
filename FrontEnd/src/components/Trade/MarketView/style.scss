@@ -59,10 +59,10 @@
     width: 0;
   }
   @include breakpoint(xlarge) {
-    width: calc(100% - 796px);
+    width: calc(100% - 596px);
   }
   @media screen and (max-width: 1500px) and (min-width: 1300px) {
-    width: calc(100% - 610px);
+    width: calc(100% - 410px);
   }
 }
 .sidebar-col {
@@ -93,7 +93,7 @@
   }
   @include breakpoint(xlarge) {
     &.sidebar-col1 {
-      width: 790px;
+      width: 596px;
       left: 0px;
     }
     &.sidebar-col2 {
