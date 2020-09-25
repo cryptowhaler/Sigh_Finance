@@ -109,8 +109,8 @@ export default {
         obj.borrowRate = liveMarket.borrowRate;
         obj.gsighSpeed = liveMarket.gsighSpeed;
         obj.exchangeRate = liveMarket.exchangeRate;
-        obj.underlyingPrice = liveMarket.underlyingPrice;
-        obj.underlyingPriceUSD = liveMarket.underlyingPriceUSD;
+        obj.underlyingPrice = Number(liveMarket.underlyingPrice)*100000000000 ;
+        obj.underlyingPriceUSD = Number(liveMarket.underlyingPrice)*100000000000 ;
         obj.numberOfBorrowers = liveMarket.numberOfBorrowers;
         obj.numberOfSuppliers = liveMarket.numberOfSuppliers;
         obj.totalGsighDistributedToSuppliers = liveMarket.totalGsighDistributedToSuppliers;

@@ -42,8 +42,8 @@
         <!-- Buttons (Approve/Mint)  -->
         <div v-else class="uk-width-1-1 flex">
             <div class="left">
-                <button v-if="!showConfirm" class="uk-button uk-button-green" style="margin-left: 51px;" @click="confirmTrade('Buy')"> Approve </button>
-                <button v-else class="uk-button uk-button-green" style="margin-left: 51px;" @click="makeTrade()"> Mint </button>
+                <button v-if="!showConfirm" class="uk-button uk-button-green" style="margin-left: 51px;" @click="approve()"> Approve </button>
+                <button v-else class="uk-button uk-button-green" style="margin-left: 51px;" @click="Mint()"> Mint </button>
             </div>
         </div> 
 

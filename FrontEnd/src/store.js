@@ -3959,6 +3959,48 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
   },
 
 
+
+    // --> Approve `spender` to transfer up to `amount` from `src`
+  Market_approve: async ({commit,state},{ marketId, amount } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, marketId );
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.approve( marketId, Web3.utils.toWei(amount.toString(), 'ether') ).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+        return receipt;        
+      })
+      .catch(error => {
+        console.log(error);
+        return error;        
+      })
+    }
+  },
+
+  // --> Sender supplies assets into the market and receives cTokens in exchange
+  market_mint: async ({commit,state},{ marketId , mintAmount } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      let CErc20_Contract = new web3.eth.Contract( CErc20.abi, marketId );
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.mint( Web3.utils.toWei(mintAmount.toString(), 'ether') ).send({from: state.web3Account})
+      .then(receipt => {
+        console.log(receipt);
+        return receipt;        
+      })
+      .catch(error => {
+        console.log(error);
+        return error;        
+      })
+    }
+  }, 
+
+
     toggleTheme({state,}, themeMode) {
       state.themeMode = themeMode;
       const themeObj = Object.keys(state.theme[themeMode]);

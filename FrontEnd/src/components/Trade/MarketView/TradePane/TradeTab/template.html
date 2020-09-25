@@ -23,7 +23,7 @@
 
         <keep-alive>
         <supply-order v-if="activeTab === 'Supply '" />
-        <limit-order v-else-if="activeTab === 'Borrow '" style="padding-right: 42px; padding-left: 42px;" />
+        <borrow-order v-else-if="activeTab === 'Borrow '" style="padding-right: 42px; padding-left: 42px;" />
         <redeem-order v-else-if="activeTab === 'Redeem'" />
         <!-- <stop-market-order v-else-if="activeTab === 'Stop Market'" /> -->
     </keep-alive>

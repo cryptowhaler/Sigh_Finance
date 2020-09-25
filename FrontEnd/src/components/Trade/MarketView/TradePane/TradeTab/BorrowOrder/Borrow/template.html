@@ -1,4 +1,4 @@
-<div class="IOC-Limit-Order">
+<div class= "Borrow">
     <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
         <!-- <span> FOK Limit Order</span> -->
     <!-- <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
@@ -33,8 +33,8 @@
         <div class="uk-width-1-1">
             <div class="form-grp">
                 <div class="form-elm">
-                    <input class="form-ctrl" type="text" placeholder="Price" v-model="formData.price">
-                    <span>{{$store.state.selectedVegaMarketquoteNameTrade}}</span>
+                    <input class="form-ctrl" type="text" placeholder="Price" v-model="formData.amount">
+                    <span>{{ $store.state.selectedMarketSymbol}}</span>
                 </div>
             </div>
         </div>
@@ -44,8 +44,8 @@
         <div class="uk-width-1-1">
             <div class="form-grp">
                 <div class="form-elm">
-                    <input class="form-ctrl" type="text" placeholder="Estimated Total Price" readonly :value="formData.amount * formData.price  || ''">
-                    <span>{{$store.state.selectedVegaMarketquoteNameTrade}}</span>
+                    <input class="form-ctrl" type="text" placeholder="Estimated Total Price" readonly :value="formData.amount * formData.amount  || ''">
+                    <span>{{ $store.state.selectedMarketSymbol }}</span>
                 </div>
             </div>
         </div>
@@ -57,22 +57,12 @@
         </div>
 
         <div v-else class="uk-width-1-1">
-<!-- Buttons (Buy/Sell) (Confirm/Cancel) -->
+<!-- Buttons (Borrow/RepayBorrow) -->
             <div class="left">
-                <button v-if="!showConfirm" class="uk-button uk-button-green" @click="confirmTrade('Buy')">Buy</button>
-                <button v-else class="uk-button uk-button-green" @click="makeTrade">Confirm</button>
+                <button class="uk-button uk-button-green" @click="Borrow()">Borrow</button>
 
-                <button v-if="!showConfirm" class="uk-button uk-button-red ml10" @click="confirmTrade('Sell')">Sell</button>
-                <button v-else class="uk-button uk-button-red ml10" @click="cancelTrade">Cancel</button>
+                <button class="uk-button uk-button-green ml10" @click="RepayBorrow()">Repay Borrow</button>
             </div>
-<!-- Fee - Maker/Taker -->
-            <!-- <div class="right">
-                <span class="value">{{ fees.maker }}%</span>
-                <span class="stream">Maker&nbsp;</span>
-                <br>
-                <span class="value">{{ fees.taker }}%</span>
-                <span class="stream">Taker&nbsp;</span>
-            </div> -->
         </div>
     </div>
 </div>

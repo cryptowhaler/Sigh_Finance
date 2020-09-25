@@ -6,14 +6,12 @@ import { stringArrayToHtmlList, } from '@/utils/utility';
 import {mapState,mapActions,} from 'vuex';
 
 export default {
-  name: 'supply-order',
-  components: {
-  },
-
+  name: 'Borrow',
   data() {
     return {
       showConfirm: false,
       formData: {
+        amount: undefined,
         mintAmount : undefined,
         SelectedMarketId : this.$store.state.selectedMarketId ,
         SelectedMarketSymbol: this.$store.state.selectedMarketSymbol,
@@ -25,7 +23,15 @@ export default {
     };
   },
 
-
+  // watch: {
+  //   formData: {
+  //     handler: function() {
+  //       this.getStatus();   //getting status for exchange ()
+  //     },
+  //     deep: true,
+  //   },
+  // },
+  
   created() {
     this.changeSelectedMarket = (newMarket) => {       //Changing Selected Vega Market
       this.formData.SelectedMarketId = newMarket.Id;
@@ -39,8 +45,10 @@ export default {
     ExchangeDataEventBus.$on('change-selected-market', this.changeSelectedMarket);        
   },
 
-  computed: {
 
+
+
+  computed: {
     estimatedNoOfTokensMinted() {    //Used "width: (((Number(ask.totalVolume)/Number(maxVol))*308)) + '%'," to determine width of dynamic bars
       if (!this.formData.mintAmount) {
         return '';
@@ -60,13 +68,11 @@ export default {
   },
 
 
-  
   methods: {
 
     ...mapActions(['Market_approve','market_mint']),
-
-
-    async approve() {   
+    
+     async Borrow() {   
       console.log(this.formData.SelectedMarketId);
       console.log(this.formData.mintAmount);
       console.log(this.formData.SelectedMarketSymbol);
@@ -83,7 +89,7 @@ export default {
       // else {this.showConfirm = true;}
     },
     
-    async Mint() {   //When we press make Mint. Shows Loader
+    async RepayBorrow() {   //When we press make Borrow. Shows Loader
       console.log(this.formData.SelectedMarketId);
       console.log(this.formData.mintAmount);
       console.log(this.formData.SelectedMarketSymbol);
@@ -123,10 +129,16 @@ export default {
       // this.showConfirm = false;
 
     },
+
+
+
   },
 
+  destroyed() {
+    clearInterval(this.watcher);
+    ExchangeDataEventBus.$off('change-selected-market', this.changeVegaMarket);    
+  },
 };
 </script>
 
-<style lang="scss" src="./style.scss" scoped>
-</style>
+<style lang="scss" src="./style.scss" scoped></style>
