@@ -126,7 +126,7 @@ export default {
         obj.marketName = marketsData[i].market.name;
         obj.symbol = marketsData[i].symbol;
         obj.enteredMarket = marketsData[i].enteredMarket;
-        obj.cTokenBalance = Number(marketsData[i].cTokenBalance)/1000000000000000000;
+        obj.cTokenBalance = Number(marketsData[i].cTokenBalance)/10000000000;
         obj.totalUnderlyingSupplied = marketsData[i].totalUnderlyingSupplied;
         obj.totalUnderlyingBorrowed = marketsData[i].totalUnderlyingBorrowed;
         obj.totalUnderlyingRedeemed = marketsData[i].totalUnderlyingRedeemed;

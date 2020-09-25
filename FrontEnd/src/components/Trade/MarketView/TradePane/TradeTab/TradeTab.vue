@@ -46,8 +46,9 @@ export default {
       this.$store.commit('selectedMarketUnderlyingSymbol', this.selectedMarket.underlyingSymbol );
       this.$store.commit('selectedMarketUnderlyingPriceUSD', this.selectedMarket.underlyingPriceUSD );
       this.$store.commit('selectedMarketExchangeRate', this.selectedMarket.exchangeRate );
+      this.$store.commit('selectedMarketUnderlyingAddress', this.selectedMarket.underlyingAddress );
 
-      ExchangeDataEventBus.$emit('change-selected-market', {'symbol':this.selectedMarket.symbol,  'Id':this.selectedMarket.id,  'underlyingSymbol':this.selectedMarket.underlyingSymbol,    'underlyingPriceUSD':this.selectedMarket.underlyingPriceUSD,        'exchangeRate':this.selectedMarket.exchangeRate  });    //TO CHANGE ORDER-BOOK/Supported-Money-Markets
+      ExchangeDataEventBus.$emit('change-selected-market', {'symbol':this.selectedMarket.symbol,  'Id':this.selectedMarket.id,  'underlyingSymbol':this.selectedMarket.underlyingSymbol,    'underlyingPriceUSD':this.selectedMarket.underlyingPriceUSD,        'exchangeRate':this.selectedMarket.exchangeRate    , 'underlyingAddress':this.selectedMarket.underlyingAddress   });    //TO CHANGE ORDER-BOOK/Supported-Money-Markets
       // ExchangeDataEventBus.$emit('change-vega-header', {'Name':this.selectedMarket.data.name,'Summary':this.selectedMarket.data.instrument_name,}); //TO CHANGE HEADER LIVE FEED               
       // ExchangeDataEventBus.$emit('change-symbol',this.$store.state.selectedPair);
     },

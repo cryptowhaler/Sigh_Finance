@@ -20,6 +20,8 @@ export default {
         selectedMarketUnderlyingSymbol: this.$store.state.selectedMarketUnderlyingSymbol,
         selectedMarketUnderlyingPriceUSD: this.$store.state.selectedMarketUnderlyingPriceUSD,
         selectedMarketExchangeRate: this.$store.state.selectedMarketExchangeRate,
+        selectedMarketunderlyingAddress : this.$store.state.underlyingAddress,        
+
       },
       showLoader: false,
     };
@@ -41,6 +43,7 @@ export default {
       this.formData.SelectedMarketUnderlyingSymbol = newMarket.underlyingSymbol;
       this.formData.selectedMarketUnderlyingPriceUSD = newMarket.underlyingPriceUSD;  
       this.formData.selectedMarketExchangeRate = newMarket.exchangeRate;        
+      this.formData.selectedMarketunderlyingAddress = newMarket.underlyingAddress;        
 
       console.log( 'NEW SELECTED MARKET - ' + newMarket.Id);
     };
@@ -53,25 +56,25 @@ export default {
   // this.getStatus('auto');
   // },
 
-  computed: {
+  // computed: {
 
-    estimatedPriceSell() {    //Used "width: (((Number(ask.totalVolume)/Number(maxVol))*308)) + '%'," to determine width of dynamic bars
-      if (!this.formData.amount) {
-        return '';
-      }
-      else {      
-        return (Number(this.formData.amount))*Number(this.$store.state.liveTradePrice);
-      }
-    },
-    estimatedPriceBuy() {   
-      if (!this.formData.amount) {
-        return '';
-      }
-      else {      
-        return (Number(this.formData.amount))*Number(this.$store.state.liveTradePrice);
-      }
-    },
-  },
+  //   estimatedPriceSell() {    //Used "width: (((Number(ask.totalVolume)/Number(maxVol))*308)) + '%'," to determine width of dynamic bars
+  //     if (!this.formData.amount) {
+  //       return '';
+  //     }
+  //     else {      
+  //       return (Number(this.formData.amount))*Number(this.$store.state.liveTradePrice);
+  //     }
+  //   },
+  //   estimatedPriceBuy() {   
+  //     if (!this.formData.amount) {
+  //       return '';
+  //     }
+  //     else {      
+  //       return (Number(this.formData.amount))*Number(this.$store.state.liveTradePrice);
+  //     }
+  //   },
+  // },
 
   methods: {
 

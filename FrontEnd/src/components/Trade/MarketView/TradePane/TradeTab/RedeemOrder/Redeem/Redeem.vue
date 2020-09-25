@@ -19,6 +19,7 @@ export default {
         selectedMarketUnderlyingSymbol: this.$store.state.selectedMarketUnderlyingSymbol,
         selectedMarketUnderlyingPriceUSD: this.$store.state.selectedMarketUnderlyingPriceUSD,
         selectedMarketExchangeRate: this.$store.state.selectedMarketExchangeRate,
+        selectedMarketunderlyingAddress : this.$store.state.underlyingAddress,            
       },
       showLoader: false,
     };
@@ -40,6 +41,7 @@ export default {
       this.formData.SelectedMarketUnderlyingSymbol = newMarket.underlyingSymbol;
       this.formData.selectedMarketUnderlyingPriceUSD = newMarket.underlyingPriceUSD;  
       this.formData.selectedMarketExchangeRate = newMarket.exchangeRate;        
+      this.formData.selectedMarketunderlyingAddress = newMarket.underlyingAddress;     
 
       console.log( 'NEW SELECTED MARKET - ' + newMarket.Id);
     };

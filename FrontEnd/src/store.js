@@ -127,6 +127,7 @@ const store = new Vuex.Store({
     selectedMarketUnderlyingSymbol : 'LINK',
     selectedMarketUnderlyingPriceUSD : 87,
     selectedMarketExchangeRate : 0,
+    selectedMarketUnderlyingAddress : undefined,
 
   },
 
@@ -322,6 +323,9 @@ const store = new Vuex.Store({
     },
     selectedMarketExchangeRate(state) {        // Selected Market
       return state.selectedMarketExchangeRate;
+    },    
+    selectedMarketUnderlyingAddress(state) {        // Selected Market
+      return state.selectedMarketUnderlyingAddress;
     }        
   },
 
@@ -594,6 +598,7 @@ const store = new Vuex.Store({
         obj.sighSpeed = markets[i].sighSpeed;
         obj.underlyingPriceUSD = markets[i].underlyingPriceUSD;
         obj.exchangeRate = markets[i].exchangeRate;
+        obj.underlyingAddress = markets[i].underlyingAddress;
         state.LiveMarkets.push(obj);
         console.log(state.LiveMarkets);
       }
@@ -618,6 +623,10 @@ const store = new Vuex.Store({
     selectedMarketExchangeRate(state, payload) {
       state.selectedMarketExchangeRate = payload;
       console.log(state.selectedMarketExchangeRate);
+    },
+    selectedMarketUnderlyingAddress(state, payload) {
+      state.selectedMarketUnderlyingAddress = payload;
+      console.log(state.selectedMarketUnderlyingAddress);
     },
 
   },
@@ -3313,7 +3322,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.mint( cer20_mintAmount ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.mint(  Web3.utils.toWei(cer20_mintAmount.toString(), 'ether')   ).send({from: state.web3Account})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3331,7 +3340,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.redeem( cer20_redeemTokens ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.redeem( Web3.utils.toWei(cer20_redeemTokens.toString(), 'ether')  ).send({from: state.web3Account})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3386,7 +3395,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.repayBorrow( cer20_repayAmount ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.repayBorrow(  Web3.utils.toWei(cer20_repayAmount.toString(), 'ether') ).send({from: state.web3Account})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3904,10 +3913,10 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
   // const ERC20Token = SimplePriceOracle.networks[state.networkId];
   // console.log(PriceOracle_);
   // if (PriceOracle_) {
-    let erc20TokenAddress = '0x61eB5a373c4Ec78523602583c049d8563d2C7BCD';
+    let erc20TokenAddress = '0x76Ff68033ef96ee0727f85eA1f979B1b0FD4C75b'; //SIGH
     let Erc20__Contract = new web3.eth.Contract(EIP20NonStandardInterface.abi, erc20TokenAddress );
     console.log(Erc20__Contract);
-    Erc20__Contract.methods.approve('0x754A614b8a5a63CbeEb38193F6D12861C876148B', Web3.utils.toWei('1000000000', 'ether') ).send({from: state.web3Account})
+    Erc20__Contract.methods.approve('0x2414607d3ef95f4730758e7316ad100B9A5084A1', Web3.utils.toWei('1000000000', 'ether') ).send({from: state.web3Account}) //SIGH-MARKET
       .then(receipt => {
         console.log(receipt);
       })
@@ -3961,14 +3970,14 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
 
 
     // --> Approve `spender` to transfer up to `amount` from `src`
-  Market_approve: async ({commit,state},{ marketId, amount } ) => {
+  Market_approve: async ({commit,state},{ contractAddress, sender, amount } ) => {
     const web3 = state.web3;
     const CErc20_ = CErc20.networks[state.networkId];
     console.log(CErc20_);
     if (CErc20_) {
-      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, marketId );
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, contractAddress );
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.approve( marketId, Web3.utils.toWei(amount.toString(), 'ether') ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.approve( sender, Web3.utils.toWei(amount.toString(), 'ether') ).send({from: state.web3Account})
       .then(receipt => {
         console.log(receipt);
         return receipt;        
@@ -4048,7 +4057,7 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract( CErc20.abi, marketId );
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.repayBorrow( Web3.utils.toWei(RedeemAmount.toString(), 'ether') ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.redeemUnderlying( Web3.utils.toWei(RedeemAmount.toString(), 'ether') ).send({from: state.web3Account})
       .then(receipt => {
         console.log(receipt);
         return receipt;        
@@ -4067,7 +4076,7 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract( CErc20.abi, marketId );
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.repayBorrow( Web3.utils.toWei(RedeemAmount.toString(), 'ether') ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.redeem( Web3.utils.toWei(RedeemAmount.toString(), 'ether') ).send({from: state.web3Account})
       .then(receipt => {
         console.log(receipt);
         return receipt;        

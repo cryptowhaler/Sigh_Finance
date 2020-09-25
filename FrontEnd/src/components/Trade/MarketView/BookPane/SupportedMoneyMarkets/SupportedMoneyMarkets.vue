@@ -103,18 +103,20 @@ export default {
         obj.id =  liveMarket.id;
         obj.symbol = liveMarket.symbol;
         obj.underlyingSymbol = liveMarket.underlyingSymbol;
-        obj.totalSupply = Number(liveMarket.totalSupply)/1000000000000000000;
-        obj.totalBorrows = Number(liveMarket.totalBorrows)/1000000000000000000;
+        obj.totalSupply = Number(liveMarket.totalSupply)/10000000000;
+        obj.totalBorrows = Number(liveMarket.totalBorrows)/10000000000;
         obj.supplyRate = liveMarket.supplyRate;
         obj.borrowRate = liveMarket.borrowRate;
         obj.gsighSpeed = liveMarket.gsighSpeed;
-        obj.exchangeRate = liveMarket.exchangeRate;
-        obj.underlyingPrice = Number(liveMarket.underlyingPrice)*100000000000 ;
-        obj.underlyingPriceUSD = Number(liveMarket.underlyingPrice)*100000000000 ;
+        console.log()        
+        obj.exchangeRate = Number(liveMarket.exchangeRate*10000000000).toFixed(3);
+        obj.underlyingPrice = Number(Number(liveMarket.underlyingPrice)*100000000000).toFixed(3) ;
+        obj.underlyingPriceUSD = Number(Number(liveMarket.underlyingPrice)*100000000000).toFixed(3) ;
         obj.numberOfBorrowers = liveMarket.numberOfBorrowers;
         obj.numberOfSuppliers = liveMarket.numberOfSuppliers;
         obj.totalGsighDistributedToSuppliers = liveMarket.totalGsighDistributedToSuppliers;
         obj.totalGsighDistributedToBorrowers = liveMarket.totalGsighDistributedToBorrowers;
+        obj.underlyingAddress = liveMarket.underlyingAddress;        
         obj.sighSpeed = liveMarket.gsighSpeed;
         if (liveMarket.underlyingPrice == '0') {
           obj.underlyingPrice = liveMarket.underlyingPriceUSD;

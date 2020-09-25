@@ -25,16 +25,16 @@
                     <tbody>
                         <!-- live markets content -->
                         <tr v-for="market in markets">
-                            <td class="uk-text-center c-white">{{ market.symbol }}</td>
-                            <td class="uk-text-center c-white">{{ market.totalSupply }}</td>
-                            <td class="uk-text-center c-white" >{{ market.totalBorrows }} </td>
-                            <td class="uk-text-center c-green">{{(Number(market.supplyRate)*10000000).toFixed(2)}} % </td>
-                            <td class="uk-text-center c-red">{{(Number(market.borrowRate)*10000000).toFixed(2)}} %</td>
-                            <td class="uk-text-center c-white">{{ market.underlyingSymbol }} </td>
-                            <td class="uk-text-center c-green">{{ market.gsighSpeed }} </td>
-                            <td class="uk-text-center c-green">{{ market.sighSpeed }} </td>
-                            <td class="uk-text-center c-white">{{ market.exchangeRate }} </td>
-                            <td class="uk-text-center c-green">{{ Number(market.underlyingPrice) }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ market.symbol }}</td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ market.totalSupply }}</td>
+                            <td class="uk-text-center c-white" style="line-height: 4;"  >{{ market.totalBorrows }} </td>
+                            <td class="uk-text-center c-green" style="line-height: 4;" >{{(Number(market.supplyRate)*10000000).toFixed(2)}} % </td>
+                            <td class="uk-text-center c-red" style="line-height: 4;" >{{(Number(market.borrowRate)*10000000).toFixed(2)}} %</td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ market.underlyingSymbol }} </td>
+                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ market.gsighSpeed }} </td>
+                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ market.sighSpeed }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ market.exchangeRate }} </td>
+                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(market.underlyingPrice).toFixed(3) }} </td>
 
                             <!-- <td class="uk-text-right">{{(market.createdAt).slice(11,19)}}-{{(market.createdAt).slice(20,22)}}</td> -->
                         </tr>

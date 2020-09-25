@@ -6,7 +6,7 @@ import { stringArrayToHtmlList, } from '@/utils/utility';
 import {mapState,mapActions,} from 'vuex';
 
 export default {
-  name: 'Borrow',
+  name: 'Supply',
   data() {
     return {
       showConfirm: false,
@@ -18,6 +18,8 @@ export default {
         selectedMarketUnderlyingSymbol: this.$store.state.selectedMarketUnderlyingSymbol,
         selectedMarketUnderlyingPriceUSD: this.$store.state.selectedMarketUnderlyingPriceUSD,
         selectedMarketExchangeRate: this.$store.state.selectedMarketExchangeRate,
+        selectedMarketunderlyingAddress: this.$store.state.underlyingAddress,
+
       },
       showLoader: false,
     };
@@ -39,6 +41,7 @@ export default {
       this.formData.SelectedMarketUnderlyingSymbol = newMarket.underlyingSymbol;
       this.formData.selectedMarketUnderlyingPriceUSD = newMarket.underlyingPriceUSD;  
       this.formData.selectedMarketExchangeRate = newMarket.exchangeRate;        
+      this.formData.selectedMarketunderlyingAddress = newMarket.underlyingAddress;        
 
       console.log( 'NEW SELECTED MARKET - ' + newMarket.Id);
     };
@@ -99,16 +102,10 @@ export default {
       console.log(this.formData.SelectedMarketUnderlyingSymbol);
       console.log(this.formData.selectedMarketUnderlyingPriceUSD);
       console.log(this.formData.selectedMarketExchangeRate);
+      console.log(this.formData.selectedMarketunderlyingAddress);
 
-      let result =  this.Market_approve( { marketId: this.formData.SelectedMarketId , amount: this.formData.SupplyAmount } );
+      this.Market_approve( { contractAddress:this.formData.selectedMarketunderlyingAddress , sender: this.formData.SelectedMarketId , amount: this.formData.SupplyAmount } );
       console.log(result);
-
-      // if (response.status == 200) {     //If Successful
-      //   this.$showSuccessMsg({message: this.formData.SelectedMarketSymbol + ' - ' + response.message,});
-      // } 
-      // else {                          //If failed.
-      //   this.$showErrorMsg({message: response.message,});
-      // }
       this.showLoader = false;
     },
 
