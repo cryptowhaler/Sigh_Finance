@@ -81,35 +81,33 @@ export function createAccountIndividualMarketStats(cTokenStatsID: string, symbol
 // Updating the Market
 export function updateMarket(marketAddress: Address,blockNumber: i32,blockTimestamp: i32,): Market {
   let marketID = marketAddress.toHexString()
-  log.info('marketID : {}',[marketID] )
+  log.info('updateMarket: marketID : {}',[marketID] )
   let market = Market.load(marketID)
 
   if (market == null) {
-    log.info('creating market : {}',[marketID] )
+    log.info('updateMarket: creating market : {}',[marketID] )
     market = createMarket(marketID)
   }
 
-  log.info('Ater creating market : {}',[marketID] )
+  log.info('updateMarket: Ater creating market : {}',[marketID] )
 
   // Update Market if it has not been updated this block
   if (market.accrualBlockNumber != blockNumber) {
     let contractAddress = Address.fromString(market.id)
     let contract = cERC20.bind(contractAddress)
-    log.info('contractAddress : {}',[contractAddress.toHex()] )
+    log.info('updateMarket: contractAddress : {}',[contractAddress.toHex()] )
 
-    // if cETH, we only update USD price
-    if (market.id == cETHAddress) {
-      market.underlyingPriceUSD = market.underlyingPrice.truncate(market.underlyingDecimals)
-    } 
-    else {
-      log.info('else statement : {}',['blockNumber'] )
-      let tokenPriceEth = getTokenPrice(blockNumber, contractAddress, market.underlyingAddress as Address, market.underlyingDecimals,)
-      market.underlyingPrice = tokenPriceEth.truncate(market.underlyingDecimals)
-    }
+    let tokenPrice = getTokenPrice(blockNumber, contractAddress, market.underlyingAddress as Address, market.underlyingDecimals,)
+    market.underlyingPrice = tokenPrice.truncate(market.underlyingDecimals)
+    market.underlyingPriceUSD = tokenPrice.truncate(market.underlyingDecimals)
+    log.info('updateMarket: market.underlyingPrice : {}', [market.underlyingPrice.toString()] )
+    log.info('updateMarket: market.underlyingPriceUSD : {}', [market.underlyingPriceUSD.toString()] )
+
 
     market.accrualBlockNumber = contract.accrualBlockNumber().toI32()
     market.blockTimestamp = blockTimestamp
     market.totalSupply = contract.totalSupply().toBigDecimal().div(cTokenDecimalsBD)
+    log.info('updateMarket: market.totalSupply : {}', [market.totalSupply.toString()] )
 
     /* Exchange rate explanation
        How to calculate for tokens with different decimals
@@ -117,22 +115,41 @@ export function updateMarket(marketAddress: Address,blockNumber: i32,blockTimest
         - Must multiply by ctokenDecimals, 10^8
         - Must div by mantissa, 10^18
      */
+    log.info('updateMarket: market.exchangeRate (before) : {}', [market.exchangeRate.toString()] )
     market.exchangeRate = contract.exchangeRateStored().toBigDecimal().div(exponentToBigDecimal(market.underlyingDecimals)).times(cTokenDecimalsBD).div(mantissaFactorBD).truncate(mantissaFactor)
+    log.info('updateMarket: market.exchangeRate (after) : {}', [market.exchangeRate.toString()] )
+
+    log.info('updateMarket: market.borrowIndex (before) : {}', [market.borrowIndex.toString()] )
     market.borrowIndex = contract.borrowIndex().toBigDecimal().div(mantissaFactorBD).truncate(mantissaFactor)
+    log.info('updateMarket: market.borrowIndex (after) : {}', [market.borrowIndex.toString()] )
+
+    log.info('updateMarket: market.reserves (before) : {}', [market.reserves.toString()] )
     market.reserves = contract.totalReserves().toBigDecimal().div(exponentToBigDecimal(market.underlyingDecimals)).truncate(market.underlyingDecimals)
+    log.info('updateMarket: market.reserves (after) : {}', [market.reserves.toString()] )
+
+    log.info('updateMarket: market.totalBorrows (before) : {}', [market.totalBorrows.toString()] )
     market.totalBorrows = contract.totalBorrows().toBigDecimal().div(exponentToBigDecimal(market.underlyingDecimals)).truncate(market.underlyingDecimals)
+    log.info('updateMarket: market.totalBorrows (after) : {}', [market.totalBorrows.toString()] )
+
+    log.info('updateMarket: market.cash (before) : {}', [market.cash.toString()] )
     market.cash = contract.getCash().toBigDecimal().div(exponentToBigDecimal(market.underlyingDecimals)).truncate(market.underlyingDecimals)
+    log.info('updateMarket: market.cash (after) : {}', [market.cash.toString()] )
 
     // Must convert to BigDecimal, and remove 10^18 that is used for Exp in Compound Solidity
+    log.info('updateMarket: market.supplyRate (after) : {}', [market.supplyRate.toString()] )
     market.supplyRate = contract.borrowRatePerBlock().toBigDecimal().times(BigDecimal.fromString('2102400')).div(mantissaFactorBD).truncate(mantissaFactor)
+    log.info('updateMarket: market.supplyRate (after) : {}', [market.supplyRate.toString()] )
 
     let supplyRatePerBlock = contract.try_supplyRatePerBlock()
     if (supplyRatePerBlock.reverted) {
       log.info('***CALL FAILED*** : cERC20 supplyRatePerBlock() reverted', [])
       market.borrowRate = zeroBD
+      log.info('updateMarket: market.borrowRate (after) : {}', [market.borrowRate.toString()] )
     } 
     else {
+      log.info('updateMarket: market.borrowRate (before) : {}', [market.borrowRate.toString()] )      
       market.borrowRate = supplyRatePerBlock.value.toBigDecimal().times(BigDecimal.fromString('2102400')).div(mantissaFactorBD).truncate(mantissaFactor)
+      log.info('updateMarket: market.borrowRate (after) : {}', [market.borrowRate.toString()] )
     }
     market.save()
   }
@@ -191,7 +208,7 @@ export function createMarket(marketAddress: string): Market {
   market.gsighSpeed = BigInt.fromI32(0)
   market.totalGsighDistributedToSuppliers = BigInt.fromI32(0)
   market.totalGsighDistributedToBorrowers = BigInt.fromI32(0)
-  market.pendingAdmin = Address.fromString('0x0000000000000000000000000000000000000000',)
+  market.pendingAdmin = Address.fromString('0xf5376e847EFa1Ea889bfCb03706F414daDE0E82c',)
   market.admin = Address.fromString('0x0000000000000000000000000000000000000000',)
   market.sightroller = Address.fromString('0x0000000000000000000000000000000000000000',)
 
@@ -218,22 +235,22 @@ export function createUserAccount(accountID: string): Account {
 // Used for all cERC20 contracts to get token Price
 // Used for all cERC20 contracts to get token Price
 function getTokenPrice(blockNumber: i32, eventAddress: Address, underlyingAddress: Address, underlyingDecimals: i32,): BigDecimal {
-  log.info('getTokenPrice market : {}',['underlyingDecimals'] )
+  log.info('getTokenPrice : getTokenPrice market : {}',['underlyingDecimals'] )
   let sightroller = Sightroller.load('1')
   if (sightroller == null) {
     sightroller = createSighTroller()
   }
-  log.info('sightroller id : {}',[sightroller.id] )
+  log.info('getTokenPrice : sightroller id : {}',[sightroller.id] )
   let oracleAddress = sightroller.priceOracle as Address
-  log.info('oracleAddress market : {}',[oracleAddress.toHexString()] )
+  log.info('getTokenPrice : oracleAddress market : {}',[oracleAddress.toHexString()] )
   let underlyingPrice: BigDecimal
   let mantissaDecimalFactor = 18 - underlyingDecimals + 18
   let bdFactor = exponentToBigDecimal(mantissaDecimalFactor)
-  log.info('before binding : {}',[oracleAddress.toHexString()] )  
+  log.info('getTokenPrice : before binding : {}',[oracleAddress.toHexString()] )  
   let oracle = PriceOracle.bind(oracleAddress)
-  log.info('after binding (Market Delegator Address) : {}',[eventAddress.toHexString()] )    
+  log.info('getTokenPrice : after binding (Market Delegator Address) : {}',[eventAddress.toHexString()] )    
   underlyingPrice = oracle.getUnderlyingPrice(eventAddress).toBigDecimal().div(bdFactor)
-  log.info('after binding (Market underlying price from Oracle) : {}',[underlyingPrice.toString()] )    
+  log.info('getTokenPrice :  after binding (Market underlying price from Oracle) : {}',[underlyingPrice.toString()] )    
   return underlyingPrice
 }
 

@@ -6,7 +6,7 @@ import IOCOrder from './IOCFolder/IOCOrder.vue';
 import FOKOrder from './FOKFolder/FOKOrder.vue';
 
 export default {
-  name: 'market-order',
+  name: 'redeem-order',
   components: {
     TabBar,
     IOCOrder,

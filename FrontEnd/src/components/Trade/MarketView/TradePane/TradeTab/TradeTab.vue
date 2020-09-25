@@ -2,31 +2,32 @@
 
 <script>
 import TabBar from '@/components/TabBar/TabBar.vue';
-import MarketOrder from './MarketOrder/MarketOrder.vue';
+import SupplyOrder from './SupplyOrder/SupplyOrder.vue';
 import LimitOrder from './LimitOrder/LimitOrder.vue';
-// import StopLimitOrder from './StopLimitOrder/StopLimitOrder.vue';
-// import StopMarketOrder from './StopMarketOrder/StopMarketOrder.vue';
+import RedeemOrder from './RedeemOrder/RedeemOrder.vue';
+
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 
 export default {
   name: 'trade-tab',
   components: {
     TabBar,
-    MarketOrder,
+    SupplyOrder,
     LimitOrder,
+    RedeemOrder,
   },
   data() {
     return {
-      activeTab: 'Invest',
+      activeTab: 'Supply ',
       selectedMarket: {},
-      tabs: ['Invest', 'Hedge',],
-      preActive: 'Hedge',
+      tabs: ['Supply ', 'Borrow ','Redeem'],
+      preActive: 'Supply ',
     };
   },
   methods: {
     activeTabChange(activeTab) {
       this.activeTab = activeTab;
-      if (activeTab == 'Invest') {
+      if (activeTab == 'Supply ') {
         this.$store.commit('changeInvestTab');
       } else {
         this.$store.commit('changeHedgeTab');

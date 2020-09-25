@@ -1,4 +1,5 @@
-<div id="landing-trade-tab">
+<!-- The options under supply borrow begin here -->
+<div id="landing-trade-tab" style="padding-left: 30%;"> 
     <div class="buy-sell-tab-dropdown uk-position-top-right">
         <!-- Pair change (Dropdown), the new selected pair gets stored directly in store.state.seletedPair, and an event is emitted in Vue.JS -->
         <div class="form-elm select" style="width: 100px;">
@@ -13,11 +14,17 @@
     <!-- Tabbing between Market/Limit -->
     <div class="cs-tab-1 uk-position-relative ">
         <tab-bar :mobileDropdown=false marketDropdown="false" :tabs=tabs @tab-change="activeTabChange" />
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
         <keep-alive>
-        <market-order v-if="activeTab === 'Invest'" />
-        <limit-order v-else-if="activeTab === 'Hedge'" />
-        <!-- <stop-limit-order v-else-if="activeTab === 'Stop Limit'" />
-        <stop-market-order v-else-if="activeTab === 'Stop Market'" /> -->
+        <supply-order v-if="activeTab === 'Supply '" />
+        <limit-order v-else-if="activeTab === 'Borrow '" style="padding-right: 42px; padding-left: 42px;" />
+        <redeem-order v-else-if="activeTab === 'Redeem'" />
+        <!-- <stop-market-order v-else-if="activeTab === 'Stop Market'" /> -->
     </keep-alive>
     </div>
 </div>
