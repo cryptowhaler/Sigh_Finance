@@ -5,7 +5,7 @@
 // import PricePane from './PricePane/PricePane.vue';
 import TradePane from './TradePane/TradePane.vue';
 import BookPane from './BookPane/BookPane.vue';
-import LiveTrades from './BookPane/LiveTrades/LiveTrades.vue';
+import SupportedMoneyMarkets from './BookPane/SupportedMoneyMarkets/SupportedMoneyMarkets.vue';
 
 export default   {
   name: 'market-view',
@@ -14,7 +14,7 @@ export default   {
     // PricePane,
     TradePane,
     BookPane,
-    LiveTrades,
+    SupportedMoneyMarkets,
   },
 
   data() {

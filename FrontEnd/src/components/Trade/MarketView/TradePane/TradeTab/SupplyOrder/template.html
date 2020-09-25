@@ -4,47 +4,57 @@
         <div class="uk-width-1-1">
             <div class="form-grp">
                 <div class="form-elm">
-                    <input class="form-ctrl" type="text" placeholder="Trade Volume" v-model="formData.amount">
-                    <span> _ </span>
-                </div>
-            </div>
-        </div>
-    </div>
-<!-- Displays the [1] of Selected pair e.q USD of BTC/USD in green color for buy  -->
-    <div class="uk-grid uk-grid-small f1-form-grid">
-        <div class="uk-width-1-2">
-            <div class="form-grp">
-                <div class="form-elm">
-                    <input style='color:var(--green-color)' class="form-ctrl" type="text" placeholder=" - " readonly :value="estimatedPriceBuy">
-                    <!-- <input style='color:var(--green-color)' class="form-ctrl" type="text" placeholder="Expected Buy Price"> -->
-                    <span style='color:var(--green-color)'>{{$store.state.selectedVegaMarketquoteNameTrade}}</span>
-                </div>
-            </div>
-        </div>
-<!-- Displays the [1] of Selected pair e.q USD of BTC/USD in red color for sell  -->
-        <div class="uk-width-1-2">
-            <div class="form-grp">
-                <div class="form-elm">
-                    <input style='color:var(--red-color)' class="form-ctrl" type="text" placeholder=" - " readonly :value="estimatedPriceSell">
-                    <!-- <input style='color:var(--red-color)' class="form-ctrl" type="text" placeholder="Expected Sell Price"> -->
-                    <span style='color:var(--red-color)'>{{$store.state.selectedVegaMarketquoteNameTrade}}</span>
+                    <input class="form-ctrl" type="text" placeholder="No. of tokens Supplied" v-model="formData.mintAmount" style="text-align:center;">
+                    <span style='color:antiquewhite'>  {{ $store.state.selectedMarketUnderlyingSymbol  }}  </span>
                 </div>
             </div>
         </div>
     </div>
 
-<!-- Loading image  -->
     <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input class="form-ctrl" type="text" placeholder="Amount" v-model="formData.mintAmount">
+                    <span> _ </span>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+<!-- Displays the [1] of Selected pair e.q USD of BTC/USD in green color for buy  -->
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input style="color:var(--green-color); text-align:center;" class="form-ctrl" type="text" placeholder=" - " readonly :value="estimatedNoOfTokensMinted">
+                    <input style="color:var(--green-color); text-align:center;" class="form-ctrl" type="text" placeholder="No. of Tokens Minted" >
+                    <span style='color:antiquewhite'>  {{ $store.state.selectedMarketSymbol }}  </span>
+                </div>
+            </div>
+        </div>
+<!-- Displays the [1] of Selected pair e.q USD of BTC/USD in red color for sell  -->
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input style="color:var(--green-color); text-align:center;" class="form-ctrl" type="text" placeholder="  " readonly :value="estimatedMintValue" >
+                    <input style="color:var(--green-color); text-align:center;" class="form-ctrl" type="text" placeholder="Estimated Mint Value">
+                    <span style='color:var(--green-color)'>  USD </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <!-- Loading image  -->
         <div v-if="showLoader" class="uk-width-1-1 center">
             <img src="https://image.ibb.co/dc02hd/30.gif" />
         </div>
+        <!-- Buttons (Approve/Mint)  -->
         <div v-else class="uk-width-1-1 flex">
-<!-- Buttons (Buy/Sell) (Confirm/Cancel)  -->
             <div class="left">
-                <button v-if="!showConfirm" class="uk-button uk-button-green"" @click="confirmTrade('Buy')">Buy</button>
-                <button v-else class="uk-button uk-button-green" @click="makeTrade()">Confirm</button>
-                <button v-if="!showConfirm" class="uk-button uk-button-red ml10" @click="confirmTrade('Sell')">Sell</button>
-                <button v-else class="uk-button uk-button-red ml10" @click="cancelTrade">Cancel</button>
+                <button v-if="!showConfirm" class="uk-button uk-button-green" style="margin-left: 51px;" @click="confirmTrade('Buy')"> Approve </button>
+                <button v-else class="uk-button uk-button-green" style="margin-left: 51px;" @click="makeTrade()"> Mint </button>
             </div>
         </div> 
 

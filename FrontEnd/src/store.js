@@ -121,6 +121,13 @@ const store = new Vuex.Store({
     countLiquidated : 0,
     countLiquidator : 0,
     hasBorrowed : 0,
+    LiveMarkets : [],
+    selectedMarketId : '',
+    selectedMarketSymbol : '',
+    selectedMarketUnderlyingSymbol : '',
+    selectedMarketUnderlyingPriceUSD : 0,
+    selectedMarketExchangeRate : 0,
+
   },
 
 
@@ -297,7 +304,25 @@ const store = new Vuex.Store({
     },    
     hasBorrowed(state) {         // hasBorrowed  (from market holdings (account subscription) )
       return state.hasBorrowed;    
-    }    
+    },    
+    LiveMarkets(state) {        // Markets supported by the protocol
+      return state.LiveMarkets;
+    },
+    selectedMarketId(state) {        // Selected Market
+      return state.selectedMarketId;
+    },
+    selectedMarketSymbol(state) {        // Selected Market
+      return state.selectedMarketSymbol;
+    },
+    selectedMarketUnderlyingSymbol(state) {        // Selected Market
+      return state.selectedMarketUnderlyingSymbol;
+    },
+    selectedMarketUnderlyingPriceUSD(state) {        // Selected Market
+      return state.selectedMarketUnderlyingPriceUSD;
+    },
+    selectedMarketExchangeRate(state) {        // Selected Market
+      return state.selectedMarketExchangeRate;
+    }        
   },
 
 
@@ -557,13 +582,48 @@ const store = new Vuex.Store({
     hasBorrowed(state, payload) {
       state.hasBorrowed = payload;
       console.log(state.hasBorrowed);
-    }
+    },
+    LiveMarkets(state,markets) {        // Markets supported by the protocol
+      state.LiveMarkets = [];
+      for ( let i =0 ; i < markets.length ; i++ ) {
+        let obj = [];
+        obj.id = markets[i].id;
+        obj.symbol = markets[i].symbol;
+        obj.underlyingSymbol = markets[i].underlyingSymbol;
+        obj.gsighSpeed = markets[i].gsighSpeed;
+        obj.sighSpeed = markets[i].sighSpeed;
+        obj.underlyingPriceUSD = markets[i].underlyingPriceUSD;
+        obj.exchangeRate = markets[i].exchangeRate;
+        state.LiveMarkets.push(obj);
+        console.log(state.LiveMarkets);
+      }
+      console.log(state.LiveMarkets);
+    },
+    selectedMarketId(state, payload) {
+      state.selectedMarketId = payload;
+      console.log(state.selectedMarketId);
+    },
+    selectedMarketSymbol(state, payload) {
+      state.selectedMarketSymbol = payload;
+      console.log(state.selectedMarketSymbol);
+    },
+    selectedMarketUnderlyingSymbol(state, payload) {
+      state.selectedMarketUnderlyingSymbol = payload;
+      console.log(state.selectedMarketUnderlyingSymbol);
+    },
+    selectedMarketUnderlyingPriceUSD(state, payload) {
+      state.selectedMarketUnderlyingPriceUSD = payload;
+      console.log(state.selectedMarketUnderlyingPriceUSD);
+    },
+    selectedMarketExchangeRate(state, payload) {
+      state.selectedMarketExchangeRate = payload;
+      console.log(state.selectedMarketExchangeRate);
+    },
+
   },
 
 
   actions: {
-
-    
 
     // CONNECTS TO WEB3 NETWORK (GANACHE/KOVAN/ETHEREUM/BSC ETC)
     loadWeb3: async ({ commit , state}) => {

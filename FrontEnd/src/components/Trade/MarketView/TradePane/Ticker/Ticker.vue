@@ -82,7 +82,7 @@ export default {
       this.$store.commit('changeSelectedVegaMarketquoteNameTrade', ticker.quoteName );
       this.$store.commit('changeSelectedVegaMarketSummaryTrade',ticker.summary);
 
-      ExchangeDataEventBus.$emit('change-vega-market', selectedMarket);      
+      ExchangeDataEventBus.$emit('change-selected-market', selectedMarket);      
       ExchangeDataEventBus.$emit('change-vega-header', {'Name':ticker.markName,'Summary':ticker.summary,});
       this.$root.$emit('tickerClicked');
     },

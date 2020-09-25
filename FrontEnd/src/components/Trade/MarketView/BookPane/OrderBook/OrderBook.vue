@@ -283,7 +283,7 @@ export default {
       // this.precisionNumber = 1;
     };
 
-    ExchangeDataEventBus.$on('change-vega-market', this.reset);
+    ExchangeDataEventBus.$on('change-selected-market', this.reset);
   },
 
   mounted() {
@@ -293,7 +293,7 @@ export default {
   },
   
   destroyed() {
-    ExchangeDataEventBus.$on('change-vega-market', this.reset);
+    ExchangeDataEventBus.$on('change-selected-market', this.reset);
     clearInterval(this.timeout);
   },
 };

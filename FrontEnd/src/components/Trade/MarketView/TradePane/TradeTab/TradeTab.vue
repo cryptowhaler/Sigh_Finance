@@ -41,21 +41,14 @@ export default {
     marketChange() {
       // console.log(this.selectedMarket);
       this.$store.commit('addLoaderTask', 3, false);
-      this.$store.commit('changeSelectedVegaMarketNameTrade', this.selectedMarket.data.name );  //Name change (eq - ETHVUSD/DEC20)
-      this.$store.commit('changeSelectedVegaMarketTradeId', this.selectedMarket.id );   //Selected market in TradeTab - ID Change
-      this.$store.commit('changeSelectedVegaMarketbaseNameTrade', this.selectedMarket.baseName );
-      this.$store.commit('changeSelectedVegaMarketquoteNameTrade', this.selectedMarket.quoteName );
-      this.$store.commit('changeSelectedVegaMarketSummaryTrade',this.selectedMarket.data.instrument_name);
-      // console.log(this.$store.getters.selectedVegaMarketNameTrade);
-      // console.log(this.$store.getters.selectedVegaMarketTradeId);
-      // console.log(this.$store.getters.selectedVegaMarketSummaryTrade);
-      // console.log(this.$store.getters.selectedVegaMarketbaseNameTrade);
-      // console.log(this.$store.getters.selectedVegaMarketquoteNameTrade);
-      ExchangeDataEventBus.$emit('change-vega-market', {'Name':this.selectedMarket.data.name,'Id':this.selectedMarket.id,});    //TO CHANGE ORDER-BOOK/LIVE-TRADES
-      this.$store.commit('changeSelectedVegaMarketSummary', this.selectedMarket.data.instrument_name);      //TO CHANGE HEADER
-      this.$store.commit('changeSelectedVegaMarketquoteName', this.selectedMarket.quoteName);   //Displayed in header and order book live feed
-      ExchangeDataEventBus.$emit('change-vega-header', {'Name':this.selectedMarket.data.name,'Summary':this.selectedMarket.data.instrument_name,}); //TO CHANGE HEADER LIVE FEED               
+      this.$store.commit('selectedMarketId', this.selectedMarket.id );  //Name change (eq - ETHVUSD/DEC20)
+      this.$store.commit('selectedMarketSymbol', this.selectedMarket.symbol );   //Selected market in TradeTab - ID Change
+      this.$store.commit('selectedMarketUnderlyingSymbol', this.selectedMarket.underlyingSymbol );
+      this.$store.commit('selectedMarketUnderlyingPriceUSD', this.selectedMarket.underlyingPriceUSD );
+      this.$store.commit('selectedMarketExchangeRate', this.selectedMarket.exchangeRate );
 
+      ExchangeDataEventBus.$emit('change-selected-market', {'symbol':this.selectedMarket.symbol,  'Id':this.selectedMarket.id,  'underlyingSymbol':this.selectedMarket.underlyingSymbol,    'underlyingPriceUSD':this.selectedMarket.underlyingPriceUSD,        'exchangeRate':this.selectedMarket.exchangeRate  });    //TO CHANGE ORDER-BOOK/Supported-Money-Markets
+      // ExchangeDataEventBus.$emit('change-vega-header', {'Name':this.selectedMarket.data.name,'Summary':this.selectedMarket.data.instrument_name,}); //TO CHANGE HEADER LIVE FEED               
       // ExchangeDataEventBus.$emit('change-symbol',this.$store.state.selectedPair);
     },
   },

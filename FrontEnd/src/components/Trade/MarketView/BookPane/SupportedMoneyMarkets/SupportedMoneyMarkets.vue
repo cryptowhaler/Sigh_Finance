@@ -6,7 +6,7 @@ import Spinner from '@/components/Spinner/Spinner.vue';
 import gql from 'graphql-tag';
 
 export default {
-  name: 'live-trades',
+  name: 'Supported-Money-Markets',
 
   components: {
     Spinner,
@@ -67,7 +67,6 @@ export default {
         // variables() {  return {marketId: this.marketId,};  },
 
         result({data,loading,}) {
-
           if (loading) {
             console.log('loading');
           }
@@ -76,10 +75,7 @@ export default {
             let _markets = data.markets;
             console.log(_markets);
             this.markets = [];
-            for (let i= (_markets.length-1) ; i>=0;i--) {
-              console.log(_markets[i]);
-              this.handleEachMarket(_markets[i]);
-            }
+            this.handleMarkets(_markets);
             this.showLoader = false;
           }
         },
@@ -96,32 +92,40 @@ export default {
 
   created() {
 
-    this.handleEachMarket = liveMarket => {
-      console.log(liveMarket);
-      let obj = [];
-      obj.symbol = liveMarket.symbol;
-      obj.underlyingSymbol = liveMarket.underlyingSymbol;
-      obj.totalSupply = liveMarket.totalSupply;
-      obj.totalBorrows = liveMarket.totalBorrows;
-      obj.supplyRate = liveMarket.supplyRate;
-      obj.borrowRate = liveMarket.borrowRate;
-      obj.gsighSpeed = liveMarket.gsighSpeed;
-      obj.exchangeRate = liveMarket.exchangeRate;
-      obj.underlyingPrice = liveMarket.underlyingPrice;
-      obj.underlyingPriceUSD = liveMarket.underlyingPriceUSD;
-      obj.numberOfBorrowers = liveMarket.numberOfBorrowers;
-      obj.numberOfSuppliers = liveMarket.numberOfSuppliers;
-      obj.totalGsighDistributedToSuppliers = liveMarket.totalGsighDistributedToSuppliers;
-      obj.totalGsighDistributedToBorrowers = liveMarket.totalGsighDistributedToBorrowers;
-      obj.sighSpeed = liveMarket.gsighSpeed;
-      if (liveMarket.underlyingPrice == '0') {
-        obj.underlyingPrice = liveMarket.underlyingPriceUSD;
-      }
-      this.markets.push(obj);
-      console.log(this.markets);
-      // this.$store.commit('liveMarketPrice', Math.abs((price/100000).toFixed(5)));
-    };
+    this.handleMarkets = _markets => {
 
+      for (let i = (_markets.length-1) ; i>=0; i--) {
+
+        let liveMarket = _markets[i];
+        console.log(liveMarket);
+
+        let obj = [];
+        obj.id =  liveMarket.id;
+        obj.symbol = liveMarket.symbol;
+        obj.underlyingSymbol = liveMarket.underlyingSymbol;
+        obj.totalSupply = liveMarket.totalSupply;
+        obj.totalBorrows = liveMarket.totalBorrows;
+        obj.supplyRate = liveMarket.supplyRate;
+        obj.borrowRate = liveMarket.borrowRate;
+        obj.gsighSpeed = liveMarket.gsighSpeed;
+        obj.exchangeRate = liveMarket.exchangeRate;
+        obj.underlyingPrice = liveMarket.underlyingPrice;
+        obj.underlyingPriceUSD = liveMarket.underlyingPriceUSD;
+        obj.numberOfBorrowers = liveMarket.numberOfBorrowers;
+        obj.numberOfSuppliers = liveMarket.numberOfSuppliers;
+        obj.totalGsighDistributedToSuppliers = liveMarket.totalGsighDistributedToSuppliers;
+        obj.totalGsighDistributedToBorrowers = liveMarket.totalGsighDistributedToBorrowers;
+        obj.sighSpeed = liveMarket.gsighSpeed;
+        if (liveMarket.underlyingPrice == '0') {
+          obj.underlyingPrice = liveMarket.underlyingPriceUSD;
+        }
+        
+        this.markets.push(obj);
+        console.log(this.markets);
+      };
+
+      this.$store.commit('LiveMarkets', this.markets);
+    }
   },
 
   destroyed() {

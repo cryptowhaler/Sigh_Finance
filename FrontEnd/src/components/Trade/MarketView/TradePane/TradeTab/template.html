@@ -2,11 +2,12 @@
 <div id="landing-trade-tab" style="padding-left: 30%;"> 
     <div class="buy-sell-tab-dropdown uk-position-top-right">
         <!-- Pair change (Dropdown), the new selected pair gets stored directly in store.state.seletedPair, and an event is emitted in Vue.JS -->
-        <div class="form-elm select" style="width: 100px;">
+        <div class="form-elm select" style="width: 251px;">
+            <span style='color:cyan'>  Select Market  </span>
             <select class="form-ctrl select2-single" @change=marketChange v-model=selectedMarket>
                 <!-- Options dropdown loaded with available pairs from DropDown -->
-                <option v-for="val in $store.getters.markets" :key=val.id :value=val>
-                    {{ val.data.name }}
+                <option v-for="val in $store.getters.LiveMarkets" :key=val.id :value=val>
+                    {{ val.symbol }}
                 </option>
             </select>
         </div>

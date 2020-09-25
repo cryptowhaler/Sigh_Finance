@@ -15,16 +15,13 @@ export default {
 
       showConfirm: false,
       formData: {
-        pair: 'BTC/USD',
-        type: 'limit',
-        exc: 'vegaProtocol',
-        vegaMarketName: this.$store.state.selectedVegaMarketNameTrade,
-        vegaMarketId: this.$store.state.selectedVegaMarketTradeId,
-        bos: 'Buy',
-        selectedmarketid: 'LBXRA65PN4FN5HBWRI2YBCOYDG2PBGYU',
-        amount: undefined,        //amount
-        price: undefined,         //price
-        moe: 'market',
+        mintAmount : 0,
+        SelectedMarketId : this.$store.state.selectedMarketId ,
+        SelectedMarketSymbol: this.$store.state.selectedMarketSymbol,
+        selectedMarketUnderlyingSymbol: this.$store.state.selectedMarketUnderlyingSymbol,
+        selectedMarketUnderlyingPriceUSD: this.$store.state.selectedMarketUnderlyingPriceUSD,
+        selectedMarketExchangeRate: this.$store.state.selectedMarketExchangeRate,
+
       },
       AmountPlaceholder: this.$store.state.selectedVegaMarketbaseNameTrade,      
       showLoader: false,
@@ -35,30 +32,34 @@ export default {
 
 
   created() {
-    this.changeVegaMarket = (newMarket) => {       //Changing Selected Vega Market
-      this.formData.vegaMarketName = newMarket.Name;
-      this.formData.vegaMarketId = newMarket.Id;
-      // console.log(this.formData.vegaMarketId + ' ' + this.formData.vegaMarketName);
+    this.changeSelectedMarket = (newMarket) => {       //Changing Selected Vega Market
+      this.formData.SelectedMarketId = newMarket.Name;
+      this.formData.SelectedMarketSymbol = newMarket.Name;
+      this.formData.SelectedMarketUnderlyingSymbol = newMarket.Id;
+      this.formData.selectedMarketUnderlyingPriceUSD = newMarket.underlyingPriceUSD;  
+      this.formData.selectedMarketExchangeRate = newMarket.exchangeRate;        
+
+      console.log( 'NEW SELECTED MARKET - ' + newMarket);
     };
-    ExchangeDataEventBus.$on('change-vega-market', this.changeVegaMarket);        
+    ExchangeDataEventBus.$on('change-selected-market', this.changeSelectedMarket);        
   },
 
   computed: {
 
-    estimatedPriceSell() {    //Used "width: (((Number(ask.totalVolume)/Number(maxVol))*308)) + '%'," to determine width of dynamic bars
-      if (!this.formData.amount) {
+    estimatedNoOfTokensMinted() {    //Used "width: (((Number(ask.totalVolume)/Number(maxVol))*308)) + '%'," to determine width of dynamic bars
+      if (!this.formData.mintAmount) {
         return '';
       }
       else {      
-        return ((Number(this.formData.amount))*Number(this.$store.state.liveTradePrice)).toFixed(5);
+        return ((Number(this.formData.mintAmount))*Number(this.$store.state.selectedMarketExchangeRate)).toFixed(5);
       }
     },
-    estimatedPriceBuy() {   
-      if (!this.formData.amount) {
+    estimatedMintValue() {   
+      if (!this.formData.mintAmount) {
         return '';
       }
       else {      
-        return ((Number(this.formData.amount))*Number(this.$store.state.liveTradePrice)).toFixed(5);
+        return ((Number(this.formData.mintAmount))*Number(this.$store.state.selectedMarketUnderlyingPriceUSD)).toFixed(5);
       }
     },
   },
@@ -66,15 +67,6 @@ export default {
 
   
   methods: {
-
-    getStatus(exc) {
-      if (exc === 'auto') {
-        this.statusCode = this.$store.getters.getAutoStatus;
-      } else {
-        this.statusCode = this.$store.getters[`get${exc}OrderStatus`];
-      }
-    },
-
 
     confirmTrade(buyOrSell) {   //Called when we press Buy/Sell. Performs validation. If valid, Confirm/Cancel buttons displayed.
       // console.log('Test1' + this.formData.amount);
@@ -103,10 +95,10 @@ export default {
     async makeTrade() {   //When we press make Trade. Shows Loader
       // console.log('FOK Test2 ' + this.formData.amount);
       this.showLoader = true;
-      let t1 = this.$store.getters.selectedVegaMarketNameTrade;
+      let t1 = this.$store.getters.selectedSelectedMarketSymbolTrade;
       let t2 = this.$store.getters.selectedVegaMarketTradeId;
       // console.log( 'In Store ' + t1 + ' ' + t2); //checking market
-      // console.log( 'In OrderPanel ' + this.formData.vegaMarketName+ ' ' + this.formData.vegaMarketId); //checking market
+      // console.log( 'In OrderPanel ' + this.formData.SelectedMarketSymbol+ ' ' + this.formData.vegaMarketId); //checking market
       //Make Call
       // const response = await  VegaProtocolService.submitOrder_market(this.formData.vegaMarketId,this.formData.amount,this.formData.bos,'MARKET','FOK');
       // setTimeout(() => {
@@ -122,7 +114,7 @@ export default {
       // this.showConfirm = false;
 
       // if (response.status == 200) {     //If Successful
-      //   this.$showSuccessMsg({message: this.formData.vegaMarketName + ' - ' + response.message,});
+      //   this.$showSuccessMsg({message: this.formData.SelectedMarketSymbol + ' - ' + response.message,});
       // } 
       // else {                          //If failed.
       //   this.$showErrorMsg({message: response.message,});
