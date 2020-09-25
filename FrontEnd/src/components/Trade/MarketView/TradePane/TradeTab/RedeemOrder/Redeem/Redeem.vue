@@ -5,15 +5,15 @@ import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import { stringArrayToHtmlList, } from '@/utils/utility';
 import {mapState,mapActions,} from 'vuex';
 
-
 export default {
-  name: 'Repay-Borrow',
+  name: 'Redeem-Order',
+
   data() {
     return {
       showConfirm: false,
       formData: {
         amount: undefined,
-        RepayBorrowAmount : undefined,
+        RedeemAmount : undefined,
         SelectedMarketId : this.$store.state.selectedMarketId ,
         SelectedMarketSymbol: this.$store.state.selectedMarketSymbol,
         selectedMarketUnderlyingSymbol: this.$store.state.selectedMarketUnderlyingSymbol,
@@ -24,18 +24,15 @@ export default {
     };
   },
 
-
   // watch: {
   //   formData: {
   //     handler: function() {
-  //       this.getStatus();   //getting status for exchange ()
+  //       this.getVegaStatus();   //getting status for exchange ()
   //     },
   //     deep: true,
   //   },
   // },
 
-
-  
   created() {
     this.changeSelectedMarket = (newMarket) => {       //Changing Selected Vega Market
       this.formData.SelectedMarketId = newMarket.Id;
@@ -49,26 +46,39 @@ export default {
     ExchangeDataEventBus.$on('change-selected-market', this.changeSelectedMarket);        
   },
 
+  // computed: {
 
-  // mounted() {
-  //   this.watcher = setInterval(() => {this.getStatus();}, 5000);  //getting status for exchange () every 5 sec
-  //   // ExchangeDataEventBus.$on('change-symbol', this.changeSymbol);
-  //   // this.getStatus('auto');
+  //   estimatedPriceSell() {    //Used "width: (((Number(ask.totalVolume)/Number(maxVol))*308)) + '%'," to determine width of dynamic bars
+  //     if (!this.formData.amount) {
+  //       return '';
+  //     }
+  //     else {      
+  //       return ((Number(this.formData.amount))*Number(this.$store.state.liveTradePrice)).toFixed(5);
+  //     }
+  //   },
+  //   estimatedPriceBuy() {   
+  //     if (!this.formData.amount) {
+  //       return '';
+  //     }
+  //     else {      
+  //       return ((Number(this.formData.amount))*Number(this.$store.state.liveTradePrice)).toFixed(5);
+  //     }
+  //   },
   // },
 
   methods: {
 
-    ...mapActions(['market_Repay_Borrow']),
+    ...mapActions(['market_Redeem']),
     
-    async RepayBorrow() {   //When we press make Borrow. Shows Loader
+    async Redeem() {   //When we press make Borrow. Shows Loader
       console.log(this.formData.SelectedMarketId);
-      console.log(this.formData.RepayBorrowAmount);
+      console.log(this.formData.RedeemAmount);
       console.log(this.formData.SelectedMarketSymbol);
       console.log(this.formData.SelectedMarketUnderlyingSymbol);
       console.log(this.formData.selectedMarketUnderlyingPriceUSD);
       console.log(this.formData.selectedMarketExchangeRate);
 
-      let result =  this.market_Repay_Borrow( { marketId: this.formData.SelectedMarketId , RepayBorrowAmount: this.formData.RepayBorrowAmount } );
+      let result =  this.market_Redeem( { marketId: this.formData.SelectedMarketId , RedeemAmount: this.formData.RedeemAmount } );
       console.log(result);
 
       // if (response.status == 200) {     //If Successful
@@ -78,15 +88,15 @@ export default {
       //   this.$showErrorMsg({message: response.message,});
       // }
       this.showLoader = false;
-
     },
+
 
 
   },
 
   destroyed() {
-    clearInterval(this.watcher);
-    ExchangeDataEventBus.$off('change-selected-market', this.changeVegaMarket);    
+    // clearInterval(this.watcher);
+    // ExchangeDataEventBus.$off('change-selected-market', this.changeVegaMarket);    
   },
 };
 </script>

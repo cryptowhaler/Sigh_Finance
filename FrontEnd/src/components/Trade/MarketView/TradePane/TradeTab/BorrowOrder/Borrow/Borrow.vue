@@ -12,7 +12,7 @@ export default {
       showConfirm: false,
       formData: {
         amount: undefined,
-        mintAmount : undefined,
+        BorrowAmount : undefined,
         SelectedMarketId : this.$store.state.selectedMarketId ,
         SelectedMarketSymbol: this.$store.state.selectedMarketSymbol,
         selectedMarketUnderlyingSymbol: this.$store.state.selectedMarketUnderlyingSymbol,
@@ -48,56 +48,39 @@ export default {
 
 
 
-  computed: {
-    estimatedNoOfTokensMinted() {    //Used "width: (((Number(ask.totalVolume)/Number(maxVol))*308)) + '%'," to determine width of dynamic bars
-      if (!this.formData.mintAmount) {
-        return '';
-      }
-      else {      
-        return ((Number(this.formData.mintAmount))*Number(this.$store.state.selectedMarketExchangeRate)).toFixed(5);
-      }
-    },
-    estimatedMintValue() {   
-      if (!this.formData.mintAmount) {
-        return '';
-      }
-      else {      
-        return ((Number(this.formData.mintAmount))*Number(this.$store.state.selectedMarketUnderlyingPriceUSD)).toFixed(5);
-      }
-    },
-  },
+  // computed: {
+  //   estimatedNoOfTokensMinted() {    //Used "width: (((Number(ask.totalVolume)/Number(maxVol))*308)) + '%'," to determine width of dynamic bars
+  //     if (!this.formData.BorrowAmount) {
+  //       return '';
+  //     }
+  //     else {      
+  //       return ((Number(this.formData.BorrowAmount))*Number(this.$store.state.selectedMarketExchangeRate)).toFixed(5);
+  //     }
+  //   },
+  //   estimatedMintValue() {   
+  //     if (!this.formData.BorrowAmount) {
+  //       return '';
+  //     }
+  //     else {      
+  //       return ((Number(this.formData.BorrowAmount))*Number(this.$store.state.selectedMarketUnderlyingPriceUSD)).toFixed(5);
+  //     }
+  //   },
+  // },
 
 
   methods: {
 
-    ...mapActions(['Market_approve','market_mint']),
+    ...mapActions(['market_Borrow']),
     
-     async Borrow() {   
+    async Borrow() {   //When we press make Borrow. Shows Loader
       console.log(this.formData.SelectedMarketId);
-      console.log(this.formData.mintAmount);
+      console.log(this.formData.BorrowAmount);
       console.log(this.formData.SelectedMarketSymbol);
       console.log(this.formData.SelectedMarketUnderlyingSymbol);
       console.log(this.formData.selectedMarketUnderlyingPriceUSD);
       console.log(this.formData.selectedMarketExchangeRate);
 
-      let result = await this.Market_approve( { marketId: this.formData.SelectedMarketId , amount: 1000000000 } );
-      console.log(result);
-
-      // if (validationErrors.length) {
-      //   this.$showErrorMsg({message: stringArrayToHtmlList(validationErrors),});
-      // } 
-      // else {this.showConfirm = true;}
-    },
-    
-    async RepayBorrow() {   //When we press make Borrow. Shows Loader
-      console.log(this.formData.SelectedMarketId);
-      console.log(this.formData.mintAmount);
-      console.log(this.formData.SelectedMarketSymbol);
-      console.log(this.formData.SelectedMarketUnderlyingSymbol);
-      console.log(this.formData.selectedMarketUnderlyingPriceUSD);
-      console.log(this.formData.selectedMarketExchangeRate);
-
-      let result =  this.market_mint( { marketId: this.formData.SelectedMarketId , mintAmount: this.formData.mintAmount } );
+      let result =  this.market_Borrow( { marketId: this.formData.SelectedMarketId , BorrowAmount: this.formData.BorrowAmount } );
       console.log(result);
 
       // if (response.status == 200) {     //If Successful
@@ -107,27 +90,6 @@ export default {
       //   this.$showErrorMsg({message: response.message,});
       // }
       this.showLoader = false;
-
-      // console.log('FOK Test2 ' + this.formData.amount);
-      // this.showLoader = true;
-      // let t1 = this.$store.getters.selectedSelectedMarketSymbolTrade;
-      // let t2 = this.$store.getters.selectedVegaMarketTradeId;
-      // console.log( 'In Store ' + t1 + ' ' + t2); //checking market
-      // console.log( 'In OrderPanel ' + this.formData.SelectedMarketSymbol+ ' ' + this.formData.vegaMarketId); //checking market
-      //Make Call
-      // const response = await  VegaProtocolService.submitOrder_market(this.formData.vegaMarketId,this.formData.amount,this.formData.bos,'MARKET','FOK');
-      // setTimeout(() => {
-      //   if(!response) {   //TimeOut Limit
-      //     this.formData.amount = undefined;
-      //     this.formData.price = undefined;
-      //     this.showConfirm = false;
-      //     this.$showErrorMsg({message: 'Timeout exceeded.',});
-      //   }
-      // },15000);
-      // this.formData.amount = undefined;
-      // this.formData.price = undefined;
-      // this.showConfirm = false;
-
     },
 
 
@@ -135,8 +97,8 @@ export default {
   },
 
   destroyed() {
-    clearInterval(this.watcher);
-    ExchangeDataEventBus.$off('change-selected-market', this.changeVegaMarket);    
+    // clearInterval(this.watcher);
+    // ExchangeDataEventBus.$off('change-selected-market', this.changeVegaMarket);    
   },
 };
 </script>

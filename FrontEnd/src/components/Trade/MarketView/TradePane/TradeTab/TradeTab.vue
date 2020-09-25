@@ -4,7 +4,7 @@
 import TabBar from '@/components/TabBar/TabBar.vue';
 import SupplyOrder from './SupplyOrder/SupplyOrder.vue';
 import BorrowOrder from './BorrowOrder/BorrowOrder.vue';
-import RedeemOrder from './RedeemOrder/RedeemOrder.vue';
+import RedeemComponent from './RedeemOrder/RedeemOrder.vue';
 
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 
@@ -14,7 +14,7 @@ export default {
     TabBar,
     SupplyOrder,
     BorrowOrder,
-    RedeemOrder,
+    RedeemComponent,
   },
   data() {
     return {

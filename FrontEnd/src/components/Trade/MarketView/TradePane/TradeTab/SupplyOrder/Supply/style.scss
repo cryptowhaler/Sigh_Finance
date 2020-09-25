@@ -1,19 +1,23 @@
-button {
-  font-family: "Open Sans", sans-serif;
-  font-size: 12px !important;
-  padding: 0 30px;
-  margin-top: 5px;
-}
-
-.center {
-  text-align: center;
+.market-order {
+  margin-top: -15px;
+  width: 100%;
 }
 
 img {
   width: 80px;
   height: auto;
 }
-.limit-order select option {
+.center {
+  text-align: center;
+}
+button {
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px !important;
+  padding: 0 25px;
+  margin-top: 4px;
+}
+
+.market-order select option {
   background-color: var(--main-bg-color);
   color: var(--pri-label-color);
 }
@@ -26,8 +30,7 @@ span {
   display: block;
   position: relative;
   line-height: 40px;
-  text-align: right;
-  float: left;
+  text-align: left;
 }
 input {
   position: absolute;
@@ -52,6 +55,7 @@ input {
   font-size: 12px;
   color: var(--primary-text-color);
 }
+
 .operational {
   color: green !important;
 }
@@ -73,29 +77,8 @@ input {
   height: 15px;
 }
 
-.limit-order{
-  margin-top: -15px;
-}
-
-.form-ctrl {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
-    font-weight: 400;
-    color: var(--primary-text-color);
-    background: transparent;
-    width: 176%;
-    height: 38px;
-    padding: 7px 3px;
-    border: 0;
-    border-bottom: 1px solid #606060;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    outline: 0;
-    display: block;
-}
-
-
-::placeholder{
-  opacity: 0.5;
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: white;
+  opacity: 0.5;
+  // opacity: 1; /* Firefox */
 }

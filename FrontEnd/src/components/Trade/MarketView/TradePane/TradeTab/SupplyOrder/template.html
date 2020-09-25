@@ -1,57 +1,19 @@
-<div class="supply-order">
+<div class="borrow-order">
+    <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
 
-    <div class="uk-grid uk-grid-small f1-form-grid">
-        <div class="uk-width-1-1">
-            <div class="form-grp">
-                <div class="form-elm">
-                    <input class="form-ctrl" type="text" placeholder="No.oftokensSupplied" v-model="formData.mintAmount" style="text-align:center;">
-                    <span style='color:antiquewhite'>  {{ $store.state.selectedMarketUnderlyingSymbol  }}  </span>
-                </div>
+    <!-- <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
+        <div>
+            <span class="dot" :class="statusCode" :title="statusCode"></span>
+        </div>         
+    </div>  -->
+        <!-- IMPLEMENTING - IOC, FOK, GTC, GTT -->
+        <div class="cs-tab-3  uk-position-relative " style=" padding-left: 30px; padding-right: 50px; padding-top: 12px;">
+            <div id="subtab-limit" :title-link-class="'tab-title-class'">
+                <tab-bar :mobileDropdown=false :tabs=tabs @tab-change="activeTabChange" />
             </div>
+            <keep-alive>
+                <Supply v-if="activeTab === 'Supply'" />
+            </keep-alive>
         </div>
     </div>
-
-<!-- Displays the [1] of Selected pair e.q USD of BTC/USD in green color for buy  -->
-    <div class="uk-grid uk-grid-small f1-form-grid">
-        <div class="uk-width-1-1">
-            <div class="form-grp">
-                <div class="form-elm">
-                    <input style="color:var(--green-color); text-align:center;" class="form-ctrl" type="text" placeholder=" - " readonly :value="estimatedNoOfTokensMinted">
-                    <input style="color:var(--green-color); text-align:center;" class="form-ctrl" type="text" placeholder="No. of Tokens Minted" >
-                    <span style='color:antiquewhite'>  {{ $store.state.selectedMarketSymbol }}  </span>
-                </div>
-            </div>
-        </div>
-<!-- Displays the [1] of Selected pair e.q USD of BTC/USD in red color for sell  -->
-        <div class="uk-width-1-1">
-            <div class="form-grp">
-                <div class="form-elm">
-                    <input style="color:var(--green-color); text-align:center;" class="form-ctrl" type="text" placeholder="  " readonly :value="estimatedMintValue" >
-                    <input style="color:var(--green-color); text-align:center;" class="form-ctrl" type="text" placeholder="Estimated Mint Value">
-                    <span style='color:var(--green-color)'>  USD </span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="uk-grid uk-grid-small f1-form-grid">
-        <!-- Loading image  -->
-        <div v-if="showLoader" class="uk-width-1-1 center">
-            <img src="https://image.ibb.co/dc02hd/30.gif" />
-        </div>
-        <!-- Buttons (Approve/Mint)  -->
-        <div v-else class="uk-width-1-1 flex">
-            <div class="left">
-                <button v-if="!showConfirm" class="uk-button uk-button-green" style="margin-left: 51px;" @click="approve()"> Approve </button>
-                <button v-else class="uk-button uk-button-green" style="margin-left: 51px;" @click="Mint()"> Mint </button>
-            </div>
-        </div> 
-
-    </div>
-
-
-
-
-
-
-</div>
+</div> 

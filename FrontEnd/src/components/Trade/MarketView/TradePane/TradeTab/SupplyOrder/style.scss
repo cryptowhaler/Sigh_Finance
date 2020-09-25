@@ -1,23 +1,19 @@
-.market-order {
-  margin-top: -15px;
-  width: 100%;
+button {
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px !important;
+  padding: 0 30px;
+  margin-top: 5px;
+}
+
+.center {
+  text-align: center;
 }
 
 img {
   width: 80px;
   height: auto;
 }
-.center {
-  text-align: center;
-}
-button {
-  font-family: "Open Sans", sans-serif;
-  font-size: 12px !important;
-  padding: 0 25px;
-  margin-top: 4px;
-}
-
-.market-order select option {
+.limit-order select option {
   background-color: var(--main-bg-color);
   color: var(--pri-label-color);
 }
@@ -30,7 +26,8 @@ span {
   display: block;
   position: relative;
   line-height: 40px;
-  text-align: left;
+  text-align: right;
+  float: right;
 }
 input {
   position: absolute;
@@ -55,7 +52,6 @@ input {
   font-size: 12px;
   color: var(--primary-text-color);
 }
-
 .operational {
   color: green !important;
 }
@@ -77,8 +73,6 @@ input {
   height: 15px;
 }
 
-::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: white;
-  opacity: 0.5;
-  // opacity: 1; /* Firefox */
+.limit-order{
+  margin-top: -15px;
 }

@@ -2,31 +2,31 @@
 
 <script>
 import TabBar from '@/components/TabBar/TabBar.vue';
-import IOCOrder from './IOCFolder/IOCOrder.vue';
-import FOKOrder from './FOKFolder/FOKOrder.vue';
+import RedeemOrder from './Redeem/Redeem.vue';
+import RedeemUnderlyingOrder from './RedeemUnderlying/RedeemUnderlying.vue';
 
 export default {
-  name: 'redeem-order',
+  name: 'Redeem-Component',
   components: {
     TabBar,
-    IOCOrder,
-    FOKOrder,
+    RedeemOrder,
+    RedeemUnderlyingOrder,
   },
 
   data() {
     return {
-      activeTab: 'Invest',
-      tabs: [ 'Invest','Withdraw',],
+      activeTab: 'Redeem',
+      tabs: [ 'Redeem','Redeem Underlying',],
       height: 0,
       statusCode: '',
-      preActive:'Invest',
+      preActive:'Redeem',
     };
   },
   
   methods: {
     activeTabChange(activeTab) {
       this.activeTab = activeTab;
-      if (activeTab === 'Invest') {
+      if (activeTab === 'Redeem') {
         this.$store.commit('changeInvest_Invest_Tab');
       } else {
         this.$store.commit('changeInvest_Withdraw_Tab');

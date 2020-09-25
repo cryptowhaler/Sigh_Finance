@@ -1,51 +1,35 @@
 <div class= "Borrow">
     <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
-        <!-- <span> FOK Limit Order</span> -->
-    <!-- <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
-        <div>
-            <span class="dot" :class="statusCode" :title="statusCode"></span>
-        </div>         
-    </div>  -->
- <!-- --  Dropdown for pair change  -->
-        <!-- <div class="buy-sell-tab-dropdown uk-position-top-right">
-            <div class="form-elm select" style="width: 80px;">
-                <select class="form-ctrl select2-single" @change=pairChange v-model=$store.state.selectedPair>
-                    <option v-for="val in $store.getters.getAvailablePairs" :key=val :value=val>
-                        {{ val }}
-                    </option>
-                </select>
-            </div>
-        </div> -->
     </div> 
     <!-- Displays the [0] of Selected pair e.q BTC of BTC/USD - -->
     <div class="uk-grid uk-grid-small f1-form-grid">
         <div class="uk-width-1-1">
             <div class="form-grp">
                 <div class="form-elm">
-                    <input class="form-ctrl" type="text" placeholder="Amount" v-model="formData.amount">
-                    <span> _ </span>
+                    <input style="text-align: center;" class="form-ctrl" type="text" placeholder="Borrow Amount (Underlying)" v-model="formData.BorrowAmount">
+                    <span style='color:antiquewhite'>  {{ $store.state.selectedMarketUnderlyingSymbol  }}  </span>
                 </div>
             </div>
         </div>
     </div>
     
-    <div class="uk-grid uk-grid-small f1-form-grid">
+    <!-- <div class="uk-grid uk-grid-small f1-form-grid">
         <div class="uk-width-1-1">
             <div class="form-grp">
                 <div class="form-elm">
-                    <input class="form-ctrl" type="text" placeholder="Price" v-model="formData.amount">
+                    <input style="text-align: center;"  class="form-ctrl" type="text" placeholder="Price" v-model="formData.amount">
                     <span>{{ $store.state.selectedMarketSymbol}}</span>
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <div class="uk-grid uk-grid-small f1-form-grid">
         <div class="uk-width-1-1">
             <div class="form-grp">
                 <div class="form-elm">
-                    <input class="form-ctrl" type="text" placeholder="Estimated Total Price" readonly :value="formData.amount * formData.amount  || ''">
-                    <span>{{ $store.state.selectedMarketSymbol }}</span>
+                    <input style="text-align: center;"  class="form-ctrl" type="text" placeholder="Estimated Value " readonly :value="formData.BorrowAmount * formData.selectedMarketUnderlyingPriceUSD  || ''">
+                    <span  style='color:antiquewhite'> USD </span>
                 </div>
             </div>
         </div>
@@ -61,7 +45,7 @@
             <div class="left">
                 <button class="uk-button uk-button-green" @click="Borrow()">Borrow</button>
 
-                <button class="uk-button uk-button-green ml10" @click="RepayBorrow()">Repay Borrow</button>
+                <!-- <button class="uk-button uk-button-green ml10" @click="RepayBorrow()">Repay Borrow</button> -->
             </div>
         </div>
     </div>
