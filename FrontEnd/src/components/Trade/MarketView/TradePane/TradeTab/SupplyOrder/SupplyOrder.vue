@@ -2,6 +2,8 @@
 
 <script>
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
+import { stringArrayToHtmlList, } from '@/utils/utility';
+import {mapState,mapActions,} from 'vuex';
 
 export default {
   name: 'supply-order',
@@ -33,9 +35,9 @@ export default {
 
   created() {
     this.changeSelectedMarket = (newMarket) => {       //Changing Selected Vega Market
-      this.formData.SelectedMarketId = newMarket.Name;
-      this.formData.SelectedMarketSymbol = newMarket.Name;
-      this.formData.SelectedMarketUnderlyingSymbol = newMarket.Id;
+      this.formData.SelectedMarketId = newMarket.Id;
+      this.formData.SelectedMarketSymbol = newMarket.symbol;
+      this.formData.SelectedMarketUnderlyingSymbol = newMarket.underlyingSymbol;
       this.formData.selectedMarketUnderlyingPriceUSD = newMarket.underlyingPriceUSD;  
       this.formData.selectedMarketExchangeRate = newMarket.exchangeRate;        
 
@@ -68,12 +70,22 @@ export default {
   
   methods: {
 
-    confirmTrade(buyOrSell) {   //Called when we press Buy/Sell. Performs validation. If valid, Confirm/Cancel buttons displayed.
-      // console.log('Test1' + this.formData.amount);
-      this.formData.bos = buyOrSell;
-      let validationErrors = [];
-      this.validateQty(validationErrors, 'Amount', this.formData.amount);
-      if (validationErrors.length) {this.$showErrorMsg({message: stringArrayToHtmlList(validationErrors),});
+    ...mapActions(['Market_approve','cERC20_mint']),
+
+
+    async approve() {   
+      console.log(this.formData.SelectedMarketId);
+      console.log(this.formData.mintAmount);
+      console.log(this.formData.SelectedMarketSymbol);
+      console.log(this.formData.SelectedMarketUnderlyingSymbol);
+      console.log(this.formData.selectedMarketUnderlyingPriceUSD);
+      console.log(this.formData.selectedMarketExchangeRate);
+
+      let result = await this.Market_approve( { marketId: this.formData.SelectedMarketId , amount: 1000000000 } );
+      console.log(result);
+      
+      if (validationErrors.length) {
+        this.$showErrorMsg({message: stringArrayToHtmlList(validationErrors),});
       } 
       else {this.showConfirm = true;}
     },
