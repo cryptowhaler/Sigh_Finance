@@ -126,13 +126,13 @@ export default {
         obj.marketName = marketsData[i].market.name;
         obj.symbol = marketsData[i].symbol;
         obj.enteredMarket = marketsData[i].enteredMarket;
-        obj.cTokenBalance = Number(marketsData[i].cTokenBalance)/10000000000;
-        obj.totalUnderlyingSupplied = marketsData[i].totalUnderlyingSupplied;
-        obj.totalUnderlyingBorrowed = marketsData[i].totalUnderlyingBorrowed;
-        obj.totalUnderlyingRedeemed = marketsData[i].totalUnderlyingRedeemed;
-        obj.totalUnderlyingRepaid = marketsData[i].totalUnderlyingRepaid;
-        obj.accountBorrowIndex = marketsData[i].accountBorrowIndex;
-        obj.storedBorrowBalance = marketsData[i].storedBorrowBalance; 
+        obj.cTokenBalance = Number(Number(marketsData[i].cTokenBalance)/10000000000).toFixed(3) ;
+        obj.totalUnderlyingSupplied = Number(marketsData[i].totalUnderlyingSupplied).toFixed(3)  ;
+        obj.totalUnderlyingBorrowed = Number(marketsData[i].totalUnderlyingBorrowed).toFixed(3);
+        obj.totalUnderlyingRedeemed = Number(marketsData[i].totalUnderlyingRedeemed).toFixed(3);
+        obj.totalUnderlyingRepaid = Number(marketsData[i].totalUnderlyingRepaid).toFixed(3);
+        obj.accountBorrowIndex = Number(marketsData[i].accountBorrowIndex).toFixed(3);
+        obj.storedBorrowBalance = Number(marketsData[i].storedBorrowBalance).toFixed(3) ; 
         console.log(obj);
         this.MarketPositions.push(obj);
       }   

@@ -26,14 +26,14 @@
                             <tr v-for=" market in MarketPositions">
                                 <!-- <td class="bg-ebony-clay c-white">{{ market.marketName }}</td> -->
                                 <td class="bg-ebony-clay c-white">{{ market.symbol }}</td>
-                                <td class="bg-ebony-clay c-white">{{ market.cTokenBalance }}</td>
+                                <td class="bg-ebony-clay c-green">{{ market.cTokenBalance }}</td>
                                 <td class="bg-ebony-clay c-white">{{ market.enteredMarket }}</td>
                                 <td class="bg-ebony-clay c-white">{{ market.totalUnderlyingSupplied }}</td>
                                 <td class="bg-ebony-clay c-white">{{ market.totalUnderlyingBorrowed }}</td>
                                 <td class="bg-ebony-clay c-white">{{ market.totalUnderlyingRedeemed }}</td>
                                 <td class="bg-ebony-clay c-white">{{ market.totalUnderlyingRepaid }}</td>
                                 <td class="bg-ebony-clay c-white">{{ market.accountBorrowIndex }}</td>
-                                <td class="bg-ebony-clay c-white">{{ market.storedBorrowBalance }}</td>
+                                <td class="bg-ebony-clay c-red">{{ market.storedBorrowBalance }}</td>
                             </tr>
                         </tbody>
                     </table>

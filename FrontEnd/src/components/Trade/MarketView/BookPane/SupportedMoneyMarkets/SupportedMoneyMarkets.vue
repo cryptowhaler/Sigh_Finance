@@ -103,8 +103,8 @@ export default {
         obj.id =  liveMarket.id;
         obj.symbol = liveMarket.symbol;
         obj.underlyingSymbol = liveMarket.underlyingSymbol;
-        obj.totalSupply = Number(liveMarket.totalSupply)/10000000000;
-        obj.totalBorrows = Number(liveMarket.totalBorrows)/10000000000;
+        obj.totalSupply = Number(Number(liveMarket.totalSupply)/10000000000).toFixed(3) ;
+        obj.totalBorrows = Number(Number(liveMarket.totalBorrows)).toFixed(3) ;
         obj.supplyRate = liveMarket.supplyRate;
         obj.borrowRate = liveMarket.borrowRate;
         obj.gsighSpeed = liveMarket.gsighSpeed;
