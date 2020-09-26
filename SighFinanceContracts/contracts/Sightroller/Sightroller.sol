@@ -64,6 +64,10 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
     /// @notice Emitted when Gsigh is distributed to a borrower
     event DistributedBorrowerGsigh(CToken indexed cToken, address indexed borrower, uint gsighDelta, uint gsighBorrowIndex);
 
+    /// @notice Emitted when SIGH is transferred to a User
+    event GSIGH_Transferred(address indexed userAddress, uint amountTransferred );
+
+
     /// @notice The threshold above which the flywheel transfers Gsigh, in wei
     uint public constant gsighClaimThreshold = 0.001e18;
 
@@ -1197,6 +1201,7 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
             uint gsighRemaining = gsigh.balanceOf(address(this));
             if (userAccrued <= gsighRemaining) {
                 gsigh.transfer(user, userAccrued);
+                emit GSIGH_Transferred(user, userAccrued);
                 return 0;
             }
         }
@@ -1312,25 +1317,6 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
         refreshGsighSpeedsInternal();
     }
 
-    /**
-     * @notice Return all of the markets
-     * @dev The automatic getter may be used to access an individual market.
-     * @return The list of market addresses
-     */
-    function getAllMarkets() public view returns (CToken[] memory) {
-        return allMarkets;
-    }
-
-    function getBlockNumber() public view returns (uint) {
-        return block.number;
-    }
-
-    function getUnderlyingPriceFromoracle(address cToken) public view returns (uint) {
-        return  oracle.getUnderlyingPrice(CToken(cToken)) ; 
-    }
-
-
-
     /*** SIGH ***/
     /*** SIGH ***/
     /*** SIGH ***/
@@ -1351,8 +1337,8 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
 
 
 
-
-
+    /// @notice The threshold above which the flywheel transfers Gsigh, in wei
+    uint public constant SIGH_ClaimThreshold = 0.001e18;
 
     /// @notice The initial SIGH index for a market
     uint224 public constant sighInitialIndex = 1e36;
@@ -1363,7 +1349,14 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
     /// @notice Emitted when market isSIGHed status is changed
     event MarketSIGHed(CToken cToken, bool isSIGHed);
 
+    /// @notice Emitted when SIGH is distributed to a supplier
+    event DistributedSupplier_SIGH(CToken indexed cToken, address indexed supplier, uint sighDelta, uint sighSupplyIndex);
 
+    /// @notice Emitted when SIGH is distributed to a borrower
+    event DistributedBorrower_SIGH(CToken indexed cToken, address indexed borrower, uint sighDelta, uint sighBorrowIndex);
+
+    /// @notice Emitted when SIGH is transferred to a User
+    event SIGH_Transferred(address indexed userAddress, uint amountTransferred );
 
     /*** SIGH Distribution Admin ***/
     /*** SIGH Distribution Admin ***/
@@ -1427,6 +1420,136 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * @notice Claim all the SIGH accrued by the msg sender
+     * @param holder The address to claim SIGH for
+     */
+    function claimSIGH() public {
+        address[] memory holders = new address[](1);
+        holders[0] = msg.sender;
+        return claimGSigh(holders);        
+    }
+
+    /**
+     * @notice Claim all SIGH accrued by the holders
+     * @param holders The addresses to claim SIGH for
+     * @param cTokens The list of markets to claim SIGH in
+     */
+    function claimSIGH(address[] memory holders ) public {
+        
+        for (uint i = 0; i < allMarkets.length; i++) {    // loops over all the suppported markets
+            CToken cToken = allMarkets[i];
+            require(markets[address(cToken)].isListed, "market must be listed");
+ 
+                Exp memory borrowIndex = Exp({mantissa: cToken.borrowIndex()});
+                updateSIGHBorrowIndex(address(cToken), borrowIndex);
+            for (uint j = 0; j < holders.length; j++) {
+                distributeBorrower_SIGH( address(cToken), holders[j], borrowIndex, true );
+            }
+ 
+                updateSIGHSupplyIndex(address(cToken));
+                for (uint j = 0; j < holders.length; j++) {
+                    distributeSupplier_SIGH(address(cToken), holders[j], true);
+                }
+        }
+    }
+
+    /**
+     * @notice Calculate SIGH accrued by a supplier and possibly transfer it to them
+     * @param cToken The market in which the supplier is interacting
+     * @param supplier The address of the supplier to distribute SIGH to
+     */
+    function distributeSupplier_SIGH(address cToken, address supplier, bool distributeAll) internal {
+        GsighMarketState storage supplyState = sighMarketSupplyState[cToken];
+        Double memory supplyIndex = Double({mantissa: supplyState.index});
+        Double memory supplierIndex = Double({mantissa: SIGHSupplierIndex[cToken][supplier]});
+        SIGHSupplierIndex[cToken][supplier] = supplyIndex.mantissa;
+
+        if (supplierIndex.mantissa == 0 && supplyIndex.mantissa > 0) {
+            supplierIndex.mantissa = sighInitialIndex;
+        }
+
+        Double memory deltaIndex = sub_(supplyIndex, supplierIndex);
+        uint supplierTokens = CToken(cToken).balanceOf(supplier);
+        uint supplierDelta = mul_(supplierTokens, deltaIndex);
+        uint supplierAccrued = add_(SIGH_Accrued[supplier], supplierDelta);
+        SIGH_Accrued[supplier] = transfer_Sigh(supplier, supplierAccrued, distributeAll ? 0 : SIGH_ClaimThreshold);
+        emit DistributedSupplier_SIGH(CToken(cToken), supplier, supplierDelta, supplyIndex.mantissa);
+    }
+
+    /**
+     * @notice Calculate SIGH accrued by a borrower and possibly transfer it to them
+     * @dev Borrowers will not begin to accrue until after the first interaction with the protocol.
+     * @param cToken The market in which the borrower is interacting
+     * @param borrower The address of the borrower to distribute SIGH to
+     */
+    function distributeBorrower_SIGH(address cToken, address borrower, Exp memory marketBorrowIndex, bool distributeAll) internal {
+        GsighMarketState storage borrowState = sighMarketBorrowState[cToken];
+        Double memory borrowIndex = Double({mantissa: borrowState.index});
+        Double memory borrowerIndex = Double({mantissa: SIGHBorrowerIndex[cToken][borrower]});
+        SIGHBorrowerIndex[cToken][borrower] = borrowIndex.mantissa;
+
+        if (borrowerIndex.mantissa > 0) {
+            Double memory deltaIndex = sub_(borrowIndex, borrowerIndex);
+            uint borrowerAmount = div_(CToken(cToken).borrowBalanceStored(borrower), marketBorrowIndex);
+            uint borrowerDelta = mul_(borrowerAmount, deltaIndex);
+            uint borrowerAccrued = add_(SIGH_Accrued[borrower], borrowerDelta);
+            SIGH_Accrued[borrower] = transfer_Sigh(borrower, borrowerAccrued, distributeAll ? 0 : SIGH_ClaimThreshold);
+            emit DistributedBorrower_SIGH(CToken(cToken), borrower, borrowerDelta, borrowIndex.mantissa);
+        }
+    }
+
+    /**
+     * @notice Transfer SIGH to the user, if they are above the threshold
+     * @dev Note: If there is not enough SIGH, we do not perform the transfer all.
+     * @param user The address of the user to transfer SIGH to
+     * @param userAccrued The amount of SIGH to (possibly) transfer
+     * @param threshold The minimum amount of SIGH to (possibly) transfer
+     * @return The amount of SIGH which was NOT transferred to the user
+     */
+    function transfer_Sigh(address user, uint userAccrued, uint threshold) internal returns (uint) {
+        if (userAccrued >= threshold && userAccrued > 0) {
+            SIGH sigh = SIGH(getSighAddress());
+            uint sigh_Remaining = sigh.balanceOf(address(this));
+            if (userAccrued <= sigh_Remaining) {
+                sigh.transfer(user, userAccrued);
+                emit SIGH_Transferred(user, userAccrued);
+                return 0;
+            }
+        }
+        return userAccrued;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * @notice Return the address of the Gsigh token
      * @return The address of GSIGH
@@ -1437,6 +1560,23 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
 
     function getSighAddress() public view returns (address) {
         return 0x76Ff68033ef96ee0727f85eA1f979B1b0FD4C75b;
+    }
+
+    /**
+     * @notice Return all of the markets
+     * @dev The automatic getter may be used to access an individual market.
+     * @return The list of market addresses
+     */
+    function getAllMarkets() public view returns (CToken[] memory) {
+        return allMarkets;
+    }
+
+    function getBlockNumber() public view returns (uint) {
+        return block.number;
+    }
+
+    function getUnderlyingPriceFromoracle(address cToken) public view returns (uint) {
+        return  oracle.getUnderlyingPrice(CToken(cToken)) ; 
     }
 
 }
