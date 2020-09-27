@@ -83,7 +83,7 @@ contract SightrollerV2Storage is SightrollerV1Storage {
         bool isGsighed;
 
         /// @notice Whether or not this market receives SIGH
-        bool isSighed;
+        bool isSIGHed;
 
     }
 
@@ -152,38 +152,45 @@ contract SightrollerV3Storage is SightrollerV2Storage {
 
 contract SightrollerV4Storage is SightrollerV3Storage {
 
-    struct SighMarketState {
-
-        // uint256 totalSighDistributed;
-
-        // uint256 recentSighDistributed;
-
-        /// @notice The market's last updated Index
+    struct SIGHMarketState {
+        /// @notice The market's last updated SIGHIndex 
         uint224 index;
+
+        uint256 recordedPriceSnapshot;
 
         /// @notice The block number the index was last updated at
         uint32 block;
     }
 
 
-    /// @notice The rate at which the flywheel distributes SIGH, per block. Calculated Daily
-    uint public sighRate;
 
-    /// @notice The portion of SighRate that each market currently receives, is adjusted every hour
-    mapping(address => uint) public sighSpeeds;
+    /// @notice The rate at which the flywheel distributes SIGH, per block
+    uint public SIGHRate;
+
+    /// @notice The portion of SIGHRate that each market currently receives
+    mapping(address => uint) public SIGH_Speeds;
 
     /// @notice The SIGH market supply state for each market
-    mapping(address => SighMarketState) public sighSupplyState;
+    mapping(address => SIGHMarketState) public sigh_Market_State;
 
-    /// @notice The SIGH market borrow state for each market
-    mapping(address => SighMarketState) public sighBorrowState;
+    // /// @notice The SIGH market supply state for each market
+    // mapping(address => SIGHMarketState) public sighMarketBorrowState;
 
-    /// @notice The SIGH borrow index for each market for each supplier as of the last time they accrued SIGH
-    mapping(address => mapping(address => uint)) public sighSupplierIndex;
+    /// @notice The Gsigh borrow index for each market for each supplier as of the last time they accrued Gsigh
+    mapping(address => mapping(address => uint)) public SIGHSupplierIndex;
 
-    /// @notice The SIGH borrow index for each market for each borrower as of the last time they accrued SIGH
-    mapping(address => mapping(address => uint)) public sighBorrowerIndex;
+    /// @notice The Gsigh borrow index for each market for each borrower as of the last time they accrued Gsigh
+    mapping(address => mapping(address => uint)) public SIGHBorrowerIndex;
 
-    /// @notice The SIGH accrued but not yet transferred to each user
-    mapping(address => uint) public sighAccrued;
+    /// @notice The Gsigh accrued but not yet transferred to each user
+    mapping(address => uint) public SIGH_Accrued;
+
+    treasuryRateMantissa
+
+    uint256 public treasury_SIGH;
+
+    uint256 public treasury_SIGH_Ratio;
+
+    address public gelatoAddress;
+
 }
