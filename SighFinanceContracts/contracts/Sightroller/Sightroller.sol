@@ -1471,7 +1471,7 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
      * @param supplier The address of the supplier to distribute SIGH to
      */
     function distributeSupplier_SIGH(address cToken, address supplier, bool distributeAll) internal {
-        GsighMarketState storage supplyState = sighMarketSupplyState[cToken];
+        SIGHMarketState storage supplyState = sighMarketSupplyState[cToken];
         Double memory supplyIndex = Double({mantissa: supplyState.index});
         Double memory supplierIndex = Double({mantissa: SIGHSupplierIndex[cToken][supplier]});
         SIGHSupplierIndex[cToken][supplier] = supplyIndex.mantissa;
@@ -1495,7 +1495,7 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
      * @param borrower The address of the borrower to distribute SIGH to
      */
     function distributeBorrower_SIGH(address cToken, address borrower, Exp memory marketBorrowIndex, bool distributeAll) internal {
-        GsighMarketState storage borrowState = sighMarketBorrowState[cToken];
+        SIGHMarketState storage borrowState = sighMarketBorrowState[cToken];
         Double memory borrowIndex = Double({mantissa: borrowState.index});
         Double memory borrowerIndex = Double({mantissa: SIGHBorrowerIndex[cToken][borrower]});
         SIGHBorrowerIndex[cToken][borrower] = borrowIndex.mantissa;
@@ -1534,7 +1534,47 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
 
 
 
+    /**
+     * @notice Accrue SIGH to the market by updating the supply index
+     * @param cToken The market whose supply index to update
+     */
+    function updateSIGHSupplyIndex(address cToken) internal {
+        SIGHMarketState storage supplyState = sighMarketSupplyState[cToken];
+        uint supplySpeed = SIGH_Speeds[cToken];
+        uint blockNumber = getBlockNumber();
+        uint deltaBlocks = sub_(blockNumber, uint(supplyState.block));
+        if (deltaBlocks > 0 && supplySpeed > 0) {
+            uint supplyTokens = CToken(cToken).totalSupply();
+            uint sigh_Accrued = mul_(deltaBlocks, supplySpeed);
+            Double memory ratio = supplyTokens > 0 ? fraction(sigh_Accrued, supplyTokens) : Double({mantissa: 0});
+            Double memory index = add_(Double({mantissa: supplyState.index}), ratio);
+            sighMarketSupplyState[cToken] = SIGHMarketState({ index: safe224(index.mantissa, "new index exceeds 224 bits"),  recordedPriceSnapshot: safe256(supplyState.recordedPriceSnapshot, "new recordedPriceSnapshot exceeds 256 bits"),   block: safe32(blockNumber, "block number exceeds 32 bits")});
+        } 
+        else if (deltaBlocks > 0) {
+            supplyState.block = safe32(blockNumber, "block number exceeds 32 bits");
+        }
+    }
 
+    /**
+     * @notice Accrue SIGH to the market by updating the borrow index
+     * @param cToken The market whose borrow index to update
+     */
+    function updateSIGHBorrowIndex(address cToken, Exp memory marketBorrowIndex) internal {
+        SIGHMarketState storage borrowState = sighMarketBorrowState[cToken];
+        uint borrowSpeed = SIGH_Speeds[cToken];
+        uint blockNumber = getBlockNumber();
+        uint deltaBlocks = sub_(blockNumber, uint(borrowState.block));
+        if (deltaBlocks > 0 && borrowSpeed > 0) {
+            uint sigh_Accrued = mul_(deltaBlocks, borrowSpeed);
+            uint borrowAmount = div_(CToken(cToken).totalBorrows(), marketBorrowIndex);
+            Double memory ratio = borrowAmount > 0 ? fraction(sigh_Accrued, borrowAmount) : Double({mantissa: 0});
+            Double memory index = add_(Double({mantissa: borrowState.index}), ratio);
+            sighMarketBorrowState[cToken] = SIGHMarketState({  index: safe224(index.mantissa, "new index exceeds 224 bits"),  recordedPriceSnapshot: safe256(borrowState.recordedPriceSnapshot, "new recordedPriceSnapshot exceeds 256 bits"),    block: safe32(blockNumber, "block number exceeds 32 bits") });
+        } 
+        else if (deltaBlocks > 0) {
+            borrowState.block = safe32(blockNumber, "block number exceeds 32 bits");
+        }
+    }
 
 
 
