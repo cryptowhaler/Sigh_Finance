@@ -97,7 +97,7 @@ contract SighReservoir {
     return address(target);
   }
 
-  function () external payable {}
+  // function () external payable {}
 
   /* Internal helper functions for safe math */
 

@@ -64,25 +64,25 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"contract CEther\",\"name\":\"cEther_\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"constant\":true,\"inputs\":[],\"name\":\"cEther\",\"outputs\":[{\"internalType\":\"contract CEther\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"borrower\",\"type\":\"address\"}],\"name\":\"repayBehalf\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"borrower\",\"type\":\"address\"},{\"internalType\":\"contract CEther\",\"name\":\"cEther_\",\"type\":\"address\"}],\"name\":\"repayBehalfExplicit\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"SighFinance\",\"methods\":{\"repayBehalf(address)\":{\"details\":\"The provided Ether is applied towards the borrow balance, any excess is refunded\",\"params\":{\"borrower\":\"The address of the borrower account to repay on behalf of\"}},\"repayBehalfExplicit(address,address)\":{\"details\":\"The provided Ether is applied towards the borrow balance, any excess is refunded\",\"params\":{\"borrower\":\"The address of the borrower account to repay on behalf of\",\"cEther_\":\"The address of the cEther contract to repay in\"}}},\"title\":\"SighFinance's Maximillion Contract\"},\"userdoc\":{\"methods\":{\"constructor\":\"Construct a Maximillion to repay max in a CEther market\",\"repayBehalf(address)\":{\"notice\":\"msg.sender sends Ether to repay an account's borrow in the cEther market\"},\"repayBehalfExplicit(address,address)\":{\"notice\":\"msg.sender sends Ether to repay an account's borrow in a cEther market\"}}}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/Maximillion.sol\":\"Maximillion\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ErrorReporter.sol\":{\"keccak256\":\"0xecacd5920a722868d343c2577f569636d452d99e5002a29034ccac3dc2359d7f\",\"urls\":[\"bzz-raw://7f8b7c017754046178211d452c6d96fdf6e026fa76d00afb001afb4c1ca81953\",\"dweb:/ipfs/QmSG3rLMdyYTMq7C7ZsPX53B23zGZRB9ifAX3S3qCnpG5p\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/InterestRateModels/InterestRateModel.sol\":{\"keccak256\":\"0xb516fd3b78e7f3f4d1631b8dd50d167da4d73ca870cd09d67efcffdea2ed3b05\",\"urls\":[\"bzz-raw://3427725de8a149882669f60a3fbf179f4ef9ee97723ca47e91f39b8818b548d3\",\"dweb:/ipfs/QmWimP2MCejqdsER2SNBmQSinAM4mtjUHY14KwBtS8rE2Q\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Math/CarefulMath.sol\":{\"keccak256\":\"0x0647348f27e41d22555d99eebd217dee02a4d737df6accd7cce5347a7487c7de\",\"urls\":[\"bzz-raw://08882d26c11a6d240949a5afba79a74694a8b651093c05c5ae4cc359a0181c22\",\"dweb:/ipfs/QmVXb1tDswuhMRNuDLajzohdkvx2kBmqu1Rxn1BAKUfhkV\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Math/Exponential.sol\":{\"keccak256\":\"0xaa59feeb5759614eb9a9af023f843e5e638f4cff7df0060c2f8b2b804d13db7f\",\"urls\":[\"bzz-raw://dca42502fe6f9edc87a73491663c985181c91921ee2db53dc72bd05ab939d681\",\"dweb:/ipfs/QmbiGFW5x1WA6V9nzQrs868cHzcz1W5X9GiMPKK4TFR7qp\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Sightroller/SightrollerInterface.sol\":{\"keccak256\":\"0xc32a0616c6a3bc2a252a8a42be7b159c6c15da7fec23ed8c62f8dd83ab965c63\",\"urls\":[\"bzz-raw://a4c6e06f1e34b0a248253ff9eb50503d75d8a98dfb0d137d6d37c8d4075a8f19\",\"dweb:/ipfs/QmaAgB56NU8fZmiTjxZHj7xTD28vURjaaiZJEj8TidU5Yd\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CEther.sol\":{\"keccak256\":\"0x64ed29784a59bad065715f9c0065f90a1781149882a3ebaa21516a09c54ee1a5\",\"urls\":[\"bzz-raw://9a018f464c0dfb48203d0d13beced076c16e6f24a823fda4c35df32ebabe83aa\",\"dweb:/ipfs/QmbwCCCfxzBsBkF2zUS2ftv8sFgmFQvCHBsmScCWhmrmpG\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CToken.sol\":{\"keccak256\":\"0xfb9ff80b893b2706c256e5a30224d6177daba81222c2f7f6417029f5569e52fd\",\"urls\":[\"bzz-raw://7aadfd9d6f0cd575565d8e255eae51bdcbb76ac9769fdf61a81d9bdda48a820b\",\"dweb:/ipfs/QmXuPYknit7BmWQt81SFo1ykEgeQhenU1XBM4F5cmtnMw2\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CTokenInterfaces.sol\":{\"keccak256\":\"0x2ad76eb92f25980603fe536e7af20c5d7e8aa21d2ce72147aac1ffa6f2d468e9\",\"urls\":[\"bzz-raw://109809645b7dcac33fd3f2ebbb78da09497c871b903b18ba783f60a0e239e8df\",\"dweb:/ipfs/QmXBEvtSkTqnbu9vg7WeYq8JLv8fQ86g7wMALVmLCNkt2z\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/Maximillion.sol\":{\"keccak256\":\"0x8015c61d6cf135b63876f8a80857e6b7bf9a268d33b1898c63ff1c58cda90fdd\",\"urls\":[\"bzz-raw://f190502413a2a7e2b97f3418783719d3fc705a91a36fa620cb77def51bc6a9ad\",\"dweb:/ipfs/QmZk33JvtTveMJ3gtCuu8EkzsVKb38T6eznJ9QBDxCEgph\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin/EIP20Interface.sol\":{\"keccak256\":\"0xfd8ed2eac6d0b4d9ee6b32628ba68bae17544b66f190a5f7ce0c6ad024579dc8\",\"urls\":[\"bzz-raw://701be308137fe36f221f1d7c815247a272638df40917e7d1456b3b16e8402897\",\"dweb:/ipfs/QmPDkPoKiWXMjwpGa65JHBjo5NH8AA3q1nMhsewfUZHjpx\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin/EIP20NonStandardInterface.sol\":{\"keccak256\":\"0x9719f12e4b80b51147ac195553a198cf8b0c516e7e4d04fc324a23ed15cbafb2\",\"urls\":[\"bzz-raw://50c3ba49b80106c88b0171390aa4127edc86f7b29607abe3dc6d08eaefebf837\",\"dweb:/ipfs/QmP6AHNmFdwYwWUeHnhYi3drCQy4dpnnqUbkMeU3oAtokj\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b506040516103363803806103368339818101604052602081101561003357600080fd5b5051600080546001600160a01b039092166001600160a01b03199092169190911790556102d1806100656000396000f3fe6080604052600436106100345760003560e01c806319b68c0014610039578063367b7f051461006a5780639f35c3d51461009a575b600080fd5b34801561004557600080fd5b5061004e6100c0565b604080516001600160a01b039092168252519081900360200190f35b6100986004803603604081101561008057600080fd5b506001600160a01b03813581169160200135166100cf565b005b610098600480360360208110156100b057600080fd5b50356001600160a01b0316610282565b6000546001600160a01b031681565b60003490506000826001600160a01b03166317bfdfbc856040518263ffffffff1660e01b815260040180826001600160a01b03166001600160a01b03168152602001915050602060405180830381600087803b15801561012e57600080fd5b505af1158015610142573d6000803e3d6000fd5b505050506040513d602081101561015857600080fd5b505190508082111561020a57826001600160a01b031663e597461982866040518363ffffffff1660e01b815260040180826001600160a01b03166001600160a01b031681526020019150506000604051808303818588803b1580156101bc57600080fd5b505af11580156101d0573d6000803e3d6000fd5b505060405133935084860380156108fc02935091506000818181858888f19350505050158015610204573d6000803e3d6000fd5b5061027c565b826001600160a01b031663e597461983866040518363ffffffff1660e01b815260040180826001600160a01b03166001600160a01b031681526020019150506000604051808303818588803b15801561026257600080fd5b505af1158015610276573d6000803e3d6000fd5b50505050505b50505050565b6000546102999082906001600160a01b03166100cf565b5056fea265627a7a72315820d5dd231d8f70a442a59728da263920c38e2cc56941eaa1e88b49d51098a897c564736f6c63430005100032",
-  "deployedBytecode": "0x6080604052600436106100345760003560e01c806319b68c0014610039578063367b7f051461006a5780639f35c3d51461009a575b600080fd5b34801561004557600080fd5b5061004e6100c0565b604080516001600160a01b039092168252519081900360200190f35b6100986004803603604081101561008057600080fd5b506001600160a01b03813581169160200135166100cf565b005b610098600480360360208110156100b057600080fd5b50356001600160a01b0316610282565b6000546001600160a01b031681565b60003490506000826001600160a01b03166317bfdfbc856040518263ffffffff1660e01b815260040180826001600160a01b03166001600160a01b03168152602001915050602060405180830381600087803b15801561012e57600080fd5b505af1158015610142573d6000803e3d6000fd5b505050506040513d602081101561015857600080fd5b505190508082111561020a57826001600160a01b031663e597461982866040518363ffffffff1660e01b815260040180826001600160a01b03166001600160a01b031681526020019150506000604051808303818588803b1580156101bc57600080fd5b505af11580156101d0573d6000803e3d6000fd5b505060405133935084860380156108fc02935091506000818181858888f19350505050158015610204573d6000803e3d6000fd5b5061027c565b826001600160a01b031663e597461983866040518363ffffffff1660e01b815260040180826001600160a01b03166001600160a01b031681526020019150506000604051808303818588803b15801561026257600080fd5b505af1158015610276573d6000803e3d6000fd5b50505050505b50505050565b6000546102999082906001600160a01b03166100cf565b5056fea265627a7a72315820d5dd231d8f70a442a59728da263920c38e2cc56941eaa1e88b49d51098a897c564736f6c63430005100032",
-  "sourceMap": "126:1449:30:-;;;336:68;8:9:-1;5:2;;;30:1;27;20:12;5:2;336:68:30;;;;;;;;;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;336:68:30;381:6;:16;;-1:-1:-1;;;;;381:16:30;;;-1:-1:-1;;;;;;381:16:30;;;;;;;;;126:1449;;;;;;",
-  "deployedSourceMap": "126:1449:30:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;222:20;;8:9:-1;5:2;;;30:1;27;20:12;5:2;222:20:30;;;:::i;:::-;;;;-1:-1:-1;;;;;222:20:30;;;;;;;;;;;;;;1147:426;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;;;;;;1147:426:30;;;;;;;;;;:::i;:::-;;688:108;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;688:108:30;-1:-1:-1;;;;;688:108:30;;:::i;222:20::-;;;-1:-1:-1;;;;;222:20:30;;:::o;1147:426::-;1235:13;1251:9;1235:25;;1270:12;1285:7;-1:-1:-1;;;;;1285:28:30;;1314:8;1285:38;;;;;;;;;;;;;-1:-1:-1;;;;;1285:38:30;-1:-1:-1;;;;;1285:38:30;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1285:38:30;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1285:38:30;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;1285:38:30;;-1:-1:-1;1337:18:30;;;1333:234;;;1371:7;-1:-1:-1;;;;;1371:25:30;;1403:7;1412:8;1371:50;;;;;;;;;;;;;-1:-1:-1;;;;;1371:50:30;-1:-1:-1;;;;;1371:50:30;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1371:50:30;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;-1:-1;;1435:39:30;;:10;;-1:-1:-1;1455:18:30;;;1435:39;;;;;-1:-1:-1;1455:18:30;-1:-1:-1;1435:39:30;;;;1455:18;1435:10;:39;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1435:39:30;1333:234;;;1505:7;-1:-1:-1;;;;;1505:25:30;;1537:8;1547;1505:51;;;;;;;;;;;;;-1:-1:-1;;;;;1505:51:30;-1:-1:-1;;;;;1505:51:30;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1505:51:30;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1505:51:30;;;;;1333:234;1147:426;;;;:::o;688:108::-;782:6;;752:37;;772:8;;-1:-1:-1;;;;;782:6:30;752:19;:37::i;:::-;688:108;:::o",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"contract CEther\",\"name\":\"cEther_\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"constant\":true,\"inputs\":[],\"name\":\"cEther\",\"outputs\":[{\"internalType\":\"contract CEther\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"borrower\",\"type\":\"address\"}],\"name\":\"repayBehalf\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"borrower\",\"type\":\"address\"},{\"internalType\":\"contract CEther\",\"name\":\"cEther_\",\"type\":\"address\"}],\"name\":\"repayBehalfExplicit\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"SighFinance\",\"methods\":{\"repayBehalf(address)\":{\"details\":\"The provided Ether is applied towards the borrow balance, any excess is refunded\",\"params\":{\"borrower\":\"The address of the borrower account to repay on behalf of\"}},\"repayBehalfExplicit(address,address)\":{\"details\":\"The provided Ether is applied towards the borrow balance, any excess is refunded\",\"params\":{\"borrower\":\"The address of the borrower account to repay on behalf of\",\"cEther_\":\"The address of the cEther contract to repay in\"}}},\"title\":\"SighFinance's Maximillion Contract\"},\"userdoc\":{\"methods\":{\"constructor\":\"Construct a Maximillion to repay max in a CEther market\",\"repayBehalf(address)\":{\"notice\":\"msg.sender sends Ether to repay an account's borrow in the cEther market\"},\"repayBehalfExplicit(address,address)\":{\"notice\":\"msg.sender sends Ether to repay an account's borrow in a cEther market\"}}}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/Maximillion.sol\":\"Maximillion\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ErrorReporter.sol\":{\"keccak256\":\"0xecacd5920a722868d343c2577f569636d452d99e5002a29034ccac3dc2359d7f\",\"urls\":[\"bzz-raw://7f8b7c017754046178211d452c6d96fdf6e026fa76d00afb001afb4c1ca81953\",\"dweb:/ipfs/QmSG3rLMdyYTMq7C7ZsPX53B23zGZRB9ifAX3S3qCnpG5p\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/InterestRateModels/InterestRateModel.sol\":{\"keccak256\":\"0xb516fd3b78e7f3f4d1631b8dd50d167da4d73ca870cd09d67efcffdea2ed3b05\",\"urls\":[\"bzz-raw://3427725de8a149882669f60a3fbf179f4ef9ee97723ca47e91f39b8818b548d3\",\"dweb:/ipfs/QmWimP2MCejqdsER2SNBmQSinAM4mtjUHY14KwBtS8rE2Q\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Math/CarefulMath.sol\":{\"keccak256\":\"0x0647348f27e41d22555d99eebd217dee02a4d737df6accd7cce5347a7487c7de\",\"urls\":[\"bzz-raw://08882d26c11a6d240949a5afba79a74694a8b651093c05c5ae4cc359a0181c22\",\"dweb:/ipfs/QmVXb1tDswuhMRNuDLajzohdkvx2kBmqu1Rxn1BAKUfhkV\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Math/Exponential.sol\":{\"keccak256\":\"0xde2e32d9268c376a74ad4cc82e11dfed28ce4fbcaff72e75e03cf59afafd2971\",\"urls\":[\"bzz-raw://8f8b1bdbee4a596c98066597d143399f386ee5314ba5d03aab0d7659a5d0d241\",\"dweb:/ipfs/QmaYfxmrbPVqVkrUZyhkcrxrCaA3i3aoQ7iQuDLbK3LEVo\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Sightroller/SightrollerInterface.sol\":{\"keccak256\":\"0xc32a0616c6a3bc2a252a8a42be7b159c6c15da7fec23ed8c62f8dd83ab965c63\",\"urls\":[\"bzz-raw://a4c6e06f1e34b0a248253ff9eb50503d75d8a98dfb0d137d6d37c8d4075a8f19\",\"dweb:/ipfs/QmaAgB56NU8fZmiTjxZHj7xTD28vURjaaiZJEj8TidU5Yd\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CEther.sol\":{\"keccak256\":\"0x64ed29784a59bad065715f9c0065f90a1781149882a3ebaa21516a09c54ee1a5\",\"urls\":[\"bzz-raw://9a018f464c0dfb48203d0d13beced076c16e6f24a823fda4c35df32ebabe83aa\",\"dweb:/ipfs/QmbwCCCfxzBsBkF2zUS2ftv8sFgmFQvCHBsmScCWhmrmpG\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CToken.sol\":{\"keccak256\":\"0xfb9ff80b893b2706c256e5a30224d6177daba81222c2f7f6417029f5569e52fd\",\"urls\":[\"bzz-raw://7aadfd9d6f0cd575565d8e255eae51bdcbb76ac9769fdf61a81d9bdda48a820b\",\"dweb:/ipfs/QmXuPYknit7BmWQt81SFo1ykEgeQhenU1XBM4F5cmtnMw2\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CTokenInterfaces.sol\":{\"keccak256\":\"0x2ad76eb92f25980603fe536e7af20c5d7e8aa21d2ce72147aac1ffa6f2d468e9\",\"urls\":[\"bzz-raw://109809645b7dcac33fd3f2ebbb78da09497c871b903b18ba783f60a0e239e8df\",\"dweb:/ipfs/QmXBEvtSkTqnbu9vg7WeYq8JLv8fQ86g7wMALVmLCNkt2z\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/Maximillion.sol\":{\"keccak256\":\"0x8015c61d6cf135b63876f8a80857e6b7bf9a268d33b1898c63ff1c58cda90fdd\",\"urls\":[\"bzz-raw://f190502413a2a7e2b97f3418783719d3fc705a91a36fa620cb77def51bc6a9ad\",\"dweb:/ipfs/QmZk33JvtTveMJ3gtCuu8EkzsVKb38T6eznJ9QBDxCEgph\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin/EIP20Interface.sol\":{\"keccak256\":\"0xfd8ed2eac6d0b4d9ee6b32628ba68bae17544b66f190a5f7ce0c6ad024579dc8\",\"urls\":[\"bzz-raw://701be308137fe36f221f1d7c815247a272638df40917e7d1456b3b16e8402897\",\"dweb:/ipfs/QmPDkPoKiWXMjwpGa65JHBjo5NH8AA3q1nMhsewfUZHjpx\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin/EIP20NonStandardInterface.sol\":{\"keccak256\":\"0x9719f12e4b80b51147ac195553a198cf8b0c516e7e4d04fc324a23ed15cbafb2\",\"urls\":[\"bzz-raw://50c3ba49b80106c88b0171390aa4127edc86f7b29607abe3dc6d08eaefebf837\",\"dweb:/ipfs/QmP6AHNmFdwYwWUeHnhYi3drCQy4dpnnqUbkMeU3oAtokj\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b506040516103363803806103368339818101604052602081101561003357600080fd5b5051600080546001600160a01b039092166001600160a01b03199092169190911790556102d1806100656000396000f3fe6080604052600436106100345760003560e01c806319b68c0014610039578063367b7f051461006a5780639f35c3d51461009a575b600080fd5b34801561004557600080fd5b5061004e6100c0565b604080516001600160a01b039092168252519081900360200190f35b6100986004803603604081101561008057600080fd5b506001600160a01b03813581169160200135166100cf565b005b610098600480360360208110156100b057600080fd5b50356001600160a01b0316610282565b6000546001600160a01b031681565b60003490506000826001600160a01b03166317bfdfbc856040518263ffffffff1660e01b815260040180826001600160a01b03166001600160a01b03168152602001915050602060405180830381600087803b15801561012e57600080fd5b505af1158015610142573d6000803e3d6000fd5b505050506040513d602081101561015857600080fd5b505190508082111561020a57826001600160a01b031663e597461982866040518363ffffffff1660e01b815260040180826001600160a01b03166001600160a01b031681526020019150506000604051808303818588803b1580156101bc57600080fd5b505af11580156101d0573d6000803e3d6000fd5b505060405133935084860380156108fc02935091506000818181858888f19350505050158015610204573d6000803e3d6000fd5b5061027c565b826001600160a01b031663e597461983866040518363ffffffff1660e01b815260040180826001600160a01b03166001600160a01b031681526020019150506000604051808303818588803b15801561026257600080fd5b505af1158015610276573d6000803e3d6000fd5b50505050505b50505050565b6000546102999082906001600160a01b03166100cf565b5056fea265627a7a723158204d37ec3d099bd6c4a1b6b0415a739cfec6b8d3d199e418c029892e9177e13f7b64736f6c63430005100032",
+  "deployedBytecode": "0x6080604052600436106100345760003560e01c806319b68c0014610039578063367b7f051461006a5780639f35c3d51461009a575b600080fd5b34801561004557600080fd5b5061004e6100c0565b604080516001600160a01b039092168252519081900360200190f35b6100986004803603604081101561008057600080fd5b506001600160a01b03813581169160200135166100cf565b005b610098600480360360208110156100b057600080fd5b50356001600160a01b0316610282565b6000546001600160a01b031681565b60003490506000826001600160a01b03166317bfdfbc856040518263ffffffff1660e01b815260040180826001600160a01b03166001600160a01b03168152602001915050602060405180830381600087803b15801561012e57600080fd5b505af1158015610142573d6000803e3d6000fd5b505050506040513d602081101561015857600080fd5b505190508082111561020a57826001600160a01b031663e597461982866040518363ffffffff1660e01b815260040180826001600160a01b03166001600160a01b031681526020019150506000604051808303818588803b1580156101bc57600080fd5b505af11580156101d0573d6000803e3d6000fd5b505060405133935084860380156108fc02935091506000818181858888f19350505050158015610204573d6000803e3d6000fd5b5061027c565b826001600160a01b031663e597461983866040518363ffffffff1660e01b815260040180826001600160a01b03166001600160a01b031681526020019150506000604051808303818588803b15801561026257600080fd5b505af1158015610276573d6000803e3d6000fd5b50505050505b50505050565b6000546102999082906001600160a01b03166100cf565b5056fea265627a7a723158204d37ec3d099bd6c4a1b6b0415a739cfec6b8d3d199e418c029892e9177e13f7b64736f6c63430005100032",
+  "sourceMap": "126:1449:31:-;;;336:68;8:9:-1;5:2;;;30:1;27;20:12;5:2;336:68:31;;;;;;;;;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;336:68:31;381:6;:16;;-1:-1:-1;;;;;381:16:31;;;-1:-1:-1;;;;;;381:16:31;;;;;;;;;126:1449;;;;;;",
+  "deployedSourceMap": "126:1449:31:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;222:20;;8:9:-1;5:2;;;30:1;27;20:12;5:2;222:20:31;;;:::i;:::-;;;;-1:-1:-1;;;;;222:20:31;;;;;;;;;;;;;;1147:426;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;;;;;;1147:426:31;;;;;;;;;;:::i;:::-;;688:108;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;688:108:31;-1:-1:-1;;;;;688:108:31;;:::i;222:20::-;;;-1:-1:-1;;;;;222:20:31;;:::o;1147:426::-;1235:13;1251:9;1235:25;;1270:12;1285:7;-1:-1:-1;;;;;1285:28:31;;1314:8;1285:38;;;;;;;;;;;;;-1:-1:-1;;;;;1285:38:31;-1:-1:-1;;;;;1285:38:31;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1285:38:31;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1285:38:31;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;1285:38:31;;-1:-1:-1;1337:18:31;;;1333:234;;;1371:7;-1:-1:-1;;;;;1371:25:31;;1403:7;1412:8;1371:50;;;;;;;;;;;;;-1:-1:-1;;;;;1371:50:31;-1:-1:-1;;;;;1371:50:31;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1371:50:31;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;-1:-1;;1435:39:31;;:10;;-1:-1:-1;1455:18:31;;;1435:39;;;;;-1:-1:-1;1455:18:31;-1:-1:-1;1435:39:31;;;;1455:18;1435:10;:39;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1435:39:31;1333:234;;;1505:7;-1:-1:-1;;;;;1505:25:31;;1537:8;1547;1505:51;;;;;;;;;;;;;-1:-1:-1;;;;;1505:51:31;-1:-1:-1;;;;;1505:51:31;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1505:51:31;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1505:51:31;;;;;1333:234;1147:426;;;;:::o;688:108::-;782:6;;752:37;;772:8;;-1:-1:-1;;;;;782:6:31;752:19;:37::i;:::-;688:108;:::o",
   "source": "pragma solidity ^0.5.16;\n\nimport \"./CEther.sol\";\n\n/**\n * @title SighFinance's Maximillion Contract\n * @author SighFinance\n */\ncontract Maximillion {\n    /**\n     * @notice The default cEther market to repay in\n     */\n    CEther public cEther;\n\n    /**\n     * @notice Construct a Maximillion to repay max in a CEther market\n     */\n    constructor(CEther cEther_) public {\n        cEther = cEther_;\n    }\n\n    /**\n     * @notice msg.sender sends Ether to repay an account's borrow in the cEther market\n     * @dev The provided Ether is applied towards the borrow balance, any excess is refunded\n     * @param borrower The address of the borrower account to repay on behalf of\n     */\n    function repayBehalf(address borrower) public payable {\n        repayBehalfExplicit(borrower, cEther);\n    }\n\n    /**\n     * @notice msg.sender sends Ether to repay an account's borrow in a cEther market\n     * @dev The provided Ether is applied towards the borrow balance, any excess is refunded\n     * @param borrower The address of the borrower account to repay on behalf of\n     * @param cEther_ The address of the cEther contract to repay in\n     */\n    function repayBehalfExplicit(address borrower, CEther cEther_) public payable {\n        uint received = msg.value;\n        uint borrows = cEther_.borrowBalanceCurrent(borrower);\n        if (received > borrows) {\n            cEther_.repayBorrowBehalf.value(borrows)(borrower);\n            msg.sender.transfer(received - borrows);\n        } else {\n            cEther_.repayBorrowBehalf.value(received)(borrower);\n        }\n    }\n}\n",
   "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/Maximillion.sol",
   "ast": {
     "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/Maximillion.sol",
     "exportedSymbols": {
       "Maximillion": [
-        18313
+        19410
       ]
     },
-    "id": 18314,
+    "id": 19411,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 18232,
+        "id": 19329,
         "literals": [
           "solidity",
           "^",
@@ -90,16 +90,16 @@
           ".16"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:30"
+        "src": "0:24:31"
       },
       {
         "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CEther.sol",
         "file": "./CEther.sol",
-        "id": 18233,
+        "id": 19330,
         "nodeType": "ImportDirective",
-        "scope": 18314,
-        "sourceUnit": 14269,
-        "src": "26:22:30",
+        "scope": 19411,
+        "sourceUnit": 15366,
+        "src": "26:22:31",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -109,35 +109,35 @@
         "contractKind": "contract",
         "documentation": "@title SighFinance's Maximillion Contract\n@author SighFinance",
         "fullyImplemented": true,
-        "id": 18313,
+        "id": 19410,
         "linearizedBaseContracts": [
-          18313
+          19410
         ],
         "name": "Maximillion",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 18235,
+            "id": 19332,
             "name": "cEther",
             "nodeType": "VariableDeclaration",
-            "scope": 18313,
-            "src": "222:20:30",
+            "scope": 19410,
+            "src": "222:20:31",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_CEther_$14268",
+              "typeIdentifier": "t_contract$_CEther_$15365",
               "typeString": "contract CEther"
             },
             "typeName": {
               "contractScope": null,
-              "id": 18234,
+              "id": 19331,
               "name": "CEther",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 14268,
-              "src": "222:6:30",
+              "referencedDeclaration": 15365,
+              "src": "222:6:31",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_CEther_$14268",
+                "typeIdentifier": "t_contract$_CEther_$15365",
                 "typeString": "contract CEther"
               }
             },
@@ -146,28 +146,28 @@
           },
           {
             "body": {
-              "id": 18244,
+              "id": 19341,
               "nodeType": "Block",
-              "src": "371:33:30",
+              "src": "371:33:31",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 18242,
+                    "id": 19339,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 18240,
+                      "id": 19337,
                       "name": "cEther",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 18235,
-                      "src": "381:6:30",
+                      "referencedDeclaration": 19332,
+                      "src": "381:6:31",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_CEther_$14268",
+                        "typeIdentifier": "t_contract$_CEther_$15365",
                         "typeString": "contract CEther"
                       }
                     },
@@ -175,62 +175,62 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 18241,
+                      "id": 19338,
                       "name": "cEther_",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 18237,
-                      "src": "390:7:30",
+                      "referencedDeclaration": 19334,
+                      "src": "390:7:31",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_CEther_$14268",
+                        "typeIdentifier": "t_contract$_CEther_$15365",
                         "typeString": "contract CEther"
                       }
                     },
-                    "src": "381:16:30",
+                    "src": "381:16:31",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_CEther_$14268",
+                      "typeIdentifier": "t_contract$_CEther_$15365",
                       "typeString": "contract CEther"
                     }
                   },
-                  "id": 18243,
+                  "id": 19340,
                   "nodeType": "ExpressionStatement",
-                  "src": "381:16:30"
+                  "src": "381:16:31"
                 }
               ]
             },
             "documentation": "@notice Construct a Maximillion to repay max in a CEther market",
-            "id": 18245,
+            "id": 19342,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [],
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 18238,
+              "id": 19335,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 18237,
+                  "id": 19334,
                   "name": "cEther_",
                   "nodeType": "VariableDeclaration",
-                  "scope": 18245,
-                  "src": "348:14:30",
+                  "scope": 19342,
+                  "src": "348:14:31",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_CEther_$14268",
+                    "typeIdentifier": "t_contract$_CEther_$15365",
                     "typeString": "contract CEther"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 18236,
+                    "id": 19333,
                     "name": "CEther",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 14268,
-                    "src": "348:6:30",
+                    "referencedDeclaration": 15365,
+                    "src": "348:6:31",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_CEther_$14268",
+                      "typeIdentifier": "t_contract$_CEther_$15365",
                       "typeString": "contract CEther"
                     }
                   },
@@ -238,25 +238,25 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "347:16:30"
+              "src": "347:16:31"
             },
             "returnParameters": {
-              "id": 18239,
+              "id": 19336,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "371:0:30"
+              "src": "371:0:31"
             },
-            "scope": 18313,
-            "src": "336:68:30",
+            "scope": 19410,
+            "src": "336:68:31",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 18255,
+              "id": 19352,
               "nodeType": "Block",
-              "src": "742:54:30",
+              "src": "742:54:31",
               "statements": [
                 {
                   "expression": {
@@ -264,12 +264,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 18251,
+                        "id": 19348,
                         "name": "borrower",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 18247,
-                        "src": "772:8:30",
+                        "referencedDeclaration": 19344,
+                        "src": "772:8:31",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -277,14 +277,14 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 18252,
+                        "id": 19349,
                         "name": "cEther",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 18235,
-                        "src": "782:6:30",
+                        "referencedDeclaration": 19332,
+                        "src": "782:6:31",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_CEther_$14268",
+                          "typeIdentifier": "t_contract$_CEther_$15365",
                           "typeString": "contract CEther"
                         }
                       }
@@ -296,22 +296,22 @@
                           "typeString": "address"
                         },
                         {
-                          "typeIdentifier": "t_contract$_CEther_$14268",
+                          "typeIdentifier": "t_contract$_CEther_$15365",
                           "typeString": "contract CEther"
                         }
                       ],
-                      "id": 18250,
+                      "id": 19347,
                       "name": "repayBehalfExplicit",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 18312,
-                      "src": "752:19:30",
+                      "referencedDeclaration": 19409,
+                      "src": "752:19:31",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_contract$_CEther_$14268_$returns$__$",
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_contract$_CEther_$15365_$returns$__$",
                         "typeString": "function (address,contract CEther)"
                       }
                     },
-                    "id": 18253,
+                    "id": 19350,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -319,36 +319,36 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "752:37:30",
+                    "src": "752:37:31",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 18254,
+                  "id": 19351,
                   "nodeType": "ExpressionStatement",
-                  "src": "752:37:30"
+                  "src": "752:37:31"
                 }
               ]
             },
             "documentation": "@notice msg.sender sends Ether to repay an account's borrow in the cEther market\n@dev The provided Ether is applied towards the borrow balance, any excess is refunded\n@param borrower The address of the borrower account to repay on behalf of",
-            "id": 18256,
+            "id": 19353,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "repayBehalf",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 18248,
+              "id": 19345,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 18247,
+                  "id": 19344,
                   "name": "borrower",
                   "nodeType": "VariableDeclaration",
-                  "scope": 18256,
-                  "src": "709:16:30",
+                  "scope": 19353,
+                  "src": "709:16:31",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -356,10 +356,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 18246,
+                    "id": 19343,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "709:7:30",
+                    "src": "709:7:31",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -370,38 +370,38 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "708:18:30"
+              "src": "708:18:31"
             },
             "returnParameters": {
-              "id": 18249,
+              "id": 19346,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "742:0:30"
+              "src": "742:0:31"
             },
-            "scope": 18313,
-            "src": "688:108:30",
+            "scope": 19410,
+            "src": "688:108:31",
             "stateMutability": "payable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 18311,
+              "id": 19408,
               "nodeType": "Block",
-              "src": "1225:348:30",
+              "src": "1225:348:31",
               "statements": [
                 {
                   "assignments": [
-                    18264
+                    19361
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 18264,
+                      "id": 19361,
                       "name": "received",
                       "nodeType": "VariableDeclaration",
-                      "scope": 18311,
-                      "src": "1235:13:30",
+                      "scope": 19408,
+                      "src": "1235:13:31",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
@@ -409,10 +409,10 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 18263,
+                        "id": 19360,
                         "name": "uint",
                         "nodeType": "ElementaryTypeName",
-                        "src": "1235:4:30",
+                        "src": "1235:4:31",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -422,23 +422,23 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 18267,
+                  "id": 19364,
                   "initialValue": {
                     "argumentTypes": null,
                     "expression": {
                       "argumentTypes": null,
-                      "id": 18265,
+                      "id": 19362,
                       "name": "msg",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 18944,
-                      "src": "1251:3:30",
+                      "referencedDeclaration": 20041,
+                      "src": "1251:3:31",
                       "typeDescriptions": {
                         "typeIdentifier": "t_magic_message",
                         "typeString": "msg"
                       }
                     },
-                    "id": 18266,
+                    "id": 19363,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -446,27 +446,27 @@
                     "memberName": "value",
                     "nodeType": "MemberAccess",
                     "referencedDeclaration": null,
-                    "src": "1251:9:30",
+                    "src": "1251:9:31",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "1235:25:30"
+                  "src": "1235:25:31"
                 },
                 {
                   "assignments": [
-                    18269
+                    19366
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 18269,
+                      "id": 19366,
                       "name": "borrows",
                       "nodeType": "VariableDeclaration",
-                      "scope": 18311,
-                      "src": "1270:12:30",
+                      "scope": 19408,
+                      "src": "1270:12:31",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
@@ -474,10 +474,10 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 18268,
+                        "id": 19365,
                         "name": "uint",
                         "nodeType": "ElementaryTypeName",
-                        "src": "1270:4:30",
+                        "src": "1270:4:31",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -487,18 +487,18 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 18274,
+                  "id": 19371,
                   "initialValue": {
                     "argumentTypes": null,
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 18272,
+                        "id": 19369,
                         "name": "borrower",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 18258,
-                        "src": "1314:8:30",
+                        "referencedDeclaration": 19355,
+                        "src": "1314:8:31",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -514,32 +514,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 18270,
+                        "id": 19367,
                         "name": "cEther_",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 18260,
-                        "src": "1285:7:30",
+                        "referencedDeclaration": 19357,
+                        "src": "1285:7:31",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_CEther_$14268",
+                          "typeIdentifier": "t_contract$_CEther_$15365",
                           "typeString": "contract CEther"
                         }
                       },
-                      "id": 18271,
+                      "id": 19368,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "borrowBalanceCurrent",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 14760,
-                      "src": "1285:28:30",
+                      "referencedDeclaration": 15857,
+                      "src": "1285:28:31",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$_t_uint256_$",
                         "typeString": "function (address) external returns (uint256)"
                       }
                     },
-                    "id": 18273,
+                    "id": 19370,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -547,14 +547,14 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "1285:38:30",
+                    "src": "1285:38:31",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "1270:53:30"
+                  "src": "1270:53:31"
                 },
                 {
                   "condition": {
@@ -563,19 +563,19 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 18277,
+                    "id": 19374,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "id": 18275,
+                      "id": 19372,
                       "name": "received",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 18264,
-                      "src": "1337:8:30",
+                      "referencedDeclaration": 19361,
+                      "src": "1337:8:31",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -585,27 +585,27 @@
                     "operator": ">",
                     "rightExpression": {
                       "argumentTypes": null,
-                      "id": 18276,
+                      "id": 19373,
                       "name": "borrows",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 18269,
-                      "src": "1348:7:30",
+                      "referencedDeclaration": 19366,
+                      "src": "1348:7:31",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "1337:18:30",
+                    "src": "1337:18:31",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
                   "falseBody": {
-                    "id": 18309,
+                    "id": 19406,
                     "nodeType": "Block",
-                    "src": "1491:76:30",
+                    "src": "1491:76:31",
                     "statements": [
                       {
                         "expression": {
@@ -613,12 +613,12 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "id": 18306,
+                              "id": 19403,
                               "name": "borrower",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 18258,
-                              "src": "1547:8:30",
+                              "referencedDeclaration": 19355,
+                              "src": "1547:8:31",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_address",
                                 "typeString": "address"
@@ -635,12 +635,12 @@
                             "arguments": [
                               {
                                 "argumentTypes": null,
-                                "id": 18304,
+                                "id": 19401,
                                 "name": "received",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 18264,
-                                "src": "1537:8:30",
+                                "referencedDeclaration": 19361,
+                                "src": "1537:8:31",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_uint256",
                                   "typeString": "uint256"
@@ -658,32 +658,32 @@
                                 "argumentTypes": null,
                                 "expression": {
                                   "argumentTypes": null,
-                                  "id": 18299,
+                                  "id": 19396,
                                   "name": "cEther_",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 18260,
-                                  "src": "1505:7:30",
+                                  "referencedDeclaration": 19357,
+                                  "src": "1505:7:31",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_contract$_CEther_$14268",
+                                    "typeIdentifier": "t_contract$_CEther_$15365",
                                     "typeString": "contract CEther"
                                   }
                                 },
-                                "id": 18302,
+                                "id": 19399,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "memberName": "repayBorrowBehalf",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 14020,
-                                "src": "1505:25:30",
+                                "referencedDeclaration": 15117,
+                                "src": "1505:25:31",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_external_payable$_t_address_$returns$__$",
                                   "typeString": "function (address) payable external"
                                 }
                               },
-                              "id": 18303,
+                              "id": 19400,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -691,13 +691,13 @@
                               "memberName": "value",
                               "nodeType": "MemberAccess",
                               "referencedDeclaration": null,
-                              "src": "1505:31:30",
+                              "src": "1505:31:31",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_setvalue_pure$_t_uint256_$returns$_t_function_external_payable$_t_address_$returns$__$value_$",
                                 "typeString": "function (uint256) pure returns (function (address) payable external)"
                               }
                             },
-                            "id": 18305,
+                            "id": 19402,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -705,13 +705,13 @@
                             "lValueRequested": false,
                             "names": [],
                             "nodeType": "FunctionCall",
-                            "src": "1505:41:30",
+                            "src": "1505:41:31",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_payable$_t_address_$returns$__$value",
                               "typeString": "function (address) payable external"
                             }
                           },
-                          "id": 18307,
+                          "id": 19404,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -719,25 +719,25 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "1505:51:30",
+                          "src": "1505:51:31",
                           "typeDescriptions": {
                             "typeIdentifier": "t_tuple$__$",
                             "typeString": "tuple()"
                           }
                         },
-                        "id": 18308,
+                        "id": 19405,
                         "nodeType": "ExpressionStatement",
-                        "src": "1505:51:30"
+                        "src": "1505:51:31"
                       }
                     ]
                   },
-                  "id": 18310,
+                  "id": 19407,
                   "nodeType": "IfStatement",
-                  "src": "1333:234:30",
+                  "src": "1333:234:31",
                   "trueBody": {
-                    "id": 18298,
+                    "id": 19395,
                     "nodeType": "Block",
-                    "src": "1357:128:30",
+                    "src": "1357:128:31",
                     "statements": [
                       {
                         "expression": {
@@ -745,12 +745,12 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "id": 18285,
+                              "id": 19382,
                               "name": "borrower",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 18258,
-                              "src": "1412:8:30",
+                              "referencedDeclaration": 19355,
+                              "src": "1412:8:31",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_address",
                                 "typeString": "address"
@@ -767,12 +767,12 @@
                             "arguments": [
                               {
                                 "argumentTypes": null,
-                                "id": 18283,
+                                "id": 19380,
                                 "name": "borrows",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 18269,
-                                "src": "1403:7:30",
+                                "referencedDeclaration": 19366,
+                                "src": "1403:7:31",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_uint256",
                                   "typeString": "uint256"
@@ -790,32 +790,32 @@
                                 "argumentTypes": null,
                                 "expression": {
                                   "argumentTypes": null,
-                                  "id": 18278,
+                                  "id": 19375,
                                   "name": "cEther_",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 18260,
-                                  "src": "1371:7:30",
+                                  "referencedDeclaration": 19357,
+                                  "src": "1371:7:31",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_contract$_CEther_$14268",
+                                    "typeIdentifier": "t_contract$_CEther_$15365",
                                     "typeString": "contract CEther"
                                   }
                                 },
-                                "id": 18281,
+                                "id": 19378,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "memberName": "repayBorrowBehalf",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 14020,
-                                "src": "1371:25:30",
+                                "referencedDeclaration": 15117,
+                                "src": "1371:25:31",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_external_payable$_t_address_$returns$__$",
                                   "typeString": "function (address) payable external"
                                 }
                               },
-                              "id": 18282,
+                              "id": 19379,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -823,13 +823,13 @@
                               "memberName": "value",
                               "nodeType": "MemberAccess",
                               "referencedDeclaration": null,
-                              "src": "1371:31:30",
+                              "src": "1371:31:31",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_setvalue_pure$_t_uint256_$returns$_t_function_external_payable$_t_address_$returns$__$value_$",
                                 "typeString": "function (uint256) pure returns (function (address) payable external)"
                               }
                             },
-                            "id": 18284,
+                            "id": 19381,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -837,13 +837,13 @@
                             "lValueRequested": false,
                             "names": [],
                             "nodeType": "FunctionCall",
-                            "src": "1371:40:30",
+                            "src": "1371:40:31",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_payable$_t_address_$returns$__$value",
                               "typeString": "function (address) payable external"
                             }
                           },
-                          "id": 18286,
+                          "id": 19383,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -851,15 +851,15 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "1371:50:30",
+                          "src": "1371:50:31",
                           "typeDescriptions": {
                             "typeIdentifier": "t_tuple$__$",
                             "typeString": "tuple()"
                           }
                         },
-                        "id": 18287,
+                        "id": 19384,
                         "nodeType": "ExpressionStatement",
-                        "src": "1371:50:30"
+                        "src": "1371:50:31"
                       },
                       {
                         "expression": {
@@ -871,19 +871,19 @@
                                 "typeIdentifier": "t_uint256",
                                 "typeString": "uint256"
                               },
-                              "id": 18295,
+                              "id": 19392,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
                               "lValueRequested": false,
                               "leftExpression": {
                                 "argumentTypes": null,
-                                "id": 18293,
+                                "id": 19390,
                                 "name": "received",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 18264,
-                                "src": "1455:8:30",
+                                "referencedDeclaration": 19361,
+                                "src": "1455:8:31",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_uint256",
                                   "typeString": "uint256"
@@ -893,18 +893,18 @@
                               "operator": "-",
                               "rightExpression": {
                                 "argumentTypes": null,
-                                "id": 18294,
+                                "id": 19391,
                                 "name": "borrows",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 18269,
-                                "src": "1466:7:30",
+                                "referencedDeclaration": 19366,
+                                "src": "1466:7:31",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_uint256",
                                   "typeString": "uint256"
                                 }
                               },
-                              "src": "1455:18:30",
+                              "src": "1455:18:31",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_uint256",
                                 "typeString": "uint256"
@@ -922,18 +922,18 @@
                               "argumentTypes": null,
                               "expression": {
                                 "argumentTypes": null,
-                                "id": 18288,
+                                "id": 19385,
                                 "name": "msg",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 18944,
-                                "src": "1435:3:30",
+                                "referencedDeclaration": 20041,
+                                "src": "1435:3:31",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_magic_message",
                                   "typeString": "msg"
                                 }
                               },
-                              "id": 18291,
+                              "id": 19388,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -941,13 +941,13 @@
                               "memberName": "sender",
                               "nodeType": "MemberAccess",
                               "referencedDeclaration": null,
-                              "src": "1435:10:30",
+                              "src": "1435:10:31",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_address_payable",
                                 "typeString": "address payable"
                               }
                             },
-                            "id": 18292,
+                            "id": 19389,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -955,13 +955,13 @@
                             "memberName": "transfer",
                             "nodeType": "MemberAccess",
                             "referencedDeclaration": null,
-                            "src": "1435:19:30",
+                            "src": "1435:19:31",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_transfer_nonpayable$_t_uint256_$returns$__$",
                               "typeString": "function (uint256)"
                             }
                           },
-                          "id": 18296,
+                          "id": 19393,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -969,15 +969,15 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "1435:39:30",
+                          "src": "1435:39:31",
                           "typeDescriptions": {
                             "typeIdentifier": "t_tuple$__$",
                             "typeString": "tuple()"
                           }
                         },
-                        "id": 18297,
+                        "id": 19394,
                         "nodeType": "ExpressionStatement",
-                        "src": "1435:39:30"
+                        "src": "1435:39:31"
                       }
                     ]
                   }
@@ -985,23 +985,23 @@
               ]
             },
             "documentation": "@notice msg.sender sends Ether to repay an account's borrow in a cEther market\n@dev The provided Ether is applied towards the borrow balance, any excess is refunded\n@param borrower The address of the borrower account to repay on behalf of\n@param cEther_ The address of the cEther contract to repay in",
-            "id": 18312,
+            "id": 19409,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "repayBehalfExplicit",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 18261,
+              "id": 19358,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 18258,
+                  "id": 19355,
                   "name": "borrower",
                   "nodeType": "VariableDeclaration",
-                  "scope": 18312,
-                  "src": "1176:16:30",
+                  "scope": 19409,
+                  "src": "1176:16:31",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1009,10 +1009,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 18257,
+                    "id": 19354,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1176:7:30",
+                    "src": "1176:7:31",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1024,26 +1024,26 @@
                 },
                 {
                   "constant": false,
-                  "id": 18260,
+                  "id": 19357,
                   "name": "cEther_",
                   "nodeType": "VariableDeclaration",
-                  "scope": 18312,
-                  "src": "1194:14:30",
+                  "scope": 19409,
+                  "src": "1194:14:31",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_CEther_$14268",
+                    "typeIdentifier": "t_contract$_CEther_$15365",
                     "typeString": "contract CEther"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 18259,
+                    "id": 19356,
                     "name": "CEther",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 14268,
-                    "src": "1194:6:30",
+                    "referencedDeclaration": 15365,
+                    "src": "1194:6:31",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_CEther_$14268",
+                      "typeIdentifier": "t_contract$_CEther_$15365",
                       "typeString": "contract CEther"
                     }
                   },
@@ -1051,39 +1051,39 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1175:34:30"
+              "src": "1175:34:31"
             },
             "returnParameters": {
-              "id": 18262,
+              "id": 19359,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1225:0:30"
+              "src": "1225:0:31"
             },
-            "scope": 18313,
-            "src": "1147:426:30",
+            "scope": 19410,
+            "src": "1147:426:31",
             "stateMutability": "payable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 18314,
-        "src": "126:1449:30"
+        "scope": 19411,
+        "src": "126:1449:31"
       }
     ],
-    "src": "0:1576:30"
+    "src": "0:1576:31"
   },
   "legacyAST": {
     "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/Maximillion.sol",
     "exportedSymbols": {
       "Maximillion": [
-        18313
+        19410
       ]
     },
-    "id": 18314,
+    "id": 19411,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 18232,
+        "id": 19329,
         "literals": [
           "solidity",
           "^",
@@ -1091,16 +1091,16 @@
           ".16"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:30"
+        "src": "0:24:31"
       },
       {
         "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CEther.sol",
         "file": "./CEther.sol",
-        "id": 18233,
+        "id": 19330,
         "nodeType": "ImportDirective",
-        "scope": 18314,
-        "sourceUnit": 14269,
-        "src": "26:22:30",
+        "scope": 19411,
+        "sourceUnit": 15366,
+        "src": "26:22:31",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -1110,35 +1110,35 @@
         "contractKind": "contract",
         "documentation": "@title SighFinance's Maximillion Contract\n@author SighFinance",
         "fullyImplemented": true,
-        "id": 18313,
+        "id": 19410,
         "linearizedBaseContracts": [
-          18313
+          19410
         ],
         "name": "Maximillion",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 18235,
+            "id": 19332,
             "name": "cEther",
             "nodeType": "VariableDeclaration",
-            "scope": 18313,
-            "src": "222:20:30",
+            "scope": 19410,
+            "src": "222:20:31",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_CEther_$14268",
+              "typeIdentifier": "t_contract$_CEther_$15365",
               "typeString": "contract CEther"
             },
             "typeName": {
               "contractScope": null,
-              "id": 18234,
+              "id": 19331,
               "name": "CEther",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 14268,
-              "src": "222:6:30",
+              "referencedDeclaration": 15365,
+              "src": "222:6:31",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_CEther_$14268",
+                "typeIdentifier": "t_contract$_CEther_$15365",
                 "typeString": "contract CEther"
               }
             },
@@ -1147,28 +1147,28 @@
           },
           {
             "body": {
-              "id": 18244,
+              "id": 19341,
               "nodeType": "Block",
-              "src": "371:33:30",
+              "src": "371:33:31",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 18242,
+                    "id": 19339,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 18240,
+                      "id": 19337,
                       "name": "cEther",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 18235,
-                      "src": "381:6:30",
+                      "referencedDeclaration": 19332,
+                      "src": "381:6:31",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_CEther_$14268",
+                        "typeIdentifier": "t_contract$_CEther_$15365",
                         "typeString": "contract CEther"
                       }
                     },
@@ -1176,62 +1176,62 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 18241,
+                      "id": 19338,
                       "name": "cEther_",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 18237,
-                      "src": "390:7:30",
+                      "referencedDeclaration": 19334,
+                      "src": "390:7:31",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_CEther_$14268",
+                        "typeIdentifier": "t_contract$_CEther_$15365",
                         "typeString": "contract CEther"
                       }
                     },
-                    "src": "381:16:30",
+                    "src": "381:16:31",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_CEther_$14268",
+                      "typeIdentifier": "t_contract$_CEther_$15365",
                       "typeString": "contract CEther"
                     }
                   },
-                  "id": 18243,
+                  "id": 19340,
                   "nodeType": "ExpressionStatement",
-                  "src": "381:16:30"
+                  "src": "381:16:31"
                 }
               ]
             },
             "documentation": "@notice Construct a Maximillion to repay max in a CEther market",
-            "id": 18245,
+            "id": 19342,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [],
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 18238,
+              "id": 19335,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 18237,
+                  "id": 19334,
                   "name": "cEther_",
                   "nodeType": "VariableDeclaration",
-                  "scope": 18245,
-                  "src": "348:14:30",
+                  "scope": 19342,
+                  "src": "348:14:31",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_CEther_$14268",
+                    "typeIdentifier": "t_contract$_CEther_$15365",
                     "typeString": "contract CEther"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 18236,
+                    "id": 19333,
                     "name": "CEther",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 14268,
-                    "src": "348:6:30",
+                    "referencedDeclaration": 15365,
+                    "src": "348:6:31",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_CEther_$14268",
+                      "typeIdentifier": "t_contract$_CEther_$15365",
                       "typeString": "contract CEther"
                     }
                   },
@@ -1239,25 +1239,25 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "347:16:30"
+              "src": "347:16:31"
             },
             "returnParameters": {
-              "id": 18239,
+              "id": 19336,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "371:0:30"
+              "src": "371:0:31"
             },
-            "scope": 18313,
-            "src": "336:68:30",
+            "scope": 19410,
+            "src": "336:68:31",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 18255,
+              "id": 19352,
               "nodeType": "Block",
-              "src": "742:54:30",
+              "src": "742:54:31",
               "statements": [
                 {
                   "expression": {
@@ -1265,12 +1265,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 18251,
+                        "id": 19348,
                         "name": "borrower",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 18247,
-                        "src": "772:8:30",
+                        "referencedDeclaration": 19344,
+                        "src": "772:8:31",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -1278,14 +1278,14 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 18252,
+                        "id": 19349,
                         "name": "cEther",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 18235,
-                        "src": "782:6:30",
+                        "referencedDeclaration": 19332,
+                        "src": "782:6:31",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_CEther_$14268",
+                          "typeIdentifier": "t_contract$_CEther_$15365",
                           "typeString": "contract CEther"
                         }
                       }
@@ -1297,22 +1297,22 @@
                           "typeString": "address"
                         },
                         {
-                          "typeIdentifier": "t_contract$_CEther_$14268",
+                          "typeIdentifier": "t_contract$_CEther_$15365",
                           "typeString": "contract CEther"
                         }
                       ],
-                      "id": 18250,
+                      "id": 19347,
                       "name": "repayBehalfExplicit",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 18312,
-                      "src": "752:19:30",
+                      "referencedDeclaration": 19409,
+                      "src": "752:19:31",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_contract$_CEther_$14268_$returns$__$",
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_contract$_CEther_$15365_$returns$__$",
                         "typeString": "function (address,contract CEther)"
                       }
                     },
-                    "id": 18253,
+                    "id": 19350,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1320,36 +1320,36 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "752:37:30",
+                    "src": "752:37:31",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 18254,
+                  "id": 19351,
                   "nodeType": "ExpressionStatement",
-                  "src": "752:37:30"
+                  "src": "752:37:31"
                 }
               ]
             },
             "documentation": "@notice msg.sender sends Ether to repay an account's borrow in the cEther market\n@dev The provided Ether is applied towards the borrow balance, any excess is refunded\n@param borrower The address of the borrower account to repay on behalf of",
-            "id": 18256,
+            "id": 19353,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "repayBehalf",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 18248,
+              "id": 19345,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 18247,
+                  "id": 19344,
                   "name": "borrower",
                   "nodeType": "VariableDeclaration",
-                  "scope": 18256,
-                  "src": "709:16:30",
+                  "scope": 19353,
+                  "src": "709:16:31",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1357,10 +1357,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 18246,
+                    "id": 19343,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "709:7:30",
+                    "src": "709:7:31",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1371,38 +1371,38 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "708:18:30"
+              "src": "708:18:31"
             },
             "returnParameters": {
-              "id": 18249,
+              "id": 19346,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "742:0:30"
+              "src": "742:0:31"
             },
-            "scope": 18313,
-            "src": "688:108:30",
+            "scope": 19410,
+            "src": "688:108:31",
             "stateMutability": "payable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 18311,
+              "id": 19408,
               "nodeType": "Block",
-              "src": "1225:348:30",
+              "src": "1225:348:31",
               "statements": [
                 {
                   "assignments": [
-                    18264
+                    19361
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 18264,
+                      "id": 19361,
                       "name": "received",
                       "nodeType": "VariableDeclaration",
-                      "scope": 18311,
-                      "src": "1235:13:30",
+                      "scope": 19408,
+                      "src": "1235:13:31",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
@@ -1410,10 +1410,10 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 18263,
+                        "id": 19360,
                         "name": "uint",
                         "nodeType": "ElementaryTypeName",
-                        "src": "1235:4:30",
+                        "src": "1235:4:31",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -1423,23 +1423,23 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 18267,
+                  "id": 19364,
                   "initialValue": {
                     "argumentTypes": null,
                     "expression": {
                       "argumentTypes": null,
-                      "id": 18265,
+                      "id": 19362,
                       "name": "msg",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 18944,
-                      "src": "1251:3:30",
+                      "referencedDeclaration": 20041,
+                      "src": "1251:3:31",
                       "typeDescriptions": {
                         "typeIdentifier": "t_magic_message",
                         "typeString": "msg"
                       }
                     },
-                    "id": 18266,
+                    "id": 19363,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1447,27 +1447,27 @@
                     "memberName": "value",
                     "nodeType": "MemberAccess",
                     "referencedDeclaration": null,
-                    "src": "1251:9:30",
+                    "src": "1251:9:31",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "1235:25:30"
+                  "src": "1235:25:31"
                 },
                 {
                   "assignments": [
-                    18269
+                    19366
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 18269,
+                      "id": 19366,
                       "name": "borrows",
                       "nodeType": "VariableDeclaration",
-                      "scope": 18311,
-                      "src": "1270:12:30",
+                      "scope": 19408,
+                      "src": "1270:12:31",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
@@ -1475,10 +1475,10 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 18268,
+                        "id": 19365,
                         "name": "uint",
                         "nodeType": "ElementaryTypeName",
-                        "src": "1270:4:30",
+                        "src": "1270:4:31",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -1488,18 +1488,18 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 18274,
+                  "id": 19371,
                   "initialValue": {
                     "argumentTypes": null,
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 18272,
+                        "id": 19369,
                         "name": "borrower",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 18258,
-                        "src": "1314:8:30",
+                        "referencedDeclaration": 19355,
+                        "src": "1314:8:31",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -1515,32 +1515,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 18270,
+                        "id": 19367,
                         "name": "cEther_",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 18260,
-                        "src": "1285:7:30",
+                        "referencedDeclaration": 19357,
+                        "src": "1285:7:31",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_CEther_$14268",
+                          "typeIdentifier": "t_contract$_CEther_$15365",
                           "typeString": "contract CEther"
                         }
                       },
-                      "id": 18271,
+                      "id": 19368,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "borrowBalanceCurrent",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 14760,
-                      "src": "1285:28:30",
+                      "referencedDeclaration": 15857,
+                      "src": "1285:28:31",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$_t_uint256_$",
                         "typeString": "function (address) external returns (uint256)"
                       }
                     },
-                    "id": 18273,
+                    "id": 19370,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1548,14 +1548,14 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "1285:38:30",
+                    "src": "1285:38:31",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "1270:53:30"
+                  "src": "1270:53:31"
                 },
                 {
                   "condition": {
@@ -1564,19 +1564,19 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 18277,
+                    "id": 19374,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "id": 18275,
+                      "id": 19372,
                       "name": "received",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 18264,
-                      "src": "1337:8:30",
+                      "referencedDeclaration": 19361,
+                      "src": "1337:8:31",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -1586,27 +1586,27 @@
                     "operator": ">",
                     "rightExpression": {
                       "argumentTypes": null,
-                      "id": 18276,
+                      "id": 19373,
                       "name": "borrows",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 18269,
-                      "src": "1348:7:30",
+                      "referencedDeclaration": 19366,
+                      "src": "1348:7:31",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "1337:18:30",
+                    "src": "1337:18:31",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
                   "falseBody": {
-                    "id": 18309,
+                    "id": 19406,
                     "nodeType": "Block",
-                    "src": "1491:76:30",
+                    "src": "1491:76:31",
                     "statements": [
                       {
                         "expression": {
@@ -1614,12 +1614,12 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "id": 18306,
+                              "id": 19403,
                               "name": "borrower",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 18258,
-                              "src": "1547:8:30",
+                              "referencedDeclaration": 19355,
+                              "src": "1547:8:31",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_address",
                                 "typeString": "address"
@@ -1636,12 +1636,12 @@
                             "arguments": [
                               {
                                 "argumentTypes": null,
-                                "id": 18304,
+                                "id": 19401,
                                 "name": "received",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 18264,
-                                "src": "1537:8:30",
+                                "referencedDeclaration": 19361,
+                                "src": "1537:8:31",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_uint256",
                                   "typeString": "uint256"
@@ -1659,32 +1659,32 @@
                                 "argumentTypes": null,
                                 "expression": {
                                   "argumentTypes": null,
-                                  "id": 18299,
+                                  "id": 19396,
                                   "name": "cEther_",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 18260,
-                                  "src": "1505:7:30",
+                                  "referencedDeclaration": 19357,
+                                  "src": "1505:7:31",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_contract$_CEther_$14268",
+                                    "typeIdentifier": "t_contract$_CEther_$15365",
                                     "typeString": "contract CEther"
                                   }
                                 },
-                                "id": 18302,
+                                "id": 19399,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "memberName": "repayBorrowBehalf",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 14020,
-                                "src": "1505:25:30",
+                                "referencedDeclaration": 15117,
+                                "src": "1505:25:31",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_external_payable$_t_address_$returns$__$",
                                   "typeString": "function (address) payable external"
                                 }
                               },
-                              "id": 18303,
+                              "id": 19400,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -1692,13 +1692,13 @@
                               "memberName": "value",
                               "nodeType": "MemberAccess",
                               "referencedDeclaration": null,
-                              "src": "1505:31:30",
+                              "src": "1505:31:31",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_setvalue_pure$_t_uint256_$returns$_t_function_external_payable$_t_address_$returns$__$value_$",
                                 "typeString": "function (uint256) pure returns (function (address) payable external)"
                               }
                             },
-                            "id": 18305,
+                            "id": 19402,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -1706,13 +1706,13 @@
                             "lValueRequested": false,
                             "names": [],
                             "nodeType": "FunctionCall",
-                            "src": "1505:41:30",
+                            "src": "1505:41:31",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_payable$_t_address_$returns$__$value",
                               "typeString": "function (address) payable external"
                             }
                           },
-                          "id": 18307,
+                          "id": 19404,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -1720,25 +1720,25 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "1505:51:30",
+                          "src": "1505:51:31",
                           "typeDescriptions": {
                             "typeIdentifier": "t_tuple$__$",
                             "typeString": "tuple()"
                           }
                         },
-                        "id": 18308,
+                        "id": 19405,
                         "nodeType": "ExpressionStatement",
-                        "src": "1505:51:30"
+                        "src": "1505:51:31"
                       }
                     ]
                   },
-                  "id": 18310,
+                  "id": 19407,
                   "nodeType": "IfStatement",
-                  "src": "1333:234:30",
+                  "src": "1333:234:31",
                   "trueBody": {
-                    "id": 18298,
+                    "id": 19395,
                     "nodeType": "Block",
-                    "src": "1357:128:30",
+                    "src": "1357:128:31",
                     "statements": [
                       {
                         "expression": {
@@ -1746,12 +1746,12 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-                              "id": 18285,
+                              "id": 19382,
                               "name": "borrower",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 18258,
-                              "src": "1412:8:30",
+                              "referencedDeclaration": 19355,
+                              "src": "1412:8:31",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_address",
                                 "typeString": "address"
@@ -1768,12 +1768,12 @@
                             "arguments": [
                               {
                                 "argumentTypes": null,
-                                "id": 18283,
+                                "id": 19380,
                                 "name": "borrows",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 18269,
-                                "src": "1403:7:30",
+                                "referencedDeclaration": 19366,
+                                "src": "1403:7:31",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_uint256",
                                   "typeString": "uint256"
@@ -1791,32 +1791,32 @@
                                 "argumentTypes": null,
                                 "expression": {
                                   "argumentTypes": null,
-                                  "id": 18278,
+                                  "id": 19375,
                                   "name": "cEther_",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 18260,
-                                  "src": "1371:7:30",
+                                  "referencedDeclaration": 19357,
+                                  "src": "1371:7:31",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_contract$_CEther_$14268",
+                                    "typeIdentifier": "t_contract$_CEther_$15365",
                                     "typeString": "contract CEther"
                                   }
                                 },
-                                "id": 18281,
+                                "id": 19378,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "memberName": "repayBorrowBehalf",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 14020,
-                                "src": "1371:25:30",
+                                "referencedDeclaration": 15117,
+                                "src": "1371:25:31",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_external_payable$_t_address_$returns$__$",
                                   "typeString": "function (address) payable external"
                                 }
                               },
-                              "id": 18282,
+                              "id": 19379,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -1824,13 +1824,13 @@
                               "memberName": "value",
                               "nodeType": "MemberAccess",
                               "referencedDeclaration": null,
-                              "src": "1371:31:30",
+                              "src": "1371:31:31",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_setvalue_pure$_t_uint256_$returns$_t_function_external_payable$_t_address_$returns$__$value_$",
                                 "typeString": "function (uint256) pure returns (function (address) payable external)"
                               }
                             },
-                            "id": 18284,
+                            "id": 19381,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -1838,13 +1838,13 @@
                             "lValueRequested": false,
                             "names": [],
                             "nodeType": "FunctionCall",
-                            "src": "1371:40:30",
+                            "src": "1371:40:31",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_payable$_t_address_$returns$__$value",
                               "typeString": "function (address) payable external"
                             }
                           },
-                          "id": 18286,
+                          "id": 19383,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -1852,15 +1852,15 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "1371:50:30",
+                          "src": "1371:50:31",
                           "typeDescriptions": {
                             "typeIdentifier": "t_tuple$__$",
                             "typeString": "tuple()"
                           }
                         },
-                        "id": 18287,
+                        "id": 19384,
                         "nodeType": "ExpressionStatement",
-                        "src": "1371:50:30"
+                        "src": "1371:50:31"
                       },
                       {
                         "expression": {
@@ -1872,19 +1872,19 @@
                                 "typeIdentifier": "t_uint256",
                                 "typeString": "uint256"
                               },
-                              "id": 18295,
+                              "id": 19392,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
                               "lValueRequested": false,
                               "leftExpression": {
                                 "argumentTypes": null,
-                                "id": 18293,
+                                "id": 19390,
                                 "name": "received",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 18264,
-                                "src": "1455:8:30",
+                                "referencedDeclaration": 19361,
+                                "src": "1455:8:31",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_uint256",
                                   "typeString": "uint256"
@@ -1894,18 +1894,18 @@
                               "operator": "-",
                               "rightExpression": {
                                 "argumentTypes": null,
-                                "id": 18294,
+                                "id": 19391,
                                 "name": "borrows",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 18269,
-                                "src": "1466:7:30",
+                                "referencedDeclaration": 19366,
+                                "src": "1466:7:31",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_uint256",
                                   "typeString": "uint256"
                                 }
                               },
-                              "src": "1455:18:30",
+                              "src": "1455:18:31",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_uint256",
                                 "typeString": "uint256"
@@ -1923,18 +1923,18 @@
                               "argumentTypes": null,
                               "expression": {
                                 "argumentTypes": null,
-                                "id": 18288,
+                                "id": 19385,
                                 "name": "msg",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 18944,
-                                "src": "1435:3:30",
+                                "referencedDeclaration": 20041,
+                                "src": "1435:3:31",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_magic_message",
                                   "typeString": "msg"
                                 }
                               },
-                              "id": 18291,
+                              "id": 19388,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -1942,13 +1942,13 @@
                               "memberName": "sender",
                               "nodeType": "MemberAccess",
                               "referencedDeclaration": null,
-                              "src": "1435:10:30",
+                              "src": "1435:10:31",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_address_payable",
                                 "typeString": "address payable"
                               }
                             },
-                            "id": 18292,
+                            "id": 19389,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -1956,13 +1956,13 @@
                             "memberName": "transfer",
                             "nodeType": "MemberAccess",
                             "referencedDeclaration": null,
-                            "src": "1435:19:30",
+                            "src": "1435:19:31",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_transfer_nonpayable$_t_uint256_$returns$__$",
                               "typeString": "function (uint256)"
                             }
                           },
-                          "id": 18296,
+                          "id": 19393,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -1970,15 +1970,15 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "1435:39:30",
+                          "src": "1435:39:31",
                           "typeDescriptions": {
                             "typeIdentifier": "t_tuple$__$",
                             "typeString": "tuple()"
                           }
                         },
-                        "id": 18297,
+                        "id": 19394,
                         "nodeType": "ExpressionStatement",
-                        "src": "1435:39:30"
+                        "src": "1435:39:31"
                       }
                     ]
                   }
@@ -1986,23 +1986,23 @@
               ]
             },
             "documentation": "@notice msg.sender sends Ether to repay an account's borrow in a cEther market\n@dev The provided Ether is applied towards the borrow balance, any excess is refunded\n@param borrower The address of the borrower account to repay on behalf of\n@param cEther_ The address of the cEther contract to repay in",
-            "id": 18312,
+            "id": 19409,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "repayBehalfExplicit",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 18261,
+              "id": 19358,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 18258,
+                  "id": 19355,
                   "name": "borrower",
                   "nodeType": "VariableDeclaration",
-                  "scope": 18312,
-                  "src": "1176:16:30",
+                  "scope": 19409,
+                  "src": "1176:16:31",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2010,10 +2010,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 18257,
+                    "id": 19354,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1176:7:30",
+                    "src": "1176:7:31",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -2025,26 +2025,26 @@
                 },
                 {
                   "constant": false,
-                  "id": 18260,
+                  "id": 19357,
                   "name": "cEther_",
                   "nodeType": "VariableDeclaration",
-                  "scope": 18312,
-                  "src": "1194:14:30",
+                  "scope": 19409,
+                  "src": "1194:14:31",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_CEther_$14268",
+                    "typeIdentifier": "t_contract$_CEther_$15365",
                     "typeString": "contract CEther"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 18259,
+                    "id": 19356,
                     "name": "CEther",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 14268,
-                    "src": "1194:6:30",
+                    "referencedDeclaration": 15365,
+                    "src": "1194:6:31",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_CEther_$14268",
+                      "typeIdentifier": "t_contract$_CEther_$15365",
                       "typeString": "contract CEther"
                     }
                   },
@@ -2052,26 +2052,26 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1175:34:30"
+              "src": "1175:34:31"
             },
             "returnParameters": {
-              "id": 18262,
+              "id": 19359,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1225:0:30"
+              "src": "1225:0:31"
             },
-            "scope": 18313,
-            "src": "1147:426:30",
+            "scope": 19410,
+            "src": "1147:426:31",
             "stateMutability": "payable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 18314,
-        "src": "126:1449:30"
+        "scope": 19411,
+        "src": "126:1449:31"
       }
     ],
-    "src": "0:1576:30"
+    "src": "0:1576:31"
   },
   "compiler": {
     "name": "solc",
@@ -2086,8 +2086,7 @@
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-25T11:43:08.229Z",
-  "networkType": "ethereum",
+  "updatedAt": "2020-09-27T14:09:02.158Z",
   "devdoc": {
     "author": "SighFinance",
     "methods": {

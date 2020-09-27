@@ -151,7 +151,7 @@
         },
         {
           "internalType": "bool",
-          "name": "isSighed",
+          "name": "isSIGHed",
           "type": "bool"
         }
       ],
@@ -301,37 +301,37 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[],\"name\":\"_borrowGuardianPaused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"_mintGuardianPaused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"accountAssets\",\"outputs\":[{\"internalType\":\"contract CToken\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"admin\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"borrowGuardianPaused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"closeFactorMantissa\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"liquidationIncentiveMantissa\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"markets\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"isListed\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"collateralFactorMantissa\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"isGsighed\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"isSighed\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"maxAssets\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"mintGuardianPaused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"oracle\",\"outputs\":[{\"internalType\":\"contract PriceOracle\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"pauseGuardian\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"pendingAdmin\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"pendingSightrollerImplementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"seizeGuardianPaused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"sightrollerImplementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"transferGuardianPaused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Sightroller/SightrollerStorage.sol\":\"SightrollerV2Storage\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ErrorReporter.sol\":{\"keccak256\":\"0xecacd5920a722868d343c2577f569636d452d99e5002a29034ccac3dc2359d7f\",\"urls\":[\"bzz-raw://7f8b7c017754046178211d452c6d96fdf6e026fa76d00afb001afb4c1ca81953\",\"dweb:/ipfs/QmSG3rLMdyYTMq7C7ZsPX53B23zGZRB9ifAX3S3qCnpG5p\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/InterestRateModels/InterestRateModel.sol\":{\"keccak256\":\"0xb516fd3b78e7f3f4d1631b8dd50d167da4d73ca870cd09d67efcffdea2ed3b05\",\"urls\":[\"bzz-raw://3427725de8a149882669f60a3fbf179f4ef9ee97723ca47e91f39b8818b548d3\",\"dweb:/ipfs/QmWimP2MCejqdsER2SNBmQSinAM4mtjUHY14KwBtS8rE2Q\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Math/CarefulMath.sol\":{\"keccak256\":\"0x0647348f27e41d22555d99eebd217dee02a4d737df6accd7cce5347a7487c7de\",\"urls\":[\"bzz-raw://08882d26c11a6d240949a5afba79a74694a8b651093c05c5ae4cc359a0181c22\",\"dweb:/ipfs/QmVXb1tDswuhMRNuDLajzohdkvx2kBmqu1Rxn1BAKUfhkV\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Math/Exponential.sol\":{\"keccak256\":\"0xaa59feeb5759614eb9a9af023f843e5e638f4cff7df0060c2f8b2b804d13db7f\",\"urls\":[\"bzz-raw://dca42502fe6f9edc87a73491663c985181c91921ee2db53dc72bd05ab939d681\",\"dweb:/ipfs/QmbiGFW5x1WA6V9nzQrs868cHzcz1W5X9GiMPKK4TFR7qp\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/PriceOracle.sol\":{\"keccak256\":\"0xca16b0fff74ee5d5b4cd64fb5957d669a22e6d15d57308a60b514174dce55d58\",\"urls\":[\"bzz-raw://4be856df7dc9c9b973e9c4e07f43dc8733fe64b1bc88a113cb2db8ca4b86007c\",\"dweb:/ipfs/QmVNREv5YubsUnGpDrXXEhee9e6BY3b6RYHxGkXd6cZYEo\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Sightroller/SightrollerInterface.sol\":{\"keccak256\":\"0xc32a0616c6a3bc2a252a8a42be7b159c6c15da7fec23ed8c62f8dd83ab965c63\",\"urls\":[\"bzz-raw://a4c6e06f1e34b0a248253ff9eb50503d75d8a98dfb0d137d6d37c8d4075a8f19\",\"dweb:/ipfs/QmaAgB56NU8fZmiTjxZHj7xTD28vURjaaiZJEj8TidU5Yd\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Sightroller/SightrollerStorage.sol\":{\"keccak256\":\"0x95e20afa3fa082fe64bae698fea47f8dddac6652a1829c63311d1466bb13e75d\",\"urls\":[\"bzz-raw://27153370b2a448e8680c685152a77f3853c9838915ae4caa6a44e425ad991416\",\"dweb:/ipfs/QmfZf7YccUEQgmYJeRTG6HhT5tCXnXhWzr7rMnYPoRCNAd\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CToken.sol\":{\"keccak256\":\"0xfb9ff80b893b2706c256e5a30224d6177daba81222c2f7f6417029f5569e52fd\",\"urls\":[\"bzz-raw://7aadfd9d6f0cd575565d8e255eae51bdcbb76ac9769fdf61a81d9bdda48a820b\",\"dweb:/ipfs/QmXuPYknit7BmWQt81SFo1ykEgeQhenU1XBM4F5cmtnMw2\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CTokenInterfaces.sol\":{\"keccak256\":\"0x2ad76eb92f25980603fe536e7af20c5d7e8aa21d2ce72147aac1ffa6f2d468e9\",\"urls\":[\"bzz-raw://109809645b7dcac33fd3f2ebbb78da09497c871b903b18ba783f60a0e239e8df\",\"dweb:/ipfs/QmXBEvtSkTqnbu9vg7WeYq8JLv8fQ86g7wMALVmLCNkt2z\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin/EIP20Interface.sol\":{\"keccak256\":\"0xfd8ed2eac6d0b4d9ee6b32628ba68bae17544b66f190a5f7ce0c6ad024579dc8\",\"urls\":[\"bzz-raw://701be308137fe36f221f1d7c815247a272638df40917e7d1456b3b16e8402897\",\"dweb:/ipfs/QmPDkPoKiWXMjwpGa65JHBjo5NH8AA3q1nMhsewfUZHjpx\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin/EIP20NonStandardInterface.sol\":{\"keccak256\":\"0x9719f12e4b80b51147ac195553a198cf8b0c516e7e4d04fc324a23ed15cbafb2\",\"urls\":[\"bzz-raw://50c3ba49b80106c88b0171390aa4127edc86f7b29607abe3dc6d08eaefebf837\",\"dweb:/ipfs/QmP6AHNmFdwYwWUeHnhYi3drCQy4dpnnqUbkMeU3oAtokj\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b506103f1806100206000396000f3fe608060405234801561001057600080fd5b506004361061010b5760003560e01c806387f76303116100a2578063dce1544911610071578063dce1544914610236578063e6653f3d14610262578063e76b97e11461026a578063e875544614610272578063f851a4401461027a5761010b565b806387f76303146101ce5780638e8f294b146101d657806394b2294b14610226578063ac0b0bb71461022e5761010b565b80634ada90af116100de5780634ada90af146101605780636d154ea51461017a578063731f0c2b146101a05780637dc0d1d0146101c65761010b565b806324a3d6221461011057806326782247146101345780633c94786f1461013c5780633e65a58d14610158575b600080fd5b610118610282565b604080516001600160a01b039092168252519081900360200190f35b610118610291565b6101446102a0565b604080519115158252519081900360200190f35b6101186102b0565b6101686102bf565b60408051918252519081900360200190f35b6101446004803603602081101561019057600080fd5b50356001600160a01b03166102c5565b610144600480360360208110156101b657600080fd5b50356001600160a01b03166102da565b6101186102ef565b6101446102fe565b6101fc600480360360208110156101ec57600080fd5b50356001600160a01b031661030e565b60408051941515855260208501939093529015158383015215156060830152519081900360800190f35b61016861033d565b610144610343565b6101186004803603604081101561024c57600080fd5b506001600160a01b038135169060200135610353565b610144610388565b610118610398565b6101686103a7565b6101186103ad565b600a546001600160a01b031681565b6001546001600160a01b031681565b600a54600160a01b900460ff1681565b6002546001600160a01b031681565b60065481565b600c6020526000908152604090205460ff1681565b600b6020526000908152604090205460ff1681565b6004546001600160a01b031681565b600a54600160b01b900460ff1681565b60096020526000908152604090208054600182015460039092015460ff91821692918181169161010090041684565b60075481565b600a54600160b81b900460ff1681565b6008602052816000526040600020818154811061036c57fe5b6000918252602090912001546001600160a01b03169150829050565b600a54600160a81b900460ff1681565b6003546001600160a01b031681565b60055481565b6000546001600160a01b03168156fea265627a7a7231582047eb20119aab6752e601fb24464d5f6c9a65ec237b1f576878616fae88041cb364736f6c63430005100032",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061010b5760003560e01c806387f76303116100a2578063dce1544911610071578063dce1544914610236578063e6653f3d14610262578063e76b97e11461026a578063e875544614610272578063f851a4401461027a5761010b565b806387f76303146101ce5780638e8f294b146101d657806394b2294b14610226578063ac0b0bb71461022e5761010b565b80634ada90af116100de5780634ada90af146101605780636d154ea51461017a578063731f0c2b146101a05780637dc0d1d0146101c65761010b565b806324a3d6221461011057806326782247146101345780633c94786f1461013c5780633e65a58d14610158575b600080fd5b610118610282565b604080516001600160a01b039092168252519081900360200190f35b610118610291565b6101446102a0565b604080519115158252519081900360200190f35b6101186102b0565b6101686102bf565b60408051918252519081900360200190f35b6101446004803603602081101561019057600080fd5b50356001600160a01b03166102c5565b610144600480360360208110156101b657600080fd5b50356001600160a01b03166102da565b6101186102ef565b6101446102fe565b6101fc600480360360208110156101ec57600080fd5b50356001600160a01b031661030e565b60408051941515855260208501939093529015158383015215156060830152519081900360800190f35b61016861033d565b610144610343565b6101186004803603604081101561024c57600080fd5b506001600160a01b038135169060200135610353565b610144610388565b610118610398565b6101686103a7565b6101186103ad565b600a546001600160a01b031681565b6001546001600160a01b031681565b600a54600160a01b900460ff1681565b6002546001600160a01b031681565b60065481565b600c6020526000908152604090205460ff1681565b600b6020526000908152604090205460ff1681565b6004546001600160a01b031681565b600a54600160b01b900460ff1681565b60096020526000908152604090208054600182015460039092015460ff91821692918181169161010090041684565b60075481565b600a54600160b81b900460ff1681565b6008602052816000526040600020818154811061036c57fe5b6000918252602090912001546001600160a01b03169150829050565b600a54600160a81b900460ff1681565b6003546001600160a01b031681565b60055481565b6000546001600160a01b03168156fea265627a7a7231582047eb20119aab6752e601fb24464d5f6c9a65ec237b1f576878616fae88041cb364736f6c63430005100032",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[],\"name\":\"_borrowGuardianPaused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"_mintGuardianPaused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"accountAssets\",\"outputs\":[{\"internalType\":\"contract CToken\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"admin\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"borrowGuardianPaused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"closeFactorMantissa\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"liquidationIncentiveMantissa\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"markets\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"isListed\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"collateralFactorMantissa\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"isGsighed\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"isSIGHed\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"maxAssets\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"mintGuardianPaused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"oracle\",\"outputs\":[{\"internalType\":\"contract PriceOracle\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"pauseGuardian\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"pendingAdmin\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"pendingSightrollerImplementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"seizeGuardianPaused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"sightrollerImplementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"transferGuardianPaused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Sightroller/SightrollerStorage.sol\":\"SightrollerV2Storage\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ErrorReporter.sol\":{\"keccak256\":\"0xecacd5920a722868d343c2577f569636d452d99e5002a29034ccac3dc2359d7f\",\"urls\":[\"bzz-raw://7f8b7c017754046178211d452c6d96fdf6e026fa76d00afb001afb4c1ca81953\",\"dweb:/ipfs/QmSG3rLMdyYTMq7C7ZsPX53B23zGZRB9ifAX3S3qCnpG5p\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/InterestRateModels/InterestRateModel.sol\":{\"keccak256\":\"0xb516fd3b78e7f3f4d1631b8dd50d167da4d73ca870cd09d67efcffdea2ed3b05\",\"urls\":[\"bzz-raw://3427725de8a149882669f60a3fbf179f4ef9ee97723ca47e91f39b8818b548d3\",\"dweb:/ipfs/QmWimP2MCejqdsER2SNBmQSinAM4mtjUHY14KwBtS8rE2Q\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Math/CarefulMath.sol\":{\"keccak256\":\"0x0647348f27e41d22555d99eebd217dee02a4d737df6accd7cce5347a7487c7de\",\"urls\":[\"bzz-raw://08882d26c11a6d240949a5afba79a74694a8b651093c05c5ae4cc359a0181c22\",\"dweb:/ipfs/QmVXb1tDswuhMRNuDLajzohdkvx2kBmqu1Rxn1BAKUfhkV\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Math/Exponential.sol\":{\"keccak256\":\"0xde2e32d9268c376a74ad4cc82e11dfed28ce4fbcaff72e75e03cf59afafd2971\",\"urls\":[\"bzz-raw://8f8b1bdbee4a596c98066597d143399f386ee5314ba5d03aab0d7659a5d0d241\",\"dweb:/ipfs/QmaYfxmrbPVqVkrUZyhkcrxrCaA3i3aoQ7iQuDLbK3LEVo\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/PriceOracle.sol\":{\"keccak256\":\"0xca16b0fff74ee5d5b4cd64fb5957d669a22e6d15d57308a60b514174dce55d58\",\"urls\":[\"bzz-raw://4be856df7dc9c9b973e9c4e07f43dc8733fe64b1bc88a113cb2db8ca4b86007c\",\"dweb:/ipfs/QmVNREv5YubsUnGpDrXXEhee9e6BY3b6RYHxGkXd6cZYEo\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Sightroller/SightrollerInterface.sol\":{\"keccak256\":\"0xc32a0616c6a3bc2a252a8a42be7b159c6c15da7fec23ed8c62f8dd83ab965c63\",\"urls\":[\"bzz-raw://a4c6e06f1e34b0a248253ff9eb50503d75d8a98dfb0d137d6d37c8d4075a8f19\",\"dweb:/ipfs/QmaAgB56NU8fZmiTjxZHj7xTD28vURjaaiZJEj8TidU5Yd\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Sightroller/SightrollerStorage.sol\":{\"keccak256\":\"0x1e9e3843989957f7bb01ebdf40c2bf49b6ea3c004a59c0cac0c1ffc14e4cbd98\",\"urls\":[\"bzz-raw://0e3194898d5a9f4f11b195376d3c1629b5b22b472cb8edb3b012e407922bc66e\",\"dweb:/ipfs/QmX7LeZzwbJAfPWEtDTwwzFFuzkdTb1imvWsAnS64UwW7q\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CToken.sol\":{\"keccak256\":\"0xfb9ff80b893b2706c256e5a30224d6177daba81222c2f7f6417029f5569e52fd\",\"urls\":[\"bzz-raw://7aadfd9d6f0cd575565d8e255eae51bdcbb76ac9769fdf61a81d9bdda48a820b\",\"dweb:/ipfs/QmXuPYknit7BmWQt81SFo1ykEgeQhenU1XBM4F5cmtnMw2\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CTokenInterfaces.sol\":{\"keccak256\":\"0x2ad76eb92f25980603fe536e7af20c5d7e8aa21d2ce72147aac1ffa6f2d468e9\",\"urls\":[\"bzz-raw://109809645b7dcac33fd3f2ebbb78da09497c871b903b18ba783f60a0e239e8df\",\"dweb:/ipfs/QmXBEvtSkTqnbu9vg7WeYq8JLv8fQ86g7wMALVmLCNkt2z\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin/EIP20Interface.sol\":{\"keccak256\":\"0xfd8ed2eac6d0b4d9ee6b32628ba68bae17544b66f190a5f7ce0c6ad024579dc8\",\"urls\":[\"bzz-raw://701be308137fe36f221f1d7c815247a272638df40917e7d1456b3b16e8402897\",\"dweb:/ipfs/QmPDkPoKiWXMjwpGa65JHBjo5NH8AA3q1nMhsewfUZHjpx\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin/EIP20NonStandardInterface.sol\":{\"keccak256\":\"0x9719f12e4b80b51147ac195553a198cf8b0c516e7e4d04fc324a23ed15cbafb2\",\"urls\":[\"bzz-raw://50c3ba49b80106c88b0171390aa4127edc86f7b29607abe3dc6d08eaefebf837\",\"dweb:/ipfs/QmP6AHNmFdwYwWUeHnhYi3drCQy4dpnnqUbkMeU3oAtokj\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b506103f1806100206000396000f3fe608060405234801561001057600080fd5b506004361061010b5760003560e01c806387f76303116100a2578063dce1544911610071578063dce1544914610236578063e6653f3d14610262578063e76b97e11461026a578063e875544614610272578063f851a4401461027a5761010b565b806387f76303146101ce5780638e8f294b146101d657806394b2294b14610226578063ac0b0bb71461022e5761010b565b80634ada90af116100de5780634ada90af146101605780636d154ea51461017a578063731f0c2b146101a05780637dc0d1d0146101c65761010b565b806324a3d6221461011057806326782247146101345780633c94786f1461013c5780633e65a58d14610158575b600080fd5b610118610282565b604080516001600160a01b039092168252519081900360200190f35b610118610291565b6101446102a0565b604080519115158252519081900360200190f35b6101186102b0565b6101686102bf565b60408051918252519081900360200190f35b6101446004803603602081101561019057600080fd5b50356001600160a01b03166102c5565b610144600480360360208110156101b657600080fd5b50356001600160a01b03166102da565b6101186102ef565b6101446102fe565b6101fc600480360360208110156101ec57600080fd5b50356001600160a01b031661030e565b60408051941515855260208501939093529015158383015215156060830152519081900360800190f35b61016861033d565b610144610343565b6101186004803603604081101561024c57600080fd5b506001600160a01b038135169060200135610353565b610144610388565b610118610398565b6101686103a7565b6101186103ad565b600a546001600160a01b031681565b6001546001600160a01b031681565b600a54600160a01b900460ff1681565b6002546001600160a01b031681565b60065481565b600c6020526000908152604090205460ff1681565b600b6020526000908152604090205460ff1681565b6004546001600160a01b031681565b600a54600160b01b900460ff1681565b60096020526000908152604090208054600182015460039092015460ff91821692918181169161010090041684565b60075481565b600a54600160b81b900460ff1681565b6008602052816000526040600020818154811061036c57fe5b6000918252602090912001546001600160a01b03169150829050565b600a54600160a81b900460ff1681565b6003546001600160a01b031681565b60055481565b6000546001600160a01b03168156fea265627a7a7231582038bbe504a9c8fd13ea8a279e87a20b751c2cbe851207b9e28345252ff541462a64736f6c63430005100032",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061010b5760003560e01c806387f76303116100a2578063dce1544911610071578063dce1544914610236578063e6653f3d14610262578063e76b97e11461026a578063e875544614610272578063f851a4401461027a5761010b565b806387f76303146101ce5780638e8f294b146101d657806394b2294b14610226578063ac0b0bb71461022e5761010b565b80634ada90af116100de5780634ada90af146101605780636d154ea51461017a578063731f0c2b146101a05780637dc0d1d0146101c65761010b565b806324a3d6221461011057806326782247146101345780633c94786f1461013c5780633e65a58d14610158575b600080fd5b610118610282565b604080516001600160a01b039092168252519081900360200190f35b610118610291565b6101446102a0565b604080519115158252519081900360200190f35b6101186102b0565b6101686102bf565b60408051918252519081900360200190f35b6101446004803603602081101561019057600080fd5b50356001600160a01b03166102c5565b610144600480360360208110156101b657600080fd5b50356001600160a01b03166102da565b6101186102ef565b6101446102fe565b6101fc600480360360208110156101ec57600080fd5b50356001600160a01b031661030e565b60408051941515855260208501939093529015158383015215156060830152519081900360800190f35b61016861033d565b610144610343565b6101186004803603604081101561024c57600080fd5b506001600160a01b038135169060200135610353565b610144610388565b610118610398565b6101686103a7565b6101186103ad565b600a546001600160a01b031681565b6001546001600160a01b031681565b600a54600160a01b900460ff1681565b6002546001600160a01b031681565b60065481565b600c6020526000908152604090205460ff1681565b600b6020526000908152604090205460ff1681565b6004546001600160a01b031681565b600a54600160b01b900460ff1681565b60096020526000908152604090208054600182015460039092015460ff91821692918181169161010090041684565b60075481565b600a54600160b81b900460ff1681565b6008602052816000526040600020818154811061036c57fe5b6000918252602090912001546001600160a01b03169150829050565b600a54600160a81b900460ff1681565b6003546001600160a01b031681565b60055481565b6000546001600160a01b03168156fea265627a7a7231582038bbe504a9c8fd13ea8a279e87a20b751c2cbe851207b9e28345252ff541462a64736f6c63430005100032",
   "sourceMap": "1313:1518:21:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1313:1518:21;;;;;;;",
   "deployedSourceMap": "1313:1518:21:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1313:1518:21;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2533:28;;;:::i;:::-;;;;-1:-1:-1;;;;;2533:28:21;;;;;;;;;;;;;;283:27;;;:::i;2567:31::-;;;:::i;:::-;;;;;;;;;;;;;;;;;;374:40;;;:::i;966:::-;;;:::i;:::-;;;;;;;;;;;;;;;;2776:52;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;2776:52:21;-1:-1:-1;;;;;2776:52:21;;:::i;2720:50::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;2720:50:21;-1:-1:-1;;;;;2720:50:21;;:::i;677:25::-;;;:::i;2643:34::-;;;:::i;2221:41::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;2221:41:21;-1:-1:-1;;;;;2221:41:21;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1131:21;;;:::i;2683:31::-;;;:::i;1254:49::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;;;;;;1254:49:21;;;;;;;;:::i;2604:33::-;;;:::i;479:47::-;;;:::i;819:31::-;;;:::i;187:20::-;;;:::i;2533:28::-;;;-1:-1:-1;;;;;2533:28:21;;:::o;283:27::-;;;-1:-1:-1;;;;;283:27:21;;:::o;2567:31::-;;;-1:-1:-1;;;2567:31:21;;;;;:::o;374:40::-;;;-1:-1:-1;;;;;374:40:21;;:::o;966:::-;;;;:::o;2776:52::-;;;;;;;;;;;;;;;:::o;2720:50::-;;;;;;;;;;;;;;;:::o;677:25::-;;;-1:-1:-1;;;;;677:25:21;;:::o;2643:34::-;;;-1:-1:-1;;;2643:34:21;;;;;:::o;2221:41::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;1131:21::-;;;;:::o;2683:31::-;;;-1:-1:-1;;;2683:31:21;;;;;:::o;1254:49::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;1254:49:21;;-1:-1:-1;1254:49:21;;-1:-1:-1;1254:49:21:o;2604:33::-;;;-1:-1:-1;;;2604:33:21;;;;;:::o;479:47::-;;;-1:-1:-1;;;;;479:47:21;;:::o;819:31::-;;;;:::o;187:20::-;;;-1:-1:-1;;;;;187:20:21;;:::o",
-  "source": "pragma solidity ^0.5.16;\n\nimport \"../Tokens/CToken.sol\";\nimport \"../PriceOracle.sol\";\n\n\ncontract UnitrollerAdminStorage {\n    /**\n    * @notice Administrator for this contract\n    */\n    address public admin;\n\n    /**\n    * @notice Pending administrator for this contract\n    */\n    address public pendingAdmin;\n\n    /**\n    * @notice Active brains of Unitroller\n    */\n    address public sightrollerImplementation;\n\n    /**\n    * @notice Pending brains of Unitroller\n    */\n    address public pendingSightrollerImplementation;\n}\n\n\n\n\n\ncontract SightrollerV1Storage is UnitrollerAdminStorage {\n\n    /**\n     * @notice Oracle which gives the price of any given asset\n     */\n    PriceOracle public oracle;\n\n    /**\n     * @notice Multiplier used to calculate the maximum repayAmount when liquidating a borrow\n     */\n    uint public closeFactorMantissa;\n\n    /**\n     * @notice Multiplier representing the discount on collateral that a liquidator receives\n     */\n    uint public liquidationIncentiveMantissa;\n\n    /**\n     * @notice Max number of assets a single account can participate in (borrow or use as collateral)\n     */\n    uint public maxAssets;\n\n    /**\n     * @notice Per-account mapping of \"assets you are in\", capped by maxAssets\n     */\n    mapping(address => CToken[]) public accountAssets;\n\n}\n\n\n\n\n\ncontract SightrollerV2Storage is SightrollerV1Storage {\n\n    struct Market {\n        /// @notice Whether or not this market is listed\n        bool isListed;\n\n        /**\n         * @notice Multiplier representing the most one can borrow against their collateral in this market.\n         *  For instance, 0.9 to allow borrowing 90% of collateral value.\n         *  Must be between 0 and 1, and stored as a mantissa.\n         */\n        uint collateralFactorMantissa;\n\n        /// @notice Per-market mapping of \"accounts in this asset\"\n        mapping(address => bool) accountMembership;\n\n        /// @notice Whether or not this market receives Gsigh\n        bool isGsighed;\n\n        /// @notice Whether or not this market receives SIGH\n        bool isSighed;\n\n    }\n\n    /**\n     * @notice Official mapping of cTokens -> Market metadata\n     * @dev Used e.g. to determine if a market is supported\n     */\n    mapping(address => Market) public markets;\n\n\n    /**\n     * @notice The Pause Guardian can pause certain actions as a safety mechanism.\n     *  Actions which allow users to remove their own assets cannot be paused.\n     *  Liquidation / seizing / transfer can only be paused globally, not by market.\n     */\n    address public pauseGuardian;\n    bool public _mintGuardianPaused;\n    bool public _borrowGuardianPaused;\n    bool public transferGuardianPaused;\n    bool public seizeGuardianPaused;\n    mapping(address => bool) public mintGuardianPaused;\n    mapping(address => bool) public borrowGuardianPaused;\n}\n\n\n\n\n\n\n\ncontract SightrollerV3Storage is SightrollerV2Storage {\n\n    struct GsighMarketState {\n        /// @notice The market's last updated GsighBorrowIndex or GsighSupplyIndex\n        uint224 index;\n\n        /// @notice The block number the index was last updated at\n        uint32 block;\n    }\n\n    /// @notice A list of all markets\n    CToken[] public allMarkets;\n\n    /// @notice The rate at which the flywheel distributes Gsigh, per block\n    uint public gsighRate;\n\n    /// @notice The portion of gsighRate that each market currently receives\n    mapping(address => uint) public gsighSpeeds;\n\n    /// @notice The Gsigh market supply state for each market\n    mapping(address => GsighMarketState) public gsighSupplyState;\n\n    /// @notice The Gsigh market borrow state for each market\n    mapping(address => GsighMarketState) public gsighBorrowState;\n\n    /// @notice The Gsigh borrow index for each market for each supplier as of the last time they accrued Gsigh\n    mapping(address => mapping(address => uint)) public gsighSupplierIndex;\n\n    /// @notice The Gsigh borrow index for each market for each borrower as of the last time they accrued Gsigh\n    mapping(address => mapping(address => uint)) public gsighBorrowerIndex;\n\n    /// @notice The Gsigh accrued but not yet transferred to each user\n    mapping(address => uint) public gsighAccrued;\n}\n\n\ncontract SightrollerV4Storage is SightrollerV3Storage {\n\n    struct SighMarketState {\n\n        // uint256 totalSighDistributed;\n\n        // uint256 recentSighDistributed;\n\n        /// @notice The market's last updated Index\n        uint224 index;\n\n        /// @notice The block number the index was last updated at\n        uint32 block;\n    }\n\n\n    /// @notice The rate at which the flywheel distributes SIGH, per block. Calculated Daily\n    uint public sighRate;\n\n    /// @notice The portion of SighRate that each market currently receives, is adjusted every hour\n    mapping(address => uint) public sighSpeeds;\n\n    /// @notice The SIGH market supply state for each market\n    mapping(address => SighMarketState) public sighSupplyState;\n\n    /// @notice The SIGH market borrow state for each market\n    mapping(address => SighMarketState) public sighBorrowState;\n\n    /// @notice The SIGH borrow index for each market for each supplier as of the last time they accrued SIGH\n    mapping(address => mapping(address => uint)) public sighSupplierIndex;\n\n    /// @notice The SIGH borrow index for each market for each borrower as of the last time they accrued SIGH\n    mapping(address => mapping(address => uint)) public sighBorrowerIndex;\n\n    /// @notice The SIGH accrued but not yet transferred to each user\n    mapping(address => uint) public sighAccrued;\n}\n",
+  "source": "pragma solidity ^0.5.16;\n\nimport \"../Tokens/CToken.sol\";\nimport \"../PriceOracle.sol\";\n\n\ncontract UnitrollerAdminStorage {\n    /**\n    * @notice Administrator for this contract\n    */\n    address public admin;\n\n    /**\n    * @notice Pending administrator for this contract\n    */\n    address public pendingAdmin;\n\n    /**\n    * @notice Active brains of Unitroller\n    */\n    address public sightrollerImplementation;\n\n    /**\n    * @notice Pending brains of Unitroller\n    */\n    address public pendingSightrollerImplementation;\n}\n\n\n\n\n\ncontract SightrollerV1Storage is UnitrollerAdminStorage {\n\n    /**\n     * @notice Oracle which gives the price of any given asset\n     */\n    PriceOracle public oracle;\n\n    /**\n     * @notice Multiplier used to calculate the maximum repayAmount when liquidating a borrow\n     */\n    uint public closeFactorMantissa;\n\n    /**\n     * @notice Multiplier representing the discount on collateral that a liquidator receives\n     */\n    uint public liquidationIncentiveMantissa;\n\n    /**\n     * @notice Max number of assets a single account can participate in (borrow or use as collateral)\n     */\n    uint public maxAssets;\n\n    /**\n     * @notice Per-account mapping of \"assets you are in\", capped by maxAssets\n     */\n    mapping(address => CToken[]) public accountAssets;\n\n}\n\n\n\n\n\ncontract SightrollerV2Storage is SightrollerV1Storage {\n\n    struct Market {\n        /// @notice Whether or not this market is listed\n        bool isListed;\n\n        /**\n         * @notice Multiplier representing the most one can borrow against their collateral in this market.\n         *  For instance, 0.9 to allow borrowing 90% of collateral value.\n         *  Must be between 0 and 1, and stored as a mantissa.\n         */\n        uint collateralFactorMantissa;\n\n        /// @notice Per-market mapping of \"accounts in this asset\"\n        mapping(address => bool) accountMembership;\n\n        /// @notice Whether or not this market receives Gsigh\n        bool isGsighed;\n\n        /// @notice Whether or not this market receives SIGH\n        bool isSIGHed;\n\n    }\n\n    /**\n     * @notice Official mapping of cTokens -> Market metadata\n     * @dev Used e.g. to determine if a market is supported\n     */\n    mapping(address => Market) public markets;\n\n\n    /**\n     * @notice The Pause Guardian can pause certain actions as a safety mechanism.\n     *  Actions which allow users to remove their own assets cannot be paused.\n     *  Liquidation / seizing / transfer can only be paused globally, not by market.\n     */\n    address public pauseGuardian;\n    bool public _mintGuardianPaused;\n    bool public _borrowGuardianPaused;\n    bool public transferGuardianPaused;\n    bool public seizeGuardianPaused;\n    mapping(address => bool) public mintGuardianPaused;\n    mapping(address => bool) public borrowGuardianPaused;\n}\n\n\n\n\n\n\n\ncontract SightrollerV3Storage is SightrollerV2Storage {\n\n    struct GsighMarketState {\n        /// @notice The market's last updated GsighBorrowIndex or GsighSupplyIndex\n        uint224 index;\n\n        /// @notice The block number the index was last updated at\n        uint32 block;\n    }\n\n    /// @notice A list of all markets\n    CToken[] public allMarkets;\n\n    /// @notice The rate at which the flywheel distributes Gsigh, per block\n    uint public gsighRate;\n\n    /// @notice The portion of gsighRate that each market currently receives\n    mapping(address => uint) public gsighSpeeds;\n\n    /// @notice The Gsigh market supply state for each market\n    mapping(address => GsighMarketState) public gsighSupplyState;\n\n    /// @notice The Gsigh market borrow state for each market\n    mapping(address => GsighMarketState) public gsighBorrowState;\n\n    /// @notice The Gsigh borrow index for each market for each supplier as of the last time they accrued Gsigh\n    mapping(address => mapping(address => uint)) public gsighSupplierIndex;\n\n    /// @notice The Gsigh borrow index for each market for each borrower as of the last time they accrued Gsigh\n    mapping(address => mapping(address => uint)) public gsighBorrowerIndex;\n\n    /// @notice The Gsigh accrued but not yet transferred to each user\n    mapping(address => uint) public gsighAccrued;\n}\n\n\ncontract SightrollerV4Storage is SightrollerV3Storage {\n\n    struct SIGHMarketState {\n        /// @notice The market's last updated SIGHIndex \n        uint224 index;\n\n        uint224 recordedPriceSnapshot;\n\n        /// @notice The block number the index was last updated at\n        uint32 block;\n    }\n\n\n\n    /// @notice The rate at which the flywheel distributes SIGH, per block\n    uint public SIGHRate;\n\n    /// @notice The portion of SIGHRate that each market currently receives\n    mapping(address => uint) public SIGH_Speeds;\n\n    /// @notice The SIGH market supply state for each market\n    mapping(address => SIGHMarketState) public sigh_Market_State;\n\n    // /// @notice The SIGH market supply state for each market\n    // mapping(address => SIGHMarketState) public sighMarketBorrowState;\n\n    /// @notice The Gsigh borrow index for each market for each supplier as of the last time they accrued Gsigh\n    mapping(address => mapping(address => uint)) public SIGHSupplierIndex;\n\n    // / @notice The Gsigh borrow index for each market for each borrower as of the last time they accrued Gsigh\n    // mapping(address => mapping(address => uint)) public SIGHBorrowerIndex;\n\n    /// @notice The Gsigh accrued but not yet transferred to each user\n    mapping(address => uint) public SIGH_Accrued;\n\n    // treasuryRateMantissa\n\n    // uint256 public treasury_SIGH;\n\n    // uint256 public treasury_SIGH_Ratio;\n\n    address public gelatoAddress;\n\n}\n",
   "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Sightroller/SightrollerStorage.sol",
   "ast": {
     "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Sightroller/SightrollerStorage.sol",
     "exportedSymbols": {
       "SightrollerV1Storage": [
-        12411
+        13443
       ],
       "SightrollerV2Storage": [
-        12449
+        13481
       ],
       "SightrollerV3Storage": [
-        12490
+        13522
       ],
       "SightrollerV4Storage": [
-        12528
+        13554
       ],
       "UnitrollerAdminStorage": [
-        12395
+        13427
       ]
     },
-    "id": 12529,
+    "id": 13555,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 12384,
+        "id": 13416,
         "literals": [
           "solidity",
           "^",
@@ -344,10 +344,10 @@
       {
         "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CToken.sol",
         "file": "../Tokens/CToken.sol",
-        "id": 12385,
+        "id": 13417,
         "nodeType": "ImportDirective",
-        "scope": 12529,
-        "sourceUnit": 17783,
+        "scope": 13555,
+        "sourceUnit": 18871,
         "src": "26:30:21",
         "symbolAliases": [],
         "unitAlias": ""
@@ -355,9 +355,9 @@
       {
         "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/PriceOracle.sol",
         "file": "../PriceOracle.sol",
-        "id": 12386,
+        "id": 13418,
         "nodeType": "ImportDirective",
-        "scope": 12529,
+        "scope": 13555,
         "sourceUnit": 6734,
         "src": "57:28:21",
         "symbolAliases": [],
@@ -369,19 +369,19 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 12395,
+        "id": 13427,
         "linearizedBaseContracts": [
-          12395
+          13427
         ],
         "name": "UnitrollerAdminStorage",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 12388,
+            "id": 13420,
             "name": "admin",
             "nodeType": "VariableDeclaration",
-            "scope": 12395,
+            "scope": 13427,
             "src": "187:20:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -390,7 +390,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 12387,
+              "id": 13419,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "187:7:21",
@@ -405,10 +405,10 @@
           },
           {
             "constant": false,
-            "id": 12390,
+            "id": 13422,
             "name": "pendingAdmin",
             "nodeType": "VariableDeclaration",
-            "scope": 12395,
+            "scope": 13427,
             "src": "283:27:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -417,7 +417,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 12389,
+              "id": 13421,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "283:7:21",
@@ -432,10 +432,10 @@
           },
           {
             "constant": false,
-            "id": 12392,
+            "id": 13424,
             "name": "sightrollerImplementation",
             "nodeType": "VariableDeclaration",
-            "scope": 12395,
+            "scope": 13427,
             "src": "374:40:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -444,7 +444,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 12391,
+              "id": 13423,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "374:7:21",
@@ -459,10 +459,10 @@
           },
           {
             "constant": false,
-            "id": 12394,
+            "id": 13426,
             "name": "pendingSightrollerImplementation",
             "nodeType": "VariableDeclaration",
-            "scope": 12395,
+            "scope": 13427,
             "src": "479:47:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -471,7 +471,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 12393,
+              "id": 13425,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "479:7:21",
@@ -485,7 +485,7 @@
             "visibility": "public"
           }
         ],
-        "scope": 12529,
+        "scope": 13555,
         "src": "88:441:21"
       },
       {
@@ -494,41 +494,41 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 12396,
+              "id": 13428,
               "name": "UnitrollerAdminStorage",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 12395,
+              "referencedDeclaration": 13427,
               "src": "568:22:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_UnitrollerAdminStorage_$12395",
+                "typeIdentifier": "t_contract$_UnitrollerAdminStorage_$13427",
                 "typeString": "contract UnitrollerAdminStorage"
               }
             },
-            "id": 12397,
+            "id": 13429,
             "nodeType": "InheritanceSpecifier",
             "src": "568:22:21"
           }
         ],
         "contractDependencies": [
-          12395
+          13427
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 12411,
+        "id": 13443,
         "linearizedBaseContracts": [
-          12411,
-          12395
+          13443,
+          13427
         ],
         "name": "SightrollerV1Storage",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 12399,
+            "id": 13431,
             "name": "oracle",
             "nodeType": "VariableDeclaration",
-            "scope": 12411,
+            "scope": 13443,
             "src": "677:25:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -538,7 +538,7 @@
             },
             "typeName": {
               "contractScope": null,
-              "id": 12398,
+              "id": 13430,
               "name": "PriceOracle",
               "nodeType": "UserDefinedTypeName",
               "referencedDeclaration": 6733,
@@ -553,10 +553,10 @@
           },
           {
             "constant": false,
-            "id": 12401,
+            "id": 13433,
             "name": "closeFactorMantissa",
             "nodeType": "VariableDeclaration",
-            "scope": 12411,
+            "scope": 13443,
             "src": "819:31:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -565,7 +565,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 12400,
+              "id": 13432,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "819:4:21",
@@ -579,10 +579,10 @@
           },
           {
             "constant": false,
-            "id": 12403,
+            "id": 13435,
             "name": "liquidationIncentiveMantissa",
             "nodeType": "VariableDeclaration",
-            "scope": 12411,
+            "scope": 13443,
             "src": "966:40:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -591,7 +591,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 12402,
+              "id": 13434,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "966:4:21",
@@ -605,10 +605,10 @@
           },
           {
             "constant": false,
-            "id": 12405,
+            "id": 13437,
             "name": "maxAssets",
             "nodeType": "VariableDeclaration",
-            "scope": 12411,
+            "scope": 13443,
             "src": "1131:21:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -617,7 +617,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 12404,
+              "id": 13436,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "1131:4:21",
@@ -631,21 +631,21 @@
           },
           {
             "constant": false,
-            "id": 12410,
+            "id": 13442,
             "name": "accountAssets",
             "nodeType": "VariableDeclaration",
-            "scope": 12411,
+            "scope": 13443,
             "src": "1254:49:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_array$_t_contract$_CToken_$17782_$dyn_storage_$",
+              "typeIdentifier": "t_mapping$_t_address_$_t_array$_t_contract$_CToken_$18870_$dyn_storage_$",
               "typeString": "mapping(address => contract CToken[])"
             },
             "typeName": {
-              "id": 12409,
+              "id": 13441,
               "keyType": {
-                "id": 12406,
+                "id": 13438,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "1262:7:21",
@@ -657,28 +657,28 @@
               "nodeType": "Mapping",
               "src": "1254:28:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_array$_t_contract$_CToken_$17782_$dyn_storage_$",
+                "typeIdentifier": "t_mapping$_t_address_$_t_array$_t_contract$_CToken_$18870_$dyn_storage_$",
                 "typeString": "mapping(address => contract CToken[])"
               },
               "valueType": {
                 "baseType": {
                   "contractScope": null,
-                  "id": 12407,
+                  "id": 13439,
                   "name": "CToken",
                   "nodeType": "UserDefinedTypeName",
-                  "referencedDeclaration": 17782,
+                  "referencedDeclaration": 18870,
                   "src": "1273:6:21",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_CToken_$17782",
+                    "typeIdentifier": "t_contract$_CToken_$18870",
                     "typeString": "contract CToken"
                   }
                 },
-                "id": 12408,
+                "id": 13440,
                 "length": null,
                 "nodeType": "ArrayTypeName",
                 "src": "1273:8:21",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_array$_t_contract$_CToken_$17782_$dyn_storage_ptr",
+                  "typeIdentifier": "t_array$_t_contract$_CToken_$18870_$dyn_storage_ptr",
                   "typeString": "contract CToken[]"
                 }
               }
@@ -687,7 +687,7 @@
             "visibility": "public"
           }
         ],
-        "scope": 12529,
+        "scope": 13555,
         "src": "535:772:21"
       },
       {
@@ -696,47 +696,47 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 12412,
+              "id": 13444,
               "name": "SightrollerV1Storage",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 12411,
+              "referencedDeclaration": 13443,
               "src": "1346:20:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SightrollerV1Storage_$12411",
+                "typeIdentifier": "t_contract$_SightrollerV1Storage_$13443",
                 "typeString": "contract SightrollerV1Storage"
               }
             },
-            "id": 12413,
+            "id": 13445,
             "nodeType": "InheritanceSpecifier",
             "src": "1346:20:21"
           }
         ],
         "contractDependencies": [
-          12395,
-          12411
+          13427,
+          13443
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 12449,
+        "id": 13481,
         "linearizedBaseContracts": [
-          12449,
-          12411,
-          12395
+          13481,
+          13443,
+          13427
         ],
         "name": "SightrollerV2Storage",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "canonicalName": "SightrollerV2Storage.Market",
-            "id": 12426,
+            "id": 13458,
             "members": [
               {
                 "constant": false,
-                "id": 12415,
+                "id": 13447,
                 "name": "isListed",
                 "nodeType": "VariableDeclaration",
-                "scope": 12426,
+                "scope": 13458,
                 "src": "1455:13:21",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -745,7 +745,7 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 12414,
+                  "id": 13446,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
                   "src": "1455:4:21",
@@ -759,10 +759,10 @@
               },
               {
                 "constant": false,
-                "id": 12417,
+                "id": 13449,
                 "name": "collateralFactorMantissa",
                 "nodeType": "VariableDeclaration",
-                "scope": 12426,
+                "scope": 13458,
                 "src": "1748:29:21",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -771,7 +771,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 12416,
+                  "id": 13448,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
                   "src": "1748:4:21",
@@ -785,10 +785,10 @@
               },
               {
                 "constant": false,
-                "id": 12421,
+                "id": 13453,
                 "name": "accountMembership",
                 "nodeType": "VariableDeclaration",
-                "scope": 12426,
+                "scope": 13458,
                 "src": "1855:42:21",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -797,9 +797,9 @@
                   "typeString": "mapping(address => bool)"
                 },
                 "typeName": {
-                  "id": 12420,
+                  "id": 13452,
                   "keyType": {
-                    "id": 12418,
+                    "id": 13450,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1863:7:21",
@@ -815,7 +815,7 @@
                     "typeString": "mapping(address => bool)"
                   },
                   "valueType": {
-                    "id": 12419,
+                    "id": 13451,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "1874:4:21",
@@ -830,10 +830,10 @@
               },
               {
                 "constant": false,
-                "id": 12423,
+                "id": 13455,
                 "name": "isGsighed",
                 "nodeType": "VariableDeclaration",
-                "scope": 12426,
+                "scope": 13458,
                 "src": "1970:14:21",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -842,7 +842,7 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 12422,
+                  "id": 13454,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
                   "src": "1970:4:21",
@@ -856,10 +856,10 @@
               },
               {
                 "constant": false,
-                "id": 12425,
-                "name": "isSighed",
+                "id": 13457,
+                "name": "isSIGHed",
                 "nodeType": "VariableDeclaration",
-                "scope": 12426,
+                "scope": 13458,
                 "src": "2056:13:21",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -868,7 +868,7 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 12424,
+                  "id": 13456,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
                   "src": "2056:4:21",
@@ -883,27 +883,27 @@
             ],
             "name": "Market",
             "nodeType": "StructDefinition",
-            "scope": 12449,
+            "scope": 13481,
             "src": "1374:703:21",
             "visibility": "public"
           },
           {
             "constant": false,
-            "id": 12430,
+            "id": 13462,
             "name": "markets",
             "nodeType": "VariableDeclaration",
-            "scope": 12449,
+            "scope": 13481,
             "src": "2221:41:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Market_$12426_storage_$",
+              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Market_$13458_storage_$",
               "typeString": "mapping(address => struct SightrollerV2Storage.Market)"
             },
             "typeName": {
-              "id": 12429,
+              "id": 13461,
               "keyType": {
-                "id": 12427,
+                "id": 13459,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "2229:7:21",
@@ -915,18 +915,18 @@
               "nodeType": "Mapping",
               "src": "2221:26:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Market_$12426_storage_$",
+                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Market_$13458_storage_$",
                 "typeString": "mapping(address => struct SightrollerV2Storage.Market)"
               },
               "valueType": {
                 "contractScope": null,
-                "id": 12428,
+                "id": 13460,
                 "name": "Market",
                 "nodeType": "UserDefinedTypeName",
-                "referencedDeclaration": 12426,
+                "referencedDeclaration": 13458,
                 "src": "2240:6:21",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_Market_$12426_storage_ptr",
+                  "typeIdentifier": "t_struct$_Market_$13458_storage_ptr",
                   "typeString": "struct SightrollerV2Storage.Market"
                 }
               }
@@ -936,10 +936,10 @@
           },
           {
             "constant": false,
-            "id": 12432,
+            "id": 13464,
             "name": "pauseGuardian",
             "nodeType": "VariableDeclaration",
-            "scope": 12449,
+            "scope": 13481,
             "src": "2533:28:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -948,7 +948,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 12431,
+              "id": 13463,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "2533:7:21",
@@ -963,10 +963,10 @@
           },
           {
             "constant": false,
-            "id": 12434,
+            "id": 13466,
             "name": "_mintGuardianPaused",
             "nodeType": "VariableDeclaration",
-            "scope": 12449,
+            "scope": 13481,
             "src": "2567:31:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -975,7 +975,7 @@
               "typeString": "bool"
             },
             "typeName": {
-              "id": 12433,
+              "id": 13465,
               "name": "bool",
               "nodeType": "ElementaryTypeName",
               "src": "2567:4:21",
@@ -989,10 +989,10 @@
           },
           {
             "constant": false,
-            "id": 12436,
+            "id": 13468,
             "name": "_borrowGuardianPaused",
             "nodeType": "VariableDeclaration",
-            "scope": 12449,
+            "scope": 13481,
             "src": "2604:33:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1001,7 +1001,7 @@
               "typeString": "bool"
             },
             "typeName": {
-              "id": 12435,
+              "id": 13467,
               "name": "bool",
               "nodeType": "ElementaryTypeName",
               "src": "2604:4:21",
@@ -1015,10 +1015,10 @@
           },
           {
             "constant": false,
-            "id": 12438,
+            "id": 13470,
             "name": "transferGuardianPaused",
             "nodeType": "VariableDeclaration",
-            "scope": 12449,
+            "scope": 13481,
             "src": "2643:34:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1027,7 +1027,7 @@
               "typeString": "bool"
             },
             "typeName": {
-              "id": 12437,
+              "id": 13469,
               "name": "bool",
               "nodeType": "ElementaryTypeName",
               "src": "2643:4:21",
@@ -1041,10 +1041,10 @@
           },
           {
             "constant": false,
-            "id": 12440,
+            "id": 13472,
             "name": "seizeGuardianPaused",
             "nodeType": "VariableDeclaration",
-            "scope": 12449,
+            "scope": 13481,
             "src": "2683:31:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1053,7 +1053,7 @@
               "typeString": "bool"
             },
             "typeName": {
-              "id": 12439,
+              "id": 13471,
               "name": "bool",
               "nodeType": "ElementaryTypeName",
               "src": "2683:4:21",
@@ -1067,10 +1067,10 @@
           },
           {
             "constant": false,
-            "id": 12444,
+            "id": 13476,
             "name": "mintGuardianPaused",
             "nodeType": "VariableDeclaration",
-            "scope": 12449,
+            "scope": 13481,
             "src": "2720:50:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1079,9 +1079,9 @@
               "typeString": "mapping(address => bool)"
             },
             "typeName": {
-              "id": 12443,
+              "id": 13475,
               "keyType": {
-                "id": 12441,
+                "id": 13473,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "2728:7:21",
@@ -1097,7 +1097,7 @@
                 "typeString": "mapping(address => bool)"
               },
               "valueType": {
-                "id": 12442,
+                "id": 13474,
                 "name": "bool",
                 "nodeType": "ElementaryTypeName",
                 "src": "2739:4:21",
@@ -1112,10 +1112,10 @@
           },
           {
             "constant": false,
-            "id": 12448,
+            "id": 13480,
             "name": "borrowGuardianPaused",
             "nodeType": "VariableDeclaration",
-            "scope": 12449,
+            "scope": 13481,
             "src": "2776:52:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1124,9 +1124,9 @@
               "typeString": "mapping(address => bool)"
             },
             "typeName": {
-              "id": 12447,
+              "id": 13479,
               "keyType": {
-                "id": 12445,
+                "id": 13477,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "2784:7:21",
@@ -1142,7 +1142,7 @@
                 "typeString": "mapping(address => bool)"
               },
               "valueType": {
-                "id": 12446,
+                "id": 13478,
                 "name": "bool",
                 "nodeType": "ElementaryTypeName",
                 "src": "2795:4:21",
@@ -1156,7 +1156,7 @@
             "visibility": "public"
           }
         ],
-        "scope": 12529,
+        "scope": 13555,
         "src": "1313:1518:21"
       },
       {
@@ -1165,49 +1165,49 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 12450,
+              "id": 13482,
               "name": "SightrollerV2Storage",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 12449,
+              "referencedDeclaration": 13481,
               "src": "2872:20:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SightrollerV2Storage_$12449",
+                "typeIdentifier": "t_contract$_SightrollerV2Storage_$13481",
                 "typeString": "contract SightrollerV2Storage"
               }
             },
-            "id": 12451,
+            "id": 13483,
             "nodeType": "InheritanceSpecifier",
             "src": "2872:20:21"
           }
         ],
         "contractDependencies": [
-          12395,
-          12411,
-          12449
+          13427,
+          13443,
+          13481
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 12490,
+        "id": 13522,
         "linearizedBaseContracts": [
-          12490,
-          12449,
-          12411,
-          12395
+          13522,
+          13481,
+          13443,
+          13427
         ],
         "name": "SightrollerV3Storage",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "canonicalName": "SightrollerV3Storage.GsighMarketState",
-            "id": 12456,
+            "id": 13488,
             "members": [
               {
                 "constant": false,
-                "id": 12453,
+                "id": 13485,
                 "name": "index",
                 "nodeType": "VariableDeclaration",
-                "scope": 12456,
+                "scope": 13488,
                 "src": "3017:13:21",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1216,7 +1216,7 @@
                   "typeString": "uint224"
                 },
                 "typeName": {
-                  "id": 12452,
+                  "id": 13484,
                   "name": "uint224",
                   "nodeType": "ElementaryTypeName",
                   "src": "3017:7:21",
@@ -1230,10 +1230,10 @@
               },
               {
                 "constant": false,
-                "id": 12455,
+                "id": 13487,
                 "name": "block",
                 "nodeType": "VariableDeclaration",
-                "scope": 12456,
+                "scope": 13488,
                 "src": "3108:12:21",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1242,7 +1242,7 @@
                   "typeString": "uint32"
                 },
                 "typeName": {
-                  "id": 12454,
+                  "id": 13486,
                   "name": "uint32",
                   "nodeType": "ElementaryTypeName",
                   "src": "3108:6:21",
@@ -1257,42 +1257,42 @@
             ],
             "name": "GsighMarketState",
             "nodeType": "StructDefinition",
-            "scope": 12490,
+            "scope": 13522,
             "src": "2900:227:21",
             "visibility": "public"
           },
           {
             "constant": false,
-            "id": 12459,
+            "id": 13491,
             "name": "allMarkets",
             "nodeType": "VariableDeclaration",
-            "scope": 12490,
+            "scope": 13522,
             "src": "3171:26:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_array$_t_contract$_CToken_$17782_$dyn_storage",
+              "typeIdentifier": "t_array$_t_contract$_CToken_$18870_$dyn_storage",
               "typeString": "contract CToken[]"
             },
             "typeName": {
               "baseType": {
                 "contractScope": null,
-                "id": 12457,
+                "id": 13489,
                 "name": "CToken",
                 "nodeType": "UserDefinedTypeName",
-                "referencedDeclaration": 17782,
+                "referencedDeclaration": 18870,
                 "src": "3171:6:21",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_contract$_CToken_$17782",
+                  "typeIdentifier": "t_contract$_CToken_$18870",
                   "typeString": "contract CToken"
                 }
               },
-              "id": 12458,
+              "id": 13490,
               "length": null,
               "nodeType": "ArrayTypeName",
               "src": "3171:8:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_array$_t_contract$_CToken_$17782_$dyn_storage_ptr",
+                "typeIdentifier": "t_array$_t_contract$_CToken_$18870_$dyn_storage_ptr",
                 "typeString": "contract CToken[]"
               }
             },
@@ -1301,10 +1301,10 @@
           },
           {
             "constant": false,
-            "id": 12461,
+            "id": 13493,
             "name": "gsighRate",
             "nodeType": "VariableDeclaration",
-            "scope": 12490,
+            "scope": 13522,
             "src": "3280:21:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1313,7 +1313,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 12460,
+              "id": 13492,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "3280:4:21",
@@ -1327,10 +1327,10 @@
           },
           {
             "constant": false,
-            "id": 12465,
+            "id": 13497,
             "name": "gsighSpeeds",
             "nodeType": "VariableDeclaration",
-            "scope": 12490,
+            "scope": 13522,
             "src": "3385:43:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1339,9 +1339,9 @@
               "typeString": "mapping(address => uint256)"
             },
             "typeName": {
-              "id": 12464,
+              "id": 13496,
               "keyType": {
-                "id": 12462,
+                "id": 13494,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "3393:7:21",
@@ -1357,7 +1357,7 @@
                 "typeString": "mapping(address => uint256)"
               },
               "valueType": {
-                "id": 12463,
+                "id": 13495,
                 "name": "uint",
                 "nodeType": "ElementaryTypeName",
                 "src": "3404:4:21",
@@ -1372,21 +1372,21 @@
           },
           {
             "constant": false,
-            "id": 12469,
+            "id": 13501,
             "name": "gsighSupplyState",
             "nodeType": "VariableDeclaration",
-            "scope": 12490,
+            "scope": 13522,
             "src": "3497:60:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_GsighMarketState_$12456_storage_$",
+              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_GsighMarketState_$13488_storage_$",
               "typeString": "mapping(address => struct SightrollerV3Storage.GsighMarketState)"
             },
             "typeName": {
-              "id": 12468,
+              "id": 13500,
               "keyType": {
-                "id": 12466,
+                "id": 13498,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "3505:7:21",
@@ -1398,18 +1398,18 @@
               "nodeType": "Mapping",
               "src": "3497:36:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_GsighMarketState_$12456_storage_$",
+                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_GsighMarketState_$13488_storage_$",
                 "typeString": "mapping(address => struct SightrollerV3Storage.GsighMarketState)"
               },
               "valueType": {
                 "contractScope": null,
-                "id": 12467,
+                "id": 13499,
                 "name": "GsighMarketState",
                 "nodeType": "UserDefinedTypeName",
-                "referencedDeclaration": 12456,
+                "referencedDeclaration": 13488,
                 "src": "3516:16:21",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_GsighMarketState_$12456_storage_ptr",
+                  "typeIdentifier": "t_struct$_GsighMarketState_$13488_storage_ptr",
                   "typeString": "struct SightrollerV3Storage.GsighMarketState"
                 }
               }
@@ -1419,21 +1419,21 @@
           },
           {
             "constant": false,
-            "id": 12473,
+            "id": 13505,
             "name": "gsighBorrowState",
             "nodeType": "VariableDeclaration",
-            "scope": 12490,
+            "scope": 13522,
             "src": "3626:60:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_GsighMarketState_$12456_storage_$",
+              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_GsighMarketState_$13488_storage_$",
               "typeString": "mapping(address => struct SightrollerV3Storage.GsighMarketState)"
             },
             "typeName": {
-              "id": 12472,
+              "id": 13504,
               "keyType": {
-                "id": 12470,
+                "id": 13502,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "3634:7:21",
@@ -1445,18 +1445,18 @@
               "nodeType": "Mapping",
               "src": "3626:36:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_GsighMarketState_$12456_storage_$",
+                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_GsighMarketState_$13488_storage_$",
                 "typeString": "mapping(address => struct SightrollerV3Storage.GsighMarketState)"
               },
               "valueType": {
                 "contractScope": null,
-                "id": 12471,
+                "id": 13503,
                 "name": "GsighMarketState",
                 "nodeType": "UserDefinedTypeName",
-                "referencedDeclaration": 12456,
+                "referencedDeclaration": 13488,
                 "src": "3645:16:21",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_GsighMarketState_$12456_storage_ptr",
+                  "typeIdentifier": "t_struct$_GsighMarketState_$13488_storage_ptr",
                   "typeString": "struct SightrollerV3Storage.GsighMarketState"
                 }
               }
@@ -1466,10 +1466,10 @@
           },
           {
             "constant": false,
-            "id": 12479,
+            "id": 13511,
             "name": "gsighSupplierIndex",
             "nodeType": "VariableDeclaration",
-            "scope": 12490,
+            "scope": 13522,
             "src": "3805:70:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1478,9 +1478,9 @@
               "typeString": "mapping(address => mapping(address => uint256))"
             },
             "typeName": {
-              "id": 12478,
+              "id": 13510,
               "keyType": {
-                "id": 12474,
+                "id": 13506,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "3813:7:21",
@@ -1496,9 +1496,9 @@
                 "typeString": "mapping(address => mapping(address => uint256))"
               },
               "valueType": {
-                "id": 12477,
+                "id": 13509,
                 "keyType": {
-                  "id": 12475,
+                  "id": 13507,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
                   "src": "3832:7:21",
@@ -1514,7 +1514,7 @@
                   "typeString": "mapping(address => uint256)"
                 },
                 "valueType": {
-                  "id": 12476,
+                  "id": 13508,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
                   "src": "3843:4:21",
@@ -1530,10 +1530,10 @@
           },
           {
             "constant": false,
-            "id": 12485,
+            "id": 13517,
             "name": "gsighBorrowerIndex",
             "nodeType": "VariableDeclaration",
-            "scope": 12490,
+            "scope": 13522,
             "src": "3994:70:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1542,9 +1542,9 @@
               "typeString": "mapping(address => mapping(address => uint256))"
             },
             "typeName": {
-              "id": 12484,
+              "id": 13516,
               "keyType": {
-                "id": 12480,
+                "id": 13512,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "4002:7:21",
@@ -1560,9 +1560,9 @@
                 "typeString": "mapping(address => mapping(address => uint256))"
               },
               "valueType": {
-                "id": 12483,
+                "id": 13515,
                 "keyType": {
-                  "id": 12481,
+                  "id": 13513,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
                   "src": "4021:7:21",
@@ -1578,7 +1578,7 @@
                   "typeString": "mapping(address => uint256)"
                 },
                 "valueType": {
-                  "id": 12482,
+                  "id": 13514,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
                   "src": "4032:4:21",
@@ -1594,10 +1594,10 @@
           },
           {
             "constant": false,
-            "id": 12489,
+            "id": 13521,
             "name": "gsighAccrued",
             "nodeType": "VariableDeclaration",
-            "scope": 12490,
+            "scope": 13522,
             "src": "4142:44:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1606,9 +1606,9 @@
               "typeString": "mapping(address => uint256)"
             },
             "typeName": {
-              "id": 12488,
+              "id": 13520,
               "keyType": {
-                "id": 12486,
+                "id": 13518,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "4150:7:21",
@@ -1624,7 +1624,7 @@
                 "typeString": "mapping(address => uint256)"
               },
               "valueType": {
-                "id": 12487,
+                "id": 13519,
                 "name": "uint",
                 "nodeType": "ElementaryTypeName",
                 "src": "4161:4:21",
@@ -1638,7 +1638,7 @@
             "visibility": "public"
           }
         ],
-        "scope": 12529,
+        "scope": 13555,
         "src": "2839:1350:21"
       },
       {
@@ -1647,52 +1647,52 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 12491,
+              "id": 13523,
               "name": "SightrollerV3Storage",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 12490,
+              "referencedDeclaration": 13522,
               "src": "4225:20:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SightrollerV3Storage_$12490",
+                "typeIdentifier": "t_contract$_SightrollerV3Storage_$13522",
                 "typeString": "contract SightrollerV3Storage"
               }
             },
-            "id": 12492,
+            "id": 13524,
             "nodeType": "InheritanceSpecifier",
             "src": "4225:20:21"
           }
         ],
         "contractDependencies": [
-          12395,
-          12411,
-          12449,
-          12490
+          13427,
+          13443,
+          13481,
+          13522
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 12528,
+        "id": 13554,
         "linearizedBaseContracts": [
-          12528,
-          12490,
-          12449,
-          12411,
-          12395
+          13554,
+          13522,
+          13481,
+          13443,
+          13427
         ],
         "name": "SightrollerV4Storage",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "canonicalName": "SightrollerV4Storage.SighMarketState",
-            "id": 12497,
+            "canonicalName": "SightrollerV4Storage.SIGHMarketState",
+            "id": 13531,
             "members": [
               {
                 "constant": false,
-                "id": 12494,
+                "id": 13526,
                 "name": "index",
                 "nodeType": "VariableDeclaration",
-                "scope": 12497,
-                "src": "4424:13:21",
+                "scope": 13531,
+                "src": "4343:13:21",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1700,10 +1700,10 @@
                   "typeString": "uint224"
                 },
                 "typeName": {
-                  "id": 12493,
+                  "id": 13525,
                   "name": "uint224",
                   "nodeType": "ElementaryTypeName",
-                  "src": "4424:7:21",
+                  "src": "4343:7:21",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint224",
                     "typeString": "uint224"
@@ -1714,11 +1714,37 @@
               },
               {
                 "constant": false,
-                "id": 12496,
+                "id": 13528,
+                "name": "recordedPriceSnapshot",
+                "nodeType": "VariableDeclaration",
+                "scope": 13531,
+                "src": "4367:29:21",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint224",
+                  "typeString": "uint224"
+                },
+                "typeName": {
+                  "id": 13527,
+                  "name": "uint224",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "4367:7:21",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint224",
+                    "typeString": "uint224"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 13530,
                 "name": "block",
                 "nodeType": "VariableDeclaration",
-                "scope": 12497,
-                "src": "4515:12:21",
+                "scope": 13531,
+                "src": "4474:12:21",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1726,10 +1752,10 @@
                   "typeString": "uint32"
                 },
                 "typeName": {
-                  "id": 12495,
+                  "id": 13529,
                   "name": "uint32",
                   "nodeType": "ElementaryTypeName",
-                  "src": "4515:6:21",
+                  "src": "4474:6:21",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint32",
                     "typeString": "uint32"
@@ -1739,19 +1765,19 @@
                 "visibility": "internal"
               }
             ],
-            "name": "SighMarketState",
+            "name": "SIGHMarketState",
             "nodeType": "StructDefinition",
-            "scope": 12528,
-            "src": "4253:281:21",
+            "scope": 13554,
+            "src": "4253:240:21",
             "visibility": "public"
           },
           {
             "constant": false,
-            "id": 12499,
-            "name": "sighRate",
+            "id": 13533,
+            "name": "SIGHRate",
             "nodeType": "VariableDeclaration",
-            "scope": 12528,
-            "src": "4634:20:21",
+            "scope": 13554,
+            "src": "4576:20:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -1759,10 +1785,10 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 12498,
+              "id": 13532,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
-              "src": "4634:4:21",
+              "src": "4576:4:21",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -1773,11 +1799,11 @@
           },
           {
             "constant": false,
-            "id": 12503,
-            "name": "sighSpeeds",
+            "id": 13537,
+            "name": "SIGH_Speeds",
             "nodeType": "VariableDeclaration",
-            "scope": 12528,
-            "src": "4761:42:21",
+            "scope": 13554,
+            "src": "4679:43:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -1785,28 +1811,28 @@
               "typeString": "mapping(address => uint256)"
             },
             "typeName": {
-              "id": 12502,
+              "id": 13536,
               "keyType": {
-                "id": 12500,
+                "id": 13534,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
-                "src": "4769:7:21",
+                "src": "4687:7:21",
                 "typeDescriptions": {
                   "typeIdentifier": "t_address",
                   "typeString": "address"
                 }
               },
               "nodeType": "Mapping",
-              "src": "4761:24:21",
+              "src": "4679:24:21",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
                 "typeString": "mapping(address => uint256)"
               },
               "valueType": {
-                "id": 12501,
+                "id": 13535,
                 "name": "uint",
                 "nodeType": "ElementaryTypeName",
-                "src": "4780:4:21",
+                "src": "4698:4:21",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
@@ -1818,45 +1844,45 @@
           },
           {
             "constant": false,
-            "id": 12507,
-            "name": "sighSupplyState",
+            "id": 13541,
+            "name": "sigh_Market_State",
             "nodeType": "VariableDeclaration",
-            "scope": 12528,
-            "src": "4871:58:21",
+            "scope": 13554,
+            "src": "4790:60:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_SighMarketState_$12497_storage_$",
-              "typeString": "mapping(address => struct SightrollerV4Storage.SighMarketState)"
+              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_SIGHMarketState_$13531_storage_$",
+              "typeString": "mapping(address => struct SightrollerV4Storage.SIGHMarketState)"
             },
             "typeName": {
-              "id": 12506,
+              "id": 13540,
               "keyType": {
-                "id": 12504,
+                "id": 13538,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
-                "src": "4879:7:21",
+                "src": "4798:7:21",
                 "typeDescriptions": {
                   "typeIdentifier": "t_address",
                   "typeString": "address"
                 }
               },
               "nodeType": "Mapping",
-              "src": "4871:35:21",
+              "src": "4790:35:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_SighMarketState_$12497_storage_$",
-                "typeString": "mapping(address => struct SightrollerV4Storage.SighMarketState)"
+                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_SIGHMarketState_$13531_storage_$",
+                "typeString": "mapping(address => struct SightrollerV4Storage.SIGHMarketState)"
               },
               "valueType": {
                 "contractScope": null,
-                "id": 12505,
-                "name": "SighMarketState",
+                "id": 13539,
+                "name": "SIGHMarketState",
                 "nodeType": "UserDefinedTypeName",
-                "referencedDeclaration": 12497,
-                "src": "4890:15:21",
+                "referencedDeclaration": 13531,
+                "src": "4809:15:21",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_SighMarketState_$12497_storage_ptr",
-                  "typeString": "struct SightrollerV4Storage.SighMarketState"
+                  "typeIdentifier": "t_struct$_SIGHMarketState_$13531_storage_ptr",
+                  "typeString": "struct SightrollerV4Storage.SIGHMarketState"
                 }
               }
             },
@@ -1865,58 +1891,11 @@
           },
           {
             "constant": false,
-            "id": 12511,
-            "name": "sighBorrowState",
+            "id": 13547,
+            "name": "SIGHSupplierIndex",
             "nodeType": "VariableDeclaration",
-            "scope": 12528,
-            "src": "4997:58:21",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_SighMarketState_$12497_storage_$",
-              "typeString": "mapping(address => struct SightrollerV4Storage.SighMarketState)"
-            },
-            "typeName": {
-              "id": 12510,
-              "keyType": {
-                "id": 12508,
-                "name": "address",
-                "nodeType": "ElementaryTypeName",
-                "src": "5005:7:21",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_address",
-                  "typeString": "address"
-                }
-              },
-              "nodeType": "Mapping",
-              "src": "4997:35:21",
-              "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_SighMarketState_$12497_storage_$",
-                "typeString": "mapping(address => struct SightrollerV4Storage.SighMarketState)"
-              },
-              "valueType": {
-                "contractScope": null,
-                "id": 12509,
-                "name": "SighMarketState",
-                "nodeType": "UserDefinedTypeName",
-                "referencedDeclaration": 12497,
-                "src": "5016:15:21",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_SighMarketState_$12497_storage_ptr",
-                  "typeString": "struct SightrollerV4Storage.SighMarketState"
-                }
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 12517,
-            "name": "sighSupplierIndex",
-            "nodeType": "VariableDeclaration",
-            "scope": 12528,
-            "src": "5172:69:21",
+            "scope": 13554,
+            "src": "5107:69:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -1924,46 +1903,46 @@
               "typeString": "mapping(address => mapping(address => uint256))"
             },
             "typeName": {
-              "id": 12516,
+              "id": 13546,
               "keyType": {
-                "id": 12512,
+                "id": 13542,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
-                "src": "5180:7:21",
+                "src": "5115:7:21",
                 "typeDescriptions": {
                   "typeIdentifier": "t_address",
                   "typeString": "address"
                 }
               },
               "nodeType": "Mapping",
-              "src": "5172:44:21",
+              "src": "5107:44:21",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_address_$_t_mapping$_t_address_$_t_uint256_$_$",
                 "typeString": "mapping(address => mapping(address => uint256))"
               },
               "valueType": {
-                "id": 12515,
+                "id": 13545,
                 "keyType": {
-                  "id": 12513,
+                  "id": 13543,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "5199:7:21",
+                  "src": "5134:7:21",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
                     "typeString": "address"
                   }
                 },
                 "nodeType": "Mapping",
-                "src": "5191:24:21",
+                "src": "5126:24:21",
                 "typeDescriptions": {
                   "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
                   "typeString": "mapping(address => uint256)"
                 },
                 "valueType": {
-                  "id": 12514,
+                  "id": 13544,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "5210:4:21",
+                  "src": "5145:4:21",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -1976,62 +1955,43 @@
           },
           {
             "constant": false,
-            "id": 12523,
-            "name": "sighBorrowerIndex",
+            "id": 13551,
+            "name": "SIGH_Accrued",
             "nodeType": "VariableDeclaration",
-            "scope": 12528,
-            "src": "5358:69:21",
+            "scope": 13554,
+            "src": "5446:44:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_mapping$_t_address_$_t_uint256_$_$",
-              "typeString": "mapping(address => mapping(address => uint256))"
+              "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
+              "typeString": "mapping(address => uint256)"
             },
             "typeName": {
-              "id": 12522,
+              "id": 13550,
               "keyType": {
-                "id": 12518,
+                "id": 13548,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
-                "src": "5366:7:21",
+                "src": "5454:7:21",
                 "typeDescriptions": {
                   "typeIdentifier": "t_address",
                   "typeString": "address"
                 }
               },
               "nodeType": "Mapping",
-              "src": "5358:44:21",
+              "src": "5446:24:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_mapping$_t_address_$_t_uint256_$_$",
-                "typeString": "mapping(address => mapping(address => uint256))"
+                "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
+                "typeString": "mapping(address => uint256)"
               },
               "valueType": {
-                "id": 12521,
-                "keyType": {
-                  "id": 12519,
-                  "name": "address",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "5385:7:21",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  }
-                },
-                "nodeType": "Mapping",
-                "src": "5377:24:21",
+                "id": 13549,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "5465:4:21",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-                  "typeString": "mapping(address => uint256)"
-                },
-                "valueType": {
-                  "id": 12520,
-                  "name": "uint",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "5396:4:21",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  }
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
                 }
               }
             },
@@ -2040,80 +2000,62 @@
           },
           {
             "constant": false,
-            "id": 12527,
-            "name": "sighAccrued",
+            "id": 13553,
+            "name": "gelatoAddress",
             "nodeType": "VariableDeclaration",
-            "scope": 12528,
-            "src": "5504:43:21",
+            "scope": 13554,
+            "src": "5608:28:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-              "typeString": "mapping(address => uint256)"
+              "typeIdentifier": "t_address",
+              "typeString": "address"
             },
             "typeName": {
-              "id": 12526,
-              "keyType": {
-                "id": 12524,
-                "name": "address",
-                "nodeType": "ElementaryTypeName",
-                "src": "5512:7:21",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_address",
-                  "typeString": "address"
-                }
-              },
-              "nodeType": "Mapping",
-              "src": "5504:24:21",
+              "id": 13552,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "5608:7:21",
+              "stateMutability": "nonpayable",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-                "typeString": "mapping(address => uint256)"
-              },
-              "valueType": {
-                "id": 12525,
-                "name": "uint",
-                "nodeType": "ElementaryTypeName",
-                "src": "5523:4:21",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_uint256",
-                  "typeString": "uint256"
-                }
+                "typeIdentifier": "t_address",
+                "typeString": "address"
               }
             },
             "value": null,
             "visibility": "public"
           }
         ],
-        "scope": 12529,
-        "src": "4192:1358:21"
+        "scope": 13555,
+        "src": "4192:1448:21"
       }
     ],
-    "src": "0:5551:21"
+    "src": "0:5641:21"
   },
   "legacyAST": {
     "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Sightroller/SightrollerStorage.sol",
     "exportedSymbols": {
       "SightrollerV1Storage": [
-        12411
+        13443
       ],
       "SightrollerV2Storage": [
-        12449
+        13481
       ],
       "SightrollerV3Storage": [
-        12490
+        13522
       ],
       "SightrollerV4Storage": [
-        12528
+        13554
       ],
       "UnitrollerAdminStorage": [
-        12395
+        13427
       ]
     },
-    "id": 12529,
+    "id": 13555,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 12384,
+        "id": 13416,
         "literals": [
           "solidity",
           "^",
@@ -2126,10 +2068,10 @@
       {
         "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CToken.sol",
         "file": "../Tokens/CToken.sol",
-        "id": 12385,
+        "id": 13417,
         "nodeType": "ImportDirective",
-        "scope": 12529,
-        "sourceUnit": 17783,
+        "scope": 13555,
+        "sourceUnit": 18871,
         "src": "26:30:21",
         "symbolAliases": [],
         "unitAlias": ""
@@ -2137,9 +2079,9 @@
       {
         "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/PriceOracle.sol",
         "file": "../PriceOracle.sol",
-        "id": 12386,
+        "id": 13418,
         "nodeType": "ImportDirective",
-        "scope": 12529,
+        "scope": 13555,
         "sourceUnit": 6734,
         "src": "57:28:21",
         "symbolAliases": [],
@@ -2151,19 +2093,19 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 12395,
+        "id": 13427,
         "linearizedBaseContracts": [
-          12395
+          13427
         ],
         "name": "UnitrollerAdminStorage",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 12388,
+            "id": 13420,
             "name": "admin",
             "nodeType": "VariableDeclaration",
-            "scope": 12395,
+            "scope": 13427,
             "src": "187:20:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2172,7 +2114,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 12387,
+              "id": 13419,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "187:7:21",
@@ -2187,10 +2129,10 @@
           },
           {
             "constant": false,
-            "id": 12390,
+            "id": 13422,
             "name": "pendingAdmin",
             "nodeType": "VariableDeclaration",
-            "scope": 12395,
+            "scope": 13427,
             "src": "283:27:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2199,7 +2141,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 12389,
+              "id": 13421,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "283:7:21",
@@ -2214,10 +2156,10 @@
           },
           {
             "constant": false,
-            "id": 12392,
+            "id": 13424,
             "name": "sightrollerImplementation",
             "nodeType": "VariableDeclaration",
-            "scope": 12395,
+            "scope": 13427,
             "src": "374:40:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2226,7 +2168,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 12391,
+              "id": 13423,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "374:7:21",
@@ -2241,10 +2183,10 @@
           },
           {
             "constant": false,
-            "id": 12394,
+            "id": 13426,
             "name": "pendingSightrollerImplementation",
             "nodeType": "VariableDeclaration",
-            "scope": 12395,
+            "scope": 13427,
             "src": "479:47:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2253,7 +2195,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 12393,
+              "id": 13425,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "479:7:21",
@@ -2267,7 +2209,7 @@
             "visibility": "public"
           }
         ],
-        "scope": 12529,
+        "scope": 13555,
         "src": "88:441:21"
       },
       {
@@ -2276,41 +2218,41 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 12396,
+              "id": 13428,
               "name": "UnitrollerAdminStorage",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 12395,
+              "referencedDeclaration": 13427,
               "src": "568:22:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_UnitrollerAdminStorage_$12395",
+                "typeIdentifier": "t_contract$_UnitrollerAdminStorage_$13427",
                 "typeString": "contract UnitrollerAdminStorage"
               }
             },
-            "id": 12397,
+            "id": 13429,
             "nodeType": "InheritanceSpecifier",
             "src": "568:22:21"
           }
         ],
         "contractDependencies": [
-          12395
+          13427
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 12411,
+        "id": 13443,
         "linearizedBaseContracts": [
-          12411,
-          12395
+          13443,
+          13427
         ],
         "name": "SightrollerV1Storage",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 12399,
+            "id": 13431,
             "name": "oracle",
             "nodeType": "VariableDeclaration",
-            "scope": 12411,
+            "scope": 13443,
             "src": "677:25:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2320,7 +2262,7 @@
             },
             "typeName": {
               "contractScope": null,
-              "id": 12398,
+              "id": 13430,
               "name": "PriceOracle",
               "nodeType": "UserDefinedTypeName",
               "referencedDeclaration": 6733,
@@ -2335,10 +2277,10 @@
           },
           {
             "constant": false,
-            "id": 12401,
+            "id": 13433,
             "name": "closeFactorMantissa",
             "nodeType": "VariableDeclaration",
-            "scope": 12411,
+            "scope": 13443,
             "src": "819:31:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2347,7 +2289,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 12400,
+              "id": 13432,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "819:4:21",
@@ -2361,10 +2303,10 @@
           },
           {
             "constant": false,
-            "id": 12403,
+            "id": 13435,
             "name": "liquidationIncentiveMantissa",
             "nodeType": "VariableDeclaration",
-            "scope": 12411,
+            "scope": 13443,
             "src": "966:40:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2373,7 +2315,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 12402,
+              "id": 13434,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "966:4:21",
@@ -2387,10 +2329,10 @@
           },
           {
             "constant": false,
-            "id": 12405,
+            "id": 13437,
             "name": "maxAssets",
             "nodeType": "VariableDeclaration",
-            "scope": 12411,
+            "scope": 13443,
             "src": "1131:21:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2399,7 +2341,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 12404,
+              "id": 13436,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "1131:4:21",
@@ -2413,21 +2355,21 @@
           },
           {
             "constant": false,
-            "id": 12410,
+            "id": 13442,
             "name": "accountAssets",
             "nodeType": "VariableDeclaration",
-            "scope": 12411,
+            "scope": 13443,
             "src": "1254:49:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_array$_t_contract$_CToken_$17782_$dyn_storage_$",
+              "typeIdentifier": "t_mapping$_t_address_$_t_array$_t_contract$_CToken_$18870_$dyn_storage_$",
               "typeString": "mapping(address => contract CToken[])"
             },
             "typeName": {
-              "id": 12409,
+              "id": 13441,
               "keyType": {
-                "id": 12406,
+                "id": 13438,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "1262:7:21",
@@ -2439,28 +2381,28 @@
               "nodeType": "Mapping",
               "src": "1254:28:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_array$_t_contract$_CToken_$17782_$dyn_storage_$",
+                "typeIdentifier": "t_mapping$_t_address_$_t_array$_t_contract$_CToken_$18870_$dyn_storage_$",
                 "typeString": "mapping(address => contract CToken[])"
               },
               "valueType": {
                 "baseType": {
                   "contractScope": null,
-                  "id": 12407,
+                  "id": 13439,
                   "name": "CToken",
                   "nodeType": "UserDefinedTypeName",
-                  "referencedDeclaration": 17782,
+                  "referencedDeclaration": 18870,
                   "src": "1273:6:21",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_CToken_$17782",
+                    "typeIdentifier": "t_contract$_CToken_$18870",
                     "typeString": "contract CToken"
                   }
                 },
-                "id": 12408,
+                "id": 13440,
                 "length": null,
                 "nodeType": "ArrayTypeName",
                 "src": "1273:8:21",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_array$_t_contract$_CToken_$17782_$dyn_storage_ptr",
+                  "typeIdentifier": "t_array$_t_contract$_CToken_$18870_$dyn_storage_ptr",
                   "typeString": "contract CToken[]"
                 }
               }
@@ -2469,7 +2411,7 @@
             "visibility": "public"
           }
         ],
-        "scope": 12529,
+        "scope": 13555,
         "src": "535:772:21"
       },
       {
@@ -2478,47 +2420,47 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 12412,
+              "id": 13444,
               "name": "SightrollerV1Storage",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 12411,
+              "referencedDeclaration": 13443,
               "src": "1346:20:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SightrollerV1Storage_$12411",
+                "typeIdentifier": "t_contract$_SightrollerV1Storage_$13443",
                 "typeString": "contract SightrollerV1Storage"
               }
             },
-            "id": 12413,
+            "id": 13445,
             "nodeType": "InheritanceSpecifier",
             "src": "1346:20:21"
           }
         ],
         "contractDependencies": [
-          12395,
-          12411
+          13427,
+          13443
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 12449,
+        "id": 13481,
         "linearizedBaseContracts": [
-          12449,
-          12411,
-          12395
+          13481,
+          13443,
+          13427
         ],
         "name": "SightrollerV2Storage",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "canonicalName": "SightrollerV2Storage.Market",
-            "id": 12426,
+            "id": 13458,
             "members": [
               {
                 "constant": false,
-                "id": 12415,
+                "id": 13447,
                 "name": "isListed",
                 "nodeType": "VariableDeclaration",
-                "scope": 12426,
+                "scope": 13458,
                 "src": "1455:13:21",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2527,7 +2469,7 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 12414,
+                  "id": 13446,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
                   "src": "1455:4:21",
@@ -2541,10 +2483,10 @@
               },
               {
                 "constant": false,
-                "id": 12417,
+                "id": 13449,
                 "name": "collateralFactorMantissa",
                 "nodeType": "VariableDeclaration",
-                "scope": 12426,
+                "scope": 13458,
                 "src": "1748:29:21",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2553,7 +2495,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 12416,
+                  "id": 13448,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
                   "src": "1748:4:21",
@@ -2567,10 +2509,10 @@
               },
               {
                 "constant": false,
-                "id": 12421,
+                "id": 13453,
                 "name": "accountMembership",
                 "nodeType": "VariableDeclaration",
-                "scope": 12426,
+                "scope": 13458,
                 "src": "1855:42:21",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2579,9 +2521,9 @@
                   "typeString": "mapping(address => bool)"
                 },
                 "typeName": {
-                  "id": 12420,
+                  "id": 13452,
                   "keyType": {
-                    "id": 12418,
+                    "id": 13450,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1863:7:21",
@@ -2597,7 +2539,7 @@
                     "typeString": "mapping(address => bool)"
                   },
                   "valueType": {
-                    "id": 12419,
+                    "id": 13451,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "1874:4:21",
@@ -2612,10 +2554,10 @@
               },
               {
                 "constant": false,
-                "id": 12423,
+                "id": 13455,
                 "name": "isGsighed",
                 "nodeType": "VariableDeclaration",
-                "scope": 12426,
+                "scope": 13458,
                 "src": "1970:14:21",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2624,7 +2566,7 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 12422,
+                  "id": 13454,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
                   "src": "1970:4:21",
@@ -2638,10 +2580,10 @@
               },
               {
                 "constant": false,
-                "id": 12425,
-                "name": "isSighed",
+                "id": 13457,
+                "name": "isSIGHed",
                 "nodeType": "VariableDeclaration",
-                "scope": 12426,
+                "scope": 13458,
                 "src": "2056:13:21",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2650,7 +2592,7 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 12424,
+                  "id": 13456,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
                   "src": "2056:4:21",
@@ -2665,27 +2607,27 @@
             ],
             "name": "Market",
             "nodeType": "StructDefinition",
-            "scope": 12449,
+            "scope": 13481,
             "src": "1374:703:21",
             "visibility": "public"
           },
           {
             "constant": false,
-            "id": 12430,
+            "id": 13462,
             "name": "markets",
             "nodeType": "VariableDeclaration",
-            "scope": 12449,
+            "scope": 13481,
             "src": "2221:41:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Market_$12426_storage_$",
+              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Market_$13458_storage_$",
               "typeString": "mapping(address => struct SightrollerV2Storage.Market)"
             },
             "typeName": {
-              "id": 12429,
+              "id": 13461,
               "keyType": {
-                "id": 12427,
+                "id": 13459,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "2229:7:21",
@@ -2697,18 +2639,18 @@
               "nodeType": "Mapping",
               "src": "2221:26:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Market_$12426_storage_$",
+                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Market_$13458_storage_$",
                 "typeString": "mapping(address => struct SightrollerV2Storage.Market)"
               },
               "valueType": {
                 "contractScope": null,
-                "id": 12428,
+                "id": 13460,
                 "name": "Market",
                 "nodeType": "UserDefinedTypeName",
-                "referencedDeclaration": 12426,
+                "referencedDeclaration": 13458,
                 "src": "2240:6:21",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_Market_$12426_storage_ptr",
+                  "typeIdentifier": "t_struct$_Market_$13458_storage_ptr",
                   "typeString": "struct SightrollerV2Storage.Market"
                 }
               }
@@ -2718,10 +2660,10 @@
           },
           {
             "constant": false,
-            "id": 12432,
+            "id": 13464,
             "name": "pauseGuardian",
             "nodeType": "VariableDeclaration",
-            "scope": 12449,
+            "scope": 13481,
             "src": "2533:28:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2730,7 +2672,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 12431,
+              "id": 13463,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "2533:7:21",
@@ -2745,10 +2687,10 @@
           },
           {
             "constant": false,
-            "id": 12434,
+            "id": 13466,
             "name": "_mintGuardianPaused",
             "nodeType": "VariableDeclaration",
-            "scope": 12449,
+            "scope": 13481,
             "src": "2567:31:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2757,7 +2699,7 @@
               "typeString": "bool"
             },
             "typeName": {
-              "id": 12433,
+              "id": 13465,
               "name": "bool",
               "nodeType": "ElementaryTypeName",
               "src": "2567:4:21",
@@ -2771,10 +2713,10 @@
           },
           {
             "constant": false,
-            "id": 12436,
+            "id": 13468,
             "name": "_borrowGuardianPaused",
             "nodeType": "VariableDeclaration",
-            "scope": 12449,
+            "scope": 13481,
             "src": "2604:33:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2783,7 +2725,7 @@
               "typeString": "bool"
             },
             "typeName": {
-              "id": 12435,
+              "id": 13467,
               "name": "bool",
               "nodeType": "ElementaryTypeName",
               "src": "2604:4:21",
@@ -2797,10 +2739,10 @@
           },
           {
             "constant": false,
-            "id": 12438,
+            "id": 13470,
             "name": "transferGuardianPaused",
             "nodeType": "VariableDeclaration",
-            "scope": 12449,
+            "scope": 13481,
             "src": "2643:34:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2809,7 +2751,7 @@
               "typeString": "bool"
             },
             "typeName": {
-              "id": 12437,
+              "id": 13469,
               "name": "bool",
               "nodeType": "ElementaryTypeName",
               "src": "2643:4:21",
@@ -2823,10 +2765,10 @@
           },
           {
             "constant": false,
-            "id": 12440,
+            "id": 13472,
             "name": "seizeGuardianPaused",
             "nodeType": "VariableDeclaration",
-            "scope": 12449,
+            "scope": 13481,
             "src": "2683:31:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2835,7 +2777,7 @@
               "typeString": "bool"
             },
             "typeName": {
-              "id": 12439,
+              "id": 13471,
               "name": "bool",
               "nodeType": "ElementaryTypeName",
               "src": "2683:4:21",
@@ -2849,10 +2791,10 @@
           },
           {
             "constant": false,
-            "id": 12444,
+            "id": 13476,
             "name": "mintGuardianPaused",
             "nodeType": "VariableDeclaration",
-            "scope": 12449,
+            "scope": 13481,
             "src": "2720:50:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2861,9 +2803,9 @@
               "typeString": "mapping(address => bool)"
             },
             "typeName": {
-              "id": 12443,
+              "id": 13475,
               "keyType": {
-                "id": 12441,
+                "id": 13473,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "2728:7:21",
@@ -2879,7 +2821,7 @@
                 "typeString": "mapping(address => bool)"
               },
               "valueType": {
-                "id": 12442,
+                "id": 13474,
                 "name": "bool",
                 "nodeType": "ElementaryTypeName",
                 "src": "2739:4:21",
@@ -2894,10 +2836,10 @@
           },
           {
             "constant": false,
-            "id": 12448,
+            "id": 13480,
             "name": "borrowGuardianPaused",
             "nodeType": "VariableDeclaration",
-            "scope": 12449,
+            "scope": 13481,
             "src": "2776:52:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2906,9 +2848,9 @@
               "typeString": "mapping(address => bool)"
             },
             "typeName": {
-              "id": 12447,
+              "id": 13479,
               "keyType": {
-                "id": 12445,
+                "id": 13477,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "2784:7:21",
@@ -2924,7 +2866,7 @@
                 "typeString": "mapping(address => bool)"
               },
               "valueType": {
-                "id": 12446,
+                "id": 13478,
                 "name": "bool",
                 "nodeType": "ElementaryTypeName",
                 "src": "2795:4:21",
@@ -2938,7 +2880,7 @@
             "visibility": "public"
           }
         ],
-        "scope": 12529,
+        "scope": 13555,
         "src": "1313:1518:21"
       },
       {
@@ -2947,49 +2889,49 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 12450,
+              "id": 13482,
               "name": "SightrollerV2Storage",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 12449,
+              "referencedDeclaration": 13481,
               "src": "2872:20:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SightrollerV2Storage_$12449",
+                "typeIdentifier": "t_contract$_SightrollerV2Storage_$13481",
                 "typeString": "contract SightrollerV2Storage"
               }
             },
-            "id": 12451,
+            "id": 13483,
             "nodeType": "InheritanceSpecifier",
             "src": "2872:20:21"
           }
         ],
         "contractDependencies": [
-          12395,
-          12411,
-          12449
+          13427,
+          13443,
+          13481
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 12490,
+        "id": 13522,
         "linearizedBaseContracts": [
-          12490,
-          12449,
-          12411,
-          12395
+          13522,
+          13481,
+          13443,
+          13427
         ],
         "name": "SightrollerV3Storage",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "canonicalName": "SightrollerV3Storage.GsighMarketState",
-            "id": 12456,
+            "id": 13488,
             "members": [
               {
                 "constant": false,
-                "id": 12453,
+                "id": 13485,
                 "name": "index",
                 "nodeType": "VariableDeclaration",
-                "scope": 12456,
+                "scope": 13488,
                 "src": "3017:13:21",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2998,7 +2940,7 @@
                   "typeString": "uint224"
                 },
                 "typeName": {
-                  "id": 12452,
+                  "id": 13484,
                   "name": "uint224",
                   "nodeType": "ElementaryTypeName",
                   "src": "3017:7:21",
@@ -3012,10 +2954,10 @@
               },
               {
                 "constant": false,
-                "id": 12455,
+                "id": 13487,
                 "name": "block",
                 "nodeType": "VariableDeclaration",
-                "scope": 12456,
+                "scope": 13488,
                 "src": "3108:12:21",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -3024,7 +2966,7 @@
                   "typeString": "uint32"
                 },
                 "typeName": {
-                  "id": 12454,
+                  "id": 13486,
                   "name": "uint32",
                   "nodeType": "ElementaryTypeName",
                   "src": "3108:6:21",
@@ -3039,42 +2981,42 @@
             ],
             "name": "GsighMarketState",
             "nodeType": "StructDefinition",
-            "scope": 12490,
+            "scope": 13522,
             "src": "2900:227:21",
             "visibility": "public"
           },
           {
             "constant": false,
-            "id": 12459,
+            "id": 13491,
             "name": "allMarkets",
             "nodeType": "VariableDeclaration",
-            "scope": 12490,
+            "scope": 13522,
             "src": "3171:26:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_array$_t_contract$_CToken_$17782_$dyn_storage",
+              "typeIdentifier": "t_array$_t_contract$_CToken_$18870_$dyn_storage",
               "typeString": "contract CToken[]"
             },
             "typeName": {
               "baseType": {
                 "contractScope": null,
-                "id": 12457,
+                "id": 13489,
                 "name": "CToken",
                 "nodeType": "UserDefinedTypeName",
-                "referencedDeclaration": 17782,
+                "referencedDeclaration": 18870,
                 "src": "3171:6:21",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_contract$_CToken_$17782",
+                  "typeIdentifier": "t_contract$_CToken_$18870",
                   "typeString": "contract CToken"
                 }
               },
-              "id": 12458,
+              "id": 13490,
               "length": null,
               "nodeType": "ArrayTypeName",
               "src": "3171:8:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_array$_t_contract$_CToken_$17782_$dyn_storage_ptr",
+                "typeIdentifier": "t_array$_t_contract$_CToken_$18870_$dyn_storage_ptr",
                 "typeString": "contract CToken[]"
               }
             },
@@ -3083,10 +3025,10 @@
           },
           {
             "constant": false,
-            "id": 12461,
+            "id": 13493,
             "name": "gsighRate",
             "nodeType": "VariableDeclaration",
-            "scope": 12490,
+            "scope": 13522,
             "src": "3280:21:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -3095,7 +3037,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 12460,
+              "id": 13492,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "3280:4:21",
@@ -3109,10 +3051,10 @@
           },
           {
             "constant": false,
-            "id": 12465,
+            "id": 13497,
             "name": "gsighSpeeds",
             "nodeType": "VariableDeclaration",
-            "scope": 12490,
+            "scope": 13522,
             "src": "3385:43:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -3121,9 +3063,9 @@
               "typeString": "mapping(address => uint256)"
             },
             "typeName": {
-              "id": 12464,
+              "id": 13496,
               "keyType": {
-                "id": 12462,
+                "id": 13494,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "3393:7:21",
@@ -3139,7 +3081,7 @@
                 "typeString": "mapping(address => uint256)"
               },
               "valueType": {
-                "id": 12463,
+                "id": 13495,
                 "name": "uint",
                 "nodeType": "ElementaryTypeName",
                 "src": "3404:4:21",
@@ -3154,21 +3096,21 @@
           },
           {
             "constant": false,
-            "id": 12469,
+            "id": 13501,
             "name": "gsighSupplyState",
             "nodeType": "VariableDeclaration",
-            "scope": 12490,
+            "scope": 13522,
             "src": "3497:60:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_GsighMarketState_$12456_storage_$",
+              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_GsighMarketState_$13488_storage_$",
               "typeString": "mapping(address => struct SightrollerV3Storage.GsighMarketState)"
             },
             "typeName": {
-              "id": 12468,
+              "id": 13500,
               "keyType": {
-                "id": 12466,
+                "id": 13498,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "3505:7:21",
@@ -3180,18 +3122,18 @@
               "nodeType": "Mapping",
               "src": "3497:36:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_GsighMarketState_$12456_storage_$",
+                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_GsighMarketState_$13488_storage_$",
                 "typeString": "mapping(address => struct SightrollerV3Storage.GsighMarketState)"
               },
               "valueType": {
                 "contractScope": null,
-                "id": 12467,
+                "id": 13499,
                 "name": "GsighMarketState",
                 "nodeType": "UserDefinedTypeName",
-                "referencedDeclaration": 12456,
+                "referencedDeclaration": 13488,
                 "src": "3516:16:21",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_GsighMarketState_$12456_storage_ptr",
+                  "typeIdentifier": "t_struct$_GsighMarketState_$13488_storage_ptr",
                   "typeString": "struct SightrollerV3Storage.GsighMarketState"
                 }
               }
@@ -3201,21 +3143,21 @@
           },
           {
             "constant": false,
-            "id": 12473,
+            "id": 13505,
             "name": "gsighBorrowState",
             "nodeType": "VariableDeclaration",
-            "scope": 12490,
+            "scope": 13522,
             "src": "3626:60:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_GsighMarketState_$12456_storage_$",
+              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_GsighMarketState_$13488_storage_$",
               "typeString": "mapping(address => struct SightrollerV3Storage.GsighMarketState)"
             },
             "typeName": {
-              "id": 12472,
+              "id": 13504,
               "keyType": {
-                "id": 12470,
+                "id": 13502,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "3634:7:21",
@@ -3227,18 +3169,18 @@
               "nodeType": "Mapping",
               "src": "3626:36:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_GsighMarketState_$12456_storage_$",
+                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_GsighMarketState_$13488_storage_$",
                 "typeString": "mapping(address => struct SightrollerV3Storage.GsighMarketState)"
               },
               "valueType": {
                 "contractScope": null,
-                "id": 12471,
+                "id": 13503,
                 "name": "GsighMarketState",
                 "nodeType": "UserDefinedTypeName",
-                "referencedDeclaration": 12456,
+                "referencedDeclaration": 13488,
                 "src": "3645:16:21",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_GsighMarketState_$12456_storage_ptr",
+                  "typeIdentifier": "t_struct$_GsighMarketState_$13488_storage_ptr",
                   "typeString": "struct SightrollerV3Storage.GsighMarketState"
                 }
               }
@@ -3248,10 +3190,10 @@
           },
           {
             "constant": false,
-            "id": 12479,
+            "id": 13511,
             "name": "gsighSupplierIndex",
             "nodeType": "VariableDeclaration",
-            "scope": 12490,
+            "scope": 13522,
             "src": "3805:70:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -3260,9 +3202,9 @@
               "typeString": "mapping(address => mapping(address => uint256))"
             },
             "typeName": {
-              "id": 12478,
+              "id": 13510,
               "keyType": {
-                "id": 12474,
+                "id": 13506,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "3813:7:21",
@@ -3278,9 +3220,9 @@
                 "typeString": "mapping(address => mapping(address => uint256))"
               },
               "valueType": {
-                "id": 12477,
+                "id": 13509,
                 "keyType": {
-                  "id": 12475,
+                  "id": 13507,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
                   "src": "3832:7:21",
@@ -3296,7 +3238,7 @@
                   "typeString": "mapping(address => uint256)"
                 },
                 "valueType": {
-                  "id": 12476,
+                  "id": 13508,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
                   "src": "3843:4:21",
@@ -3312,10 +3254,10 @@
           },
           {
             "constant": false,
-            "id": 12485,
+            "id": 13517,
             "name": "gsighBorrowerIndex",
             "nodeType": "VariableDeclaration",
-            "scope": 12490,
+            "scope": 13522,
             "src": "3994:70:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -3324,9 +3266,9 @@
               "typeString": "mapping(address => mapping(address => uint256))"
             },
             "typeName": {
-              "id": 12484,
+              "id": 13516,
               "keyType": {
-                "id": 12480,
+                "id": 13512,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "4002:7:21",
@@ -3342,9 +3284,9 @@
                 "typeString": "mapping(address => mapping(address => uint256))"
               },
               "valueType": {
-                "id": 12483,
+                "id": 13515,
                 "keyType": {
-                  "id": 12481,
+                  "id": 13513,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
                   "src": "4021:7:21",
@@ -3360,7 +3302,7 @@
                   "typeString": "mapping(address => uint256)"
                 },
                 "valueType": {
-                  "id": 12482,
+                  "id": 13514,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
                   "src": "4032:4:21",
@@ -3376,10 +3318,10 @@
           },
           {
             "constant": false,
-            "id": 12489,
+            "id": 13521,
             "name": "gsighAccrued",
             "nodeType": "VariableDeclaration",
-            "scope": 12490,
+            "scope": 13522,
             "src": "4142:44:21",
             "stateVariable": true,
             "storageLocation": "default",
@@ -3388,9 +3330,9 @@
               "typeString": "mapping(address => uint256)"
             },
             "typeName": {
-              "id": 12488,
+              "id": 13520,
               "keyType": {
-                "id": 12486,
+                "id": 13518,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "4150:7:21",
@@ -3406,7 +3348,7 @@
                 "typeString": "mapping(address => uint256)"
               },
               "valueType": {
-                "id": 12487,
+                "id": 13519,
                 "name": "uint",
                 "nodeType": "ElementaryTypeName",
                 "src": "4161:4:21",
@@ -3420,7 +3362,7 @@
             "visibility": "public"
           }
         ],
-        "scope": 12529,
+        "scope": 13555,
         "src": "2839:1350:21"
       },
       {
@@ -3429,52 +3371,52 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 12491,
+              "id": 13523,
               "name": "SightrollerV3Storage",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 12490,
+              "referencedDeclaration": 13522,
               "src": "4225:20:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SightrollerV3Storage_$12490",
+                "typeIdentifier": "t_contract$_SightrollerV3Storage_$13522",
                 "typeString": "contract SightrollerV3Storage"
               }
             },
-            "id": 12492,
+            "id": 13524,
             "nodeType": "InheritanceSpecifier",
             "src": "4225:20:21"
           }
         ],
         "contractDependencies": [
-          12395,
-          12411,
-          12449,
-          12490
+          13427,
+          13443,
+          13481,
+          13522
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 12528,
+        "id": 13554,
         "linearizedBaseContracts": [
-          12528,
-          12490,
-          12449,
-          12411,
-          12395
+          13554,
+          13522,
+          13481,
+          13443,
+          13427
         ],
         "name": "SightrollerV4Storage",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "canonicalName": "SightrollerV4Storage.SighMarketState",
-            "id": 12497,
+            "canonicalName": "SightrollerV4Storage.SIGHMarketState",
+            "id": 13531,
             "members": [
               {
                 "constant": false,
-                "id": 12494,
+                "id": 13526,
                 "name": "index",
                 "nodeType": "VariableDeclaration",
-                "scope": 12497,
-                "src": "4424:13:21",
+                "scope": 13531,
+                "src": "4343:13:21",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -3482,10 +3424,10 @@
                   "typeString": "uint224"
                 },
                 "typeName": {
-                  "id": 12493,
+                  "id": 13525,
                   "name": "uint224",
                   "nodeType": "ElementaryTypeName",
-                  "src": "4424:7:21",
+                  "src": "4343:7:21",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint224",
                     "typeString": "uint224"
@@ -3496,11 +3438,37 @@
               },
               {
                 "constant": false,
-                "id": 12496,
+                "id": 13528,
+                "name": "recordedPriceSnapshot",
+                "nodeType": "VariableDeclaration",
+                "scope": 13531,
+                "src": "4367:29:21",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint224",
+                  "typeString": "uint224"
+                },
+                "typeName": {
+                  "id": 13527,
+                  "name": "uint224",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "4367:7:21",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint224",
+                    "typeString": "uint224"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 13530,
                 "name": "block",
                 "nodeType": "VariableDeclaration",
-                "scope": 12497,
-                "src": "4515:12:21",
+                "scope": 13531,
+                "src": "4474:12:21",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -3508,10 +3476,10 @@
                   "typeString": "uint32"
                 },
                 "typeName": {
-                  "id": 12495,
+                  "id": 13529,
                   "name": "uint32",
                   "nodeType": "ElementaryTypeName",
-                  "src": "4515:6:21",
+                  "src": "4474:6:21",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint32",
                     "typeString": "uint32"
@@ -3521,19 +3489,19 @@
                 "visibility": "internal"
               }
             ],
-            "name": "SighMarketState",
+            "name": "SIGHMarketState",
             "nodeType": "StructDefinition",
-            "scope": 12528,
-            "src": "4253:281:21",
+            "scope": 13554,
+            "src": "4253:240:21",
             "visibility": "public"
           },
           {
             "constant": false,
-            "id": 12499,
-            "name": "sighRate",
+            "id": 13533,
+            "name": "SIGHRate",
             "nodeType": "VariableDeclaration",
-            "scope": 12528,
-            "src": "4634:20:21",
+            "scope": 13554,
+            "src": "4576:20:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -3541,10 +3509,10 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 12498,
+              "id": 13532,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
-              "src": "4634:4:21",
+              "src": "4576:4:21",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -3555,11 +3523,11 @@
           },
           {
             "constant": false,
-            "id": 12503,
-            "name": "sighSpeeds",
+            "id": 13537,
+            "name": "SIGH_Speeds",
             "nodeType": "VariableDeclaration",
-            "scope": 12528,
-            "src": "4761:42:21",
+            "scope": 13554,
+            "src": "4679:43:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -3567,28 +3535,28 @@
               "typeString": "mapping(address => uint256)"
             },
             "typeName": {
-              "id": 12502,
+              "id": 13536,
               "keyType": {
-                "id": 12500,
+                "id": 13534,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
-                "src": "4769:7:21",
+                "src": "4687:7:21",
                 "typeDescriptions": {
                   "typeIdentifier": "t_address",
                   "typeString": "address"
                 }
               },
               "nodeType": "Mapping",
-              "src": "4761:24:21",
+              "src": "4679:24:21",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
                 "typeString": "mapping(address => uint256)"
               },
               "valueType": {
-                "id": 12501,
+                "id": 13535,
                 "name": "uint",
                 "nodeType": "ElementaryTypeName",
-                "src": "4780:4:21",
+                "src": "4698:4:21",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
@@ -3600,45 +3568,45 @@
           },
           {
             "constant": false,
-            "id": 12507,
-            "name": "sighSupplyState",
+            "id": 13541,
+            "name": "sigh_Market_State",
             "nodeType": "VariableDeclaration",
-            "scope": 12528,
-            "src": "4871:58:21",
+            "scope": 13554,
+            "src": "4790:60:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_SighMarketState_$12497_storage_$",
-              "typeString": "mapping(address => struct SightrollerV4Storage.SighMarketState)"
+              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_SIGHMarketState_$13531_storage_$",
+              "typeString": "mapping(address => struct SightrollerV4Storage.SIGHMarketState)"
             },
             "typeName": {
-              "id": 12506,
+              "id": 13540,
               "keyType": {
-                "id": 12504,
+                "id": 13538,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
-                "src": "4879:7:21",
+                "src": "4798:7:21",
                 "typeDescriptions": {
                   "typeIdentifier": "t_address",
                   "typeString": "address"
                 }
               },
               "nodeType": "Mapping",
-              "src": "4871:35:21",
+              "src": "4790:35:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_SighMarketState_$12497_storage_$",
-                "typeString": "mapping(address => struct SightrollerV4Storage.SighMarketState)"
+                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_SIGHMarketState_$13531_storage_$",
+                "typeString": "mapping(address => struct SightrollerV4Storage.SIGHMarketState)"
               },
               "valueType": {
                 "contractScope": null,
-                "id": 12505,
-                "name": "SighMarketState",
+                "id": 13539,
+                "name": "SIGHMarketState",
                 "nodeType": "UserDefinedTypeName",
-                "referencedDeclaration": 12497,
-                "src": "4890:15:21",
+                "referencedDeclaration": 13531,
+                "src": "4809:15:21",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_SighMarketState_$12497_storage_ptr",
-                  "typeString": "struct SightrollerV4Storage.SighMarketState"
+                  "typeIdentifier": "t_struct$_SIGHMarketState_$13531_storage_ptr",
+                  "typeString": "struct SightrollerV4Storage.SIGHMarketState"
                 }
               }
             },
@@ -3647,58 +3615,11 @@
           },
           {
             "constant": false,
-            "id": 12511,
-            "name": "sighBorrowState",
+            "id": 13547,
+            "name": "SIGHSupplierIndex",
             "nodeType": "VariableDeclaration",
-            "scope": 12528,
-            "src": "4997:58:21",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_SighMarketState_$12497_storage_$",
-              "typeString": "mapping(address => struct SightrollerV4Storage.SighMarketState)"
-            },
-            "typeName": {
-              "id": 12510,
-              "keyType": {
-                "id": 12508,
-                "name": "address",
-                "nodeType": "ElementaryTypeName",
-                "src": "5005:7:21",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_address",
-                  "typeString": "address"
-                }
-              },
-              "nodeType": "Mapping",
-              "src": "4997:35:21",
-              "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_SighMarketState_$12497_storage_$",
-                "typeString": "mapping(address => struct SightrollerV4Storage.SighMarketState)"
-              },
-              "valueType": {
-                "contractScope": null,
-                "id": 12509,
-                "name": "SighMarketState",
-                "nodeType": "UserDefinedTypeName",
-                "referencedDeclaration": 12497,
-                "src": "5016:15:21",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_SighMarketState_$12497_storage_ptr",
-                  "typeString": "struct SightrollerV4Storage.SighMarketState"
-                }
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 12517,
-            "name": "sighSupplierIndex",
-            "nodeType": "VariableDeclaration",
-            "scope": 12528,
-            "src": "5172:69:21",
+            "scope": 13554,
+            "src": "5107:69:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -3706,46 +3627,46 @@
               "typeString": "mapping(address => mapping(address => uint256))"
             },
             "typeName": {
-              "id": 12516,
+              "id": 13546,
               "keyType": {
-                "id": 12512,
+                "id": 13542,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
-                "src": "5180:7:21",
+                "src": "5115:7:21",
                 "typeDescriptions": {
                   "typeIdentifier": "t_address",
                   "typeString": "address"
                 }
               },
               "nodeType": "Mapping",
-              "src": "5172:44:21",
+              "src": "5107:44:21",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_address_$_t_mapping$_t_address_$_t_uint256_$_$",
                 "typeString": "mapping(address => mapping(address => uint256))"
               },
               "valueType": {
-                "id": 12515,
+                "id": 13545,
                 "keyType": {
-                  "id": 12513,
+                  "id": 13543,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "5199:7:21",
+                  "src": "5134:7:21",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
                     "typeString": "address"
                   }
                 },
                 "nodeType": "Mapping",
-                "src": "5191:24:21",
+                "src": "5126:24:21",
                 "typeDescriptions": {
                   "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
                   "typeString": "mapping(address => uint256)"
                 },
                 "valueType": {
-                  "id": 12514,
+                  "id": 13544,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "5210:4:21",
+                  "src": "5145:4:21",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -3758,62 +3679,43 @@
           },
           {
             "constant": false,
-            "id": 12523,
-            "name": "sighBorrowerIndex",
+            "id": 13551,
+            "name": "SIGH_Accrued",
             "nodeType": "VariableDeclaration",
-            "scope": 12528,
-            "src": "5358:69:21",
+            "scope": 13554,
+            "src": "5446:44:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_mapping$_t_address_$_t_uint256_$_$",
-              "typeString": "mapping(address => mapping(address => uint256))"
+              "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
+              "typeString": "mapping(address => uint256)"
             },
             "typeName": {
-              "id": 12522,
+              "id": 13550,
               "keyType": {
-                "id": 12518,
+                "id": 13548,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
-                "src": "5366:7:21",
+                "src": "5454:7:21",
                 "typeDescriptions": {
                   "typeIdentifier": "t_address",
                   "typeString": "address"
                 }
               },
               "nodeType": "Mapping",
-              "src": "5358:44:21",
+              "src": "5446:24:21",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_mapping$_t_address_$_t_uint256_$_$",
-                "typeString": "mapping(address => mapping(address => uint256))"
+                "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
+                "typeString": "mapping(address => uint256)"
               },
               "valueType": {
-                "id": 12521,
-                "keyType": {
-                  "id": 12519,
-                  "name": "address",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "5385:7:21",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  }
-                },
-                "nodeType": "Mapping",
-                "src": "5377:24:21",
+                "id": 13549,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "5465:4:21",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-                  "typeString": "mapping(address => uint256)"
-                },
-                "valueType": {
-                  "id": 12520,
-                  "name": "uint",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "5396:4:21",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  }
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
                 }
               }
             },
@@ -3822,55 +3724,37 @@
           },
           {
             "constant": false,
-            "id": 12527,
-            "name": "sighAccrued",
+            "id": 13553,
+            "name": "gelatoAddress",
             "nodeType": "VariableDeclaration",
-            "scope": 12528,
-            "src": "5504:43:21",
+            "scope": 13554,
+            "src": "5608:28:21",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-              "typeString": "mapping(address => uint256)"
+              "typeIdentifier": "t_address",
+              "typeString": "address"
             },
             "typeName": {
-              "id": 12526,
-              "keyType": {
-                "id": 12524,
-                "name": "address",
-                "nodeType": "ElementaryTypeName",
-                "src": "5512:7:21",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_address",
-                  "typeString": "address"
-                }
-              },
-              "nodeType": "Mapping",
-              "src": "5504:24:21",
+              "id": 13552,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "5608:7:21",
+              "stateMutability": "nonpayable",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-                "typeString": "mapping(address => uint256)"
-              },
-              "valueType": {
-                "id": 12525,
-                "name": "uint",
-                "nodeType": "ElementaryTypeName",
-                "src": "5523:4:21",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_uint256",
-                  "typeString": "uint256"
-                }
+                "typeIdentifier": "t_address",
+                "typeString": "address"
               }
             },
             "value": null,
             "visibility": "public"
           }
         ],
-        "scope": 12529,
-        "src": "4192:1358:21"
+        "scope": 13555,
+        "src": "4192:1448:21"
       }
     ],
-    "src": "0:5551:21"
+    "src": "0:5641:21"
   },
   "compiler": {
     "name": "solc",
@@ -3878,7 +3762,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-24T07:56:12.837Z",
+  "updatedAt": "2020-09-27T14:09:01.997Z",
   "devdoc": {
     "methods": {}
   },

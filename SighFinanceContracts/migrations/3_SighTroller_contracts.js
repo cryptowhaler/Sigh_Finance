@@ -10,10 +10,10 @@ module.exports = function(deployer) {
     let Sightroller_____ = await Sightroller_.deployed();                                           
     console.log( 'Sightroller_____ ' +  Sightroller_____.address);
 
-    await deployer.deploy(Unitroller_);           // Deployer address is the Admin
+    // await deployer.deploy(Unitroller_);           // Deployer address is the Admin
 
-    let Unitroller_____ = await Unitroller_.deployed();                                           
-    console.log( 'Unitroller_____ ' +  Unitroller_____.address);
+    // let Unitroller_____ = await Unitroller_.deployed();                                           
+    // console.log( 'Unitroller_____ ' +  Unitroller_____.address);
 
   })
 

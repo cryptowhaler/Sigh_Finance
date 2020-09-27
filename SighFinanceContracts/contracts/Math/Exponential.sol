@@ -229,6 +229,11 @@ contract Exponential is CarefulMath {
         return value.mantissa == 0;
     }
 
+    // function safe256(uint n, string memory errorMessage) pure internal returns (uint256) {
+    //     require(n < 2**256, errorMessage);
+    //     return uint256(n);
+    // }
+
     function safe224(uint n, string memory errorMessage) pure internal returns (uint224) {
         require(n < 2**224, errorMessage);
         return uint224(n);

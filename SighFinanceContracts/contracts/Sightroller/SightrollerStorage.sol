@@ -156,7 +156,7 @@ contract SightrollerV4Storage is SightrollerV3Storage {
         /// @notice The market's last updated SIGHIndex 
         uint224 index;
 
-        uint256 recordedPriceSnapshot;
+        uint224 recordedPriceSnapshot;
 
         /// @notice The block number the index was last updated at
         uint32 block;
@@ -179,17 +179,17 @@ contract SightrollerV4Storage is SightrollerV3Storage {
     /// @notice The Gsigh borrow index for each market for each supplier as of the last time they accrued Gsigh
     mapping(address => mapping(address => uint)) public SIGHSupplierIndex;
 
-    /// @notice The Gsigh borrow index for each market for each borrower as of the last time they accrued Gsigh
-    mapping(address => mapping(address => uint)) public SIGHBorrowerIndex;
+    // / @notice The Gsigh borrow index for each market for each borrower as of the last time they accrued Gsigh
+    // mapping(address => mapping(address => uint)) public SIGHBorrowerIndex;
 
     /// @notice The Gsigh accrued but not yet transferred to each user
     mapping(address => uint) public SIGH_Accrued;
 
-    treasuryRateMantissa
+    // treasuryRateMantissa
 
-    uint256 public treasury_SIGH;
+    // uint256 public treasury_SIGH;
 
-    uint256 public treasury_SIGH_Ratio;
+    // uint256 public treasury_SIGH_Ratio;
 
     address public gelatoAddress;
 
