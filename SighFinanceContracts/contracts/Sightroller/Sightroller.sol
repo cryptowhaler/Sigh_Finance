@@ -1578,6 +1578,63 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
 
 
 
+    /**
+     * @notice Recalculate and update SIGH speeds for all SIGH markets
+     */
+    function refreshGsighSpeeds() public {
+        require(msg.sender == tx.origin, "only externally owned accounts may refresh speeds");
+        refreshGsighSpeedsInternal();
+    }
+
+    function refreshGsighSpeedsInternal() internal {
+        CToken[] memory allMarkets_ = allMarkets;
+
+        // accure the indexes 
+        for (uint i = 0; i < allMarkets_.length; i++) {
+            CToken cToken = allMarkets_[i];
+            Exp memory borrowIndex = Exp({mantissa: cToken.borrowIndex()});
+            updateGsighSupplyIndex(address(cToken));
+            updateGsighBorrowIndex(address(cToken), borrowIndex);
+        }
+
+        // get the price, current balance, and the value of the available SIGH
+        uint256 SIGH_Price = oracle.getThePriceofSIGH(); // Price of SIGH
+        SIGH sigh = SIGH(getSighAddress());
+        uint256 sigh_Remaining = sigh.balanceOf(address(this));
+        uint256 value_of_remaining_SIGH = mul_(SIGH_Price, sigh_Remaining);
+
+        // Calculate the total Loss made by the protocol over the 24 hrs
+        for (uint i = 0; i < allMarkets_.length; i++) {
+            CToken cToken = allMarkets_[i];
+            Exp memory borrowIndex = Exp({mantissa: cToken.borrowIndex()});
+            updateGsighSupplyIndex(address(cToken));
+            updateGsighBorrowIndex(address(cToken), borrowIndex);
+        }
+
+
+
+
+
+        Exp memory totalUtility = Exp({mantissa: 0});
+        Exp[] memory utilities = new Exp[](allMarkets_.length);
+        
+        for (uint i = 0; i < allMarkets_.length; i++) {
+            CToken cToken = allMarkets_[i];
+            if (markets[address(cToken)].isGsighed) {
+                Exp memory assetPrice = Exp({mantissa: oracle.getUnderlyingPrice(cToken)});
+                Exp memory utility = mul_(assetPrice, cToken.totalBorrows());
+                utilities[i] = utility;
+                totalUtility = add_(totalUtility, utility);
+            }
+        }
+
+        for (uint i = 0; i < allMarkets_.length; i++) {
+            CToken cToken = allMarkets[i];
+            uint newSpeed = totalUtility.mantissa > 0 ? mul_(gsighRate, div_(utilities[i], totalUtility)) : 0;
+            gsighSpeeds[address(cToken)] = newSpeed;
+            emit GsighSpeedUpdated(cToken, newSpeed);
+        }
+    }
 
 
 
