@@ -739,7 +739,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 20041,
+                        "referencedDeclaration": 18820,
                         "src": "1904:3:7",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -1036,7 +1036,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 20041,
+                            "referencedDeclaration": 18820,
                             "src": "2676:3:7",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -1112,10 +1112,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        20044,
-                        20045
+                        18823,
+                        18824
                       ],
-                      "referencedDeclaration": 20045,
+                      "referencedDeclaration": 18824,
                       "src": "2668:7:7",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -4641,7 +4641,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 20041,
+                        "referencedDeclaration": 18820,
                         "src": "1904:3:7",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -4938,7 +4938,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 20041,
+                            "referencedDeclaration": 18820,
                             "src": "2676:3:7",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -5014,10 +5014,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        20044,
-                        20045
+                        18823,
+                        18824
                       ],
-                      "referencedDeclaration": 20045,
+                      "referencedDeclaration": 18824,
                       "src": "2668:7:7",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -8187,7 +8187,7 @@
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-27T14:12:56.903Z",
+  "updatedAt": "2020-09-27T15:34:39.347Z",
   "devdoc": {
     "author": "SighFinance (modified by Dharma Labs)",
     "methods": {

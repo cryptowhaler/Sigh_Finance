@@ -4,7 +4,7 @@ import "../Tokens/CToken.sol";
 import "../ErrorReporter.sol";
 import "../Math/Exponential.sol";
 import "../PriceOracle.sol";
-import "../Governance/GSigh.sol";
+// import "../Governance/GSigh.sol";
 import "./SightrollerInterface.sol";
 import "./SightrollerStorage.sol";
 import "./Unitroller.sol";
@@ -50,30 +50,30 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
     /// @notice Emitted when an action is paused on a market
     event ActionPaused(CToken cToken, string action, bool pauseState);
 
-    /// @notice Emitted when market Gsighed status is changed
-    event MarketGsighed(CToken cToken, bool isGsighed);
+    // /// @notice Emitted when market Gsighed status is changed
+    // event MarketGsighed(CToken cToken, bool isGsighed);
 
-    /// @notice Emitted when GSIGH rate is changed
-    event NewGsighRate(uint oldGsighRate, uint newGsighRate);
+    // /// @notice Emitted when GSIGH rate is changed
+    // event NewGsighRate(uint oldGsighRate, uint newGsighRate);
 
-    /// @notice Emitted when a new Gsigh speed is calculated for a market
-    event GsighSpeedUpdated(CToken indexed cToken, uint newSpeed);
+    // /// @notice Emitted when a new Gsigh speed is calculated for a market
+    // event GsighSpeedUpdated(CToken indexed cToken, uint newSpeed);
 
-    /// @notice Emitted when Gsigh is distributed to a supplier
-    event DistributedSupplierGsigh(CToken indexed cToken, address indexed supplier, uint gsighDelta, uint gsighSupplyIndex);
+    // /// @notice Emitted when Gsigh is distributed to a supplier
+    // event DistributedSupplierGsigh(CToken indexed cToken, address indexed supplier, uint gsighDelta, uint gsighSupplyIndex);
 
-    /// @notice Emitted when Gsigh is distributed to a borrower
-    event DistributedBorrowerGsigh(CToken indexed cToken, address indexed borrower, uint gsighDelta, uint gsighBorrowIndex);
+    // /// @notice Emitted when Gsigh is distributed to a borrower
+    // event DistributedBorrowerGsigh(CToken indexed cToken, address indexed borrower, uint gsighDelta, uint gsighBorrowIndex);
 
-    /// @notice Emitted when SIGH is transferred to a User
-    event GSIGH_Transferred(address indexed userAddress, uint amountTransferred );
+    // /// @notice Emitted when SIGH is transferred to a User
+    // event GSIGH_Transferred(address indexed userAddress, uint amountTransferred );
 
 
-    /// @notice The threshold above which the flywheel transfers Gsigh, in wei
-    uint public constant gsighClaimThreshold = 0.001e18;
+    // /// @notice The threshold above which the flywheel transfers Gsigh, in wei
+    // uint public constant gsighClaimThreshold = 0.001e18;
 
-    /// @notice The initial Gsigh index for a market
-    uint224 public constant gsighInitialIndex = 1e36;
+    // /// @notice The initial Gsigh index for a market
+    // uint224 public constant gsighInitialIndex = 1e36;
 
     // closeFactorMantissa must be strictly greater than this value
     uint internal constant closeFactorMinMantissa = 0.05e18; // 0.05
@@ -248,9 +248,9 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
             return uint(Error.MARKET_NOT_LISTED);
         }
 
-        // Keep the flywheel moving
-        updateGsighSupplyIndex(cToken);
-        distributeSupplierGsigh(cToken, minter, false);
+        // // Keep the flywheel moving
+        // updateGsighSupplyIndex(cToken);
+        // distributeSupplierGsigh(cToken, minter, false);
 
         // Flywheel for SIGH TOkens
         updateSIGHSupplyIndex(cToken);
@@ -293,9 +293,9 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
             return allowed;
         }
 
-        // Keep the flywheel moving
-        updateGsighSupplyIndex(cToken);
-        distributeSupplierGsigh(cToken, redeemer, false);
+        // // Keep the flywheel moving
+        // updateGsighSupplyIndex(cToken);
+        // distributeSupplierGsigh(cToken, redeemer, false);
 
         // Flywheel for SIGH TOkens
         updateSIGHSupplyIndex(cToken);
@@ -385,10 +385,10 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
             return uint(Error.INSUFFICIENT_LIQUIDITY);
         }
 
-        // Keep the flywheel moving
-        Exp memory borrowIndex = Exp({mantissa: CToken(cToken).borrowIndex()});
-        updateGsighBorrowIndex(cToken, borrowIndex);
-        distributeBorrowerGsigh(cToken, borrower, borrowIndex, false);
+        // // Keep the flywheel moving
+        // Exp memory borrowIndex = Exp({mantissa: CToken(cToken).borrowIndex()});
+        // updateGsighBorrowIndex(cToken, borrowIndex);
+        // distributeBorrowerGsigh(cToken, borrower, borrowIndex, false);
 
         return uint(Error.NO_ERROR);
     }
@@ -429,10 +429,10 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
             return uint(Error.MARKET_NOT_LISTED);
         }
 
-        // Keep the flywheel moving
-        Exp memory borrowIndex = Exp({mantissa: CToken(cToken).borrowIndex()});
-        updateGsighBorrowIndex(cToken, borrowIndex);
-        distributeBorrowerGsigh(cToken, borrower, borrowIndex, false);
+        // // Keep the flywheel moving
+        // Exp memory borrowIndex = Exp({mantissa: CToken(cToken).borrowIndex()});
+        // updateGsighBorrowIndex(cToken, borrowIndex);
+        // distributeBorrowerGsigh(cToken, borrower, borrowIndex, false);
 
         return uint(Error.NO_ERROR);
     }
@@ -542,10 +542,10 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
             return uint(Error.SIGHTROLLER_MISMATCH);
         }
 
-        // Keep the flywheel moving
-        updateGsighSupplyIndex(cTokenCollateral);
-        distributeSupplierGsigh(cTokenCollateral, borrower, false);
-        distributeSupplierGsigh(cTokenCollateral, liquidator, false);
+        // // Keep the flywheel moving
+        // updateGsighSupplyIndex(cTokenCollateral);
+        // distributeSupplierGsigh(cTokenCollateral, borrower, false);
+        // distributeSupplierGsigh(cTokenCollateral, liquidator, false);
 
         // Flywheel for SIGH TOkens
         updateSIGHSupplyIndex(cTokenCollateral);
@@ -595,10 +595,10 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
             return allowed;
         }
 
-        // Keep the flywheel moving
-        updateGsighSupplyIndex(cToken);
-        distributeSupplierGsigh(cToken, src, false);
-        distributeSupplierGsigh(cToken, dst, false);
+        // // Keep the flywheel moving
+        // updateGsighSupplyIndex(cToken);
+        // distributeSupplierGsigh(cToken, src, false);
+        // distributeSupplierGsigh(cToken, dst, false);
 
         // Flywheel for SIGH TOkens
         updateSIGHSupplyIndex(cToken);
@@ -1082,260 +1082,260 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
 
     /*** GSigh Distribution ***/
 
-    /**
-     * @notice Recalculate and update GSigh speeds for all GSigh markets
-     */
-    function refreshGsighSpeeds() public {
-        require(msg.sender == tx.origin, "only externally owned accounts may refresh speeds");
-        refreshGsighSpeedsInternal();
-    }
+    // /**
+    //  * @notice Recalculate and update GSigh speeds for all GSigh markets
+    //  */
+    // function refreshGsighSpeeds() public {
+    //     require(msg.sender == tx.origin, "only externally owned accounts may refresh speeds");
+    //     refreshGsighSpeedsInternal();
+    // }
 
-    function refreshGsighSpeedsInternal() internal {
-        CToken[] memory allMarkets_ = allMarkets;
+    // function refreshGsighSpeedsInternal() internal {
+    //     CToken[] memory allMarkets_ = allMarkets;
 
-        for (uint i = 0; i < allMarkets_.length; i++) {
-            CToken cToken = allMarkets_[i];
-            Exp memory borrowIndex = Exp({mantissa: cToken.borrowIndex()});
-            updateGsighSupplyIndex(address(cToken));
-            updateGsighBorrowIndex(address(cToken), borrowIndex);
-        }
+    //     for (uint i = 0; i < allMarkets_.length; i++) {
+    //         CToken cToken = allMarkets_[i];
+    //         Exp memory borrowIndex = Exp({mantissa: cToken.borrowIndex()});
+    //         updateGsighSupplyIndex(address(cToken));
+    //         updateGsighBorrowIndex(address(cToken), borrowIndex);
+    //     }
 
-        Exp memory totalUtility = Exp({mantissa: 0});
-        Exp[] memory utilities = new Exp[](allMarkets_.length);
+    //     Exp memory totalUtility = Exp({mantissa: 0});
+    //     Exp[] memory utilities = new Exp[](allMarkets_.length);
         
-        for (uint i = 0; i < allMarkets_.length; i++) {
-            CToken cToken = allMarkets_[i];
-            if (markets[address(cToken)].isGsighed) {
-                Exp memory assetPrice = Exp({mantissa: oracle.getUnderlyingPrice(cToken)});
-                Exp memory utility = mul_(assetPrice, cToken.totalBorrows());
-                utilities[i] = utility;
-                totalUtility = add_(totalUtility, utility);
-            }
-        }
+    //     for (uint i = 0; i < allMarkets_.length; i++) {
+    //         CToken cToken = allMarkets_[i];
+    //         if (markets[address(cToken)].isGsighed) {
+    //             Exp memory assetPrice = Exp({mantissa: oracle.getUnderlyingPrice(cToken)});
+    //             Exp memory utility = mul_(assetPrice, cToken.totalBorrows());
+    //             utilities[i] = utility;
+    //             totalUtility = add_(totalUtility, utility);
+    //         }
+    //     }
 
-        for (uint i = 0; i < allMarkets_.length; i++) {
-            CToken cToken = allMarkets[i];
-            uint newSpeed = totalUtility.mantissa > 0 ? mul_(gsighRate, div_(utilities[i], totalUtility)) : 0;
-            gsighSpeeds[address(cToken)] = newSpeed;
-            emit GsighSpeedUpdated(cToken, newSpeed);
-        }
-    }
+    //     for (uint i = 0; i < allMarkets_.length; i++) {
+    //         CToken cToken = allMarkets[i];
+    //         uint newSpeed = totalUtility.mantissa > 0 ? mul_(gsighRate, div_(utilities[i], totalUtility)) : 0;
+    //         gsighSpeeds[address(cToken)] = newSpeed;
+    //         emit GsighSpeedUpdated(cToken, newSpeed);
+    //     }
+    // }
 
-    /**
-     * @notice Accrue Gsigh to the market by updating the supply index
-     * @param cToken The market whose supply index to update
-     */
-    function updateGsighSupplyIndex(address cToken) internal {
-        GsighMarketState storage supplyState = gsighSupplyState[cToken];
-        uint supplySpeed = gsighSpeeds[cToken];
-        uint blockNumber = getBlockNumber();
-        uint deltaBlocks = sub_(blockNumber, uint(supplyState.block));
-        if (deltaBlocks > 0 && supplySpeed > 0) {
-            uint supplyTokens = CToken(cToken).totalSupply();
-            uint gsighAccrued = mul_(deltaBlocks, supplySpeed);
-            Double memory ratio = supplyTokens > 0 ? fraction(gsighAccrued, supplyTokens) : Double({mantissa: 0});
-            Double memory index = add_(Double({mantissa: supplyState.index}), ratio);
-            gsighSupplyState[cToken] = GsighMarketState({ index: safe224(index.mantissa, "new index exceeds 224 bits"), block: safe32(blockNumber, "block number exceeds 32 bits")});
-        } 
-        else if (deltaBlocks > 0) {
-            supplyState.block = safe32(blockNumber, "block number exceeds 32 bits");
-        }
-    }
+    // /**
+    //  * @notice Accrue Gsigh to the market by updating the supply index
+    //  * @param cToken The market whose supply index to update
+    //  */
+    // function updateGsighSupplyIndex(address cToken) internal {
+    //     GsighMarketState storage supplyState = gsighSupplyState[cToken];
+    //     uint supplySpeed = gsighSpeeds[cToken];
+    //     uint blockNumber = getBlockNumber();
+    //     uint deltaBlocks = sub_(blockNumber, uint(supplyState.block));
+    //     if (deltaBlocks > 0 && supplySpeed > 0) {
+    //         uint supplyTokens = CToken(cToken).totalSupply();
+    //         uint gsighAccrued = mul_(deltaBlocks, supplySpeed);
+    //         Double memory ratio = supplyTokens > 0 ? fraction(gsighAccrued, supplyTokens) : Double({mantissa: 0});
+    //         Double memory index = add_(Double({mantissa: supplyState.index}), ratio);
+    //         gsighSupplyState[cToken] = GsighMarketState({ index: safe224(index.mantissa, "new index exceeds 224 bits"), block: safe32(blockNumber, "block number exceeds 32 bits")});
+    //     } 
+    //     else if (deltaBlocks > 0) {
+    //         supplyState.block = safe32(blockNumber, "block number exceeds 32 bits");
+    //     }
+    // }
 
-    /**
-     * @notice Accrue Gsigh to the market by updating the borrow index
-     * @param cToken The market whose borrow index to update
-     */
-    function updateGsighBorrowIndex(address cToken, Exp memory marketBorrowIndex) internal {
-        GsighMarketState storage borrowState = gsighBorrowState[cToken];
-        uint borrowSpeed = gsighSpeeds[cToken];
-        uint blockNumber = getBlockNumber();
-        uint deltaBlocks = sub_(blockNumber, uint(borrowState.block));
-        if (deltaBlocks > 0 && borrowSpeed > 0) {
-            uint gsighAccrued = mul_(deltaBlocks, borrowSpeed);
-            uint borrowAmount = div_(CToken(cToken).totalBorrows(), marketBorrowIndex);
-            Double memory ratio = borrowAmount > 0 ? fraction(gsighAccrued, borrowAmount) : Double({mantissa: 0});
-            Double memory index = add_(Double({mantissa: borrowState.index}), ratio);
-            gsighBorrowState[cToken] = GsighMarketState({  index: safe224(index.mantissa, "new index exceeds 224 bits"), block: safe32(blockNumber, "block number exceeds 32 bits") });
-        } 
-        else if (deltaBlocks > 0) {
-            borrowState.block = safe32(blockNumber, "block number exceeds 32 bits");
-        }
-    }
+    // /**
+    //  * @notice Accrue Gsigh to the market by updating the borrow index
+    //  * @param cToken The market whose borrow index to update
+    //  */
+    // function updateGsighBorrowIndex(address cToken, Exp memory marketBorrowIndex) internal {
+    //     GsighMarketState storage borrowState = gsighBorrowState[cToken];
+    //     uint borrowSpeed = gsighSpeeds[cToken];
+    //     uint blockNumber = getBlockNumber();
+    //     uint deltaBlocks = sub_(blockNumber, uint(borrowState.block));
+    //     if (deltaBlocks > 0 && borrowSpeed > 0) {
+    //         uint gsighAccrued = mul_(deltaBlocks, borrowSpeed);
+    //         uint borrowAmount = div_(CToken(cToken).totalBorrows(), marketBorrowIndex);
+    //         Double memory ratio = borrowAmount > 0 ? fraction(gsighAccrued, borrowAmount) : Double({mantissa: 0});
+    //         Double memory index = add_(Double({mantissa: borrowState.index}), ratio);
+    //         gsighBorrowState[cToken] = GsighMarketState({  index: safe224(index.mantissa, "new index exceeds 224 bits"), block: safe32(blockNumber, "block number exceeds 32 bits") });
+    //     } 
+    //     else if (deltaBlocks > 0) {
+    //         borrowState.block = safe32(blockNumber, "block number exceeds 32 bits");
+    //     }
+    // }
 
-    /**
-     * @notice Calculate Gsigh accrued by a supplier and possibly transfer it to them
-     * @param cToken The market in which the supplier is interacting
-     * @param supplier The address of the supplier to distribute Gsigh to
-     */
-    function distributeSupplierGsigh(address cToken, address supplier, bool distributeAll) internal {
-        GsighMarketState storage supplyState = gsighSupplyState[cToken];
-        Double memory supplyIndex = Double({mantissa: supplyState.index});
-        Double memory supplierIndex = Double({mantissa: gsighSupplierIndex[cToken][supplier]});
-        gsighSupplierIndex[cToken][supplier] = supplyIndex.mantissa;
+    // /**
+    //  * @notice Calculate Gsigh accrued by a supplier and possibly transfer it to them
+    //  * @param cToken The market in which the supplier is interacting
+    //  * @param supplier The address of the supplier to distribute Gsigh to
+    //  */
+    // function distributeSupplierGsigh(address cToken, address supplier, bool distributeAll) internal {
+    //     GsighMarketState storage supplyState = gsighSupplyState[cToken];
+    //     Double memory supplyIndex = Double({mantissa: supplyState.index});
+    //     Double memory supplierIndex = Double({mantissa: gsighSupplierIndex[cToken][supplier]});
+    //     gsighSupplierIndex[cToken][supplier] = supplyIndex.mantissa;
 
-        if (supplierIndex.mantissa == 0 && supplyIndex.mantissa > 0) {
-            supplierIndex.mantissa = gsighInitialIndex;
-        }
+    //     if (supplierIndex.mantissa == 0 && supplyIndex.mantissa > 0) {
+    //         supplierIndex.mantissa = gsighInitialIndex;
+    //     }
 
-        Double memory deltaIndex = sub_(supplyIndex, supplierIndex);
-        uint supplierTokens = CToken(cToken).balanceOf(supplier);
-        uint supplierDelta = mul_(supplierTokens, deltaIndex);
-        uint supplierAccrued = add_(gsighAccrued[supplier], supplierDelta);
-        gsighAccrued[supplier] = transferGSigh(supplier, supplierAccrued, distributeAll ? 0 : gsighClaimThreshold);
-        emit DistributedSupplierGsigh(CToken(cToken), supplier, supplierDelta, supplyIndex.mantissa);
-    }
+    //     Double memory deltaIndex = sub_(supplyIndex, supplierIndex);
+    //     uint supplierTokens = CToken(cToken).balanceOf(supplier);
+    //     uint supplierDelta = mul_(supplierTokens, deltaIndex);
+    //     uint supplierAccrued = add_(gsighAccrued[supplier], supplierDelta);
+    //     gsighAccrued[supplier] = transferGSigh(supplier, supplierAccrued, distributeAll ? 0 : gsighClaimThreshold);
+    //     emit DistributedSupplierGsigh(CToken(cToken), supplier, supplierDelta, supplyIndex.mantissa);
+    // }
 
-    /**
-     * @notice Calculate Gsigh accrued by a borrower and possibly transfer it to them
-     * @dev Borrowers will not begin to accrue until after the first interaction with the protocol.
-     * @param cToken The market in which the borrower is interacting
-     * @param borrower The address of the borrower to distribute Gsigh to
-     */
-    function distributeBorrowerGsigh(address cToken, address borrower, Exp memory marketBorrowIndex, bool distributeAll) internal {
-        GsighMarketState storage borrowState = gsighBorrowState[cToken];
-        Double memory borrowIndex = Double({mantissa: borrowState.index});
-        Double memory borrowerIndex = Double({mantissa: gsighBorrowerIndex[cToken][borrower]});
-        gsighBorrowerIndex[cToken][borrower] = borrowIndex.mantissa;
+    // /**
+    //  * @notice Calculate Gsigh accrued by a borrower and possibly transfer it to them
+    //  * @dev Borrowers will not begin to accrue until after the first interaction with the protocol.
+    //  * @param cToken The market in which the borrower is interacting
+    //  * @param borrower The address of the borrower to distribute Gsigh to
+    //  */
+    // function distributeBorrowerGsigh(address cToken, address borrower, Exp memory marketBorrowIndex, bool distributeAll) internal {
+    //     GsighMarketState storage borrowState = gsighBorrowState[cToken];
+    //     Double memory borrowIndex = Double({mantissa: borrowState.index});
+    //     Double memory borrowerIndex = Double({mantissa: gsighBorrowerIndex[cToken][borrower]});
+    //     gsighBorrowerIndex[cToken][borrower] = borrowIndex.mantissa;
 
-        if (borrowerIndex.mantissa > 0) {
-            Double memory deltaIndex = sub_(borrowIndex, borrowerIndex);
-            uint borrowerAmount = div_(CToken(cToken).borrowBalanceStored(borrower), marketBorrowIndex);
-            uint borrowerDelta = mul_(borrowerAmount, deltaIndex);
-            uint borrowerAccrued = add_(gsighAccrued[borrower], borrowerDelta);
-            gsighAccrued[borrower] = transferGSigh(borrower, borrowerAccrued, distributeAll ? 0 : gsighClaimThreshold);
-            emit DistributedBorrowerGsigh(CToken(cToken), borrower, borrowerDelta, borrowIndex.mantissa);
-        }
-    }
+    //     if (borrowerIndex.mantissa > 0) {
+    //         Double memory deltaIndex = sub_(borrowIndex, borrowerIndex);
+    //         uint borrowerAmount = div_(CToken(cToken).borrowBalanceStored(borrower), marketBorrowIndex);
+    //         uint borrowerDelta = mul_(borrowerAmount, deltaIndex);
+    //         uint borrowerAccrued = add_(gsighAccrued[borrower], borrowerDelta);
+    //         gsighAccrued[borrower] = transferGSigh(borrower, borrowerAccrued, distributeAll ? 0 : gsighClaimThreshold);
+    //         emit DistributedBorrowerGsigh(CToken(cToken), borrower, borrowerDelta, borrowIndex.mantissa);
+    //     }
+    // }
 
-    /**
-     * @notice Transfer Gsigh to the user, if they are above the threshold
-     * @dev Note: If there is not enough Gsigh, we do not perform the transfer all.
-     * @param user The address of the user to transfer Gsigh to
-     * @param userAccrued The amount of Gsigh to (possibly) transfer
-     * @return The amount of Gsigh which was NOT transferred to the user
-     */
-    function transferGSigh(address user, uint userAccrued, uint threshold) internal returns (uint) {
-        if (userAccrued >= threshold && userAccrued > 0) {
-            GSigh gsigh = GSigh(getGSighAddress());
-            uint gsighRemaining = gsigh.balanceOf(address(this));
-            if (userAccrued <= gsighRemaining) {
-                gsigh.transfer(user, userAccrued);
-                emit GSIGH_Transferred(user, userAccrued);
-                return 0;
-            }
-        }
-        return userAccrued;
-    }
+    // /**
+    //  * @notice Transfer Gsigh to the user, if they are above the threshold
+    //  * @dev Note: If there is not enough Gsigh, we do not perform the transfer all.
+    //  * @param user The address of the user to transfer Gsigh to
+    //  * @param userAccrued The amount of Gsigh to (possibly) transfer
+    //  * @return The amount of Gsigh which was NOT transferred to the user
+    //  */
+    // function transferGSigh(address user, uint userAccrued, uint threshold) internal returns (uint) {
+    //     if (userAccrued >= threshold && userAccrued > 0) {
+    //         GSigh gsigh = GSigh(getGSighAddress());
+    //         uint gsighRemaining = gsigh.balanceOf(address(this));
+    //         if (userAccrued <= gsighRemaining) {
+    //             gsigh.transfer(user, userAccrued);
+    //             emit GSIGH_Transferred(user, userAccrued);
+    //             return 0;
+    //         }
+    //     }
+    //     return userAccrued;
+    // }
 
-    /**
-     * @notice Claim all the Gsigh accrued by holder in all markets
-     * @param holder The address to claim Gsigh for
-     */
-    function claimGSigh(address holder) public {
-        return claimGSigh(holder, allMarkets);
-    }
+    // /**
+    //  * @notice Claim all the Gsigh accrued by holder in all markets
+    //  * @param holder The address to claim Gsigh for
+    //  */
+    // function claimGSigh(address holder) public {
+    //     return claimGSigh(holder, allMarkets);
+    // }
 
-    /**
-     * @notice Claim all the Gsigh accrued by holder in the specified markets
-     * @param holder The address to claim Gsigh for
-     * @param cTokens The list of markets to claim Gsigh in
-     */
-    function claimGSigh(address holder, CToken[] memory cTokens) public {
-        address[] memory holders = new address[](1);
-        holders[0] = holder;
-        claimGSigh(holders, cTokens, true, true);
-    }
+    // /**
+    //  * @notice Claim all the Gsigh accrued by holder in the specified markets
+    //  * @param holder The address to claim Gsigh for
+    //  * @param cTokens The list of markets to claim Gsigh in
+    //  */
+    // function claimGSigh(address holder, CToken[] memory cTokens) public {
+    //     address[] memory holders = new address[](1);
+    //     holders[0] = holder;
+    //     claimGSigh(holders, cTokens, true, true);
+    // }
 
-    /**
-     * @notice Claim all Gsigh accrued by the holders
-     * @param holders The addresses to claim Gsigh for
-     * @param cTokens The list of markets to claim Gsigh in
-     * @param borrowers Whether or not to claim Gsigh earned by borrowing
-     * @param suppliers Whether or not to claim Gsigh earned by supplying
-     */
-    function claimGSigh(address[] memory holders, CToken[] memory cTokens, bool borrowers, bool suppliers) public {
-        for (uint i = 0; i < cTokens.length; i++) {
-            CToken cToken = cTokens[i];
-            require(markets[address(cToken)].isListed, "market must be listed");
-            if (borrowers == true) {
-                Exp memory borrowIndex = Exp({mantissa: cToken.borrowIndex()});
-                updateGsighBorrowIndex(address(cToken), borrowIndex);
-                for (uint j = 0; j < holders.length; j++) {
-                    distributeBorrowerGsigh(address(cToken), holders[j], borrowIndex, true);
-                }
-            }
-            if (suppliers == true) {
-                updateGsighSupplyIndex(address(cToken));
-                for (uint j = 0; j < holders.length; j++) {
-                    distributeSupplierGsigh(address(cToken), holders[j], true);
-                }
-            }
-        }
-    }
+    // /**
+    //  * @notice Claim all Gsigh accrued by the holders
+    //  * @param holders The addresses to claim Gsigh for
+    //  * @param cTokens The list of markets to claim Gsigh in
+    //  * @param borrowers Whether or not to claim Gsigh earned by borrowing
+    //  * @param suppliers Whether or not to claim Gsigh earned by supplying
+    //  */
+    // function claimGSigh(address[] memory holders, CToken[] memory cTokens, bool borrowers, bool suppliers) public {
+    //     for (uint i = 0; i < cTokens.length; i++) {
+    //         CToken cToken = cTokens[i];
+    //         require(markets[address(cToken)].isListed, "market must be listed");
+    //         if (borrowers == true) {
+    //             Exp memory borrowIndex = Exp({mantissa: cToken.borrowIndex()});
+    //             updateGsighBorrowIndex(address(cToken), borrowIndex);
+    //             for (uint j = 0; j < holders.length; j++) {
+    //                 distributeBorrowerGsigh(address(cToken), holders[j], borrowIndex, true);
+    //             }
+    //         }
+    //         if (suppliers == true) {
+    //             updateGsighSupplyIndex(address(cToken));
+    //             for (uint j = 0; j < holders.length; j++) {
+    //                 distributeSupplierGsigh(address(cToken), holders[j], true);
+    //             }
+    //         }
+    //     }
+    // }
 
-    /*** Gsigh Distribution Admin ***/
+    // /*** Gsigh Distribution Admin ***/
 
-    /**
-     * @notice Set the amount of Gsigh distributed per block
-     * @param gsighRate_ The amount of Gsigh wei per block to distribute
-     */
-    function _setGsighRate(uint gsighRate_) public {
-        require(adminOrInitializing(), "only admin can change Gsigh rate");
+    // /**
+    //  * @notice Set the amount of Gsigh distributed per block
+    //  * @param gsighRate_ The amount of Gsigh wei per block to distribute
+    //  */
+    // function _setGsighRate(uint gsighRate_) public {
+    //     require(adminOrInitializing(), "only admin can change Gsigh rate");
 
-        uint oldRate = gsighRate;
-        gsighRate = gsighRate_;
-        emit NewGsighRate(oldRate, gsighRate_);
+    //     uint oldRate = gsighRate;
+    //     gsighRate = gsighRate_;
+    //     emit NewGsighRate(oldRate, gsighRate_);
 
-        refreshGsighSpeedsInternal();
-    }
+    //     refreshGsighSpeedsInternal();
+    // }
 
-    /**
-     * @notice Add markets to GsighMarkets, allowing them to earn Gsigh in the flywheel
-     * @param cTokens The addresses of the markets to add
-     */
-    function _addGsighMarkets(address[] memory cTokens) public {
-        require(adminOrInitializing(), "only admin can add Gsigh market");
+    // /**
+    //  * @notice Add markets to GsighMarkets, allowing them to earn Gsigh in the flywheel
+    //  * @param cTokens The addresses of the markets to add
+    //  */
+    // function _addGsighMarkets(address[] memory cTokens) public {
+    //     require(adminOrInitializing(), "only admin can add Gsigh market");
 
-        for (uint i = 0; i < cTokens.length; i++) {
-            _addGsighMarketInternal(cTokens[i]);
-        }
+    //     for (uint i = 0; i < cTokens.length; i++) {
+    //         _addGsighMarketInternal(cTokens[i]);
+    //     }
 
-        refreshGsighSpeedsInternal();
-    }
+    //     refreshGsighSpeedsInternal();
+    // }
 
-    function _addGsighMarketInternal(address cToken) internal {
-        Market storage market = markets[cToken];
-        require(market.isListed == true, "Gsigh market is not listed");
-        require(market.isGsighed == false, "Gsigh market already added");
+    // function _addGsighMarketInternal(address cToken) internal {
+    //     Market storage market = markets[cToken];
+    //     require(market.isListed == true, "Gsigh market is not listed");
+    //     require(market.isGsighed == false, "Gsigh market already added");
 
-        market.isGsighed = true;
-        emit MarketGsighed(CToken(cToken), true);
+    //     market.isGsighed = true;
+    //     emit MarketGsighed(CToken(cToken), true);
 
-        if (gsighSupplyState[cToken].index == 0 && gsighSupplyState[cToken].block == 0) {
-            gsighSupplyState[cToken] = GsighMarketState({ index: gsighInitialIndex, block: safe32(getBlockNumber(), "block number exceeds 32 bits") });
-        }
+    //     if (gsighSupplyState[cToken].index == 0 && gsighSupplyState[cToken].block == 0) {
+    //         gsighSupplyState[cToken] = GsighMarketState({ index: gsighInitialIndex, block: safe32(getBlockNumber(), "block number exceeds 32 bits") });
+    //     }
 
-        if (gsighBorrowState[cToken].index == 0 && gsighBorrowState[cToken].block == 0) {
-            gsighBorrowState[cToken] = GsighMarketState({ index: gsighInitialIndex, block: safe32(getBlockNumber(), "block number exceeds 32 bits") });
-        }
-    }
+    //     if (gsighBorrowState[cToken].index == 0 && gsighBorrowState[cToken].block == 0) {
+    //         gsighBorrowState[cToken] = GsighMarketState({ index: gsighInitialIndex, block: safe32(getBlockNumber(), "block number exceeds 32 bits") });
+    //     }
+    // }
 
-    /**
-     * @notice Remove a market from gsighMarkets, preventing it from earning Gsigh in the flywheel
-     * @param cToken The address of the market to drop
-     */
-    function _dropGsighMarket(address cToken) public {
-        require(msg.sender == admin, "only admin can drop Gsigh market");
+    // /**
+    //  * @notice Remove a market from gsighMarkets, preventing it from earning Gsigh in the flywheel
+    //  * @param cToken The address of the market to drop
+    //  */
+    // function _dropGsighMarket(address cToken) public {
+    //     require(msg.sender == admin, "only admin can drop Gsigh market");
 
-        Market storage market = markets[cToken];
-        require(market.isGsighed == true, "market is not a Gsigh market");
+    //     Market storage market = markets[cToken];
+    //     require(market.isGsighed == true, "market is not a Gsigh market");
 
-        market.isGsighed = false;
-        emit MarketGsighed(CToken(cToken), false);
+    //     market.isGsighed = false;
+    //     emit MarketGsighed(CToken(cToken), false);
 
-        refreshGsighSpeedsInternal();
-    }
+    //     refreshGsighSpeedsInternal();
+    // }
 
     /*** SIGH ***/
     /*** SIGH ***/
@@ -1366,7 +1366,7 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
     /// @notice Emitted when SIGH rate is changed
     event NewSIGHRate(uint oldSIGHRate, uint newSIGHRate);
 
-    /// @notice Emitted when a new Gsigh speed is calculated for a market
+    /// @notice Emitted when a new SIGH speed is calculated for a market
     event SIGHSpeedUpdated(CToken indexed cToken, uint newSpeed);
 
     /// @notice Emitted when market isSIGHed status is changed
@@ -1610,16 +1610,16 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
      * @notice Return the address of the Gsigh token
      * @return The address of GSIGH
      */
-    function getGSighAddress() public view returns (address) {
-        return 0xbbe41461213d89FCb2d40aff25eB2b0ed8e2Db70;
-    }
+    // function getGSighAddress() public view returns (address) {
+    //     return 0xbbe41461213d89FCb2d40aff25eB2b0ed8e2Db70;
+    // }
 
     function getSighAddress() public view returns (address) {
         return 0x76Ff68033ef96ee0727f85eA1f979B1b0FD4C75b;
     }
 
     function getSighReservoir() public view returns (address) {
-        return 0x76Ff68033ef96ee0727f85eA1f979B1b0FD4C75b;
+        return 0x9748692378cD832db750009BEF7Ea3f6862f9fD9;
     }
 
     function setGelatoAddress(address gelato_) public returns (address) {

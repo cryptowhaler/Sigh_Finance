@@ -206,6 +206,9 @@ export default {
      'sightroller_setMintPaused','sightroller_setBorrowPaused','sightroller_setTransferPaused','sightroller_setSeizePaused','sightroller__become','sightroller_refreshGsighSpeeds',
      'sightroller_claimGSigh','sightroller_claimGSigh_bs','sightroller_setGsighRate','sightroller__addGsighMarkets','sightroller__dropGsighMarket','sightroller__getAllMarkets',
      'sightroller__getBlockNumber','sightroller__getGSighAddress','sightroller_getUnderlyingPriceFromOracle','sightroller_getGSighRate','sightroller_getSighAddress','sightroller_getAdmin',
+      'sightroller_getSIGHSpeed','sightroller_getSIGHSpeedForMarket','sightroller_addSIGHMarket','sightroller_dropSIGHMarket','sightroller_takeSIGHPriceSnapshot','sightroller_refreshSIGHSpeeds',
+      'sightroller_claimSIGH','sightroller_setGelatoAddress','sightroller_getGelatoAddress','sightroller_setSIGHRate',
+
 
       'unitroller___setPendingImplementation','unitroller_acceptImplementation','unitroller_setPendingAdmin','unitroller_acceptAdmin','unitroller_getAdmin','unitroller_getPendingSightrollerImplementation',
       'unitroller_getSightrollerImplementation',
@@ -624,6 +627,44 @@ export default {
       if (type == 'getAdmin') {
         this.sightroller_getAdmin();        
       }
+
+
+      if (type == 'setSIGHRate') {
+        this.sightroller_setSIGHRate({sighRate : this.gsighRate_  });        
+      }
+      if (type == 'getSIGHSpeed') {
+        this.sightroller_getSIGHSpeed();        
+      }
+      if (type == 'getSIGHSpeedForMarket') {
+        this.sightroller_getSIGHSpeedForMarket({market: this.market });        
+      }
+      if (type == 'addSIGHMarket') {
+        this.sightroller_addSIGHMarket({market: this.market });        
+      }
+      if (type == 'dropSIGHMarket') {
+        this.sightroller_dropSIGHMarket({market: this.market });        
+      }
+      if (type == 'takeSIGHPriceSnapshot') {
+        this.sightroller_takeSIGHPriceSnapshot();        
+      }
+      if (type == 'refreshSIGHSpeeds') {
+        this.sightroller_refreshSIGHSpeeds();        
+      }
+      if (type == 'claimSIGH') {
+        this.sightroller_claimSIGH();        
+      }
+      if (type == 'setGelatoAddress') {
+        this.sightroller_setGelatoAddress( {gelato : this.market } );        
+      }
+
+      if (type == 'getGelatoAddress') {
+        this.sightroller_getGelatoAddress();        
+      }
+
+
+
+
+
 
     },
 

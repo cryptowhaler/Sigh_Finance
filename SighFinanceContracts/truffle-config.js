@@ -68,7 +68,7 @@ module.exports = {
       },
       host: "127.0.0.1",
       network_id: 42,
-      gas: 12500000,
+      gas: 12400000,
       from: wallet,
     },
     // ropsten: {

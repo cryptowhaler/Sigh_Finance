@@ -2348,6 +2348,160 @@ const store = new Vuex.Store({
       }
     },
 
+    sightroller_getSIGHSpeed: async ({commit,state}) => {
+      const web3 = state.web3;
+      const Sightroller_ = Unitroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+      console.log(Sightroller_);
+      if (Sightroller_) {
+        let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+        console.log(SIGHTROLLER_Contract);
+        let SIGHRate_ = SIGHTROLLER_Contract.methods.SIGHRate().call(); 
+          console.log(SIGHRate_);
+      }
+    },
+
+    sightroller_getSIGHSpeedForMarket: async ({commit,state},{market}) => {
+      const web3 = state.web3;
+      const Sightroller_ = Unitroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+      console.log(Sightroller_);
+      if (Sightroller_) {
+        let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+        console.log(SIGHTROLLER_Contract);
+        let SIGHRate_ = SIGHTROLLER_Contract.methods.SIGH_Speeds(market).call(); 
+          console.log(SIGHRate_);
+      }
+    },    
+
+    sightroller_addSIGHMarket: async ({commit,state},{market}) => {
+      const web3 = state.web3;
+      const Sightroller_ = Unitroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+      console.log(Sightroller_);
+      if (Sightroller_) {
+        let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+        console.log(SIGHTROLLER_Contract);
+        SIGHTROLLER_Contract.methods._addSIGHMarket(market).send({from: state.web3Account})
+        .then(receipt => {
+          console.log(receipt);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      }
+    },
+
+    sightroller_dropSIGHMarket: async ({commit,state},{market}) => {
+      const web3 = state.web3;
+      const Sightroller_ = Unitroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+      console.log(Sightroller_);
+      if (Sightroller_) {
+        let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+        console.log(SIGHTROLLER_Contract);
+        SIGHTROLLER_Contract.methods._dropSIGHMarket(market).send({from: state.web3Account})
+        .then(receipt => {
+          console.log(receipt);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      }
+    },
+
+    sightroller_takeSIGHPriceSnapshot: async ({commit,state}) => {
+      const web3 = state.web3;
+      const Sightroller_ = Unitroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+      console.log(Sightroller_);
+      if (Sightroller_) {
+        let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+        console.log(SIGHTROLLER_Contract);
+        SIGHTROLLER_Contract.methods.takeSIGHPriceSnapshot().send({from: state.web3Account})
+        .then(receipt => {
+          console.log(receipt);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      }
+    },
+
+    sightroller_refreshSIGHSpeeds: async ({commit,state}) => {
+      const web3 = state.web3;
+      const Sightroller_ = Unitroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+      console.log(Sightroller_);
+      if (Sightroller_) {
+        let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+        console.log(SIGHTROLLER_Contract);
+        SIGHTROLLER_Contract.methods.refreshSIGHSpeeds().send({from: state.web3Account})
+        .then(receipt => {
+          console.log(receipt);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      }
+    },
+
+    sightroller_claimSIGH: async ({commit,state}) => {
+      const web3 = state.web3;
+      const Sightroller_ = Unitroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+      console.log(Sightroller_);
+      if (Sightroller_) {
+        let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+        console.log(SIGHTROLLER_Contract);
+        SIGHTROLLER_Contract.methods.claimSIGH().send({from: state.web3Account})
+        .then(receipt => {
+          console.log(receipt);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      }
+    },
+
+    sightroller_setGelatoAddress: async ({commit,state},{gelato}) => {
+      const web3 = state.web3;
+      const Sightroller_ = Unitroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+      console.log(Sightroller_);
+      if (Sightroller_) {
+        let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+        console.log(SIGHTROLLER_Contract);
+        SIGHTROLLER_Contract.methods.setGelatoAddress(gelato).send({from: state.web3Account})
+        .then(receipt => {
+          console.log(receipt);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      }
+    },
+
+    sightroller_getGelatoAddress: async ({commit,state}) => {
+      const web3 = state.web3;
+      const Sightroller_ = Unitroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+      console.log(Sightroller_);
+      if (Sightroller_) {
+        let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+        console.log(SIGHTROLLER_Contract);
+        let ret = SIGHTROLLER_Contract.methods.getGelatoAddress().call();
+        console.log(ret);
+      } 
+    },
+
+    sightroller_setSIGHRate: async ({commit,state},{sighRate}) => {
+      const web3 = state.web3;
+      const Sightroller_ = Unitroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+      console.log(Sightroller_);
+      if (Sightroller_) {
+        let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+        console.log(SIGHTROLLER_Contract);
+        let ret = SIGHTROLLER_Contract.methods.setSIGHRate(sighRate).send({from: state.web3Account})
+        .then(receipt => {
+          console.log(receipt);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      } 
+    },
   // UNITROLLER FUNCTIONS (END)
   //********************** 
   //********************** 
