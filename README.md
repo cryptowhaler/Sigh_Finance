@@ -1,7 +1,3 @@
-#ChainLink #Hackathon #ChainLinkHackathon
-
-#GraphProtocol
-
 Link to the Graph -  https://thegraph.com/explorer/subgraph/cryptowhaler/sigh-finance-kovan
 
 
