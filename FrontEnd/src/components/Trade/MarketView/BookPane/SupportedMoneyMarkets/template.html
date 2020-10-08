@@ -16,10 +16,13 @@
                             <th class="uk-text-center">Supply APY</th>
                             <th class="uk-text-center">Borrow APY</th>
                             <th class="uk-text-center"> Underlying Market </th>
-                            <th class="uk-text-center"> GSigh Speed </th>
-                            <th class="uk-text-center"> Sigh Speed </th>
                             <th class="uk-text-center"> Exchange Rate </th>
                             <th class="uk-text-center"> Underlying Price </th>
+                            <th class="uk-text-center"> Recorded Price </th>
+                            <th class="uk-text-center"> Sigh Speed </th>
+                            <th class="uk-text-center"> Losses Recovered (24 hrs) </th>
+                            <!-- <th class="uk-text-center"> Losses Recovered % </th> -->
+
                         </tr>
                     </thead>
                     <tbody>
@@ -31,11 +34,12 @@
                             <td class="uk-text-center c-green" style="line-height: 4;" >{{(Number(market.supplyRate)*1000000).toFixed(2)}} % </td>
                             <td class="uk-text-center c-red" style="line-height: 4;" >{{(Number(market.borrowRate)*10000000).toFixed(2)}} %</td>
                             <td class="uk-text-center c-white" style="line-height: 4;" >{{ market.underlyingSymbol }} </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ market.gsighSpeed }} </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ market.sighSpeed }} </td>
                             <td class="uk-text-center c-white" style="line-height: 4;" >{{ market.exchangeRate }} </td>
                             <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(market.underlyingPrice).toFixed(3) }} </td>
-
+                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(Number(market.savePriceSnapshot)/10000000).toFixed(3) }} </td>
+                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ market.sighSpeed }} </td>
+                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(Number(market.sighAccuredInCurrentCycle)/10000000).toFixed(2) }} </td>
+                            <!-- <td class="uk-text-center c-green" style="line-height: 4;" >{{ market.lossesRecovered }} </td> -->
                             <!-- <td class="uk-text-right">{{(market.createdAt).slice(11,19)}}-{{(market.createdAt).slice(20,22)}}</td> -->
                         </tr>
                     </tbody>

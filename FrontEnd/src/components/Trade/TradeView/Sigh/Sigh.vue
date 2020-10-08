@@ -17,7 +17,7 @@ export default {
   data() {
     return {
       sigh: [],
-      sighAddress : "0x58897eb4e8e70eb8133587ce80b8e56f9248705c",
+      sighAddress : "0x76ff68033ef96ee0727f85ea1f979b1b0fd4c75b",
       sighSnapshot : [],
     };
   },

@@ -79,18 +79,6 @@ const store = new Vuex.Store({
     selectedPair: 'BTC/USD',
     pubkeysArray: [],
 
-    selectedVegaMarketName: 'ETHBTC/DEC20',    //Added
-    selectedVegaMarketId: 'RTJVFCMFZZQQLLYVSXTWEN62P6AH6OCN',     //Added
-    selectedVegaMarketSummary: 'December 2020 ETH vs BTC future',     //Added
-    selectedVegaMarketbaseName: 'ETHBTC', //Added
-    selectedVegaMarketquoteName: 'BTC', //Added
-
-    selectedVegaMarketTradeId: 'RTJVFCMFZZQQLLYVSXTWEN62P6AH6OCN',     //Added
-    selectedVegaMarketNameTrade: 'ETHBTC/DEC20',    //Added
-    selectedVegaMarketSummaryTrade: 'December 2020 ETH vs BTC future',     //Added
-    selectedVegaMarketbaseNameTrade: 'ETHBTC', //Added
-    selectedVegaMarketquoteNameTrade: 'BTC', //Added
-
     totalRealizedPNL_VUSD: 0,          //Realized PNL
     totalUnrealizedPNL_VUSD: 0,        //Unrealized PNL
     totalRealizedPNL_BTC: 0,          //Realized PNL
@@ -129,6 +117,8 @@ const store = new Vuex.Store({
     selectedMarketExchangeRate : 0,
     selectedMarketUnderlyingAddress : undefined,
 
+    supportedMarkets: [],
+
   },
 
 
@@ -163,44 +153,9 @@ const store = new Vuex.Store({
     selectedPair(state) {
       return state.selectedPair;
     },
-    selectedVegaMarket(state) {   //Added
-      return {'selectedVegaMarketName':state.selectedVegaMarketName,'selectedVegaMarketId':state.selectedVegaMarketName,};
-    },
-    selectedVegaMarketName(state) {   //Added
-      return state.selectedVegaMarketName;
-    },
     pubkeysArray(state) {           //returns array having pubkeys
       return state.pubkeysArray;
-    },
-    selectedVegaMarketId(state) {     //Added
-      return state.selectedVegaMarketId;
-    },
-    selectedVegaMarketSummary(state) {  //Added
-      return state.selectedVegaMarketSummary;
-    },
-    selectedVegaMarketbaseName(state) {   //Added
-      return state.selectedVegaMarketbaseName;
-    },
-    selectedVegaMarketquoteName(state) {    //Added
-      return state.selectedVegaMarketquoteName;
-    },
-
-    selectedVegaMarketNameTrade(state) {   //Added
-      return state.selectedVegaMarketNameTrade;
-    },
-    selectedVegaMarketTradeId(state) {     //Added
-      return state.selectedVegaMarketTradeId;
-    },
-    selectedVegaMarketSummaryTrade(state) {  //Added
-      return state.selectedVegaMarketSummaryTrade;
-    },
-    selectedVegaMarketbaseNameTrade(state) {   //Added
-      return state.selectedVegaMarketbaseNameTrade;
-    },
-    selectedVegaMarketquoteNameTrade(state) {    //Added
-      return state.selectedVegaMarketquoteNameTrade;
-    },
-    
+    },    
     isLoggedIn(state) {
       return state.isLoggedIn;
     },
@@ -326,6 +281,9 @@ const store = new Vuex.Store({
     },    
     selectedMarketUnderlyingAddress(state) {        // Selected Market
       return state.selectedMarketUnderlyingAddress;
+    },
+    supportedMarkets(state) {             // SUPPORTED MARKETS
+      return state.supportedMarkets;
     }        
   },
 
@@ -473,45 +431,6 @@ const store = new Vuex.Store({
     selectedPair(state, exchange) {
       state.selectedPair = exchange;
     },
-    changeSelectedVegaMarket(state,newMarket) { //ADDED
-      // console.log('In Store - ' );
-      state.selectedVegaMarketName = newMarket.Name;
-      state.selectedVegaMarketId = newMarket.Id;
-      // console.log(typeof(newMarket.Id));
-      // console.log(state.selectedVegaMarketName + ' ' + state.selectedVegaMarketId );
-      // console.log(typeof(state.selectedVegaMarketId));
-      state.selectedVegaMarketId = toString(state.selectedVegaMarketId);
-      // console.log(typeof(state.selectedVegaMarketId));
-    },
-    changeSelectedVegaMarketSummary(state,summary) {  //Added
-      state.selectedVegaMarketSummary = summary;
-    },
-    changeSelectedVegaMarketbaseName(state,baseName) {  //Added
-      state.selectedVegaMarketbaseName = baseName;
-    },
-    changeSelectedVegaMarketquoteName(state,quoteName) {  //Added
-      state.selectedVegaMarketquoteName = quoteName;
-    },
-////////////////////
-    changeSelectedVegaMarketNameTrade(state,Name) {  //Added (TradeTab)
-      state.selectedVegaMarketNameTrade = Name;
-    },    
-    changeSelectedVegaMarketTradeId(state,Id) {  //Added (TradeTab)
-      state.selectedVegaMarketTradeId = Id;
-    },    
-    changeSelectedVegaMarketSummaryTrade(state,summary) {  //Added (TradeTab)
-      state.selectedVegaMarketSummaryTrade = summary;
-    },
-    changeSelectedVegaMarketbaseNameTrade(state,baseName) {  //Added (TradeTab)
-      state.selectedVegaMarketbaseNameTrade = baseName;
-    },
-    changeSelectedVegaMarketquoteNameTrade(state,quoteName) {  //Added (TradeTab)
-      state.selectedVegaMarketquoteNameTrade = quoteName;
-    },
-    
-
-
-
     addSupportedPair() {
       // state.supportedPairs.push(pair);
     },
@@ -628,8 +547,16 @@ const store = new Vuex.Store({
       state.selectedMarketUnderlyingAddress = payload;
       console.log(state.selectedMarketUnderlyingAddress);
     },
-
+    SET_SUPPORTED_MARKETS(state, payload) {          
+      state.supportedMarkets = new Map();
+      for (let i=0; i < payload.length(); i++ ) {
+        state.supportedMarkets.set(payload[i] , true);
+      }
+      console.log(state.supportedMarkets);
+    }
   },
+
+
 
 
   actions: {
@@ -812,7 +739,7 @@ const store = new Vuex.Store({
       const whitePaperModel = whitePaperInterestRateModel.networks[state.networkId];
       console.log(whitePaperModel);
       if (whitePaperModel) {
-        const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi, whitePaperModel.address );
+        const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi, '0xbae04cbf96391086dc643e842b517734e214d698' ); //whitePaperModel.address );
         console.log(interestRateModel);
         const baseRatePerBlock = await interestRateModel.methods.baseRatePerBlock().call();
         console.log( 'baseRatePerBlock - ' + baseRatePerBlock);
@@ -825,7 +752,7 @@ const store = new Vuex.Store({
       const whitePaperModel = whitePaperInterestRateModel.networks[state.networkId];
       console.log(whitePaperModel);
       if (whitePaperModel) {
-        const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi, whitePaperModel.address );
+        const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi , '0xbae04cbf96391086dc643e842b517734e214d698' ); //whitePaperModel.address );, whitePaperModel.address );
         console.log(interestRateModel);
         const multiplierPerBlock = await interestRateModel.methods.multiplierPerBlock().call();
         console.log( 'multiplierPerBlock - ' + multiplierPerBlock);
@@ -4241,6 +4168,47 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
       })
     }
   },     
+
+  marketIsSupported: async ( {commit,state},{ marketID } ) => {
+    const web3 = state.web3;
+
+    if (state.supportedMarkets == [] ) {
+      const Sightroller_ = Unitroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+      console.log(Sightroller_);
+      if (Sightroller_) {
+          let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+          console.log(SIGHTROLLER_Contract);
+          let ret = SIGHTROLLER_Contract.methods.allMarkets().call();
+          console.log(ret);
+          commit('SET_SUPPORTED_MARKETS',ret);        
+      }
+    }
+    console.log(state.supportedMarkets);
+
+    if ( state.supportedMarkets.has(marketID) ) {     // if the market is supported
+      return true;
+    }
+
+    return false;
+  },     
+
+
+  marketIsApproved: async ( {commit,state},{ underlyingAddress , sender } ) => {
+    const web3 = state.web3;
+    const CErc20_ = CErc20.networks[state.networkId];
+    console.log(CErc20_);
+    if (CErc20_) {
+      let CErc20_Contract = new web3.eth.Contract(CErc20.abi, underlyingAddress );
+      console.log(CErc20_Contract);
+      const ret = CErc20_Contract.methods.allowance( state.web3Account, sender).call();
+      console.log(ret);
+      if ( Number(ret) > 0 ) {     // if the market is supported
+        return true;
+      }
+    }
+    return false;
+  }, 
+
 
 
     toggleTheme({state,}, themeMode) {

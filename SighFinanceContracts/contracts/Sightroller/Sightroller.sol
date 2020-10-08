@@ -1367,25 +1367,25 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
     event NewSIGHRate(uint oldSIGHRate, uint newSIGHRate);
 
     /// @notice Emitted when a new SIGH speed is calculated for a market
-    event SIGHSpeedUpdated(CToken indexed cToken, uint newSpeed);
+    event SIGHSpeedUpdated(CToken cToken, uint newSpeed);
 
     /// @notice Emitted when market isSIGHed status is changed
     event MarketSIGHed(CToken cToken, bool isSIGHed);
 
     /// @notice Emitted when SIGH is distributed to a supplier
-    event DistributedSupplier_SIGH(CToken indexed cToken, address indexed supplier, uint sighDelta, uint sighSupplyIndex);
+    event DistributedSupplier_SIGH(CToken cToken, address supplier, uint sighDelta, uint sighSupplyIndex);
 
     /// @notice Emitted when SIGH is distributed to a borrower
-    event DistributedBorrower_SIGH(CToken indexed cToken, address indexed borrower, uint sighDelta, uint sighBorrowIndex);
+    event DistributedBorrower_SIGH(CToken cToken, address borrower, uint sighDelta, uint sighBorrowIndex);
 
     /// @notice Emitted when SIGH is transferred to a User
-    event SIGH_Transferred(address indexed userAddress, uint amountTransferred );
+    event SIGH_Transferred(address userAddress, uint amountTransferred );
 
     /// @notice Emitted when Gelato Address is changed
-    event GelatoAddressChanged(address indexed prevGelatoAddress, address indexed gelatoAddress , uint amountTransferred );
+    event GelatoAddressChanged(address prevGelatoAddress, address gelatoAddress , uint amountTransferred );
 
     /// @notice Emitted when Price snapshot is taken
-    event PriceSnapped(address indexed cToken, uint prevPrice, uint currentPrice, uint blockNumber);
+    event PriceSnapped(address cToken, uint prevPrice, uint currentPrice, uint blockNumber);
 
     /*** SIGH Distribution Admin ***/
     /*** SIGH Distribution Admin ***/
@@ -1469,6 +1469,10 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
         refreshSIGHSpeedsInternal();
     }
 
+    event refreshingSighSpeeds_1( CToken market ,  uint previousPrice , uint currentPrice , uint marketLosses , uint totalSupply, uint totalLosses   );
+
+    event refreshingSighSpeeds_2( CToken market, uint marketLosses , uint totalLosses, uint newSpeed   );
+
     function refreshSIGHSpeedsInternal() internal {
         CToken[] memory allMarkets_ = allMarkets;
 
@@ -1498,6 +1502,8 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
                  marketLosses[i] = Exp({mantissa: 0});
             }
             totalLosses = add_(totalLosses, marketLosses[i]);  // Total loss made by the platform
+
+            emit refreshingSighSpeeds_1( cToken , previousPrice.mantissa , currentPrice.mantissa , marketLosses[i].mantissa , cToken.totalSupply(),  totalLosses.mantissa );
         }
 
         // Drip the SIGH before doing anything else
@@ -1511,6 +1517,8 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
             CToken cToken = allMarkets[i];
             uint newSpeed = totalLosses.mantissa > 0 ? mul_(SIGHRate, div_(marketLosses[i], totalLosses)) : 0;
             SIGH_Speeds[address(cToken)] = newSpeed;  
+            emit refreshingSighSpeeds_2( cToken ,  marketLosses[i].mantissa , totalLosses.mantissa , newSpeed );
+
             emit SIGHSpeedUpdated(cToken, newSpeed);
         }
     }
@@ -1541,6 +1549,10 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
         }
     }
 
+    event distributeSupplier_SIGH_test3(address market,uint supplyIndex, uint supplierIndex );
+
+    event distributeSupplier_SIGH_test4(address market, uint deltaIndex ,uint supplierTokens, uint supplierDelta , uint supplierAccrued);
+
     /**
      * @notice Calculate SIGH accrued by a supplier and possibly transfer it to them
      * @param cToken The market in which the supplier is interacting
@@ -1556,10 +1568,13 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
             supplierIndex.mantissa = sighInitialIndex;
         }
 
+        emit distributeSupplier_SIGH_test3(cToken, supplyIndex.mantissa, supplierIndex.mantissa );
+
         Double memory deltaIndex = sub_(supplyIndex, supplierIndex);
         uint supplierTokens = CToken(cToken).balanceOf(supplier);
         uint supplierDelta = mul_(supplierTokens, deltaIndex);
         uint supplierAccrued = add_(SIGH_Accrued[supplier], supplierDelta);
+        emit distributeSupplier_SIGH_test4(cToken, deltaIndex.mantissa , supplierTokens, supplierDelta , supplierAccrued);
         SIGH_Accrued[supplier] = transfer_Sigh(supplier, supplierAccrued, distributeAll ? 0 : SIGH_ClaimThreshold);
         emit DistributedSupplier_SIGH(CToken(cToken), supplier, supplierDelta, supplyIndex.mantissa);
     }
@@ -1585,6 +1600,11 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
         return userAccrued;
     }
 
+
+    event updateSIGHSupplyIndex_test1(address market,uint speed, uint curBlock, uint deltaBlocks );
+
+    event updateSIGHSupplyIndex_test2(address market,uint supplyTokens, uint sigh_Accrued, uint ratio, uint index );
+
     /**
      * @notice Accrue SIGH to the market by updating the supply index
      * @param cToken The market whose supply index to update
@@ -1594,11 +1614,13 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
         uint supplySpeed = SIGH_Speeds[cToken];
         uint blockNumber = getBlockNumber();
         uint deltaBlocks = sub_(blockNumber, uint(supplyState.block));
+        emit updateSIGHSupplyIndex_test1(cToken, supplySpeed, blockNumber, deltaBlocks );
         if (deltaBlocks > 0 && supplySpeed > 0) {
             uint supplyTokens = CToken(cToken).totalSupply();
             uint sigh_Accrued = mul_(deltaBlocks, supplySpeed);
             Double memory ratio = supplyTokens > 0 ? fraction(sigh_Accrued, supplyTokens) : Double({mantissa: 0});
             Double memory index = add_(Double({mantissa: supplyState.index}), ratio);
+            emit updateSIGHSupplyIndex_test2( cToken, supplyTokens, sigh_Accrued, ratio.mantissa , index.mantissa );
             sigh_Market_State[cToken] = SIGHMarketState({ index: safe224(index.mantissa, "new index exceeds 224 bits"),  recordedPriceSnapshot: safe224(supplyState.recordedPriceSnapshot, "new recordedPriceSnapshot exceeds 256 bits"),   block: safe32(blockNumber, "block number exceeds 32 bits")});
         } 
         else if (deltaBlocks > 0) {

@@ -32,7 +32,11 @@ contract SighReservoir {
   address public admin;
 
   bool public isDripAllowed = false;  
+
+  event DripRateChanged(uint prevDripRate , uint newDripRate );  
   
+  event Dripped(uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
+
   /**
     * @notice Constructs a Reservoir
     * @param token_ The token to drip
@@ -58,7 +62,9 @@ contract SighReservoir {
   function changeDripRate (uint dripRate_) public returns (bool) {
     require(admin == msg.sender,"Drip rate can only be changed by the Admin");
     drip();
+    uint prevDripRate = dripRate;
     dripRate = dripRate_;
+    emit DripRateChanged(prevDripRate , dripRate);
     return true;
   }
 
@@ -85,6 +91,9 @@ contract SighReservoir {
     uint prevDrippedAmount = totalDrippedAmount;
     recentlyDrippedAmount = toDrip_;
     totalDrippedAmount = add(prevDrippedAmount,toDrip_,"Overflow");
+    reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
+
+    emit Dripped( reservoirBalance_, recentlyDrippedAmount , totalDrippedAmount ); 
     
     return toDrip_;
   } 

@@ -4,6 +4,7 @@
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import Spinner from '@/components/Spinner/Spinner.vue';
 import gql from 'graphql-tag';
+import {mapState,mapActions,} from 'vuex';
 
 export default {
   name: 'Supported-Money-Markets',
@@ -61,6 +62,9 @@ export default {
               pendingAdmin
               admin
               sightroller
+              sighSpeed
+              savePriceSnapshot
+              sighAccuredInCurrentCycle              
             }                
           }`,
 
@@ -99,35 +103,49 @@ export default {
         let liveMarket = _markets[i];
         console.log(liveMarket);
 
-        let obj = [];
-        obj.id =  liveMarket.id;
-        obj.symbol = liveMarket.symbol;
-        obj.underlyingSymbol = liveMarket.underlyingSymbol;
-        obj.totalSupply = Number(Number(liveMarket.totalSupply)/10000000000).toFixed(3) ;
-        obj.totalBorrows = Number(Number(liveMarket.totalBorrows)).toFixed(3) ;
-        obj.supplyRate = liveMarket.supplyRate;
-        obj.borrowRate = liveMarket.borrowRate;
-        obj.gsighSpeed = liveMarket.gsighSpeed;
-        console.log()        
-        obj.exchangeRate = Number(liveMarket.exchangeRate*10000000000).toFixed(3);
-        obj.underlyingPrice = Number(Number(liveMarket.underlyingPrice)*100000000000).toFixed(3) ;
-        obj.underlyingPriceUSD = Number(Number(liveMarket.underlyingPrice)*100000000000).toFixed(3) ;
-        obj.numberOfBorrowers = liveMarket.numberOfBorrowers;
-        obj.numberOfSuppliers = liveMarket.numberOfSuppliers;
-        obj.totalGsighDistributedToSuppliers = liveMarket.totalGsighDistributedToSuppliers;
-        obj.totalGsighDistributedToBorrowers = liveMarket.totalGsighDistributedToBorrowers;
-        obj.underlyingAddress = liveMarket.underlyingAddress;        
-        obj.sighSpeed = liveMarket.gsighSpeed;
-        if (liveMarket.underlyingPrice == '0') {
-          obj.underlyingPrice = liveMarket.underlyingPriceUSD;
+        if ( this.marketIsSupported(liveMarket.id) ) {
+          let obj = [];
+          obj.id =  liveMarket.id;
+          obj.symbol = liveMarket.symbol;
+          obj.underlyingSymbol = liveMarket.underlyingSymbol;
+          obj.totalSupply = Number(Number(liveMarket.totalSupply)/10000000000).toFixed(3) ;
+          obj.totalBorrows = Number(Number(liveMarket.totalBorrows)).toFixed(3) ;
+          obj.supplyRate = liveMarket.supplyRate;
+          obj.borrowRate = liveMarket.borrowRate;
+          obj.gsighSpeed = liveMarket.gsighSpeed;
+          console.log()        
+          obj.exchangeRate = Number(liveMarket.exchangeRate*10000000000).toFixed(3);
+          obj.underlyingPrice = Number(Number(liveMarket.underlyingPrice)*100000000000).toFixed(3) ;
+          obj.underlyingPriceUSD = Number(Number(liveMarket.underlyingPrice)*100000000000).toFixed(3) ;
+          obj.numberOfBorrowers = liveMarket.numberOfBorrowers;
+          obj.numberOfSuppliers = liveMarket.numberOfSuppliers;
+          obj.totalGsighDistributedToSuppliers = liveMarket.totalGsighDistributedToSuppliers;
+          obj.totalGsighDistributedToBorrowers = liveMarket.totalGsighDistributedToBorrowers;
+          obj.underlyingAddress = liveMarket.underlyingAddress;        
+          obj.sighSpeed = liveMarket.sighSpeed;
+
+          obj.savePriceSnapshot = liveMarket.savePriceSnapshot;
+          obj.sighAccuredInCurrentCycle = liveMarket.savePriceSnapshot;    
+
+          // obj.lossesRecovered =       (market.sighAccuredInCurrentCycle) * sighPrice  / market.totalSupply * ( Number(market.savePriceSnapshot) - Number(market.underlyingPrice) )
+      
+          if (liveMarket.underlyingPrice == '0') {
+            obj.underlyingPrice = liveMarket.underlyingPriceUSD;
+          }
+          
+          this.markets.push(obj);
+          console.log(this.markets);
         }
-        
-        this.markets.push(obj);
-        console.log(this.markets);
-      };
+      }
 
       this.$store.commit('LiveMarkets', this.markets);
-    }
+    };
+  },
+
+  methods: {
+
+    ...mapActions(['marketIsSupported']),
+
   },
 
   destroyed() {

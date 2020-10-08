@@ -71,16 +71,6 @@ export default {
       let selectedMarket = {'Name':ticker.markName,'Id':ticker.markId,};
       let selectedMarketTrade = {'Name':ticker.markName,'Id':ticker.markId,'baseName':ticker.baseName,'quoteName':ticker.quoteName,'summary':ticker.summary,};
       // console.log(selectedMarket);
-      this.$store.commit('changeSelectedVegaMarket', selectedMarket );      
-      this.$store.commit('changeSelectedVegaMarketSummary', ticker.summary);
-      this.$store.commit('changeSelectedVegaMarketbaseName', ticker.baseName);      
-      this.$store.commit('changeSelectedVegaMarketquoteName', ticker.quoteName);      
-      this.$store.commit('changeSelectedVegaMarketTrade', selectedMarketTrade );        //Used for trade Tab
-      this.$store.commit('changeSelectedVegaMarketNameTrade', ticker.markName );  //Name change (eq - ETHVUSD/DEC20)
-      this.$store.commit('changeSelectedVegaMarketTradeId', ticker.markId);   //Selected market in TradeTab - ID Change
-      this.$store.commit('changeSelectedVegaMarketbaseNameTrade', ticker.baseName);
-      this.$store.commit('changeSelectedVegaMarketquoteNameTrade', ticker.quoteName );
-      this.$store.commit('changeSelectedVegaMarketSummaryTrade',ticker.summary);
 
       ExchangeDataEventBus.$emit('change-selected-market', selectedMarket);      
       ExchangeDataEventBus.$emit('change-vega-header', {'Name':ticker.markName,'Summary':ticker.summary,});

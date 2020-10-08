@@ -53,13 +53,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "contract CToken",
         "name": "cToken",
         "type": "address"
       },
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "address",
         "name": "borrower",
         "type": "address"
@@ -67,30 +67,30 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "gsighDelta",
+        "name": "sighDelta",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "gsighBorrowIndex",
+        "name": "sighBorrowIndex",
         "type": "uint256"
       }
     ],
-    "name": "DistributedBorrowerGsigh",
+    "name": "DistributedBorrower_SIGH",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "contract CToken",
         "name": "cToken",
         "type": "address"
       },
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "address",
         "name": "supplier",
         "type": "address"
@@ -98,17 +98,17 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "gsighDelta",
+        "name": "sighDelta",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "gsighSupplyIndex",
+        "name": "sighSupplyIndex",
         "type": "uint256"
       }
     ],
-    "name": "DistributedSupplierGsigh",
+    "name": "DistributedSupplier_SIGH",
     "type": "event"
   },
   {
@@ -140,19 +140,25 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "contract CToken",
-        "name": "cToken",
+        "indexed": false,
+        "internalType": "address",
+        "name": "prevGelatoAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "gelatoAddress",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "newSpeed",
+        "name": "amountTransferred",
         "type": "uint256"
       }
     ],
-    "name": "GsighSpeedUpdated",
+    "name": "GelatoAddressChanged",
     "type": "event"
   },
   {
@@ -201,15 +207,9 @@
         "internalType": "contract CToken",
         "name": "cToken",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "isGsighed",
-        "type": "bool"
       }
     ],
-    "name": "MarketGsighed",
+    "name": "MarketListed",
     "type": "event"
   },
   {
@@ -220,9 +220,15 @@
         "internalType": "contract CToken",
         "name": "cToken",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "isSIGHed",
+        "type": "bool"
       }
     ],
-    "name": "MarketListed",
+    "name": "MarketSIGHed",
     "type": "event"
   },
   {
@@ -267,25 +273,6 @@
       }
     ],
     "name": "NewCollateralFactor",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "oldGsighRate",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "newGsighRate",
-        "type": "uint256"
-      }
-    ],
-    "name": "NewGsighRate",
     "type": "event"
   },
   {
@@ -363,6 +350,192 @@
     ],
     "name": "NewPriceOracle",
     "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "oldSIGHRate",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newSIGHRate",
+        "type": "uint256"
+      }
+    ],
+    "name": "NewSIGHRate",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "cToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "prevPrice",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "currentPrice",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "blockNumber",
+        "type": "uint256"
+      }
+    ],
+    "name": "PriceSnapped",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "contract CToken",
+        "name": "cToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newSpeed",
+        "type": "uint256"
+      }
+    ],
+    "name": "SIGHSpeedUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "userAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountTransferred",
+        "type": "uint256"
+      }
+    ],
+    "name": "SIGH_Transferred",
+    "type": "event"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "SIGHRate",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "SIGHSupplierIndex",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "SIGH_Accrued",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "SIGH_ClaimThreshold",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "SIGH_Speeds",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "constant": true,
@@ -494,6 +667,21 @@
   },
   {
     "constant": true,
+    "inputs": [],
+    "name": "gelatoAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [
       {
         "internalType": "address",
@@ -559,36 +747,6 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "gsighClaimThreshold",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "gsighInitialIndex",
-    "outputs": [
-      {
-        "internalType": "uint224",
-        "name": "",
-        "type": "uint224"
       }
     ],
     "payable": false,
@@ -741,7 +899,7 @@
       },
       {
         "internalType": "bool",
-        "name": "isSighed",
+        "name": "isSIGHed",
         "type": "bool"
       }
     ],
@@ -862,19 +1020,13 @@
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "sighAccrued",
+    "inputs": [],
+    "name": "sighInitialIndex",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint224",
         "name": "",
-        "type": "uint256"
+        "type": "uint224"
       }
     ],
     "payable": false,
@@ -890,7 +1042,7 @@
         "type": "address"
       }
     ],
-    "name": "sighBorrowState",
+    "name": "sigh_Market_State",
     "outputs": [
       {
         "internalType": "uint224",
@@ -898,117 +1050,8 @@
         "type": "uint224"
       },
       {
-        "internalType": "uint32",
-        "name": "block",
-        "type": "uint32"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "sighBorrowerIndex",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "sighRate",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "sighSpeeds",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "sighSupplierIndex",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "sighSupplyState",
-    "outputs": [
-      {
         "internalType": "uint224",
-        "name": "index",
+        "name": "recordedPriceSnapshot",
         "type": "uint224"
       },
       {
@@ -1988,103 +2031,14 @@
   },
   {
     "constant": false,
-    "inputs": [],
-    "name": "refreshGsighSpeeds",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "holder",
-        "type": "address"
-      },
-      {
-        "internalType": "contract CToken[]",
-        "name": "cTokens",
-        "type": "address[]"
-      }
-    ],
-    "name": "claimGSigh",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address[]",
-        "name": "holders",
-        "type": "address[]"
-      },
-      {
-        "internalType": "contract CToken[]",
-        "name": "cTokens",
-        "type": "address[]"
-      },
-      {
-        "internalType": "bool",
-        "name": "borrowers",
-        "type": "bool"
-      },
-      {
-        "internalType": "bool",
-        "name": "suppliers",
-        "type": "bool"
-      }
-    ],
-    "name": "claimGSigh",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "holder",
-        "type": "address"
-      }
-    ],
-    "name": "claimGSigh",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "gsighRate_",
+        "name": "SIGHRate_",
         "type": "uint256"
       }
     ],
-    "name": "_setGsighRate",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address[]",
-        "name": "cTokens",
-        "type": "address[]"
-      }
-    ],
-    "name": "_addGsighMarkets",
+    "name": "setSIGHRate",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -2099,7 +2053,64 @@
         "type": "address"
       }
     ],
-    "name": "_dropGsighMarket",
+    "name": "_addSIGHMarket",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "cToken",
+        "type": "address"
+      }
+    ],
+    "name": "_dropSIGHMarket",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "takeSIGHPriceSnapshot",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "refreshSIGHSpeeds",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "holders",
+        "type": "address[]"
+      }
+    ],
+    "name": "claimSIGH",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "claimSIGH",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -2108,7 +2119,58 @@
   {
     "constant": true,
     "inputs": [],
-    "name": "getGSighAddress",
+    "name": "getSighAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getSighReservoir",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "gelato_",
+        "type": "address"
+      }
+    ],
+    "name": "setGelatoAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getGelatoAddress",
     "outputs": [
       {
         "internalType": "address",
@@ -2139,6 +2201,27 @@
     "constant": true,
     "inputs": [],
     "name": "getBlockNumber",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "cToken",
+        "type": "address"
+      }
+    ],
+    "name": "getUnderlyingPriceFromoracle",
     "outputs": [
       {
         "internalType": "uint256",

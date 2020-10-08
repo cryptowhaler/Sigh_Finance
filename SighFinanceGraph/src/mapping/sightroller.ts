@@ -1,23 +1,26 @@
 import { BigInt } from "@graphprotocol/graph-ts"
 import {
-  DistributedBorrowerGsigh,
-  DistributedSupplierGsigh,
-  GsighSpeedUpdated,
+  // DistributedBorrowerGsigh,
+  // DistributedSupplierGsigh,
+  // GsighSpeedUpdated,
   MarketEntered,
   MarketExited,
-  MarketGsighed,
+  // MarketGsighed,
   MarketListed,
   NewCloseFactor,
   NewCollateralFactor,
-  NewGsighRate,
+  // NewGsighRate,
   NewLiquidationIncentive,
   NewMaxAssets,
   NewPauseGuardian,
-  NewPriceOracle
+  NewPriceOracle,
+  NewSIGHRate,
+  SIGHSpeedUpdated,
+  PriceSnapped
 } from "../../generated/Sightroller/Sightroller"
 
 import { Sightroller, Market } from "../../generated/schema"
-import { mantissaFactorBD, updateUserAccount_IndividualMarketStats , createSighTroller } from '../helpers'
+import { mantissaFactorBD, updateUserAccount_IndividualMarketStats , createSighTroller, createMarket } from '../helpers'
 import { log } from '@graphprotocol/graph-ts'
 
 // SIGHTROLLER GLOBAL VARIABLES HANDLING
@@ -73,12 +76,21 @@ export function handleNewPauseGuardian(event: NewPauseGuardian): void {
   sightroller.save()  
 }
 
-export function handleNewGsighRate(event: NewGsighRate): void {
+// export function handleNewGsighRate(event: NewGsighRate): void {
+//   let sightroller = Sightroller.load('1')
+//   if (sightroller == null) {
+//     sightroller = createSighTroller()
+//   }
+//   sightroller.gsighRate = event.params.newGsighRate
+//   sightroller.save()
+// }
+
+export function handleNewSIGHRate(event: NewSIGHRate): void {
   let sightroller = Sightroller.load('1')
   if (sightroller == null) {
     sightroller = createSighTroller()
   }
-  sightroller.gsighRate = event.params.newGsighRate
+  sightroller.sighRate = event.params.newSIGHRate
   sightroller.save()
 }
 
@@ -104,9 +116,9 @@ export function handleMarketExited(event: MarketExited): void {
   cTokenStats.save()
 }
 
-export function handleDistributedBorrowerGsigh(event: DistributedBorrowerGsigh): void {}
+// export function handleDistributedBorrowerGsigh(event: DistributedBorrowerGsigh): void {}
 
-export function handleDistributedSupplierGsigh(event: DistributedSupplierGsigh): void {}
+// export function handleDistributedSupplierGsigh(event: DistributedSupplierGsigh): void {}
 
 
 // for Market
@@ -116,9 +128,39 @@ export function handleDistributedSupplierGsigh(event: DistributedSupplierGsigh):
 // for Market
 // for Market
 
-export function handleGsighSpeedUpdated(event: GsighSpeedUpdated): void {}
+export function handleSIGHSpeedUpdated(event: SIGHSpeedUpdated): void {
+  let market = Market.load(event.params.cToken.toHexString())
+  if (market == null) {
+    market = createMarket(event.params.cToken.toHexString())
+  }
+  let prevSpeed = market.sighSpeed
+  let prevBlockNumber = market.blockNumberWhenSpeedWasUpdated
+  let curBlockNumber = event.block.number.toI32()
+  let diffInBlockNumbers = curBlockNumber - prevBlockNumber
+  let sighAccured = BigInt.fromI32(diffInBlockNumbers) * prevSpeed
 
-export function handleMarketGsighed(event: MarketGsighed): void {}
+  market.sighSpeed = event.params.newSpeed;       // Speed updated
+  log.info('handleSIGHSpeedUpdated - market.sighSpeed : {}',[market.sighSpeed.toString()] )
+  market.blockNumberWhenSpeedWasUpdated = curBlockNumber;   // Block number updated
+
+  market.sighAccuredInCurrentCycle = market.sighAccuredInCurrentCycle + sighAccured  // Sigh Accured Added
+  market.save()
+}
+
+export function handlePriceSnapped(event: PriceSnapped): void {
+  let market = Market.load(event.params.cToken.toHexString())
+  if (market == null) {
+    market = createMarket(event.params.cToken.toHexString())
+  }
+  log.info('handlePriceSnapped - event.params.currentPrice : {}',[event.params.currentPrice.toString()] )
+  market.savePriceSnapshot = event.params.currentPrice;
+  log.info('handlePriceSnapped - market.savePriceSnapshot : {}',[market.savePriceSnapshot.toString()] )
+  market.sighAccuredInCurrentCycle = BigInt.fromI32(0);
+  market.save()
+}
+
+
+// export function handleMarketGsighed(event: MarketGsighed): void {}
 
 export function handleNewCollateralFactor(event: NewCollateralFactor): void {
   let market = Market.load(event.params.cToken.toHexString())
@@ -126,7 +168,7 @@ export function handleNewCollateralFactor(event: NewCollateralFactor): void {
   market.save()
 }
 
-export function handleMarketListed(event: MarketListed): void {}
+// export function handleMarketListed(event: MarketListed): void {}
 
 
 

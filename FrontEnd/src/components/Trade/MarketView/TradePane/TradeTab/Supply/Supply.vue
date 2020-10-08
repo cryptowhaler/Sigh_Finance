@@ -22,6 +22,7 @@ export default {
 
       },
       showLoader: false,
+      showApproveButton: true,
     };
   },
 
@@ -44,6 +45,9 @@ export default {
       this.formData.selectedMarketunderlyingAddress = newMarket.underlyingAddress;        
 
       console.log( 'NEW SELECTED MARKET - ' + newMarket.Id);
+
+      this.showApproveButton = this.marketIsApproved( newMarket.underlyingAddress, newMarket.Id );
+      console.log(this.showApproveButton);
     };
     ExchangeDataEventBus.$on('change-selected-market', this.changeSelectedMarket);        
   },
@@ -73,7 +77,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['market_mint','Market_approve']),
+    ...mapActions(['market_mint','Market_approve','marketIsApproved']),
     
     async Supply() {   //When we press make Borrow. Shows Loader
       console.log(this.formData.SelectedMarketId);
@@ -104,7 +108,7 @@ export default {
       console.log(this.formData.selectedMarketExchangeRate);
       console.log(this.formData.selectedMarketunderlyingAddress);
 
-      this.Market_approve( { contractAddress:this.formData.selectedMarketunderlyingAddress , sender: this.formData.SelectedMarketId , amount: this.formData.SupplyAmount } );
+      this.Market_approve( { contractAddress:this.formData.selectedMarketunderlyingAddress , sender: this.formData.SelectedMarketId , amount: 1000000000 } );
       console.log(result);
       this.showLoader = false;
     },

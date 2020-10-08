@@ -15,7 +15,7 @@ type Sightroller @entity {
     "NewGsighRate event"
     gsighRate: BigInt
 
-    # sighRate: BigInt
+    sighRate: BigInt
 }
 
 
@@ -103,6 +103,14 @@ type Market @entity {
     "NewSightroller event"
     sightroller: Bytes!    
 
+    "SIGH Distribution Speed, SIGHSpeedUpdated event "
+    sighSpeed: BigInt!
+
+    blockNumberWhenSpeedWasUpdated: Int!
+
+    savePriceSnapshot: BigInt!
+
+    sighAccuredInCurrentCycle: BigInt!
 
 }
 
@@ -204,4 +212,14 @@ type SIGH @entity {
     totalSupply: BigInt!
     blockNumberWhenCoinsMinted: BigInt!
     Reservoir: Bytes!
+}
+
+
+type SIGHReservoir @entity {
+    "ID is contract address"
+    id: ID!
+    dripRate: BigInt!
+    recentlyDripped: BigInt!
+    totalAmountDripped: BigInt!
+    ReservoirBalance: BigInt!
 }

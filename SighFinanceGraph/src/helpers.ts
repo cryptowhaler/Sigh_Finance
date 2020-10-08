@@ -204,13 +204,17 @@ export function createMarket(marketAddress: string): Market {
   market.accrualBlockNumber = 0
   market.blockTimestamp = 0
   market.borrowIndex = zeroBD
-
   market.gsighSpeed = BigInt.fromI32(0)
   market.totalGsighDistributedToSuppliers = BigInt.fromI32(0)
   market.totalGsighDistributedToBorrowers = BigInt.fromI32(0)
   market.pendingAdmin = contract.pendingAdmin() as Address
   market.admin = contract.admin() as Address
   market.sightroller = contract.sightroller() as Address
+
+  market.sighAccuredInCurrentCycle = BigInt.fromI32(0)
+  market.sighSpeed = BigInt.fromI32(0)
+  market.blockNumberWhenSpeedWasUpdated = 0
+  market.savePriceSnapshot = BigInt.fromI32(0)
 
   return market
 }
@@ -225,7 +229,7 @@ export function createUserAccount(accountID: string): Account {
   account.countLiquidated = 0
   account.countLiquidator = 0
   account.hasBorrowed = false
-  account.save()
+  account.save() 
   return account
 }
 
@@ -285,6 +289,7 @@ export function createSighTroller(): Sightroller {
   Sightroller_contract.maxAssets = new BigInt(0)
   Sightroller_contract.pauseGuardian = Address.fromString('0xf5376e847EFa1Ea889bfCb03706F414daDE0E82c',)
   Sightroller_contract.gsighRate = new BigInt(0)
+  Sightroller_contract.sighRate = new BigInt(0)
   Sightroller_contract.save()
   return Sightroller_contract
 }

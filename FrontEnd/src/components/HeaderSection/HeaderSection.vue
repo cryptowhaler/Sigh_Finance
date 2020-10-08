@@ -13,8 +13,6 @@ export default {
     return {
       status: 'Major Outage',
       serverStatusCode: 'major_outage',
-      vegaSelectedMarketName: this.$store.getters.selectedVegaMarketName,
-      vegaMarketSummary: this.$store.getters.selectedVegaMarketSummary,
     };
   },
   components: {

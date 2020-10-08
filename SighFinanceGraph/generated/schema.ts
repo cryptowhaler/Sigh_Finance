@@ -143,6 +143,23 @@ export class Sightroller extends Entity {
       this.set("gsighRate", Value.fromBigInt(value as BigInt));
     }
   }
+
+  get sighRate(): BigInt | null {
+    let value = this.get("sighRate");
+    if (value === null) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set sighRate(value: BigInt | null) {
+    if (value === null) {
+      this.unset("sighRate");
+    } else {
+      this.set("sighRate", Value.fromBigInt(value as BigInt));
+    }
+  }
 }
 
 export class Market extends Entity {
@@ -434,6 +451,42 @@ export class Market extends Entity {
 
   set sightroller(value: Bytes) {
     this.set("sightroller", Value.fromBytes(value));
+  }
+
+  get sighSpeed(): BigInt {
+    let value = this.get("sighSpeed");
+    return value.toBigInt();
+  }
+
+  set sighSpeed(value: BigInt) {
+    this.set("sighSpeed", Value.fromBigInt(value));
+  }
+
+  get blockNumberWhenSpeedWasUpdated(): i32 {
+    let value = this.get("blockNumberWhenSpeedWasUpdated");
+    return value.toI32();
+  }
+
+  set blockNumberWhenSpeedWasUpdated(value: i32) {
+    this.set("blockNumberWhenSpeedWasUpdated", Value.fromI32(value));
+  }
+
+  get savePriceSnapshot(): BigInt {
+    let value = this.get("savePriceSnapshot");
+    return value.toBigInt();
+  }
+
+  set savePriceSnapshot(value: BigInt) {
+    this.set("savePriceSnapshot", Value.fromBigInt(value));
+  }
+
+  get sighAccuredInCurrentCycle(): BigInt {
+    let value = this.get("sighAccuredInCurrentCycle");
+    return value.toBigInt();
+  }
+
+  set sighAccuredInCurrentCycle(value: BigInt) {
+    this.set("sighAccuredInCurrentCycle", Value.fromBigInt(value));
   }
 }
 

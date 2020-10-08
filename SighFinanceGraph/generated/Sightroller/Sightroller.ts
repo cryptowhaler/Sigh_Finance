@@ -58,16 +58,16 @@ export class ActionPaused1__Params {
   }
 }
 
-export class DistributedBorrowerGsigh extends ethereum.Event {
-  get params(): DistributedBorrowerGsigh__Params {
-    return new DistributedBorrowerGsigh__Params(this);
+export class DistributedBorrower_SIGH extends ethereum.Event {
+  get params(): DistributedBorrower_SIGH__Params {
+    return new DistributedBorrower_SIGH__Params(this);
   }
 }
 
-export class DistributedBorrowerGsigh__Params {
-  _event: DistributedBorrowerGsigh;
+export class DistributedBorrower_SIGH__Params {
+  _event: DistributedBorrower_SIGH;
 
-  constructor(event: DistributedBorrowerGsigh) {
+  constructor(event: DistributedBorrower_SIGH) {
     this._event = event;
   }
 
@@ -79,25 +79,25 @@ export class DistributedBorrowerGsigh__Params {
     return this._event.parameters[1].value.toAddress();
   }
 
-  get gsighDelta(): BigInt {
+  get sighDelta(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get gsighBorrowIndex(): BigInt {
+  get sighBorrowIndex(): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
 }
 
-export class DistributedSupplierGsigh extends ethereum.Event {
-  get params(): DistributedSupplierGsigh__Params {
-    return new DistributedSupplierGsigh__Params(this);
+export class DistributedSupplier_SIGH extends ethereum.Event {
+  get params(): DistributedSupplier_SIGH__Params {
+    return new DistributedSupplier_SIGH__Params(this);
   }
 }
 
-export class DistributedSupplierGsigh__Params {
-  _event: DistributedSupplierGsigh;
+export class DistributedSupplier_SIGH__Params {
+  _event: DistributedSupplier_SIGH;
 
-  constructor(event: DistributedSupplierGsigh) {
+  constructor(event: DistributedSupplier_SIGH) {
     this._event = event;
   }
 
@@ -109,11 +109,11 @@ export class DistributedSupplierGsigh__Params {
     return this._event.parameters[1].value.toAddress();
   }
 
-  get gsighDelta(): BigInt {
+  get sighDelta(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get gsighSupplyIndex(): BigInt {
+  get sighSupplyIndex(): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
 }
@@ -144,25 +144,29 @@ export class Failure__Params {
   }
 }
 
-export class GsighSpeedUpdated extends ethereum.Event {
-  get params(): GsighSpeedUpdated__Params {
-    return new GsighSpeedUpdated__Params(this);
+export class GelatoAddressChanged extends ethereum.Event {
+  get params(): GelatoAddressChanged__Params {
+    return new GelatoAddressChanged__Params(this);
   }
 }
 
-export class GsighSpeedUpdated__Params {
-  _event: GsighSpeedUpdated;
+export class GelatoAddressChanged__Params {
+  _event: GelatoAddressChanged;
 
-  constructor(event: GsighSpeedUpdated) {
+  constructor(event: GelatoAddressChanged) {
     this._event = event;
   }
 
-  get cToken(): Address {
+  get prevGelatoAddress(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get newSpeed(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
+  get gelatoAddress(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get amountTransferred(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
   }
 }
 
@@ -210,28 +214,6 @@ export class MarketExited__Params {
   }
 }
 
-export class MarketGsighed extends ethereum.Event {
-  get params(): MarketGsighed__Params {
-    return new MarketGsighed__Params(this);
-  }
-}
-
-export class MarketGsighed__Params {
-  _event: MarketGsighed;
-
-  constructor(event: MarketGsighed) {
-    this._event = event;
-  }
-
-  get cToken(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
-  get isGsighed(): boolean {
-    return this._event.parameters[1].value.toBoolean();
-  }
-}
-
 export class MarketListed extends ethereum.Event {
   get params(): MarketListed__Params {
     return new MarketListed__Params(this);
@@ -247,6 +229,28 @@ export class MarketListed__Params {
 
   get cToken(): Address {
     return this._event.parameters[0].value.toAddress();
+  }
+}
+
+export class MarketSIGHed extends ethereum.Event {
+  get params(): MarketSIGHed__Params {
+    return new MarketSIGHed__Params(this);
+  }
+}
+
+export class MarketSIGHed__Params {
+  _event: MarketSIGHed;
+
+  constructor(event: MarketSIGHed) {
+    this._event = event;
+  }
+
+  get cToken(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get isSIGHed(): boolean {
+    return this._event.parameters[1].value.toBoolean();
   }
 }
 
@@ -295,28 +299,6 @@ export class NewCollateralFactor__Params {
 
   get newCollateralFactorMantissa(): BigInt {
     return this._event.parameters[2].value.toBigInt();
-  }
-}
-
-export class NewGsighRate extends ethereum.Event {
-  get params(): NewGsighRate__Params {
-    return new NewGsighRate__Params(this);
-  }
-}
-
-export class NewGsighRate__Params {
-  _event: NewGsighRate;
-
-  constructor(event: NewGsighRate) {
-    this._event = event;
-  }
-
-  get oldGsighRate(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get newGsighRate(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
   }
 }
 
@@ -408,6 +390,102 @@ export class NewPriceOracle__Params {
   }
 }
 
+export class NewSIGHRate extends ethereum.Event {
+  get params(): NewSIGHRate__Params {
+    return new NewSIGHRate__Params(this);
+  }
+}
+
+export class NewSIGHRate__Params {
+  _event: NewSIGHRate;
+
+  constructor(event: NewSIGHRate) {
+    this._event = event;
+  }
+
+  get oldSIGHRate(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get newSIGHRate(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
+export class PriceSnapped extends ethereum.Event {
+  get params(): PriceSnapped__Params {
+    return new PriceSnapped__Params(this);
+  }
+}
+
+export class PriceSnapped__Params {
+  _event: PriceSnapped;
+
+  constructor(event: PriceSnapped) {
+    this._event = event;
+  }
+
+  get cToken(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get prevPrice(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get currentPrice(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get blockNumber(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+}
+
+export class SIGHSpeedUpdated extends ethereum.Event {
+  get params(): SIGHSpeedUpdated__Params {
+    return new SIGHSpeedUpdated__Params(this);
+  }
+}
+
+export class SIGHSpeedUpdated__Params {
+  _event: SIGHSpeedUpdated;
+
+  constructor(event: SIGHSpeedUpdated) {
+    this._event = event;
+  }
+
+  get cToken(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get newSpeed(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
+export class SIGH_Transferred extends ethereum.Event {
+  get params(): SIGH_Transferred__Params {
+    return new SIGH_Transferred__Params(this);
+  }
+}
+
+export class SIGH_Transferred__Params {
+  _event: SIGH_Transferred;
+
+  constructor(event: SIGH_Transferred) {
+    this._event = event;
+  }
+
+  get userAddress(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get amountTransferred(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
 export class Sightroller__gsighBorrowStateResult {
   value0: BigInt;
   value1: BigInt;
@@ -470,36 +548,22 @@ export class Sightroller__marketsResult {
   }
 }
 
-export class Sightroller__sighBorrowStateResult {
+export class Sightroller__sigh_Market_StateResult {
   value0: BigInt;
   value1: BigInt;
+  value2: BigInt;
 
-  constructor(value0: BigInt, value1: BigInt) {
+  constructor(value0: BigInt, value1: BigInt, value2: BigInt) {
     this.value0 = value0;
     this.value1 = value1;
+    this.value2 = value2;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
     map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    return map;
-  }
-}
-
-export class Sightroller__sighSupplyStateResult {
-  value0: BigInt;
-  value1: BigInt;
-
-  constructor(value0: BigInt, value1: BigInt) {
-    this.value0 = value0;
-    this.value1 = value1;
-  }
-
-  toMap(): TypedMap<string, ethereum.Value> {
-    let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
-    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
     return map;
   }
 }
@@ -564,6 +628,112 @@ export class Sightroller__liquidateCalculateSeizeTokensResult {
 export class Sightroller extends ethereum.SmartContract {
   static bind(address: Address): Sightroller {
     return new Sightroller("Sightroller", address);
+  }
+
+  SIGHRate(): BigInt {
+    let result = super.call("SIGHRate", "SIGHRate():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_SIGHRate(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("SIGHRate", "SIGHRate():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  SIGHSupplierIndex(param0: Address, param1: Address): BigInt {
+    let result = super.call(
+      "SIGHSupplierIndex",
+      "SIGHSupplierIndex(address,address):(uint256)",
+      [ethereum.Value.fromAddress(param0), ethereum.Value.fromAddress(param1)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_SIGHSupplierIndex(
+    param0: Address,
+    param1: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "SIGHSupplierIndex",
+      "SIGHSupplierIndex(address,address):(uint256)",
+      [ethereum.Value.fromAddress(param0), ethereum.Value.fromAddress(param1)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  SIGH_Accrued(param0: Address): BigInt {
+    let result = super.call("SIGH_Accrued", "SIGH_Accrued(address):(uint256)", [
+      ethereum.Value.fromAddress(param0)
+    ]);
+
+    return result[0].toBigInt();
+  }
+
+  try_SIGH_Accrued(param0: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "SIGH_Accrued",
+      "SIGH_Accrued(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  SIGH_ClaimThreshold(): BigInt {
+    let result = super.call(
+      "SIGH_ClaimThreshold",
+      "SIGH_ClaimThreshold():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_SIGH_ClaimThreshold(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "SIGH_ClaimThreshold",
+      "SIGH_ClaimThreshold():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  SIGH_Speeds(param0: Address): BigInt {
+    let result = super.call("SIGH_Speeds", "SIGH_Speeds(address):(uint256)", [
+      ethereum.Value.fromAddress(param0)
+    ]);
+
+    return result[0].toBigInt();
+  }
+
+  try_SIGH_Speeds(param0: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "SIGH_Speeds",
+      "SIGH_Speeds(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   _borrowGuardianPaused(): boolean {
@@ -724,6 +894,25 @@ export class Sightroller extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  gelatoAddress(): Address {
+    let result = super.call("gelatoAddress", "gelatoAddress():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_gelatoAddress(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "gelatoAddress",
+      "gelatoAddress():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   gsighAccrued(param0: Address): BigInt {
     let result = super.call("gsighAccrued", "gsighAccrued(address):(uint256)", [
       ethereum.Value.fromAddress(param0)
@@ -796,52 +985,6 @@ export class Sightroller extends ethereum.SmartContract {
       "gsighBorrowerIndex",
       "gsighBorrowerIndex(address,address):(uint256)",
       [ethereum.Value.fromAddress(param0), ethereum.Value.fromAddress(param1)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  gsighClaimThreshold(): BigInt {
-    let result = super.call(
-      "gsighClaimThreshold",
-      "gsighClaimThreshold():(uint256)",
-      []
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_gsighClaimThreshold(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "gsighClaimThreshold",
-      "gsighClaimThreshold():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  gsighInitialIndex(): BigInt {
-    let result = super.call(
-      "gsighInitialIndex",
-      "gsighInitialIndex():(uint224)",
-      []
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_gsighInitialIndex(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "gsighInitialIndex",
-      "gsighInitialIndex():(uint224)",
-      []
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1153,19 +1296,21 @@ export class Sightroller extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  sighAccrued(param0: Address): BigInt {
-    let result = super.call("sighAccrued", "sighAccrued(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
-    ]);
+  sighInitialIndex(): BigInt {
+    let result = super.call(
+      "sighInitialIndex",
+      "sighInitialIndex():(uint224)",
+      []
+    );
 
     return result[0].toBigInt();
   }
 
-  try_sighAccrued(param0: Address): ethereum.CallResult<BigInt> {
+  try_sighInitialIndex(): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "sighAccrued",
-      "sighAccrued(address):(uint256)",
-      [ethereum.Value.fromAddress(param0)]
+      "sighInitialIndex",
+      "sighInitialIndex():(uint224)",
+      []
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1174,25 +1319,26 @@ export class Sightroller extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  sighBorrowState(param0: Address): Sightroller__sighBorrowStateResult {
+  sigh_Market_State(param0: Address): Sightroller__sigh_Market_StateResult {
     let result = super.call(
-      "sighBorrowState",
-      "sighBorrowState(address):(uint224,uint32)",
+      "sigh_Market_State",
+      "sigh_Market_State(address):(uint224,uint224,uint32)",
       [ethereum.Value.fromAddress(param0)]
     );
 
-    return new Sightroller__sighBorrowStateResult(
+    return new Sightroller__sigh_Market_StateResult(
       result[0].toBigInt(),
-      result[1].toBigInt()
+      result[1].toBigInt(),
+      result[2].toBigInt()
     );
   }
 
-  try_sighBorrowState(
+  try_sigh_Market_State(
     param0: Address
-  ): ethereum.CallResult<Sightroller__sighBorrowStateResult> {
+  ): ethereum.CallResult<Sightroller__sigh_Market_StateResult> {
     let result = super.tryCall(
-      "sighBorrowState",
-      "sighBorrowState(address):(uint224,uint32)",
+      "sigh_Market_State",
+      "sigh_Market_State(address):(uint224,uint224,uint32)",
       [ethereum.Value.fromAddress(param0)]
     );
     if (result.reverted) {
@@ -1200,128 +1346,10 @@ export class Sightroller extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new Sightroller__sighBorrowStateResult(
+      new Sightroller__sigh_Market_StateResult(
         value[0].toBigInt(),
-        value[1].toBigInt()
-      )
-    );
-  }
-
-  sighBorrowerIndex(param0: Address, param1: Address): BigInt {
-    let result = super.call(
-      "sighBorrowerIndex",
-      "sighBorrowerIndex(address,address):(uint256)",
-      [ethereum.Value.fromAddress(param0), ethereum.Value.fromAddress(param1)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_sighBorrowerIndex(
-    param0: Address,
-    param1: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "sighBorrowerIndex",
-      "sighBorrowerIndex(address,address):(uint256)",
-      [ethereum.Value.fromAddress(param0), ethereum.Value.fromAddress(param1)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  sighRate(): BigInt {
-    let result = super.call("sighRate", "sighRate():(uint256)", []);
-
-    return result[0].toBigInt();
-  }
-
-  try_sighRate(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("sighRate", "sighRate():(uint256)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  sighSpeeds(param0: Address): BigInt {
-    let result = super.call("sighSpeeds", "sighSpeeds(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
-    ]);
-
-    return result[0].toBigInt();
-  }
-
-  try_sighSpeeds(param0: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("sighSpeeds", "sighSpeeds(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  sighSupplierIndex(param0: Address, param1: Address): BigInt {
-    let result = super.call(
-      "sighSupplierIndex",
-      "sighSupplierIndex(address,address):(uint256)",
-      [ethereum.Value.fromAddress(param0), ethereum.Value.fromAddress(param1)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_sighSupplierIndex(
-    param0: Address,
-    param1: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "sighSupplierIndex",
-      "sighSupplierIndex(address,address):(uint256)",
-      [ethereum.Value.fromAddress(param0), ethereum.Value.fromAddress(param1)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  sighSupplyState(param0: Address): Sightroller__sighSupplyStateResult {
-    let result = super.call(
-      "sighSupplyState",
-      "sighSupplyState(address):(uint224,uint32)",
-      [ethereum.Value.fromAddress(param0)]
-    );
-
-    return new Sightroller__sighSupplyStateResult(
-      result[0].toBigInt(),
-      result[1].toBigInt()
-    );
-  }
-
-  try_sighSupplyState(
-    param0: Address
-  ): ethereum.CallResult<Sightroller__sighSupplyStateResult> {
-    let result = super.tryCall(
-      "sighSupplyState",
-      "sighSupplyState(address):(uint224,uint32)",
-      [ethereum.Value.fromAddress(param0)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new Sightroller__sighSupplyStateResult(
-        value[0].toBigInt(),
-        value[1].toBigInt()
+        value[1].toBigInt(),
+        value[2].toBigInt()
       )
     );
   }
@@ -2168,20 +2196,85 @@ export class Sightroller extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  getGSighAddress(): Address {
+  getSighAddress(): Address {
+    let result = super.call("getSighAddress", "getSighAddress():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_getSighAddress(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "getSighAddress",
+      "getSighAddress():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getSighReservoir(): Address {
     let result = super.call(
-      "getGSighAddress",
-      "getGSighAddress():(address)",
+      "getSighReservoir",
+      "getSighReservoir():(address)",
       []
     );
 
     return result[0].toAddress();
   }
 
-  try_getGSighAddress(): ethereum.CallResult<Address> {
+  try_getSighReservoir(): ethereum.CallResult<Address> {
     let result = super.tryCall(
-      "getGSighAddress",
-      "getGSighAddress():(address)",
+      "getSighReservoir",
+      "getSighReservoir():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  setGelatoAddress(gelato_: Address): Address {
+    let result = super.call(
+      "setGelatoAddress",
+      "setGelatoAddress(address):(address)",
+      [ethereum.Value.fromAddress(gelato_)]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_setGelatoAddress(gelato_: Address): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "setGelatoAddress",
+      "setGelatoAddress(address):(address)",
+      [ethereum.Value.fromAddress(gelato_)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getGelatoAddress(): Address {
+    let result = super.call(
+      "getGelatoAddress",
+      "getGelatoAddress():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_getGelatoAddress(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "getGelatoAddress",
+      "getGelatoAddress():(address)",
       []
     );
     if (result.reverted) {
@@ -2221,6 +2314,31 @@ export class Sightroller extends ethereum.SmartContract {
       "getBlockNumber",
       "getBlockNumber():(uint256)",
       []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getUnderlyingPriceFromoracle(cToken: Address): BigInt {
+    let result = super.call(
+      "getUnderlyingPriceFromoracle",
+      "getUnderlyingPriceFromoracle(address):(uint256)",
+      [ethereum.Value.fromAddress(cToken)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getUnderlyingPriceFromoracle(
+    cToken: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getUnderlyingPriceFromoracle",
+      "getUnderlyingPriceFromoracle(address):(uint256)",
+      [ethereum.Value.fromAddress(cToken)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -3364,212 +3482,50 @@ export class _becomeCall__Outputs {
   }
 }
 
-export class RefreshGsighSpeedsCall extends ethereum.Call {
-  get inputs(): RefreshGsighSpeedsCall__Inputs {
-    return new RefreshGsighSpeedsCall__Inputs(this);
+export class SetSIGHRateCall extends ethereum.Call {
+  get inputs(): SetSIGHRateCall__Inputs {
+    return new SetSIGHRateCall__Inputs(this);
   }
 
-  get outputs(): RefreshGsighSpeedsCall__Outputs {
-    return new RefreshGsighSpeedsCall__Outputs(this);
-  }
-}
-
-export class RefreshGsighSpeedsCall__Inputs {
-  _call: RefreshGsighSpeedsCall;
-
-  constructor(call: RefreshGsighSpeedsCall) {
-    this._call = call;
+  get outputs(): SetSIGHRateCall__Outputs {
+    return new SetSIGHRateCall__Outputs(this);
   }
 }
 
-export class RefreshGsighSpeedsCall__Outputs {
-  _call: RefreshGsighSpeedsCall;
+export class SetSIGHRateCall__Inputs {
+  _call: SetSIGHRateCall;
 
-  constructor(call: RefreshGsighSpeedsCall) {
-    this._call = call;
-  }
-}
-
-export class ClaimGSighCall extends ethereum.Call {
-  get inputs(): ClaimGSighCall__Inputs {
-    return new ClaimGSighCall__Inputs(this);
-  }
-
-  get outputs(): ClaimGSighCall__Outputs {
-    return new ClaimGSighCall__Outputs(this);
-  }
-}
-
-export class ClaimGSighCall__Inputs {
-  _call: ClaimGSighCall;
-
-  constructor(call: ClaimGSighCall) {
+  constructor(call: SetSIGHRateCall) {
     this._call = call;
   }
 
-  get holder(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get cTokens(): Array<Address> {
-    return this._call.inputValues[1].value.toAddressArray();
-  }
-}
-
-export class ClaimGSighCall__Outputs {
-  _call: ClaimGSighCall;
-
-  constructor(call: ClaimGSighCall) {
-    this._call = call;
-  }
-}
-
-export class ClaimGSigh1Call extends ethereum.Call {
-  get inputs(): ClaimGSigh1Call__Inputs {
-    return new ClaimGSigh1Call__Inputs(this);
-  }
-
-  get outputs(): ClaimGSigh1Call__Outputs {
-    return new ClaimGSigh1Call__Outputs(this);
-  }
-}
-
-export class ClaimGSigh1Call__Inputs {
-  _call: ClaimGSigh1Call;
-
-  constructor(call: ClaimGSigh1Call) {
-    this._call = call;
-  }
-
-  get holders(): Array<Address> {
-    return this._call.inputValues[0].value.toAddressArray();
-  }
-
-  get cTokens(): Array<Address> {
-    return this._call.inputValues[1].value.toAddressArray();
-  }
-
-  get borrowers(): boolean {
-    return this._call.inputValues[2].value.toBoolean();
-  }
-
-  get suppliers(): boolean {
-    return this._call.inputValues[3].value.toBoolean();
-  }
-}
-
-export class ClaimGSigh1Call__Outputs {
-  _call: ClaimGSigh1Call;
-
-  constructor(call: ClaimGSigh1Call) {
-    this._call = call;
-  }
-}
-
-export class ClaimGSigh2Call extends ethereum.Call {
-  get inputs(): ClaimGSigh2Call__Inputs {
-    return new ClaimGSigh2Call__Inputs(this);
-  }
-
-  get outputs(): ClaimGSigh2Call__Outputs {
-    return new ClaimGSigh2Call__Outputs(this);
-  }
-}
-
-export class ClaimGSigh2Call__Inputs {
-  _call: ClaimGSigh2Call;
-
-  constructor(call: ClaimGSigh2Call) {
-    this._call = call;
-  }
-
-  get holder(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class ClaimGSigh2Call__Outputs {
-  _call: ClaimGSigh2Call;
-
-  constructor(call: ClaimGSigh2Call) {
-    this._call = call;
-  }
-}
-
-export class _setGsighRateCall extends ethereum.Call {
-  get inputs(): _setGsighRateCall__Inputs {
-    return new _setGsighRateCall__Inputs(this);
-  }
-
-  get outputs(): _setGsighRateCall__Outputs {
-    return new _setGsighRateCall__Outputs(this);
-  }
-}
-
-export class _setGsighRateCall__Inputs {
-  _call: _setGsighRateCall;
-
-  constructor(call: _setGsighRateCall) {
-    this._call = call;
-  }
-
-  get gsighRate_(): BigInt {
+  get SIGHRate_(): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 }
 
-export class _setGsighRateCall__Outputs {
-  _call: _setGsighRateCall;
+export class SetSIGHRateCall__Outputs {
+  _call: SetSIGHRateCall;
 
-  constructor(call: _setGsighRateCall) {
+  constructor(call: SetSIGHRateCall) {
     this._call = call;
   }
 }
 
-export class _addGsighMarketsCall extends ethereum.Call {
-  get inputs(): _addGsighMarketsCall__Inputs {
-    return new _addGsighMarketsCall__Inputs(this);
+export class _addSIGHMarketCall extends ethereum.Call {
+  get inputs(): _addSIGHMarketCall__Inputs {
+    return new _addSIGHMarketCall__Inputs(this);
   }
 
-  get outputs(): _addGsighMarketsCall__Outputs {
-    return new _addGsighMarketsCall__Outputs(this);
-  }
-}
-
-export class _addGsighMarketsCall__Inputs {
-  _call: _addGsighMarketsCall;
-
-  constructor(call: _addGsighMarketsCall) {
-    this._call = call;
-  }
-
-  get cTokens(): Array<Address> {
-    return this._call.inputValues[0].value.toAddressArray();
+  get outputs(): _addSIGHMarketCall__Outputs {
+    return new _addSIGHMarketCall__Outputs(this);
   }
 }
 
-export class _addGsighMarketsCall__Outputs {
-  _call: _addGsighMarketsCall;
+export class _addSIGHMarketCall__Inputs {
+  _call: _addSIGHMarketCall;
 
-  constructor(call: _addGsighMarketsCall) {
-    this._call = call;
-  }
-}
-
-export class _dropGsighMarketCall extends ethereum.Call {
-  get inputs(): _dropGsighMarketCall__Inputs {
-    return new _dropGsighMarketCall__Inputs(this);
-  }
-
-  get outputs(): _dropGsighMarketCall__Outputs {
-    return new _dropGsighMarketCall__Outputs(this);
-  }
-}
-
-export class _dropGsighMarketCall__Inputs {
-  _call: _dropGsighMarketCall;
-
-  constructor(call: _dropGsighMarketCall) {
+  constructor(call: _addSIGHMarketCall) {
     this._call = call;
   }
 
@@ -3578,10 +3534,182 @@ export class _dropGsighMarketCall__Inputs {
   }
 }
 
-export class _dropGsighMarketCall__Outputs {
-  _call: _dropGsighMarketCall;
+export class _addSIGHMarketCall__Outputs {
+  _call: _addSIGHMarketCall;
 
-  constructor(call: _dropGsighMarketCall) {
+  constructor(call: _addSIGHMarketCall) {
     this._call = call;
+  }
+}
+
+export class _dropSIGHMarketCall extends ethereum.Call {
+  get inputs(): _dropSIGHMarketCall__Inputs {
+    return new _dropSIGHMarketCall__Inputs(this);
+  }
+
+  get outputs(): _dropSIGHMarketCall__Outputs {
+    return new _dropSIGHMarketCall__Outputs(this);
+  }
+}
+
+export class _dropSIGHMarketCall__Inputs {
+  _call: _dropSIGHMarketCall;
+
+  constructor(call: _dropSIGHMarketCall) {
+    this._call = call;
+  }
+
+  get cToken(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class _dropSIGHMarketCall__Outputs {
+  _call: _dropSIGHMarketCall;
+
+  constructor(call: _dropSIGHMarketCall) {
+    this._call = call;
+  }
+}
+
+export class TakeSIGHPriceSnapshotCall extends ethereum.Call {
+  get inputs(): TakeSIGHPriceSnapshotCall__Inputs {
+    return new TakeSIGHPriceSnapshotCall__Inputs(this);
+  }
+
+  get outputs(): TakeSIGHPriceSnapshotCall__Outputs {
+    return new TakeSIGHPriceSnapshotCall__Outputs(this);
+  }
+}
+
+export class TakeSIGHPriceSnapshotCall__Inputs {
+  _call: TakeSIGHPriceSnapshotCall;
+
+  constructor(call: TakeSIGHPriceSnapshotCall) {
+    this._call = call;
+  }
+}
+
+export class TakeSIGHPriceSnapshotCall__Outputs {
+  _call: TakeSIGHPriceSnapshotCall;
+
+  constructor(call: TakeSIGHPriceSnapshotCall) {
+    this._call = call;
+  }
+}
+
+export class RefreshSIGHSpeedsCall extends ethereum.Call {
+  get inputs(): RefreshSIGHSpeedsCall__Inputs {
+    return new RefreshSIGHSpeedsCall__Inputs(this);
+  }
+
+  get outputs(): RefreshSIGHSpeedsCall__Outputs {
+    return new RefreshSIGHSpeedsCall__Outputs(this);
+  }
+}
+
+export class RefreshSIGHSpeedsCall__Inputs {
+  _call: RefreshSIGHSpeedsCall;
+
+  constructor(call: RefreshSIGHSpeedsCall) {
+    this._call = call;
+  }
+}
+
+export class RefreshSIGHSpeedsCall__Outputs {
+  _call: RefreshSIGHSpeedsCall;
+
+  constructor(call: RefreshSIGHSpeedsCall) {
+    this._call = call;
+  }
+}
+
+export class ClaimSIGHCall extends ethereum.Call {
+  get inputs(): ClaimSIGHCall__Inputs {
+    return new ClaimSIGHCall__Inputs(this);
+  }
+
+  get outputs(): ClaimSIGHCall__Outputs {
+    return new ClaimSIGHCall__Outputs(this);
+  }
+}
+
+export class ClaimSIGHCall__Inputs {
+  _call: ClaimSIGHCall;
+
+  constructor(call: ClaimSIGHCall) {
+    this._call = call;
+  }
+
+  get holders(): Array<Address> {
+    return this._call.inputValues[0].value.toAddressArray();
+  }
+}
+
+export class ClaimSIGHCall__Outputs {
+  _call: ClaimSIGHCall;
+
+  constructor(call: ClaimSIGHCall) {
+    this._call = call;
+  }
+}
+
+export class ClaimSIGH1Call extends ethereum.Call {
+  get inputs(): ClaimSIGH1Call__Inputs {
+    return new ClaimSIGH1Call__Inputs(this);
+  }
+
+  get outputs(): ClaimSIGH1Call__Outputs {
+    return new ClaimSIGH1Call__Outputs(this);
+  }
+}
+
+export class ClaimSIGH1Call__Inputs {
+  _call: ClaimSIGH1Call;
+
+  constructor(call: ClaimSIGH1Call) {
+    this._call = call;
+  }
+}
+
+export class ClaimSIGH1Call__Outputs {
+  _call: ClaimSIGH1Call;
+
+  constructor(call: ClaimSIGH1Call) {
+    this._call = call;
+  }
+}
+
+export class SetGelatoAddressCall extends ethereum.Call {
+  get inputs(): SetGelatoAddressCall__Inputs {
+    return new SetGelatoAddressCall__Inputs(this);
+  }
+
+  get outputs(): SetGelatoAddressCall__Outputs {
+    return new SetGelatoAddressCall__Outputs(this);
+  }
+}
+
+export class SetGelatoAddressCall__Inputs {
+  _call: SetGelatoAddressCall;
+
+  constructor(call: SetGelatoAddressCall) {
+    this._call = call;
+  }
+
+  get gelato_(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class SetGelatoAddressCall__Outputs {
+  _call: SetGelatoAddressCall;
+
+  constructor(call: SetGelatoAddressCall) {
+    this._call = call;
+  }
+
+  get value0(): Address {
+    return this._call.outputValues[0].value.toAddress();
   }
 }

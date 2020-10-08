@@ -34,8 +34,8 @@ dataSources:
           handler: handleNewPriceOracle
         - event: NewPauseGuardian(address,address)
           handler: handleNewPauseGuardian
-        - event: NewGsighRate(uint256,uint256)
-          handler: handleNewGsighRate
+        # - event: NewGsighRate(uint256,uint256)
+        #   handler: handleNewGsighRate
         - event: MarketEntered(address,address)
           handler: handleMarketEntered
         - event: MarketExited(address,address)
@@ -56,6 +56,12 @@ dataSources:
         #   handler: handleActionPaused
         # - event: ActionPaused(address,string,bool)
         #   handler: handleActionPaused1
+        - event: SIGHSpeedUpdated(address,uint256)
+          handler: handleSIGHSpeedUpdated
+        - event: NewSIGHRate(uint256,uint256)
+          handler: handleNewSIGHRate
+        - event: PriceSnapped(address,uint256,uint256,uint256)
+          handler: handlePriceSnapped
   - kind: ethereum/contract
     name: link
     network: kovan
@@ -284,7 +290,7 @@ dataSources:
     name: SIGH
     network: kovan
     source:
-      address: "0x58897EB4e8e70eb8133587Ce80b8e56f9248705C"
+      address: "0x76Ff68033ef96ee0727f85eA1f979B1b0FD4C75b"
       abi: SIGH
       startBlock: 21040723
     mapping:
@@ -302,3 +308,25 @@ dataSources:
           handler: handleCoinsMinted
         - event: ReservoirChanged(address,address,uint256)
           handler: handleReservoirChanged
+  - kind: ethereum/contract
+    name: SIGH_Reservoir
+    network: kovan
+    source:
+      address: "0x9748692378cD832db750009BEF7Ea3f6862f9fD9"
+      abi: SIGHReservoir
+      startBlock: 21040723
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping/sighReservoir.ts
+      entities:
+        - SIGHReservoir
+      abis:
+      - name: SIGHReservoir
+        file: ./abis/SIGHReservoir.json
+      eventHandlers:
+        - event: DripRateChanged(uint256,uint256)
+          handler: handleDripRateChanged
+        - event: Dripped(uint256,uint256,uint256)
+          handler: handleDripped         
