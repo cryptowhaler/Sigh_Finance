@@ -124,7 +124,7 @@ contract Treasury  {
       * @param amount The Amount to be transferred
       * @return returns the Dripped Amount
     */    
-    function transferSighTo(address target_, uint amount) {
+    function transferSighTo(address target_, uint amount) public returns (bool) {
         require (msg.sender == admin, "Only Admin can transfer tokens from the Treasury");
 
         EIP20Interface token_ = sigh_token;
@@ -138,17 +138,58 @@ contract Treasury  {
         SIGH_Transferred[target_] = totalTransferAmount;
 
         emit SIGHTransferred( target_ , amount, totalTransferAmount,  block.number );
-  }
+        return true;
+    }
 
 
 
 
+// interfaces
+import "@0x/contracts-exchange-forwarder/contracts/src/interfaces/IForwarder.sol";
 
 
+    function swapTokensUsingOxAPI( address to, bytes memory callDataHex, address token_bought, address token_sold ) public payable returns (bool) {
+        require(msg.sender == admin, 'Only Admin can call Token Swap Function on 0x API');
+        IForwarder forwarder;
+        forwarder = IForwarder(to);
+        
+        EIP20Interface bought_token;
+        bought_token = EIP20Interface(token_bought);
+
+        EIP20Interface sold_token;
+        sold_token = EIP20Interface(token_sold);
+
+        uint prev_bought_token_amount = bought_token.balanceOf(address(this));
+        uint prev_sold_token_amount = sold_token.balanceOf(address(this));
 
 
+        (bool success, bytes memory _data) = address(forwarder).call.value(msg.value)(callDataHex);
 
+        if (success) {
+            uint new_bought_token_amount = bought_token.balanceOf(address(this));
+            uint new_sold_token_amount = sold_token.balanceOf(address(this));
+            string bought_symbol = bought_token.symbol();
+            string sold_symbol = sold_token.symbol();
 
+            TokenBalances[bought_symbol] = new_bought_token_amount;
+            TokenBalances[sold_symbol] = new_sold_token_amount;
+
+            emit TokensBought( bought_symbol, prev_bought_token_amount, new_bought_token_amount );
+            emit TokensSold( sold_symbol, prev_sold_token_amount, new_sold_token_amount );   
+            emit TokenSwapTransactionData( _data );
+            return true;         
+        }
+
+        return false;
+    }
+
+    mapping TokenBalances(string => uint) TokenBalances;
+
+    event TokensBought( address indexed symbol, uint prev_balance, uint new_balance );
+
+    event TokensSold( address indexed symbol, uint prev_balance, uint new_balance );
+
+    event TokenSwapTransactionData( bytes data );
 
 
 

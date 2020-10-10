@@ -31,6 +31,8 @@ const getRevertReason = require('eth-revert-reason');
 
 // import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from "constants";
 
+// import * as qs from 'qs';
+
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
@@ -4208,6 +4210,61 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
     }
     return false;
   }, 
+
+
+
+
+
+
+
+
+
+
+
+  treasuryTokenSwap: async ( {commit, state}, {sellToken, buyToken, sellAmount, buyAmount} ) => {
+    const buy_Amount;
+    const sell_Amount;
+    if (buyAmount != undefined) {
+      buy_Amount = baseUnitAmount(buyAmount); // we want to buy 1 unit of DAI
+    }
+    if (sellAmount != undefined) {
+      sell_Amount = baseUnitAmount(sellAmount); // we want to buy 1 unit of DAI
+    }
+
+    const params = { sellToken: sellToken, buyToken: buyToken, buyAmount: buy_Amount.toString(), sellAmount: sell_Amount.toString(),};
+
+    const res = await fetch(`https://kovan.api.0x.org/swap/v1/quote?${qs.stringify(params)}`);
+    const quote = await res.json();
+    console.log('Received quote:', quote); 
+
+    const Treasury_ = Treasury.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+    console.log(Treasury_);
+    if (Treasury_) {
+        let Treasury__Contract = new web3.eth.Contract(Treasury.abi, Treasury_.address);
+        console.log(Treasury__Contract);
+        try {
+          let txHash = Treasury__Contract.methods.swapTokens(quote.data).sendTransactionAsync({ from:  state.web3Account, value: quote.value, gasPrice: quote.gasPrice});
+          console.log(txHash);
+        } 
+        catch (e) {
+          console.log(e)
+        }
+    }
+  },
+
+  export const baseUnitAmount = (unitAmount: number, decimals = 18): BigNumber => {
+    return Web3Wrapper.toBaseUnitAmount(new BigNumber(unitAmount), decimals);
+};
+
+  
+  
+
+
+
+
+
+
+
 
 
 
