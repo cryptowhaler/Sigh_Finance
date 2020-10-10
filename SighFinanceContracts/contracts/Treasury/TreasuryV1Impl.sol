@@ -12,9 +12,9 @@ import "./TreasuryCore.sol";
 contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
     
     bool isDripAllowed = false;
-    uint lastDripBlockNumber; 
-    uint recentlyDrippedAmount;
-    uint totalDrippedAmount;
+    uint public lastDripBlockNumber; 
+    uint public recentlyDrippedAmount;
+    uint public totalDrippedAmount;
 
     /// @notice Emitted when an amount is dripped to the Sightroller
     event AmountDripped(uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
@@ -51,7 +51,7 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
     require(msg.sender == admin,'Only Admin can begin/stop Dripping');
     bool prevDripAllowed = isDripAllowed;
     if (val == 0) {
-        dripToSightroller();
+        drip();
         isDripAllowed = false;
     }
     else {
@@ -70,7 +70,7 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
     function changeDripRate (uint dripRate_) public returns (bool) {
         require(admin == msg.sender,"Drip rate can only be changed by the Admin");
         if (isDripAllowed) {
-        dripToSightroller();
+        drip();
         }
         uint prevDripRate = dripRate;
         dripRate = dripRate_;

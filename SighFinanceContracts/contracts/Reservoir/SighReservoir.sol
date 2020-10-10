@@ -11,50 +11,47 @@ import "../openzeppelin/EIP20Interface.sol";
  
 contract SighReservoir {
 
-  /// @notice The block number when the Reservoir started (immutable)
-  // uint public dripStart;
-
-  /// @notice Tokens per block that to drip to target (immutable)
   uint public dripRate;
 
   /// @notice Reference to token to drip (immutable)
   EIP20Interface public token;
 
-  /// @notice Target to receive dripped tokens (immutable)
-  address public target;
-
-  uint public lastDripBlockNumber;    
-
-  uint public totalDrippedAmount; // Dripped Amount till now
-
-  uint public recentlyDrippedAmount;  // Amount recently Dripped
-
+  address public sightroller;
   address public admin;
+  address public treasury;
 
   bool public isDripAllowed = false;  
+
+  uint public lastDripBlockNumber;    
+  uint public totalDrippedAmount; 
+  uint public recentlyDrippedAmount;
+
+  uint public totalAmountTransferredToTreasury;
 
   event DripRateChanged(uint prevDripRate , uint newDripRate );  
   
   event Dripped(uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
 
+  event SIGH_TransferredToTreasury(uint amountTransferred, uint currentBalance, uint blockNumber);
+
   /**
     * @notice Constructs a Reservoir
     * @param token_ The token to drip
     */
-  constructor(EIP20Interface token_) public {
+  constructor(EIP20Interface token_, address treasury_) public {
     admin = msg.sender;
     token = token_;
-    totalDrippedAmount = 0;
-    recentlyDrippedAmount = 0;
+    treasury = treasury_;
 
   }
 
-  function beginDripping (uint dripRate_, address target_ ) public returns (bool) {
+  function beginDripping (uint dripRate_, address sightroller_ ) public returns (bool) {
     require(admin == msg.sender,"Dripping can only be initialized by the Admin");
     require(!isDripAllowed,"Dripping can only be initialized once");
     isDripAllowed = true;
-    target = target_;
-    require(target == target_,"Target address could not be properly initialized");
+    sightroller = sightroller_;
+    lastDripBlockNumber = block.number;
+    require(sightroller == sightroller_,"Sightroller address could not be properly initialized");
     require(changeDripRate(dripRate_),"Drip Rate could not be initialized properly");
     return true;
   }
@@ -80,30 +77,70 @@ contract SighReservoir {
   }
 
   function dripInternal() internal returns (uint) {
+
     EIP20Interface token_ = token;
+    
     uint reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
     uint blockNumber_ = block.number;
     uint deltaDrip_ = mul(dripRate, blockNumber_ - lastDripBlockNumber, "dripTotal overflow");
     uint toDrip_ = min(reservoirBalance_, deltaDrip_);
+
     require(reservoirBalance_ != 0, 'The reservoir currently does not have any SIGH tokens' );
-    require(token_.transfer(target, toDrip_), 'The transfer did not complete.' );
+    require(token_.transfer(sightroller, toDrip_), 'The transfer did not complete.' );
+    
     lastDripBlockNumber = blockNumber_; // setting the block number when the Drip is made
     uint prevDrippedAmount = totalDrippedAmount;
-    recentlyDrippedAmount = toDrip_;
     totalDrippedAmount = add(prevDrippedAmount,toDrip_,"Overflow");
     reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
+    recentlyDrippedAmount = toDrip_;
 
     emit Dripped( reservoirBalance_, recentlyDrippedAmount , totalDrippedAmount ); 
     
     return toDrip_;
   } 
 
+  function transferToTreasury(uint amount) public returns (uint) {
+    require(msg.sender == admin,'Only admin can transfer the amount');
+
+    if (isDripAllowed) {
+      dripInternal();
+    }
+    
+    EIP20Interface token_ = token;   
+    uint balance = token_.balanceOf(address(this));
+
+    require(balance > amount, 'The Reservoir balance is less than the amount to be transferred');
+    require(token_.transfer(treasury, amount),'SIGH Token transfer failed');
+
+    uint prevTreasuryAmount = totalAmountTransferredToTreasury;
+    totalAmountTransferredToTreasury = add(prevTreasuryAmount, amount,"Overflow");
+
+    balance = token_.balanceOf(address(this));
+
+    emit SIGH_TransferredToTreasury(amount, balance, block.number);
+
+  }
+
   function getSighAddress() external view returns (address) {
     return address(token);
   }
 
-  function getTargetAddress() external view returns (address) {
-    return address(target);
+  function getsightrollerAddress() external view returns (address) {
+    return address(sightroller);
+  }
+
+  function getTreasuryAddress() external view returns (address) {
+    return address(treasury);
+  }
+
+  function getTotalAmountTransferredToTreasury() external view returns (uint) {
+    return totalAmountTransferredToTreasury;
+  }
+
+  function getSIGHBalance() external view returns (uint) {
+    EIP20Interface token_ = token;   
+    uint balance = token_.balanceOf(address(this));
+    returns balance;
   }
 
   // function () external payable {}
