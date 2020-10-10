@@ -1,7 +1,7 @@
 pragma solidity ^0.5.16;
 
 
-contract TreasuryStorage {
+contract TreasuryCoreStorage {
     /**
     * @notice Administrator for this contract
     */
@@ -20,15 +20,24 @@ contract TreasuryStorage {
     /**
     * @notice Pending brains of Treasury
     */
-    address public pendingTreasuryImplementation;
+    address public pendingTreasuryImplementation;1
+}
 
-    /**
-    * @notice Sightroller Address 
-    */
-    address public sightroller;
 
-    /**
-    * @notice Sightroller Address 
-    */
-    address public pendingSightroller;
+
+
+
+contract TreasuryV1Storage is TreasuryCoreStorage {
+
+    /// @notice Reference to token to drip (immutable)
+    EIP20Interface public sigh_token;
+
+    /// @notice Target to receive dripped tokens (immutable)
+    address public sightroller_address;
+
+    uint dripRate;
+
+    mapping(address => uint) SIGH_Transferred;
+
+    mapping (string => uint) TokenBalances;
 }

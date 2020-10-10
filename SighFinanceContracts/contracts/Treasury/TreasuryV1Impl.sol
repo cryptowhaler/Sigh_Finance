@@ -1,23 +1,17 @@
 pragma solidity ^0.5.16;
 
-import "../Math/Exponential.sol";
-
+// interfaces
+import "@0x/contracts-exchange-forwarder/contracts/src/interfaces/IForwarder.sol";
 import "../openzeppelin/EIP20Interface.sol";
+import "./TreasuryCore.sol";
 
 /**
  * @title SighFinance's Treasury Contract
  * @author SighFinance
  */t
-contract Treasury  {
+contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
     
-    /// @notice Reference to token to drip (immutable)
-    EIP20Interface public sigh_token;
-
-    /// @notice Target to receive dripped tokens (immutable)
-    address public sightroller_address;
-
     bool isDripAllowed = false;
-    uint dripRate;
     uint lastDripBlockNumber; 
     uint recentlyDrippedAmount;
     uint totalDrippedAmount;
@@ -29,6 +23,13 @@ contract Treasury  {
 
     event DripAllowedChanged(bool prevDripAllowed , bool newDripAllowed, uint blockNumber); 
 
+    event SIGHTransferred(address indexed TargetAddress, uint amountTransferred, uint totalAmountTransferred, uint blockNumber);
+
+    event TokensBought( address indexed symbol, uint prev_balance, uint new_balance );
+
+    event TokensSold( address indexed symbol, uint prev_balance, uint new_balance );
+
+    event TokenSwapTransactionData( bytes data );
 
     /**
       * @notice Constructor
@@ -82,9 +83,8 @@ contract Treasury  {
       * @notice Drips the SIGH Tokens to the SIGHtroller
       * @return returns the Dripped Amount
     */    
-    function dripToSightroller() public returns (uint) {
+    function drip() public returns (uint) {
         require(isDripAllowed, 'Drip is currently not allowed.');
-        require(sightroller_address != '0x0000000000000000000000000000000000000000' , 'Sightroller Address is not Set.');
 
         EIP20Interface token_ = sigh_token;
 
@@ -108,16 +108,6 @@ contract Treasury  {
     }
 
 
-
-
-
-
-
-
-    mapping(address => uint) SIGH_Transferred;
-
-    event SIGHTransferred(address TargetAddress, uint amountTransferred, uint totalAmountTransferred, uint blockNumber);
-
     /**
       * @notice Transfers the SIGH Tokens to the Target Address
       * @param target_ Address to which the amount is to be transferred
@@ -140,13 +130,6 @@ contract Treasury  {
         emit SIGHTransferred( target_ , amount, totalTransferAmount,  block.number );
         return true;
     }
-
-
-
-
-// interfaces
-import "@0x/contracts-exchange-forwarder/contracts/src/interfaces/IForwarder.sol";
-
 
     function swapTokensUsingOxAPI( address to, bytes memory callDataHex, address token_bought, address token_sold ) public payable returns (bool) {
         require(msg.sender == admin, 'Only Admin can call Token Swap Function on 0x API');
@@ -183,58 +166,68 @@ import "@0x/contracts-exchange-forwarder/contracts/src/interfaces/IForwarder.sol
         return false;
     }
 
-    mapping TokenBalances(string => uint) TokenBalances;
+    function getSIGHBalance() external view returns (uint) {
+        EIP20Interface token_ = sigh_token;
+        uint treasuryBalance_ = token_.balanceOf(address(this)); // get current SIGH balance
+        return treasuryBalance_;
+    }
 
-    event TokensBought( address indexed symbol, uint prev_balance, uint new_balance );
+    function getTokenBalance(string symbol) external view returns (uint) {
+        return TokenBalances[symbol];
+    }
 
-    event TokensSold( address indexed symbol, uint prev_balance, uint new_balance );
+    function getAmountTransferred(address target) external view returns (uint) {
+        return SIGH_Transferred[target];
+    }
 
-    event TokenSwapTransactionData( bytes data );
+    function getDripRate() external view returns (uint) {
+        if (isDripAllowed) {
+            return dripRate;
+        }
+        return 0;
+    }
 
+    function getTotalDrippedAmount external view returns (uint) {
+        return totalDrippedAmount;
+    }
 
-
-
-
-
-
-
-
-
-
+      // TreasuryCore is the storage Implementation (Function calls get redirected here from there)
+  // When new Functionality contract is being initiated (Treasury Impl Contract is updated), we use this function
+  // It is used to make the new implementation to be accepted by calling a function from TreasuryCore.
+    function _become(TreasuryCore treasuryCoreAddress) public {
+        require(msg.sender == treasuryCoreAddress.admin(), "only unitroller admin can change brains");
+        require(treasuryCoreAddress._acceptImplementation() == 0, "change not authorized");
+    }
 
 
   /* Internal helper functions for safe math */
 
-  function add(uint a, uint b, string memory errorMessage) internal pure returns (uint) {
-    uint c = a + b;
-    require(c >= a, errorMessage);
-    return c;
-  }
-
-  function sub(uint a, uint b, string memory errorMessage) internal pure returns (uint) {
-    require(b <= a, errorMessage);
-    uint c = a - b;
-    return c;
-  }
-
-  function mul(uint a, uint b, string memory errorMessage) internal pure returns (uint) {
-    if (a == 0) {
-      return 0;
+    function add(uint a, uint b, string memory errorMessage) internal pure returns (uint) {
+        uint c = a + b;
+        require(c >= a, errorMessage);
+        return c;
     }
-    uint c = a * b;
-    require(c / a == b, errorMessage);
-    return c;
-  }
 
-  function min(uint a, uint b) internal pure returns (uint) {
-    if (a <= b) {
-      return a;
-    } else {
-      return b;
+    function sub(uint a, uint b, string memory errorMessage) internal pure returns (uint) {
+        require(b <= a, errorMessage);
+        uint c = a - b;
+        return c;
     }
-  }
-}
 
+    function mul(uint a, uint b, string memory errorMessage) internal pure returns (uint) {
+        if (a == 0) {
+        return 0;
+        }
+        uint c = a * b;
+        require(c / a == b, errorMessage);
+        return c;
+    }
 
-
+    function min(uint a, uint b) internal pure returns (uint) {
+        if (a <= b) {
+        return a;
+        } else {
+        return b;
+        }
+    }
 }

@@ -30,6 +30,7 @@
     "solparse": "^2.2.8"
   },
   "dependencies": {
+    "@0x/contracts-exchange-forwarder": "^4.2.7",
     "@openzeppelin/contracts": "^3.1.0",
     "chainlink": "^0.8.2",
     "dotenv": "^8.2.0",

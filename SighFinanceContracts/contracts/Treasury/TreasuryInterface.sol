@@ -1,9 +1,17 @@
 pragma solidity ^0.5.16;
 
-contract TreasuryInterface {
+contract TreasuryInterfaceV1 {
 
-    function getCurrentSIGHBalance() external view returns (uint);
+    function getSIGHBalance() external view returns (uint);
 
-    function dripToSightroller() external view returns (uint);
+    function getTokenBalance(string symbol) external view returns (uint) ;
+
+    function getAmountTransferred(address target) external view returns (uint);
+
+    function getDripRate() external view returns (uint) ;
+
+    function getTotalDrippedAmount external view returns (uint);
+    
+    function drip() public returns (uint);            
 
 }
