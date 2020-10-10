@@ -74,7 +74,7 @@
         // max-width: ;
         padding: 7px 24px;
         background: black;
-        max-width: 24%;
+        max-width: 30%;
         // text-transform: capitalize;
     }
     .header-market-link {
@@ -183,25 +183,29 @@ html.uk-notouch .page-mask {
     background-color: black;
     margin-left: 20px;
     padding-left: 242px;
-    display: inherit;
+    // display: inherit;
     align-items: center;
-    justify-content: center;
-    height: 50px;
+    //justify-content: center;
+    justify-content: flex-end;
+    height: 80px;
 }
 
-.navbar a {
+.navbar a, .navbar span {
     padding: 16px;
+    font-size: 16px;
+    letter-spacing: 1px;
 }
 
 .navbar a,
 .navbar div {
     float: left;
-    font-size: 12px;
+    font-size: 16px;
     color: var(--primary-text-color);
     text-align: center;
     text-decoration: none;
     margin-right: 0.5rem;
 }
+
 
 .dropdown {
     float: right;
@@ -224,11 +228,11 @@ html.uk-notouch .page-mask {
 
 .navbar a:hover,
 .dropdown:hover .dropbtn {
-    background-color: var(--main-bg-color);
+   background-color: var(--main-bg-color);
 }
 
-.navbar a span img {
-    width: 32px;
+.navbar img {
+    max-width: 70%;
 }
 
 .dropdown-content {
