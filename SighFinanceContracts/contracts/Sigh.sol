@@ -19,21 +19,22 @@ contract SIGH is Context, IERC20 {
 
     uint256 private constant INITIAL_SUPPLY = 5 * 10**6 * 10**18; // 5 Million (with 18 decimals)
     uint256 public CURRENT_SUPPLY = INITIAL_SUPPLY ;
-    bool public mintingActivated = false;
 
+    bool public isReservoirSet = false;
     address public Reservoir;
-    address public prevReservoir;
-
 
     uint256 public constant CYCLE_SECONDS = 86400;  // 24*60*60 (i.e seconds in 1 day )
     uint256 public constant FINAL_CYCLE = 3711; // 10 years (3650 days) + 60 days
     uint256 public Current_Cycle; 
     uint256 public Current_Era;
     uint256 public currentDivisibilityFactor;
+
+    bool public mintingActivated = false;
     uint256 public previousMintTimeStamp;
     uint256 public recentlyMintedAmount;
     address public recentMinter;
-    bool public isReservoirSet = false;
+
+    uint256 private prize_amount = 500 * 10**18;
 
     mapping ( uint256 => uint256 ) private mintHistory;
 
@@ -41,8 +42,6 @@ contract SIGH is Context, IERC20 {
         uint256 startCycle;
         uint256 endCycle;
         uint256 divisibilityFactor;
-        uint256 cyclicAddition;
-        uint256 finalSupply;
     }
 
     Era[11] private _eras;
@@ -51,6 +50,9 @@ contract SIGH is Context, IERC20 {
     string public _name;
     string public _symbol;
     uint8 public _decimals;
+
+    event NewCycle( uint prevCycle, uint newCycle, uint blockNumber, uint timeStamp );
+    event NewEra( uint prevEra, uint newEra, uint blockNumber, uint timeStamp );
 
     event coinsMinted(uint256 cycle, uint256 Era, address minter, uint256 amountMinted, uint256 current_supply, uint256 block_number, uint timestamp);
     event ReservoirChanged(address prevReservoir, address newReservoir, uint256 blockNumber);
@@ -61,97 +63,69 @@ contract SIGH is Context, IERC20 {
         _symbol = 'SIGH';
         _decimals = 18;
         _owner = _msgSender();
-        balances[_msgSender()] = INITIAL_SUPPLY;
+        balances[_owner] = INITIAL_SUPPLY;
         recentMinter = _owner;
         recentlyMintedAmount = INITIAL_SUPPLY;
         mintHistory[0] = INITIAL_SUPPLY;
         previousMintTimeStamp = now;
-        emit coinsMinted(Current_Cycle,Current_Era,_msgSender(),INITIAL_SUPPLY,CURRENT_SUPPLY,block.number, now);
+        emit coinsMinted(Current_Cycle,Current_Era,_owner,INITIAL_SUPPLY,CURRENT_SUPPLY,block.number, now);
+    }
+
+    // ################################################
+    // #######   FUNCTIONS TO INITIATE MINTING  #######
+    // ################################################
+
+    function changeReservoir(address newReservoir) public returns (bool) {
+        require(_msgSender() == _owner, "Only the Admin can change Reservoir");
+        require(newReservoir != address(0), "Not a valid Reservoir address");
+        require( !isReservoirSet, " Reservoir can be set only once ");
+
+        address prevReservoir = Reservoir;
+        Reservoir = newReservoir;
+        isReservoirSet = true;
+        
+        emit ReservoirChanged(prevReservoir, Reservoir, block.number );
+        return true;
     }
 
     function initMinting() public returns (bool) {
         require(_msgSender() == _owner,"Mining can only be initialized by the owner." );
         require( isReservoirSet , "Reservoir needs to be set before the Eras can begin" );
+        require(!mintingActivated, "Minting can only be initialized once" );
         _initEras();
         _startTime = now;
         mintingActivated = true;
-        previousMintTimeStamp = now;
     }
 
     function _initEras() private {
-        _eras[0] = Era(1, 60, 100, 184467440737095516, 18166966985640902);        // 60 days
-        _eras[1] = Era(61, 425, 200, 92233720368547758, 112174713264391144);       // 1 year
-        _eras[2] = Era(426, 790, 400, 46116860184273879, 279057783081840914);      // 1 year
-        _eras[3] = Era(791, 1155, 800, 23058430092136939, 440268139544969912);       // 1 year
-        _eras[4] = Era(1156, 1520, 1600, 11529215046068469, 553044069474490613);     // 1 year
-        _eras[5] = Era(1521, 1885, 3200, 5764607523034234, 619853011328525904);      // 1 year   
-        _eras[6] = Era(1886, 2250, 6400, 2882303761517117, 656228575376038043);       // 1 year
-        _eras[7] = Era(2251, 2615, 12800, 1441151880758558, 675209948612919169);        // 1 year
-        _eras[8] = Era(2616, 2980, 25600, 720575940379279, 684905732173838476);        // 1 year
-        _eras[9] = Era(2981, 3345, 51200, 360287970189639, 689805758238227141);        // 1 year
-        _eras[10] = Era(3346, 3710, 102400, 180143985094819, 692268913795056564);       // 1 year
-    }
-
-    function name() public view returns (string memory) {
-        return _name;
-    }
-
-    function symbol() public view returns (string memory) {
-        return _symbol;
-    }
-
-    function decimals() public view returns (uint8) {
-        return _decimals;
-    }
-
-    function start_Time() external view returns(uint256) {
-        // require(mintingActivated, 'Minting has not been activated yet.');
-        return _startTime;
+        _eras[0] = Era(1, 96, 100 );        // 96 days
+        _eras[1] = Era(97, 462, 200 );       // 1 year
+        _eras[2] = Era(463, 828, 400 );      // 1 year
+        _eras[3] = Era(829, 1194, 800 );       // 1 year
+        _eras[4] = Era(1195, 1560, 1600 );     // 1 year
+        _eras[5] = Era(1561, 1926, 3200 );      // 1 year   
+        _eras[6] = Era(1927, 2292, 6400 );       // 1 year
+        _eras[7] = Era(2293, 2658, 12800 );        // 1 year
+        _eras[8] = Era(2659, 3024, 25600 );        // 1 year
+        _eras[9] = Era(3025, 3390, 51200 );        // 1 year
+        _eras[10] = Era(3391, 3756, 102400 );       // 1 year
     }
 
     function isMintingActivated() external view returns(bool) {
         return mintingActivated;
     }
 
-    // function sendAirdrop(address[] calldata recipients, uint256 airdropAmt) external {
-    //     for (uint256 i = 0; i < recipients.length; i++) {
-    //         transfer(recipients[i], airdropAmt);
-    //     }
-    // }
+    // ################################################
+    // ########   ALLOWANCE RELATED FUNCTONS   ########
+    // ################################################
 
-    function totalSupply() public view  returns (uint256) {
-        return CURRENT_SUPPLY;
-    }
-
-    function balanceOf(address account) public view  returns (uint256) {
-        return balances[account];
-    }
-
-    // Transfer made by the address owner himself
-    function transfer(address recipient, uint256 amount) public  returns (bool) {
-        _transfer(_msgSender(), recipient, amount);
-        return true;
-    }
-
-    function allowance(address owner, address spender) public view  returns (uint256) {
-        return _allowances[owner][spender];
-    }
-
-    // Address owners Approve a spender for allowance
     function approve(address spender, uint256 amount) public  returns (bool) {
         _approve(_msgSender(), spender, amount);
         return true;
     }
 
-    // User with allowance calls the transfer function
-    function transferFrom(address sender, address recipient, uint256 amount) public  returns (bool) {
-        _transfer(sender, recipient, amount);
-        _approve(sender, _msgSender(), _allowances[sender][_msgSender()].sub(amount, "ERC20: transfer amount exceeds allowance"));
-        return true;
-    }
-
     function increaseAllowance(address spender, uint256 addedValue) public returns (bool) {
-        _approve(_msgSender(), spender, _allowances[_msgSender()][spender].add(addedValue));
+        _approve(_msgSender(), spender, _allowances[_msgSender()][spender].add(addedValue,"Overflow"));
         return true;
     }
 
@@ -168,9 +142,27 @@ contract SIGH is Context, IERC20 {
         emit Approval(owner, spender, amount);
     }
 
+    // ################################################
+    // ############   TRANSFER FUNCTONS    ############
+    // ################################################
+
+    function transfer(address recipient, uint256 amount) external  returns (bool) {
+        _transfer(_msgSender(), recipient, amount);
+        return true;
+    }
+
+    // User with allowance calls the transfer function
+    function transferFrom(address spender, address recipient, uint256 amount) external  returns (bool) {
+        require( _allowances[spender][_msgSender()] > amount,"Transfer amount exceeds Allowance");
+        _transfer(spender, recipient, amount);
+        _approve(spender, _msgSender(), _allowances[spender][_msgSender()].sub(amount, "ERC20: transfer amount exceeds allowance"));
+        return true;
+    }
+
     function _transfer(address sender, address recipient, uint256 amount) private {
         require(sender != address(0), "ERC20: transfer from the zero address");
         require(recipient != address(0), "ERC20: transfer to the zero address");
+        require(balances[sender] > amount, "ERC20: The Sender doesn't have the required balance");
 
         if (isMintingPossible()) {
              mintNewCoins();
@@ -181,66 +173,84 @@ contract SIGH is Context, IERC20 {
         emit Transfer(sender, recipient, amount);
     }
 
-    // checks if minting can be done right now
+    // ################################################
+    // ############   MINT FUNCTONS    ############
+    // ################################################
+
     function isMintingPossible() private returns (bool) {
         if ( mintingActivated && Current_Cycle < 3711 && _getElapsedSeconds(previousMintTimeStamp,now) > CYCLE_SECONDS ) {
-        uint256 cycle = _getCycle(_startTime,now);
-        if ( cycle > Current_Cycle ) {
-            Current_Cycle = cycle;  // CURRENT CYCLE IS UPDATED 
+            uint prevCycle = Current_Cycle;      
+            uint newCycle = add(Current_Cycle,uint256(1),'Overflow');
+            Current_Cycle = newCycle;  // CURRENT CYCLE IS UPDATED 
+            emit NewCycle(prevCycle, Current_Cycle, block.number, now);
             return true;
-        }
         }
         else {
             return false;
         }
     }
 
-    // FUNCTION TO MINT NEW COINS - CAN BE CALLED BY ANYONE ONCE THE MINTING IS ACTIVATED
     function mintCoins() external returns (bool) {
         require(isMintingPossible(), 'Minting not possible yet.');
         return mintNewCoins();
     }
 
-    // 
     function mintNewCoins() private returns (bool) {
 
-
-        // IF THE ERA HAS CHANGED
         if ( Current_Era < _CalculateCurrentEra() ) {
-            Current_Era += 1; // ERA IS UPDATED
+            uint prevEra = Current_Era;
+            uint newEra = add(Current_Era,uint256(1),"NEW ERA : Addition gave error");
+            Current_Era = newEra;
+            emit NewEra(prevEra, Current_Era, block.number, now);
         }
 
         uint256 newCoins = CURRENT_SUPPLY.div(_eras[Current_Era].divisibilityFactor);  // Calculate the number of new tokens to be minted.
-        CURRENT_SUPPLY += newCoins;
-        balances[_msgSender()] += 500 * 10**18;         // 500 coins given to caller for calling the mint successfully
-        balances[Reservoir] += newCoins - (500 * 10**18);     //newly minted coins provided to Reservoir
+        uint new_total_supply = add(CURRENT_SUPPLY,newCoins,"Total Supply: Addition gave error");
+        CURRENT_SUPPLY = new_total_supply;
+
+
+        balances[_msgSender()] = balances[_msgSender()].add(prize_amount);         // 500 coins given to caller for calling the mint successfully
+        uint256 reservoir_amount = newCoins.sub(prize_amount);
+        balances[Reservoir] = balances[Reservoir].add(reservoir_amount);     //newly minted coins provided to Reservoir
+
         recentMinter = _msgSender();
         recentlyMintedAmount = newCoins;
         mintHistory[Current_Cycle] = newCoins;
         previousMintTimeStamp = now;        
+
         emit coinsMinted(Current_Cycle,Current_Era,_msgSender(),newCoins,CURRENT_SUPPLY,block.number, now);
 
         return true;        
     }
 
-    function changeReservoir(address newReservoir) public returns (bool) {
-        require(_msgSender() == _owner, "Only the Admin can change Reservoir");
-
-        prevReservoir = Reservoir;
-        Reservoir = newReservoir;
-        if (!isReservoirSet) {
-            isReservoirSet = true;
-        }        
-        emit ReservoirChanged(prevReservoir, Reservoir, block.number );
-        return true;
+    function _getElapsedSeconds(uint256 startTime, uint256 currentTime) private pure returns(uint256) {
+        return currentTime.sub(startTime);
     }
 
-    // Returns the current ERA
+    function _CalculateCurrentEra() private view returns (uint256) {
+
+        if (Current_Cycle <= 96 && Current_Cycle >= 0 ) {
+            return uint256(0);
+        }
+
+        uint256 C_Era_sub = sub(Current_Cycle,uint256(96),'ERA: Subtraction gave error');
+        uint256 _newEra = div(C_Era_sub,uint256(365),"ERA : Division gave error");
+
+        if (_newEra <= 9 ) {
+            return uint256(_newEra.add(1) );
+        }
+
+        return uint256(11);
+    }
+
+    // ################################################
+    // ###########   MINT FUNCTONS (VIEW)   ###########
+    // ################################################
+
    function getCurrentEra() public view returns (uint256) {
         return Current_Era;
     }
 
-    // Returns the current Cycle
    function getCurrentCycle() public view returns (uint256) {
         return Current_Cycle;
     }
@@ -253,47 +263,37 @@ contract SIGH is Context, IERC20 {
         return recentlyMintedAmount;
     }
 
-    // function getMintHistory() public view returns ( mapping (uint128 => uint256) ) {
-    //     return mintHistory;
-    // }
-
-
-    // gives the day number since start
-    function _getCycle(uint256 startTime, uint256 currentTime) private pure returns(uint256) {
-        uint256 secondsElapsed = _getElapsedSeconds(startTime, currentTime);
-        uint256 cycle = (secondsElapsed - (secondsElapsed % CYCLE_SECONDS)) / CYCLE_SECONDS + 1; // secondsElapsed % CYCLE_SECONDS gives remainder seconds which are subtracted. 
-        // (secondsElapsed - (secondsElapsed % CYCLE_SECONDS)) is divided by CYCLE_SECONDS which gives number of days elapsed (from 0) and 1 is added to it 
-
-        // if cycle is greater than 3711, i.e all eras completed
-        if (cycle >= FINAL_CYCLE) 
-            return FINAL_CYCLE;
-
-        return cycle;
+    function getMintHistory(uint cycle) public view returns (uint256) {
+        return mintHistory[cycle];
     }
 
-    // subtracts startTime from currentTime
-    function _getElapsedSeconds(uint256 startTime, uint256 currentTime) private pure returns(uint256) {
-        return currentTime.sub(startTime);
+    // ################################################
+    // ##########    SIGH FUNCTIONS (VIEW)   ##########
+    // ################################################
+
+    function name() external view returns (string memory) {
+        return _name;
     }
 
-    function _CalculateCurrentEra() private view returns (uint256) {
-
-        if (Current_Cycle <= 60 && Current_Cycle >= 0 ) {
-            return uint256(0);
-        }
-
-        uint256 C_Era = (Current_Cycle - 60) / 365;
-
-        if (C_Era <= 9 ) {
-            return uint256(C_Era + 1);
-        }
-
-        return uint256(11);
+    function symbol() external view returns (string memory) {
+        return _symbol;
     }
 
+    function decimals() external view returns (uint8) {
+        return _decimals;
+    }
 
+    function totalSupply() public view  returns (uint256) {
+        return CURRENT_SUPPLY;
+    }
 
+    function balanceOf(address account) public view  returns (uint256) {
+        return balances[account];
+    }
 
+    function allowance(address owner, address spender) public view  returns (uint256) {
+        return _allowances[owner][spender];
+    }
 
 }
 

@@ -16,6 +16,10 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
     uint public recentlyDrippedAmount;
     uint public totalDrippedAmount;
 
+    uint public maxTransferAmount = 500000 * 10**18;
+    uint public coolDownPeriod = 1;
+    uint public prevTransferBlock;
+
     /// @notice Emitted when an amount is dripped to the Sightroller
     event AmountDripped(uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
 
@@ -116,12 +120,17 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
     */    
     function transferSighTo(address target_, uint amount) public returns (bool) {
         require (msg.sender == admin, "Only Admin can transfer tokens from the Treasury");
+        require (amount < maxTransferAmount, "The amount provided is greater than the amount allowed");
+
+        uint blockNumber = block.number;
+        uint dif = sub(blockNumber, prevTransferBlock, 'underflow');
+        require(dif > coolDownPeriod, 'The cool down period is not completed');
 
         EIP20Interface token_ = sigh_token;
 
         uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
         require(treasuryBalance_ > amount , "The current treasury's SIGH balance is less than the amount to be transferred" );
-        require(sigh_token.transfer(target_, amount), 'The transfer did not complete.' );
+        require(token_.transfer(target_, amount), 'The transfer did not complete.' );
 
         uint prevTransferAmount = SIGH_Transferred[target_];
         uint totalTransferAmount = add(prevTransferAmount,amount,"Overflow");
