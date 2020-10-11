@@ -5,7 +5,7 @@
 table {
   text-align: left;
   display: table;
-  table-layout: fixed;
+  table-layout: auto;
   width: calc(100% - 5px);
 }
 
@@ -31,4 +31,5 @@ td {
   font-size: 14px;
 }
 thead th {
+  padding: 0px 5px;
 }

@@ -645,6 +645,7 @@ const store = new Vuex.Store({
       let weiBalance = web3.eth.getBalance(account)
       .then(balance => {
         console.log(balance);
+        alert("Balance is : "+balance+" ETH")
       })
       .catch(er => {
         console.log(er);

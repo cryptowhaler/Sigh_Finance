@@ -2,7 +2,22 @@ button {
   font-family: "Open Sans", sans-serif;
   font-size: 12px !important;
   padding: 0 30px;
-  margin-top: 5px;
+  margin-left: 5%;
+  margin-top: 1%;
+  min-width: 50%;
+}
+button:hover {
+  background-color: var(--main-bg-color);
+}
+
+.form-ctrl {
+  border: 1px solid #606060;
+  padding: 7px 16px;
+  margin-left: 5%;
+}
+
+.uk-grid-small h1 {
+  padding: 1.5% 6%;
 }
 
 .center {

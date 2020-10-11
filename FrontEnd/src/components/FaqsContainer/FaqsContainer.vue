@@ -4,7 +4,7 @@
       <div class="page-container">
         <div class="flex-col-vertical-bottom top-title">
           <div class="title">
-            <h2 style="color: black; font-weight: 500; font-size: 42px; font-family: ui-monospace;"> FAQs </h2>
+            <h2 style="color: black; font-weight: 500; font-size: 42px;"> FAQs </h2>
             <!-- <h5>
               {{ $t('home.faqs.subtitle') }}
               <a
@@ -24,7 +24,7 @@
             <li v-for="prop in Object.keys(faqs)" :key="prop">
               <!--  Heading and open button for each FAQ -->
               <div class="qa__contents--title" @click="openFAQ(prop)">
-                <h3 style="color: black; font-weight: 500; font-size: 24px; font-family: ui-monospace;"> {{faqs[prop].title}} </h3>
+                <h3 style="color: black; font-weight: 500; font-size: 24px;"> {{faqs[prop].title}} </h3>
                 <div class="show-more-buttons">
                   <div :class=" faqs[prop].open ? 'faq-open' : '' " class="animated-button">
                     <div class="bar bar1"></div>
@@ -34,7 +34,7 @@
               </div>
               <!-- Content which is displayed when the tab is opened for each FAQ -->
               <div :class="faqs[prop].open ? 'faq-open' : ''" class="qa__contents--content" >
-                <div class="qa-text" style="color: black; font-weight: 240; font-size: 17px; font-family: ui-monospace;">
+                <div class="qa-text" style="color: black; font-weight: 240; font-size: 17px;">
                   <div class="content">
                     {{faqs[prop].content}}
                     <div v-if="faqs[prop].issubcontentAvailable" > 
