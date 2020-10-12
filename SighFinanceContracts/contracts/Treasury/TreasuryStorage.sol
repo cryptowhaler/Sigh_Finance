@@ -1,5 +1,7 @@
 pragma solidity ^0.5.16;
 
+import "../openzeppelin/EIP20Interface.sol";
+
 
 contract TreasuryCoreStorage {
     /**
@@ -15,12 +17,12 @@ contract TreasuryCoreStorage {
     /**
     * @notice Active brains of Treasury
     */
-    address public TreasuryImplementation;
+    address public treasuryImplementation;
 
     /**
     * @notice Pending brains of Treasury
     */
-    address public pendingTreasuryImplementation;1
+    address public pendingTreasuryImplementation;
 }
 
 

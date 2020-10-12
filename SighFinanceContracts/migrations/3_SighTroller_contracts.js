@@ -1,17 +1,17 @@
-// const Sightroller_ = artifacts.require("Sightroller");          //       constructor() 
+const Sightroller_ = artifacts.require("Sightroller");          //       constructor() 
 // const Unitroller_ = artifacts.require("Unitroller");           //     constructor() 
 
-const BAT = artifacts.require("BAT");
-const BUSD = artifacts.require("BUSD");
-const Comp = artifacts.require("Comp");
-const LINK = artifacts.require("LINK");
-const SNX = artifacts.require("SNX");
-const UNI = artifacts.require("UNI");
-const USDC = artifacts.require("USDC");
-const USDT = artifacts.require("USDT");
-const WBTC = artifacts.require("WBTC");
-const YFI = artifacts.require("YFI");
-const ZRX = artifacts.require("ZRX");
+// const BAT = artifacts.require("BAT");
+// const BUSD = artifacts.require("BUSD");
+// const Comp = artifacts.require("Comp");
+// const LINK = artifacts.require("LINK");
+// const SNX = artifacts.require("SNX");
+// const UNI = artifacts.require("UNI");
+// const USDC = artifacts.require("USDC");
+// const USDT = artifacts.require("USDT");
+// const WBTC = artifacts.require("WBTC");
+// const YFI = artifacts.require("YFI");
+// const ZRX = artifacts.require("ZRX");
 
 
 
@@ -27,9 +27,9 @@ module.exports = function(deployer) {
     // await deployer.deploy(UNI);        
     // await deployer.deploy(USDC);        
     // await deployer.deploy(USDT);        
-    await deployer.deploy(WBTC);        
-    await deployer.deploy(YFI);        
-    await deployer.deploy(ZRX);        
+    // await deployer.deploy(WBTC);        
+    // await deployer.deploy(YFI);        
+    // await deployer.deploy(ZRX);        
 
     // let BAT___ = await BAT.deployed();                                           
     // console.log( 'BAT ' +  BAT___.address);
@@ -67,10 +67,10 @@ module.exports = function(deployer) {
 
 
     // // ******** SIGHTROLLER & UNITROLLER CONTRACTS ( THE MAIN LOGIC HANDLING CONTRACTS ON A PLATFORM SPECIFIC LEVEL )  **************
-    // await deployer.deploy(Sightroller_);          // Deployer address is the Admin
+    await deployer.deploy(Sightroller_);          // Deployer address is the Admin
 
-    // let Sightroller_____ = await Sightroller_.deployed();                                           
-    // console.log( 'Sightroller_____ ' +  Sightroller_____.address);
+    let Sightroller_____ = await Sightroller_.deployed();                                           
+    console.log( 'Sightroller_____ ' +  Sightroller_____.address);
 
     // await deployer.deploy(Unitroller_);           // Deployer address is the Admin
 

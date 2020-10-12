@@ -253,8 +253,8 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
         // distributeSupplierGsigh(cToken, minter, false);
 
         // Flywheel for SIGH TOkens
-        updateSIGHSupplyIndex(cToken);
-        distributeSupplier_SIGH(cToken, minter, false);
+        // updateSIGHSupplyIndex(cToken);
+        // distributeSupplier_SIGH(cToken, minter, false);
 
 
         return uint(Error.NO_ERROR);
@@ -298,8 +298,8 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
         // distributeSupplierGsigh(cToken, redeemer, false);
 
         // Flywheel for SIGH TOkens
-        updateSIGHSupplyIndex(cToken);
-        distributeSupplier_SIGH(cToken, redeemer, false);
+        // updateSIGHSupplyIndex(cToken);
+        // distributeSupplier_SIGH(cToken, redeemer, false);
 
         return uint(Error.NO_ERROR);
     }
@@ -548,9 +548,9 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
         // distributeSupplierGsigh(cTokenCollateral, liquidator, false);
 
         // Flywheel for SIGH TOkens
-        updateSIGHSupplyIndex(cTokenCollateral);
-        distributeSupplier_SIGH(cTokenCollateral, borrower, false);
-        distributeSupplier_SIGH(cTokenCollateral, liquidator, false);
+        // updateSIGHSupplyIndex(cTokenCollateral);
+        // distributeSupplier_SIGH(cTokenCollateral, borrower, false);
+        // distributeSupplier_SIGH(cTokenCollateral, liquidator, false);
 
         return uint(Error.NO_ERROR);
     }
@@ -601,9 +601,9 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
         // distributeSupplierGsigh(cToken, dst, false);
 
         // Flywheel for SIGH TOkens
-        updateSIGHSupplyIndex(cToken);
-        distributeSupplier_SIGH(cToken, src, false);
-        distributeSupplier_SIGH(cToken, dst, false);
+        // updateSIGHSupplyIndex(cToken);
+        // distributeSupplier_SIGH(cToken, src, false);
+        // distributeSupplier_SIGH(cToken, dst, false);
 
         return uint(Error.NO_ERROR);
     }
@@ -985,7 +985,7 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
 
         cToken.isCToken(); // Sanity check to make sure its really a CToken
 
-        markets[address(cToken)] = Market({isListed: true, isGsighed: false, isSIGHed: false, collateralFactorMantissa: 0});
+        markets[address(cToken)] = Market({isListed: true,  isSIGHed: false, collateralFactorMantissa: 0});
 
         _addMarketInternal(address(cToken));
 

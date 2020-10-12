@@ -140,7 +140,7 @@ contract SighReservoir {
   function getSIGHBalance() external view returns (uint) {
     EIP20Interface token_ = token;   
     uint balance = token_.balanceOf(address(this));
-    returns balance;
+    return balance;
   }
 
   // function () external payable {}

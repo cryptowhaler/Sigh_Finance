@@ -4,11 +4,12 @@ pragma solidity ^0.5.16;
 import "@0x/contracts-exchange-forwarder/contracts/src/interfaces/IForwarder.sol";
 import "../openzeppelin/EIP20Interface.sol";
 import "./TreasuryCore.sol";
-
+import "./TreasuryStorage.sol";
+import "./TreasuryInterface.sol";
 /**
  * @title SighFinance's Treasury Contract
  * @author SighFinance
- */t
+ */
 contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
     
     bool isDripAllowed = false;
@@ -29,9 +30,9 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
 
     event SIGHTransferred(address indexed TargetAddress, uint amountTransferred, uint totalAmountTransferred, uint blockNumber);
 
-    event TokensBought( address indexed symbol, uint prev_balance, uint new_balance );
+    event TokensBought( address indexed symbol, string symbolName, uint prev_balance, uint new_balance );
 
-    event TokensSold( address indexed symbol, uint prev_balance, uint new_balance );
+    event TokensSold( address indexed symbol, string symbolName, uint prev_balance, uint new_balance );
 
     event TokenSwapTransactionData( bytes data );
 
@@ -160,14 +161,14 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         if (success) {
             uint new_bought_token_amount = bought_token.balanceOf(address(this));
             uint new_sold_token_amount = sold_token.balanceOf(address(this));
-            string bought_symbol = bought_token.symbol();
-            string sold_symbol = sold_token.symbol();
+            string memory bought_symbol = bought_token.symbol();
+            string memory sold_symbol = sold_token.symbol();
 
             TokenBalances[bought_symbol] = new_bought_token_amount;
             TokenBalances[sold_symbol] = new_sold_token_amount;
 
-            emit TokensBought( bought_symbol, prev_bought_token_amount, new_bought_token_amount );
-            emit TokensSold( sold_symbol, prev_sold_token_amount, new_sold_token_amount );   
+            emit TokensBought( token_bought, bought_symbol, prev_bought_token_amount, new_bought_token_amount );
+            emit TokensSold( token_sold, sold_symbol, prev_sold_token_amount, new_sold_token_amount );   
             emit TokenSwapTransactionData( _data );
             return true;         
         }
@@ -181,7 +182,7 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         return treasuryBalance_;
     }
 
-    function getTokenBalance(string symbol) external view returns (uint) {
+    function getTokenBalance(string calldata symbol) external view returns (uint) {
         return TokenBalances[symbol];
     }
 
@@ -196,7 +197,7 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         return 0;
     }
 
-    function getTotalDrippedAmount external view returns (uint) {
+    function getTotalDrippedAmount() external view returns (uint) {
         return totalDrippedAmount;
     }
 

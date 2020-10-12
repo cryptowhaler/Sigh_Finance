@@ -125,7 +125,7 @@ contract SIGH is Context, IERC20 {
     }
 
     function increaseAllowance(address spender, uint256 addedValue) public returns (bool) {
-        _approve(_msgSender(), spender, _allowances[_msgSender()][spender].add(addedValue,"Overflow"));
+        _approve(_msgSender(), spender, _allowances[_msgSender()][spender].add(addedValue));
         return true;
     }
 
@@ -293,6 +293,50 @@ contract SIGH is Context, IERC20 {
 
     function allowance(address owner, address spender) public view  returns (uint256) {
         return _allowances[owner][spender];
+    }
+
+  /* Internal helper functions for safe math */
+
+    function add(uint a, uint b, string memory errorMessage) internal pure returns (uint) {
+        uint c = a + b;
+        require(c >= a, errorMessage);
+        return c;
+    }
+
+    function sub(uint a, uint b, string memory errorMessage) internal pure returns (uint) {
+        require(b <= a, errorMessage);
+        uint c = a - b;
+        return c;
+    }
+
+    function mul(uint a, uint b, string memory errorMessage) internal pure returns (uint) {
+        if (a == 0) {
+        return 0;
+        }
+        uint c = a * b;
+        require(c / a == b, errorMessage);
+        return c;
+    }
+
+    function min(uint a, uint b) internal pure returns (uint) {
+        if (a <= b) {
+        return a;
+        } else {
+        return b;
+        }
+    }    
+
+    function div(uint256 a, uint256 b) internal pure returns (uint256) {
+        return div(a, b, "SafeMath: division by zero");
+    }
+
+    function div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {
+        // Solidity only automatically asserts when dividing by 0
+        require(b > 0, errorMessage);
+        uint256 c = a / b;
+        // assert(a == b * c + a % b); // There is no case in which this doesn't hold
+
+        return c;
     }
 
 }
