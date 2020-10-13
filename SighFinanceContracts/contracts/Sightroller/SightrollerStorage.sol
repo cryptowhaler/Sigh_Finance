@@ -113,37 +113,10 @@ contract SightrollerV2Storage is SightrollerV1Storage {
 
 contract SightrollerV3Storage is SightrollerV2Storage {
 
-    struct GsighMarketState {
-        /// @notice The market's last updated GsighBorrowIndex or GsighSupplyIndex
-        uint224 index;
-
-        /// @notice The block number the index was last updated at
-        uint32 block;
-    }
-
     /// @notice A list of all markets
     CToken[] public allMarkets;
 
-    /// @notice The rate at which the flywheel distributes Gsigh, per block
-    uint public gsighRate;
 
-    /// @notice The portion of gsighRate that each market currently receives
-    mapping(address => uint) public gsighSpeeds;
-
-    /// @notice The Gsigh market supply state for each market
-    mapping(address => GsighMarketState) public gsighSupplyState;
-
-    /// @notice The Gsigh market borrow state for each market
-    mapping(address => GsighMarketState) public gsighBorrowState;
-
-    /// @notice The Gsigh borrow index for each market for each supplier as of the last time they accrued Gsigh
-    mapping(address => mapping(address => uint)) public gsighSupplierIndex;
-
-    /// @notice The Gsigh borrow index for each market for each borrower as of the last time they accrued Gsigh
-    mapping(address => mapping(address => uint)) public gsighBorrowerIndex;
-
-    /// @notice The Gsigh accrued but not yet transferred to each user
-    mapping(address => uint) public gsighAccrued;
 }
 
 
@@ -153,41 +126,42 @@ contract SightrollerV4Storage is SightrollerV3Storage {
         /// @notice The market's last updated SIGHIndex 
         uint224 index;
 
-        uint224 recordedPriceSnapshot;
+        uint224[24] recordedPriceSnapshot;
 
         /// @notice The block number the index was last updated at
-        uint32 block;
+        uint32 block_;
     }
 
+    uint224 public curClock;
 
+    uint256 public prevSpeedRefreshTime;
+
+    uint224 public constant deltaTimeforSpeed = 3600; // 60 * 60 
 
     /// @notice The rate at which the flywheel distributes SIGH, per block
-    uint public SIGHRate;
+    uint public SIGHSpeed;
 
-    /// @notice The portion of SIGHRate that each market currently receives
-    mapping(address => uint) public SIGH_Speeds;
+    mapping(address => uint) public SIGH_Speeds_Supplier_Ratio_Mantissa;
+
+    /// @notice The portion of SIGHSpeed that suppliers of each market currently receives
+    mapping(address => uint) public SIGH_Speeds_Suppliers;
+
+    /// @notice The portion of SIGHSpeed that borrowers of each market currently receives
+    mapping(address => uint) public SIGH_Speeds_Borrowers;
 
     /// @notice The SIGH market supply state for each market
     mapping(address => SIGHMarketState) public sigh_Market_State;
 
-    // /// @notice The SIGH market supply state for each market
-    // mapping(address => SIGHMarketState) public sighMarketBorrowState;
+    /// @notice The SIGH market supply state for each market
+    mapping(address => SIGHMarketState) public sighMarketBorrowState;
 
-    /// @notice The Gsigh borrow index for each market for each supplier as of the last time they accrued Gsigh
+    /// @notice The SIGH borrow index for each market for each supplier as of the last time they accrued Gsigh
     mapping(address => mapping(address => uint)) public SIGHSupplierIndex;
 
-    // / @notice The Gsigh borrow index for each market for each borrower as of the last time they accrued Gsigh
-    // mapping(address => mapping(address => uint)) public SIGHBorrowerIndex;
+    // @notice The SIGH borrow index for each market for each borrower as of the last time they accrued Gsigh
+    mapping(address => mapping(address => uint)) public SIGHBorrowerIndex;
 
     /// @notice The Gsigh accrued but not yet transferred to each user
     mapping(address => uint) public SIGH_Accrued;
-
-    // treasuryRateMantissa
-
-    // uint256 public treasury_SIGH;
-
-    // uint256 public treasury_SIGH_Ratio;
-
-    address public gelatoAddress;
 
 }
