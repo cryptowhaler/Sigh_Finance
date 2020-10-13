@@ -218,8 +218,16 @@ type SIGH @entity {
 type SIGHReservoir @entity {
     "ID is contract address"
     id: ID!
-    dripRate: BigInt!
-    recentlyDripped: BigInt!
+    ProtocolAddress: Bytes!
+    TreasuryAddress: Bytes!
+    ProtocolDistributionSpeed: BigInt!
+    TreasuryDistributionSpeed: BigInt!
+    recentlyDrippedToProtocol: BigInt!
+    totalAmountDrippedToProtocol: BigInt!
+    recentlyDrippedToTreasury: BigInt!
+    totalAmountDrippedToTreasury: BigInt!
     totalAmountDripped: BigInt!
     ReservoirBalance: BigInt!
 }
+
+

@@ -35,12 +35,12 @@ contract SighReservoir {
 
   uint public totalAmountTransferredToTreasury;
 
-  event ProtocolDistributionSpeedChanged(uint prevSpeed , uint newSpeed );  
+  event DistributionInitialized(address protocolAddress, address treasuryAddress);
 
+  event ProtocolDistributionSpeedChanged(uint prevSpeed , uint newSpeed );  
   event TreasuryDistributionSpeedChanged(uint prevSpeed , uint newSpeed );  
 
   event DrippedToProtocol(uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
-
   event DrippedToTreasury(uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
 
   /**
@@ -59,15 +59,18 @@ contract SighReservoir {
   function beginDripping (uint protocolDistributionSpeed_, uint treasuryDistributionSpeed_ address sightroller_ ,  address treasury_) public returns (bool) {
     require(admin == msg.sender,"Dripping can only be initialized by the Admin");
     require(!isDripAllowed,"Dripping can only be initialized once");
+
     isDripAllowed = true;
     sightroller = sightroller_;
     treasury = treasury_;
     lastDripBlockNumber = block.number;
+
     require(treasury == treasury_,"SIGH Treasury address could not be properly initialized");
     require(sightroller == sightroller_,"Sightroller address could not be properly initialized");
     require(changeProtocolDistributionSpeed(protocolDistributionSpeed_),"Protocol Drip Rate could not be initialized properly");
     require(changeTreasuryDistributionSpeed(treasuryDistributionSpeed_),"Treasury Drip Rate could not be initialized properly");
 
+    emit DistributionInitialized(sightroller , treasury );
     return true;
   }
 
@@ -132,7 +135,7 @@ contract SighReservoir {
     totalDrippedAmount_toProtocol = add(prevDrippedAmount,toDrip_,"Overflow");
     reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
 
-    emit DrippedToProtocol( reservoirBalance_, recentlyDrippedAmount_toProtocol , totalDrippedAmount_toProtocol ); 
+    emit DrippedToProtocol( reservoirBalance_, toDrip_ , totalDrippedAmount_toProtocol ); 
     
     return toDrip_;
   } 

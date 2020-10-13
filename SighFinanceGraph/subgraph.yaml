@@ -308,6 +308,7 @@ dataSources:
           handler: handleCoinsMinted
         - event: ReservoirChanged(address,address,uint256)
           handler: handleReservoirChanged
+
   - kind: ethereum/contract
     name: SIGH_Reservoir
     network: kovan
@@ -326,7 +327,42 @@ dataSources:
       - name: SIGHReservoir
         file: ./abis/SIGHReservoir.json
       eventHandlers:
-        - event: DripRateChanged(uint256,uint256)
-          handler: handleDripRateChanged
-        - event: Dripped(uint256,uint256,uint256)
-          handler: handleDripped         
+        - event: DistributionInitialized(address,address)
+          handler: handleDistributionInitialized
+        - event: ProtocolDistributionSpeedChanged(uint256,uint256)
+          handler: handleProtocolDistributionSpeedChanged
+        - event: TreasuryDistributionSpeedChanged(uint256,uint256)
+          handler: handleTreasuryDistributionSpeedChanged        
+        - event: DrippedToProtocol(uint256,uint256,uint256)
+          handler: handleDrippedToProtocol         
+        - event: DrippedToTreasury(uint256,uint256,uint256)
+          handler: handleDrippedToTreasury         
+
+  - kind: ethereum/contract
+    name: SIGH_Treasury
+    network: kovan
+    source:
+      address: "0x9748692378cD832db750009BEF7Ea3f6862f9fD9"
+      abi: SIGHTreasury
+      startBlock: 21040723
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping/sighReservoir.ts
+      entities:
+        - SIGHTreasury
+      abis:
+      - name: SIGHTreasury
+        file: ./abis/SIGHTreasury.json
+      eventHandlers:
+        - event: DistributionInitialized(address,address)
+          handler: handleDistributionInitialized
+        - event: ProtocolDistributionSpeedChanged(uint256,uint256)
+          handler: handleProtocolDistributionSpeedChanged
+        - event: TreasuryDistributionSpeedChanged(uint256,uint256)
+          handler: handleTreasuryDistributionSpeedChanged        
+        - event: DrippedToProtocol(uint256,uint256,uint256)
+          handler: handleDrippedToProtocol         
+        - event: DrippedToTreasury(uint256,uint256,uint256)
+          handler: handleDrippedToTreasury              
