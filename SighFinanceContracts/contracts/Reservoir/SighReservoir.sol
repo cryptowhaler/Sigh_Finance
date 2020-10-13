@@ -11,59 +11,91 @@ import "../openzeppelin/EIP20Interface.sol";
  
 contract SighReservoir {
 
-  uint public dripRate;
+  uint public protocolDistributionSpeed;
+
+  uint public treasuryDistributionSpeed;
 
   /// @notice Reference to token to drip (immutable)
   EIP20Interface public token;
 
-  address public sightroller;
   address public admin;
+  address public sightroller;
   address public treasury;
 
   bool public isDripAllowed = false;  
 
   uint public lastDripBlockNumber;    
-  uint public totalDrippedAmount; 
-  uint public recentlyDrippedAmount;
+
+  uint public totalDrippedAmount_toProtocol; 
+  uint public recentlyDrippedAmount_toProtocol;
+
+  uint public totalDrippedAmount_toTreasury; 
+  uint public recentlyDrippedAmount_toTreasury;
+
 
   uint public totalAmountTransferredToTreasury;
 
-  event DripRateChanged(uint prevDripRate , uint newDripRate );  
-  
-  event Dripped(uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
+  event ProtocolDistributionSpeedChanged(uint prevSpeed , uint newSpeed );  
 
-  event SIGH_TransferredToTreasury(uint amountTransferred, uint currentBalance, uint blockNumber);
+  event TreasuryDistributionSpeedChanged(uint prevSpeed , uint newSpeed );  
+
+  event DrippedToProtocol(uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
+
+  event DrippedToTreasury(uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
 
   /**
     * @notice Constructs a Reservoir
     * @param token_ The token to drip
     */
-  constructor(EIP20Interface token_, address treasury_) public {
+  constructor(EIP20Interface token_ ) public {
     admin = msg.sender;
     token = token_;
-    treasury = treasury_;
-
   }
 
-  function beginDripping (uint dripRate_, address sightroller_ ) public returns (bool) {
+// #############################################################################################
+// ###########   SIGH DISTRIBUTION : INITIALIZED DRIPPING (Can be called only once)   ##########
+// #############################################################################################
+
+  function beginDripping (uint protocolDistributionSpeed_, uint treasuryDistributionSpeed_ address sightroller_ ,  address treasury_) public returns (bool) {
     require(admin == msg.sender,"Dripping can only be initialized by the Admin");
     require(!isDripAllowed,"Dripping can only be initialized once");
     isDripAllowed = true;
     sightroller = sightroller_;
+    treasury = treasury_;
     lastDripBlockNumber = block.number;
+    require(treasury == treasury_,"SIGH Treasury address could not be properly initialized");
     require(sightroller == sightroller_,"Sightroller address could not be properly initialized");
-    require(changeDripRate(dripRate_),"Drip Rate could not be initialized properly");
+    require(changeProtocolDistributionSpeed(protocolDistributionSpeed_),"Protocol Drip Rate could not be initialized properly");
+    require(changeTreasuryDistributionSpeed(treasuryDistributionSpeed_),"Treasury Drip Rate could not be initialized properly");
+
     return true;
   }
 
-  function changeDripRate (uint dripRate_) public returns (bool) {
+// ######################################################################################
+// ###########   SIGH DISTRIBUTION : FUNCTIONS TO UPDATE DISTRIBUTION SPEEDS   ##########
+// ######################################################################################
+
+  function changeProtocolDistributionSpeed (uint newSpeed_) public returns (bool) {
     require(admin == msg.sender,"Drip rate can only be changed by the Admin");
     drip();
-    uint prevDripRate = dripRate;
-    dripRate = dripRate_;
-    emit DripRateChanged(prevDripRate , dripRate);
+    uint prevSpeed = protocolDistributionSpeed;
+    protocolDistributionSpeed = newSpeed_;
+    emit ProtocolDistributionSpeedChanged(prevSpeed , protocolDistributionSpeed);
     return true;
   }
+
+  function changeTreasuryDistributionSpeed (uint newSpeed_) public returns (bool) {
+    require(admin == msg.sender,"Drip rate can only be changed by the Admin");
+    drip();
+    uint prevSpeed = treasuryDistributionSpeed;
+    treasuryDistributionSpeed = newSpeed_;
+    emit TreasuryDistributionSpeedChanged(prevSpeed , treasuryDistributionSpeed);
+    return true;
+  }
+
+// #####################################################################
+// ###########   SIGH DISTRIBUTION FUNCTION - DRIP FUNCTION   ##########
+// #####################################################################
 
   /**
     * @notice Drips the maximum amount of tokens to match the drip rate since inception
@@ -72,70 +104,68 @@ contract SighReservoir {
     */
   function drip() public returns (uint) {
     require(isDripAllowed,'Dripping has not been initialized by the Admin');    
-    uint drippedAmount = dripInternal();
-    return drippedAmount;
+    uint drippedAmount_toProtocol = dripToProtocol();
+    uint drippedAmount_toTreasury = dripToTreasury();
+    lastDripBlockNumber = block.number; 
+    uint totalDrippedAmount = add(drippedAmount_toProtocol,drippedAmount_toTreasury, 'Total Drip Amount : Addition Overflow');
+    return totalDrippedAmount;
   }
 
-  function dripInternal() internal returns (uint) {
+  function dripToProtocol() internal returns (uint) {
+
+    if (protocolDistributionSpeed == 0) {
+      return 0;
+    }
 
     EIP20Interface token_ = token;
     
     uint reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
     uint blockNumber_ = block.number;
-    uint deltaDrip_ = mul(dripRate, blockNumber_ - lastDripBlockNumber, "dripTotal overflow");
+    uint deltaDrip_ = mul(protocolDistributionSpeed, blockNumber_ - lastDripBlockNumber, "dripTotal overflow");
     uint toDrip_ = min(reservoirBalance_, deltaDrip_);
 
-    require(reservoirBalance_ != 0, 'The reservoir currently does not have any SIGH tokens' );
-    require(token_.transfer(sightroller, toDrip_), 'The transfer did not complete.' );
+    require(reservoirBalance_ != 0, 'Protocol Transfer: The reservoir currently does not have any SIGH tokens' );
+    require(token_.transfer(sightroller, toDrip_), 'Protocol Transfer: The transfer did not complete.' );
     
-    lastDripBlockNumber = blockNumber_; // setting the block number when the Drip is made
-    uint prevDrippedAmount = totalDrippedAmount;
-    totalDrippedAmount = add(prevDrippedAmount,toDrip_,"Overflow");
+    // lastDripBlockNumber = blockNumber_; // setting the block number when the Drip is made
+    uint prevDrippedAmount = totalDrippedAmount_toProtocol;
+    totalDrippedAmount_toProtocol = add(prevDrippedAmount,toDrip_,"Overflow");
     reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
-    recentlyDrippedAmount = toDrip_;
 
-    emit Dripped( reservoirBalance_, recentlyDrippedAmount , totalDrippedAmount ); 
+    emit DrippedToProtocol( reservoirBalance_, recentlyDrippedAmount_toProtocol , totalDrippedAmount_toProtocol ); 
     
     return toDrip_;
   } 
 
-  function transferToTreasury(uint amount) public returns (uint) {
-    require(msg.sender == admin,'Only admin can transfer the amount');
+  function dripToTreasury() internal returns (uint) {
 
-    if (isDripAllowed) {
-      dripInternal();
+    if (treasuryDistributionSpeed == 0) {
+      return 0;
     }
+
+    EIP20Interface token_ = token;
+
+    uint reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
+    uint blockNumber_ = block.number;
+    uint deltaDrip_ = mul(treasuryDistributionSpeed, blockNumber_ - lastDripBlockNumber, "dripTotal overflow");
+    uint toDrip_ = min(reservoirBalance_, deltaDrip_);
+
+    require(reservoirBalance_ != 0, 'Protocol Transfer: The reservoir currently does not have any SIGH tokens' );
+    require(token_.transfer(treasury, toDrip_), 'Protocol Transfer: The transfer did not complete.' );
     
-    EIP20Interface token_ = token;   
-    uint balance = token_.balanceOf(address(this));
+    // lastDripBlockNumber = blockNumber_; // setting the block number when the Drip is made
+    uint prevDrippedAmount = totalDrippedAmount_toTreasury;
+    totalDrippedAmount_toTreasury = add(prevDrippedAmount,toDrip_,"Overflow");
+    reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
 
-    require(balance > amount, 'The Reservoir balance is less than the amount to be transferred');
-    require(token_.transfer(treasury, amount),'SIGH Token transfer failed');
+    emit DrippedToTreasury( reservoirBalance_, toDrip_ , totalDrippedAmount_toTreasury ); 
+    
+    return toDrip_;
+  } 
 
-    uint prevTreasuryAmount = totalAmountTransferredToTreasury;
-    totalAmountTransferredToTreasury = add(prevTreasuryAmount, amount,"Overflow");
-
-    balance = token_.balanceOf(address(this));
-
-    emit SIGH_TransferredToTreasury(amount, balance, block.number);
-
-  }
-
-  function getSighAddress() external view returns (address) {
-    return address(token);
-  }
-
-  function getsightrollerAddress() external view returns (address) {
-    return address(sightroller);
-  }
-
-  function getTreasuryAddress() external view returns (address) {
-    return address(treasury);
-  }
-
-  function getTotalAmountTransferredToTreasury() external view returns (uint) {
-    return totalAmountTransferredToTreasury;
-  }
+// ###############################################################
+// ###########   EXTERNAL VIEW functions TO GET STATE   ##########
+// ###############################################################
 
   function getSIGHBalance() external view returns (uint) {
     EIP20Interface token_ = token;   
@@ -143,9 +173,29 @@ contract SighReservoir {
     return balance;
   }
 
-  // function () external payable {}
+  function getSighAddress() external view returns (address) {
+    return address(token);
+  }
 
-  /* Internal helper functions for safe math */
+  function getSightrollerAddress() external view returns (address) {
+    return address(sightroller);
+  }
+
+  function getTreasuryAddress() external view returns (address) {
+    return address(treasury);
+  }
+
+  function getTotalAmountDistributedToSightroller() external view returns (uint) {
+    return totalDrippedAmount_toProtocol;
+  }
+
+  function getTotalAmountDistributedToTreasury() external view returns (uint) {
+    return totalDrippedAmount_toTreasury;
+  }
+
+// ###############################################################
+// ########### Internal helper functions for safe math ###########
+// ###############################################################
 
   function add(uint a, uint b, string memory errorMessage) internal pure returns (uint) {
     uint c = a + b;

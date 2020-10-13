@@ -79,9 +79,6 @@ contract SightrollerV2Storage is SightrollerV1Storage {
         /// @notice Per-market mapping of "accounts in this asset"
         mapping(address => bool) accountMembership;
 
-        // /// @notice Whether or not this market receives Gsigh
-        // bool isGsighed;
-
         /// @notice Whether or not this market receives SIGH
         bool isSIGHed;
 

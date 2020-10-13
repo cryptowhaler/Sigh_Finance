@@ -1929,7 +1929,7 @@ const store = new Vuex.Store({
     const Sightroller_ = Sightroller.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
     console.log(Sightroller_);
     if (Sightroller_) {
-      let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
+      let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, '0x0950A0d41A9B30f490BC6Cc9F30232202Ff60032');
       console.log(SIGHTROLLER_Contract);
       SIGHTROLLER_Contract.methods._become(unitroller).send({from: state.web3Account})
       .then(receipt => {
@@ -4223,8 +4223,8 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
 
 
   treasuryTokenSwap: async ( {commit, state}, {sellToken, buyToken, sellAmount, buyAmount} ) => {
-    const buy_Amount;
-    const sell_Amount;
+    let buy_Amount;
+    let sell_Amount;
     if (buyAmount != undefined) {
       buy_Amount = baseUnitAmount(buyAmount); // we want to buy 1 unit of DAI
     }
@@ -4244,7 +4244,7 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
         let Treasury__Contract = new web3.eth.Contract(Treasury.abi, Treasury_.address);
         console.log(Treasury__Contract);
         try {
-          let txHash = Treasury__Contract.methods.swapTokens(quote.data).sendTransactionAsync({ from:  state.web3Account, value: quote.value, gasPrice: quote.gasPrice});
+          let txHash = Treasury__Contract.methods.swapTokensUsingOxAPI(quote.to, quote.data).sendTransactionAsync({ from:  state.web3Account, value: quote.value, gasPrice: quote.gasPrice});
           console.log(txHash);
         } 
         catch (e) {
@@ -4253,9 +4253,9 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
     }
   },
 
-  export const baseUnitAmount = (unitAmount: number, decimals = 18): BigNumber => {
-    return Web3Wrapper.toBaseUnitAmount(new BigNumber(unitAmount), decimals);
-};
+//   export const baseUnitAmount = (unitAmount: number, decimals = 18): BigNumber => {
+//     return Web3Wrapper.toBaseUnitAmount(new BigNumber(unitAmount), decimals);
+// };
 
   
   

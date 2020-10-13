@@ -50,31 +50,6 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
     /// @notice Emitted when an action is paused on a market
     event ActionPaused(CToken cToken, string action, bool pauseState);
 
-    // /// @notice Emitted when market Gsighed status is changed
-    // event MarketGsighed(CToken cToken, bool isGsighed);
-
-    // /// @notice Emitted when GSIGH rate is changed
-    // event NewGsighRate(uint oldGsighRate, uint newGsighRate);
-
-    // /// @notice Emitted when a new Gsigh speed is calculated for a market
-    // event GsighSpeedUpdated(CToken indexed cToken, uint newSpeed);
-
-    // /// @notice Emitted when Gsigh is distributed to a supplier
-    // event DistributedSupplierGsigh(CToken indexed cToken, address indexed supplier, uint gsighDelta, uint gsighSupplyIndex);
-
-    // /// @notice Emitted when Gsigh is distributed to a borrower
-    // event DistributedBorrowerGsigh(CToken indexed cToken, address indexed borrower, uint gsighDelta, uint gsighBorrowIndex);
-
-    // /// @notice Emitted when SIGH is transferred to a User
-    // event GSIGH_Transferred(address indexed userAddress, uint amountTransferred );
-
-
-    // /// @notice The threshold above which the flywheel transfers Gsigh, in wei
-    // uint public constant gsighClaimThreshold = 0.001e18;
-
-    // /// @notice The initial Gsigh index for a market
-    // uint224 public constant gsighInitialIndex = 1e36;
-
     // closeFactorMantissa must be strictly greater than this value
     uint internal constant closeFactorMinMantissa = 0.05e18; // 0.05
 
@@ -248,14 +223,9 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
             return uint(Error.MARKET_NOT_LISTED);
         }
 
-        // // Keep the flywheel moving
-        // updateGsighSupplyIndex(cToken);
-        // distributeSupplierGsigh(cToken, minter, false);
-
         // Flywheel for SIGH TOkens
-        // updateSIGHSupplyIndex(cToken);
-        // distributeSupplier_SIGH(cToken, minter, false);
-
+        updateSIGHSupplyIndex(cToken);
+        distributeSupplier_SIGH(cToken, minter, false);
 
         return uint(Error.NO_ERROR);
     }
@@ -293,13 +263,9 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
             return allowed;
         }
 
-        // // Keep the flywheel moving
-        // updateGsighSupplyIndex(cToken);
-        // distributeSupplierGsigh(cToken, redeemer, false);
-
         // Flywheel for SIGH TOkens
-        // updateSIGHSupplyIndex(cToken);
-        // distributeSupplier_SIGH(cToken, redeemer, false);
+        updateSIGHSupplyIndex(cToken);
+        distributeSupplier_SIGH(cToken, redeemer, false);
 
         return uint(Error.NO_ERROR);
     }
@@ -542,15 +508,10 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
             return uint(Error.SIGHTROLLER_MISMATCH);
         }
 
-        // // Keep the flywheel moving
-        // updateGsighSupplyIndex(cTokenCollateral);
-        // distributeSupplierGsigh(cTokenCollateral, borrower, false);
-        // distributeSupplierGsigh(cTokenCollateral, liquidator, false);
-
         // Flywheel for SIGH TOkens
-        // updateSIGHSupplyIndex(cTokenCollateral);
-        // distributeSupplier_SIGH(cTokenCollateral, borrower, false);
-        // distributeSupplier_SIGH(cTokenCollateral, liquidator, false);
+        updateSIGHSupplyIndex(cTokenCollateral);
+        distributeSupplier_SIGH(cTokenCollateral, borrower, false);
+        distributeSupplier_SIGH(cTokenCollateral, liquidator, false);
 
         return uint(Error.NO_ERROR);
     }
@@ -595,15 +556,10 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
             return allowed;
         }
 
-        // // Keep the flywheel moving
-        // updateGsighSupplyIndex(cToken);
-        // distributeSupplierGsigh(cToken, src, false);
-        // distributeSupplierGsigh(cToken, dst, false);
-
         // Flywheel for SIGH TOkens
-        // updateSIGHSupplyIndex(cToken);
-        // distributeSupplier_SIGH(cToken, src, false);
-        // distributeSupplier_SIGH(cToken, dst, false);
+        updateSIGHSupplyIndex(cToken);
+        distributeSupplier_SIGH(cToken, src, false);
+        distributeSupplier_SIGH(cToken, dst, false);
 
         return uint(Error.NO_ERROR);
     }
@@ -1115,7 +1071,7 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
 
     //     for (uint i = 0; i < allMarkets_.length; i++) {
     //         CToken cToken = allMarkets[i];
-    //         uint newSpeed = totalUtility.mantissa > 0 ? mul_(gsighRate, div_(utilities[i], totalUtility)) : 0;
+    //         uint newSpeed = totalUtility.mantissa > 0 ? mul_(gSIGHSpeed, div_(utilities[i], totalUtility)) : 0;
     //         gsighSpeeds[address(cToken)] = newSpeed;
     //         emit GsighSpeedUpdated(cToken, newSpeed);
     //     }
@@ -1278,14 +1234,14 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
 
     // /**
     //  * @notice Set the amount of Gsigh distributed per block
-    //  * @param gsighRate_ The amount of Gsigh wei per block to distribute
+    //  * @param gSIGHSpeed_ The amount of Gsigh wei per block to distribute
     //  */
-    // function _setGsighRate(uint gsighRate_) public {
+    // function _setGSIGHSpeed(uint gSIGHSpeed_) public {
     //     require(adminOrInitializing(), "only admin can change Gsigh rate");
 
-    //     uint oldRate = gsighRate;
-    //     gsighRate = gsighRate_;
-    //     emit NewGsighRate(oldRate, gsighRate_);
+    //     uint oldRate = gSIGHSpeed;
+    //     gSIGHSpeed = gSIGHSpeed_;
+    //     emit NewGSIGHSpeed(oldRate, gSIGHSpeed_);
 
     //     refreshGsighSpeedsInternal();
     // }
@@ -1364,7 +1320,7 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
     uint224 public constant sighInitialIndex = 1e36;
 
     /// @notice Emitted when SIGH rate is changed
-    event NewSIGHRate(uint oldSIGHRate, uint newSIGHRate);
+    event NewSIGHSpeed(uint oldSIGHSpeed, uint newSIGHSpeed);
 
     /// @notice Emitted when a new SIGH speed is calculated for a market
     event SIGHSpeedUpdated(CToken cToken, uint newSpeed);
@@ -1393,20 +1349,6 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
     /*** SIGH Distribution Admin ***/
 
     /**
-     * @notice Set the amount of SIGH distributed per block
-     * @param SIGHRate_ The amount of SIGH wei per block to distribute
-     */
-    function setSIGHRate(uint SIGHRate_) public {
-        require(adminOrInitializing(), "only admin can change SIGH rate");
-
-        uint oldRate = SIGHRate;
-        SIGHRate = SIGHRate_;
-        emit NewSIGHRate(oldRate, SIGHRate_);
-
-        refreshSIGHSpeedsInternal();  // TO BE IMPLEMENTED
-    }
-
-    /**
      * @notice Add market to SIGHMarkets, allowing them to earn SIGH in the flywheel
      * @param cToken The addresses of the markets to add
      */
@@ -1419,12 +1361,18 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
 
         market.isSIGHed = true;
         
+        SIGHMarketState storage getCurrentMarketState = sigh_Market_State[cToken]; 
+
+        if (getCurrentMarketState[cToken].index == 0 && getCurrentMarketState[cToken].block_ == 0) {
+            uint curPrice = oracle.getUnderlyingPrice(CToken(cToken));
+            require(curPrice != 0,'The oracle gave an invalid Price'); 
+            getCurrentMarketState[cToken] = SIGHMarketState({ index: sighInitialIndex, recordedPriceSnapshot[curClock]: uint224(curPrice),  block_: safe32(getBlockNumber(), "block number exceeds 32 bits") });
+        }
+
+        refreshSIGHSpeedsInternal();  // TO BE IMPLEMENTED
+
         emit MarketSIGHed(CToken(cToken), true);
 
-        if (sigh_Market_State[cToken].index == 0 && sigh_Market_State[cToken].block == 0) {
-            sigh_Market_State[cToken] = SIGHMarketState({ index: sighInitialIndex, recordedPriceSnapshot: uint224(oracle.getUnderlyingPrice(CToken(cToken))),  block: safe32(getBlockNumber(), "block number exceeds 32 bits") });
-        }
-        // refreshSIGHSpeedsInternal();  // TO BE IMPLEMENTED
     }
 
     /**
@@ -1438,13 +1386,30 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
         require(market.isSIGHed == true, "market is not a SIGH market");
 
         market.isSIGHed = false;
+
+        refreshSIGHSpeedsInternal();
+
         emit MarketSIGHed(CToken(cToken), false);
 
-        // refreshSIGHSpeedsInternal();
     }
 
     function takeSIGHPriceSnapshot() public {
-        require(msg.sender == getGelatoAddress(), "only the assigned Gelato Account may refresh speeds");        
+        uint256 timeElapsedSinceLastRefresh = sub_(now , prevSpeedRefreshTime, "SighSnapshot : Subtraction underflow"); 
+        require ( timeElapsedSinceLastRefresh >= deltaTimeforSpeed , '1 Hour is not  completed yet.');
+
+        prevSpeedRefreshTime = now ;    // Global speed refresh time updated
+        uint224 prevClock = curClock;  
+
+        if (curClock == 11) {
+            curClock = 0;               // Global clock Updated
+        }
+        else {
+            uint224 newClock = add_(curClock,1,"curClock : Addition Failed");
+            curClock = newClock;        // Global clock Updated
+        }
+        
+        emit ClockUpdated(prevClock,curClock,now);
+
         CToken[] memory allMarkets_ = allMarkets;
 
         // accure the indexes 
@@ -1453,13 +1418,27 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
             updateSIGHSupplyIndex(address(cToken));
             uint blockNumber = getBlockNumber();            
             uint256 currentPrice = oracle.getUnderlyingPrice(cToken);
+            require (currentPrice != 0, 'PriceSnapshot : The price received from Oracle is not valid');
             SIGHMarketState storage marketState = sigh_Market_State[address(cToken)];
-            uint prevPrice = marketState.recordedPriceSnapshot;
-            sigh_Market_State[address(cToken)] = SIGHMarketState({ index: safe224(marketState.index,"new index exceeds 224 bits"), recordedPriceSnapshot: safe224(currentPrice, "new recordedPriceSnapshot exceeds 256 bits"),   block: safe32(blockNumber, "block number exceeds 32 bits")});
+            uint prevPrice = marketState.recordedPriceSnapshot[curClock];
+            marketState = SIGHMarketState({ index: safe224(marketState.index,"new index exceeds 224 bits"), recordedPriceSnapshot[curClock] : safe224(currentPrice, "new recordedPriceSnapshot exceeds 256 bits"),   block: safe32(blockNumber, "block number exceeds 32 bits")});
             emit PriceSnapped(address(cToken), prevPrice, currentPrice, blockNumber );
         }
     }
 
+    /**
+     * @notice Set the amount of SIGH distributed per block
+     * @param SIGHSpeed_ The amount of SIGH wei per block to distribute
+     */
+    function setSIGHSpeed(uint SIGHSpeed_) public {
+        require(msg.sender == admin, "only admin can change SIGH rate"); 
+
+        uint oldSpeed = SIGHSpeed;
+        SIGHSpeed = SIGHSpeed_;
+        emit NewSIGHSpeed(oldSpeed, SIGHSpeed_);
+
+        refreshSIGHSpeedsInternal();  // TO BE IMPLEMENTED
+    }
 
     /**
      * @notice Recalculate and update SIGH speeds for all SIGH markets
@@ -1510,12 +1489,12 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
         SighReservoir sigh_Reservoir = SighReservoir(getSighReservoir());
         uint256 dripped_amount = sigh_Reservoir.drip();
 
-        // treasuryRate = mulScalar(Exp({mantissa: treasuryRateMantissa}), SIGHRate);  // treasuryRateMantissa will be 0.1e18
-        // SighRateAcrossMarkets = subUInt(SIGHRate, treasuryRate);
+        // treasuryRate = mulScalar(Exp({mantissa: treasuryRateMantissa}), SIGHSpeed);  // treasuryRateMantissa will be 0.1e18
+        // SIGHSpeedAcrossMarkets = subUInt(SIGHSpeed, treasuryRate);
 
         for (uint i=0 ; i < allMarkets_.length ; i++) {
             CToken cToken = allMarkets[i];
-            uint newSpeed = totalLosses.mantissa > 0 ? mul_(SIGHRate, div_(marketLosses[i], totalLosses)) : 0;
+            uint newSpeed = totalLosses.mantissa > 0 ? mul_(SIGHSpeed, div_(marketLosses[i], totalLosses)) : 0;
             SIGH_Speeds[address(cToken)] = newSpeed;  
             emit refreshingSighSpeeds_2( cToken ,  marketLosses[i].mantissa , totalLosses.mantissa , newSpeed );
 
