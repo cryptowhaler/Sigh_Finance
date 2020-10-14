@@ -230,4 +230,23 @@ type SIGHReservoir @entity {
     ReservoirBalance: BigInt!
 }
 
+type SIGHTreasury @entity {
+    "ID is contract address"
+    id: ID!
+    sightroller_address: Bytes!
+    sigh_token: Bytes!
 
+    tokenBeingDripped: Bytes!
+    DripSpeed: BigInt!
+    isDripAllowed: Boolean!
+
+    maxTransferAmount: BigInt!
+}
+
+type TokenBalancesData @entity {
+    "Token Address is the ID"
+    id: ID!
+    symbol: String!
+    balance: BigInt!
+    totalDripped: BigInt!
+}

@@ -12,28 +12,24 @@ import "./TreasuryInterface.sol";
  */
 contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
     
-    bool isDripAllowed = false;
-    uint public lastDripBlockNumber; 
-    uint public recentlyDrippedAmount;
-    uint public totalDrippedAmount;
 
-    uint public maxTransferAmount = 500000 * 10**18;
-    uint public coolDownPeriod = 1;
+    uint public lastDripBlockNumber; 
+
+    uint public maxTransferAmount;
+    uint public coolDownPeriod = 60*5; // 5 min
     uint public prevTransferBlock;
 
-    /// @notice Emitted when an amount is dripped to the Sightroller
-    event AmountDripped(uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
-
-    event DripRateChanged(uint prevDripRate , uint curDripRate,  uint blockNumber ); 
-
+    event tokenBeingDistributedChanged(address prevToken, address newToken, uint blockNumber);
     event DripAllowedChanged(bool prevDripAllowed , bool newDripAllowed, uint blockNumber); 
+    event DripSpeedChanged(uint prevDripSpeed , uint curDripSpeed,  uint blockNumber ); 
 
+    event AmountDripped(address tokenBeingDripped, uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
+
+    event maxTransferAmountUpdated(uint prevmaxTransferAmount, uint newmaxTransferAmount);
     event SIGHTransferred(address indexed TargetAddress, uint amountTransferred, uint totalAmountTransferred, uint blockNumber);
 
-    event TokensBought( address indexed symbol, string symbolName, uint prev_balance, uint new_balance );
-
-    event TokensSold( address indexed symbol, string symbolName, uint prev_balance, uint new_balance );
-
+    event TokensBought( address indexed token_Address, string symbolName, uint prev_balance, uint new_balance );
+    event TokensSold( address indexed token_Address, string symbolName, uint prev_balance, uint new_balance );
     event TokenSwapTransactionData( bytes data );
 
     /**
@@ -47,71 +43,116 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         sightroller_address = sightroller_Address_;
     }
 
-    /**
-      * @notice Switch to ON/OFF Dripping
-      * @param val O to Stop Dripping. Any other value to inititate Dripping.
-      * @return returns a Boolean True is Successful 
-    */    
-  function ChangeIsDripAllowed(uint val) public returns (bool) {
-    require(msg.sender == admin,'Only Admin can begin/stop Dripping');
-    bool prevDripAllowed = isDripAllowed;
-    if (val == 0) {
-        drip();
-        isDripAllowed = false;
-    }
-    else {
-        isDripAllowed = true;
-        lastDripBlockNumber = block.number;
-    }
-    emit DripAllowedChanged(prevDripAllowed, isDripAllowed, block.number );
-    return true;      
-  }
+
+// ##############################################################################################################################
+// ###########   TREASURY CAN DISTRIBUTE ANY TOKEN TO THE SIGHTROLLER AT A PER BLOCK BASIS                           ############
+// ###########   1. ChangeTokenBeingDripped() --> Change the token being dripped to the Protocol's Core Contract     ############
+// ###########   2. ChangeDrippingStatus() --> Switch to ON/OFF Dripping                // ######################################
+// ###########   3. changeDripSpeed() --> To change the Current Drip Speed              // ######################################
+// ##############################################################################################################################
 
     /**
-      * @notice To change the Current Drip Rate
-      * @param dripRate_ New Drip Rate
+      * @notice Change the token being dripped to the Protocol's Core Contract
+      * @param tokenToDrip Address of the token to be dripped
+      * @return returns the address of the token that will be Dripped
+    */    
+    function ChangeTokenBeingDripped(address tokenToDrip ) public returns (address) {
+        require(msg.sender == admin,'Only Admin can begin/stop Dripping');
+
+        if ( isDripAllowed ) {
+            drip();
+        }
+
+        EIP20Interface newToken = EIP20Interface(tokenToDrip);
+        uint currentBalance = newToken.balanceOf(address(this)); 
+
+        require(currentBalance > 0, 'The Treasury does not hold these new tokens');
+
+        address prevToken = tokenBeingDripped;
+        tokenBeingDripped = tokenToDrip;
+        require(tokenBeingDripped == tokenToDrip, 'Address for the token to be Dripped not assigned properly');
+
+        emit tokenBeingDistributedChanged(prevToken, tokenBeingDripped, block.number);
+        return tokenBeingDripped;
+    }
+
+    /**
+      * @notice Switch to ON/OFF Dripping
+      * @param val If 0, dripping is disabled, else enabled
+      * @return retursn is Dripping is allowed or not
+    */    
+    function ChangeDrippingStatus( uint val ) public returns (bool) {
+        require(msg.sender == admin,'Only Admin can begin/stop Dripping');
+        bool prevDripAllowed = isDripAllowed;
+
+        if (isDripAllowed) {
+            drip();
+        }
+
+        if (val == 0 ) {
+            isDripAllowed = false;
+        }
+        else if (val > 0) {
+            isDripAllowed = true;
+            lastDripBlockNumber = block.number;
+        }
+
+        emit DripAllowedChanged(prevDripAllowed , isDripAllowed, block.number);
+        return isDripAllowed;
+    }
+
+    /**
+      * @notice To change the Current Drip Speed
+      * @param DripSpeed_ New Drip Speed
       * @return returns a Boolean True is Successful 
     */    
-    function changeDripRate (uint dripRate_) public returns (bool) {
+    function changeDripSpeed (uint DripSpeed_) public returns (bool) {
         require(admin == msg.sender,"Drip rate can only be changed by the Admin");
         if (isDripAllowed) {
-        drip();
+            drip();
         }
-        uint prevDripRate = dripRate;
-        dripRate = dripRate_;
-        emit DripRateChanged(prevDripRate , dripRate, block.number);
+        uint prevDripSpeed = DripSpeed;
+        DripSpeed = DripSpeed_;
+        emit DripSpeedChanged(prevDripSpeed , DripSpeed, block.number);
         return true;
   }
 
+// ################################################################################
+// ###########   THE FUNCTION TO DRIP THE TOKENS TO THE CORE CONTRACT  ############
+// ################################################################################
 
     /**
-      * @notice Drips the SIGH Tokens to the SIGHtroller
+      * @notice Drips the Tokens to the SIGHtroller
       * @return returns the Dripped Amount
     */    
     function drip() public returns (uint) {
         require(isDripAllowed, 'Drip is currently not allowed.');
 
-        EIP20Interface token_ = sigh_token;
+        EIP20Interface token_ = tokenBeingDripped; 
 
-        uint treasuryBalance_ = token_.balanceOf(address(this)); // get current SIGH balance
+        uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance of the token Being Dripped
         uint blockNumber_ = block.number;
-        uint deltaDrip_ = mul(dripRate, blockNumber_ - lastDripBlockNumber, "dripTotal overflow");
+        uint deltaDrip_ = mul(DripSpeed, blockNumber_ - lastDripBlockNumber, "dripTotal overflow");
         uint toDrip_ = min(treasuryBalance_, deltaDrip_);
         
-        require(treasuryBalance_ != 0, 'The treasury currently does not have any SIGH tokens' );
+        require(treasuryBalance_ != 0, 'The treasury currently does not have any of tokens which are being Dripped');
         require(token_.transfer(sightroller_address, toDrip_), 'The transfer did not complete.' );
         
         lastDripBlockNumber = blockNumber_; // setting the block number when the Drip is made
-        recentlyDrippedAmount = toDrip_;
-        uint prevTotalDrippedAmount = totalDrippedAmount;
-        totalDrippedAmount = add(prevTotalDrippedAmount,toDrip_,"Overflow");
+        uint prevTotalDrippedAmount = totalDrippedAmount[tokenBeingDripped];
+        totalDrippedAmount[tokenBeingDripped] = add(prevTotalDrippedAmount,toDrip_,"Overflow");
         treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
 
-        emit AmountDripped( treasuryBalance_, recentlyDrippedAmount , totalDrippedAmount ); 
+        TokenBalances[tokenBeingDripped] = treasuryBalance_;
+
+        emit AmountDripped( tokenBeingDripped, treasuryBalance_, toDrip_ , totalDrippedAmount[tokenBeingDripped], block.number); 
         
         return toDrip_;
     }
 
+// ##########################################################
+// ###########   FUNCTION TO TRANSFER SIGH TOKENS  ##########
+// ##########################################################
 
     /**
       * @notice Transfers the SIGH Tokens to the Target Address
@@ -121,6 +162,7 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
     */    
     function transferSighTo(address target_, uint amount) public returns (bool) {
         require (msg.sender == admin, "Only Admin can transfer tokens from the Treasury");
+        updatemaxTransferAmount();
         require (amount < maxTransferAmount, "The amount provided is greater than the amount allowed");
 
         uint blockNumber = block.number;
@@ -136,10 +178,30 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         uint prevTransferAmount = SIGH_Transferred[target_];
         uint totalTransferAmount = add(prevTransferAmount,amount,"Overflow");
         SIGH_Transferred[target_] = totalTransferAmount;
+        prevTransferBlock = block.number;
+
+        uint new_sigh_balance = token_.balanceOf(address(this));
+        TokenBalances[sigh_token] = new_sigh_balance;
 
         emit SIGHTransferred( target_ , amount, totalTransferAmount,  block.number );
         return true;
     }
+
+    function updatemaxTransferAmount() internal returns (uint) {
+        EIP20Interface token_ = sigh_token;
+        uint totalSupply = token_.totalSupply(); // get total Supply
+        require(totalSupply > 0, 'Total Supply of SIGH tokens returned not valid');
+        uint newtransferAmount = div(totalSupply,100,'updatemaxTransferAmount: Division returned error');
+
+        uint prevmaxTransferAmount = maxTransferAmount;
+        maxTransferAmount = newtransferAmount;
+        emit maxTransferAmountUpdated(prevmaxTransferAmount,maxTransferAmount);
+        return maxTransferAmount;
+    }
+
+// ##########################################################
+// ###########   FUNCTION TO SWAP TOKENS  ##########
+// ##########################################################
 
     function swapTokensUsingOxAPI( address to, bytes memory callDataHex, address token_bought, address token_sold ) public payable returns (bool) {
         require(msg.sender == admin, 'Only Admin can call Token Swap Function on 0x API');
@@ -161,13 +223,11 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         if (success) {
             uint new_bought_token_amount = bought_token.balanceOf(address(this));
             uint new_sold_token_amount = sold_token.balanceOf(address(this));
-            string memory bought_symbol = bought_token.symbol();
-            string memory sold_symbol = sold_token.symbol();
 
-            TokenBalances[bought_symbol] = new_bought_token_amount;
-            TokenBalances[sold_symbol] = new_sold_token_amount;
+            TokenBalances[token_bought] = new_bought_token_amount;
+            TokenBalances[token_sold] = new_sold_token_amount;
 
-            emit TokensBought( token_bought, bought_symbol, prev_bought_token_amount, new_bought_token_amount );
+            emit TokensBought( token_bought, bought_symbol, prev_bought_token_amount, new_bought_token_amount);
             emit TokensSold( token_sold, sold_symbol, prev_sold_token_amount, new_sold_token_amount );   
             emit TokenSwapTransactionData( _data );
             return true;         
@@ -176,29 +236,33 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         return false;
     }
 
+// ########################################
+// ###########   VIEW FUNCTIONS  ##########
+// ########################################
+
     function getSIGHBalance() external view returns (uint) {
         EIP20Interface token_ = sigh_token;
         uint treasuryBalance_ = token_.balanceOf(address(this)); // get current SIGH balance
         return treasuryBalance_;
     }
 
-    function getTokenBalance(string calldata symbol) external view returns (uint) {
-        return TokenBalances[symbol];
+    function getTokenBalance(address token_address) external view returns (uint) {
+        return TokenBalances[token_address];
     }
 
     function getAmountTransferred(address target) external view returns (uint) {
         return SIGH_Transferred[target];
     }
 
-    function getDripRate() external view returns (uint) {
+    function getDripSpeed() external view returns (uint) {
         if (isDripAllowed) {
-            return dripRate;
+            return DripSpeed;
         }
         return 0;
     }
 
-    function getTotalDrippedAmount() external view returns (uint) {
-        return totalDrippedAmount;
+    function getTotalDrippedAmount(address token) external view returns (uint) {
+        return totalDrippedAmount[token];
     }
 
       // TreasuryCore is the storage Implementation (Function calls get redirected here from there)
@@ -240,4 +304,15 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         return b;
         }
     }
+
+    function div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {
+        // Solidity only automatically asserts when dividing by 0
+        require(b > 0, errorMessage);
+        uint256 c = a / b;
+        // assert(a == b * c + a % b); // There is no case in which this doesn't hold
+
+        return c;
+    }
+
+
 }

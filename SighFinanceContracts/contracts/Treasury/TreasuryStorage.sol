@@ -37,9 +37,14 @@ contract TreasuryV1Storage is TreasuryCoreStorage {
     /// @notice Target to receive dripped tokens (immutable)
     address public sightroller_address;
 
-    uint dripRate;
+    address public tokenBeingDripped; 
+    uint DripSpeed;
+    bool isDripAllowed = false;
 
     mapping(address => uint) SIGH_Transferred;
 
-    mapping (string => uint) TokenBalances;
+    mapping (address => uint) TokenBalances;
+
+    mapping (address => uint)  totalDrippedAmount;  // Stores the total amount of each token dripped
+
 }
