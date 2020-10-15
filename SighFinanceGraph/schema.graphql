@@ -205,13 +205,18 @@ type UserAccount_IndividualMarketStats @entity {
 type SIGH @entity {
     "ID is contract address"
     id: ID!
+    symbol: Bytes!
+    decimals: BigInt!
+    Reservoir: Bytes!
+    totalSupply: BigInt!
+    currentInflation: BigDecimal!
+    RecentSIGHMinted: BigInt!
+    blockNumberWhenCoinsMinted: BigInt!
+    Recentminter: Bytes!
     currentCycle: BigInt!
     currentEra: BigInt!
-    Recentminter: Bytes!
-    RecentCoinsMinted: BigInt!
-    totalSupply: BigInt!
-    blockNumberWhenCoinsMinted: BigInt!
-    Reservoir: Bytes!
+    totalBurntSIGH: BigInt!
+    recentlyBurntSIGH: BigInt!
 }
 
 
@@ -241,6 +246,9 @@ type SIGHTreasury @entity {
     isDripAllowed: Boolean!
 
     maxTransferAmount: BigInt!
+
+    recentlySIGHBurned: BigInt!
+    totalSIGHBurned: BigInt!
 }
 
 type TokenBalancesData @entity {

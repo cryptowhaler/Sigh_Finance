@@ -19,6 +19,8 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
     uint public coolDownPeriod = 60*5; // 5 min
     uint public prevTransferBlock;
 
+    uint public totalSIGHBurned = 0;
+
     event tokenBeingDistributedChanged(address prevToken, address newToken, uint blockNumber);
     event DripAllowedChanged(bool prevDripAllowed , bool newDripAllowed, uint blockNumber); 
     event DripSpeedChanged(uint prevDripSpeed , uint curDripSpeed,  uint blockNumber ); 
@@ -31,6 +33,8 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
     event TokensBought( address indexed token_Address, string symbolName, uint prev_balance, uint new_balance );
     event TokensSold( address indexed token_Address, string symbolName, uint prev_balance, uint new_balance );
     event TokenSwapTransactionData( bytes data );
+
+    event SIGH_Burned(address sigh_Address, uint amount, uint totalSIGHBurned, uint remaining_balance, uint blockNumber);
 
     /**
       * @notice Constructor
@@ -234,6 +238,24 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         }
 
         return false;
+    }
+
+    function burnSIGHTokens(uint amount ) {
+        require(msg.sender == admin, 'Only Admin can call SIGH Burn Function');
+
+        EIP20Interface token_ = sigh_token;
+
+        uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
+        require(treasuryBalance_ > amount , "The current treasury's SIGH balance is less than the amount to be burned" );
+        require(token_.burn(amount), 'The Token Burn did not complete.' );
+
+        uint prevTotalSIGHBurned = totalSIGHBurned;
+        totalSIGHBurned = add(prevTotalSIGHBurned,amount,'Total SIGH Burn Addition gave overflow');
+
+        treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
+        TokenBalances[Address(sigh_token)] = treasuryBalance_;
+
+        emit SIGH_Burned(Address(sigh_token), amount, totalSIGHBurned, treasuryBalance_, block.number);
     }
 
 // ########################################

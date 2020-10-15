@@ -56,7 +56,7 @@ contract SighReservoir {
 // ###########   SIGH DISTRIBUTION : INITIALIZED DRIPPING (Can be called only once)   ##########
 // #############################################################################################
 
-  function beginDripping (uint protocolDistributionSpeed_, uint treasuryDistributionSpeed_ address sightroller_ ,  address treasury_) public returns (bool) {
+  function beginDripping (uint protocolDistributionSpeed_, uint treasuryDistributionSpeed_, address sightroller_ ,  address treasury_) public returns (bool) {
     require(admin == msg.sender,"Dripping can only be initialized by the Admin");
     require(!isDripAllowed,"Dripping can only be initialized once");
 

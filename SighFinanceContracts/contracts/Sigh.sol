@@ -19,15 +19,16 @@ contract SIGH is Context, IERC20 {
 
     uint256 private constant INITIAL_SUPPLY = 5 * 10**6 * 10**18; // 5 Million (with 18 decimals)
     uint256 public CURRENT_SUPPLY = INITIAL_SUPPLY ;
+    uint256 public totalAmountBurnt = 0;
 
     bool public isReservoirSet = false;
     address public Reservoir;
 
-    uint256 public constant CYCLE_SECONDS = 86400;  // 24*60*60 (i.e seconds in 1 day )
+    uint256 public constant CYCLE_SECONDS = 300;  // 24*60*60 (i.e seconds in 1 day )
     uint256 public constant FINAL_CYCLE = 3711; // 10 years (3650 days) + 60 days
     uint256 public Current_Cycle; 
     uint256 public Current_Era;
-    uint256 public currentDivisibilityFactor;
+    uint256 public currentDivisibilityFactor = 100;
 
     bool public mintingActivated = false;
     uint256 public previousMintTimeStamp;
@@ -54,8 +55,10 @@ contract SIGH is Context, IERC20 {
     event NewCycle( uint prevCycle, uint newCycle, uint blockNumber, uint timeStamp );
     event NewEra( uint prevEra, uint newEra, uint blockNumber, uint timeStamp );
 
-    event coinsMinted(uint256 cycle, uint256 Era, address minter, uint256 amountMinted, uint256 current_supply, uint256 block_number, uint timestamp);
     event ReservoirChanged(address prevReservoir, address newReservoir, uint256 blockNumber);
+
+    event SIGHMinted(uint256 cycle, uint256 Era, address minter, uint256 amountMinted, uint256 current_supply, uint256 block_number, uint timestamp);
+    event SIGHBurned(address userAddress, uint256 amount, uint256 totalBurnedAmount, uint256 currentSupply);
 
     // constructing  
     constructor () public {
@@ -68,7 +71,7 @@ contract SIGH is Context, IERC20 {
         recentlyMintedAmount = INITIAL_SUPPLY;
         mintHistory[0] = INITIAL_SUPPLY;
         previousMintTimeStamp = now;
-        emit coinsMinted(Current_Cycle,Current_Era,_owner,INITIAL_SUPPLY,CURRENT_SUPPLY,block.number, now);
+        emit SIGHMinted(Current_Cycle,Current_Era,_owner,INITIAL_SUPPLY,CURRENT_SUPPLY,block.number, now);
     }
 
     // ################################################
@@ -201,6 +204,7 @@ contract SIGH is Context, IERC20 {
             uint prevEra = Current_Era;
             uint newEra = add(Current_Era,uint256(1),"NEW ERA : Addition gave error");
             Current_Era = newEra;
+            currentDivisibilityFactor = _eras[Current_Era].divisibilityFactor;
             emit NewEra(prevEra, Current_Era, block.number, now);
         }
 
@@ -218,7 +222,7 @@ contract SIGH is Context, IERC20 {
         mintHistory[Current_Cycle] = newCoins;
         previousMintTimeStamp = now;        
 
-        emit coinsMinted(Current_Cycle,Current_Era,_msgSender(),newCoins,CURRENT_SUPPLY,block.number, now);
+        emit SIGHMinted(Current_Cycle,Current_Era,_msgSender(),newCoins,CURRENT_SUPPLY,block.number, now);
 
         return true;        
     }
@@ -242,6 +246,23 @@ contract SIGH is Context, IERC20 {
 
         return uint256(11);
     }
+
+    // ################################################
+    // ############   BURN FUNCTON    #################
+    // ################################################
+
+    function burn(uint amount) public returns (bool) {
+        require(balances[msg.sender] > amount, "ERC20: The Sender doesn't have the required balance");
+        balances[msg.sender] = balances[msg.sender].sub(amount);
+        
+        uint total_amount_burnt = add(totalAmountBurnt , amount, 'burn : Total Number of tokens burnt gave addition overflow');
+        totalAmountBurnt = total_amount_burnt;
+        CURRENT_SUPPLY = CURRENT_SUPPLY.sub(amount);
+
+        emit SIGHBurned(msg.sender, amount, totalAmountBurnt, CURRENT_SUPPLY );
+
+    }
+
 
     // ################################################
     // ###########   MINT FUNCTONS (VIEW)   ###########

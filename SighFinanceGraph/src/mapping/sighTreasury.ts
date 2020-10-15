@@ -1,5 +1,5 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts"
-import { tokenBeingDistributedChanged, DripAllowedChanged, DripSpeedChanged, AmountDripped, maxTransferAmountUpdated,TokensBought,TokensSold} from "../../generated/Sightroller/Sightroller"
+import { tokenBeingDistributedChanged, DripAllowedChanged, DripSpeedChanged, AmountDripped, maxTransferAmountUpdated,TokensBought,TokensSold,SIGH_Burned} from "../../generated/Sightroller/Sightroller"
 
 import { SIGHTreasury,TokenBalancesData } from "../../generated/schema"
 import { SIGHTreasuryContract } from '../generated/POLY/PriceOracle'
@@ -92,7 +92,20 @@ export function handleDripAllowedChanged(event: DripAllowedChanged): void {
     SighTreasury.save()
   }
   
-  
+  export function handleSIGH_Burned(event: SIGH_Burned): void {
+    let SighTreasury = SIGHTreasury.load(event.address.toHexString())
+
+    SighTreasury.recentlySIGHBurned = event.params.amount
+    SighTreasury.totalSIGHBurned = event.params.totalSIGHBurned
+
+    let token = event.params.sigh_Address
+    let token_balances = getTokenBalances(token)
+
+    token_balances.balance = event.params.remaining_balance
+    token_balances.save()
+
+    SighTreasury.save()
+  }
 
   export function getTokenBalances(tokenBalanceID : string) : TokenBalancesData {
       let cur_token_balance = TokenBalancesData.load(tokenBalanceID)
@@ -118,7 +131,10 @@ function createSighTreasury(addressID: string): SIGHTreasury {
     Sigh_Treasury.tokenBeingDripped = Address.fromString('0x0000000000000000000000000000000000000000',)
     Sigh_Treasury.DripSpeed = new BigInt(0)    
     Sigh_Treasury.isDripAllowed = false    
-    
+
+    Sigh_Treasury.recentlySIGHBurned = new BigInt(0)    
+    Sigh_Treasury.totalSIGHBurned = new BigInt(0)    
+
     Sigh_Treasury.save()
     return Sigh_Treasury as SIGHTreasury
 }

@@ -260,22 +260,6 @@ function getTokenPrice(blockNumber: i32, eventAddress: Address, underlyingAddres
 
 
 
-// Creating SIGH  
-// Creating SIGH
-// Creating SIGH
-// Creating SIGH
-export function createSIGH(addressID: string): SIGH {
-  let sigh_token_contract = new SIGH(addressID)
-  sigh_token_contract.currentCycle = new BigInt(0)
-  sigh_token_contract.currentEra = new BigInt(0)
-  sigh_token_contract.Recentminter = Address.fromString('0x0000000000000000000000000000000000000000',)
-  sigh_token_contract.RecentCoinsMinted = new BigInt(0)
-  sigh_token_contract.totalSupply = new BigInt(0)
-  sigh_token_contract.blockNumberWhenCoinsMinted = new BigInt(0)
-  sigh_token_contract.Reservoir = Address.fromString('0x0000000000000000000000000000000000000000',)
-  sigh_token_contract.save()
-  return sigh_token_contract
-}
 
 // Creating SIGHTROLLER
 // Creating SIGHTROLLER

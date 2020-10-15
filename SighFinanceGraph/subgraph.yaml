@@ -23,10 +23,16 @@ dataSources:
       - name: SIGH
         file: ./abis/SIGH.json
       eventHandlers:
-        - event: coinsMinted(uint256,uint256,address,uint256,uint256,uint256,uint256)
-          handler: handleCoinsMinted
+        - event: SIGHMinted(uint256,uint256,address,uint256,uint256,uint256,uint256)
+          handler: handleSIGHMinted
+        - event: SIGHBurned(address,uint256,uint256,uint256)
+          handler: handleSIGHBurned
         - event: ReservoirChanged(address,address,uint256)
           handler: handleReservoirChanged
+        - event: NewCycle(uint256,uint256,uint256,uint256)
+          handler: handleNewCycle
+        - event: NewEra(uint256,uint256,uint256,uint256)
+          handler: handleNewEra
 
   - kind: ethereum/contract
     name: SIGH_Reservoir
@@ -91,6 +97,8 @@ dataSources:
           handler: handleTokensBought             
         - event: TokensSold(address,string,uint256,uint256)
           handler: handleTokensSold    
+          - event: SIGH_Burned(address,uint256,uint256,uint256,uint256)
+          handler: handleSIGH_Burned  
           
           
   # - kind: ethereum/contract
