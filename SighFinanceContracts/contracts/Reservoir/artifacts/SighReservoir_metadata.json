@@ -430,21 +430,6 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "totalAmountTransferredToTreasury",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
 				"name": "totalDrippedAmount_toProtocol",
 				"outputs": [
 					{
@@ -501,6 +486,48 @@
 				"payable": false,
 				"stateMutability": "view",
 				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newSightroller",
+						"type": "address"
+					}
+				],
+				"name": "updateSightroller",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newtreasury",
+						"type": "address"
+					}
+				],
+				"name": "updateTreasury",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -539,10 +566,10 @@
 	},
 	"sources": {
 		"localhost/Reservoir/SighReservoir.sol": {
-			"keccak256": "0x279111fc20eeb98ed0f1091fd7459cf5523412adf25ef05fdd2b02cac979b496",
+			"keccak256": "0xb7f4041b74e73dc69831cfeef0c45d2135cd9c126235da55cc7359e42d8fd249",
 			"urls": [
-				"bzz-raw://b1a1cd9ac60a4cd13da5565c18fc4b3b42752f85daa88f85e1f7b13be1483667",
-				"dweb:/ipfs/QmQq31KzWy1PJ5gZGbsfsECqfugDd6YfnV5yQdqDdxPXEw"
+				"bzz-raw://0128f278aa9227743624883c0568c687e42976400ce0114c5feeb4da19a49d8f",
+				"dweb:/ipfs/QmZBoh54Xh9JCX1HUjYFAvjFyBXq7c52M6N2e8KM9WifP6"
 			]
 		},
 		"localhost/openzeppelin/EIP20Interface.sol": {

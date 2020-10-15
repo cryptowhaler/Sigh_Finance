@@ -1,0 +1,65 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"methods": {}
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/Treasury/0xContracts/LibMath.sol": "LibMath"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/Treasury/0xContracts/LibMath.sol": {
+			"keccak256": "0x6bd90e5c83d34d21a466a41d6f57a0547b49505d4be5dd61447a7d1dc21f9f25",
+			"urls": [
+				"bzz-raw://e1cb22812e006da65f243d561c7e0fcc4b8ee99852f45bec0d23547c1a3d4370",
+				"dweb:/ipfs/QmTYS7ZxhZaJe6heYP2jyoykCPPJ9ufUv7xdPa2nM5JcQ2"
+			]
+		},
+		"localhost/Treasury/0xContracts/LibMathRichErrors.sol": {
+			"keccak256": "0xd2d047534facd6051467dd7a22d7ee9fd4e54e63bb5a5fae2511eac7332fad3d",
+			"urls": [
+				"bzz-raw://5e0aeedd55c996fd72004a14f5c528ed60b46631ca9599bbb7925c8342ca3be4",
+				"dweb:/ipfs/QmNi1ozt4sYmn4pCobjU7FQ4KGUvK77pCyWUtbD18uQgVm"
+			]
+		},
+		"localhost/Treasury/0xContracts/LibRichErrors.sol": {
+			"keccak256": "0xe3ce6ded2fea3cc80998ca4d364bda530e273af0ba1c78d22a6cdadb6f64186e",
+			"urls": [
+				"bzz-raw://8239629dbcee9797a8f8157f03c2b78827b446787b4d53b3033a3e1ab538ad0b",
+				"dweb:/ipfs/QmbttkX94CxMkS6t1K4He5bNwGKCRUhKqTt9pNsAL5ynst"
+			]
+		},
+		"localhost/Treasury/0xContracts/LibSafeMath.sol": {
+			"keccak256": "0xd0da9ac1905381832f6612774cb7eced3b4b60459d6bafa59f5424955b44c935",
+			"urls": [
+				"bzz-raw://ede4bbe2dac43c6cc4e3b7a22285e00d55b31fb8cc00b375c6ac4714298b7e6d",
+				"dweb:/ipfs/QmWbN5qbJSNYrMMZMugaH5itTVSexe9yPsCPuArQVCLUgi"
+			]
+		},
+		"localhost/Treasury/0xContracts/LibSafeMathRichErrors.sol": {
+			"keccak256": "0xcf6adae04bd7af8e41fcd40ad148cc3d1cd5596bd42b01961b735c9b416a6572",
+			"urls": [
+				"bzz-raw://103791140e631e9d670bbc99e5f8e546f56061c5d49de97754006ce2c252d61e",
+				"dweb:/ipfs/QmeRMyYFSk7n1sLzRSGqxcoX1sKQSdAQya6bRy6nseu6xX"
+			]
+		}
+	},
+	"version": 1
+}

@@ -12,7 +12,6 @@ import "../openzeppelin/EIP20Interface.sol";
 contract SighReservoir {
 
   uint public protocolDistributionSpeed;
-
   uint public treasuryDistributionSpeed;
 
   /// @notice Reference to token to drip (immutable)
@@ -32,8 +31,6 @@ contract SighReservoir {
   uint public totalDrippedAmount_toTreasury; 
   uint public recentlyDrippedAmount_toTreasury;
 
-
-  uint public totalAmountTransferredToTreasury;
 
   event DistributionInitialized(address protocolAddress, address treasuryAddress);
 
@@ -71,6 +68,20 @@ contract SighReservoir {
     require(changeTreasuryDistributionSpeed(treasuryDistributionSpeed_),"Treasury Drip Rate could not be initialized properly");
 
     emit DistributionInitialized(sightroller , treasury );
+    return true;
+  }
+
+ // for testing.
+  function updateSightroller(address newSightroller) public returns (bool) {
+    require(admin == msg.sender,"sightroller can only be changed by the Admin");
+    sightroller = newSightroller;
+    return true;
+  }
+
+ // for testing.
+  function updateTreasury(address newtreasury) public returns (bool) {
+    require(admin == msg.sender,"Treasury can only be changed by the Admin");
+    treasury = newtreasury;
     return true;
   }
 
@@ -130,9 +141,9 @@ contract SighReservoir {
     require(reservoirBalance_ != 0, 'Protocol Transfer: The reservoir currently does not have any SIGH tokens' );
     require(token_.transfer(sightroller, toDrip_), 'Protocol Transfer: The transfer did not complete.' );
     
-    // lastDripBlockNumber = blockNumber_; // setting the block number when the Drip is made
     uint prevDrippedAmount = totalDrippedAmount_toProtocol;
     totalDrippedAmount_toProtocol = add(prevDrippedAmount,toDrip_,"Overflow");
+    recentlyDrippedAmount_toProtocol = toDrip_;
     reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
 
     emit DrippedToProtocol( reservoirBalance_, toDrip_ , totalDrippedAmount_toProtocol ); 
@@ -156,9 +167,9 @@ contract SighReservoir {
     require(reservoirBalance_ != 0, 'Protocol Transfer: The reservoir currently does not have any SIGH tokens' );
     require(token_.transfer(treasury, toDrip_), 'Protocol Transfer: The transfer did not complete.' );
     
-    // lastDripBlockNumber = blockNumber_; // setting the block number when the Drip is made
     uint prevDrippedAmount = totalDrippedAmount_toTreasury;
     totalDrippedAmount_toTreasury = add(prevDrippedAmount,toDrip_,"Overflow");
+    recentlyDrippedAmount_toTreasury = toDrip_;
     reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
 
     emit DrippedToTreasury( reservoirBalance_, toDrip_ , totalDrippedAmount_toTreasury ); 

@@ -4,13 +4,13 @@ contract TreasuryInterfaceV1 {
 
     function getSIGHBalance() external view returns (uint);
 
-    function getTokenBalance(string calldata symbol) external view returns (uint) ;
+    function getTokenBalance(address token_address) external view returns (uint) ;
 
     function getAmountTransferred(address target) external view returns (uint);
 
-    function getDripRate() external view returns (uint) ;
+    function getDripSpeed() external view returns (uint) ;
 
-    function getTotalDrippedAmount() external view returns (uint);
+    function getTotalDrippedAmount(address token) external view returns (uint);
     
     function drip() public returns (uint);            
 

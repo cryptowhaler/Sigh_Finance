@@ -1,0 +1,37 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"methods": {}
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/Treasury/0xContracts/LibMathRichErrors.sol": "LibMathRichErrors"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/Treasury/0xContracts/LibMathRichErrors.sol": {
+			"keccak256": "0xd2d047534facd6051467dd7a22d7ee9fd4e54e63bb5a5fae2511eac7332fad3d",
+			"urls": [
+				"bzz-raw://5e0aeedd55c996fd72004a14f5c528ed60b46631ca9599bbb7925c8342ca3be4",
+				"dweb:/ipfs/QmNi1ozt4sYmn4pCobjU7FQ4KGUvK77pCyWUtbD18uQgVm"
+			]
+		}
+	},
+	"version": 1
+}

@@ -1,11 +1,12 @@
 pragma solidity ^0.5.16;
 
 // interfaces
-import "@0x/contracts-exchange-forwarder/contracts/src/interfaces/IForwarder.sol";
+import "./IForwarder.sol";
 import "../openzeppelin/EIP20Interface.sol";
 import "./TreasuryCore.sol";
 import "./TreasuryStorage.sol";
 import "./TreasuryInterface.sol";
+import "./EIP20InterfaceSIGH.sol";
 /**
  * @title SighFinance's Treasury Contract
  * @author SighFinance
@@ -16,7 +17,7 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
     uint public lastDripBlockNumber; 
 
     uint public maxTransferAmount;
-    uint public coolDownPeriod = 60*5; // 5 min
+    uint public coolDownPeriod = 2; // 5 min
     uint public prevTransferBlock;
 
     uint public totalSIGHBurned = 0;
@@ -30,8 +31,8 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
     event maxTransferAmountUpdated(uint prevmaxTransferAmount, uint newmaxTransferAmount);
     event SIGHTransferred(address indexed TargetAddress, uint amountTransferred, uint totalAmountTransferred, uint blockNumber);
 
-    event TokensBought( address indexed token_Address, string symbolName, uint prev_balance, uint new_balance );
-    event TokensSold( address indexed token_Address, string symbolName, uint prev_balance, uint new_balance );
+    event TokensBought( address indexed token_Address, uint prev_balance, uint new_balance );
+    event TokensSold( address indexed token_Address, uint prev_balance, uint new_balance );
     event TokenSwapTransactionData( bytes data );
 
     event SIGH_Burned(address sigh_Address, uint amount, uint totalSIGHBurned, uint remaining_balance, uint blockNumber);
@@ -132,7 +133,7 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
     function drip() public returns (uint) {
         require(isDripAllowed, 'Drip is currently not allowed.');
 
-        EIP20Interface token_ = tokenBeingDripped; 
+        EIP20Interface token_ = EIP20Interface(tokenBeingDripped); 
 
         uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance of the token Being Dripped
         uint blockNumber_ = block.number;
@@ -149,7 +150,7 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
 
         TokenBalances[tokenBeingDripped] = treasuryBalance_;
 
-        emit AmountDripped( tokenBeingDripped, treasuryBalance_, toDrip_ , totalDrippedAmount[tokenBeingDripped], block.number); 
+        emit AmountDripped( tokenBeingDripped, treasuryBalance_, toDrip_ , totalDrippedAmount[tokenBeingDripped] ); 
         
         return toDrip_;
     }
@@ -185,7 +186,7 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         prevTransferBlock = block.number;
 
         uint new_sigh_balance = token_.balanceOf(address(this));
-        TokenBalances[sigh_token] = new_sigh_balance;
+        TokenBalances[address(sigh_token)] = new_sigh_balance;
 
         emit SIGHTransferred( target_ , amount, totalTransferAmount,  block.number );
         return true;
@@ -227,12 +228,12 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         if (success) {
             uint new_bought_token_amount = bought_token.balanceOf(address(this));
             uint new_sold_token_amount = sold_token.balanceOf(address(this));
-
+            
             TokenBalances[token_bought] = new_bought_token_amount;
             TokenBalances[token_sold] = new_sold_token_amount;
 
-            emit TokensBought( token_bought, bought_symbol, prev_bought_token_amount, new_bought_token_amount);
-            emit TokensSold( token_sold, sold_symbol, prev_sold_token_amount, new_sold_token_amount );   
+            emit TokensBought( token_bought, prev_bought_token_amount, new_bought_token_amount);
+            emit TokensSold( token_sold, prev_sold_token_amount, new_sold_token_amount );   
             emit TokenSwapTransactionData( _data );
             return true;         
         }
@@ -240,10 +241,10 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         return false;
     }
 
-    function burnSIGHTokens(uint amount ) {
+    function burnSIGHTokens(uint amount ) public returns (bool) {
         require(msg.sender == admin, 'Only Admin can call SIGH Burn Function');
 
-        EIP20Interface token_ = sigh_token;
+        EIP20InterfaceSIGH token_ = 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4(address(sigh_token));
 
         uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
         require(treasuryBalance_ > amount , "The current treasury's SIGH balance is less than the amount to be burned" );
@@ -253,9 +254,23 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         totalSIGHBurned = add(prevTotalSIGHBurned,amount,'Total SIGH Burn Addition gave overflow');
 
         treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
-        TokenBalances[Address(sigh_token)] = treasuryBalance_;
+        TokenBalances[address(sigh_token)] = treasuryBalance_;
 
-        emit SIGH_Burned(Address(sigh_token), amount, totalSIGHBurned, treasuryBalance_, block.number);
+        emit SIGH_Burned(address(sigh_token), amount, totalSIGHBurned, treasuryBalance_, block.number);
+        return true;
+    }
+
+
+// ########################################################
+// ###########   BECOMES THE NEW IMPLEMENTATION  ##########
+// ########################################################
+
+      // TreasuryCore is the storage Implementation (Function calls get redirected here from there)
+  // When new Functionality contract is being initiated (Treasury Impl Contract is updated), we use this function
+  // It is used to make the new implementation to be accepted by calling a function from TreasuryCore.
+    function _become(TreasuryCore treasuryCoreAddress) public {
+        require(msg.sender == treasuryCoreAddress.admin(), "only Treasury Code Address's admin can change brains");
+        require(treasuryCoreAddress._acceptImplementation() == 0, "change not authorized");
     }
 
 // ########################################
@@ -287,13 +302,6 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         return totalDrippedAmount[token];
     }
 
-      // TreasuryCore is the storage Implementation (Function calls get redirected here from there)
-  // When new Functionality contract is being initiated (Treasury Impl Contract is updated), we use this function
-  // It is used to make the new implementation to be accepted by calling a function from TreasuryCore.
-    function _become(TreasuryCore treasuryCoreAddress) public {
-        require(msg.sender == treasuryCoreAddress.admin(), "only unitroller admin can change brains");
-        require(treasuryCoreAddress._acceptImplementation() == 0, "change not authorized");
-    }
 
 
   /* Internal helper functions for safe math */

@@ -1,0 +1,919 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "contract EIP20Interface",
+						"name": "sigh_token_",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "sightroller_Address_",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "tokenBeingDripped",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "currentBalance",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "AmountDripped",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalAmountDripped",
+						"type": "uint256"
+					}
+				],
+				"name": "AmountDripped",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "prevDripAllowed",
+						"type": "bool"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "newDripAllowed",
+						"type": "bool"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "DripAllowedChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "prevDripSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "curDripSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "DripSpeedChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "TargetAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountTransferred",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalAmountTransferred",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "SIGHTransferred",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "sigh_Address",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalSIGHBurned",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "remaining_balance",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "SIGH_Burned",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "TokenSwapTransactionData",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "token_Address",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "prev_balance",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "new_balance",
+						"type": "uint256"
+					}
+				],
+				"name": "TokensBought",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "token_Address",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "prev_balance",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "new_balance",
+						"type": "uint256"
+					}
+				],
+				"name": "TokensSold",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "prevmaxTransferAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newmaxTransferAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "maxTransferAmountUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "prevToken",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "newToken",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "tokenBeingDistributedChanged",
+				"type": "event"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "val",
+						"type": "uint256"
+					}
+				],
+				"name": "ChangeDrippingStatus",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "tokenToDrip",
+						"type": "address"
+					}
+				],
+				"name": "ChangeTokenBeingDripped",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "contract TreasuryCore",
+						"name": "treasuryCoreAddress",
+						"type": "address"
+					}
+				],
+				"name": "_become",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "admin",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "burnSIGHTokens",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "DripSpeed_",
+						"type": "uint256"
+					}
+				],
+				"name": "changeDripSpeed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "coolDownPeriod",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "drip",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "target",
+						"type": "address"
+					}
+				],
+				"name": "getAmountTransferred",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getDripSpeed",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getSIGHBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token_address",
+						"type": "address"
+					}
+				],
+				"name": "getTokenBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					}
+				],
+				"name": "getTotalDrippedAmount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "lastDripBlockNumber",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "maxTransferAmount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "pendingAdmin",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "pendingTreasuryImplementation",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "prevTransferBlock",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "sigh_token",
+				"outputs": [
+					{
+						"internalType": "contract EIP20Interface",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "sightroller_address",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes",
+						"name": "callDataHex",
+						"type": "bytes"
+					},
+					{
+						"internalType": "address",
+						"name": "token_bought",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "token_sold",
+						"type": "address"
+					}
+				],
+				"name": "swapTokensUsingOxAPI",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": true,
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "tokenBeingDripped",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "totalSIGHBurned",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "target_",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "transferSighTo",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "treasuryImplementation",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "SighFinance",
+			"methods": {
+				"ChangeDrippingStatus(uint256)": {
+					"params": {
+						"val": "If 0, dripping is disabled, else enabled"
+					},
+					"return": "retursn is Dripping is allowed or not"
+				},
+				"ChangeTokenBeingDripped(address)": {
+					"params": {
+						"tokenToDrip": "Address of the token to be dripped"
+					},
+					"return": "returns the address of the token that will be Dripped"
+				},
+				"changeDripSpeed(uint256)": {
+					"params": {
+						"DripSpeed_": "New Drip Speed"
+					},
+					"return": "returns a Boolean True is Successful "
+				},
+				"constructor": {
+					"params": {
+						"sigh_token_": "The SIGH Token Address",
+						"sightroller_Address_": "The Sightroller Contract Address "
+					}
+				},
+				"drip()": {
+					"return": "returns the Dripped Amount"
+				},
+				"transferSighTo(address,uint256)": {
+					"params": {
+						"amount": "The Amount to be transferred",
+						"target_": "Address to which the amount is to be transferred"
+					},
+					"return": "returns the Dripped Amount"
+				}
+			},
+			"title": "SighFinance's Treasury Contract"
+		},
+		"userdoc": {
+			"methods": {
+				"ChangeDrippingStatus(uint256)": {
+					"notice": "Switch to ON/OFF Dripping"
+				},
+				"ChangeTokenBeingDripped(address)": {
+					"notice": "Change the token being dripped to the Protocol's Core Contract"
+				},
+				"changeDripSpeed(uint256)": {
+					"notice": "To change the Current Drip Speed"
+				},
+				"constructor": "Constructor",
+				"drip()": {
+					"notice": "Drips the Tokens to the SIGHtroller"
+				},
+				"transferSighTo(address,uint256)": {
+					"notice": "Transfers the SIGH Tokens to the Target Address"
+				}
+			}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/Treasury/TreasuryV1Impl.sol": "Treasury"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/ErrorReporter.sol": {
+			"keccak256": "0xecacd5920a722868d343c2577f569636d452d99e5002a29034ccac3dc2359d7f",
+			"urls": [
+				"bzz-raw://7f8b7c017754046178211d452c6d96fdf6e026fa76d00afb001afb4c1ca81953",
+				"dweb:/ipfs/QmSG3rLMdyYTMq7C7ZsPX53B23zGZRB9ifAX3S3qCnpG5p"
+			]
+		},
+		"localhost/Treasury/0xContracts/LibEIP712.sol": {
+			"keccak256": "0xe19c3cbc71fbea0fdb45c1763306550015d940bea9dbec5f3fd2edfe2165d673",
+			"urls": [
+				"bzz-raw://267d263f0453352a1ac8d8085a13c4976fb8c964eff8d3aab0a84173d1438efb",
+				"dweb:/ipfs/QmbaRw85MYYP3KTmQ68gYdEnFyMqD7frwjxxwsj4j4JCr1"
+			]
+		},
+		"localhost/Treasury/0xContracts/LibFillResults.sol": {
+			"keccak256": "0xb3c2c233d4aca372c4306d35b6b805e0f577ae927264821deae6015ee54ff3c2",
+			"urls": [
+				"bzz-raw://f5d825334bc205f7fce1ce761a5e7cf37df8c1af5a95cef1dbfd6274d51657cb",
+				"dweb:/ipfs/QmPdeEFeJA8oCVA5RyjKhZWPxf14LJdVQMT2KLcQ7UbUPo"
+			]
+		},
+		"localhost/Treasury/0xContracts/LibMath.sol": {
+			"keccak256": "0x6bd90e5c83d34d21a466a41d6f57a0547b49505d4be5dd61447a7d1dc21f9f25",
+			"urls": [
+				"bzz-raw://e1cb22812e006da65f243d561c7e0fcc4b8ee99852f45bec0d23547c1a3d4370",
+				"dweb:/ipfs/QmTYS7ZxhZaJe6heYP2jyoykCPPJ9ufUv7xdPa2nM5JcQ2"
+			]
+		},
+		"localhost/Treasury/0xContracts/LibMathRichErrors.sol": {
+			"keccak256": "0xd2d047534facd6051467dd7a22d7ee9fd4e54e63bb5a5fae2511eac7332fad3d",
+			"urls": [
+				"bzz-raw://5e0aeedd55c996fd72004a14f5c528ed60b46631ca9599bbb7925c8342ca3be4",
+				"dweb:/ipfs/QmNi1ozt4sYmn4pCobjU7FQ4KGUvK77pCyWUtbD18uQgVm"
+			]
+		},
+		"localhost/Treasury/0xContracts/LibOrder.sol": {
+			"keccak256": "0xc7f3f4488ec75bd34fa0acf0c213d3076cdc30a6bb8a56958ca16475c08b59a9",
+			"urls": [
+				"bzz-raw://7d81dd68b6136765d49a53e8a67a2f4550001d20a142272afc0e9efd65d7193f",
+				"dweb:/ipfs/Qmb4S8jZNkw6AB1ai91rHjCgWbtsqvxN5hLdBEYvfuNAeF"
+			]
+		},
+		"localhost/Treasury/0xContracts/LibRichErrors.sol": {
+			"keccak256": "0xe3ce6ded2fea3cc80998ca4d364bda530e273af0ba1c78d22a6cdadb6f64186e",
+			"urls": [
+				"bzz-raw://8239629dbcee9797a8f8157f03c2b78827b446787b4d53b3033a3e1ab538ad0b",
+				"dweb:/ipfs/QmbttkX94CxMkS6t1K4He5bNwGKCRUhKqTt9pNsAL5ynst"
+			]
+		},
+		"localhost/Treasury/0xContracts/LibSafeMath.sol": {
+			"keccak256": "0xd0da9ac1905381832f6612774cb7eced3b4b60459d6bafa59f5424955b44c935",
+			"urls": [
+				"bzz-raw://ede4bbe2dac43c6cc4e3b7a22285e00d55b31fb8cc00b375c6ac4714298b7e6d",
+				"dweb:/ipfs/QmWbN5qbJSNYrMMZMugaH5itTVSexe9yPsCPuArQVCLUgi"
+			]
+		},
+		"localhost/Treasury/0xContracts/LibSafeMathRichErrors.sol": {
+			"keccak256": "0xcf6adae04bd7af8e41fcd40ad148cc3d1cd5596bd42b01961b735c9b416a6572",
+			"urls": [
+				"bzz-raw://103791140e631e9d670bbc99e5f8e546f56061c5d49de97754006ce2c252d61e",
+				"dweb:/ipfs/QmeRMyYFSk7n1sLzRSGqxcoX1sKQSdAQya6bRy6nseu6xX"
+			]
+		},
+		"localhost/Treasury/EIP20InterfaceSIGH.sol": {
+			"keccak256": "0x23d6b5c907cf140011678898a10dc22195f21ec6adc038a8fb1d9682000ccbd1",
+			"urls": [
+				"bzz-raw://5098f11afe1b0e5d5796e4231cc870e23ae7e528055f63d8a4e478769ca1ec16",
+				"dweb:/ipfs/QmQVVa2MHESeLT5p8jaudjpawabZx6x8cfrPcci73ehiCS"
+			]
+		},
+		"localhost/Treasury/IForwarder.sol": {
+			"keccak256": "0x3fce16a105cb31fb0e150af634a787b1bdc5435cd6cad9096a55ca677b82fa4a",
+			"urls": [
+				"bzz-raw://ca87d7f8fa8e10fb9b02ea0b9b4ee3b6fef7fdb7ed5551cd4ada9fa96c46fab3",
+				"dweb:/ipfs/QmWx2VLi5PnaT2gE8zaMTibePwRZFa8vkUHXCq7TGSHv9c"
+			]
+		},
+		"localhost/Treasury/TreasuryCore.sol": {
+			"keccak256": "0x29fa85296cf49183594165f69c9e4925a02c3cbbca5e66c3990e15cfb490efcd",
+			"urls": [
+				"bzz-raw://28af49eb6cb022338d0e01c1e33c32b772ac6a28e5a9d938965b63829b73c29e",
+				"dweb:/ipfs/QmbpY9HK77no5SLJhPFKPsoQSbZDJhd4jZ7knk3egXLij2"
+			]
+		},
+		"localhost/Treasury/TreasuryInterface.sol": {
+			"keccak256": "0x29da4f8a2e0659c745f9c0ba3b4d7a446444071a6008359780c039fba3ee54e2",
+			"urls": [
+				"bzz-raw://c7d124ac5ee35aba8b8b27669ab8e9c2e81e2e102f327f68fb92c0b868d7e061",
+				"dweb:/ipfs/QmcZNxFzdxRYMgX1Yibx2jD8gQiEooHjFTdK6Ka4i8GMuS"
+			]
+		},
+		"localhost/Treasury/TreasuryStorage.sol": {
+			"keccak256": "0xe603657b6ccf672fdff3193e8cd72d561a937258dc7095bbd387608477f67c41",
+			"urls": [
+				"bzz-raw://cd804197b04b851b1bd1c31789f22d3d09372669e7594399c65c8f05928ab0ed",
+				"dweb:/ipfs/QmSuFV46v6NuPoYBfekSUVPZVXWFdi3cwmyjTwbd5kamAr"
+			]
+		},
+		"localhost/Treasury/TreasuryV1Impl.sol": {
+			"keccak256": "0x7fb699f30fedeb55ebe69c20dd4112b1e1bb1f2672a6da3a21e1ae52f4b20ba3",
+			"urls": [
+				"bzz-raw://aaf0382e16597206024764c816e85fc5e2b9ad77f8cae8213e1b2f4acb1628cf",
+				"dweb:/ipfs/QmXHpbtdn63JMGorJiqBwagK5taJFuymmG2HrJxqG7VBn6"
+			]
+		},
+		"localhost/openzeppelin/EIP20Interface.sol": {
+			"keccak256": "0xfd8ed2eac6d0b4d9ee6b32628ba68bae17544b66f190a5f7ce0c6ad024579dc8",
+			"urls": [
+				"bzz-raw://701be308137fe36f221f1d7c815247a272638df40917e7d1456b3b16e8402897",
+				"dweb:/ipfs/QmPDkPoKiWXMjwpGa65JHBjo5NH8AA3q1nMhsewfUZHjpx"
+			]
+		}
+	},
+	"version": 1
+}
