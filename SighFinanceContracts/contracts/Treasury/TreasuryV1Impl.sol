@@ -254,13 +254,17 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
 // ################################################# 
 
 
-    function changeSIGHBurnAllowed(bool isAllowed) public returns (bool) {
+    function changeSIGHBurnAllowed(uint isAllowed) public returns (bool) {
         require (msg.sender == admin,'Only Admin can decide is SIGH Burn is currently allowed or not.');
-        require (is_SIGH_BurnAllowed == isAllowed && isAllowed,'SIGH Burn is already allowed by the Treasury.');
-        require (is_SIGH_BurnAllowed == isAllowed && !isAllowed,'SIGH Burn is already not allowed by the Treasury.');
-         
+
         bool prevStatus = is_SIGH_BurnAllowed;
-        is_SIGH_BurnAllowed = isAllowed;
+        
+        if (isAllowed == 0) {
+            is_SIGH_BurnAllowed = false;
+        }
+        else {
+            is_SIGH_BurnAllowed = true;
+        }
         SIGHBurnSpeed = 0;
 
         emit SIGHBurnAllowedChanged(prevStatus, is_SIGH_BurnAllowed, block.number);
@@ -279,13 +283,15 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         lastBurnBlockNumber = block.number;
         
         require (SIGHBurnSpeed == newBurnSpeed, 'New SIGH Burn Speed not initialized properly');
+        emit SIGHBurnSpeedChanged(prevBurnSpeed, SIGHBurnSpeed, block.number);
         return true;
     }
 
     function burnSIGHTokens() public returns (bool) {
         require (is_SIGH_BurnAllowed,'SIGH Burn is currently not allowed by the Treasury.');
-
-        EIP20InterfaceSIGH token_ = EIP20InterfaceSIGH(address(sigh_token));
+        
+        address sighTokenAddress = address(sigh_token);
+        EIP20InterfaceSIGH token_ = EIP20InterfaceSIGH(sighTokenAddress);
 
 
         uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance of SIGH
@@ -346,10 +352,28 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         return 0;
     }
 
+    function getBurnSpeed() external view returns (uint) {
+        if (is_SIGH_BurnAllowed) {
+            return SIGHBurnSpeed;
+        }
+        return 0;
+    }
+    
+    function getTokenBeingDripped() external view returns (address) {
+        if (isDripAllowed) {
+            return tokenBeingDripped;
+        }
+        return address(0);
+    }
+    
+
     function getTotalDrippedAmount(address token) external view returns (uint) {
         return totalDrippedAmount[token];
     }
 
+// ####################################################
+// ###########   Internal helper functions  ##########
+// ####################################################
 
 
   /* Internal helper functions for safe math */

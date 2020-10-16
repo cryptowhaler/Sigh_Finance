@@ -440,9 +440,9 @@
 				"constant": false,
 				"inputs": [
 					{
-						"internalType": "bool",
+						"internalType": "uint256",
 						"name": "isAllowed",
-						"type": "bool"
+						"type": "uint256"
 					}
 				],
 				"name": "changeSIGHBurnAllowed",
@@ -511,6 +511,21 @@
 			{
 				"constant": true,
 				"inputs": [],
+				"name": "getBurnSpeed",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
 				"name": "getDripSpeed",
 				"outputs": [
 					{
@@ -553,6 +568,21 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getTokenBeingDripped",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
 					}
 				],
 				"payable": false,
@@ -1008,10 +1038,10 @@
 			]
 		},
 		"localhost/Treasury/TreasuryV1Impl.sol": {
-			"keccak256": "0x484adcdb16c27dc2d60de5b70eb160d6d4c4c9617f26befffce8034bd10abb61",
+			"keccak256": "0x80644fed63f46b7bd7d17d6a43599dd616b44080ea7245c17c8e31ff175bbf56",
 			"urls": [
-				"bzz-raw://e7c779526bab311b80d5ed3481069c384f577d13ce16815fab08a1dd55bf882c",
-				"dweb:/ipfs/QmPgaZBmBoGzBXintQ7XnXDYZmZruW2sg3m8cqDKzq2C4s"
+				"bzz-raw://1ffc1cf5304baf4faebfe836fc3679968debd456c41e6476701ecf236dbd4e0a",
+				"dweb:/ipfs/QmdaMo3XsqDZZkfKcrj3KbFA1SxW3se8koeRoyRRRwCAMt"
 			]
 		},
 		"localhost/openzeppelin/EIP20Interface.sol": {

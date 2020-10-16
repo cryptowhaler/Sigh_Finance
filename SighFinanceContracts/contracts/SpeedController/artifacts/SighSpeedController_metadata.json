@@ -529,6 +529,21 @@
 				"payable": false,
 				"stateMutability": "view",
 				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "totalProtocolsSupported",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -567,10 +582,10 @@
 	},
 	"sources": {
 		"localhost/SpeedController/SighSpeedController.sol": {
-			"keccak256": "0xfecdba6db5de61d2ce9cce05f1e91a2e227e399736f2480ef274c26477addf19",
+			"keccak256": "0x03c7f376a289308dc91db90015baf60adec057da53f79948bf7864f648be05a4",
 			"urls": [
-				"bzz-raw://9a5d5da748a0bf9c8544fe605cf10083ffac3fbc2a8226a2043fa8fb5e2ec08c",
-				"dweb:/ipfs/QmX3MWRdhDhiNSSTpwtnNKbpdx93X7BgKTjaz5ybq4xiUe"
+				"bzz-raw://5466a0533ae83df08688a1dbf4cb8ad20fcb2b1f922ea07afca23d199ac4deb1",
+				"dweb:/ipfs/QmPhZDJjtGdvFH7rzGuGzw6yMkY7Ygz95RfweejsnTiRRP"
 			]
 		},
 		"localhost/openzeppelin/EIP20Interface.sol": {

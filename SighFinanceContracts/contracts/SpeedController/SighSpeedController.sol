@@ -230,6 +230,11 @@ contract SighSpeedController {
   function getSIGHSpeedForProtocol(address protocolAddress) external view returns (uint) {
       return distributionSpeeds[protocolAddress];
   }
+  
+  function totalProtocolsSupported() external view returns (uint) {
+      uint len = storedSupportedProtocols.length;
+      return len;
+  }
 
 // ###############################################################
 // ########### Internal helper functions for safe math ###########

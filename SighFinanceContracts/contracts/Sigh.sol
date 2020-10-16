@@ -251,7 +251,7 @@ contract SIGH is Context, IERC20 {
     // ############   BURN FUNCTON    #################
     // ################################################
 
-    function burn(uint amount) public returns (bool) {
+    function burn(uint amount) external returns (bool) {
         require(balances[msg.sender] > amount, "ERC20: The Sender doesn't have the required balance");
         balances[msg.sender] = balances[msg.sender].sub(amount);
         
@@ -260,7 +260,7 @@ contract SIGH is Context, IERC20 {
         CURRENT_SUPPLY = CURRENT_SUPPLY.sub(amount);
 
         emit SIGHBurned(msg.sender, amount, totalAmountBurnt, CURRENT_SUPPLY );
-
+        return true;
     }
 
 
@@ -304,15 +304,15 @@ contract SIGH is Context, IERC20 {
         return _decimals;
     }
 
-    function totalSupply() public view  returns (uint256) {
+    function totalSupply() external view  returns (uint256) {
         return CURRENT_SUPPLY;
     }
 
-    function balanceOf(address account) public view  returns (uint256) {
+    function balanceOf(address account) external view  returns (uint256) {
         return balances[account];
     }
 
-    function allowance(address owner, address spender) public view  returns (uint256) {
+    function allowance(address owner, address spender) external view  returns (uint256) {
         return _allowances[owner][spender];
     }
 

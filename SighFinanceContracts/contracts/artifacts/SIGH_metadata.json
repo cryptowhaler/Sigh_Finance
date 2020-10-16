@@ -922,10 +922,10 @@
 			]
 		},
 		"localhost/Sigh.sol": {
-			"keccak256": "0x2dc2cdbadaeeeed08b3847736fd972efa9e46f07cc07270d518f19b667e7a27f",
+			"keccak256": "0x8223ca1e67f0797ec4742b2482e4b069102d8657c64d55c2a12d7ff5f719caeb",
 			"urls": [
-				"bzz-raw://c6cbd2a2f0d19f949cfbcb44e317a21c89775b1d75b68cebe7b239fd3c7f5bef",
-				"dweb:/ipfs/QmeN6fSGaf3Yi6vjqCA3bx9zRghbDwPBPSnuLg1wRSGEVX"
+				"bzz-raw://929fb953a71422f00a62e64fa3cab72c6a2ba8a7866eb6f0627db2dc56d0305f",
+				"dweb:/ipfs/QmSL9aLFEMwWWJmDkP7oX3S8Z93A6WN1uZsmU6vz1tqY5i"
 			]
 		},
 		"localhost/openzeppelin/Address.sol": {
