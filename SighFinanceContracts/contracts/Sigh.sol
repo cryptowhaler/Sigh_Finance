@@ -21,8 +21,8 @@ contract SIGH is Context, IERC20 {
     uint256 public CURRENT_SUPPLY = INITIAL_SUPPLY ;
     uint256 public totalAmountBurnt = 0;
 
-    bool public isReservoirSet = false;
-    address public Reservoir;
+    bool public isSpeedControllerSet = false;
+    address public SpeedController;
 
     uint256 public constant CYCLE_SECONDS = 60;  // 24*60*60 (i.e seconds in 1 day )
     uint256 public constant FINAL_CYCLE = 3711; // 10 years (3650 days) + 60 days
@@ -55,7 +55,7 @@ contract SIGH is Context, IERC20 {
     event NewCycle( uint prevCycle, uint newCycle, uint blockNumber, uint timeStamp );
     event NewEra( uint prevEra, uint newEra, uint blockNumber, uint timeStamp );
 
-    event ReservoirChanged(address prevReservoir, address newReservoir, uint256 blockNumber);
+    event SpeedControllerChanged(address prevSpeedController, address newSpeedController, uint256 blockNumber);
 
     event SIGHMinted(uint256 cycle, uint256 Era, address minter, uint256 amountMinted, uint256 current_supply, uint256 block_number, uint timestamp);
     event SIGHBurned(address userAddress, uint256 amount, uint256 totalBurnedAmount, uint256 currentSupply);
@@ -78,22 +78,22 @@ contract SIGH is Context, IERC20 {
     // #######   FUNCTIONS TO INITIATE MINTING  #######
     // ################################################
 
-    function changeReservoir(address newReservoir) public returns (bool) {
-        require(_msgSender() == _owner, "Only the Admin can change Reservoir");
-        require(newReservoir != address(0), "Not a valid Reservoir address");
-        require( !isReservoirSet, " Reservoir can be set only once ");
+    function changeSpeedController(address newSpeedController) public returns (bool) {
+        require(_msgSender() == _owner, "Only the Admin can change SpeedController");
+        require(newSpeedController != address(0), "Not a valid Speed Controller address");
+        // require( !isSpeedControllerSet, " Speed Controller can be set only once ");
 
-        address prevReservoir = Reservoir;
-        Reservoir = newReservoir;
-        isReservoirSet = true;
+        address prevSpeedController = SpeedController;
+        SpeedController = newSpeedController;
+        isSpeedControllerSet = true;
         
-        emit ReservoirChanged(prevReservoir, Reservoir, block.number );
+        emit SpeedControllerChanged(prevSpeedController, SpeedController, block.number );
         return true;
     }
-
+    
     function initMinting() public returns (bool) {
         require(_msgSender() == _owner,"Mining can only be initialized by the owner." );
-        require( isReservoirSet , "Reservoir needs to be set before the Eras can begin" );
+        require( isSpeedControllerSet , "Speed Controller needs to be set before the Eras can begin" );
         require(!mintingActivated, "Minting can only be initialized once" );
         _initEras();
         _startTime = now;
@@ -214,8 +214,8 @@ contract SIGH is Context, IERC20 {
 
 
         balances[_msgSender()] = balances[_msgSender()].add(prize_amount);         // 500 coins given to caller for calling the mint successfully
-        uint256 reservoir_amount = newCoins.sub(prize_amount);
-        balances[Reservoir] = balances[Reservoir].add(reservoir_amount);     //newly minted coins provided to Reservoir
+        uint256 SpeedController_amount = newCoins.sub(prize_amount);
+        balances[SpeedController] = balances[SpeedController].add(SpeedController_amount);     //newly minted coins provided to SpeedController
 
         recentMinter = _msgSender();
         recentlyMintedAmount = newCoins;

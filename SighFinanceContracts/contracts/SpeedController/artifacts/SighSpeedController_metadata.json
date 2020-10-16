@@ -22,15 +22,9 @@
 				"inputs": [
 					{
 						"indexed": false,
-						"internalType": "address",
-						"name": "protocolAddress",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "treasuryAddress",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
 					}
 				],
 				"name": "DistributionInitialized",
@@ -41,6 +35,37 @@
 				"inputs": [
 					{
 						"indexed": false,
+						"internalType": "address",
+						"name": "protocolAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "prevSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "DistributionSpeedChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "protocolAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
 						"internalType": "uint256",
 						"name": "currentBalance",
 						"type": "uint256"
@@ -58,7 +83,83 @@
 						"type": "uint256"
 					}
 				],
-				"name": "DrippedToProtocol",
+				"name": "Dripped",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "protocolAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "sighSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "NewProtocolSupported",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "protocolAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalDrippedToProtocol",
+						"type": "uint256"
+					}
+				],
+				"name": "ProtocolRemoved",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "prevAdmin",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "admin",
+						"type": "address"
+					}
+				],
+				"name": "newAdminAssigned",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "prevPendingAdmin",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "pendingAdmin",
+						"type": "address"
+					}
+				],
+				"name": "pendingAdminUpdated",
 				"type": "event"
 			},
 			{
@@ -67,62 +168,27 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "currentBalance",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "AmountDripped",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "totalAmountDripped",
+						"name": "b",
 						"type": "uint256"
 					}
 				],
-				"name": "DrippedToTreasury",
+				"name": "testing",
 				"type": "event"
 			},
 			{
-				"anonymous": false,
-				"inputs": [
+				"constant": false,
+				"inputs": [],
+				"name": "acceptAdmin",
+				"outputs": [
 					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "prevSpeed",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "newSpeed",
-						"type": "uint256"
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
 					}
 				],
-				"name": "ProtocolDistributionSpeedChanged",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "prevSpeed",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "newSpeed",
-						"type": "uint256"
-					}
-				],
-				"name": "TreasuryDistributionSpeedChanged",
-				"type": "event"
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
 			},
 			{
 				"constant": true,
@@ -141,28 +207,7 @@
 			},
 			{
 				"constant": false,
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "protocolDistributionSpeed_",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "treasuryDistributionSpeed_",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "sightroller_",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "treasury_",
-						"type": "address"
-					}
-				],
+				"inputs": [],
 				"name": "beginDripping",
 				"outputs": [
 					{
@@ -179,12 +224,12 @@
 				"constant": false,
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "newSpeed_",
-						"type": "uint256"
+						"internalType": "address",
+						"name": "newAdmin",
+						"type": "address"
 					}
 				],
-				"name": "changeProtocolDistributionSpeed",
+				"name": "changeAdmin",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -200,12 +245,17 @@
 				"constant": false,
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "targetAddress",
+						"type": "address"
+					},
+					{
 						"internalType": "uint256",
 						"name": "newSpeed_",
 						"type": "uint256"
 					}
 				],
-				"name": "changeTreasuryDistributionSpeed",
+				"name": "changeProtocolSIGHSpeed",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -234,8 +284,50 @@
 			},
 			{
 				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "protocolAddress",
+						"type": "address"
+					}
+				],
+				"name": "getRecentAmountDistributedToProtocol",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
 				"inputs": [],
 				"name": "getSIGHBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "protocolAddress",
+						"type": "address"
+					}
+				],
+				"name": "getSIGHSpeedForProtocol",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -264,58 +356,19 @@
 			},
 			{
 				"constant": true,
-				"inputs": [],
-				"name": "getSightrollerAddress",
-				"outputs": [
+				"inputs": [
 					{
 						"internalType": "address",
-						"name": "",
+						"name": "protocolAddress",
 						"type": "address"
 					}
 				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getTotalAmountDistributedToSightroller",
+				"name": "getTotalAmountDistributedToProtocol",
 				"outputs": [
 					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getTotalAmountDistributedToTreasury",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getTreasuryAddress",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
 					}
 				],
 				"payable": false,
@@ -326,6 +379,27 @@
 				"constant": true,
 				"inputs": [],
 				"name": "isDripAllowed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "protocolAddress",
+						"type": "address"
+					}
+				],
+				"name": "isThisProtocolSupported",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -354,62 +428,70 @@
 			},
 			{
 				"constant": true,
-				"inputs": [],
-				"name": "protocolDistributionSpeed",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "recentlyDrippedAmount_toProtocol",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "recentlyDrippedAmount_toTreasury",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "sightroller",
-				"outputs": [
+				"inputs": [
 					{
 						"internalType": "address",
 						"name": "",
 						"type": "address"
 					}
 				],
+				"name": "recentlyDrippedAmount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
 				"payable": false,
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "protocolAddress_",
+						"type": "address"
+					}
+				],
+				"name": "removeSupportedProtocol",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newProtocolAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "sighSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "supportNewProtocol",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -429,104 +511,23 @@
 			},
 			{
 				"constant": true,
-				"inputs": [],
-				"name": "totalDrippedAmount_toProtocol",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "totalDrippedAmount_toTreasury",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "treasury",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "treasuryDistributionSpeed",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": false,
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "newSightroller",
+						"name": "",
 						"type": "address"
 					}
 				],
-				"name": "updateSightroller",
+				"name": "totalDrippedAmount",
 				"outputs": [
 					{
-						"internalType": "bool",
+						"internalType": "uint256",
 						"name": "",
-						"type": "bool"
+						"type": "uint256"
 					}
 				],
 				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "newtreasury",
-						"type": "address"
-					}
-				],
-				"name": "updateTreasury",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			}
 		],
@@ -554,7 +555,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/Reservoir/SighReservoir.sol": "SighSpeedController"
+			"localhost/SpeedController/SighSpeedController.sol": "SighSpeedController"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -565,11 +566,11 @@
 		"remappings": []
 	},
 	"sources": {
-		"localhost/Reservoir/SighReservoir.sol": {
-			"keccak256": "0x525626775268afd7005d590d31087e66e5390f699e2764dc5ed4af5bc351f76d",
+		"localhost/SpeedController/SighSpeedController.sol": {
+			"keccak256": "0xfecdba6db5de61d2ce9cce05f1e91a2e227e399736f2480ef274c26477addf19",
 			"urls": [
-				"bzz-raw://893e770687f5c469ada434fe85eb685a60ac180c41aa11fb8c47fa4e42d35dbb",
-				"dweb:/ipfs/QmaLkz2XN3gPX5xVU4Y6FRhLVe7PRiWBt4VjYG5PmZoNyj"
+				"bzz-raw://9a5d5da748a0bf9c8544fe605cf10083ffac3fbc2a8226a2043fa8fb5e2ec08c",
+				"dweb:/ipfs/QmX3MWRdhDhiNSSTpwtnNKbpdx93X7BgKTjaz5ybq4xiUe"
 			]
 		},
 		"localhost/openzeppelin/EIP20Interface.sol": {

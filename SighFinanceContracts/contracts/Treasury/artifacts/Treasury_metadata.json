@@ -8,7 +8,7 @@
 			{
 				"inputs": [
 					{
-						"internalType": "contract EIP20Interface",
+						"internalType": "address",
 						"name": "sigh_token_",
 						"type": "address"
 					},
@@ -101,6 +101,56 @@
 					}
 				],
 				"name": "DripSpeedChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "prevBurnAllowed",
+						"type": "bool"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "newBurnAllowed",
+						"type": "bool"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "SIGHBurnAllowedChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "prevSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "SIGHBurnSpeedChanged",
 				"type": "event"
 			},
 			{
@@ -352,13 +402,7 @@
 			},
 			{
 				"constant": false,
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
+				"inputs": [],
 				"name": "burnSIGHTokens",
 				"outputs": [
 					{
@@ -381,6 +425,27 @@
 					}
 				],
 				"name": "changeDripSpeed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "bool",
+						"name": "isAllowed",
+						"type": "bool"
+					}
+				],
+				"name": "changeSIGHBurnAllowed",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -518,6 +583,36 @@
 			{
 				"constant": true,
 				"inputs": [],
+				"name": "is_SIGH_BurnAllowed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "lastBurnBlockNumber",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
 				"name": "lastDripBlockNumber",
 				"outputs": [
 					{
@@ -549,21 +644,6 @@
 				"constant": true,
 				"inputs": [],
 				"name": "pendingAdmin",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "pendingTreasuryImplementation",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -674,7 +754,7 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "totalSIGHBurned",
+				"name": "totalBurntSIGH",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -713,18 +793,45 @@
 				"type": "function"
 			},
 			{
-				"constant": true,
-				"inputs": [],
-				"name": "treasuryImplementation",
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newBurnSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "updateSIGHBurnSpeed",
 				"outputs": [
 					{
-						"internalType": "address",
+						"internalType": "bool",
 						"name": "",
-						"type": "address"
+						"type": "bool"
 					}
 				],
 				"payable": false,
-				"stateMutability": "view",
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newSightroller",
+						"type": "address"
+					}
+				],
+				"name": "updateSighTrollerAddress",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -894,17 +1001,17 @@
 			]
 		},
 		"localhost/Treasury/TreasuryStorage.sol": {
-			"keccak256": "0xe603657b6ccf672fdff3193e8cd72d561a937258dc7095bbd387608477f67c41",
+			"keccak256": "0xbb590d9409330d584dff41d5b954aff77a4b79044e3352cc0424027ba1bb02a7",
 			"urls": [
-				"bzz-raw://cd804197b04b851b1bd1c31789f22d3d09372669e7594399c65c8f05928ab0ed",
-				"dweb:/ipfs/QmSuFV46v6NuPoYBfekSUVPZVXWFdi3cwmyjTwbd5kamAr"
+				"bzz-raw://1ab66687389d74aa3df55626011093045dff850b3d2d1885a9eb3946f0d395b7",
+				"dweb:/ipfs/QmXABqRJWn1BFtBN9ULxbFHt1rGqSZC6cLXCJtniPosd4G"
 			]
 		},
 		"localhost/Treasury/TreasuryV1Impl.sol": {
-			"keccak256": "0x7fb699f30fedeb55ebe69c20dd4112b1e1bb1f2672a6da3a21e1ae52f4b20ba3",
+			"keccak256": "0x484adcdb16c27dc2d60de5b70eb160d6d4c4c9617f26befffce8034bd10abb61",
 			"urls": [
-				"bzz-raw://aaf0382e16597206024764c816e85fc5e2b9ad77f8cae8213e1b2f4acb1628cf",
-				"dweb:/ipfs/QmXHpbtdn63JMGorJiqBwagK5taJFuymmG2HrJxqG7VBn6"
+				"bzz-raw://e7c779526bab311b80d5ed3481069c384f577d13ce16815fab08a1dd55bf882c",
+				"dweb:/ipfs/QmPgaZBmBoGzBXintQ7XnXDYZmZruW2sg3m8cqDKzq2C4s"
 			]
 		},
 		"localhost/openzeppelin/EIP20Interface.sol": {

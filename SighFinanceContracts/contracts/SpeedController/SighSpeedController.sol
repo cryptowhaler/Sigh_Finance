@@ -15,10 +15,12 @@ contract SighSpeedController {
   EIP20Interface public token;
 
   address public admin;
+  address private pendingAdmin;
 
   bool public isDripAllowed = false;  
   uint public lastDripBlockNumber;    
-
+    
+  address[] private storedSupportedProtocols; 
   mapping (address => bool) supportedProtocols;
   mapping (address => uint) distributionSpeeds;
 
@@ -32,6 +34,9 @@ contract SighSpeedController {
   
   event DistributionSpeedChanged(address protocolAddress, uint prevSpeed , uint newSpeed );  
   event Dripped(address protocolAddress, uint currentBalance, uint AmountDripped, uint totalAmountDripped ); 
+
+  event pendingAdminUpdated(address prevPendingAdmin, address pendingAdmin );
+  event newAdminAssigned(address prevAdmin, address admin);
 
   /**
     * @notice Constructs a Reservoir
@@ -61,39 +66,68 @@ contract SighSpeedController {
 // ###########   SIGH DISTRIBUTION : ADDING / REMOVING NEW PROTOCOL WHICH WILL RECEIVE SIGH TOKENS   ##########
 // ############################################################################################################
 
+    event testing( uint b );
+
   function supportNewProtocol( address newProtocolAddress, uint sighSpeed ) public returns (bool)  {
     require(admin == msg.sender,"New Protocol can only be added by the Admin");
     bool checkIfSupported = supportedProtocols[newProtocolAddress];
     require (!checkIfSupported, 'This Protocol is already supported by the Sigh Speed Controller');
+    
+    storedSupportedProtocols.push(newProtocolAddress);
     
     supportedProtocols[newProtocolAddress] = true;
     distributionSpeeds[newProtocolAddress] = sighSpeed;
     totalDrippedAmount[newProtocolAddress] = 0;
     recentlyDrippedAmount[newProtocolAddress] = 0;
     
-    require (supportedProtocols[newProtocolAddress] == true, 'Error occured when adding the new protocol address to the supported protocols list.');
+    require (supportedProtocols[newProtocolAddress], 'Error occured when adding the new protocol address to the supported protocols list.');
     require (distributionSpeeds[newProtocolAddress] == sighSpeed, 'SIGH Speed for the new protocl was not initialized properly.');
     
     emit NewProtocolSupported(newProtocolAddress, sighSpeed);
   }
   
   function removeSupportedProtocol(address protocolAddress_ ) public returns (bool) {
-      
+    require(admin == msg.sender,"Protocol can only be removed by the Admin");
+    require(supportedProtocols[protocolAddress_],'The Protocol is already not Supported by the Sigh Speed Controller' );
+    
+    uint index = 0;
+    uint len = storedSupportedProtocols.length;
+
+    for (uint i=0; i< len; i++) {
+        if ( storedSupportedProtocols[i] == protocolAddress_ ) {
+            index = i;
+            break;
+        }
+    }
+    
+    storedSupportedProtocols[index] = storedSupportedProtocols[len - 1];
+    storedSupportedProtocols.length--;
+    uint newLength = len - 1;
+    require(storedSupportedProtocols.length == newLength, 'The length of the list was not properly decremented.' );
+    
+    supportedProtocols[protocolAddress_] = false;
+    distributionSpeeds[protocolAddress_] = 0;
+
+    require (supportedProtocols[protocolAddress_] == false, 'Error occured when removing the protocol.');
+    require (distributionSpeeds[protocolAddress_] == 0, 'SIGH Speed was not properly assigned to 0.');
+
+      emit ProtocolRemoved( protocolAddress_,  totalDrippedAmount[protocolAddress_] );
   }
   
-  
-
 // ######################################################################################
 // ###########   SIGH DISTRIBUTION : FUNCTIONS TO UPDATE DISTRIBUTION SPEEDS   ##########
 // ######################################################################################
 
-  function changeSIGHDistributionSpeed (address targetAddress, uint newSpeed_) public returns (bool) {
+  function changeProtocolSIGHSpeed (address targetAddress, uint newSpeed_) public returns (bool) {
     require(admin == msg.sender,"Drip rate can only be changed by the Admin");
-    let 
-    drip();
-    uint prevSpeed = protocolDistributionSpeed;
-    protocolDistributionSpeed = newSpeed_;
-    emit ProtocolDistributionSpeedChanged(prevSpeed , protocolDistributionSpeed);
+    require(supportedProtocols[targetAddress],'The Protocol not Supported by the Sigh Speed Controller' );
+    if (isDripAllowed) {
+        drip();
+    }
+    uint prevSpeed = distributionSpeeds[targetAddress];
+    distributionSpeeds[targetAddress] = newSpeed_;
+    require(distributionSpeeds[targetAddress] == newSpeed_, " Protocol's SIGH speed was not properly updated");
+    emit DistributionSpeedChanged(targetAddress, prevSpeed , distributionSpeeds[targetAddress]);
     return true;
   }
 
@@ -109,64 +143,63 @@ contract SighSpeedController {
     */
   function drip() public returns (uint) {
     require(isDripAllowed,'Dripping has not been initialized by the Admin');    
-    uint drippedAmount_toProtocol = dripToProtocol();
-    uint drippedAmount_toTreasury = dripToTreasury();
-    lastDripBlockNumber = block.number; 
-    uint totalDrippedAmount = add(drippedAmount_toProtocol,drippedAmount_toTreasury, 'Total Drip Amount : Addition Overflow');
-    return totalDrippedAmount;
+
+    EIP20Interface token_ = token;
+    
+    address[] memory protocols = storedSupportedProtocols;
+    uint length = protocols.length;
+    
+    if (length > 0) {
+        
+        for ( uint i=0; i < length; i++) {
+            
+            address current_protocol = protocols[i];
+            
+            if ( supportedProtocols[ current_protocol ] ) {
+                
+                uint reservoirBalance_ = token_.balanceOf(address(this)); 
+                uint blockNumber_ = block.number;
+                uint deltaDrip_ = mul(distributionSpeeds[ current_protocol ], blockNumber_ - lastDripBlockNumber, "dripTotal overflow");
+                uint toDrip_ = min(reservoirBalance_, deltaDrip_);
+            
+                require(reservoirBalance_ != 0, 'Protocol Transfer: The reservoir currently does not have any SIGH tokens' );
+                require(token_.transfer(current_protocol, toDrip_), 'Protocol Transfer: The transfer did not complete.' );
+                
+                uint prevDrippedAmount = totalDrippedAmount[current_protocol];
+                totalDrippedAmount[current_protocol] = add(prevDrippedAmount,toDrip_,"Overflow");
+                recentlyDrippedAmount[current_protocol] = toDrip_;
+                reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
+            
+                emit Dripped( current_protocol, reservoirBalance_, toDrip_ , totalDrippedAmount[current_protocol] ); 
+            }
+        }
+    }
+    lastDripBlockNumber = block.number;
   }
 
-  function dripToProtocol() internal returns (uint) {
+// ########################################################
+// ###########   FUNCTIONS TO CHANGE THE ADMIN   ##########
+// ########################################################
 
-    if (protocolDistributionSpeed == 0) {
-      return 0;
-    }
+ function changeAdmin(address newAdmin) public returns (bool) {
+    require(admin == msg.sender,"Stored Admin can only be changed by the current Admin");
+    address prevPendingAdmin = pendingAdmin;
+    pendingAdmin = newAdmin;
+    emit pendingAdminUpdated(prevPendingAdmin,pendingAdmin );
+    return true;
+ }
 
-    EIP20Interface token_ = token;
+ function acceptAdmin() public returns (bool) {
+    require(pendingAdmin == msg.sender,"Only the pending admin can call this function");
+    address prevAdmin = admin;
+    admin = pendingAdmin;
+    pendingAdmin = address(0);
+    require (admin == pendingAdmin,'Admin not assigned properly');
     
-    uint reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
-    uint blockNumber_ = block.number;
-    uint deltaDrip_ = mul(protocolDistributionSpeed, blockNumber_ - lastDripBlockNumber, "dripTotal overflow");
-    uint toDrip_ = min(reservoirBalance_, deltaDrip_);
-
-    require(reservoirBalance_ != 0, 'Protocol Transfer: The reservoir currently does not have any SIGH tokens' );
-    require(token_.transfer(sightroller, toDrip_), 'Protocol Transfer: The transfer did not complete.' );
-    
-    uint prevDrippedAmount = totalDrippedAmount_toProtocol;
-    totalDrippedAmount_toProtocol = add(prevDrippedAmount,toDrip_,"Overflow");
-    recentlyDrippedAmount_toProtocol = toDrip_;
-    reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
-
-    emit DrippedToProtocol( reservoirBalance_, toDrip_ , totalDrippedAmount_toProtocol ); 
-    
-    return toDrip_;
-  } 
-
-  function dripToTreasury() internal returns (uint) {
-
-    if (treasuryDistributionSpeed == 0) {
-      return 0;
-    }
-
-    EIP20Interface token_ = token;
-
-    uint reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
-    uint blockNumber_ = block.number;
-    uint deltaDrip_ = mul(treasuryDistributionSpeed, blockNumber_ - lastDripBlockNumber, "dripTotal overflow");
-    uint toDrip_ = min(reservoirBalance_, deltaDrip_);
-
-    require(reservoirBalance_ != 0, 'Protocol Transfer: The reservoir currently does not have any SIGH tokens' );
-    require(token_.transfer(treasury, toDrip_), 'Protocol Transfer: The transfer did not complete.' );
-    
-    uint prevDrippedAmount = totalDrippedAmount_toTreasury;
-    totalDrippedAmount_toTreasury = add(prevDrippedAmount,toDrip_,"Overflow");
-    recentlyDrippedAmount_toTreasury = toDrip_;
-    reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
-
-    emit DrippedToTreasury( reservoirBalance_, toDrip_ , totalDrippedAmount_toTreasury ); 
-    
-    return toDrip_;
-  } 
+    emit newAdminAssigned(prevAdmin, admin);
+     
+ } 
+ 
 
 // ###############################################################
 // ###########   EXTERNAL VIEW functions TO GET STATE   ##########
@@ -182,20 +215,20 @@ contract SighSpeedController {
     return address(token);
   }
 
-  function getSightrollerAddress() external view returns (address) {
-    return address(sightroller);
+  function isThisProtocolSupported(address protocolAddress) external view returns (bool) {
+    return supportedProtocols[protocolAddress];
   }
 
-  function getTreasuryAddress() external view returns (address) {
-    return address(treasury);
+  function getTotalAmountDistributedToProtocol(address protocolAddress) external view returns (uint) {
+    return totalDrippedAmount[protocolAddress];
   }
 
-  function getTotalAmountDistributedToSightroller() external view returns (uint) {
-    return totalDrippedAmount_toProtocol;
+  function getRecentAmountDistributedToProtocol(address protocolAddress) external view returns (uint) {
+    return recentlyDrippedAmount[protocolAddress];
   }
-
-  function getTotalAmountDistributedToTreasury() external view returns (uint) {
-    return totalDrippedAmount_toTreasury;
+  
+  function getSIGHSpeedForProtocol(address protocolAddress) external view returns (uint) {
+      return distributionSpeeds[protocolAddress];
   }
 
 // ###############################################################

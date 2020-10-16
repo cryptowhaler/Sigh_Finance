@@ -13,19 +13,19 @@ import "./EIP20InterfaceSIGH.sol";
  */
 contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
     
-
-    uint public lastDripBlockNumber; 
-
     uint public maxTransferAmount;
     uint public coolDownPeriod = 2; // 5 min
     uint public prevTransferBlock;
+    
+    bool public is_SIGH_BurnAllowed;
+    uint public totalBurntSIGH = 0;
+    uint public lastBurnBlockNumber;
 
-    uint public totalSIGHBurned = 0;
+    uint public lastDripBlockNumber; 
 
     event tokenBeingDistributedChanged(address prevToken, address newToken, uint blockNumber);
     event DripAllowedChanged(bool prevDripAllowed , bool newDripAllowed, uint blockNumber); 
     event DripSpeedChanged(uint prevDripSpeed , uint curDripSpeed,  uint blockNumber ); 
-
     event AmountDripped(address tokenBeingDripped, uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
 
     event maxTransferAmountUpdated(uint prevmaxTransferAmount, uint newmaxTransferAmount);
@@ -35,6 +35,7 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
     event TokensSold( address indexed token_Address, uint prev_balance, uint new_balance );
     event TokenSwapTransactionData( bytes data );
 
+    event SIGHBurnAllowedChanged(bool prevBurnAllowed , bool newBurnAllowed, uint blockNumber); 
     event SIGH_Burned(address sigh_Address, uint amount, uint totalSIGHBurned, uint remaining_balance, uint blockNumber);
     event SIGHBurnSpeedChanged(uint prevSpeed, uint newSpeed, uint blockNumber);
 
@@ -110,7 +111,7 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         }
 
         emit DripAllowedChanged(prevDripAllowed , isDripAllowed, block.number);
-        return isDripAllowed;
+        return true;
     }
 
     /**
@@ -211,9 +212,9 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         return maxTransferAmount;
     }
 
-// ##########################################################
+// ################################################# 
 // ###########   FUNCTION TO SWAP TOKENS  ##########
-// ##########################################################
+// ################################################# 
 
     function swapTokensUsingOxAPI( address to, bytes memory callDataHex, address token_bought, address token_sold ) public payable returns (bool) {
         require(msg.sender == admin, 'Only Admin can call Token Swap Function on 0x API');
@@ -248,32 +249,62 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         return false;
     }
 
+// ################################################# 
+// ###########   BURN SIGH TOKENS  ##########
+// ################################################# 
+
+
+    function changeSIGHBurnAllowed(bool isAllowed) public returns (bool) {
+        require (msg.sender == admin,'Only Admin can decide is SIGH Burn is currently allowed or not.');
+        require (is_SIGH_BurnAllowed == isAllowed && isAllowed,'SIGH Burn is already allowed by the Treasury.');
+        require (is_SIGH_BurnAllowed == isAllowed && !isAllowed,'SIGH Burn is already not allowed by the Treasury.');
+         
+        bool prevStatus = is_SIGH_BurnAllowed;
+        is_SIGH_BurnAllowed = isAllowed;
+        SIGHBurnSpeed = 0;
+
+        emit SIGHBurnAllowedChanged(prevStatus, is_SIGH_BurnAllowed, block.number);
+    }
+        
     function updateSIGHBurnSpeed(uint newBurnSpeed) public returns (bool) {
         require (msg.sender == admin,'Only Admin can update SIGH Burn Speed');
+        require (is_SIGH_BurnAllowed,'SIGH Burn is currently not allowed by the Treasury.');
+        
+        
         if ( SIGHBurnSpeed > 0 ) {
             burnSIGHTokens();
         } 
         uint prevBurnSpeed = SIGHBurnSpeed;
         SIGHBurnSpeed = newBurnSpeed;
+        lastBurnBlockNumber = block.number;
+        
         require (SIGHBurnSpeed == newBurnSpeed, 'New SIGH Burn Speed not initialized properly');
         return true;
     }
 
     function burnSIGHTokens() public returns (bool) {
+        require (is_SIGH_BurnAllowed,'SIGH Burn is currently not allowed by the Treasury.');
 
-        EIP20InterfaceSIGH token_ = (address(sigh_token));
+        EIP20InterfaceSIGH token_ = EIP20InterfaceSIGH(address(sigh_token));
 
-        uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
-        require(treasuryBalance_ > amount , "The current treasury's SIGH balance is less than the amount to be burned" );
-        require(token_.burn(amount), 'The Token Burn did not complete.' );
 
-        uint prevTotalSIGHBurned = totalSIGHBurned;
-        totalSIGHBurned = add(prevTotalSIGHBurned,amount,'Total SIGH Burn Addition gave overflow');
-
+        uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance of SIGH
+        uint blockNumber_ = block.number;
+        uint deltaBurn_ = mul(SIGHBurnSpeed, blockNumber_ - lastBurnBlockNumber, "BurnTotal overflow");
+        uint toBurn_ = min(treasuryBalance_, deltaBurn_);
+        
+        require(treasuryBalance_ != 0, 'The treasury currently does not have any SIGH tokens.');
+        require(token_.burn(toBurn_), 'The burn did not complete.' );
+        
+        lastBurnBlockNumber = blockNumber_;                         // setting the block number when the Burn is made
+        uint prevTotalBurntAmount = totalBurntSIGH ;
+        totalBurntSIGH = add(prevTotalBurntAmount,toBurn_,"Overflow");
         treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
+
         TokenBalances[address(sigh_token)] = treasuryBalance_;
 
-        emit SIGH_Burned(address(sigh_token), amount, totalSIGHBurned, treasuryBalance_, block.number);
+        emit SIGH_Burned( address(sigh_token), toBurn_, totalBurntSIGH,  treasuryBalance_, lastBurnBlockNumber ); 
+
         return true;
     }
 
