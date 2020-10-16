@@ -220,7 +220,7 @@ type SIGH @entity {
 }
 
 
-type SIGHReservoir @entity {
+type SIGHSpeedController @entity {
     "ID is contract address"
     id: ID!
     ProtocolAddress: Bytes!

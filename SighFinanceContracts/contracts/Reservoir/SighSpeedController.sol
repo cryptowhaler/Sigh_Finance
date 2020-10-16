@@ -9,7 +9,7 @@ pragma solidity ^0.5.16;
 
 import "../openzeppelin/EIP20Interface.sol";
  
-contract SighReservoir {
+contract SighSpeedController {
 
   uint public protocolDistributionSpeed;
   uint public treasuryDistributionSpeed;

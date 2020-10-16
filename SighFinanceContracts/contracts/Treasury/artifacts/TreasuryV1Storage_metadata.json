@@ -1,0 +1,120 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "admin",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "pendingAdmin",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "sigh_token",
+				"outputs": [
+					{
+						"internalType": "contract EIP20Interface",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "sightroller_address",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "tokenBeingDripped",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"methods": {}
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/Treasury/TreasuryStorage.sol": "TreasuryV1Storage"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/Treasury/TreasuryStorage.sol": {
+			"keccak256": "0x9fb4add88d9d25fd05b11de9dfd284edc23a6aaf4d96ccebefc09e4b14f562e8",
+			"urls": [
+				"bzz-raw://59ec9f5f759f5e5cfe46390dea8ded1a0265cd6bb92b25715698532a3619b129",
+				"dweb:/ipfs/Qmc3i15RUbdP6CR9qAyXnyjgM3V2nsYNZ5yanvBvcdDFVN"
+			]
+		},
+		"localhost/openzeppelin/EIP20Interface.sol": {
+			"keccak256": "0xfd8ed2eac6d0b4d9ee6b32628ba68bae17544b66f190a5f7ce0c6ad024579dc8",
+			"urls": [
+				"bzz-raw://701be308137fe36f221f1d7c815247a272638df40917e7d1456b3b16e8402897",
+				"dweb:/ipfs/QmPDkPoKiWXMjwpGa65JHBjo5NH8AA3q1nMhsewfUZHjpx"
+			]
+		}
+	},
+	"version": 1
+}

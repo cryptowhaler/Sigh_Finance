@@ -29,7 +29,11 @@ contract TreasuryCoreStorage {
 
 
 
-contract TreasuryV1Storage is TreasuryCoreStorage {
+contract TreasuryV1Storage {
+
+    address public admin;
+
+    address public pendingAdmin;
 
     /// @notice Reference to token to drip (immutable)
     EIP20Interface public sigh_token;
@@ -40,6 +44,9 @@ contract TreasuryV1Storage is TreasuryCoreStorage {
     address public tokenBeingDripped; 
     uint DripSpeed;
     bool isDripAllowed = false;
+    
+    uint SIGHBurnSpeed;
+    
 
     mapping(address => uint) SIGH_Transferred;
 

@@ -36,16 +36,23 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
     event TokenSwapTransactionData( bytes data );
 
     event SIGH_Burned(address sigh_Address, uint amount, uint totalSIGHBurned, uint remaining_balance, uint blockNumber);
+    event SIGHBurnSpeedChanged(uint prevSpeed, uint newSpeed, uint blockNumber);
 
     /**
       * @notice Constructor
       * @param sigh_token_ The SIGH Token Address
       * @param sightroller_Address_ The Sightroller Contract Address 
     */    
-    constructor (EIP20Interface sigh_token_, address sightroller_Address_ ) public {
+    constructor (address sigh_token_, address sightroller_Address_ ) public {
         admin = msg.sender;
-        sigh_token = sigh_token_;
+        sigh_token = EIP20Interface(sigh_token_);
         sightroller_address = sightroller_Address_;
+    }
+    
+    // Testing
+    function updateSighTrollerAddress(address newSightroller) public returns (bool) {
+        require(msg.sender == admin,'Only Admin can change sightroller_address');
+        sightroller_address = newSightroller;
     }
 
 
@@ -241,10 +248,20 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         return false;
     }
 
-    function burnSIGHTokens(uint amount ) public returns (bool) {
-        require(msg.sender == admin, 'Only Admin can call SIGH Burn Function');
+    function updateSIGHBurnSpeed(uint newBurnSpeed) public returns (bool) {
+        require (msg.sender == admin,'Only Admin can update SIGH Burn Speed');
+        if ( SIGHBurnSpeed > 0 ) {
+            burnSIGHTokens();
+        } 
+        uint prevBurnSpeed = SIGHBurnSpeed;
+        SIGHBurnSpeed = newBurnSpeed;
+        require (SIGHBurnSpeed == newBurnSpeed, 'New SIGH Burn Speed not initialized properly');
+        return true;
+    }
 
-        EIP20InterfaceSIGH token_ = 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4(address(sigh_token));
+    function burnSIGHTokens() public returns (bool) {
+
+        EIP20InterfaceSIGH token_ = (address(sigh_token));
 
         uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
         require(treasuryBalance_ > amount , "The current treasury's SIGH balance is less than the amount to be burned" );

@@ -35,22 +35,22 @@ dataSources:
           handler: handleNewEra
 
   - kind: ethereum/contract
-    name: SIGH_Reservoir
+    name: SIGH_SpeedController
     network: kovan
     source:
       address: "0x9748692378cD832db750009BEF7Ea3f6862f9fD9"
-      abi: SIGHReservoir
+      abi: SIGHSpeedController
       startBlock: 21040723
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/mapping/sighReservoir.ts
+      file: ./src/mapping/SIGHSpeedController.ts
       entities:
-        - SIGHReservoir
+        - SIGHSpeedController
       abis:
-      - name: SIGHReservoir
-        file: ./abis/SIGHReservoir.json
+      - name: SIGHSpeedController
+        file: ./abis/SIGHSpeedController.json
       eventHandlers:
         - event: DistributionInitialized(address,address)
           handler: handleDistributionInitialized
