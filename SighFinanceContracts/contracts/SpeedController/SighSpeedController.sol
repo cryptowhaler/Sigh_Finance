@@ -11,34 +11,27 @@ import "../openzeppelin/EIP20Interface.sol";
  
 contract SighSpeedController {
 
-  uint public protocolDistributionSpeed;
-  uint public treasuryDistributionSpeed;
-
   /// @notice Reference to token to drip (immutable)
   EIP20Interface public token;
 
   address public admin;
-  address public sightroller;
-  address public treasury;
 
   bool public isDripAllowed = false;  
-
   uint public lastDripBlockNumber;    
 
-  uint public totalDrippedAmount_toProtocol; 
-  uint public recentlyDrippedAmount_toProtocol;
+  mapping (address => bool) supportedProtocols;
+  mapping (address => uint) distributionSpeeds;
 
-  uint public totalDrippedAmount_toTreasury; 
-  uint public recentlyDrippedAmount_toTreasury;
+  mapping (address => uint) public totalDrippedAmount; 
+  mapping (address => uint) public recentlyDrippedAmount;
 
+  event DistributionInitialized(uint blockNumber);
 
-  event DistributionInitialized(address protocolAddress, address treasuryAddress);
-
-  event ProtocolDistributionSpeedChanged(uint prevSpeed , uint newSpeed );  
-  event TreasuryDistributionSpeedChanged(uint prevSpeed , uint newSpeed );  
-
-  event DrippedToProtocol(uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
-  event DrippedToTreasury(uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
+  event NewProtocolSupported (address protocolAddress, uint sighSpeed);
+  event ProtocolRemoved(address protocolAddress, uint totalDrippedToProtocol);
+  
+  event DistributionSpeedChanged(address protocolAddress, uint prevSpeed , uint newSpeed );  
+  event Dripped(address protocolAddress, uint currentBalance, uint AmountDripped, uint totalAmountDripped ); 
 
   /**
     * @notice Constructs a Reservoir
@@ -53,44 +46,50 @@ contract SighSpeedController {
 // ###########   SIGH DISTRIBUTION : INITIALIZED DRIPPING (Can be called only once)   ##########
 // #############################################################################################
 
-  function beginDripping (uint protocolDistributionSpeed_, uint treasuryDistributionSpeed_, address sightroller_ ,  address treasury_) public returns (bool) {
+  function beginDripping () public returns (bool) {
     require(admin == msg.sender,"Dripping can only be initialized by the Admin");
     require(!isDripAllowed,"Dripping can only be initialized once");
 
     isDripAllowed = true;
-    sightroller = sightroller_;
-    treasury = treasury_;
     lastDripBlockNumber = block.number;
 
-    require(treasury == treasury_,"SIGH Treasury address could not be properly initialized");
-    require(sightroller == sightroller_,"Sightroller address could not be properly initialized");
-    require(changeProtocolDistributionSpeed(protocolDistributionSpeed_),"Protocol Drip Rate could not be initialized properly");
-    require(changeTreasuryDistributionSpeed(treasuryDistributionSpeed_),"Treasury Drip Rate could not be initialized properly");
-
-    emit DistributionInitialized(sightroller , treasury );
+    emit DistributionInitialized( lastDripBlockNumber );
     return true;
   }
 
- // for testing.
-  function updateSightroller(address newSightroller) public returns (bool) {
-    require(admin == msg.sender,"sightroller can only be changed by the Admin");
-    sightroller = newSightroller;
-    return true;
-  }
+// ############################################################################################################
+// ###########   SIGH DISTRIBUTION : ADDING / REMOVING NEW PROTOCOL WHICH WILL RECEIVE SIGH TOKENS   ##########
+// ############################################################################################################
 
- // for testing.
-  function updateTreasury(address newtreasury) public returns (bool) {
-    require(admin == msg.sender,"Treasury can only be changed by the Admin");
-    treasury = newtreasury;
-    return true;
+  function supportNewProtocol( address newProtocolAddress, uint sighSpeed ) public returns (bool)  {
+    require(admin == msg.sender,"New Protocol can only be added by the Admin");
+    bool checkIfSupported = supportedProtocols[newProtocolAddress];
+    require (!checkIfSupported, 'This Protocol is already supported by the Sigh Speed Controller');
+    
+    supportedProtocols[newProtocolAddress] = true;
+    distributionSpeeds[newProtocolAddress] = sighSpeed;
+    totalDrippedAmount[newProtocolAddress] = 0;
+    recentlyDrippedAmount[newProtocolAddress] = 0;
+    
+    require (supportedProtocols[newProtocolAddress] == true, 'Error occured when adding the new protocol address to the supported protocols list.');
+    require (distributionSpeeds[newProtocolAddress] == sighSpeed, 'SIGH Speed for the new protocl was not initialized properly.');
+    
+    emit NewProtocolSupported(newProtocolAddress, sighSpeed);
   }
+  
+  function removeSupportedProtocol(address protocolAddress_ ) public returns (bool) {
+      
+  }
+  
+  
 
 // ######################################################################################
 // ###########   SIGH DISTRIBUTION : FUNCTIONS TO UPDATE DISTRIBUTION SPEEDS   ##########
 // ######################################################################################
 
-  function changeProtocolDistributionSpeed (uint newSpeed_) public returns (bool) {
+  function changeSIGHDistributionSpeed (address targetAddress, uint newSpeed_) public returns (bool) {
     require(admin == msg.sender,"Drip rate can only be changed by the Admin");
+    let 
     drip();
     uint prevSpeed = protocolDistributionSpeed;
     protocolDistributionSpeed = newSpeed_;
@@ -98,14 +97,6 @@ contract SighSpeedController {
     return true;
   }
 
-  function changeTreasuryDistributionSpeed (uint newSpeed_) public returns (bool) {
-    require(admin == msg.sender,"Drip rate can only be changed by the Admin");
-    drip();
-    uint prevSpeed = treasuryDistributionSpeed;
-    treasuryDistributionSpeed = newSpeed_;
-    emit TreasuryDistributionSpeedChanged(prevSpeed , treasuryDistributionSpeed);
-    return true;
-  }
 
 // #####################################################################
 // ###########   SIGH DISTRIBUTION FUNCTION - DRIP FUNCTION   ##########
