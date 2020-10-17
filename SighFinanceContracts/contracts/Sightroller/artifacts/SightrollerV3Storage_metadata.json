@@ -8,6 +8,21 @@
 			{
 				"constant": true,
 				"inputs": [],
+				"name": "SIGHDistributionHandler",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
 				"name": "_borrowGuardianPaused",
 				"outputs": [
 					{
@@ -168,11 +183,6 @@
 						"internalType": "uint256",
 						"name": "collateralFactorMantissa",
 						"type": "uint256"
-					},
-					{
-						"internalType": "bool",
-						"name": "isSIGHed",
-						"type": "bool"
 					}
 				],
 				"payable": false,
@@ -363,17 +373,17 @@
 			]
 		},
 		"localhost/Math/Exponential.sol": {
-			"keccak256": "0xde2e32d9268c376a74ad4cc82e11dfed28ce4fbcaff72e75e03cf59afafd2971",
+			"keccak256": "0x16208257a4d106dde7208fc88cb424f26dbc18cca1fd46c3c15d875275170f30",
 			"urls": [
-				"bzz-raw://8f8b1bdbee4a596c98066597d143399f386ee5314ba5d03aab0d7659a5d0d241",
-				"dweb:/ipfs/QmaYfxmrbPVqVkrUZyhkcrxrCaA3i3aoQ7iQuDLbK3LEVo"
+				"bzz-raw://cf54f88f8c8c99c8c22b31e58c9dc5dd4c6c19dbb2fe1b437632f8268ca9e1b8",
+				"dweb:/ipfs/QmVsaomWuGu3sQRdQ3BWtkTNLG9KB3MWu5hKZwiqSmbob4"
 			]
 		},
 		"localhost/PriceOracle.sol": {
-			"keccak256": "0x29cf24155ba071b151b72df66b0ba96371a32d025b3af7662d8ade5d3e54ca8f",
+			"keccak256": "0x48772217853f894d85eed0e9c7699ecacb569a955d1825c691e8d636f16b3229",
 			"urls": [
-				"bzz-raw://a363df757e15e163791aaa4ddacd21d222e3fac68dab50b37a3769b0266166ae",
-				"dweb:/ipfs/QmcVrGHGPPr8UKYmZHszABHVABV1wxooYxm9do7DzPbzSz"
+				"bzz-raw://427f28163935266b6014b36e10f371a3a538282e3ceacd68a59863b61cf1b36b",
+				"dweb:/ipfs/QmWqTqkRNx8imZtgnWKStQwTR5yiCa5gZoWxcJyor5fkdt"
 			]
 		},
 		"localhost/Sightroller/SightrollerInterface.sol": {
@@ -384,10 +394,10 @@
 			]
 		},
 		"localhost/Sightroller/SightrollerStorage.sol": {
-			"keccak256": "0x12ee9900bbc4a903f90d4c6f705b861d3dafba52d8a110c13d6a198d7d913e6c",
+			"keccak256": "0x7e554f7692944fc61cc01d0bb821247bfa6545cf1bbc2a3e8b752fd41c292340",
 			"urls": [
-				"bzz-raw://c96fce16b53f7e333d42919c1a3d6052a1a9a210970bb573e98766c57a3043eb",
-				"dweb:/ipfs/QmdbghN5qyV5WPrgMRcTnNXUahqyTvjkVznypRtrr4ZTGx"
+				"bzz-raw://8b687aa458a3f18d032a943467738065e4974bfdde40884919aabcc88dc08b75",
+				"dweb:/ipfs/QmYAgcXMkEUkwSQKMzP2VYu8a3fPLvfBsgmZCvYwB5XYA6"
 			]
 		},
 		"localhost/Tokens/CToken.sol": {

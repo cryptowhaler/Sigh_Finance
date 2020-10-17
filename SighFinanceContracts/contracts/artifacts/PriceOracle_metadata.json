@@ -7,21 +7,6 @@
 		"abi": [
 			{
 				"constant": true,
-				"inputs": [],
-				"name": "currentCLock",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": false,
 				"inputs": [
 					{
 						"internalType": "contract CToken",
@@ -38,7 +23,7 @@
 					}
 				],
 				"payable": false,
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -76,39 +61,29 @@
 				"payable": false,
 				"stateMutability": "view",
 				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "pricesList",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
 			}
 		],
 		"devdoc": {
-			"methods": {}
+			"methods": {
+				"getUnderlyingPrice(address)": {
+					"params": {
+						"cToken": "The cToken to get the underlying price of"
+					},
+					"return": "The underlying asset price mantissa (scaled by 1e18). Zero means the price is unavailable."
+				}
+			}
 		},
 		"userdoc": {
-			"methods": {}
+			"methods": {
+				"getUnderlyingPrice(address)": {
+					"notice": "Get the underlying price of a cToken asset"
+				}
+			}
 		}
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/SimplePriceOracle.sol": "SimplePriceOracle"
+			"localhost/PriceOracle.sol": "PriceOracle"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -119,13 +94,6 @@
 		"remappings": []
 	},
 	"sources": {
-		"localhost/AggregatorV3Interface.sol": {
-			"keccak256": "0x1df2b25bb9724abc0e2a328de64866bb430ff13a4535e931089e4eed6a432219",
-			"urls": [
-				"bzz-raw://869e7ce73270b7098552d8f00ba4cf4da67135f21f6f38e8bddafe6e8e93dd60",
-				"dweb:/ipfs/QmTpN6PkUAyRs33PifxiFkzixszWEVgrtT4Jw2eQRZ7TV8"
-			]
-		},
 		"localhost/ErrorReporter.sol": {
 			"keccak256": "0xecacd5920a722868d343c2577f569636d452d99e5002a29034ccac3dc2359d7f",
 			"urls": [
@@ -155,10 +123,10 @@
 			]
 		},
 		"localhost/PriceOracle.sol": {
-			"keccak256": "0x29cf24155ba071b151b72df66b0ba96371a32d025b3af7662d8ade5d3e54ca8f",
+			"keccak256": "0x48772217853f894d85eed0e9c7699ecacb569a955d1825c691e8d636f16b3229",
 			"urls": [
-				"bzz-raw://a363df757e15e163791aaa4ddacd21d222e3fac68dab50b37a3769b0266166ae",
-				"dweb:/ipfs/QmcVrGHGPPr8UKYmZHszABHVABV1wxooYxm9do7DzPbzSz"
+				"bzz-raw://427f28163935266b6014b36e10f371a3a538282e3ceacd68a59863b61cf1b36b",
+				"dweb:/ipfs/QmWqTqkRNx8imZtgnWKStQwTR5yiCa5gZoWxcJyor5fkdt"
 			]
 		},
 		"localhost/Sightroller/SightrollerInterface.sol": {
@@ -166,20 +134,6 @@
 			"urls": [
 				"bzz-raw://a4c6e06f1e34b0a248253ff9eb50503d75d8a98dfb0d137d6d37c8d4075a8f19",
 				"dweb:/ipfs/QmaAgB56NU8fZmiTjxZHj7xTD28vURjaaiZJEj8TidU5Yd"
-			]
-		},
-		"localhost/SimplePriceOracle.sol": {
-			"keccak256": "0x2b6144601bd504062ee06c291c38116206d9b6704d5988a7d653ea912956a911",
-			"urls": [
-				"bzz-raw://892935cc87c9b5a5cf4151bddd7e45f5a464bb5afd12c1915329a54020618473",
-				"dweb:/ipfs/QmeAMPaq6gbhtBvMD4WQb3q2FHEuXGFnEzxe58BoRJWvKE"
-			]
-		},
-		"localhost/Tokens/CErc20.sol": {
-			"keccak256": "0xf1eafdb19a4155e4973f7afc834c398a3a2abfd80083006de0c6ea2687e4de7e",
-			"urls": [
-				"bzz-raw://6c6142d61ce3da0e2c38c934d6e1a9bc9f669ddd87cc02b5a37fc7ad16378f97",
-				"dweb:/ipfs/QmeZvuTYWYhse47fW1mTfoxxTGg7GvU9Q1Av42G8HDqrjP"
 			]
 		},
 		"localhost/Tokens/CToken.sol": {

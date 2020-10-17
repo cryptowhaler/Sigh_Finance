@@ -6,6 +6,293 @@
 	"output": {
 		"abi": [
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "contract CToken",
+						"name": "cToken",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "prevSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "BorrowersSIGHSpeedUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint224",
+						"name": "prevClock",
+						"type": "uint224"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint224",
+						"name": "curClock",
+						"type": "uint224"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "ClockUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "contract CToken",
+						"name": "cToken",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "borrower",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "sighDelta",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "sighBorrowIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "DistributedBorrower_SIGH",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "contract CToken",
+						"name": "cToken",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "supplier",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "sighDelta",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "sighSupplyIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "DistributedSupplier_SIGH",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "contract CToken",
+						"name": "cToken",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "isSIGHed",
+						"type": "bool"
+					}
+				],
+				"name": "MarketSIGHed",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "oldSIGHSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newSIGHSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber_",
+						"type": "uint256"
+					}
+				],
+				"name": "NewSIGHSpeed",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "cToken",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "prevPrice",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "currentPrice",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "PriceSnapped",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "cToken",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "prevPrice",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "currentPrice",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "PriceSnappedCheck",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "cToken",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "prevRatio",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newRatio",
+						"type": "uint256"
+					}
+				],
+				"name": "SIGH_Speeds_Supplier_Ratio_Mantissa_Updated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "userAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountTransferred",
+						"type": "uint256"
+					}
+				],
+				"name": "SIGH_Transferred",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "contract CToken",
+						"name": "cToken",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "prevSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "SuppliersSIGHSpeedUpdated",
+				"type": "event"
+			},
+			{
 				"constant": true,
 				"inputs": [
 					{
@@ -25,21 +312,6 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "SIGHDistributionHandler",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
 					}
 				],
 				"payable": false,
@@ -97,6 +369,21 @@
 					}
 				],
 				"name": "SIGH_Accrued",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "SIGH_ClaimThreshold",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -204,134 +491,6 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "_borrowGuardianPaused",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "_mintGuardianPaused",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "accountAssets",
-				"outputs": [
-					{
-						"internalType": "contract CToken",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "admin",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "allMarkets",
-				"outputs": [
-					{
-						"internalType": "contract CToken",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "borrowGuardianPaused",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "closeFactorMantissa",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
 				"name": "curClock",
 				"outputs": [
 					{
@@ -362,137 +521,10 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "liquidationIncentiveMantissa",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "markets",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "isListed",
-						"type": "bool"
-					},
-					{
-						"internalType": "uint256",
-						"name": "collateralFactorMantissa",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bool",
-						"name": "isSIGHed",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "maxAssets",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "mintGuardianPaused",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
 				"name": "oracle",
 				"outputs": [
 					{
 						"internalType": "contract PriceOracle",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "pauseGuardian",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "pendingAdmin",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "pendingSightrollerImplementation",
-				"outputs": [
-					{
-						"internalType": "address",
 						"name": "",
 						"type": "address"
 					}
@@ -519,12 +551,12 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "seizeGuardianPaused",
+				"name": "sighInitialIndex",
 				"outputs": [
 					{
-						"internalType": "bool",
+						"internalType": "uint224",
 						"name": "",
-						"type": "bool"
+						"type": "uint224"
 					}
 				],
 				"payable": false,
@@ -603,36 +635,6 @@
 				"payable": false,
 				"stateMutability": "view",
 				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "sightrollerImplementation",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "transferGuardianPaused",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -644,7 +646,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/Sightroller/SightrollerStorage.sol": "SightrollerV4Storage"
+			"localhost/Sightroller/SightrollerSIGHDistributionHandler.sol": "SightrollerSIGHDistributionHandler"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -669,6 +671,13 @@
 				"dweb:/ipfs/QmWimP2MCejqdsER2SNBmQSinAM4mtjUHY14KwBtS8rE2Q"
 			]
 		},
+		"localhost/Math/ABDKMath.sol": {
+			"keccak256": "0xc1a76b51aa087361e3a34d13bc58c65444b96fb1359fdc224d1df518b992db3f",
+			"urls": [
+				"bzz-raw://72e6cc616f0644a2c3d452a6d0101cd7b0ed4acf87d0fc62cddf4ebfbabfe635",
+				"dweb:/ipfs/QmPi236bYbLP7eVB5k65hDTUkcV8MCZJTSXPMwPZwk1NVi"
+			]
+		},
 		"localhost/Math/CarefulMath.sol": {
 			"keccak256": "0x0647348f27e41d22555d99eebd217dee02a4d737df6accd7cce5347a7487c7de",
 			"urls": [
@@ -690,6 +699,13 @@
 				"dweb:/ipfs/QmWqTqkRNx8imZtgnWKStQwTR5yiCa5gZoWxcJyor5fkdt"
 			]
 		},
+		"localhost/Sigh.sol": {
+			"keccak256": "0xf0c38750e9444fbe210703ad8ce6231344035fd66a0b405dade548d8ac1d66ec",
+			"urls": [
+				"bzz-raw://a8ebe7ce52c32b56e01673c3c03e141736c173284e88b81b62fd76662d7d5ee1",
+				"dweb:/ipfs/Qmb3RbzKcUWNtQv6V7epgLkZwEn3dXWoytpao16xvoXH2B"
+			]
+		},
 		"localhost/Sightroller/SightrollerInterface.sol": {
 			"keccak256": "0xc32a0616c6a3bc2a252a8a42be7b159c6c15da7fec23ed8c62f8dd83ab965c63",
 			"urls": [
@@ -697,11 +713,18 @@
 				"dweb:/ipfs/QmaAgB56NU8fZmiTjxZHj7xTD28vURjaaiZJEj8TidU5Yd"
 			]
 		},
-		"localhost/Sightroller/SightrollerStorage.sol": {
-			"keccak256": "0x5952fa72b8c42dd6ce866b2d074238fa89942a8c6c2d153f064924b68aa86e01",
+		"localhost/Sightroller/SightrollerSIGHDistributionHandler.sol": {
+			"keccak256": "0xf45a8d8c2b0c27c53440ee61288c9139aad5e4df47c1c087cd57504884cf20ec",
 			"urls": [
-				"bzz-raw://bc2552e86143f49cffe9ce2946178cfba5c8c36586eae71cb9cb1238c4b80cc9",
-				"dweb:/ipfs/QmYBx1HpMz8i6HDfGeZ9nbUFDw666S3RYdigXpQFD8h5tB"
+				"bzz-raw://8498b45caed283c922f04dcf098e7bf4501799fa6c80ac593282528d0b02ff15",
+				"dweb:/ipfs/QmarjPhPhpZPPvSsHeFacS7pFPD9TEJZctEb1HCEDNmtXC"
+			]
+		},
+		"localhost/SpeedController/SighSpeedController.sol": {
+			"keccak256": "0x03c7f376a289308dc91db90015baf60adec057da53f79948bf7864f648be05a4",
+			"urls": [
+				"bzz-raw://5466a0533ae83df08688a1dbf4cb8ad20fcb2b1f922ea07afca23d199ac4deb1",
+				"dweb:/ipfs/QmPhZDJjtGdvFH7rzGuGzw6yMkY7Ygz95RfweejsnTiRRP"
 			]
 		},
 		"localhost/Tokens/CToken.sol": {
@@ -718,6 +741,20 @@
 				"dweb:/ipfs/QmXBEvtSkTqnbu9vg7WeYq8JLv8fQ86g7wMALVmLCNkt2z"
 			]
 		},
+		"localhost/openzeppelin/Address.sol": {
+			"keccak256": "0x4de036019a21ea9c533e407350db987a2ca709675a0f8ff59e1ee7f2f74aa5ff",
+			"urls": [
+				"bzz-raw://813c0cb869a48a446a9bb134dacc0c266da551951abd678badefe4921e17f9eb",
+				"dweb:/ipfs/QmNicwDKpbtifUVLHwU9H2iM4FweZiTEwdbReAfgZRFRyh"
+			]
+		},
+		"localhost/openzeppelin/Context.sol": {
+			"keccak256": "0x12f78c7e16a79e701d2f84d7af1f278023c4b7eba6e54fb0b3fc9b42f7af8cbb",
+			"urls": [
+				"bzz-raw://cfc83144fbb86a060997ad11637b6eb1807a97f07fd632a8cbcb5767222e2050",
+				"dweb:/ipfs/QmYN9we1c2uw5itUG6toMBCC9ByVxY7UEPNxSHfRppwfY2"
+			]
+		},
 		"localhost/openzeppelin/EIP20Interface.sol": {
 			"keccak256": "0xfd8ed2eac6d0b4d9ee6b32628ba68bae17544b66f190a5f7ce0c6ad024579dc8",
 			"urls": [
@@ -730,6 +767,20 @@
 			"urls": [
 				"bzz-raw://50c3ba49b80106c88b0171390aa4127edc86f7b29607abe3dc6d08eaefebf837",
 				"dweb:/ipfs/QmP6AHNmFdwYwWUeHnhYi3drCQy4dpnnqUbkMeU3oAtokj"
+			]
+		},
+		"localhost/openzeppelin/IERC20.sol": {
+			"keccak256": "0x094762dde69857667a84ec5bf7b23a6f2f1800ecd51c5cc1bc55894562dc9830",
+			"urls": [
+				"bzz-raw://850ce22375e5236c65eac5edfeb6aed085e86473b53fda7398087b34d1c9dc37",
+				"dweb:/ipfs/QmYr1rWFHmEJHqVJvRRM3eEdobPeYLXhWydw37gEjxuAKd"
+			]
+		},
+		"localhost/openzeppelin/SafeMath.sol": {
+			"keccak256": "0x00997e3b7b77b87950ca2cbc738b91f4d5bcd7d25676945cfd53421d5128f039",
+			"urls": [
+				"bzz-raw://0ea73ee764b966d0bc982a5c69a355c3037bf83638f3ed4272fffc5b3e237a64",
+				"dweb:/ipfs/QmR6wYdGwBUAxgWkCDqAXb4vPPQVnrDHfqhe65GWtDhijr"
 			]
 		}
 	},

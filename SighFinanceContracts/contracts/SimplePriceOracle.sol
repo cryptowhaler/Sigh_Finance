@@ -25,9 +25,14 @@ contract SimplePriceOracle is PriceOracle {
     uint public currentCLock;
 
 
+    function getUnderlyingPrice(CToken cToken) public view returns (uint) {
+        
+        return pricesList[currentCLock];
+    }
+
     
 
-    function getUnderlyingPrice(CToken cToken) public returns (uint) {
+    function getUnderlyingPriceRefresh(CToken cToken) public returns (uint) {
         
         if (!initialized) {
             initializePrices();
