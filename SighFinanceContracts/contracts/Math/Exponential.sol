@@ -239,6 +239,15 @@ contract Exponential is CarefulMath {
         return uint224(n);
     }
 
+    function safe224(uint[24] memory n, string memory errorMessage) pure internal returns (uint224[24] memory) {
+        uint224[24] memory to_return;
+        for (uint i=0; i<24; i++) {
+            require(n[i] < 2**224, errorMessage);
+            to_return[i] = uint224(n[i]);
+        }
+        return to_return;
+    }
+
     function safe32(uint n, string memory errorMessage) pure internal returns (uint32) {
         require(n < 2**32, errorMessage);
         return uint32(n);

@@ -1,0 +1,168 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "admin",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "pendingAdmin",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "pendingSightrollerImplementation",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "sightrollerImplementation",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"methods": {}
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/Sightroller/SightrollerStorage.sol": "UnitrollerAdminStorage"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/ErrorReporter.sol": {
+			"keccak256": "0xecacd5920a722868d343c2577f569636d452d99e5002a29034ccac3dc2359d7f",
+			"urls": [
+				"bzz-raw://7f8b7c017754046178211d452c6d96fdf6e026fa76d00afb001afb4c1ca81953",
+				"dweb:/ipfs/QmSG3rLMdyYTMq7C7ZsPX53B23zGZRB9ifAX3S3qCnpG5p"
+			]
+		},
+		"localhost/InterestRateModels/InterestRateModel.sol": {
+			"keccak256": "0xb516fd3b78e7f3f4d1631b8dd50d167da4d73ca870cd09d67efcffdea2ed3b05",
+			"urls": [
+				"bzz-raw://3427725de8a149882669f60a3fbf179f4ef9ee97723ca47e91f39b8818b548d3",
+				"dweb:/ipfs/QmWimP2MCejqdsER2SNBmQSinAM4mtjUHY14KwBtS8rE2Q"
+			]
+		},
+		"localhost/Math/CarefulMath.sol": {
+			"keccak256": "0x0647348f27e41d22555d99eebd217dee02a4d737df6accd7cce5347a7487c7de",
+			"urls": [
+				"bzz-raw://08882d26c11a6d240949a5afba79a74694a8b651093c05c5ae4cc359a0181c22",
+				"dweb:/ipfs/QmVXb1tDswuhMRNuDLajzohdkvx2kBmqu1Rxn1BAKUfhkV"
+			]
+		},
+		"localhost/Math/Exponential.sol": {
+			"keccak256": "0xde2e32d9268c376a74ad4cc82e11dfed28ce4fbcaff72e75e03cf59afafd2971",
+			"urls": [
+				"bzz-raw://8f8b1bdbee4a596c98066597d143399f386ee5314ba5d03aab0d7659a5d0d241",
+				"dweb:/ipfs/QmaYfxmrbPVqVkrUZyhkcrxrCaA3i3aoQ7iQuDLbK3LEVo"
+			]
+		},
+		"localhost/PriceOracle.sol": {
+			"keccak256": "0x29cf24155ba071b151b72df66b0ba96371a32d025b3af7662d8ade5d3e54ca8f",
+			"urls": [
+				"bzz-raw://a363df757e15e163791aaa4ddacd21d222e3fac68dab50b37a3769b0266166ae",
+				"dweb:/ipfs/QmcVrGHGPPr8UKYmZHszABHVABV1wxooYxm9do7DzPbzSz"
+			]
+		},
+		"localhost/Sightroller/SightrollerInterface.sol": {
+			"keccak256": "0xc32a0616c6a3bc2a252a8a42be7b159c6c15da7fec23ed8c62f8dd83ab965c63",
+			"urls": [
+				"bzz-raw://a4c6e06f1e34b0a248253ff9eb50503d75d8a98dfb0d137d6d37c8d4075a8f19",
+				"dweb:/ipfs/QmaAgB56NU8fZmiTjxZHj7xTD28vURjaaiZJEj8TidU5Yd"
+			]
+		},
+		"localhost/Sightroller/SightrollerStorage.sol": {
+			"keccak256": "0x12ee9900bbc4a903f90d4c6f705b861d3dafba52d8a110c13d6a198d7d913e6c",
+			"urls": [
+				"bzz-raw://c96fce16b53f7e333d42919c1a3d6052a1a9a210970bb573e98766c57a3043eb",
+				"dweb:/ipfs/QmdbghN5qyV5WPrgMRcTnNXUahqyTvjkVznypRtrr4ZTGx"
+			]
+		},
+		"localhost/Tokens/CToken.sol": {
+			"keccak256": "0xfb9ff80b893b2706c256e5a30224d6177daba81222c2f7f6417029f5569e52fd",
+			"urls": [
+				"bzz-raw://7aadfd9d6f0cd575565d8e255eae51bdcbb76ac9769fdf61a81d9bdda48a820b",
+				"dweb:/ipfs/QmXuPYknit7BmWQt81SFo1ykEgeQhenU1XBM4F5cmtnMw2"
+			]
+		},
+		"localhost/Tokens/CTokenInterfaces.sol": {
+			"keccak256": "0x2ad76eb92f25980603fe536e7af20c5d7e8aa21d2ce72147aac1ffa6f2d468e9",
+			"urls": [
+				"bzz-raw://109809645b7dcac33fd3f2ebbb78da09497c871b903b18ba783f60a0e239e8df",
+				"dweb:/ipfs/QmXBEvtSkTqnbu9vg7WeYq8JLv8fQ86g7wMALVmLCNkt2z"
+			]
+		},
+		"localhost/openzeppelin/EIP20Interface.sol": {
+			"keccak256": "0xfd8ed2eac6d0b4d9ee6b32628ba68bae17544b66f190a5f7ce0c6ad024579dc8",
+			"urls": [
+				"bzz-raw://701be308137fe36f221f1d7c815247a272638df40917e7d1456b3b16e8402897",
+				"dweb:/ipfs/QmPDkPoKiWXMjwpGa65JHBjo5NH8AA3q1nMhsewfUZHjpx"
+			]
+		},
+		"localhost/openzeppelin/EIP20NonStandardInterface.sol": {
+			"keccak256": "0x9719f12e4b80b51147ac195553a198cf8b0c516e7e4d04fc324a23ed15cbafb2",
+			"urls": [
+				"bzz-raw://50c3ba49b80106c88b0171390aa4127edc86f7b29607abe3dc6d08eaefebf837",
+				"dweb:/ipfs/QmP6AHNmFdwYwWUeHnhYi3drCQy4dpnnqUbkMeU3oAtokj"
+			]
+		}
+	},
+	"version": 1
+}

@@ -121,6 +121,9 @@ contract SightrollerV3Storage is SightrollerV2Storage {
 
 
 contract SightrollerV4Storage is SightrollerV3Storage {
+    
+    address public Sigh_Address;
+    address public SighSpeedControllerAddress;
 
     struct SIGHMarketState {
         /// @notice The market's last updated SIGHIndex 
