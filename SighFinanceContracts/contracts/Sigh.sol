@@ -101,17 +101,28 @@ contract SIGH is Context, IERC20 {
     }
 
     function _initEras() private {
-        _eras[0] = Era(1, 96, 100 );        // 96 days
-        _eras[1] = Era(97, 462, 200 );       // 1 year
-        _eras[2] = Era(463, 828, 400 );      // 1 year
-        _eras[3] = Era(829, 1194, 800 );       // 1 year
-        _eras[4] = Era(1195, 1560, 1600 );     // 1 year
-        _eras[5] = Era(1561, 1926, 3200 );      // 1 year   
-        _eras[6] = Era(1927, 2292, 6400 );       // 1 year
-        _eras[7] = Era(2293, 2658, 12800 );        // 1 year
-        _eras[8] = Era(2659, 3024, 25600 );        // 1 year
-        _eras[9] = Era(3025, 3390, 51200 );        // 1 year
-        _eras[10] = Era(3391, 3756, 102400 );       // 1 year
+        _eras[0] = Era(1, 5, 100 );        // 96 days
+        _eras[1] = Era(97, 7, 200 );       // 1 year
+        _eras[2] = Era(463, 7, 400 );      // 1 year
+        _eras[3] = Era(829, 7, 800 );       // 1 year
+        _eras[4] = Era(1195, 7, 1600 );     // 1 year
+        _eras[5] = Era(1561, 7, 3200 );      // 1 year   
+        _eras[6] = Era(1927, 7, 6400 );       // 1 year
+        _eras[7] = Era(2293, 7, 12800 );        // 1 year
+        _eras[8] = Era(2659, 7, 25600 );        // 1 year
+        _eras[9] = Era(3025, 7, 51200 );        // 1 year
+        _eras[10] = Era(3391, 7, 102400 );       // 1 year
+        // _eras[0] = Era(1, 96, 100 );        // 96 days
+        // _eras[1] = Era(97, 462, 200 );       // 1 year
+        // _eras[2] = Era(463, 828, 400 );      // 1 year
+        // _eras[3] = Era(829, 1194, 800 );       // 1 year
+        // _eras[4] = Era(1195, 1560, 1600 );     // 1 year
+        // _eras[5] = Era(1561, 1926, 3200 );      // 1 year   
+        // _eras[6] = Era(1927, 2292, 6400 );       // 1 year
+        // _eras[7] = Era(2293, 2658, 12800 );        // 1 year
+        // _eras[8] = Era(2659, 3024, 25600 );        // 1 year
+        // _eras[9] = Era(3025, 3390, 51200 );        // 1 year
+        // _eras[10] = Era(3391, 3756, 102400 );       // 1 year
     }
 
     function isMintingActivated() external view returns(bool) {

@@ -1121,14 +1121,46 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
         if (getCurrentMarketState[cToken].index == 0 && getCurrentMarketState[cToken].block_ == 0) {
             uint curPrice = oracle.getUnderlyingPrice(CToken(cToken));
             require(curPrice != 0,'The oracle gave an invalid Price'); 
-            getCurrentMarketState[cToken] = SIGHMarketState({ index: sighInitialIndex, recordedPriceSnapshot[curClock]: uint224(curPrice),  block_: safe32(getBlockNumber(), "block number exceeds 32 bits") });
+            uint224[24] getinitalSnapshot = getinitalSnapshots();
+    
+            getinitalSnapshot[curClock] = curPrice;
+            
+            getCurrentMarketState[cToken] = SIGHMarketState({ index: sighInitialIndex, recordedPriceSnapshot: getinitalSnapshot,  block_: safe32(getBlockNumber(), "block number exceeds 32 bits") });
         }
 
         SIGH_Speeds_Supplier_Ratio_Mantissa[cToken] = 1e18;
 
-        refreshSIGHSpeeds() // TO BE IMPLEMENTED
+        refreshSIGHSpeeds(); // TO BE IMPLEMENTED
 
         emit MarketSIGHed(CToken(cToken), true);
+    }
+
+    function getinitalSnapshots() internal returns(uint224[24] memory) {
+        uint224[24] memory currentSnap;
+        currentSnap[0] = 0;
+        currentSnap[1] = 800000;
+        currentSnap[2] = 700000;
+        currentSnap[3] = 650000;
+        currentSnap[4] = 900000;
+        currentSnap[5] = 800000;
+        currentSnap[6] = 500000;
+        currentSnap[7] = 1000000;
+        currentSnap[8] = 1100000;
+        currentSnap[9] = 1150000;
+        currentSnap[10] = 900000;
+        currentSnap[11] = 850000;
+        currentSnap[12] = 750000;
+        currentSnap[13] = 720000;
+        currentSnap[14] = 700000;
+        currentSnap[15] = 620000;
+        currentSnap[16] = 1000000;
+        currentSnap[17] = 1500000;
+        currentSnap[18] = 1400000;
+        currentSnap[19] = 1200000;
+        currentSnap[20] = 1100000;
+        currentSnap[22] = 1400000;
+        currentSnap[23] = 900000;
+        return currentSnap;
     }
 
     /**
@@ -1149,7 +1181,7 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
 
     }
 
-    function setSIGHSpeedRatioForAMarket(address cToken, uint supplierRatio) {
+    function setSIGHSpeedRatioForAMarket(address cToken, uint supplierRatio) public returns (bool) {
         require(msg.sender == admin, 'Only Admin can change the SIGH Speed Distribution Ratio for a Market');
         require( supplierRatio > 0.5e18, 'The new Supplier Ratio must be greater than 0.5e18');
         require( supplierRatio <= 1e18, 'The new Supplier Ratio must be less than 1e18');
@@ -1161,6 +1193,7 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
         SIGH_Speeds_Supplier_Ratio_Mantissa[cToken] = supplierRatio;
         emit SIGH_Speeds_Supplier_Ratio_Mantissa_Updated( cToken, prevRatio , SIGH_Speeds_Supplier_Ratio_Mantissa[cToken] );
         refreshSIGHSpeeds();
+        return true;
     }
 
     /**
@@ -1243,8 +1276,10 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
             }
 
             //  ###### It updates the stored Price for the current CLock ######
-            uint blockNumber = getBlockNumber();            
-            marketState = SIGHMarketState({ index: safe224(marketState.index,"new index exceeds 224 bits"), recordedPriceSnapshot[curClock] : safe224(currentPrice.mantissa, "new recordedPriceSnapshot exceeds 256 bits"),   block: safe32(blockNumber, "block number exceeds 32 bits")});            
+            uint blockNumber = getBlockNumber();        
+            uint224[24] priceSnapshots = marketState.recordedPriceSnapshot;
+            priceSnapshots[curClock] = currentPrice.mantissa;
+            marketState = SIGHMarketState({ index: safe224(marketState.index,"new index exceeds 224 bits"), recordedPriceSnapshot : safe224(priceSnapshots, "new recordedPriceSnapshot exceeds 256 bits"),   block: safe32(blockNumber, "block number exceeds 32 bits")});            
             emit PriceSnapped(address(cToken), previousPrice.mantissa, currentPrice.mantissa , blockNumber );
             SIGHMarketState storage marketState_new = sigh_Market_State[address(cToken)];            
             emit PriceSnappedCheck(address(cToken), previousPrice.mantissa, marketState_new.recordedPriceSnapshot[curClock] , blockNumber );
@@ -1256,7 +1291,7 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
             emit refreshingSighSpeeds_1( cToken , previousPrice.mantissa , currentPrice.mantissa , marketLosses[i].mantissa , totalSupply,  totalLosses.mantissa );
         }
 
-        // ###### Drips the SIGH from the SIGHSpeedController ######
+        // ###### Drips the SIGH from the SIGH Speed Controller ######
         SighSpeedController sigh_SpeedController = SighSpeedController(getSighSpeedController());
         uint256 dripped_amount = sigh_SpeedController.drip();
 
@@ -1484,24 +1519,24 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
     // #########################################################
     // ################### GENERAL FUNCTIONS ###################
     // #########################################################
-    address sigh_address_;
-    address sighSpeedControllerAddress;
-    function setSighAddress(address contractAddress) public returns (bool) {
-        sigh_address_ = contractAddress;
-        return true;
-    }
 
-    function getSighAddress() public view returns (address) {
-        return sigh_address_;
+
+    function setSighAddress(address Sigh_Address__) public view returns (address) {
+        Sigh_Address = Sigh_Address__;
+        return Sigh_Address;
     }
+    
+    function getSighAddress() public view returns (address) {
+        return Sigh_Address;
+    }    
 
     function getSighSpeedController() public view returns (address) {
-        return sighSpeedControllerAddress;
+        return SighSpeedController;
     }
-
-    function setSighSpeedController(address contractAddress) public returns (bool) {
-        sighSpeedControllerAddress = contractAddress
-        return true;
+    
+    function setSighSpeedController(address SighSpeedController__) public returns (address) {
+        SighSpeedController = SighSpeedController__;
+        return SighSpeedController;
     }    
 
     /**

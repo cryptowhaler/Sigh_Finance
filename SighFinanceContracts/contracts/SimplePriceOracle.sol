@@ -20,32 +20,82 @@ contract SimplePriceOracle is PriceOracle {
 
     AggregatorV3Interface internal ZRX_USD = AggregatorV3Interface(0x5813A90f826e16dB392abd2aF7966313fc1fd5B8); //ZRX - USD
 
+    uint[24] public pricesList;
+    bool initialized = false;
+    uint public currentCLock;
 
 
-    function getUnderlyingPrice(CToken cToken) public view returns (uint) {
+    
 
-        // Return LINK price in USD
-        if (compareStrings(cToken.symbol(), "link")) {
-            (uint80 roundID, int price,uint startedAt, uint timeStamp, uint80 answeredInRound) = LINK_USD.latestRoundData();
-            return uint(price);
-        } 
-        else if (compareStrings(cToken.symbol(), "S-GSIGH")) {
-            (uint80 roundID, int price,uint startedAt, uint timeStamp, uint80 answeredInRound) = GSIGH_USD.latestRoundData();
-            return uint(price);
-        } 
-        else if (compareStrings(cToken.symbol(), "S-SIGH")) {
-            (uint80 roundID, int price,uint startedAt, uint timeStamp, uint80 answeredInRound) = SIGH_USD.latestRoundData();
-            return uint(price);
-        } 
-        // Return LINK price in ETH
-        else {
-            (uint80 roundID, int price,uint startedAt, uint timeStamp, uint80 answeredInRound) = LINK_ETH.latestRoundData();
-            return uint(price);
+    function getUnderlyingPrice(CToken cToken) public returns (uint) {
+        
+        if (!initialized) {
+            initializePrices();
         }
+        
+        uint prev = currentCLock;
+        currentCLock = prev + 1;
+        if (currentCLock >= 24) {
+            currentCLock = 0;
+        }
+
+        return pricesList[currentCLock];
     }
 
+
+    function initializePrices() internal returns (bool){
+        pricesList[0] = 1000000;
+        pricesList[1] = 800000;
+        pricesList[2] = 700000;
+        pricesList[3] = 650000;
+        pricesList[4] = 900000;
+        pricesList[5] = 800000;
+        pricesList[6] = 500000;
+        pricesList[7] = 1000000;
+        pricesList[8] = 1100000;
+        pricesList[9] = 1150000;
+        pricesList[10] = 900000;
+        pricesList[11] = 850000;
+        pricesList[12] = 750000;
+        pricesList[13] = 720000;
+        pricesList[14] = 700000;
+        pricesList[15] = 620000;
+        pricesList[16] = 1000000;
+        pricesList[17] = 1500000;
+        pricesList[18] = 1400000;
+        pricesList[19] = 1200000;
+        pricesList[20] = 1100000;
+        pricesList[22] = 1400000;
+        pricesList[23] = 900000;
+        initialized = true;
+        return initialized;
+    }
 
     function compareStrings(string memory a, string memory b) internal pure returns (bool) {
         return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
     }
 }
+
+
+
+
+
+        // // Return LINK price in USD
+        // if (compareStrings(cToken.symbol(), "link")) {
+        //     (uint80 roundID, int price,uint startedAt, uint timeStamp, uint80 answeredInRound) = LINK_USD.latestRoundData();
+        //     return uint(price);
+        // } 
+        // else if (compareStrings(cToken.symbol(), "S-GSIGH")) {
+        //     (uint80 roundID, int price,uint startedAt, uint timeStamp, uint80 answeredInRound) = GSIGH_USD.latestRoundData();
+        //     return uint(price);
+        // } 
+        // else if (compareStrings(cToken.symbol(), "S-SIGH")) {
+        //     (uint80 roundID, int price,uint startedAt, uint timeStamp, uint80 answeredInRound) = SIGH_USD.latestRoundData();
+        //     return uint(price);
+        // } 
+        // // Return LINK price in ETH
+        // else {
+        //     (uint80 roundID, int price,uint startedAt, uint timeStamp, uint80 answeredInRound) = LINK_ETH.latestRoundData();
+        //     return uint(price);
+        // }
+
