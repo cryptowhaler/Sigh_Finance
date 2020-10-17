@@ -6,7 +6,7 @@
 }
 
 #mobile-header {
-    height: 50px;
+    height: 70px;
     background: #000000;
     //var(--mobile-bg-color);
     padding: 0 20px;
@@ -17,7 +17,7 @@
     .logo {
         // float: left; 
         // padding-top: 2%; 
-        max-width: 42%;
+        min-width: 170%;
         position: absolute;
         left: 0;
         top: 0;
