@@ -9,7 +9,7 @@ import "./SightrollerInterface.sol";
 import "./SightrollerStorage.sol";
 import "./Unitroller.sol";
 import "../Sigh.sol";
-import "../Reservoir/SighReservoir.sol";
+import "../SpeedController/SighSpeedController.sol";
 
 /**
  * @title SighFinance's Sightroller Contract
@@ -1256,9 +1256,9 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
             emit refreshingSighSpeeds_1( cToken , previousPrice.mantissa , currentPrice.mantissa , marketLosses[i].mantissa , totalSupply,  totalLosses.mantissa );
         }
 
-        // ###### Drips the SIGH from the SIGH Reservoir ######
-        SighReservoir sigh_Reservoir = SighReservoir(getSighReservoir());
-        uint256 dripped_amount = sigh_Reservoir.drip();
+        // ###### Drips the SIGH from the SIGHSpeedController ######
+        SighSpeedController sigh_SpeedController = SighSpeedController(getSighSpeedController());
+        uint256 dripped_amount = sigh_SpeedController.drip();
 
         // ###### Updates the Speed for the Supported Markets ######
         for (uint i=0 ; i < allMarkets_.length ; i++) {
@@ -1484,15 +1484,25 @@ contract Sightroller is SightrollerV4Storage, SightrollerInterface, SightrollerE
     // #########################################################
     // ################### GENERAL FUNCTIONS ###################
     // #########################################################
-
+    address sigh_address_;
+    address sighSpeedControllerAddress;
+    function setSighAddress(address contractAddress) public returns (bool) {
+        sigh_address_ = contractAddress;
+        return true;
+    }
 
     function getSighAddress() public view returns (address) {
-        return 0x76Ff68033ef96ee0727f85eA1f979B1b0FD4C75b;
+        return sigh_address_;
     }
 
-    function getSighReservoir() public view returns (address) {
-        return 0x9748692378cD832db750009BEF7Ea3f6862f9fD9;
+    function getSighSpeedController() public view returns (address) {
+        return sighSpeedControllerAddress;
     }
+
+    function setSighSpeedController(address contractAddress) public returns (bool) {
+        sighSpeedControllerAddress = contractAddress
+        return true;
+    }    
 
     /**
      * @notice Return all of the markets
