@@ -1,14 +1,13 @@
 pragma solidity ^0.5.16;
 
 import "../Tokens/CToken.sol";
-import "../ErrorReporter.sol";
 import "../Math/Exponential.sol";
 import "../PriceOracle.sol";
 import "../SpeedController/SighSpeedController.sol";
-import "../Sigh.sol";
+import "../openzeppelin/EIP20Interface.sol";
 
 
-contract SightrollerSIGHDistributionHandler {
+contract SightrollerSIGHDistributionHandler is Exponential {
     
     address admin;
     address public sightrollerAddress;
@@ -96,29 +95,6 @@ contract SightrollerSIGHDistributionHandler {
         admin = msg.sender;
     }
     
-    function setSightrollerAddress(address newSightroller) public returns (bool) {
-        require(msg.sender == admin, "only admin can set SIGHTROLLER");
-        sightrollerAddress = newSightroller;
-        return true;
-    }
-    
-    function setOracle(address newOracle) public returns (bool) {
-        require(msg.sender == admin, "only admin can set oracle");
-        oracle = newOracle;
-        return true;
-    }
-    
-    function setSigh_Address(address newSigh_Address) public returns (bool) {
-        require(msg.sender == admin, "only admin can set Sigh_Address");
-        Sigh_Address = newSigh_Address;
-        return true;
-    }
-    
-    function setSighSpeedControllerAddress(address newSighSpeedControllerAddress) public returns (bool) {
-        require(msg.sender == admin, "only admin can set SighSpeedControllerAddress");
-        SighSpeedControllerAddress = newSighSpeedControllerAddress;
-        return true;
-    }
     
     /*** SIGH Distribution Admin ***/
     /*** SIGH Distribution Admin ***/
@@ -232,8 +208,7 @@ contract SightrollerSIGHDistributionHandler {
         for (uint i = 0; i < allMarkets_.length; i++) {
             CToken currentMarket = allMarkets_[i];
             updateSIGHSupplyIndex(address(currentMarket));
-            Exp memory borrowIndex = Exp({mantissa: currentMarket.borrowIndex()});            
-            updateSIGHBorrowIndex(address(currentMarket),borrowIndex);
+            updateSIGHBorrowIndex(address(currentMarket));
         }
 
         // ###### Updates the Clock ######
@@ -270,7 +245,7 @@ contract SightrollerSIGHDistributionHandler {
             
             require ( currentPrice.mantissa > 0, "refreshSIGHSpeedsInternal : Oracle returned Invalid Price" );
 
-            if ( sighedMarkets[address(cToken)].isSIGHed && sighPriceCycles[address(cToken)].initializationCounter == 24 && greaterThanExp( previousPrice , currentPrice ) ) {  // i.e the price has decreased
+            if ( sighedMarkets[address(cToken)] && sighPriceCycles[address(cToken)].initializationCounter == 24 && greaterThanExp( previousPrice , currentPrice ) ) {  // i.e the price has decreased
                 (MathError error, Exp memory lossPerUnderlying) = subExp( previousPrice , currentPrice );
                 totalSupply = cToken.totalSupply();
                 ( error, marketLosses[i] ) = mulScalar( lossPerUnderlying, totalSupply );
@@ -348,7 +323,7 @@ contract SightrollerSIGHDistributionHandler {
 
     /**
      * @notice Accrue SIGH to the market by updating the supply index
-     * @param cToken The market whose supply index to update
+     * @param currentMarket The market whose supply index to update
      */
     function updateSIGHSupplyIndex(address currentMarket) public {
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
@@ -385,7 +360,7 @@ contract SightrollerSIGHDistributionHandler {
 
     /**
      * @notice Accrue SIGH to the market by updating the borrow index
-     * @param cToken The market whose borrow index to update
+     * @param currentMarket The market whose borrow index to update
      */
     function updateSIGHBorrowIndex(address currentMarket) public {
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
@@ -414,7 +389,7 @@ contract SightrollerSIGHDistributionHandler {
             borrowState.block_ = safe32(blockNumber, "block number exceeds 32 bits");
         }
         
-        SIGHMarketState memory newBorrowState = sighMarketBorrowState[cToken];
+        SIGHMarketState memory newBorrowState = sighMarketBorrowState[currentMarket];
         emit updateSIGHBorrowIndex_test3( currentMarket, prevIndex, newBorrowState.index, newBorrowState.block_  );
     }
 
@@ -428,8 +403,9 @@ contract SightrollerSIGHDistributionHandler {
 
     /**
      * @notice Calculate SIGH accrued by a supplier and possibly transfer it to them
-     * @param cToken The market in which the supplier is interacting
+     * @param currentMarket The market in which the supplier is interacting
      * @param supplier The address of the supplier to distribute SIGH to
+     * @param distributeAll All SIGH Distributed if it is true
      */
     function distributeSupplier_SIGH(address currentMarket, address supplier, bool distributeAll) public {
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
@@ -460,8 +436,9 @@ contract SightrollerSIGHDistributionHandler {
     /**
      * @notice Calculate SIGH accrued by a borrower and possibly transfer it to them
      * @dev Borrowers will not begin to accrue until after the first interaction with the protocol.
-     * @param cToken The market in which the borrower is interacting
+     * @param currentMarket The market in which the borrower is interacting
      * @param borrower The address of the borrower to distribute Gsigh to
+     * @param distributeAll All SIGH Distributed if it is true
      */
     function distributeBorrower_SIGH(address currentMarket, address borrower, bool distributeAll) public {
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
@@ -492,26 +469,104 @@ contract SightrollerSIGHDistributionHandler {
         }
     }
 
+    // #########################################################################################
+    // ################### MARKET PARTICIPANTS CAN CLAIM THEIR ACCURED SIGH  ###################
+    // #########################################################################################
 
+    function claimSIGH(address[] memory holders, bool borrowers, bool suppliers ) public {
+        
+        for (uint i = 0; i < allMarkets.length; i++) {  
+            CToken currentMarket = allMarkets[i];
 
+            if (borrowers == true) {
+                updateSIGHBorrowIndex(address(currentMarket));
+                for (uint j = 0; j < holders.length; j++) {
+                    distributeBorrower_SIGH(address(currentMarket), holders[j], true);
+                }
+            }
 
+            if (suppliers == true) {
+                updateSIGHSupplyIndex(address(currentMarket));
+                for (uint j = 0; j < holders.length; j++) {
+                    distributeSupplier_SIGH(address(currentMarket), holders[j], true);
+                }
+            }
+        }
+    }
 
+    // #########################################################################################
+    // ################### TRANSFERS THE SIGH TO THE MARKET PARTICIPANT  ###################
+    // #########################################################################################
 
+    /**
+     * @notice Transfer SIGH to the user, if they are above the threshold
+     * @dev Note: If there is not enough SIGH, we do not perform the transfer all.
+     * @param user The address of the user to transfer SIGH to
+     * @param userAccrued The amount of SIGH to (possibly) transfer
+     * @param threshold The minimum amount of SIGH to (possibly) transfer
+     * @return The amount of SIGH which was NOT transferred to the user
+     */
+    function transfer_Sigh(address user, uint userAccrued, uint threshold) internal returns (uint) {
+        if (userAccrued >= threshold && userAccrued > 0) {
+            EIP20Interface sigh = EIP20Interface(getSighAddress());
+            uint sigh_Remaining = sigh.balanceOf(address(this));
+            if (userAccrued <= sigh_Remaining) {
+                sigh.transfer(user, userAccrued);
+                emit SIGH_Transferred(user, userAccrued);
+                return 0;
+            }
+        }
+        return userAccrued;
+    }
+
+    // #########################################################
+    // ################### GENERAL FUNCTIONS ###################
+    // #########################################################
+
+// SIGHTROLLER - GETTER AND SETTER
+    function setSightrollerAddress(address newSightroller) public returns (bool) {
+        require(msg.sender == admin, "only admin can set SIGHTROLLER");
+        sightrollerAddress = newSightroller;
+        return true;
+    }
+
+    function getSightrollerAddress() public view returns (address) {
+        return sightrollerAddress;
+    }    
+
+// SIGH - GETTER AND SETTER
+    function setSighAddress(address Sigh_Address__) public returns (address) {
+        require(msg.sender == admin, "only admin can set Sigh_Address");
+        Sigh_Address = Sigh_Address__;
+        return Sigh_Address;
+    }
+    
+    function getSighAddress() public view returns (address) {
+        return Sigh_Address;
+    }    
+
+// SIGH SPEED CONTROLLER - GETTER AND SETTER
+    function setSighSpeedController(address SighSpeedController__) public returns (address) {
+        require(msg.sender == admin, "only admin can set Sigh_Address");
+        SighSpeedControllerAddress = SighSpeedController__;
+        return SighSpeedControllerAddress;
+    }    
+
+    function getSighSpeedController() public view returns (address) {
+        return SighSpeedControllerAddress;
+    }
+    
+// ORACLE - SETTER
+    function setOracle(address newOracle) public returns (bool) {
+        require(msg.sender == admin, "only admin can set oracle");
+        oracle = PriceOracle(newOracle);
+        return true;
+    }
 
 
 
     function getBlockNumber() public view returns (uint32) {
         return uint32(block.number);
     }
-
-
-
-
-
-
-
-
-
-
 
 }

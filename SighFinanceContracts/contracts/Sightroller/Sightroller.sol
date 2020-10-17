@@ -1055,9 +1055,6 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
     event MarketSIGHed(CToken cToken, bool isSIGHed);
 
 
-
-
-
     // ##############################################################################
     // ################ ADMIN FUNCTIONS RELATED TO SIGH DISTRIBUTION ################
     // ##############################################################################
@@ -1073,7 +1070,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
         require(market.isListed == true, "This market is not listed");
         require(isSIGHDistributionHandlerSet, "SIGH Distribution Handler has not been initialized.");
     
-        SightrollerSIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler;
+        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
         bool isMarketAdded = sighHandlerContract.addSIGHMarket(cToken);
 
         require(isMarketAdded, "SIGH market not added properly");
@@ -1092,7 +1089,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
         require(market.isListed == true, "SIGH market is not listed");
         require(isSIGHDistributionHandlerSet, "SIGH Distribution Handler has not been initialized.");
     
-        SightrollerSIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler;
+        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
         bool isMarketDropped = sighHandlerContract.dropSIGHMarket(cToken);
 
         require(isMarketDropped, "SIGH market not dropped properly");
@@ -1107,7 +1104,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
     function setSIGHSpeed(uint SIGHSpeed_) public returns (bool) {
         require(msg.sender == admin, "only admin can change SIGH rate"); 
 
-        SightrollerSIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler;
+        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
         bool isSpeedUpdated = sighHandlerContract.updateSIGHSpeed(SIGHSpeed_);
 
         require(isSpeedUpdated, "SIGH speed not updated properly");
@@ -1119,7 +1116,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
         require( supplierRatio > 0.5e18, 'The new Supplier Ratio must be greater than 0.5e18');
         require( supplierRatio <= 1e18, 'The new Supplier Ratio must be less than 1e18');
 
-        SightrollerSIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler;
+        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
         bool isSIGHSpeedRatioForAMarketUpdated = sighHandlerContract.updateSIGHSpeedRatioForAMarket(cToken,supplierRatio );
 
         require(isSIGHSpeedRatioForAMarketUpdated, "market's SIGH Speed Ratio not updated properly");
@@ -1136,7 +1133,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
      */
     function refreshSIGHSpeeds() public returns (bool) {
 
-        SightrollerSIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler;
+        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
         bool areSIGHSpeedsRefreshed = sighHandlerContract.refreshSIGHSpeeds();
         
         if (areSIGHSpeedsRefreshed) {
@@ -1156,7 +1153,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
      */
     function updateSIGHSupplyIndex(address cToken) internal {
         
-        SightrollerSIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler;
+        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
         sighHandlerContract.updateSIGHSupplyIndex(cToken);
         
     }
@@ -1167,7 +1164,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
      */
     function updateSIGHBorrowIndex(address cToken) internal {
 
-        SightrollerSIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler;
+        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
         sighHandlerContract.updateSIGHBorrowIndex(cToken);
         
     }
@@ -1181,9 +1178,9 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
      * @param cToken The market in which the supplier is interacting
      * @param supplier The address of the supplier to distribute SIGH to
      */
-    function distributeSupplier_SIGH(address cToken, address supplier) internal {
-        SightrollerSIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler;
-        sighHandlerContract.distributeSupplier_SIGH(cToken,supplier);
+    function distributeSupplier_SIGH(address cToken, address supplier, bool distributeAll) internal {
+        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
+        sighHandlerContract.distributeSupplier_SIGH(cToken,supplier,distributeAll);
     }
 
     /**
@@ -1192,9 +1189,9 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
      * @param cToken The market in which the borrower is interacting
      * @param borrower The address of the borrower to distribute Gsigh to
      */
-    function distributeBorrower_SIGH(address cToken, address borrower, Exp memory marketBorrowIndex) internal {
-        SightrollerSIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler;
-        sighHandlerContract.distributeBorrower_SIGH(cToken,borrower);
+    function distributeBorrower_SIGH(address cToken, address borrower, bool distributeAll) internal {
+        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
+        sighHandlerContract.distributeBorrower_SIGH(cToken,borrower,distributeAll);
     }
 
     // #########################################################################################
@@ -1215,75 +1212,17 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
      * @param holders The addresses to claim SIGH for
      */
     function claimSIGH(address[] memory holders, bool borrowers, bool suppliers ) public {
+
+        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
+        sighHandlerContract.claimSIGH(holders,borrowers,suppliers);
         
-        for (uint i = 0; i < allMarkets.length; i++) {  
-            CToken cToken = allMarkets[i];
-            require(markets[address(cToken)].isListed, "market must be listed");
-            
-            if (borrowers == true) {
-                Exp memory borrowIndex = Exp({mantissa: cToken.borrowIndex()});
-                updateSIGHBorrowIndex(address(cToken), borrowIndex);
-                for (uint j = 0; j < holders.length; j++) {
-                    distributeBorrower_SIGH(address(cToken), holders[j], borrowIndex, true);
-                }
-            }
-
-            if (suppliers == true) {
-                updateSIGHSupplyIndex(address(cToken));
-                for (uint j = 0; j < holders.length; j++) {
-                    distributeSupplier_SIGH(address(cToken), holders[j], true);
-                }
-            }
-        }
     }
 
-    // #########################################################################################
-    // ################### TRANSFERS THE SIGH TO THE MARKET PARTICIPANT  ###################
-    // #########################################################################################
-
-    /**
-     * @notice Transfer SIGH to the user, if they are above the threshold
-     * @dev Note: If there is not enough SIGH, we do not perform the transfer all.
-     * @param user The address of the user to transfer SIGH to
-     * @param userAccrued The amount of SIGH to (possibly) transfer
-     * @param threshold The minimum amount of SIGH to (possibly) transfer
-     * @return The amount of SIGH which was NOT transferred to the user
-     */
-    function transfer_Sigh(address user, uint userAccrued, uint threshold) internal returns (uint) {
-        if (userAccrued >= threshold && userAccrued > 0) {
-            SIGH sigh = SIGH(getSighAddress());
-            uint sigh_Remaining = sigh.balanceOf(address(this));
-            if (userAccrued <= sigh_Remaining) {
-                sigh.transfer(user, userAccrued);
-                emit SIGH_Transferred(user, userAccrued);
-                return 0;
-            }
-        }
-        return userAccrued;
-    }
 
     // #########################################################
     // ################### GENERAL FUNCTIONS ###################
     // #########################################################
 
-
-    function setSighAddress(address Sigh_Address__) public returns (address) {
-        Sigh_Address = Sigh_Address__;
-        return Sigh_Address;
-    }
-    
-    function getSighAddress() public view returns (address) {
-        return Sigh_Address;
-    }    
-
-    function getSighSpeedController() public view returns (address) {
-        return SighSpeedControllerAddress;
-    }
-    
-    function setSighSpeedController(address SighSpeedController__) public returns (address) {
-        SighSpeedControllerAddress = SighSpeedController__;
-        return SighSpeedControllerAddress;
-    }    
 
     /**
      * @notice Return all of the markets
@@ -1301,5 +1240,12 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
     function getUnderlyingPriceFromoracle(address cToken) public view returns (uint) {
         return  oracle.getUnderlyingPrice(CToken(cToken)) ; 
     }
+    
+    function setSIGHDistributionHandler(address newSIGHDistributionHandler) public returns (bool) {
+        require(msg.sender == admin, 'Only admin can change the SIGHDistributionHandler ');
+        SIGHDistributionHandler = newSIGHDistributionHandler;
+        isSIGHDistributionHandlerSet = true;
+    }  
+
 
 }

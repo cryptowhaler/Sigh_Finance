@@ -4,8 +4,8 @@ pragma experimental ABIEncoderV2;
 import "../Tokens/CErc20.sol";
 import "../Tokens/CToken.sol";
 import "../openzeppelin/EIP20Interface.sol";
-import "../Governance/GovernorAlpha.sol";
-import "../Governance/GSigh.sol";
+// import "../Governance/GovernorAlpha.sol";
+// import "../Governance/GSigh.sol";
 import "../PriceOracle.sol";
 
 interface SighLensInterface {
@@ -195,159 +195,159 @@ contract SighLens {
 
 
 
-    struct GovReceipt {
-        uint proposalId;
-        bool hasVoted;
-        bool support;
-        uint96 votes;
-    }
+    // struct GovReceipt {
+    //     uint proposalId;
+    //     bool hasVoted;
+    //     bool support;
+    //     uint96 votes;
+    // }
 
-    function getGovReceipts(GovernorAlpha governor, address voter, uint[] memory proposalIds) public view returns (GovReceipt[] memory) {
-        uint proposalCount = proposalIds.length;
-        GovReceipt[] memory res = new GovReceipt[](proposalCount);
-        for (uint i = 0; i < proposalCount; i++) {
-            GovernorAlpha.Receipt memory receipt = governor.getReceipt(proposalIds[i], voter);
-            res[i] = GovReceipt({
-                proposalId: proposalIds[i],
-                hasVoted: receipt.hasVoted,
-                support: receipt.support,
-                votes: receipt.votes
-            });
-        }
-        return res;
-    }
-
-
-
-
-    struct GovProposal {
-        uint proposalId;
-        address proposer;
-        uint eta;
-        address[] targets;
-        uint[] values;
-        string[] signatures;
-        bytes[] calldatas;
-        uint startBlock;
-        uint endBlock;
-        uint forVotes;
-        uint againstVotes;
-        bool canceled;
-        bool executed;
-    }
-
-    function setProposal(GovProposal memory res, GovernorAlpha governor, uint proposalId) internal view {
-        (
-            ,
-            address proposer,
-            uint eta,
-            uint startBlock,
-            uint endBlock,
-            uint forVotes,
-            uint againstVotes,
-            bool canceled,
-            bool executed
-        ) = governor.proposals(proposalId);
-        res.proposalId = proposalId;
-        res.proposer = proposer;
-        res.eta = eta;
-        res.startBlock = startBlock;
-        res.endBlock = endBlock;
-        res.forVotes = forVotes;
-        res.againstVotes = againstVotes;
-        res.canceled = canceled;
-        res.executed = executed;
-    }
-
-    function getGovProposals(GovernorAlpha governor, uint[] calldata proposalIds) external view returns (GovProposal[] memory) {
-        GovProposal[] memory res = new GovProposal[](proposalIds.length);
-        for (uint i = 0; i < proposalIds.length; i++) {
-            (
-                address[] memory targets,
-                uint[] memory values,
-                string[] memory signatures,
-                bytes[] memory calldatas
-            ) = governor.getActions(proposalIds[i]);
-            res[i] = GovProposal({
-                proposalId: 0,
-                proposer: address(0),
-                eta: 0,
-                targets: targets,
-                values: values,
-                signatures: signatures,
-                calldatas: calldatas,
-                startBlock: 0,
-                endBlock: 0,
-                forVotes: 0,
-                againstVotes: 0,
-                canceled: false,
-                executed: false
-            });
-            setProposal(res[i], governor, proposalIds[i]);
-        }
-        return res;
-    }
+    // function getGovReceipts(GovernorAlpha governor, address voter, uint[] memory proposalIds) public view returns (GovReceipt[] memory) {
+    //     uint proposalCount = proposalIds.length;
+    //     GovReceipt[] memory res = new GovReceipt[](proposalCount);
+    //     for (uint i = 0; i < proposalCount; i++) {
+    //         GovernorAlpha.Receipt memory receipt = governor.getReceipt(proposalIds[i], voter);
+    //         res[i] = GovReceipt({
+    //             proposalId: proposalIds[i],
+    //             hasVoted: receipt.hasVoted,
+    //             support: receipt.support,
+    //             votes: receipt.votes
+    //         });
+    //     }
+    //     return res;
+    // }
 
 
 
 
+    // struct GovProposal {
+    //     uint proposalId;
+    //     address proposer;
+    //     uint eta;
+    //     address[] targets;
+    //     uint[] values;
+    //     string[] signatures;
+    //     bytes[] calldatas;
+    //     uint startBlock;
+    //     uint endBlock;
+    //     uint forVotes;
+    //     uint againstVotes;
+    //     bool canceled;
+    //     bool executed;
+    // }
 
-    struct GSighBalanceMetadata {
-        uint balance;
-        uint votes;
-        address delegate;
-    }
+    // function setProposal(GovProposal memory res, GovernorAlpha governor, uint proposalId) internal view {
+    //     (
+    //         ,
+    //         address proposer,
+    //         uint eta,
+    //         uint startBlock,
+    //         uint endBlock,
+    //         uint forVotes,
+    //         uint againstVotes,
+    //         bool canceled,
+    //         bool executed
+    //     ) = governor.proposals(proposalId);
+    //     res.proposalId = proposalId;
+    //     res.proposer = proposer;
+    //     res.eta = eta;
+    //     res.startBlock = startBlock;
+    //     res.endBlock = endBlock;
+    //     res.forVotes = forVotes;
+    //     res.againstVotes = againstVotes;
+    //     res.canceled = canceled;
+    //     res.executed = executed;
+    // }
 
-    function getGSighBalanceMetadata(GSigh gsigh, address account) external view returns (GSighBalanceMetadata memory) {
-        return GSighBalanceMetadata({
-            balance: gsigh.balanceOf(account),
-            votes: uint256(gsigh.getCurrentVotes(account)),
-            delegate: gsigh.delegates(account)
-        });
-    }
-
-    struct GSighBalanceMetadataExt {
-        uint balance;
-        uint votes;
-        address delegate;
-        uint allocated;
-    }
-
-    function getGSighBalanceMetadataExt(GSigh gsigh, SighLensInterface sightroller, address account) external returns (GSighBalanceMetadataExt memory) {
-        uint balance = gsigh.balanceOf(account);
-        sightroller.claimGSigh(account);
-        uint newBalance = gsigh.balanceOf(account);
-        uint accrued = sightroller.GSighAccrued(account);
-        uint total = add(accrued, newBalance, "sum GSigh total");
-        uint allocated = sub(total, balance, "sub allocated");
-
-        return GSighBalanceMetadataExt({
-            balance: balance,
-            votes: uint256(gsigh.getCurrentVotes(account)),
-            delegate: gsigh.delegates(account),
-            allocated: allocated
-        });
-    }
+    // function getGovProposals(GovernorAlpha governor, uint[] calldata proposalIds) external view returns (GovProposal[] memory) {
+    //     GovProposal[] memory res = new GovProposal[](proposalIds.length);
+    //     for (uint i = 0; i < proposalIds.length; i++) {
+    //         (
+    //             address[] memory targets,
+    //             uint[] memory values,
+    //             string[] memory signatures,
+    //             bytes[] memory calldatas
+    //         ) = governor.getActions(proposalIds[i]);
+    //         res[i] = GovProposal({
+    //             proposalId: 0,
+    //             proposer: address(0),
+    //             eta: 0,
+    //             targets: targets,
+    //             values: values,
+    //             signatures: signatures,
+    //             calldatas: calldatas,
+    //             startBlock: 0,
+    //             endBlock: 0,
+    //             forVotes: 0,
+    //             againstVotes: 0,
+    //             canceled: false,
+    //             executed: false
+    //         });
+    //         setProposal(res[i], governor, proposalIds[i]);
+    //     }
+    //     return res;
+    // }
 
 
 
 
 
-    struct GSighVotes {
-        uint blockNumber;
-        uint votes;
-    }
+    // struct GSighBalanceMetadata {
+    //     uint balance;
+    //     uint votes;
+    //     address delegate;
+    // }
 
-    function getGSighVotes(GSigh gsigh, address account, uint32[] calldata blockNumbers) external view returns (GSighVotes[] memory) {
-        GSighVotes[] memory res = new GSighVotes[](blockNumbers.length);
-        for (uint i = 0; i < blockNumbers.length; i++) {
-            res[i] = GSighVotes({
-                blockNumber: uint256(blockNumbers[i]),
-                votes: uint256(gsigh.getPriorVotes(account, blockNumbers[i]))
-            });
-        }
-        return res;
-    }
+    // function getGSighBalanceMetadata(GSigh gsigh, address account) external view returns (GSighBalanceMetadata memory) {
+    //     return GSighBalanceMetadata({
+    //         balance: gsigh.balanceOf(account),
+    //         votes: uint256(gsigh.getCurrentVotes(account)),
+    //         delegate: gsigh.delegates(account)
+    //     });
+    // }
+
+    // struct GSighBalanceMetadataExt {
+    //     uint balance;
+    //     uint votes;
+    //     address delegate;
+    //     uint allocated;
+    // }
+
+    // function getGSighBalanceMetadataExt(GSigh gsigh, SighLensInterface sightroller, address account) external returns (GSighBalanceMetadataExt memory) {
+    //     uint balance = gsigh.balanceOf(account);
+    //     sightroller.claimGSigh(account);
+    //     uint newBalance = gsigh.balanceOf(account);
+    //     uint accrued = sightroller.GSighAccrued(account);
+    //     uint total = add(accrued, newBalance, "sum GSigh total");
+    //     uint allocated = sub(total, balance, "sub allocated");
+
+    //     return GSighBalanceMetadataExt({
+    //         balance: balance,
+    //         votes: uint256(gsigh.getCurrentVotes(account)),
+    //         delegate: gsigh.delegates(account),
+    //         allocated: allocated
+    //     });
+    // }
+
+
+
+
+
+    // struct GSighVotes {
+    //     uint blockNumber;
+    //     uint votes;
+    // }
+
+    // function getGSighVotes(GSigh gsigh, address account, uint32[] calldata blockNumbers) external view returns (GSighVotes[] memory) {
+    //     GSighVotes[] memory res = new GSighVotes[](blockNumbers.length);
+    //     for (uint i = 0; i < blockNumbers.length; i++) {
+    //         res[i] = GSighVotes({
+    //             blockNumber: uint256(blockNumbers[i]),
+    //             votes: uint256(gsigh.getPriorVotes(account, blockNumbers[i]))
+    //         });
+    //     }
+    //     return res;
+    // }
 
     function compareStrings(string memory a, string memory b) internal pure returns (bool) {
         return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
