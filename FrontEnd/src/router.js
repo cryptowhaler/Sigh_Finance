@@ -1,10 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import BalanceTransfer from '@/components/BalanceTransfer/BalanceTransfer.vue';
-import SummaryVega from '@/components/BalanceTransfer/SummaryVegaWallet/SummaryVegaWallet.vue';
-import ActiveOrdersMobile from '@/components/ActiveOrdersMobile/ActiveOrders.vue';
-import RecentTradesMobile from '@/components/RecentTradesMobile/RecentTrades.vue';
-import PositionsMobile from '@/components/PositionsMobile/Positions.vue';
 import LocalStorage from '@/utils/localStorage.js';
 import EventBus, {  EventNames,} from '@/eventBuses/default';
 import Landing from '@/components/Trade/Landing.vue';
