@@ -1,0 +1,327 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "baseRatePerYear",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "multiplierPerYear",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "baseRatePerBlock",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "multiplierPerBlock",
+						"type": "uint256"
+					}
+				],
+				"name": "NewInterestParams",
+				"type": "event"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "admin",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "baseRatePerBlock",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "blocksPerYear",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "cash",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "borrows",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "reserves",
+						"type": "uint256"
+					}
+				],
+				"name": "getBorrowRate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "cash",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "borrows",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "reserves",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "reserveFactorMantissa",
+						"type": "uint256"
+					}
+				],
+				"name": "getSupplyRate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "isInterestRateModel",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "multiplierPerBlock",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "baseRatePerYear",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "multiplierPerYear",
+						"type": "uint256"
+					}
+				],
+				"name": "setBaseParameters",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "cash",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "borrows",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "reserves",
+						"type": "uint256"
+					}
+				],
+				"name": "utilizationRate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "pure",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "SighFinance",
+			"methods": {
+				"constructor": {
+					"params": {
+						"baseRatePerYear": "The approximate target base APR, as a mantissa (scaled by 1e18)",
+						"multiplierPerYear": "The rate of increase in interest rate wrt utilization (scaled by 1e18)"
+					}
+				},
+				"getBorrowRate(uint256,uint256,uint256)": {
+					"params": {
+						"borrows": "The amount of borrows in the market",
+						"cash": "The amount of cash in the market",
+						"reserves": "The amount of reserves in the market"
+					},
+					"return": "The borrow rate percentage per block as a mantissa (scaled by 1e18)"
+				},
+				"getSupplyRate(uint256,uint256,uint256,uint256)": {
+					"params": {
+						"borrows": "The amount of borrows in the market",
+						"cash": "The amount of cash in the market",
+						"reserveFactorMantissa": "The current reserve factor for the market",
+						"reserves": "The amount of reserves in the market"
+					},
+					"return": "The supply rate percentage per block as a mantissa (scaled by 1e18)"
+				},
+				"utilizationRate(uint256,uint256,uint256)": {
+					"params": {
+						"borrows": "The amount of borrows in the market",
+						"cash": "The amount of cash in the market",
+						"reserves": "The amount of reserves in the market (currently unused)"
+					},
+					"return": "The utilization rate as a mantissa between [0, 1e18]"
+				}
+			},
+			"title": "SighFinance's WhitePaperInterestRateModel Contract"
+		},
+		"userdoc": {
+			"methods": {
+				"constructor": "Construct an interest rate model",
+				"getBorrowRate(uint256,uint256,uint256)": {
+					"notice": "Calculates the current borrow rate per block, with the error code expected by the market"
+				},
+				"getSupplyRate(uint256,uint256,uint256,uint256)": {
+					"notice": "Calculates the current supply rate per block"
+				},
+				"utilizationRate(uint256,uint256,uint256)": {
+					"notice": "Calculates the utilization rate of the market: `borrows / (cash + borrows - reserves)`"
+				}
+			},
+			"notice": "The parameterized model described in section 2.4 of the original SighFinance Protocol whitepaper"
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/InterestRateModels/WhitePaperInterestRateModel.sol": "WhitePaperInterestRateModel"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/InterestRateModels/InterestRateModel.sol": {
+			"keccak256": "0xb516fd3b78e7f3f4d1631b8dd50d167da4d73ca870cd09d67efcffdea2ed3b05",
+			"urls": [
+				"bzz-raw://3427725de8a149882669f60a3fbf179f4ef9ee97723ca47e91f39b8818b548d3",
+				"dweb:/ipfs/QmWimP2MCejqdsER2SNBmQSinAM4mtjUHY14KwBtS8rE2Q"
+			]
+		},
+		"localhost/InterestRateModels/WhitePaperInterestRateModel.sol": {
+			"keccak256": "0xeeedbc13ec272f9d4c7baee822df6eaa6e74affefd8fa39c34c7077200c2f527",
+			"urls": [
+				"bzz-raw://fe620a484f299e293b7311193a44c5866ecf6e790ca39a00ed25ff8d9a87936c",
+				"dweb:/ipfs/QmYQM9oPdsjaQM4QmeJaVfRrz2EJtJJf2EPVQpzUNXsQiS"
+			]
+		},
+		"localhost/Math/SafeMath.sol": {
+			"keccak256": "0x6653e37ff57a02b7b7f20199bb0fd5685756ced19a67f53328b42c9d2167ffd2",
+			"urls": [
+				"bzz-raw://1ab0575cc97bfb6c741c4e76fbb36a87fe320458d23dea7b6394259c9356ddcf",
+				"dweb:/ipfs/QmbH6Qu2JSAmSgfhUA7gMmp7BBks9BBsufdGepewqpHssf"
+			]
+		}
+	},
+	"version": 1
+}

@@ -473,27 +473,6 @@
 				"type": "function"
 			},
 			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "newSpeedController",
-						"type": "address"
-					}
-				],
-				"name": "changeSpeedController",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"constant": true,
 				"inputs": [],
 				"name": "currentDivisibilityFactor",
@@ -792,6 +771,27 @@
 				"type": "function"
 			},
 			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newSpeedController",
+						"type": "address"
+					}
+				],
+				"name": "setSpeedController",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"constant": true,
 				"inputs": [],
 				"name": "symbol",
@@ -922,10 +922,10 @@
 			]
 		},
 		"localhost/Sigh.sol": {
-			"keccak256": "0x06094da9810bde0a757543a5f1736109777445312c2cee446fc5d125f41f901f",
+			"keccak256": "0x7e6c010c2a3d7e869c4caa3d9f40b9ef47797349d85d788636896f05e6614d74",
 			"urls": [
-				"bzz-raw://b28aa6e31e13f6cb820d79f686acd15b2ab5893075ef1b6f6b381142f12a7da2",
-				"dweb:/ipfs/QmfMSd8krjNVyU382ChN5ChtC5Gkes94JCRNxjvBtBi5oz"
+				"bzz-raw://2e2469ba8930e1ed136847db95245a46862c74d3b3161fc4a5c4f6d677e6953a",
+				"dweb:/ipfs/QmZHGgYg7p2mPCAnpgv54qMsUzzZAeQFcszFizHiCQhPYP"
 			]
 		},
 		"localhost/openzeppelin/Address.sol": {

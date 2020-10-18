@@ -78,7 +78,7 @@ contract SIGH is Context, IERC20 {
     // #######   FUNCTIONS TO INITIATE MINTING  #######
     // ################################################
 
-    function changeSpeedController(address newSpeedController) public returns (bool) {
+    function setSpeedController(address newSpeedController) public returns (bool) {
         require(_msgSender() == _owner, "Only the Admin can change SpeedController");
         require(newSpeedController != address(0), "Not a valid Speed Controller address");
         // require( !isSpeedControllerSet, " Speed Controller can be set only once ");

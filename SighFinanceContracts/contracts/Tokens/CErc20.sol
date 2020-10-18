@@ -8,6 +8,12 @@ import "./CToken.sol";
  * @author SighFinance
  */
 contract CErc20 is CToken, CErc20Interface {
+    
+    constructor() public {
+        admin = msg.sender;    
+     }
+
+    
     /**
      * @notice Initialize the new money market
      * @param underlying_ The address of the underlying asset

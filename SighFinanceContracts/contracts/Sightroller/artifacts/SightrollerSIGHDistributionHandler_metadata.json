@@ -128,8 +128,8 @@
 				"inputs": [
 					{
 						"indexed": false,
-						"internalType": "contract CToken",
-						"name": "cToken",
+						"internalType": "address",
+						"name": "marketAddress",
 						"type": "address"
 					},
 					{
@@ -308,6 +308,31 @@
 					}
 				],
 				"name": "SuppliersSIGHSpeedUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "market",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint224",
+						"name": "index",
+						"type": "uint224"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint32",
+						"name": "blockNumber",
+						"type": "uint32"
+					}
+				],
+				"name": "checkIndexes",
 				"type": "event"
 			},
 			{
@@ -969,6 +994,53 @@
 				"type": "function"
 			},
 			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "market_",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "clock",
+						"type": "uint256"
+					}
+				],
+				"name": "checkPriceSnapshots",
+				"outputs": [
+					{
+						"internalType": "uint224",
+						"name": "",
+						"type": "uint224"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "market_",
+						"type": "address"
+					}
+				],
+				"name": "checkinitializationCounter",
+				"outputs": [
+					{
+						"internalType": "uint224",
+						"name": "",
+						"type": "uint224"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"constant": false,
 				"inputs": [
 					{
@@ -1110,7 +1182,7 @@
 				"type": "function"
 			},
 			{
-				"constant": false,
+				"constant": true,
 				"inputs": [],
 				"name": "getSIGHBalance",
 				"outputs": [
@@ -1121,7 +1193,7 @@
 					}
 				],
 				"payable": false,
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -1592,10 +1664,10 @@
 			]
 		},
 		"localhost/Sightroller/SightrollerSIGHDistributionHandler.sol": {
-			"keccak256": "0xfa20ecac4072e1fd08ea15aaa627f5f3ce21e93511f9e4fc8ae2dd45868add5b",
+			"keccak256": "0x6cf162b70f1995cd74f5ddf71570e0c9dce9952ec9a1aef0b8b8a7f6dd9664d6",
 			"urls": [
-				"bzz-raw://43da427bce69580b718f8884de016af303724f884bc3c1a59af8da64a7ad9a1e",
-				"dweb:/ipfs/QmZ6GQXZzmzS1Ckwizs8hoEjXL9Jy9QDQoyjf5AV5yti2M"
+				"bzz-raw://cbfb93c4c339e2b7a0bf2d1a73874c6a7525c65f3d2c0d8eacfd1eba88aaa030",
+				"dweb:/ipfs/QmUdbkJfEFEr1DjHoLnqXCqntkX2PduhunQar4tQJ3yJkK"
 			]
 		},
 		"localhost/SpeedController/SighSpeedController.sol": {

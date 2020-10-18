@@ -31,7 +31,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
 
     uint public SIGHSpeed;
 
-    uint224 public constant deltaTimeforSpeed = 420; // 60 * 60 
+    uint224 public constant deltaTimeforSpeed = 1; // 60 * 60 
     uint256 public prevSpeedRefreshTime;
     uint224 public curClock;
 
@@ -53,7 +53,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
     uint224 public constant sighInitialIndex = 1e36;            /// @notice The initial SIGH index for a market
 
     /// @notice Emitted when market isSIGHed status is changed
-    event MarketSIGHed(CToken cToken, bool isSIGHed);
+    event MarketSIGHed(address marketAddress, bool isSIGHed);
 
     /// @notice Emitted when SIGH rate is changed
     event NewSIGHSpeed(uint oldSIGHSpeed, uint newSIGHSpeed, uint blockNumber_);
@@ -92,6 +92,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
 // ###############################################################################################
 // ##############        ADD / DROP A MARKET FROM THOSE THAT RECEIVE SIGH           ##############
 // ###############################################################################################
+    event checkIndexes(address market, uint224 index, uint32 blockNumber);
 
     function addSIGHMarket(address marketAddress_) public returns (bool) {
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can add SIGH market");
@@ -100,11 +101,13 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         _addMarketInternal(marketAddress_);
         
         if ( sighMarketSupplyState[marketAddress_].index == 0 && sighMarketSupplyState[marketAddress_].block_ == 0 ) {
-            sighMarketSupplyState[marketAddress_] = SIGHMarketState({ index: sighInitialIndex, block_: safe32(getBlockNumber(), "block number exceeds 32 bits") });
+            sighMarketSupplyState[marketAddress_] = SIGHMarketState({ index: safe224(sighInitialIndex,"sighInitialIndex exceeds 224 bits"), block_: safe32(getBlockNumber(), "block number exceeds 32 bits") });
+            emit checkIndexes(marketAddress_,sighMarketSupplyState[marketAddress_].index, sighMarketSupplyState[marketAddress_].block_);
         }
         
         if ( sighMarketBorrowState[marketAddress_].index == 0 && sighMarketBorrowState[marketAddress_].block_ == 0 ) {
-            sighMarketBorrowState[marketAddress_] = SIGHMarketState({ index: sighInitialIndex, block_: safe32(getBlockNumber(), "block number exceeds 32 bits") });
+            sighMarketBorrowState[marketAddress_] = SIGHMarketState({ index: safe224(sighInitialIndex,"sighInitialIndex exceeds 224 bits"), block_: safe32(getBlockNumber(), "block number exceeds 32 bits") });
+            emit checkIndexes(marketAddress_,sighMarketBorrowState[marketAddress_].index, sighMarketBorrowState[marketAddress_].block_);
         }
         
         if ( sighPriceCycles[marketAddress_].initializationCounter == 0 ) {
@@ -115,6 +118,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         SIGH_Speeds_Supplier_Ratio_Mantissa[marketAddress_] = 1e18;
         sighedMarkets[marketAddress_] = true;
         refreshSIGHSpeeds(); 
+        emit MarketSIGHed( marketAddress_, true);
         
         return true;
     }
@@ -129,6 +133,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         sighedMarkets[marketAddress_] = false;
         
         refreshSIGHSpeeds();
+        emit MarketSIGHed( marketAddress_, false);
         return true;
     }
     
@@ -191,8 +196,9 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         if ( timeElapsedSinceLastRefresh >= deltaTimeforSpeed) {
             refreshSIGHSpeedsInternal();
             prevSpeedRefreshTime = now;
+            return true;
         }
-        return true;
+        return false;
     }
 
     event refreshingSighSpeeds_1( address market ,  uint previousPrice , uint currentPrice , uint marketLosses , uint totalSupply, uint totalLosses   );
@@ -273,11 +279,6 @@ contract SightrollerSIGHDistributionHandler is Exponential {
             emit PriceSnappedCheck(address(cToken), previousPrice.mantissa, sighPriceCycles[address(cToken)].recordedPriceSnapshot[curClock] , sighPriceCycles[address(cToken)].initializationCounter,  blockNumber );
         }
 
-        // ###### Drips the SIGH from the SIGH Speed Controller ######
-        SighSpeedController sigh_SpeedController = SighSpeedController(getSighSpeedController());
-        if ( sigh_SpeedController.isThisProtocolSupported(address(this)) && sigh_SpeedController.isDripAllowed() ) {
-            sigh_SpeedController.drip();
-        }
 
         // ###### Updates the Speed for the Supported Markets ######
         // ###### Updates the Speed for the Supported Markets ######        
@@ -346,7 +347,6 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         
         SIGHMarketState memory newSupplyState = sighMarketSupplyState[currentMarket];
         emit updateSIGHSupplyIndex_test3( currentMarket, prevIndex, newSupplyState.index, newSupplyState.block_  );
-        refreshSIGHSpeeds(); 
 
     }
 
@@ -387,7 +387,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         
         SIGHMarketState memory newBorrowState = sighMarketBorrowState[currentMarket];
         emit updateSIGHBorrowIndex_test3( currentMarket, prevIndex, newBorrowState.index, newBorrowState.block_  );
-        refreshSIGHSpeeds(); 
+
     }
 
 
@@ -406,7 +406,13 @@ contract SightrollerSIGHDistributionHandler is Exponential {
      */
     function distributeSupplier_SIGH(address currentMarket, address supplier, bool distributeAll) public {
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
-        
+
+        // ###### Drips the SIGH from the SIGH Speed Controller ######
+        SighSpeedController sigh_SpeedController = SighSpeedController(getSighSpeedController());
+        if ( sigh_SpeedController.isThisProtocolSupported(address(this)) && sigh_SpeedController.isDripAllowed() ) {
+            sigh_SpeedController.drip();
+        }
+
         SIGHMarketState storage supplyState = sighMarketSupplyState[currentMarket];
         Double memory supplyIndex = Double({mantissa: supplyState.index});
         Double memory supplierIndex = Double({mantissa: SIGHSupplierIndex[currentMarket][supplier]});
@@ -439,6 +445,12 @@ contract SightrollerSIGHDistributionHandler is Exponential {
      */
     function distributeBorrower_SIGH(address currentMarket, address borrower, bool distributeAll) public {
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
+
+        // ###### Drips the SIGH from the SIGH Speed Controller ######
+        SighSpeedController sigh_SpeedController = SighSpeedController(getSighSpeedController());
+        if ( sigh_SpeedController.isThisProtocolSupported(address(this)) && sigh_SpeedController.isDripAllowed() ) {
+            sigh_SpeedController.drip();
+        }
         
         SIGHMarketState storage borrowState = sighMarketBorrowState[currentMarket];
         Double memory borrowIndex = Double({mantissa: borrowState.index});
@@ -570,5 +582,14 @@ contract SightrollerSIGHDistributionHandler is Exponential {
     function getBlockNumber() public view returns (uint32) {
         return uint32(block.number);
     }
+    
+    function checkPriceSnapshots(address market_, uint clock) public view returns (uint224) {
+        return sighPriceCycles[market_].recordedPriceSnapshot[clock];
+    }
+    
+    function checkinitializationCounter(address market_) public view returns (uint224) {
+        return sighPriceCycles[market_].initializationCounter;
+    }
+    
 
 }

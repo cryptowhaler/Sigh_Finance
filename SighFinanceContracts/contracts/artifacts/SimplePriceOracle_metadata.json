@@ -169,17 +169,17 @@
 			]
 		},
 		"localhost/SimplePriceOracle.sol": {
-			"keccak256": "0x255f1542e5f3e5b3c25bfd991b08e0f8a892e15bc121694a49b97d22a1fc9a1e",
+			"keccak256": "0xcbc6fd3fdada3dbe4eb0eb360be37ad5de9bc77c49cbfa6e0a17fd13320e1ed0",
 			"urls": [
-				"bzz-raw://639a9f96369ee44d4707c09f63cbd7cc58f66463cae2c17546cf5cc72f38d73b",
-				"dweb:/ipfs/QmPw3raTqUCHrqptmaVWq3jaCg5pMXoLHVjgNk7yrnJE75"
+				"bzz-raw://9f36ccf6c49a65ebdaa90ad80cece96e69bcec1fa8c2a288bb54ac7de7ff40be",
+				"dweb:/ipfs/QmeF4woekt9z4fzYmCvFeJhSZxsL8usNEg5Maub4Hz6EHC"
 			]
 		},
 		"localhost/Tokens/CErc20.sol": {
-			"keccak256": "0xf1eafdb19a4155e4973f7afc834c398a3a2abfd80083006de0c6ea2687e4de7e",
+			"keccak256": "0xdffeecc0c561a368d9931c542e3ccb01d4d1bd1f0a9bba06b30c910092e2d7a5",
 			"urls": [
-				"bzz-raw://6c6142d61ce3da0e2c38c934d6e1a9bc9f669ddd87cc02b5a37fc7ad16378f97",
-				"dweb:/ipfs/QmeZvuTYWYhse47fW1mTfoxxTGg7GvU9Q1Av42G8HDqrjP"
+				"bzz-raw://8813d2c2e071bc1cd9fa033af1d3564820d6c927d5c2374671fb4b004028255e",
+				"dweb:/ipfs/QmVFJ7AqmRyC1BJQ4VuYpGLcb3KjhNS9DHF1E8WX52Hbz6"
 			]
 		},
 		"localhost/Tokens/CToken.sol": {

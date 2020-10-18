@@ -43,7 +43,6 @@ contract SimplePriceOracle is PriceOracle {
         if (currentCLock >= 24) {
             currentCLock = 0;
         }
-
         return pricesList[currentCLock];
     }
 
@@ -70,6 +69,7 @@ contract SimplePriceOracle is PriceOracle {
         pricesList[18] = 1400000;
         pricesList[19] = 1200000;
         pricesList[20] = 1100000;
+        pricesList[21] = 1240000;
         pricesList[22] = 1400000;
         pricesList[23] = 900000;
         initialized = true;
