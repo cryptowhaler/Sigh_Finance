@@ -21,7 +21,7 @@
 				"type": "function"
 			},
 			{
-				"constant": false,
+				"constant": true,
 				"inputs": [
 					{
 						"internalType": "contract CToken",
@@ -38,7 +38,7 @@
 					}
 				],
 				"payable": false,
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -113,7 +113,7 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
@@ -155,10 +155,10 @@
 			]
 		},
 		"localhost/PriceOracle.sol": {
-			"keccak256": "0x29cf24155ba071b151b72df66b0ba96371a32d025b3af7662d8ade5d3e54ca8f",
+			"keccak256": "0x48772217853f894d85eed0e9c7699ecacb569a955d1825c691e8d636f16b3229",
 			"urls": [
-				"bzz-raw://a363df757e15e163791aaa4ddacd21d222e3fac68dab50b37a3769b0266166ae",
-				"dweb:/ipfs/QmcVrGHGPPr8UKYmZHszABHVABV1wxooYxm9do7DzPbzSz"
+				"bzz-raw://427f28163935266b6014b36e10f371a3a538282e3ceacd68a59863b61cf1b36b",
+				"dweb:/ipfs/QmWqTqkRNx8imZtgnWKStQwTR5yiCa5gZoWxcJyor5fkdt"
 			]
 		},
 		"localhost/Sightroller/SightrollerInterface.sol": {
@@ -169,10 +169,10 @@
 			]
 		},
 		"localhost/SimplePriceOracle.sol": {
-			"keccak256": "0x2b6144601bd504062ee06c291c38116206d9b6704d5988a7d653ea912956a911",
+			"keccak256": "0x255f1542e5f3e5b3c25bfd991b08e0f8a892e15bc121694a49b97d22a1fc9a1e",
 			"urls": [
-				"bzz-raw://892935cc87c9b5a5cf4151bddd7e45f5a464bb5afd12c1915329a54020618473",
-				"dweb:/ipfs/QmeAMPaq6gbhtBvMD4WQb3q2FHEuXGFnEzxe58BoRJWvKE"
+				"bzz-raw://639a9f96369ee44d4707c09f63cbd7cc58f66463cae2c17546cf5cc72f38d73b",
+				"dweb:/ipfs/QmPw3raTqUCHrqptmaVWq3jaCg5pMXoLHVjgNk7yrnJE75"
 			]
 		},
 		"localhost/Tokens/CErc20.sol": {

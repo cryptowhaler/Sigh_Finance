@@ -128,6 +128,25 @@
 				"inputs": [
 					{
 						"indexed": false,
+						"internalType": "contract CToken",
+						"name": "cToken",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "isSIGHed",
+						"type": "bool"
+					}
+				],
+				"name": "MarketSIGHed",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
 						"internalType": "uint256",
 						"name": "oldSIGHSpeed",
 						"type": "uint256"
@@ -171,6 +190,12 @@
 					},
 					{
 						"indexed": false,
+						"internalType": "uint32",
+						"name": "Prevcounter",
+						"type": "uint32"
+					},
+					{
+						"indexed": false,
 						"internalType": "uint256",
 						"name": "blockNumber",
 						"type": "uint256"
@@ -199,6 +224,12 @@
 						"internalType": "uint256",
 						"name": "currentPrice",
 						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint32",
+						"name": "currentCounter",
+						"type": "uint32"
 					},
 					{
 						"indexed": false,
@@ -1079,6 +1110,21 @@
 				"type": "function"
 			},
 			{
+				"constant": false,
+				"inputs": [],
+				"name": "getSIGHBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"constant": true,
 				"inputs": [],
 				"name": "getSighAddress",
@@ -1469,9 +1515,6 @@
 		},
 		"userdoc": {
 			"methods": {
-				"addSIGHMarket(address)": {
-					"notice": "* SIGH Distribution Admin **"
-				},
 				"distributeBorrower_SIGH(address,address,bool)": {
 					"notice": "Calculate SIGH accrued by a borrower and possibly transfer it to them"
 				},
@@ -1549,17 +1592,17 @@
 			]
 		},
 		"localhost/Sightroller/SightrollerSIGHDistributionHandler.sol": {
-			"keccak256": "0xa45d539ac50ce25bfab064aac7bea91a28cd5b956d0564e693d4e3d9f308a8ac",
+			"keccak256": "0xfa20ecac4072e1fd08ea15aaa627f5f3ce21e93511f9e4fc8ae2dd45868add5b",
 			"urls": [
-				"bzz-raw://8937d3dc1cd3fe23c20f50c12306d225395ffa2acec02300384ddd8fd72b62b7",
-				"dweb:/ipfs/QmNkLsTQcmyk9Wv3DQMVpmeDuabpCKbHRKwuwfsmWVUGHH"
+				"bzz-raw://43da427bce69580b718f8884de016af303724f884bc3c1a59af8da64a7ad9a1e",
+				"dweb:/ipfs/QmZ6GQXZzmzS1Ckwizs8hoEjXL9Jy9QDQoyjf5AV5yti2M"
 			]
 		},
 		"localhost/SpeedController/SighSpeedController.sol": {
-			"keccak256": "0x03c7f376a289308dc91db90015baf60adec057da53f79948bf7864f648be05a4",
+			"keccak256": "0x6195ab3743a9556751ee41d7ea5b291e889be53c670f52dc0bb0893f02c140c5",
 			"urls": [
-				"bzz-raw://5466a0533ae83df08688a1dbf4cb8ad20fcb2b1f922ea07afca23d199ac4deb1",
-				"dweb:/ipfs/QmPhZDJjtGdvFH7rzGuGzw6yMkY7Ygz95RfweejsnTiRRP"
+				"bzz-raw://73e7890abb418bfc5d142fd41f345932502c4dcc9194848977f557dc1c883250",
+				"dweb:/ipfs/QmNR55iMQeKSvC9XzcWShgftAJcEPq5a9JGF5EXbozR2aq"
 			]
 		},
 		"localhost/Tokens/CToken.sol": {

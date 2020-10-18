@@ -351,9 +351,8 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
         }
 
         // // Keep the flywheel moving
-        // Exp memory borrowIndex = Exp({mantissa: CToken(cToken).borrowIndex()});
-        // updateGsighBorrowIndex(cToken, borrowIndex);
-        // distributeBorrowerGsigh(cToken, borrower, borrowIndex, false);
+        updateSIGHBorrowIndex(cToken);
+        distributeBorrower_SIGH(cToken, borrower,false);
 
         return uint(Error.NO_ERROR);
     }
@@ -395,9 +394,8 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
         }
 
         // // Keep the flywheel moving
-        // Exp memory borrowIndex = Exp({mantissa: CToken(cToken).borrowIndex()});
-        // updateGsighBorrowIndex(cToken, borrowIndex);
-        // distributeBorrowerGsigh(cToken, borrower, borrowIndex, false);
+        updateSIGHBorrowIndex(cToken);
+        distributeBorrower_SIGH(cToken, borrower,false);
 
         return uint(Error.NO_ERROR);
     }
@@ -1052,8 +1050,6 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
     /*** SIGH ***/
 
 
-    /// @notice Emitted when market isSIGHed status is changed
-    event MarketSIGHed(CToken cToken, bool isSIGHed);
 
 
     // ##############################################################################
@@ -1075,8 +1071,6 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
         bool isMarketAdded = sighHandlerContract.addSIGHMarket(cToken);
 
         require(isMarketAdded, "SIGH market not added properly");
-
-        emit MarketSIGHed(CToken(cToken), true);
     }
 
     /**
@@ -1094,8 +1088,6 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
         bool isMarketDropped = sighHandlerContract.dropSIGHMarket(cToken);
 
         require(isMarketDropped, "SIGH market not dropped properly");
-
-        emit MarketSIGHed(CToken(cToken), false);
     }
 
     /**
@@ -1114,8 +1106,6 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
 
     function setSIGHSpeedRatioForAMarket(address cToken, uint supplierRatio) public returns (bool) {
         require(msg.sender == admin, 'Only Admin can change the SIGH Speed Distribution Ratio for a Market');
-        require( supplierRatio > 0.5e18, 'The new Supplier Ratio must be greater than 0.5e18');
-        require( supplierRatio <= 1e18, 'The new Supplier Ratio must be less than 1e18');
 
         SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
         bool isSIGHSpeedRatioForAMarketUpdated = sighHandlerContract.updateSIGHSpeedRatioForAMarket(cToken,supplierRatio );

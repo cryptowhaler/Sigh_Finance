@@ -136,25 +136,6 @@
 				"inputs": [
 					{
 						"indexed": false,
-						"internalType": "contract CToken",
-						"name": "cToken",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "bool",
-						"name": "isSIGHed",
-						"type": "bool"
-					}
-				],
-				"name": "MarketSIGHed",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
 						"internalType": "uint256",
 						"name": "oldCloseFactorMantissa",
 						"type": "uint256"
@@ -1982,7 +1963,7 @@
 					}
 				}
 			},
-			"title": "SighFinance's Sightroller Contract"
+			"title": "SighFinance's Sightroller Contract (The money-market functionality has been taken from the Compound Finance's COMPTROLLER Contract)"
 		},
 		"userdoc": {
 			"methods": {
@@ -2143,10 +2124,10 @@
 			]
 		},
 		"localhost/Sightroller/Sightroller.sol": {
-			"keccak256": "0xa44e7591df2799a84f5d19368ca7dd799b1094fb331c22919a43b10e439380d6",
+			"keccak256": "0xc26ec0dba49cbf7eedfa66a1647c961c1d4b89ea4386b4ccc1247ef29f14cae4",
 			"urls": [
-				"bzz-raw://70b8b01b9eefdd498f2b71c2dce35cd0531802aaeac0cec05e5c1037dbc7eced",
-				"dweb:/ipfs/QmRdeGRbRfuAV7MPn6idMCcASdpdoJC6sYiaaJBawaVcwh"
+				"bzz-raw://e7c494b0a52da7de0792d7c738c00a5ae9ddf5727c67fc0bda1b78d0a022309b",
+				"dweb:/ipfs/QmQko9Yjb5Bs9KAd9N1oNJLnWr8rEJGp4dR43RDW8Fcugb"
 			]
 		},
 		"localhost/Sightroller/SightrollerInterface.sol": {
@@ -2157,10 +2138,10 @@
 			]
 		},
 		"localhost/Sightroller/SightrollerSIGHDistributionHandler.sol": {
-			"keccak256": "0xa45d539ac50ce25bfab064aac7bea91a28cd5b956d0564e693d4e3d9f308a8ac",
+			"keccak256": "0x313839418776e0dcbff9ce4c85835b343e26e539c84bfdee4dae3460f76a8b22",
 			"urls": [
-				"bzz-raw://8937d3dc1cd3fe23c20f50c12306d225395ffa2acec02300384ddd8fd72b62b7",
-				"dweb:/ipfs/QmNkLsTQcmyk9Wv3DQMVpmeDuabpCKbHRKwuwfsmWVUGHH"
+				"bzz-raw://cba18e4850ff50910e70c78ba63354bb867a9d398aea63448b4112e3a0b5ae4f",
+				"dweb:/ipfs/QmcaYkNLDxZYzk6SmpUzd1xaQw7bYyot8PUN3JY7SqYp8w"
 			]
 		},
 		"localhost/Sightroller/SightrollerStorage.sol": {
@@ -2178,10 +2159,10 @@
 			]
 		},
 		"localhost/SpeedController/SighSpeedController.sol": {
-			"keccak256": "0x03c7f376a289308dc91db90015baf60adec057da53f79948bf7864f648be05a4",
+			"keccak256": "0x6195ab3743a9556751ee41d7ea5b291e889be53c670f52dc0bb0893f02c140c5",
 			"urls": [
-				"bzz-raw://5466a0533ae83df08688a1dbf4cb8ad20fcb2b1f922ea07afca23d199ac4deb1",
-				"dweb:/ipfs/QmPhZDJjtGdvFH7rzGuGzw6yMkY7Ygz95RfweejsnTiRRP"
+				"bzz-raw://73e7890abb418bfc5d142fd41f345932502c4dcc9194848977f557dc1c883250",
+				"dweb:/ipfs/QmNR55iMQeKSvC9XzcWShgftAJcEPq5a9JGF5EXbozR2aq"
 			]
 		},
 		"localhost/Tokens/CToken.sol": {
