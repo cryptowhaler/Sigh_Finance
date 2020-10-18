@@ -9,8 +9,9 @@ import "./SightrollerStorage.sol";
 import "./Unitroller.sol";
 import "./SightrollerSIGHDistributionHandler.sol";
 
+
 /**
- * @title SighFinance's Sightroller Contract
+ * @title SighFinance's Sightroller Contract (The money-market functionality has been taken from the Compound Finance's COMPTROLLER Contract)
  * @author SighFinance
  */
 contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerErrorReporter, Exponential {

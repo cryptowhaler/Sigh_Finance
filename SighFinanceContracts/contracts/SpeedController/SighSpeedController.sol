@@ -66,8 +66,6 @@ contract SighSpeedController {
 // ###########   SIGH DISTRIBUTION : ADDING / REMOVING NEW PROTOCOL WHICH WILL RECEIVE SIGH TOKENS   ##########
 // ############################################################################################################
 
-    event testing( uint b );
-
   function supportNewProtocol( address newProtocolAddress, uint sighSpeed ) public returns (bool)  {
     require(admin == msg.sender,"New Protocol can only be added by the Admin");
     bool checkIfSupported = supportedProtocols[newProtocolAddress];

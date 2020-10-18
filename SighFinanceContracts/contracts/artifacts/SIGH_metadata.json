@@ -908,7 +908,7 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
@@ -922,10 +922,10 @@
 			]
 		},
 		"localhost/Sigh.sol": {
-			"keccak256": "0xf0c38750e9444fbe210703ad8ce6231344035fd66a0b405dade548d8ac1d66ec",
+			"keccak256": "0x06094da9810bde0a757543a5f1736109777445312c2cee446fc5d125f41f901f",
 			"urls": [
-				"bzz-raw://a8ebe7ce52c32b56e01673c3c03e141736c173284e88b81b62fd76662d7d5ee1",
-				"dweb:/ipfs/Qmb3RbzKcUWNtQv6V7epgLkZwEn3dXWoytpao16xvoXH2B"
+				"bzz-raw://b28aa6e31e13f6cb820d79f686acd15b2ab5893075ef1b6f6b381142f12a7da2",
+				"dweb:/ipfs/QmfMSd8krjNVyU382ChN5ChtC5Gkes94JCRNxjvBtBi5oz"
 			]
 		},
 		"localhost/openzeppelin/Address.sol": {
