@@ -10,7 +10,7 @@ contract WBTC is Context, IERC20 {
     // ****** PARAMETERS & EVENTS ******
 
     /// @notice EIP-20 token name for this token
-    string public constant name = "Wrapped BitCoin";
+    string public constant name = "Wrapped Bitcoin";
 
     /// @notice EIP-20 token symbol for this token
     string public constant symbol = "WBTC";
@@ -134,7 +134,7 @@ contract WBTC is Context, IERC20 {
     }
 
     function mint(address dst, uint mintAmount) public {
-        require (mintAmount < 1000000000000000000000000000, "minted value should be less than 1000000000 ");
+        require (mintAmount < 100000000000000000000000, "minted value should be less than 1000000000 ");
         uint96 amount = safe96(mintAmount, "mint: amount exceeds 96 bits");
 
         balances[dst]= add96( balances[dst],amount,"dst balance overflows");
