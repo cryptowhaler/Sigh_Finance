@@ -15,6 +15,8 @@ contract SightrollerSIGHDistributionHandler is Exponential {
     address public Sigh_Address;
     address public SighSpeedControllerAddress;
 
+    bool public isSpeedUpperCheckAllowed = false;
+
     CToken[] public allMarkets;
 
     mapping (address => bool) sighedMarkets;    // Markets which receive SIGH 
@@ -29,20 +31,26 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         uint32 initializationCounter;
     }
 
+    uint224[24] public blockNumbersForPriceSnapshots_;
+    
+    struct SIGH_Speeds {
+        uint suppliers_Speed;
+        uint borrowers_Speed;
+        uint speeds_Ratio_Mantissa;
+        uint staking_Speed;
+    }
+
     uint public SIGHSpeed;
 
-    uint224 public constant deltaTimeforSpeed = 1; // 60 * 60 
-    uint256 public prevSpeedRefreshTime;
+    uint224 public constant deltaBlocksForSpeed = 1; // 60 * 60 
+    uint256 public prevSpeedRefreshBlock;
     uint224 public curClock;
 
-    mapping(address => uint) public SIGH_Speeds_Supplier_Ratio_Mantissa;
-    mapping(address => uint) public SIGH_Speeds_Suppliers;
-    mapping(address => uint) public SIGH_Speeds_Borrowers;
+    mapping(address => SIGH_PriceCycles) public sighPriceCycles;
+    mapping(address => SIGH_Speeds) public SIGH_Speeds_for_Markets;
 
     mapping(address => SIGHMarketState) public sighMarketSupplyState;
     mapping(address => SIGHMarketState) public sighMarketBorrowState;
-
-    mapping(address => SIGH_PriceCycles) public sighPriceCycles;
 
     mapping(address => mapping(address => uint)) public SIGHSupplierIndex;
     mapping(address => mapping(address => uint)) public SIGHBorrowerIndex;
@@ -57,6 +65,8 @@ contract SightrollerSIGHDistributionHandler is Exponential {
 
     /// @notice Emitted when SIGH rate is changed
     event NewSIGHSpeed(uint oldSIGHSpeed, uint newSIGHSpeed, uint blockNumber_);
+    
+    event StakingSpeedUpdated(address marketAddress, uint prevStakingSpeed, uint new_staking_Speed, uint blockNumber );
 
     event SIGH_Speeds_Supplier_Ratio_Mantissa_Updated(address cToken, uint prevRatio, uint newRatio);
 
@@ -115,7 +125,8 @@ contract SightrollerSIGHDistributionHandler is Exponential {
             sighPriceCycles[marketAddress_] = SIGH_PriceCycles({ recordedPriceSnapshot : emptyPrices, initializationCounter: 0 }) ;
         }   
         
-        SIGH_Speeds_Supplier_Ratio_Mantissa[marketAddress_] = 1e18;
+        SIGH_Speeds_for_Markets[marketAddress_] = SIGH_Speeds( { suppliers_Speed: uint(0), borrowers_Speed: uint(0), speeds_Ratio_Mantissa: uint(1e18), staking_Speed: uint(0) } );
+        
         sighedMarkets[marketAddress_] = true;
         refreshSIGHSpeeds(); 
         emit MarketSIGHed( marketAddress_, true);
@@ -130,6 +141,8 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         // Recorded Price snapshots initialized to 0. 
         uint224[24] memory emptyPrices;
         sighPriceCycles[marketAddress_] = SIGH_PriceCycles({ recordedPriceSnapshot : emptyPrices, initializationCounter: 0 }) ;
+        SIGH_Speeds_for_Markets[marketAddress_] = SIGH_Speeds( { suppliers_Speed: uint(0), borrowers_Speed: uint(0), speeds_Ratio_Mantissa: uint(1e18), staking_Speed: uint(0) } );
+        
         sighedMarkets[marketAddress_] = false;
         
         refreshSIGHSpeeds();
@@ -160,7 +173,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
      * @param SIGHSpeed_ The amount of SIGH wei per block to distribute
      */
     function updateSIGHSpeed(uint SIGHSpeed_) public returns (bool) {
-        require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can change SIGH rate"); 
+        require( msg.sender == admin, "only admin/Sightroller can change SIGH rate"); 
 
         uint oldSpeed = SIGHSpeed;
         SIGHSpeed = SIGHSpeed_;
@@ -171,16 +184,25 @@ contract SightrollerSIGHDistributionHandler is Exponential {
     }
 
     function updateSIGHSpeedRatioForAMarket(address marketAddress, uint supplierRatio) public returns (bool) {
-        require(msg.sender == admin, 'Only Admin can change the SIGH Speed Distribution Ratio for a Market');
+        require( msg.sender == admin, 'Only Admin can change the SIGH Speed Distribution Ratio for a Market');
         require( supplierRatio > 0.5e18, 'The new Supplier Ratio must be greater than 0.5e18');
         require( supplierRatio <= 1e18, 'The new Supplier Ratio must be less than 1e18');
 
-        uint prevRatio = SIGH_Speeds_Supplier_Ratio_Mantissa[marketAddress];
-        SIGH_Speeds_Supplier_Ratio_Mantissa[marketAddress] = supplierRatio;
-        emit SIGH_Speeds_Supplier_Ratio_Mantissa_Updated( marketAddress, prevRatio , SIGH_Speeds_Supplier_Ratio_Mantissa[marketAddress] );
+        uint prevRatio = SIGH_Speeds_for_Markets[marketAddress].speeds_Ratio_Mantissa ;
+        SIGH_Speeds_for_Markets[marketAddress].speeds_Ratio_Mantissa = supplierRatio;
+        emit SIGH_Speeds_Supplier_Ratio_Mantissa_Updated( marketAddress, prevRatio , SIGH_Speeds_for_Markets[marketAddress].speeds_Ratio_Mantissa );
         
         refreshSIGHSpeeds();
         return true;
+    }
+    
+    function updateStakingSpeedForAMarket(address marketAddress, uint newStakingSpeed) public returns (uint) {
+        require( msg.sender == admin, 'Only Admin can change the SIGH Speed Distribution Ratio for a Market');
+        
+        uint prevStakingSpeed = SIGH_Speeds_for_Markets[marketAddress].staking_Speed;
+        SIGH_Speeds_for_Markets[marketAddress].staking_Speed = newStakingSpeed;
+        
+        emit StakingSpeedUpdated(marketAddress, prevStakingSpeed, SIGH_Speeds_for_Markets[marketAddress].staking_Speed, block.number );
     }
     
     // ###########################################################################################
@@ -191,11 +213,12 @@ contract SightrollerSIGHDistributionHandler is Exponential {
      * @notice Recalculate and update SIGH speeds for all SIGH markets
      */
     function refreshSIGHSpeeds() public returns (bool) {
-        uint256 timeElapsedSinceLastRefresh = sub_(now , prevSpeedRefreshTime, "RefreshSIGHSpeeds : Subtraction underflow"); 
+        uint blockNumber = block.number;
+        uint256 blocksElapsedSinceLastRefresh = sub_(blockNumber , prevSpeedRefreshBlock, "RefreshSIGHSpeeds : Subtraction underflow for blocks"); 
 
-        if ( timeElapsedSinceLastRefresh >= deltaTimeforSpeed) {
+        if ( blocksElapsedSinceLastRefresh >= deltaBlocksForSpeed) {
             refreshSIGHSpeedsInternal();
-            prevSpeedRefreshTime = now;
+            prevSpeedRefreshBlock = blockNumber;
             return true;
         }
         return false;
@@ -204,10 +227,12 @@ contract SightrollerSIGHDistributionHandler is Exponential {
     event refreshingSighSpeeds_1( address market ,  uint previousPrice , uint currentPrice , uint marketLosses , uint totalSupply, uint totalLosses   );
     event refreshingSighSpeeds_2( address market, uint marketLosses , uint totalLosses, uint newSpeed   );
 
-
+    event maxSpeedCheck(uint SIGH)
 
     function refreshSIGHSpeedsInternal() internal {
         CToken[] memory allMarkets_ = allMarkets;
+        uint blockNumber = getBlockNumber();   
+        
 
         // ###### accure the indexes ######
         for (uint i = 0; i < allMarkets_.length; i++) {
@@ -229,9 +254,16 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         
         emit ClockUpdated(prevClock,curClock,now);
         
+        // ###### Blocks passed since PriceSnapshot taken 24 hours back ######
+        // ###### blockNumbersForPriceSnapshots_ updated for Current Clock ######
+        uint prevBlockNumberForSnapshot = blockNumbersForPriceSnapshots_[curClock];
+        uint deltaBlocks_ = sub_(blockNumber , prevBlockNumberForSnapshot, "DeltaBlocks resulted in Underflow");
+        blockNumbersForPriceSnapshots_[curClock] = blockNumber;
+        
         // ###### Calculate the total Loss made by the protocol over the 24 hrs ######
         Exp memory totalLosses = Exp({mantissa: 0});
         Exp[] memory marketLosses = new Exp[](allMarkets_.length); 
+        
 
         // ######    Calculates the marketLosses[i] by subtracting the current          ######
         // ###### price from the stored price for the current clock (24 hr old price)   ######
@@ -239,53 +271,82 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         // ######         It updates the stored Price for the current CLock             ######
         for (uint i = 0; i < allMarkets_.length; i++) {
             CToken cToken = allMarkets_[i];
-
-            // ######    Calculates the marketLosses[i] by subtracting the current          ######
-            // ###### price from the stored price for the current clock (24 hr old price)   ######
-            Exp memory previousPrice = Exp({ mantissa: sighPriceCycles[address(cToken)].recordedPriceSnapshot[curClock] });
-            Exp memory currentPrice = Exp({ mantissa: oracle.getUnderlyingPriceRefresh( cToken ) });
-            uint totalSupply = cToken.totalSupply();
             
-            require ( currentPrice.mantissa > 0, "refreshSIGHSpeedsInternal : Oracle returned Invalid Price" );
+            if ( sighedMarkets[address(cToken)]  ) {
 
-            if ( sighedMarkets[address(cToken)] && sighPriceCycles[address(cToken)].initializationCounter == 24 && greaterThanExp( previousPrice , currentPrice ) ) {  // i.e the price has decreased
-                (MathError error, Exp memory lossPerUnderlying) = subExp( previousPrice , currentPrice );
-                ( error, marketLosses[i] ) = mulScalar( lossPerUnderlying, totalSupply );
+                // ######    Calculates the marketLosses[i] by subtracting the current          ######
+                // ###### price from the stored price for the current clock (24 hr old price)   ######
+                // ###### and then multiplying it witht the underlying token balance of the     ######
+                // ###### market (not totalSupply (stokens balance), as the price diff. is      ###### 
+                // ###### for underlying, and exchangeRate will lead to wrong result if we use  ###### 
+                // ######       totalSupply instead of underlying balance)                      ######
+                // ######       We then divide it by the total blocks elapsed in 24 hours       ######
+                // ######       to get the per Block loss figure                                ######
+                Exp memory totalLossesOver24hours = Exp({mantissa: 0});
+                Exp memory previousPrice = Exp({ mantissa: sighPriceCycles[address(cToken)].recordedPriceSnapshot[curClock] });
+                Exp memory currentPrice = Exp({ mantissa: oracle.getUnderlyingPriceRefresh( cToken ) });
+                uint totalUnderlyingBalance = cToken.getCash();
+                
+                require ( currentPrice.mantissa > 0, "refreshSIGHSpeedsInternal : Oracle returned Invalid Price" );
+    
+                if ( sighPriceCycles[address(cToken)].initializationCounter == 24 && greaterThanExp( previousPrice , currentPrice ) ) {  // i.e the price has decreased
+                    (MathError error, Exp memory lossPerUnderlying) = subExp( previousPrice , currentPrice );
+                    ( error, totalLossesOver24hours ) = mulScalar( lossPerUnderlying, totalUnderlyingBalance );
+                    ( error, marketLosses[i] ) = div_( totalLossesOver24hours, deltaBlocks_ );  // marketLosses[i] on an average per Block Basis over past 24 hours
+                }
+                else {
+                     marketLosses[i] = Exp({mantissa: 0});
+                }
+    
+                //  ###### Adds the loss of the current Market to total loss ######
+                //  ###### Adds the loss of the current Market to total loss ######            
+                MathError error;
+                Exp memory prevTotalLosses = Exp({ mantissa : totalLosses.mantissa });
+                (error, totalLosses) = addExp(prevTotalLosses, marketLosses[i]);  // Total loss made by the platform
+                uint curMarketLoss = marketLosses[i].mantissa;
+                emit refreshingSighSpeeds_1( address(cToken) , previousPrice.mantissa , currentPrice.mantissa , prevBlockNumberForSnapshot, blockNumber, deltaBlocks_, totalLossesOver24hours , totalUnderlyingBalance,curMarketLoss, totalLosses.mantissa );
+    
+                //  ###### It updates the stored Price for the current CLock       ######
+                uint32 prevCounter;
+                sighPriceCycles[address(cToken)].recordedPriceSnapshot[curClock] =  safe224(uint224(currentPrice.mantissa), 'Assigning current price failed. Price overflows uint224.' );
+    
+                // ######                   initializationCounter is used for newly SIGHED / Added Markets.                                 ######
+                // ######   It needs to reach 24 (priceSnapshots need to be taken) before it can be assigned a Sigh Speed based on LOSSES   ######
+                if (sighPriceCycles[address(cToken)].initializationCounter < 24 ) {
+                    prevCounter = sighPriceCycles[address(cToken)].initializationCounter;
+                    sighPriceCycles[address(cToken)].initializationCounter = uint32(add_(prevCounter,uint32(1),'Price Counter addition failed.'));
+                }
+                
+                emit PriceSnapped(address(cToken), previousPrice.mantissa, currentPrice.mantissa ,uint32(prevCounter), blockNumber );
+                emit PriceSnappedCheck(address(cToken), previousPrice.mantissa, sighPriceCycles[address(cToken)].recordedPriceSnapshot[curClock] , sighPriceCycles[address(cToken)].initializationCounter );
             }
-            else {
-                 marketLosses[i] = Exp({mantissa: 0});
+        }
+        
+        // ###### Max SIGH Speed is calculated is here (can be switched off)                                    ###### 
+        // ###### If the value of SIGH which can be distributed per block is greater than the total losses      ###### 
+        // ###### that occured on a per block basis, then we cap SIGH Speed (loss based only) to the value      ###### 
+        // ######  which will lead to a distribution of value equal to the total losses on a per block basis    ###### 
+        uint maxSpeed = SIGHSpeed;
+        if (isSpeedUpperCheckAllowed) {
+            uint SIGH_Price = oracle.getUnderlyingPriceRefresh( Sigh_Address );
+            uint max_valueDistributedPerBlock = mul_(SIGH_Price,SIGHSpeed);
+            uint totalLosses = totalLosses.mantissa;
+            if ( SIGH_Price == 0 || totalLosses > max_valueDistributedPerBlock ) {
+                maxSpeed = SIGHSpeed;            
+            } 
+            else  {
+                maxSpeed = div_( totalLosses , SIGH_Price, "Max Speed division gave error");
             }
-
-            //  ###### Adds the loss of the current Market to total loss ######
-            //  ###### Adds the loss of the current Market to total loss ######            
-            Exp memory prevTotalLosses = Exp({ mantissa : totalLosses.mantissa });
-            MathError error;
-            (error, totalLosses) = addExp(prevTotalLosses, marketLosses[i]);  // Total loss made by the platform
-            uint curMarketLoss = marketLosses[i].mantissa;
-            emit refreshingSighSpeeds_1( address(cToken) , previousPrice.mantissa , currentPrice.mantissa ,curMarketLoss , totalSupply,  totalLosses.mantissa );
-
-            //  ###### It updates the stored Price for the current CLock ######
-            //  ###### It updates the stored Price for the current CLock ######     
-            uint32 prevCounter;
-            sighPriceCycles[address(cToken)].recordedPriceSnapshot[curClock] =  safe224(uint224(currentPrice.mantissa), 'Assigning current price failed. Price overflows uint224.' );
-            if (sighPriceCycles[address(cToken)].initializationCounter < 24 ) {
-                prevCounter = sighPriceCycles[address(cToken)].initializationCounter;
-                sighPriceCycles[address(cToken)].initializationCounter = uint32(add_(prevCounter,uint32(1),'Price Counter addition failed.'));
-            }
-            
-            uint blockNumber = getBlockNumber();   
-            
-            emit PriceSnapped(address(cToken), previousPrice.mantissa, currentPrice.mantissa ,uint32(prevCounter), blockNumber );
-            emit PriceSnappedCheck(address(cToken), previousPrice.mantissa, sighPriceCycles[address(cToken)].recordedPriceSnapshot[curClock] , sighPriceCycles[address(cToken)].initializationCounter,  blockNumber );
         }
 
-
-        // ###### Updates the Speed for the Supported Markets ######
-        // ###### Updates the Speed for the Supported Markets ######        
+        // ###### Updates the Speed (loss driven) for the Supported Markets ######
+        // ###### Updates the Speed (loss driven) for the Supported Markets ######        
         for (uint i=0 ; i < allMarkets_.length ; i++) {
             CToken current_market = allMarkets[i];
-            uint prevSpeedSupplier =  SIGH_Speeds_Suppliers[address(current_market)];
-            uint prevSpeedBorrower =  SIGH_Speeds_Borrowers[address(current_market)];
+            
+            uint prevSpeedSupplier =  SIGH_Speeds_for_Markets[address(current_market)].suppliers_Speed ;
+            uint prevSpeedBorrower =  SIGH_Speeds_for_Markets[address(current_market)].borrowers_Speed ;
+            uint stakingSpeed = SIGH_Speeds_for_Markets[address(current_market)].staking_Speed ;
 
             Exp memory lossRatio;
             if (totalLosses.mantissa > 0) {
@@ -295,18 +356,28 @@ contract SightrollerSIGHDistributionHandler is Exponential {
             else {
                 lossRatio = Exp({mantissa: 0});
             }
-            uint newSpeed = totalLosses.mantissa > 0 ? mul_(SIGHSpeed, lossRatio) : 0;
+            
+            uint newSpeed_ = totalLosses.mantissa > 0 ? mul_(maxSpeed, lossRatio) : 0;
+            uint newSpeedFinal = newSpeed_;
+            
+            // ADDING STAKING SPEED TO THE SPEED CALCULATED FROM THE LOSSES[i]/TOTAL_LOSSES 
+            if (stakingSpeed > 0) {
+                uint newSpeedWithStakingRewrds = add_(newSpeed_,stakingSpeed,'Speed Addition Overflow');
+                newSpeedFinal = newSpeedWithStakingRewrds;
+            }
+            
+            // New Supplier Speed = NewSpeed (i.e Speed from the losses + staking speed for the market) * supplierSpeedRatio
+            // New Borrower Speed = NewSpeed (i.e Speed from the losses + staking speed for the market) - New Supplier Speed 
+            Exp memory supplierSpeedRatio = Exp({ mantissa : SIGH_Speeds_for_Markets[address(current_market)].speeds_Ratio_Mantissa });
+            uint supplierNewSpeed = mul_(newSpeedFinal, supplierSpeedRatio );
+            uint borrowerNewSpeed = sub_(newSpeedFinal, supplierNewSpeed, 'Borrower New Speed: Underflow' );
 
-            Exp memory supplierSpeedRatio = Exp({ mantissa : SIGH_Speeds_Supplier_Ratio_Mantissa[address(current_market)] });
-            uint supplierNewSpeed = mul_(newSpeed, supplierSpeedRatio );
-            uint borrowerNewSpeed = sub_(newSpeed, supplierNewSpeed, 'Borrower New Speed: Underflow' );
+            SIGH_Speeds_for_Markets[address(current_market)].suppliers_Speed = supplierNewSpeed;  
+            SIGH_Speeds_for_Markets[address(current_market)].borrowers_Speed = borrowerNewSpeed;  
 
-            SIGH_Speeds_Suppliers[address(current_market)] = supplierNewSpeed;  
-            SIGH_Speeds_Borrowers[address(current_market)] = borrowerNewSpeed;  
-
-            emit refreshingSighSpeeds_2( address(current_market) ,  marketLosses[i].mantissa , totalLosses.mantissa , newSpeed );
-            emit SuppliersSIGHSpeedUpdated(current_market, prevSpeedSupplier, SIGH_Speeds_Suppliers[address(current_market)]);
-            emit BorrowersSIGHSpeedUpdated(current_market, prevSpeedBorrower, SIGH_Speeds_Borrowers[address(current_market)]);
+            emit refreshingSighSpeeds_2( address(current_market) ,  marketLosses[i].mantissa , totalLosses.mantissa ,newSpeed_, stakingSpeed,  newSpeedFinal  );
+            emit SuppliersSIGHSpeedUpdated(current_market, prevSpeedSupplier, SIGH_Speeds_for_Markets[address(current_market)].suppliers_Speed   );
+            emit BorrowersSIGHSpeedUpdated(current_market, prevSpeedBorrower, SIGH_Speeds_for_Markets[address(current_market)].borrowers_Speed   );
         }
     }
 
@@ -327,7 +398,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
         
         SIGHMarketState storage supplyState = sighMarketSupplyState[currentMarket];
-        uint supplySpeed = SIGH_Speeds_Suppliers[currentMarket];
+        uint supplySpeed = SIGH_Speeds_for_Markets[address(current_market)].suppliers_Speed; 
         uint blockNumber = getBlockNumber();
         uint prevIndex = supplyState.index;
         uint deltaBlocks = sub_(blockNumber, uint( supplyState.block_ ), 'updateSIGHSupplyIndex : Block Subtraction Underflow');
@@ -366,7 +437,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         Exp memory marketBorrowIndex = Exp({mantissa: currentMarketContract.borrowIndex()});
         
         SIGHMarketState storage borrowState = sighMarketBorrowState[currentMarket];
-        uint borrowSpeed = SIGH_Speeds_Borrowers[currentMarket];
+        uint borrowSpeed = SIGH_Speeds_for_Markets[address(current_market)].borrowers_Speed; 
         uint blockNumber = getBlockNumber();
         uint prevIndex = borrowState.index;
         uint deltaBlocks = sub_(blockNumber, uint(borrowState.block_));
@@ -489,7 +560,9 @@ contract SightrollerSIGHDistributionHandler is Exponential {
                 }
             }
             
-            transfer_Sigh(holders[i],SIGH_Accrued[ holders[i] ],0 );
+            for (uint j = 0; j < holders.length; j++) {
+                SIGH_Accrued[holders[i]] = transfer_Sigh(holders[i] , SIGH_Accrued[ holders[i] ] , 0 );
+            }
         }
     }
 
@@ -519,7 +592,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
     }
 
     // #########################################################
-    // ################### GENERAL FUNCTIONS ###################
+    // ################### GENERAL PARAMETER FUNCTIONS ###################
     // #########################################################
 
     // SIGHTROLLER - GETTER AND SETTER
@@ -555,7 +628,6 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         uint sigh_Remaining = sigh.balanceOf(address(this));
         return sigh_Remaining;
     }
-
 
     function getBlockNumber() public view returns (uint32) {
         return uint32(block.number);

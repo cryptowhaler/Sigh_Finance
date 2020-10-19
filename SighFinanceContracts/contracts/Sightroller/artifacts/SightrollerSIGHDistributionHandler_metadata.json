@@ -1607,10 +1607,10 @@
 			]
 		},
 		"localhost/Sightroller/SightrollerSIGHDistributionHandler.sol": {
-			"keccak256": "0x10e8910092ff37bfcb07e8b014228c14e5bad7c62fe5c8e02f1718eb85a8cc24",
+			"keccak256": "0xb1e6d6dc1a4a7cbb74df2bd79ded4c32e1a607e76c1db878322434f946e0a0b6",
 			"urls": [
-				"bzz-raw://8e61ec824147f3d423043bb5ad6851e1f8431ece26f42bf032c13f1e4ed97e53",
-				"dweb:/ipfs/QmbccrRhCvQqZKjS3DzLUrfsqjMWxkG3ga84eLG5dYViZn"
+				"bzz-raw://e10a461179276be7457bc9d5aec80cfedd2810c708e279aa1a8401d8220c176f",
+				"dweb:/ipfs/QmXC4t9gpE98q4pJr5GWYoccCwPzH1NjHPd5KzoivhYqYg"
 			]
 		},
 		"localhost/SpeedController/SighSpeedController.sol": {
