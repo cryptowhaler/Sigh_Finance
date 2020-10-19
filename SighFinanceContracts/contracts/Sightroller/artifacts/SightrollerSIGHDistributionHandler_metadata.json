@@ -1107,11 +1107,6 @@
 						"internalType": "address",
 						"name": "borrower",
 						"type": "address"
-					},
-					{
-						"internalType": "bool",
-						"name": "distributeAll",
-						"type": "bool"
 					}
 				],
 				"name": "distributeBorrower_SIGH",
@@ -1132,11 +1127,6 @@
 						"internalType": "address",
 						"name": "supplier",
 						"type": "address"
-					},
-					{
-						"internalType": "bool",
-						"name": "distributeAll",
-						"type": "bool"
 					}
 				],
 				"name": "distributeSupplier_SIGH",
@@ -1190,51 +1180,6 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getSighAddress",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getSighSpeedController",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getSightrollerAddress",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
 					}
 				],
 				"payable": false,
@@ -1553,18 +1498,16 @@
 		],
 		"devdoc": {
 			"methods": {
-				"distributeBorrower_SIGH(address,address,bool)": {
+				"distributeBorrower_SIGH(address,address)": {
 					"details": "Borrowers will not begin to accrue until after the first interaction with the protocol.",
 					"params": {
 						"borrower": "The address of the borrower to distribute Gsigh to",
-						"currentMarket": "The market in which the borrower is interacting",
-						"distributeAll": "All SIGH Distributed if it is true"
+						"currentMarket": "The market in which the borrower is interacting"
 					}
 				},
-				"distributeSupplier_SIGH(address,address,bool)": {
+				"distributeSupplier_SIGH(address,address)": {
 					"params": {
 						"currentMarket": "The market in which the supplier is interacting",
-						"distributeAll": "All SIGH Distributed if it is true",
 						"supplier": "The address of the supplier to distribute SIGH to"
 					}
 				},
@@ -1587,10 +1530,10 @@
 		},
 		"userdoc": {
 			"methods": {
-				"distributeBorrower_SIGH(address,address,bool)": {
+				"distributeBorrower_SIGH(address,address)": {
 					"notice": "Calculate SIGH accrued by a borrower and possibly transfer it to them"
 				},
-				"distributeSupplier_SIGH(address,address,bool)": {
+				"distributeSupplier_SIGH(address,address)": {
 					"notice": "Calculate SIGH accrued by a supplier and possibly transfer it to them"
 				},
 				"refreshSIGHSpeeds()": {
@@ -1664,10 +1607,10 @@
 			]
 		},
 		"localhost/Sightroller/SightrollerSIGHDistributionHandler.sol": {
-			"keccak256": "0x6cf162b70f1995cd74f5ddf71570e0c9dce9952ec9a1aef0b8b8a7f6dd9664d6",
+			"keccak256": "0x10e8910092ff37bfcb07e8b014228c14e5bad7c62fe5c8e02f1718eb85a8cc24",
 			"urls": [
-				"bzz-raw://cbfb93c4c339e2b7a0bf2d1a73874c6a7525c65f3d2c0d8eacfd1eba88aaa030",
-				"dweb:/ipfs/QmUdbkJfEFEr1DjHoLnqXCqntkX2PduhunQar4tQJ3yJkK"
+				"bzz-raw://8e61ec824147f3d423043bb5ad6851e1f8431ece26f42bf032c13f1e4ed97e53",
+				"dweb:/ipfs/QmbccrRhCvQqZKjS3DzLUrfsqjMWxkG3ga84eLG5dYViZn"
 			]
 		},
 		"localhost/SpeedController/SighSpeedController.sol": {

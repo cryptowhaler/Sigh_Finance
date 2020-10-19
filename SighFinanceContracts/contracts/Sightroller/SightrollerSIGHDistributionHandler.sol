@@ -49,7 +49,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
 
     mapping(address => uint) public SIGH_Accrued;           /// @notice The SIGH accrued but not yet transferred to each user
 
-    uint public constant SIGH_ClaimThreshold = 0.001e18;        /// @notice The threshold above which the flywheel transfers Gsigh, in wei
+    uint public constant SIGH_ClaimThreshold = 0.001e18;        /// @notice The threshold above which the flywheel transfers SIGH, in wei
     uint224 public constant sighInitialIndex = 1e36;            /// @notice The initial SIGH index for a market
 
     /// @notice Emitted when market isSIGHed status is changed
@@ -323,7 +323,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
      * @notice Accrue SIGH to the market by updating the supply index
      * @param currentMarket The market whose supply index to update
      */
-    function updateSIGHSupplyIndex(address currentMarket) public {
+    function updateSIGHSupplyIndex(address currentMarket) public {      // SHOULD ONLY BE CALLED BY SIGHTROLLER. WAS INTERNAL BEFORE
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
         
         SIGHMarketState storage supplyState = sighMarketSupplyState[currentMarket];
@@ -358,7 +358,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
      * @notice Accrue SIGH to the market by updating the borrow index
      * @param currentMarket The market whose borrow index to update
      */
-    function updateSIGHBorrowIndex(address currentMarket) public {
+    function updateSIGHBorrowIndex(address currentMarket) public {      // SHOULD ONLY BE CALLED BY SIGHTROLLER. WAS INTERNAL BEFORE
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
         
         
@@ -402,16 +402,9 @@ contract SightrollerSIGHDistributionHandler is Exponential {
      * @notice Calculate SIGH accrued by a supplier and possibly transfer it to them
      * @param currentMarket The market in which the supplier is interacting
      * @param supplier The address of the supplier to distribute SIGH to
-     * @param distributeAll All SIGH Distributed if it is true
      */
-    function distributeSupplier_SIGH(address currentMarket, address supplier, bool distributeAll) public {
+    function distributeSupplier_SIGH(address currentMarket, address supplier ) public {
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
-
-        // ###### Drips the SIGH from the SIGH Speed Controller ######
-        SighSpeedController sigh_SpeedController = SighSpeedController(getSighSpeedController());
-        if ( sigh_SpeedController.isThisProtocolSupported(address(this)) && sigh_SpeedController.isDripAllowed() ) {
-            sigh_SpeedController.drip();
-        }
 
         SIGHMarketState storage supplyState = sighMarketSupplyState[currentMarket];
         Double memory supplyIndex = Double({mantissa: supplyState.index});
@@ -429,8 +422,9 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         uint supplierDelta = mul_(supplierTokens, deltaIndex);
         uint supplierAccrued = add_(SIGH_Accrued[supplier], supplierDelta);
         emit distributeSupplier_SIGH_test4(currentMarket, deltaIndex.mantissa , supplierTokens, supplierDelta , supplierAccrued);
-        SIGH_Accrued[supplier] = transfer_Sigh(supplier, supplierAccrued, distributeAll ? 0 : SIGH_ClaimThreshold);
-        emit DistributedSupplier_SIGH(CToken(currentMarket), supplier, supplierDelta, supplyIndex.mantissa);
+        SIGH_Accrued[supplier] = transfer_Sigh(supplier, supplierAccrued, SIGH_ClaimThreshold);
+        uint sigh_accured_by_supplier = SIGH_Accrued[supplier];         
+        emit DistributedSupplier_SIGH(CToken(currentMarket), supplier, supplierDelta, sigh_accured_by_supplier);
     }
 
     event distributeBorrower_SIGH_test3(address market,uint borrowIndex, uint borrowerIndex );
@@ -441,17 +435,10 @@ contract SightrollerSIGHDistributionHandler is Exponential {
      * @dev Borrowers will not begin to accrue until after the first interaction with the protocol.
      * @param currentMarket The market in which the borrower is interacting
      * @param borrower The address of the borrower to distribute Gsigh to
-     * @param distributeAll All SIGH Distributed if it is true
      */
-    function distributeBorrower_SIGH(address currentMarket, address borrower, bool distributeAll) public {
+    function distributeBorrower_SIGH(address currentMarket, address borrower) public {
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
 
-        // ###### Drips the SIGH from the SIGH Speed Controller ######
-        SighSpeedController sigh_SpeedController = SighSpeedController(getSighSpeedController());
-        if ( sigh_SpeedController.isThisProtocolSupported(address(this)) && sigh_SpeedController.isDripAllowed() ) {
-            sigh_SpeedController.drip();
-        }
-        
         SIGHMarketState storage borrowState = sighMarketBorrowState[currentMarket];
         Double memory borrowIndex = Double({mantissa: borrowState.index});
         Double memory borrowerIndex = Double({mantissa: SIGHBorrowerIndex[currentMarket][borrower]});
@@ -473,8 +460,9 @@ contract SightrollerSIGHDistributionHandler is Exponential {
             uint borrowerDelta = mul_(borrowerAmount, deltaIndex);
             uint borrowerAccrued = add_(SIGH_Accrued[borrower], borrowerDelta);
             emit distributeBorrower_SIGH_test4(currentMarket, deltaIndex.mantissa , borrowerAmount, borrowerDelta , borrowerAccrued);
-            SIGH_Accrued[borrower] = transfer_Sigh(borrower, borrowerAccrued, distributeAll ? 0 : SIGH_ClaimThreshold);
-            emit distributeBorrower_SIGH_test4(currentMarket, deltaIndex.mantissa, borrowBalance, borrowerDelta, borrowerAccrued);
+            SIGH_Accrued[borrower] = transfer_Sigh(borrower, borrowerAccrued, SIGH_ClaimThreshold);
+            uint sigh_accured_by_borrower = SIGH_Accrued[borrower]; 
+            emit distributeBorrower_SIGH_test4(currentMarket, deltaIndex.mantissa, borrowerAmount, borrowerDelta, sigh_accured_by_borrower);
         }
     }
 
@@ -490,16 +478,18 @@ contract SightrollerSIGHDistributionHandler is Exponential {
             if (borrowers == true) {
                 updateSIGHBorrowIndex(address(currentMarket));
                 for (uint j = 0; j < holders.length; j++) {
-                    distributeBorrower_SIGH(address(currentMarket), holders[j], true);
+                    distributeBorrower_SIGH(address(currentMarket), holders[j] );
                 }
             }
 
             if (suppliers == true) {
                 updateSIGHSupplyIndex(address(currentMarket));
                 for (uint j = 0; j < holders.length; j++) {
-                    distributeSupplier_SIGH(address(currentMarket), holders[j], true);
+                    distributeSupplier_SIGH(address(currentMarket), holders[j] );
                 }
             }
+            
+            transfer_Sigh(holders[i],SIGH_Accrued[ holders[i] ],0 );
         }
     }
 
@@ -517,7 +507,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
      */
     function transfer_Sigh(address user, uint userAccrued, uint threshold) internal returns (uint) {
         if (userAccrued >= threshold && userAccrued > 0) {
-            EIP20Interface sigh = EIP20Interface(getSighAddress());
+            EIP20Interface sigh = EIP20Interface(Sigh_Address);
             uint sigh_Remaining = sigh.balanceOf(address(this));
             if (userAccrued <= sigh_Remaining) {
                 sigh.transfer(user, userAccrued);
@@ -539,10 +529,6 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         return true;
     }
 
-    function getSightrollerAddress() public view returns (address) {
-        return sightrollerAddress;
-    }    
-
     // SIGH - GETTER AND SETTER
     function setSighAddress(address Sigh_Address__) public returns (address) {
         require(msg.sender == admin, "only admin can set Sigh_Address");
@@ -550,10 +536,6 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         return Sigh_Address;
     }
     
-    function getSighAddress() public view returns (address) {
-        return Sigh_Address;
-    }    
-
     // SIGH SPEED CONTROLLER - GETTER AND SETTER
     function setSighSpeedController(address SighSpeedController__) public returns (address) {
         require(msg.sender == admin, "only admin can set Sigh_Address");
@@ -561,10 +543,6 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         return SighSpeedControllerAddress;
     }    
 
-    function getSighSpeedController() public view returns (address) {
-        return SighSpeedControllerAddress;
-    }
-    
     // ORACLE - SETTER
     function setOracle(address newOracle) public returns (bool) {
         require(msg.sender == admin, "only admin can set oracle");
@@ -573,7 +551,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
     }
     
     function getSIGHBalance() public view returns (uint) {
-        EIP20Interface sigh = EIP20Interface(getSighAddress());
+        EIP20Interface sigh = EIP20Interface(Sigh_Address);
         uint sigh_Remaining = sigh.balanceOf(address(this));
         return sigh_Remaining;
     }
