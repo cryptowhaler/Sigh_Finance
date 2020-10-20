@@ -23,15 +23,15 @@ contract IToken is ERC20, ERC20Detailed {
 
     address public underlyingAssetAddress;
 
-    LendingPoolAddressesProvider private addressesProvider;
+    LendingPoolAddressesProvider private addressesProvider;     // Only used in Constructor()
     LendingPoolCore private core;
     LendingPool private pool;
     LendingPoolDataProvider private dataProvider;
     
-    mapping (address => uint256) private userIndexes;
-    mapping (address => address) private interestRedirectionAddresses;
+    mapping (address => uint256) private userIndexes;                       // index values. Taken from core lending pool contract
+    mapping (address => address) private interestRedirectionAddresses;      // Address to which the interest stream is being redirected
     mapping (address => uint256) private redirectedBalances;
-    mapping (address => address) private interestRedirectionAllowances;
+    mapping (address => address) private interestRedirectionAllowances;     // Address allowed to perform interest redirection by the user
 
 // ########################
 // ######  EVENTS #########
@@ -103,7 +103,7 @@ contract IToken is ERC20, ERC20Detailed {
 // ###########################
 
     modifier onlyLendingPool {
-        require( msg.sender == address(pool), "The caller of this function must be a lending pool");
+        require( msg.sender == address(pool), "The caller of this function must be the lending pool");
         _;
     }
 
@@ -112,17 +112,24 @@ contract IToken is ERC20, ERC20Detailed {
         _;
     }
 
-// #############################
-// ######  CONSTRUCTOR #########
-// #############################
+    /**
+     * @dev Used to validate transfers before actually executing them.
+     * @param _user address of the user to check
+     * @param _amount the amount to check
+     * @return true if the _user can transfer _amount, false otherwise
+     **/
+    function isTransferAllowed(address _user, uint256 _amount) public view returns (bool) {
+        return dataProvider.balanceDecreaseAllowed(underlyingAssetAddress, _user, _amount);
+    }
 
-   constructor(
-        LendingPoolAddressesProvider _addressesProvider,
-        address _underlyingAsset,
-        uint8 _underlyingAssetDecimals,
-        string memory _name,
-        string memory _symbol
-    ) public ERC20Detailed(_name, _symbol, _underlyingAssetDecimals) {
+// ################################################################################################################################################
+// ######  CONSTRUCTOR ############################################################################################################################
+// ######  1. Sets the UNDERLYINGASSETADDRESS, name, symbol, decimals.              ###############################################################
+// ######  2. The LendingPoolAddressesProvider's address is used to get the LendingPoolCore #######################################################
+// ######     contract address, LendingPool contract address, and the LendingPoolDataProvider contract address and set them.    ###################
+// ################################################################################################################################################
+
+   constructor( LendingPoolAddressesProvider _addressesProvider,    address _underlyingAsset, uint8 _underlyingAssetDecimals, string memory _name, string memory _symbol) public ERC20Detailed(_name, _symbol, _underlyingAssetDecimals) {
 
         addressesProvider = _addressesProvider;
         core = LendingPoolCore(addressesProvider.getLendingPoolCore());
@@ -131,46 +138,38 @@ contract IToken is ERC20, ERC20Detailed {
         underlyingAssetAddress = _underlyingAsset;
     }
 
-    /**
-     * @notice ERC20 implementation internal function backing transfer() and transferFrom()
-     * @dev validates the transfer before allowing it. NOTE: This is not standard ERC20 behavior
-     **/
-    function _transfer(address _from, address _to, uint256 _amount) internal whenTransferAllowed(_from, _amount) {
-
-        executeTransferInternal(_from, _to, _amount);
-    }
-
-
-    /**
-    * @dev redirects the interest generated to a target address.
-    * when the interest is redirected, the user balance is added to the recepient redirected balance.
-    * @param _to the address to which the interest will be redirected
-    **/
-    function redirectInterestStream(address _to) external {
-        redirectInterestStreamInternal(msg.sender, _to);
-    }
+// #################################################################
+// ######  MINT NEW ITOKENS ON DEPOST ##############################
+// ######  1. Can only be called by lendingPool Contract (called after amount is transferred) 
+// ######  2. If interest is being redirected, it adds the amount which is 
+// ######     deposited to the increase in balance (through interest) and 
+// ######     updates the redirected balance. 
+// ######  3. It then mints new ITokens  
+// #################################################################
 
     /**
-    * @dev redirects the interest generated by _from to a target address.
-    * when the interest is redirected, the user balance is added to the recepient redirected balance. 
-    * The caller needs to have allowance on the interest redirection to be able to execute the function.
-    * @param _from the address of the user whom interest is being redirected
-    * @param _to the address to which the interest will be redirected
-    **/
-    function redirectInterestStreamOf(address _from, address _to) external {
-        require( msg.sender == interestRedirectionAllowances[_from], "Caller is not allowed to redirect the interest of the user");
-        redirectInterestStreamInternal(_from,_to);
+     * @dev mints token in the event of users depositing the underlying asset into the lending pool. Only lending pools can call this function
+     * @param _account the address receiving the minted tokens
+     * @param _amount the amount of tokens to mint
+     */
+    function mintOnDeposit(address _account, uint256 _amount) external onlyLendingPool {
+        
+        (, , uint256 balanceIncrease, uint256 index) = cumulateBalanceInternal(_account);       //calculates new interest generated and mints the ITokens (based on interest)
+
+         //if the user is redirecting his interest towards someone else, we update the redirected balance of the redirection address by adding the accrued interest and the amount deposited
+        updateRedirectedBalanceOfRedirectionAddressInternal(_account, balanceIncrease.add(_amount), 0);
+        _mint(_account, _amount);       //mint an equivalent amount of tokens to cover the new deposit
+
+        emit MintOnDeposit(_account, _amount, balanceIncrease, index);
     }
 
-    /**
-    * @dev gives allowance to an address to execute the interest redirection on behalf of the caller.
-    * @param _to the address to which the interest will be redirected. Pass address(0) to reset the allowance.
-    **/
-    function allowInterestRedirectionTo(address _to) external {
-        require(_to != msg.sender, "User cannot give allowance to himself");
-        interestRedirectionAllowances[msg.sender] = _to;
-        emit InterestRedirectionAllowanceChanged( msg.sender, _to);
-    }
+// ###############################################################
+// ######  REDEEM UNDERLYING TOKENS ##############################
+// ######  1. If interest is being redirected, it adds the increase in balance (through interest) and 
+// ######     subtracts the amount to be redeemed to the redirected balance. 
+// ######  2. It then burns the ITokens equal to amount to be redeemed
+// ######  3. It then calls redeemUnderlying function of lendingPool Contract to transfer the underlying amount
+// ###############################################################
 
     /**
     * @dev redeems Itoken for the underlying asset
@@ -190,50 +189,31 @@ contract IToken is ERC20, ERC20Detailed {
         }
 
         require(amountToRedeem <= currentBalance, "User cannot redeem more than the available balance");
-
-        //check that the user is allowed to redeem the amount
-        require(isTransferAllowed(msg.sender, amountToRedeem), "Transfer cannot be allowed.");
+        require(isTransferAllowed(msg.sender, amountToRedeem), "Transfer cannot be allowed.");       //check that the user is allowed to redeem the amount
 
         //if the user is redirecting his interest towards someone else,
         //we update the redirected balance of the redirection address by adding the accrued interest, and removing the amount to redeem
         updateRedirectedBalanceOfRedirectionAddressInternal(msg.sender, balanceIncrease, amountToRedeem);
 
-        // burns tokens equivalent to the amount requested
-        _burn(msg.sender, amountToRedeem);
+        _burn(msg.sender, amountToRedeem);      // burns tokens equivalent to the amount requested
 
         bool userIndexReset = false;
-        //reset the user data if the remaining balance is 0
-        if(currentBalance.sub(amountToRedeem) == 0){
+        
+        if(currentBalance.sub(amountToRedeem) == 0){        //reset the user data if the remaining balance is 0
             userIndexReset = resetDataOnZeroBalanceInternal(msg.sender);
         }
 
-        // executes redeem of the underlying asset
-        pool.redeemUnderlying( underlyingAssetAddress, msg.sender, amountToRedeem, currentBalance.sub(amountToRedeem) );
-
+        pool.redeemUnderlying( underlyingAssetAddress, msg.sender, amountToRedeem, currentBalance.sub(amountToRedeem) );   // executes redeem of the underlying asset
         emit Redeem(msg.sender, amountToRedeem, balanceIncrease, userIndexReset ? 0 : index);
     }
 
-    /**
-     * @dev mints token in the event of users depositing the underlying asset into the lending pool
-     * only lending pools can call this function
-     * @param _account the address receiving the minted tokens
-     * @param _amount the amount of tokens to mint
-     */
-    function mintOnDeposit(address _account, uint256 _amount) external onlyLendingPool {
-
-        //cumulates the balance of the user
-        (, , uint256 balanceIncrease, uint256 index) = cumulateBalanceInternal(_account);
-
-         //if the user is redirecting his interest towards someone else,
-        //we update the redirected balance of the redirection address by adding the accrued interest
-        //and the amount deposited
-        updateRedirectedBalanceOfRedirectionAddressInternal(_account, balanceIncrease.add(_amount), 0);
-
-        //mint an equivalent amount of tokens to cover the new deposit
-        _mint(_account, _amount);
-
-        emit MintOnDeposit(_account, _amount, balanceIncrease, index);
-    }
+// ###########################################################################
+// ######  BURN ITOKENS WHEN LIQUIDATION OCCURS ##############################
+// ######  1. Can only be called by lendingPool Contract
+// ######  1. If interest is being redirected, it adds the increase in balance (through interest) and 
+// ######     subtracts the amount to be burnt to the redirected balance. 
+// ######  2. It then burns the ITokens equal to amount to be burnt
+// ###########################################################################
 
     /**
      * @dev burns token in the event of a borrow being liquidated, in case the liquidators reclaims the underlying asset
@@ -243,49 +223,163 @@ contract IToken is ERC20, ERC20Detailed {
      * @param _value the amount to burn
      **/
     function burnOnLiquidation(address _account, uint256 _value) external onlyLendingPool {
-
-        //cumulates the balance of the user being liquidated
-        (,uint256 accountBalance,uint256 balanceIncrease,uint256 index) = cumulateBalanceInternal(_account);
+        
+        (,uint256 accountBalance,uint256 balanceIncrease,uint256 index) = cumulateBalanceInternal(_account);    //cumulates the balance of the user being liquidated
 
         //adds the accrued interest and substracts the burned amount to the redirected balance
         updateRedirectedBalanceOfRedirectionAddressInternal(_account, balanceIncrease, _value);
-
-        //burns the requested amount of tokens
-        _burn(_account, _value);
+        _burn(_account, _value);        //burns the requested amount of tokens
 
         bool userIndexReset = false;
-        //reset the user data if the remaining balance is 0
-        if(accountBalance.sub(_value) == 0){
+        if(accountBalance.sub(_value) == 0){        //reset the user data if the remaining balance is 0
             userIndexReset = resetDataOnZeroBalanceInternal(_account);
         }
 
         emit BurnOnLiquidation(_account, _value, balanceIncrease, userIndexReset ? 0 : index);
     }
 
+// ###########################################################################
+// ######  TRANSFER FUNCTIONALITY ########################################
+// ######  1. transferOnLiquidation() : Can only be called by lendingPool Contract. Called to transfer Collateral when liquidating
+// ######  2. _transfer() : Over-rides the internal _transfer() called by the ERC20's transfer() & transferFrom() 
+// ######  3. executeTransferInternal() --> It actually executes the transfer. Accures interest and updates redirected balances before executing transfer.
+// ###########################################################################
+
     /**
-     * @dev transfers tokens in the event of a borrow being liquidated, in case the liquidators reclaims the Itoken
-     *      only lending pools can call this function
+     * @dev transfers tokens in the event of a borrow being liquidated, in case the liquidators reclaims the Itoken  only lending pools can call this function
      * @param _from the address from which transfer the Itokens
      * @param _to the destination address
      * @param _value the amount to transfer
      **/
     function transferOnLiquidation(address _from, address _to, uint256 _value) external onlyLendingPool {
-        //being a normal transfer, the Transfer() and BalanceTransfer() are emitted so no need to emit a specific event here
         executeTransferInternal(_from, _to, _value);
     }
 
     /**
-    * @dev calculates the balance of the user, which is the
-    * principal balance + interest generated by the principal balance + interest generated by the redirected balance
+     * @notice ERC20 implementation internal function backing transfer() and transferFrom()
+     * @dev validates the transfer before allowing it. NOTE: This is not standard ERC20 behavior
+     **/
+    function _transfer(address _from, address _to, uint256 _amount) internal whenTransferAllowed(_from, _amount) {
+        executeTransferInternal(_from, _to, _amount);
+    }
+
+    /**
+    * @dev executes the transfer of Itokens, invoked by both _transfer() and transferOnLiquidation()
+    * @param _from the address from which transfer the Itokens
+    * @param _to the destination address
+    * @param _value the amount to transfer
+    **/
+    function executeTransferInternal( address _from, address _to,  uint256 _value) internal {
+        require(_value > 0, "Transferred amount needs to be greater than zero");
+
+        (, uint256 fromBalance, uint256 fromBalanceIncrease, uint256 fromIndex ) = cumulateBalanceInternal(_from);   //cumulate the balance of the sender
+        (, , uint256 toBalanceIncrease, uint256 toIndex ) = cumulateBalanceInternal(_to);       //cumulate the balance of the receiver
+
+        //if the sender is redirecting his interest towards someone else, adds to the redirected balance the accrued interest and removes the amount being transferred
+        updateRedirectedBalanceOfRedirectionAddressInternal(_from, fromBalanceIncrease, _value);
+        //if the receiver is redirecting his interest towards someone else, adds to the redirected balance the accrued interest and the amount being transferred
+        updateRedirectedBalanceOfRedirectionAddressInternal(_to, toBalanceIncrease.add(_value), 0);
+
+        super._transfer(_from, _to, _value);        //performs the transfer
+
+        bool fromIndexReset = false;
+        
+        if(fromBalance.sub(_value) == 0){           //reset the user data if the remaining balance is 0
+            fromIndexReset = resetDataOnZeroBalanceInternal(_from);
+        }
+
+        emit BalanceTransfer(  _from, _to, _value, fromBalanceIncrease, toBalanceIncrease, fromIndexReset ? 0 : fromIndex, toIndex);
+    }
+
+// ###########################################################################
+// ######  REDIRECTING INTEREST STREAMS: FUNCTIONALITY ########################################
+// ######  1. redirectInterestStream() : User himself redirects his interest stream.
+// ######  2. allowInterestRedirectionTo() : User gives the permission of redirecting the interest stream to another account
+// ######  2. redirectInterestStreamOf() : When account given the permission to redirect interest stream (by the user) redirects the stream.
+// ######  3. redirectInterestStreamInternal() --> Executes the redirecting of the interest stream
+// ###########################################################################
+
+    /**
+    * @dev redirects the interest generated to a target address. When the interest is redirected, the user balance is added to the recepient redirected balance.
+    * @param _to the address to which the interest will be redirected
+    **/
+    function redirectInterestStream(address _to) external {
+        redirectInterestStreamInternal(msg.sender, _to);
+    }
+
+    /**
+    * @dev gives allowance to an address to execute the interest redirection on behalf of the caller.
+    * @param _to the address to which the interest will be redirected. Pass address(0) to reset the allowance.
+    **/
+    function allowInterestRedirectionTo(address _to) external {
+        require(_to != msg.sender, "User cannot give allowance to himself");
+        interestRedirectionAllowances[msg.sender] = _to;
+        emit InterestRedirectionAllowanceChanged( msg.sender, _to);
+    }
+
+    /**
+    * @dev redirects the interest generated by _from to a target address.
+    * The caller needs to have allowance on the interest redirection to be able to execute the function.
+    * @param _from the address of the user whom interest is being redirected
+    * @param _to the address to which the interest will be redirected
+    **/
+    function redirectInterestStreamOf(address _from, address _to) external {
+        require( msg.sender == interestRedirectionAllowances[_from], "Caller is not allowed to redirect the interest of the user");
+        redirectInterestStreamInternal(_from,_to);
+    }
+
+
+    /**
+    * @dev executes the redirection of the interest from one address to another.
+    * immediately after redirection, the destination address will start to accrue interest.
+    * @param _from the address from which transfer the Itokens
+    * @param _to the destination address
+    **/
+    function redirectInterestStreamInternal( address _from, address _to) internal {
+
+        address currentRedirectionAddress = interestRedirectionAddresses[_from];
+        require(_to != currentRedirectionAddress, "Interest is already redirected to the user");
+
+        (uint256 previousPrincipalBalance, uint256 fromBalance, uint256 balanceIncrease, uint256 fromIndex) = cumulateBalanceInternal(_from);   //accumulates the accrued interest to the principal
+        require(fromBalance > 0, "Interest stream can only be redirected if there is a valid balance");
+
+        //if the user is already redirecting the interest to someone, before changing the redirection address we substract the redirected balance of the previous recipient
+        if(currentRedirectionAddress != address(0)){
+            updateRedirectedBalanceOfRedirectionAddressInternal(_from,0, previousPrincipalBalance);
+        }
+
+        //if the user is redirecting the interest back to himself, we simply set to 0 the interest redirection address
+        if(_to == _from) {
+            interestRedirectionAddresses[_from] = address(0);
+            emit InterestStreamRedirected( _from, address(0), fromBalance, balanceIncrease,fromIndex);
+            return;
+        }
+        
+        interestRedirectionAddresses[_from] = _to;      // set the redirection address to the new recipient
+        updateRedirectedBalanceOfRedirectionAddressInternal(_from,fromBalance,0);   //adds the user balance to the redirected balance of the destination
+
+        emit InterestStreamRedirected( _from, _to, fromBalance, balanceIncrease, fromIndex);
+    }
+
+
+
+
+
+
+
+
+
+
+
+    /**
+    * @dev calculates the balance of the user, which is the principal balance + interest generated by the principal balance + interest generated by the redirected balance
     * @param _user the user for which the balance is being calculated
     * @return the total balance of the user
     **/
     function balanceOf(address _user) public view returns(uint256) {
 
-        //current principal balance of the user
-        uint256 currentPrincipalBalance = super.balanceOf(_user);
-        //balance redirected by other users to _user for interest rate accrual
-        uint256 redirectedBalance = redirectedBalances[_user];
+        uint256 currentPrincipalBalance = super.balanceOf(_user);       //current principal balance of the user
+        uint256 redirectedBalance = redirectedBalances[_user];          //balance redirected by other users to _user for interest rate accrual
 
         if(currentPrincipalBalance == 0 && redirectedBalance == 0) {
             return 0;
@@ -293,17 +387,117 @@ contract IToken is ERC20, ERC20Detailed {
 
         //if the _user is not redirecting the interest to anybody, accrues the interest for himself
         if(interestRedirectionAddresses[_user] == address(0)){
-            //accruing for himself means that both the principal balance and
-            //the redirected balance partecipate in the interest
-            return calculateCumulatedBalanceInternal( _user, currentPrincipalBalance.add( redirectedBalance) ).sub(redirectedBalance);
+            //accruing for himself means that both the principal balance and the redirected balance partecipate in the interest
+            return calculateCumulatedBalanceInternal(   _user, currentPrincipalBalance.add(redirectedBalance)   ).sub(redirectedBalance);
         }
         else {
             //if the user redirected the interest, then only the redirected
             //balance generates interest. In that case, the interest generated
             //by the redirected balance is added to the current principal balance.
-            return currentPrincipalBalance.add( calculateCumulatedBalanceInternal( _user, redirectedBalance).sub(redirectedBalance) );
+            return currentPrincipalBalance.add( calculateCumulatedBalanceInternal( _user, redirectedBalance ).sub(redirectedBalance) );
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+// #########################################################################################################
+// ### cumulateBalanceInternal( user ) --> returns 4 values and mints the balanceIncrease amount
+// ###  1. previousPrincipalBalance : IToken balance of the user
+// ###  2. newPrincipalBalance : new balance after adding balanceIncrease
+// ###  3. balanceIncrease : increase in balance based on interest from both principal and redirected interest streams
+// ###  4. index : updated user Index (gets the value from the core lending pool contract)
+// #########################################################################################################
+
+    /**
+    * @dev accumulates the accrued interest of the user to the principal balance
+    * @param _user the address of the user for which the interest is being accumulated
+    * @return the previous principal balance, the new principal balance, the balance increase
+    * and the new user index
+    **/
+    function cumulateBalanceInternal(address _user) internal returns(uint256, uint256, uint256, uint256) {
+
+        uint256 previousPrincipalBalance = super.balanceOf(_user);                                         // Current IToken Balance
+        uint256 balanceIncrease = balanceOf(_user).sub(previousPrincipalBalance);                          //calculate the accrued interest since the last accumulation
+        _mint(_user, balanceIncrease);                                                                     //mints an amount of tokens equivalent to the amount accumulated
+        uint256 index = userIndexes[_user] = core.getReserveNormalizedIncome(underlyingAssetAddress);      //updates the user index
+        return ( previousPrincipalBalance, previousPrincipalBalance.add(balanceIncrease), balanceIncrease, index);
+    }
+
+
+
+    /**
+    * @dev updates the redirected balance of the user. If the user is not redirecting his interest, nothing is executed.
+    * @param _user the address of the user for which the interest is being accumulated
+    * @param _balanceToAdd the amount to add to the redirected balance
+    * @param _balanceToRemove the amount to remove from the redirected balance
+    **/
+    function updateRedirectedBalanceOfRedirectionAddressInternal( address _user, uint256 _balanceToAdd, uint256 _balanceToRemove ) internal {
+
+        address redirectionAddress = interestRedirectionAddresses[_user];
+        if(redirectionAddress == address(0)){               //if there isn't any redirection, nothing to be done
+            return;
+        }
+
+        (,,uint256 balanceIncrease, uint256 index) = cumulateBalanceInternal(redirectionAddress);       //compound balances of the redirected address
+        redirectedBalances[redirectionAddress] = redirectedBalances[redirectionAddress].add(_balanceToAdd).sub(_balanceToRemove);   //updating the redirected balance
+
+        //if the interest of redirectionAddress is also being redirected, we need to update the redirected balance of the redirection target by adding the balance increase
+        address targetOfRedirectionAddress = interestRedirectionAddresses[redirectionAddress];
+
+        if(targetOfRedirectionAddress != address(0)){
+            redirectedBalances[targetOfRedirectionAddress] = redirectedBalances[targetOfRedirectionAddress].add(balanceIncrease);
+        }
+
+        emit RedirectedBalanceUpdated( redirectionAddress, balanceIncrease, index, _balanceToAdd, _balanceToRemove );
+    }
+
+    /**
+    * @dev calculate the interest accrued by _user on a specific balance
+    * @param _user the address of the user for which the interest is being accumulated
+    * @param _balance the balance on which the interest is calculated
+    * @return the interest rate accrued
+    **/
+    function calculateCumulatedBalanceInternal( address _user,  uint256 _balance) internal view returns (uint256) {
+        return _balance.wadToRay().rayMul(core.getReserveNormalizedIncome(underlyingAssetAddress)).rayDiv(userIndexes[_user]).rayToWad();
+    }
+
+
+
+
+// #################################################
+// #### Called when the user balance becomes 0  ####
+// #################################################
+    /**
+    * @dev function to reset the interest stream redirection and the user index, if the user has no balance left.
+    * @param _user the address of the user
+    * @return true if the user index has also been reset, false otherwise. useful to emit the proper user index value
+    **/
+    function resetDataOnZeroBalanceInternal(address _user) internal returns(bool) {
+        
+        interestRedirectionAddresses[_user] = address(0);       //if the user has 0 principal balance, the interest stream redirection gets reset
+        emit InterestStreamRedirected(_user, address(0),0,0,0);     //emits a InterestStreamRedirected event to notify that the redirection has been reset
+
+        //if the redirected balance is also 0, we clear up the user index
+        if(redirectedBalances[_user] == 0){
+            userIndexes[_user] = 0;
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+// ############################################################
+// #### Getting the State of the Contract (View Functions) ####
+// ############################################################
 
     /**
     * @dev returns the principal balance of the user. The principal balance is the last
@@ -314,32 +508,17 @@ contract IToken is ERC20, ERC20Detailed {
     function principalBalanceOf(address _user) external view returns(uint256) {
         return super.balanceOf(_user);
     }
-
-
+    
     /**
     * @dev calculates the total supply of the specific Itoken. since the balance of every single user increases over time, the total supply does that too.
     * @return the current total supply
     **/
     function totalSupply() public view returns(uint256) {
-
         uint256 currentSupplyPrincipal = super.totalSupply();
-
         if(currentSupplyPrincipal == 0){
             return 0;
         }
-
         return currentSupplyPrincipal.wadToRay().rayMul( core.getReserveNormalizedIncome(underlyingAssetAddress) ) .rayToWad();
-    }
-
-
-    /**
-     * @dev Used to validate transfers before actually executing them.
-     * @param _user address of the user to check
-     * @param _amount the amount to check
-     * @return true if the _user can transfer _amount, false otherwise
-     **/
-    function isTransferAllowed(address _user, uint256 _amount) public view returns (bool) {
-        return dataProvider.balanceDecreaseAllowed(underlyingAssetAddress, _user, _amount);
     }
 
     /**
@@ -362,8 +541,7 @@ contract IToken is ERC20, ERC20Detailed {
     }
 
     /**
-    * @dev returns the redirected balance of the user. The redirected balance is the balance
-    * redirected by other accounts to the user, that is accrueing interest for him.
+    * @dev returns the redirected balance of the user. The redirected balance is the balance redirected by other accounts to the user, that is accrueing interest for him.
     * @param _user address of the user
     * @return the total redirected balance
     **/
@@ -371,156 +549,4 @@ contract IToken is ERC20, ERC20Detailed {
         return redirectedBalances[_user];
     }
 
-    /**
-    * @dev accumulates the accrued interest of the user to the principal balance
-    * @param _user the address of the user for which the interest is being accumulated
-    * @return the previous principal balance, the new principal balance, the balance increase
-    * and the new user index
-    **/
-    function cumulateBalanceInternal(address _user) internal returns(uint256, uint256, uint256, uint256) {
-
-        uint256 previousPrincipalBalance = super.balanceOf(_user);
-        uint256 balanceIncrease = balanceOf(_user).sub(previousPrincipalBalance);       //calculate the accrued interest since the last accumulation
-        _mint(_user, balanceIncrease);              //mints an amount of tokens equivalent to the amount accumulated
-        uint256 index = userIndexes[_user] = core.getReserveNormalizedIncome(underlyingAssetAddress);       //updates the user index
-        return ( previousPrincipalBalance, previousPrincipalBalance.add(balanceIncrease), balanceIncrease, index);
-    }
-
-    /**
-    * @dev updates the redirected balance of the user. If the user is not redirecting his
-    * interest, nothing is executed.
-    * @param _user the address of the user for which the interest is being accumulated
-    * @param _balanceToAdd the amount to add to the redirected balance
-    * @param _balanceToRemove the amount to remove from the redirected balance
-    **/
-    function updateRedirectedBalanceOfRedirectionAddressInternal( address _user, uint256 _balanceToAdd, uint256 _balanceToRemove ) internal {
-
-        address redirectionAddress = interestRedirectionAddresses[_user];
-        //if there isn't any redirection, nothing to be done
-        if(redirectionAddress == address(0)){
-            return;
-        }
-
-        //compound balances of the redirected address
-        (,,uint256 balanceIncrease, uint256 index) = cumulateBalanceInternal(redirectionAddress);
-
-        //updating the redirected balance
-        redirectedBalances[redirectionAddress] = redirectedBalances[redirectionAddress].add(_balanceToAdd).sub(_balanceToRemove);
-
-        //if the interest of redirectionAddress is also being redirected, we need to update
-        //the redirected balance of the redirection target by adding the balance increase
-        address targetOfRedirectionAddress = interestRedirectionAddresses[redirectionAddress];
-
-        if(targetOfRedirectionAddress != address(0)){
-            redirectedBalances[targetOfRedirectionAddress] = redirectedBalances[targetOfRedirectionAddress].add(balanceIncrease);
-        }
-
-        emit RedirectedBalanceUpdated( redirectionAddress, balanceIncrease, index, _balanceToAdd, _balanceToRemove );
-    }
-
-    /**
-    * @dev calculate the interest accrued by _user on a specific balance
-    * @param _user the address of the user for which the interest is being accumulated
-    * @param _balance the balance on which the interest is calculated
-    * @return the interest rate accrued
-    **/
-    function calculateCumulatedBalanceInternal( address _user,  uint256 _balance) internal view returns (uint256) {
-        return _balance.wadToRay().rayMul(core.getReserveNormalizedIncome(underlyingAssetAddress)).rayDiv(userIndexes[_user]).rayToWad();
-    }
-
-    /**
-    * @dev executes the transfer of Itokens, invoked by both _transfer() and
-    *      transferOnLiquidation()
-    * @param _from the address from which transfer the Itokens
-    * @param _to the destination address
-    * @param _value the amount to transfer
-    **/
-    function executeTransferInternal( address _from, address _to,  uint256 _value) internal {
-
-        require(_value > 0, "Transferred amount needs to be greater than zero");
-
-        //cumulate the balance of the sender
-        (, uint256 fromBalance, uint256 fromBalanceIncrease, uint256 fromIndex ) = cumulateBalanceInternal(_from);
-
-        //cumulate the balance of the receiver
-        (, , uint256 toBalanceIncrease, uint256 toIndex ) = cumulateBalanceInternal(_to);
-
-        //if the sender is redirecting his interest towards someone else,
-        //adds to the redirected balance the accrued interest and removes the amount being transferred
-        updateRedirectedBalanceOfRedirectionAddressInternal(_from, fromBalanceIncrease, _value);
-
-        //if the receiver is redirecting his interest towards someone else,
-        //adds to the redirected balance the accrued interest and the amount being transferred
-        updateRedirectedBalanceOfRedirectionAddressInternal(_to, toBalanceIncrease.add(_value), 0);
-        super._transfer(_from, _to, _value);        //performs the transfer
-
-        bool fromIndexReset = false;
-        
-        if(fromBalance.sub(_value) == 0){           //reset the user data if the remaining balance is 0
-            fromIndexReset = resetDataOnZeroBalanceInternal(_from);
-        }
-
-        emit BalanceTransfer(  _from, _to, _value, fromBalanceIncrease, toBalanceIncrease, fromIndexReset ? 0 : fromIndex, toIndex);
-    }
-
-    /**
-    * @dev executes the redirection of the interest from one address to another.
-    * immediately after redirection, the destination address will start to accrue interest.
-    * @param _from the address from which transfer the Itokens
-    * @param _to the destination address
-    **/
-    function redirectInterestStreamInternal( address _from, address _to) internal {
-
-        address currentRedirectionAddress = interestRedirectionAddresses[_from];
-        require(_to != currentRedirectionAddress, "Interest is already redirected to the user");
-
-        //accumulates the accrued interest to the principal
-        (uint256 previousPrincipalBalance, uint256 fromBalance, uint256 balanceIncrease, uint256 fromIndex) = cumulateBalanceInternal(_from);
-        require(fromBalance > 0, "Interest stream can only be redirected if there is a valid balance");
-
-        //if the user is already redirecting the interest to someone, before changing
-        //the redirection address we substract the redirected balance of the previous recipient
-        if(currentRedirectionAddress != address(0)){
-            updateRedirectedBalanceOfRedirectionAddressInternal(_from,0, previousPrincipalBalance);
-        }
-
-        //if the user is redirecting the interest back to himself, we simply set to 0 the interest redirection address
-        if(_to == _from) {
-            interestRedirectionAddresses[_from] = address(0);
-            emit InterestStreamRedirected( _from, address(0), fromBalance, balanceIncrease,fromIndex);
-            return;
-        }
-
-        //first set the redirection address to the new recipient
-        interestRedirectionAddresses[_from] = _to;
-
-        //adds the user balance to the redirected balance of the destination
-        updateRedirectedBalanceOfRedirectionAddressInternal(_from,fromBalance,0);
-
-        emit InterestStreamRedirected( _from, _to, fromBalance, balanceIncrease, fromIndex);
-    }
-
-    /**
-    * @dev function to reset the interest stream redirection and the user index, if the
-    * user has no balance left.
-    * @param _user the address of the user
-    * @return true if the user index has also been reset, false otherwise. useful to emit the proper user index value
-    **/
-    function resetDataOnZeroBalanceInternal(address _user) internal returns(bool) {
-
-        //if the user has 0 principal balance, the interest stream redirection gets reset
-        interestRedirectionAddresses[_user] = address(0);
-
-        //emits a InterestStreamRedirected event to notify that the redirection has been reset
-        emit InterestStreamRedirected(_user, address(0),0,0,0);
-
-        //if the redirected balance is also 0, we clear up the user index
-        if(redirectedBalances[_user] == 0){
-            userIndexes[_user] = 0;
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
 }

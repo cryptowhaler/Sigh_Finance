@@ -12,7 +12,7 @@ import "../libraries/EthAddressLib.sol";
 
 import "../configuration/LendingPoolAddressesProvider.sol";
 import "../configuration/LendingPoolParametersProvider.sol";
-import "../tokenization/AToken.sol";
+import "../tokenization/IToken.sol";
 
 import "../interfaces/IFeeProvider.sol";
 import "../flashloan/interfaces/IFlashLoanReceiver.sol";
@@ -160,21 +160,21 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     * @param _liquidatedCollateralAmount the amount of collateral being liquidated
     * @param _accruedBorrowInterest the amount of interest accrued by the borrower since the last action
     * @param _liquidator the address of the liquidator
-    * @param _receiveAToken true if the liquidator wants to receive aTokens, false otherwise
+    * @param _receiveIToken true if the liquidator wants to receive ITokens, false otherwise
     * @param _timestamp the timestamp of the action
     **/
-    event LiquidationCall( address indexed _collateral, address indexed _instrument, address indexed _user, uint256 _purchaseAmount, uint256 _liquidatedCollateralAmount, uint256 _accruedBorrowInterest, address _liquidator, bool _receiveAToken, uint256 _timestamp);
+    event LiquidationCall( address indexed _collateral, address indexed _instrument, address indexed _user, uint256 _purchaseAmount, uint256 _liquidatedCollateralAmount, uint256 _accruedBorrowInterest, address _liquidator, bool _receiveIToken, uint256 _timestamp);
 
 // ########################
 // ######  MODIFIERS ######
 // ########################
 
     /**
-    * @dev functions affected by this modifier can only be invoked by the aToken.sol contract
+    * @dev functions affected by this modifier can only be invoked by the IToken.sol contract
     * @param _instrument the address of the instrument
     **/
-    modifier onlyOverlyingAToken(address _instrument) {
-        require( msg.sender == core.getReserveATokenAddress(_instrument), "The caller of this function can only be the IToken contract of this instrument" );
+    modifier onlyOverlyingIToken(address _instrument) {
+        require( msg.sender == core.getInstrumentITokenAddress(_instrument), "The caller of this function can only be the IToken contract of this instrument" );
         _;
     }
 
@@ -236,7 +236,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
 // ###########################################
 
     /**
-    * @dev deposits The underlying asset into the instrument. A corresponding amount of the overlying asset (aTokens) is minted.
+    * @dev deposits The underlying asset into the instrument. A corresponding amount of the overlying asset (ITokens) is minted.
     * @param _instrument the address of the instrument
     * @param _amount the amount to be deposited
     * @param _referralCode integrators are assigned a referral code and can potentially receive rewards.
@@ -249,17 +249,17 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
         onlyUnfreezedInstrument(_instrument)
         onlyAmountGreaterThanZero(_amount)
     {
-        AToken aToken = AToken(core.getReserveATokenAddress(_instrument));
+        IToken iToken = IToken(core.getInstrumentITokenAddress(_instrument));
 
-        bool isFirstDeposit = aToken.balanceOf(msg.sender) == 0;
+        bool isFirstDeposit = iToken.balanceOf(msg.sender) == 0;
 
         core.updateStateOnDeposit(_instrument, msg.sender, _amount, isFirstDeposit);
 
-        //minting AToken to user 1:1 with the specific exchange rate
-        aToken.mintOnDeposit(msg.sender, _amount);
+        //minting IToken to user 1:1 with the specific exchange rate
+        iToken.mintOnDeposit(msg.sender, _amount);
 
         //transfer to the core contract
-        core.transferToReserve.value(msg.value)(_instrument, msg.sender, _amount);
+        core.transferToInstrument.value(msg.value)(_instrument, msg.sender, _amount);
 
         //solium-disable-next-line
         emit Deposit(_instrument, msg.sender, _amount, _referralCode, block.timestamp);
@@ -268,20 +268,20 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
 
     /**
     * @dev Redeems the underlying amount of assets requested by _user.
-    * This function is executed by the overlying aToken contract in response to a redeem action.
+    * This function is executed by the overlying IToken contract in response to a redeem action.
     * @param _instrument the address of the instrument
     * @param _user the address of the user performing the action
     * @param _amount the underlying amount to be redeemed
     **/
-    function redeemUnderlying( address _instrument,address payable _user,uint256 _amount, uint256 _aTokenBalanceAfterRedeem) external nonReentrant
-        onlyOverlyingAToken(_instrument)
+    function redeemUnderlying( address _instrument,address payable _user,uint256 _amount, uint256 _ITokenBalanceAfterRedeem) external nonReentrant
+        onlyOverlyingIToken(_instrument)
         onlyActiveInstrument(_instrument)
         onlyAmountGreaterThanZero(_amount)
     {
-        uint256 currentAvailableLiquidity = core.getReserveAvailableLiquidity(_instrument);
+        uint256 currentAvailableLiquidity = core.getInstrumentAvailableLiquidity(_instrument);
         require( currentAvailableLiquidity >= _amount, "There is not enough liquidity available to redeem" );
 
-        core.updateStateOnRedeem(_instrument, _user, _amount, _aTokenBalanceAfterRedeem == 0);
+        core.updateStateOnRedeem(_instrument, _user, _amount, _ITokenBalanceAfterRedeem == 0);
 
         core.transferToUser(_instrument, _user, _amount);
 
@@ -332,7 +332,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
         BorrowLocalVars memory vars;
 
         //check that the instrument is enabled for borrowing
-        require(core.isReserveBorrowingEnabled(_instrument), "Instrument is not enabled for borrowing");
+        require(core.isInstrumentBorrowingEnabled(_instrument), "Instrument is not enabled for borrowing");
         //validate interest rate mode
         require( uint256(CoreLibrary.InterestRateMode.VARIABLE) == _interestRateMode || uint256(CoreLibrary.InterestRateMode.STABLE) == _interestRateMode, "Invalid interest rate mode selected");
 
@@ -340,7 +340,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
         vars.rateMode = CoreLibrary.InterestRateMode(_interestRateMode);
 
         //check that the amount is available in the instrument
-        vars.availableLiquidity = core.getReserveAvailableLiquidity(_instrument);
+        vars.availableLiquidity = core.getInstrumentAvailableLiquidity(_instrument);
 
         require( vars.availableLiquidity >= _amount,"There is not enough liquidity available in the Instrument's reserve");
 
@@ -456,9 +456,9 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
         }
 
         //sending the total msg.value if the transfer is ETH.
-        //the transferToReserve() function will take care of sending the
+        //the transferToInstrument() function will take care of sending the
         //excess ETH back to the caller
-        core.transferToReserve.value(vars.isETH ? msg.value.sub(vars.originationFee) : 0)( _instrument, msg.sender, vars.paybackAmountMinusFees );
+        core.transferToInstrument.value(vars.isETH ? msg.value.sub(vars.originationFee) : 0)( _instrument, msg.sender, vars.paybackAmountMinusFees );
         emit Repay( _instrument, _onBehalfOf, msg.sender, vars.paybackAmountMinusFees, vars.originationFee, vars.borrowBalanceIncrease, block.timestamp);
     }
 
@@ -508,8 +508,8 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
         require( core.getUserCurrentBorrowRateMode(_instrument, _user) == CoreLibrary.InterestRateMode.STABLE,"The user borrow is variable and cannot be rebalanced" );
 
         uint256 userCurrentStableRate = core.getUserCurrentStableBorrowRate(_instrument, _user);
-        uint256 liquidityRate = core.getReserveCurrentLiquidityRate(_instrument);
-        uint256 instrumentCurrentStableRate = core.getReserveCurrentStableBorrowRate(_instrument);
+        uint256 liquidityRate = core.getInstrumentCurrentLiquidityRate(_instrument);
+        uint256 instrumentCurrentStableRate = core.getInstrumentCurrentStableBorrowRate(_instrument);
         uint256 rebalanceDownRateThreshold = instrumentCurrentStableRate.rayMul( WadRayMath.ray().add( parametersProvider.getRebalanceDownRateDelta() ) );
 
         //step 2: we have two possible situations to rebalance:
@@ -545,7 +545,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
         require(underlyingBalance > 0, "User does not have any liquidity deposited");
         require( dataProvider.balanceDecreaseAllowed(_instrument, msg.sender, underlyingBalance), "User deposit is already being used as collateral");
 
-        core.setUserUseReserveAsCollateral(_instrument, msg.sender, _useAsCollateral);
+        core.setUserUseInstrumentAsCollateral(_instrument, msg.sender, _useAsCollateral);
 
         if (_useAsCollateral) {
             emit InstrumentUsedAsCollateralEnabled(_instrument, msg.sender);
@@ -561,15 +561,15 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     * @param _instrument the address of the principal instrument
     * @param _user the address of the borrower
     * @param _purchaseAmount the amount of principal that the liquidator wants to repay
-    * @param _receiveAToken true if the liquidators wants to receive the aTokens, false if
+    * @param _receiveIToken true if the liquidators wants to receive the ITokens, false if
     * he wants to receive the underlying asset directly
     **/
-    function liquidationCall( address _collateral, address _instrument, address _user, uint256 _purchaseAmount, bool _receiveAToken ) external payable nonReentrant 
+    function liquidationCall( address _collateral, address _instrument, address _user, uint256 _purchaseAmount, bool _receiveIToken ) external payable nonReentrant 
         onlyActiveInstrument(_instrument) 
         onlyActiveInstrument(_collateral) {
 
         address liquidationManager = addressesProvider.getLendingPoolLiquidationManager();
-        (bool success, bytes memory result) = liquidationManager.delegatecall( abi.encodeWithSignature("liquidationCall(address,address,address,uint256,bool)",  _collateral, _instrument, _user, _purchaseAmount, _receiveAToken ) );
+        (bool success, bytes memory result) = liquidationManager.delegatecall( abi.encodeWithSignature("liquidationCall(address,address,address,uint256,bool)",  _collateral, _instrument, _user, _purchaseAmount, _receiveIToken ) );
         require(success, "Liquidation call failed");
 
         (uint256 returnCode, string memory returnMessage) = abi.decode(result, (uint256, string));
@@ -642,7 +642,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
             bool isActive
         )
     {
-        return dataProvider.getReserveConfigurationData(_instrument);
+        return dataProvider.getInstrumentConfigurationData(_instrument);
     }
 
     function getInstrumentData(address _instrument) external view returns (
@@ -657,11 +657,11 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
             uint256 utilizationRate,
             uint256 liquidityIndex,
             uint256 variableBorrowIndex,
-            address aTokenAddress,
+            address iTokenAddress,
             uint40 lastUpdateTimestamp
         )
     {
-        return dataProvider.getReserveData(_instrument);
+        return dataProvider.getInstrumentData(_instrument);
     }
 
     function getUserAccountData(address _user) external view returns (
@@ -679,7 +679,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     }
 
     function getUserInstrumentData(address _instrument, address _user) external view returns (
-            uint256 currentATokenBalance,
+            uint256 currentITokenBalance,
             uint256 currentBorrowBalance,
             uint256 principalBorrowBalance,
             uint256 borrowRateMode,
@@ -691,11 +691,11 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
             bool usageAsCollateralEnabled
         )
     {
-        return dataProvider.getUserReserveData(_instrument, _user);
+        return dataProvider.getUserInstrumentData(_instrument, _user);
     }
 
     function getInstruments() external view returns (address[] memory) {
-        return core.getReserves();
+        return core.getInstruments();
     }
 
 // ########################################
@@ -705,14 +705,14 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     * @dev internal function to save on code size for the onlyActiveInstrument modifier
     **/
     function requireInstrumentActiveInternal(address _instrument) internal view {
-        require(core.getReserveIsActive(_instrument), "Action requires an active instrument");
+        require(core.getInstrumentIsActive(_instrument), "Action requires an active instrument");
     }
 
     /**
     * @notice internal function to save on code size for the onlyUnfreezedInstrument modifier
     **/
     function requireInstrumentNotFreezedInternal(address _instrument) internal view {
-        require(!core.getReserveIsFreezed(_instrument), "Action requires an unfreezed instrument");
+        require(!core.getInstrumentIsFreezed(_instrument), "Action requires an unfreezed instrument");
     }
 
     /**
