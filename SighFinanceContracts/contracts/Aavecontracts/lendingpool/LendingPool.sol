@@ -309,7 +309,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
         uint256 userBorrowBalanceETH;
         uint256 userTotalFeesETH;
         uint256 borrowBalanceIncrease;
-        uint256 currentReserveStableRate;
+        uint256 currentInstrumentStableRate;
         uint256 availableLiquidity;
         uint256 instrumentDecimals;
         uint256 finalUserBorrowRate;
@@ -332,7 +332,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
         BorrowLocalVars memory vars;
 
         //check that the instrument is enabled for borrowing
-        require(core.isReserveBorrowingEnabled(_instrument), "Reserve is not enabled for borrowing");
+        require(core.isReserveBorrowingEnabled(_instrument), "Instrument is not enabled for borrowing");
         //validate interest rate mode
         require( uint256(CoreLibrary.InterestRateMode.VARIABLE) == _interestRateMode || uint256(CoreLibrary.InterestRateMode.STABLE) == _interestRateMode, "Invalid interest rate mode selected");
 
@@ -538,7 +538,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     * @param _instrument the address of the instrument
     * @param _useAsCollateral true if the user wants to user the deposit as collateral, false otherwise.
     **/
-    function setUserUseReserveAsCollateral(address _instrument, bool _useAsCollateral) external nonReentrant onlyActiveInstrument(_instrument)  onlyUnfreezedInstrument(_instrument) {
+    function setUserUseInstrumentAsCollateral(address _instrument, bool _useAsCollateral) external nonReentrant onlyActiveInstrument(_instrument)  onlyUnfreezedInstrument(_instrument) {
        
         uint256 underlyingBalance = core.getUserUnderlyingAssetBalance(_instrument, msg.sender);
 
@@ -548,10 +548,10 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
         core.setUserUseReserveAsCollateral(_instrument, msg.sender, _useAsCollateral);
 
         if (_useAsCollateral) {
-            emit ReserveUsedAsCollateralEnabled(_instrument, msg.sender);
+            emit InstrumentUsedAsCollateralEnabled(_instrument, msg.sender);
         } 
         else {
-            emit ReserveUsedAsCollateralDisabled(_instrument, msg.sender);
+            emit InstrumentUsedAsCollateralDisabled(_instrument, msg.sender);
         }
     }
 
@@ -631,7 +631,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     * @dev accessory functions to fetch data from the core contract
     **/
 
-    function getReserveConfigurationData(address _instrument) external view returns (
+    function getInstrumentConfigurationData(address _instrument) external view returns (
             uint256 ltv,
             uint256 liquidationThreshold,
             uint256 liquidationBonus,
@@ -645,7 +645,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
         return dataProvider.getReserveConfigurationData(_instrument);
     }
 
-    function getReserveData(address _instrument) external view returns (
+    function getInstrumentData(address _instrument) external view returns (
             uint256 totalLiquidity,
             uint256 availableLiquidity,
             uint256 totalBorrowsStable,
@@ -678,7 +678,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
         return dataProvider.getUserAccountData(_user);
     }
 
-    function getUserReserveData(address _instrument, address _user) external view returns (
+    function getUserInstrumentData(address _instrument, address _user) external view returns (
             uint256 currentATokenBalance,
             uint256 currentBorrowBalance,
             uint256 principalBorrowBalance,
@@ -694,7 +694,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
         return dataProvider.getUserReserveData(_instrument, _user);
     }
 
-    function getReserves() external view returns (address[] memory) {
+    function getInstruments() external view returns (address[] memory) {
         return core.getReserves();
     }
 
@@ -704,14 +704,14 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     /**
     * @dev internal function to save on code size for the onlyActiveInstrument modifier
     **/
-    function requireReserveActiveInternal(address _instrument) internal view {
+    function requireInstrumentActiveInternal(address _instrument) internal view {
         require(core.getReserveIsActive(_instrument), "Action requires an active instrument");
     }
 
     /**
     * @notice internal function to save on code size for the onlyUnfreezedInstrument modifier
     **/
-    function requireReserveNotFreezedInternal(address _instrument) internal view {
+    function requireInstrumentNotFreezedInternal(address _instrument) internal view {
         require(!core.getReserveIsFreezed(_instrument), "Action requires an unfreezed instrument");
     }
 
