@@ -13,7 +13,6 @@ contract SightrollerSIGHDistributionHandler is Exponential {
     address public sightrollerAddress;
     PriceOracle public oracle;
     address public Sigh_Address;
-    address public SighSpeedControllerAddress;
 
     bool public isSpeedUpperCheckAllowed = false;
 
@@ -27,11 +26,12 @@ contract SightrollerSIGHDistributionHandler is Exponential {
     }
     
     struct SIGH_PriceCycles {
+        bool isListed;
         uint224[24] recordedPriceSnapshot;
         uint32 initializationCounter;
     }
 
-    uint224[24] public blockNumbersForPriceSnapshots_;
+    uint256[24] public blockNumbersForPriceSnapshots_;
     
     struct SIGH_Speeds {
         uint suppliers_Speed;
@@ -42,7 +42,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
 
     uint public SIGHSpeed;
 
-    uint224 public constant deltaBlocksForSpeed = 1; // 60 * 60 
+    uint224 public deltaBlocksForSpeed = 1; // 60 * 60 
     uint256 public prevSpeedRefreshBlock;
     uint224 public curClock;
 
@@ -60,6 +60,9 @@ contract SightrollerSIGHDistributionHandler is Exponential {
     uint public constant SIGH_ClaimThreshold = 0.001e18;        /// @notice The threshold above which the flywheel transfers SIGH, in wei
     uint224 public constant sighInitialIndex = 1e36;            /// @notice The initial SIGH index for a market
 
+
+    event MarketAdded (address marketAddress_,uint blockNumber); 
+
     /// @notice Emitted when market isSIGHed status is changed
     event MarketSIGHed(address marketAddress, bool isSIGHed);
 
@@ -69,6 +72,9 @@ contract SightrollerSIGHDistributionHandler is Exponential {
     event StakingSpeedUpdated(address marketAddress, uint prevStakingSpeed, uint new_staking_Speed, uint blockNumber );
 
     event SIGH_Speeds_Supplier_Ratio_Mantissa_Updated(address cToken, uint prevRatio, uint newRatio);
+
+    event SpeedUpperCheckAllowedSwitched(bool previsSpeedUpperCheckAllowed, bool isSpeedUpperCheckAllowed );
+
 
     /// @notice Emitted when a new SIGH speed is calculated for a market
     event SuppliersSIGHSpeedUpdated(CToken cToken, uint prevSpeed, uint newSpeed);
@@ -86,7 +92,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
     event SIGH_Transferred(address userAddress, uint amountTransferred );
 
     /// @notice Emitted when Price snapshot is taken
-    event PriceSnapped(address cToken, uint prevPrice, uint currentPrice, uint32 Prevcounter, uint blockNumber);
+    event PriceSnapped(address cToken, uint prevPrice, uint currentPrice);
 
     event PriceSnappedCheck(address cToken, uint prevPrice, uint currentPrice,uint32 currentCounter, uint blockNumber);
 
@@ -104,65 +110,65 @@ contract SightrollerSIGHDistributionHandler is Exponential {
 // ###############################################################################################
     event checkIndexes(address market, uint224 index, uint32 blockNumber);
 
-    function addSIGHMarket(address marketAddress_) public returns (bool) {
+    function addMarket(address marketAddress_) public returns (bool) {
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can add SIGH market");
-        require(!sighedMarkets[marketAddress_], "Market already supports SIGH");
+        require(!sighPriceCycles[marketAddress_].isListed ,"Market already supported.");
+
+        allMarkets.push(CToken(marketAddress_)); // ADD THE MARKET TO THE LIST OF SUPPORTED MARKETS
         
-        _addMarketInternal(marketAddress_);
-        
+        // INITIALIZE SUPPLY INDEXES
         if ( sighMarketSupplyState[marketAddress_].index == 0 && sighMarketSupplyState[marketAddress_].block_ == 0 ) {
             sighMarketSupplyState[marketAddress_] = SIGHMarketState({ index: safe224(sighInitialIndex,"sighInitialIndex exceeds 224 bits"), block_: safe32(getBlockNumber(), "block number exceeds 32 bits") });
             emit checkIndexes(marketAddress_,sighMarketSupplyState[marketAddress_].index, sighMarketSupplyState[marketAddress_].block_);
         }
-        
+
+        // INITIALIZE BORROW INDEXES
         if ( sighMarketBorrowState[marketAddress_].index == 0 && sighMarketBorrowState[marketAddress_].block_ == 0 ) {
             sighMarketBorrowState[marketAddress_] = SIGHMarketState({ index: safe224(sighInitialIndex,"sighInitialIndex exceeds 224 bits"), block_: safe32(getBlockNumber(), "block number exceeds 32 bits") });
             emit checkIndexes(marketAddress_,sighMarketBorrowState[marketAddress_].index, sighMarketBorrowState[marketAddress_].block_);
         }
-        
+
+        // INITIALIZE PRICECYCLES
         if ( sighPriceCycles[marketAddress_].initializationCounter == 0 ) {
             uint224[24] memory emptyPrices;
-            sighPriceCycles[marketAddress_] = SIGH_PriceCycles({ recordedPriceSnapshot : emptyPrices, initializationCounter: 0 }) ;
+            sighPriceCycles[marketAddress_] = SIGH_PriceCycles({ isListed: true, recordedPriceSnapshot : emptyPrices, initializationCounter: 0 }) ;
         }   
-        
+
+        // INITIALIZE SPEEDS
         SIGH_Speeds_for_Markets[marketAddress_] = SIGH_Speeds( { suppliers_Speed: uint(0), borrowers_Speed: uint(0), speeds_Ratio_Mantissa: uint(1e18), staking_Speed: uint(0) } );
+        
+        sighedMarkets[marketAddress_] = false;
+        refreshSIGHSpeeds(); 
+        emit MarketAdded(marketAddress_, block.number); 
+        return true;
+    }
+
+    function Market_SIGHed(address marketAddress_) public returns (bool) {
+        require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can add SIGH market");
+        require(sighPriceCycles[marketAddress_].isListed ,"Market not supported.");
+        require(!sighedMarkets[marketAddress_], "Market already supports SIGH");
         
         sighedMarkets[marketAddress_] = true;
         refreshSIGHSpeeds(); 
         emit MarketSIGHed( marketAddress_, true);
-        
         return true;
     }
 
-    function dropSIGHMarket(address marketAddress_) public returns (bool) {
+    function Market_UNSIGHed(address marketAddress_) public returns (bool) {
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can drop SIGH market");
+        require(sighPriceCycles[marketAddress_].isListed ,"Market not supported.");
         require(sighedMarkets[marketAddress_], "Market does not support SIGH");
 
         // Recorded Price snapshots initialized to 0. 
         uint224[24] memory emptyPrices;
-        sighPriceCycles[marketAddress_] = SIGH_PriceCycles({ recordedPriceSnapshot : emptyPrices, initializationCounter: 0 }) ;
-        SIGH_Speeds_for_Markets[marketAddress_] = SIGH_Speeds( { suppliers_Speed: uint(0), borrowers_Speed: uint(0), speeds_Ratio_Mantissa: uint(1e18), staking_Speed: uint(0) } );
-        
+        sighPriceCycles[marketAddress_] = SIGH_PriceCycles({ isListed: true, recordedPriceSnapshot : emptyPrices, initializationCounter: 0 }) ;
+
         sighedMarkets[marketAddress_] = false;
-        
         refreshSIGHSpeeds();
         emit MarketSIGHed( marketAddress_, false);
         return true;
     }
     
-    
-    function _addMarketInternal(address newMarket) internal {
-        uint check = 0;
-        for (uint i = 0; i < allMarkets.length; i ++) {
-            if (allMarkets[i] == CToken(newMarket) ) {
-                check = 1;
-                break;
-            }
-        }
-        if (check == 0) {
-            allMarkets.push(CToken(newMarket));
-        }
-    }
 
 // ###############################################################################################
 // ##############        GLOBAL SIGH SPEED AND SIGH SPEED RATIO FOR A MARKET          ##############
@@ -185,6 +191,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
 
     function updateSIGHSpeedRatioForAMarket(address marketAddress, uint supplierRatio) public returns (bool) {
         require( msg.sender == admin, 'Only Admin can change the SIGH Speed Distribution Ratio for a Market');
+        require(sighPriceCycles[marketAddress].isListed ,"Market not supported.");
         require( supplierRatio > 0.5e18, 'The new Supplier Ratio must be greater than 0.5e18');
         require( supplierRatio <= 1e18, 'The new Supplier Ratio must be less than 1e18');
 
@@ -196,13 +203,30 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         return true;
     }
     
-    function updateStakingSpeedForAMarket(address marketAddress, uint newStakingSpeed) public returns (uint) {
+    function updateStakingSpeedForAMarket(address marketAddress, uint newStakingSpeed) public returns (bool) {
         require( msg.sender == admin, 'Only Admin can change the SIGH Speed Distribution Ratio for a Market');
+        require(sighPriceCycles[marketAddress].isListed ,"Market not supported.");
         
         uint prevStakingSpeed = SIGH_Speeds_for_Markets[marketAddress].staking_Speed;
         SIGH_Speeds_for_Markets[marketAddress].staking_Speed = newStakingSpeed;
-        
+        refreshSIGHSpeeds();
+
         emit StakingSpeedUpdated(marketAddress, prevStakingSpeed, SIGH_Speeds_for_Markets[marketAddress].staking_Speed, block.number );
+        return true;
+        
+    }
+    
+    function SpeedUpperCheckAllowedSwitch() public returns (bool) {
+        require( msg.sender == admin, 'Only Admin can change isSpeedUpperCheckAllowed');
+        bool previsSpeedUpperCheckAllowed = isSpeedUpperCheckAllowed;
+        if (isSpeedUpperCheckAllowed) {
+            isSpeedUpperCheckAllowed = false;
+        }
+        else {
+            isSpeedUpperCheckAllowed = true;
+        }
+        emit SpeedUpperCheckAllowedSwitched(previsSpeedUpperCheckAllowed, isSpeedUpperCheckAllowed );
+        return isSpeedUpperCheckAllowed;        
     }
     
     // ###########################################################################################
@@ -224,11 +248,13 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         return false;
     }
 
-    event refreshingSighSpeeds_1( address market ,  uint previousPrice , uint currentPrice , uint marketLosses , uint totalSupply, uint totalLosses   );
-    event refreshingSighSpeeds_2( address market, uint marketLosses , uint totalLosses, uint newSpeed   );
+    event refreshingSighSpeeds_1( address market,uint marketLosses , uint totalLosses   );
+    event refreshingSighSpeeds_2( address market,uint newSpeed, uint stakingSpeed, uint newSpeedFinal   );
 
-    event maxSpeedCheck(uint SIGH)
-
+    event maxSpeedCheck(uint SIGH);
+    event blockNumberForSnapshotUpdated(uint224 curClock,uint prevBlockNumberForSnapshot,uint blockNumbersForPriceSnapshots, uint deltaBlocks_,uint blocknumber );    
+    event MaxSpeedUsedWhenRefreshingPriceSnapshots(uint SIGHSpeed, uint maxSpeed,uint SIGH_Price,uint totalLosses_  );
+        
     function refreshSIGHSpeedsInternal() internal {
         CToken[] memory allMarkets_ = allMarkets;
         uint blockNumber = getBlockNumber();   
@@ -258,7 +284,9 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         // ###### blockNumbersForPriceSnapshots_ updated for Current Clock ######
         uint prevBlockNumberForSnapshot = blockNumbersForPriceSnapshots_[curClock];
         uint deltaBlocks_ = sub_(blockNumber , prevBlockNumberForSnapshot, "DeltaBlocks resulted in Underflow");
-        blockNumbersForPriceSnapshots_[curClock] = blockNumber;
+        blockNumbersForPriceSnapshots_[curClock] = uint224(blockNumber);
+        
+        emit blockNumberForSnapshotUpdated(curClock, prevBlockNumberForSnapshot, blockNumbersForPriceSnapshots_[curClock], deltaBlocks_, block.number );
         
         // ###### Calculate the total Loss made by the protocol over the 24 hrs ######
         Exp memory totalLosses = Exp({mantissa: 0});
@@ -272,7 +300,10 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         for (uint i = 0; i < allMarkets_.length; i++) {
             CToken cToken = allMarkets_[i];
             
-            if ( sighedMarkets[address(cToken)]  ) {
+            if ( !sighedMarkets[address(cToken)]  ) { 
+                marketLosses[i] = Exp({mantissa: 0});
+            }
+            else {
 
                 // ######    Calculates the marketLosses[i] by subtracting the current          ######
                 // ###### price from the stored price for the current clock (24 hr old price)   ######
@@ -292,7 +323,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
                 if ( sighPriceCycles[address(cToken)].initializationCounter == 24 && greaterThanExp( previousPrice , currentPrice ) ) {  // i.e the price has decreased
                     (MathError error, Exp memory lossPerUnderlying) = subExp( previousPrice , currentPrice );
                     ( error, totalLossesOver24hours ) = mulScalar( lossPerUnderlying, totalUnderlyingBalance );
-                    ( error, marketLosses[i] ) = div_( totalLossesOver24hours, deltaBlocks_ );  // marketLosses[i] on an average per Block Basis over past 24 hours
+                    marketLosses[i] = div_( totalLossesOver24hours, deltaBlocks_ );  // marketLosses[i] on an average per Block Basis over past 24 hours
                 }
                 else {
                      marketLosses[i] = Exp({mantissa: 0});
@@ -304,7 +335,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
                 Exp memory prevTotalLosses = Exp({ mantissa : totalLosses.mantissa });
                 (error, totalLosses) = addExp(prevTotalLosses, marketLosses[i]);  // Total loss made by the platform
                 uint curMarketLoss = marketLosses[i].mantissa;
-                emit refreshingSighSpeeds_1( address(cToken) , previousPrice.mantissa , currentPrice.mantissa , prevBlockNumberForSnapshot, blockNumber, deltaBlocks_, totalLossesOver24hours , totalUnderlyingBalance,curMarketLoss, totalLosses.mantissa );
+                emit refreshingSighSpeeds_1( address(cToken) , curMarketLoss, totalLosses.mantissa );
     
                 //  ###### It updates the stored Price for the current CLock       ######
                 uint32 prevCounter;
@@ -317,8 +348,8 @@ contract SightrollerSIGHDistributionHandler is Exponential {
                     sighPriceCycles[address(cToken)].initializationCounter = uint32(add_(prevCounter,uint32(1),'Price Counter addition failed.'));
                 }
                 
-                emit PriceSnapped(address(cToken), previousPrice.mantissa, currentPrice.mantissa ,uint32(prevCounter), blockNumber );
-                emit PriceSnappedCheck(address(cToken), previousPrice.mantissa, sighPriceCycles[address(cToken)].recordedPriceSnapshot[curClock] , sighPriceCycles[address(cToken)].initializationCounter );
+                emit PriceSnapped(address(cToken), previousPrice.mantissa, currentPrice.mantissa );
+                emit PriceSnappedCheck(address(cToken), previousPrice.mantissa, sighPriceCycles[address(cToken)].recordedPriceSnapshot[curClock] ,  sighPriceCycles[address(cToken)].initializationCounter, block.number );
             }
         }
         
@@ -327,17 +358,20 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         // ###### that occured on a per block basis, then we cap SIGH Speed (loss based only) to the value      ###### 
         // ######  which will lead to a distribution of value equal to the total losses on a per block basis    ###### 
         uint maxSpeed = SIGHSpeed;
+        uint SIGH_Price;
         if (isSpeedUpperCheckAllowed) {
-            uint SIGH_Price = oracle.getUnderlyingPriceRefresh( Sigh_Address );
+            SIGH_Price = oracle.getUnderlyingPrice( CToken(Sigh_Address) );
             uint max_valueDistributedPerBlock = mul_(SIGH_Price,SIGHSpeed);
-            uint totalLosses = totalLosses.mantissa;
-            if ( SIGH_Price == 0 || totalLosses > max_valueDistributedPerBlock ) {
+            uint totalLosses_ = totalLosses.mantissa;
+            if ( SIGH_Price == 0 || totalLosses_ > max_valueDistributedPerBlock ) {
                 maxSpeed = SIGHSpeed;            
             } 
             else  {
-                maxSpeed = div_( totalLosses , SIGH_Price, "Max Speed division gave error");
+                maxSpeed = div_( totalLosses_ , SIGH_Price, "Max Speed division gave error");
             }
         }
+        
+        emit MaxSpeedUsedWhenRefreshingPriceSnapshots(SIGHSpeed, maxSpeed, SIGH_Price, totalLosses.mantissa  );
 
         // ###### Updates the Speed (loss driven) for the Supported Markets ######
         // ###### Updates the Speed (loss driven) for the Supported Markets ######        
@@ -375,7 +409,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
             SIGH_Speeds_for_Markets[address(current_market)].suppliers_Speed = supplierNewSpeed;  
             SIGH_Speeds_for_Markets[address(current_market)].borrowers_Speed = borrowerNewSpeed;  
 
-            emit refreshingSighSpeeds_2( address(current_market) ,  marketLosses[i].mantissa , totalLosses.mantissa ,newSpeed_, stakingSpeed,  newSpeedFinal  );
+            emit refreshingSighSpeeds_2( address(current_market) ,newSpeed_, stakingSpeed,  newSpeedFinal  );
             emit SuppliersSIGHSpeedUpdated(current_market, prevSpeedSupplier, SIGH_Speeds_for_Markets[address(current_market)].suppliers_Speed   );
             emit BorrowersSIGHSpeedUpdated(current_market, prevSpeedBorrower, SIGH_Speeds_for_Markets[address(current_market)].borrowers_Speed   );
         }
@@ -384,6 +418,9 @@ contract SightrollerSIGHDistributionHandler is Exponential {
 
     // ################################################################## 
     // ################ UPDATE SIGH DISTRIBUTION INDEXES ################
+    // ################ No need to use balanceUnderlying() as we did when calculating total loss based speeds.              ################ 
+    // ################ As over there balanceUnderlying() was needed to remove differences across markets while             ################ 
+    // ################ here when updating indexes or distruting SIGH's, the ratios are calculated within individual market ################ 
     // ##################################################################
 
     event updateSIGHSupplyIndex_test1(address market,uint speed,uint currentIndex,  uint prevBlock, uint curBlock, uint deltaBlocks );
@@ -396,9 +433,10 @@ contract SightrollerSIGHDistributionHandler is Exponential {
      */
     function updateSIGHSupplyIndex(address currentMarket) public {      // SHOULD ONLY BE CALLED BY SIGHTROLLER. WAS INTERNAL BEFORE
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
+        require(sighPriceCycles[currentMarket].isListed ,"Market not supported.");
         
         SIGHMarketState storage supplyState = sighMarketSupplyState[currentMarket];
-        uint supplySpeed = SIGH_Speeds_for_Markets[address(current_market)].suppliers_Speed; 
+        uint supplySpeed = SIGH_Speeds_for_Markets[address(currentMarket)].suppliers_Speed; 
         uint blockNumber = getBlockNumber();
         uint prevIndex = supplyState.index;
         uint deltaBlocks = sub_(blockNumber, uint( supplyState.block_ ), 'updateSIGHSupplyIndex : Block Subtraction Underflow');
@@ -431,13 +469,13 @@ contract SightrollerSIGHDistributionHandler is Exponential {
      */
     function updateSIGHBorrowIndex(address currentMarket) public {      // SHOULD ONLY BE CALLED BY SIGHTROLLER. WAS INTERNAL BEFORE
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
-        
+        require(sighPriceCycles[currentMarket].isListed ,"Market not supported.");
         
         CToken currentMarketContract = CToken(currentMarket);
         Exp memory marketBorrowIndex = Exp({mantissa: currentMarketContract.borrowIndex()});
         
         SIGHMarketState storage borrowState = sighMarketBorrowState[currentMarket];
-        uint borrowSpeed = SIGH_Speeds_for_Markets[address(current_market)].borrowers_Speed; 
+        uint borrowSpeed = SIGH_Speeds_for_Markets[address(currentMarket)].borrowers_Speed; 
         uint blockNumber = getBlockNumber();
         uint prevIndex = borrowState.index;
         uint deltaBlocks = sub_(blockNumber, uint(borrowState.block_));
@@ -476,6 +514,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
      */
     function distributeSupplier_SIGH(address currentMarket, address supplier ) public {
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
+        require(sighPriceCycles[currentMarket].isListed ,"Market not supported.");
 
         SIGHMarketState storage supplyState = sighMarketSupplyState[currentMarket];
         Double memory supplyIndex = Double({mantissa: supplyState.index});
@@ -509,6 +548,7 @@ contract SightrollerSIGHDistributionHandler is Exponential {
      */
     function distributeBorrower_SIGH(address currentMarket, address borrower) public {
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
+        require(sighPriceCycles[currentMarket].isListed ,"Market not supported.");
 
         SIGHMarketState storage borrowState = sighMarketBorrowState[currentMarket];
         Double memory borrowIndex = Double({mantissa: borrowState.index});
@@ -609,13 +649,6 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         return Sigh_Address;
     }
     
-    // SIGH SPEED CONTROLLER - GETTER AND SETTER
-    function setSighSpeedController(address SighSpeedController__) public returns (address) {
-        require(msg.sender == admin, "only admin can set Sigh_Address");
-        SighSpeedControllerAddress = SighSpeedController__;
-        return SighSpeedControllerAddress;
-    }    
-
     // ORACLE - SETTER
     function setOracle(address newOracle) public returns (bool) {
         require(msg.sender == admin, "only admin can set oracle");
@@ -627,6 +660,11 @@ contract SightrollerSIGHDistributionHandler is Exponential {
         EIP20Interface sigh = EIP20Interface(Sigh_Address);
         uint sigh_Remaining = sigh.balanceOf(address(this));
         return sigh_Remaining;
+    }
+    
+    function setMinimumDeltaBlocksForSpeed(uint224 newMinimumDeltaBlocks) public {
+        require(msg.sender == admin, "only admin can set oracle");
+        deltaBlocksForSpeed = newMinimumDeltaBlocks;
     }
 
     function getBlockNumber() public view returns (uint32) {

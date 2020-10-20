@@ -13,6 +13,13 @@ contract SIGH is Context, IERC20 {
     using Address for address;
 
     address private _owner;
+    address private pendingOwner;
+    address public treasury; 
+
+    event TreasuryChanged(address prevTreasury, address treasury, uint blockNumber);
+    event NewPendingOwner(address pendingAdmin, uint blockNumber);                
+    event NewOwner(address prevAdmin, address admin, uint blockNumber);                
+
 
     mapping (address => uint256) private balances;
     mapping (address => mapping (address => uint256)) private _allowances;
@@ -21,7 +28,6 @@ contract SIGH is Context, IERC20 {
     uint256 public CURRENT_SUPPLY = INITIAL_SUPPLY ;
     uint256 public totalAmountBurnt = 0;
 
-    bool public isSpeedControllerSet = false;
     address public SpeedController;
 
     uint256 public constant CYCLE_SECONDS = 60;  // 24*60*60 (i.e seconds in 1 day )
@@ -78,25 +84,18 @@ contract SIGH is Context, IERC20 {
     // #######   FUNCTIONS TO INITIATE MINTING  #######
     // ################################################
 
-    function setSpeedController(address newSpeedController) public returns (bool) {
-        require(_msgSender() == _owner, "Only the Admin can change SpeedController");
+    function initMinting(address newSpeedController) public returns (bool) {
+        require(_msgSender() == _owner,"Mining can only be initialized by the owner." );
         require(newSpeedController != address(0), "Not a valid Speed Controller address");
-        // require( !isSpeedControllerSet, " Speed Controller can be set only once ");
+        require(!mintingActivated, "Minting can only be initialized once" );
 
         address prevSpeedController = SpeedController;
         SpeedController = newSpeedController;
-        isSpeedControllerSet = true;
-        
-        emit SpeedControllerChanged(prevSpeedController, SpeedController, block.number );
-        return true;
-    }
-    
-    function initMinting() public returns (bool) {
-        require(_msgSender() == _owner,"Mining can only be initialized by the owner." );
-        require( isSpeedControllerSet , "Speed Controller needs to be set before the Eras can begin" );
-        require(!mintingActivated, "Minting can only be initialized once" );
+
         _initEras();
         _startTime = now;
+        
+        emit SpeedControllerChanged(prevSpeedController, SpeedController, block.number );
         mintingActivated = true;
     }
 
@@ -250,9 +249,10 @@ contract SIGH is Context, IERC20 {
     // ################################################
     // ############   BURN FUNCTON    #################
     // ################################################
-
+    
     function burn(uint amount) external returns (bool) {
-        require(balances[msg.sender] > amount, "ERC20: The Sender doesn't have the required balance");
+        require( msg.sender == treasury,"Only Treasury can burn SIGH Tokens");
+        require(balances[msg.sender] > amount, "ERC20: Treasury doesn't have the required balance");
         balances[msg.sender] = balances[msg.sender].sub(amount);
         
         uint total_amount_burnt = add(totalAmountBurnt , amount, 'burn : Total Number of tokens burnt gave addition overflow');
@@ -263,6 +263,37 @@ contract SIGH is Context, IERC20 {
         return true;
     }
 
+    function changeTreasury(address newTreasury) public returns (bool) {
+        require( msg.sender == _owner,"Only Treasury can burn SIGH Tokens");
+        
+        address prevTreasury = treasury;
+        treasury = newTreasury;
+        require( treasury == newTreasury,"Treasury not assigned properly");
+        
+        emit TreasuryChanged(prevTreasury, treasury, block.number);
+    }
+    
+    // ##################################################
+    // ############   ADMIN FUNCTONS    #################
+    // ##################################################
+    
+    function changeAdmin(address newPendingAdmin) public {
+        require( msg.sender == _owner,"Only Admin can assign a new Pending Admin");
+        
+        pendingOwner = newPendingAdmin;
+        require( pendingOwner == newPendingAdmin,"Pending Admin not assigned properly");
+        emit NewPendingOwner(pendingOwner, block.number);                
+    }
+    
+    function acceptAdmin () public {
+        require( msg.sender == pendingOwner,"Only Admin can assign a new Pending Admin");
+        address prevAdmin = _owner;
+        _owner = pendingOwner;
+        require( _owner == pendingOwner,"Admin not assigned properly");
+        pendingOwner = address(0);
+
+        emit NewOwner(prevAdmin, _owner, block.number);                
+    }
 
     // ################################################
     // ###########   MINT FUNCTONS (VIEW)   ###########

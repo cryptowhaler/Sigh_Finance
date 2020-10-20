@@ -104,6 +104,50 @@
 					{
 						"indexed": false,
 						"internalType": "address",
+						"name": "prevAdmin",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "admin",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "NewOwner",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "pendingAdmin",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "NewPendingOwner",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
 						"name": "userAddress",
 						"type": "address"
 					},
@@ -226,6 +270,31 @@
 					}
 				],
 				"name": "Transfer",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "prevTreasury",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "treasury",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "TreasuryChanged",
 				"type": "event"
 			},
 			{
@@ -379,6 +448,15 @@
 				"type": "function"
 			},
 			{
+				"constant": false,
+				"inputs": [],
+				"name": "acceptAdmin",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"constant": true,
 				"inputs": [
 					{
@@ -461,6 +539,42 @@
 					}
 				],
 				"name": "burn",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newPendingAdmin",
+						"type": "address"
+					}
+				],
+				"name": "changeAdmin",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newTreasury",
+						"type": "address"
+					}
+				],
+				"name": "changeTreasury",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -637,7 +751,13 @@
 			},
 			{
 				"constant": false,
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newSpeedController",
+						"type": "address"
+					}
+				],
 				"name": "initMinting",
 				"outputs": [
 					{
@@ -654,21 +774,6 @@
 				"constant": true,
 				"inputs": [],
 				"name": "isMintingActivated",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "isSpeedControllerSet",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -768,27 +873,6 @@
 				],
 				"payable": false,
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "newSpeedController",
-						"type": "address"
-					}
-				],
-				"name": "setSpeedController",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -892,6 +976,21 @@
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "treasury",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -922,10 +1021,10 @@
 			]
 		},
 		"localhost/Sigh.sol": {
-			"keccak256": "0x7e6c010c2a3d7e869c4caa3d9f40b9ef47797349d85d788636896f05e6614d74",
+			"keccak256": "0x515ed8d35511608cb1e12b15b1b16ac6281b2d9a447992e50bdd3b5556f974a4",
 			"urls": [
-				"bzz-raw://2e2469ba8930e1ed136847db95245a46862c74d3b3161fc4a5c4f6d677e6953a",
-				"dweb:/ipfs/QmZHGgYg7p2mPCAnpgv54qMsUzzZAeQFcszFizHiCQhPYP"
+				"bzz-raw://8a747f632ef83cc5bb6093d574cb7d5d03d966f9be2d6946fb1431c8340a1461",
+				"dweb:/ipfs/QmQynmmEfdcxjMWKHpfZBBeCmSBSGPukyb9HNjJGshGpqo"
 			]
 		},
 		"localhost/openzeppelin/Address.sol": {

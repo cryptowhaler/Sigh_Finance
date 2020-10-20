@@ -68,8 +68,11 @@ contract SighSpeedController {
 
   function supportNewProtocol( address newProtocolAddress, uint sighSpeed ) public returns (bool)  {
     require(admin == msg.sender,"New Protocol can only be added by the Admin");
-    bool checkIfSupported = supportedProtocols[newProtocolAddress];
-    require (!checkIfSupported, 'This Protocol is already supported by the Sigh Speed Controller');
+    require (!supportedProtocols[newProtocolAddress], 'This Protocol is already supported by the Sigh Speed Controller');
+
+    if (isDripAllowed) {
+        drip();
+    }
     
     storedSupportedProtocols.push(newProtocolAddress);
     
@@ -84,6 +87,7 @@ contract SighSpeedController {
     emit NewProtocolSupported(newProtocolAddress, sighSpeed);
   }
   
+//   ######### WE DO NOT DRIP WHEN REMOVING A PROTOCOL  ######### 
   function removeSupportedProtocol(address protocolAddress_ ) public returns (bool) {
     require(admin == msg.sender,"Protocol can only be removed by the Admin");
     require(supportedProtocols[protocolAddress_],'The Protocol is already not Supported by the Sigh Speed Controller' );
@@ -118,7 +122,7 @@ contract SighSpeedController {
 
   function changeProtocolSIGHSpeed (address targetAddress, uint newSpeed_) public returns (bool) {
     require(admin == msg.sender,"Drip rate can only be changed by the Admin");
-    require(supportedProtocols[targetAddress],'The Protocol not Supported by the Sigh Speed Controller' );
+    require(supportedProtocols[targetAddress],'The Protocol is not Supported by the Sigh Speed Controller' );
     if (isDripAllowed) {
         drip();
     }
