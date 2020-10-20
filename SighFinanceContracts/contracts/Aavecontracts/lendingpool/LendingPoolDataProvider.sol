@@ -30,7 +30,6 @@ contract LendingPoolDataProvider is VersionedInitializable {
     * 1e18 by default, if the health factor drops below 1e18, the loan can be liquidated.
     **/
     uint256 public constant HEALTH_FACTOR_LIQUIDATION_THRESHOLD = 1e18;
-
     uint256 public constant DATA_PROVIDER_REVISION = 0x1;
 
     function getRevision() internal pure returns (uint256) {
@@ -67,10 +66,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
     * @return the total liquidity, total collateral, total borrow balances of the user in ETH.
     * also the average Ltv, liquidation threshold, and the health factor
     **/
-    function calculateUserGlobalData(address _user)
-        public
-        view
-        returns (
+    function calculateUserGlobalData(address _user) public view returns (
             uint256 totalLiquidityBalanceETH,
             uint256 totalCollateralBalanceETH,
             uint256 totalBorrowBalanceETH,
@@ -82,77 +78,47 @@ contract LendingPoolDataProvider is VersionedInitializable {
         )
     {
         IPriceOracleGetter oracle = IPriceOracleGetter(addressesProvider.getPriceOracle());
-
-        // Usage of a memory struct of vars to avoid "Stack too deep" errors due to local variables
-        UserGlobalDataLocalVars memory vars;
+        UserGlobalDataLocalVars memory vars;        // Usage of a memory struct of vars to avoid "Stack too deep" errors due to local variables
 
         address[] memory reserves = core.getReserves();
 
         for (uint256 i = 0; i < reserves.length; i++) {
             vars.currentReserve = reserves[i];
 
-            (
-                vars.compoundedLiquidityBalance,
-                vars.compoundedBorrowBalance,
-                vars.originationFee,
-                vars.userUsesReserveAsCollateral
-            ) = core.getUserBasicReserveData(vars.currentReserve, _user);
+            ( vars.compoundedLiquidityBalance, vars.compoundedBorrowBalance, vars.originationFee, vars.userUsesReserveAsCollateral ) = core.getUserBasicReserveData(vars.currentReserve, _user);
 
             if (vars.compoundedLiquidityBalance == 0 && vars.compoundedBorrowBalance == 0) {
                 continue;
             }
 
             //fetch reserve data
-            (
-                vars.reserveDecimals,
-                vars.baseLtv,
-                vars.liquidationThreshold,
-                vars.usageAsCollateralEnabled
-            ) = core.getReserveConfiguration(vars.currentReserve);
-
+            ( vars.reserveDecimals, vars.baseLtv, vars.liquidationThreshold, vars.usageAsCollateralEnabled ) = core.getReserveConfiguration(vars.currentReserve);
             vars.tokenUnit = 10 ** vars.reserveDecimals;
             vars.reserveUnitPrice = oracle.getAssetPrice(vars.currentReserve);
 
             //liquidity and collateral balance
             if (vars.compoundedLiquidityBalance > 0) {
-                uint256 liquidityBalanceETH = vars
-                    .reserveUnitPrice
-                    .mul(vars.compoundedLiquidityBalance)
-                    .div(vars.tokenUnit);
+                uint256 liquidityBalanceETH = vars.reserveUnitPrice.mul(vars.compoundedLiquidityBalance).div(vars.tokenUnit);
                 totalLiquidityBalanceETH = totalLiquidityBalanceETH.add(liquidityBalanceETH);
 
                 if (vars.usageAsCollateralEnabled && vars.userUsesReserveAsCollateral) {
                     totalCollateralBalanceETH = totalCollateralBalanceETH.add(liquidityBalanceETH);
-                    currentLtv = currentLtv.add(liquidityBalanceETH.mul(vars.baseLtv));
-                    currentLiquidationThreshold = currentLiquidationThreshold.add(
-                        liquidityBalanceETH.mul(vars.liquidationThreshold)
-                    );
+                    currentLtv = currentLtv.add( liquidityBalanceETH.mul(vars.baseLtv) );
+                    currentLiquidationThreshold = currentLiquidationThreshold.add( liquidityBalanceETH.mul(vars.liquidationThreshold) );
                 }
             }
 
             if (vars.compoundedBorrowBalance > 0) {
-                totalBorrowBalanceETH = totalBorrowBalanceETH.add(
-                    vars.reserveUnitPrice.mul(vars.compoundedBorrowBalance).div(vars.tokenUnit)
-                );
-                totalFeesETH = totalFeesETH.add(
-                    vars.originationFee.mul(vars.reserveUnitPrice).div(vars.tokenUnit)
-                );
+                totalBorrowBalanceETH = totalBorrowBalanceETH.add( vars.reserveUnitPrice.mul(vars.compoundedBorrowBalance).div(vars.tokenUnit) );
+                totalFeesETH = totalFeesETH.add( vars.originationFee.mul(vars.reserveUnitPrice).div(vars.tokenUnit) );
             }
         }
 
         currentLtv = totalCollateralBalanceETH > 0 ? currentLtv.div(totalCollateralBalanceETH) : 0;
-        currentLiquidationThreshold = totalCollateralBalanceETH > 0
-            ? currentLiquidationThreshold.div(totalCollateralBalanceETH)
-            : 0;
+        currentLiquidationThreshold = totalCollateralBalanceETH > 0 ? currentLiquidationThreshold.div(totalCollateralBalanceETH) : 0;
 
-        healthFactor = calculateHealthFactorFromBalancesInternal(
-            totalCollateralBalanceETH,
-            totalBorrowBalanceETH,
-            totalFeesETH,
-            currentLiquidationThreshold
-        );
+        healthFactor = calculateHealthFactorFromBalancesInternal( totalCollateralBalanceETH, totalBorrowBalanceETH, totalFeesETH, currentLiquidationThreshold );
         healthFactorBelowThreshold = healthFactor < HEALTH_FACTOR_LIQUIDATION_THRESHOLD;
-
     }
 
     struct balanceDecreaseAllowedLocalVars {
@@ -177,70 +143,32 @@ contract LendingPoolDataProvider is VersionedInitializable {
     * @return true if the decrease of the balance is allowed
     **/
 
-    function balanceDecreaseAllowed(address _reserve, address _user, uint256 _amount)
-        external
-        view
-        returns (bool)
-    {
-        // Usage of a memory struct of vars to avoid "Stack too deep" errors due to local variables
-        balanceDecreaseAllowedLocalVars memory vars;
+    function balanceDecreaseAllowed(address _reserve, address _user, uint256 _amount)  external view returns (bool) {
+        
+        balanceDecreaseAllowedLocalVars memory vars;    // Usage of a memory struct of vars to avoid "Stack too deep" errors due to local variables
+        ( vars.decimals, ,  vars.reserveLiquidationThreshold, vars.reserveUsageAsCollateralEnabled ) = core.getReserveConfiguration(_reserve);
 
-        (
-            vars.decimals,
-            ,
-            vars.reserveLiquidationThreshold,
-            vars.reserveUsageAsCollateralEnabled
-        ) = core.getReserveConfiguration(_reserve);
-
-        if (
-            !vars.reserveUsageAsCollateralEnabled ||
-            !core.isUserUseReserveAsCollateralEnabled(_reserve, _user)
-        ) {
+        if ( !vars.reserveUsageAsCollateralEnabled || !core.isUserUseReserveAsCollateralEnabled(_reserve, _user) ) {
             return true; //if reserve is not used as collateral, no reasons to block the transfer
         }
 
-        (
-            ,
-            vars.collateralBalanceETH,
-            vars.borrowBalanceETH,
-            vars.totalFeesETH,
-            ,
-            vars.currentLiquidationThreshold,
-            ,
-
-        ) = calculateUserGlobalData(_user);
+        (  , vars.collateralBalanceETH, vars.borrowBalanceETH, vars.totalFeesETH, , vars.currentLiquidationThreshold, , ) = calculateUserGlobalData(_user);
 
         if (vars.borrowBalanceETH == 0) {
             return true; //no borrows - no reasons to block the transfer
         }
 
         IPriceOracleGetter oracle = IPriceOracleGetter(addressesProvider.getPriceOracle());
-
-        vars.amountToDecreaseETH = oracle.getAssetPrice(_reserve).mul(_amount).div(
-            10 ** vars.decimals
-        );
-
-        vars.collateralBalancefterDecrease = vars.collateralBalanceETH.sub(
-            vars.amountToDecreaseETH
-        );
+        vars.amountToDecreaseETH = oracle.getAssetPrice(_reserve).mul(_amount).div( 10 ** vars.decimals );
+        vars.collateralBalancefterDecrease = vars.collateralBalanceETH.sub(  vars.amountToDecreaseETH );
 
         //if there is a borrow, there can't be 0 collateral
         if (vars.collateralBalancefterDecrease == 0) {
             return false;
         }
 
-        vars.liquidationThresholdAfterDecrease = vars
-            .collateralBalanceETH
-            .mul(vars.currentLiquidationThreshold)
-            .sub(vars.amountToDecreaseETH.mul(vars.reserveLiquidationThreshold))
-            .div(vars.collateralBalancefterDecrease);
-
-        uint256 healthFactorAfterDecrease = calculateHealthFactorFromBalancesInternal(
-            vars.collateralBalancefterDecrease,
-            vars.borrowBalanceETH,
-            vars.totalFeesETH,
-            vars.liquidationThresholdAfterDecrease
-        );
+        vars.liquidationThresholdAfterDecrease = vars.collateralBalanceETH.mul(vars.currentLiquidationThreshold).sub(vars.amountToDecreaseETH.mul(vars.reserveLiquidationThreshold)).div(vars.collateralBalancefterDecrease);
+        uint256 healthFactorAfterDecrease = calculateHealthFactorFromBalancesInternal( vars.collateralBalancefterDecrease, vars.borrowBalanceETH, vars.totalFeesETH, vars.liquidationThresholdAfterDecrease );
 
         return healthFactorAfterDecrease > HEALTH_FACTOR_LIQUIDATION_THRESHOLD;
 
@@ -255,37 +183,21 @@ contract LendingPoolDataProvider is VersionedInitializable {
    * @param _userCurrentLtv the average ltv of the user given his current collateral
    * @return the total amount of collateral in ETH to cover the current borrow balance + the new amount + fee
    **/
-    function calculateCollateralNeededInETH(
-        address _reserve,
-        uint256 _amount,
-        uint256 _fee,
-        uint256 _userCurrentBorrowBalanceTH,
-        uint256 _userCurrentFeesETH,
-        uint256 _userCurrentLtv
-    ) external view returns (uint256) {
+    function calculateCollateralNeededInETH( address _reserve, uint256 _amount, uint256 _fee, uint256 _userCurrentBorrowBalanceTH, uint256 _userCurrentFeesETH, uint256 _userCurrentLtv ) external view returns (uint256) {
+
         uint256 reserveDecimals = core.getReserveDecimals(_reserve);
-
         IPriceOracleGetter oracle = IPriceOracleGetter(addressesProvider.getPriceOracle());
-
-        uint256 requestedBorrowAmountETH = oracle
-            .getAssetPrice(_reserve)
-            .mul(_amount.add(_fee))
-            .div(10 ** reserveDecimals); //price is in ether
+        uint256 requestedBorrowAmountETH = oracle.getAssetPrice(_reserve).mul(_amount.add(_fee)).div(10 ** reserveDecimals); //price is in ether
 
         //add the current already borrowed amount to the amount requested to calculate the total collateral needed.
-        uint256 collateralNeededInETH = _userCurrentBorrowBalanceTH
-            .add(_userCurrentFeesETH)
-            .add(requestedBorrowAmountETH)
-            .mul(100)
-            .div(_userCurrentLtv); //LTV is calculated in percentage
+        uint256 collateralNeededInETH = _userCurrentBorrowBalanceTH.add(_userCurrentFeesETH).add(requestedBorrowAmountETH).mul(100).div(_userCurrentLtv); //LTV is calculated in percentage
 
         return collateralNeededInETH;
 
     }
 
     /**
-    * @dev calculates the equivalent amount in ETH that an user can borrow, depending on the available collateral and the
-    * average Loan To Value.
+    * @dev calculates the equivalent amount in ETH that an user can borrow, depending on the available collateral and the average Loan To Value.
     * @param collateralBalanceETH the total collateral balance
     * @param borrowBalanceETH the total borrow balance
     * @param totalFeesETH the total fees
@@ -293,12 +205,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
     * @return the amount available to borrow in ETH for the user
     **/
 
-    function calculateAvailableBorrowsETHInternal(
-        uint256 collateralBalanceETH,
-        uint256 borrowBalanceETH,
-        uint256 totalFeesETH,
-        uint256 ltv
-    ) internal view returns (uint256) {
+    function calculateAvailableBorrowsETHInternal( uint256 collateralBalanceETH,uint256 borrowBalanceETH, uint256 totalFeesETH, uint256 ltv ) internal view returns (uint256) {
         uint256 availableBorrowsETH = collateralBalanceETH.mul(ltv).div(100); //ltv is in percentage
 
         if (availableBorrowsETH < borrowBalanceETH) {
@@ -307,8 +214,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
 
         availableBorrowsETH = availableBorrowsETH.sub(borrowBalanceETH.add(totalFeesETH));
         //calculate fee
-        uint256 borrowFee = IFeeProvider(addressesProvider.getFeeProvider())
-            .calculateLoanOriginationFee(msg.sender, availableBorrowsETH);
+        uint256 borrowFee = IFeeProvider(addressesProvider.getFeeProvider()).calculateLoanOriginationFee(msg.sender, availableBorrowsETH);
         return availableBorrowsETH.sub(borrowFee);
     }
 
@@ -319,18 +225,11 @@ contract LendingPoolDataProvider is VersionedInitializable {
     * @param totalFeesETH the total fees in ETH
     * @param liquidationThreshold the avg liquidation threshold
     **/
-    function calculateHealthFactorFromBalancesInternal(
-        uint256 collateralBalanceETH,
-        uint256 borrowBalanceETH,
-        uint256 totalFeesETH,
-        uint256 liquidationThreshold
-    ) internal pure returns (uint256) {
-        if (borrowBalanceETH == 0) return uint256(-1);
+    function calculateHealthFactorFromBalancesInternal( uint256 collateralBalanceETH, uint256 borrowBalanceETH, uint256 totalFeesETH, uint256 liquidationThreshold ) internal pure returns (uint256) {
+        if (borrowBalanceETH == 0) 
+            return uint256(-1);
 
-        return
-            (collateralBalanceETH.mul(liquidationThreshold).div(100)).wadDiv(
-                borrowBalanceETH.add(totalFeesETH)
-            );
+        return (collateralBalanceETH.mul(liquidationThreshold).div(100)).wadDiv( borrowBalanceETH.add(totalFeesETH) );
     }
 
     /**
@@ -343,35 +242,16 @@ contract LendingPoolDataProvider is VersionedInitializable {
     /**
     * @dev accessory functions to fetch data from the lendingPoolCore
     **/
-    function getReserveConfigurationData(address _reserve)
-        external
-        view
-        returns (
-            uint256 ltv,
-            uint256 liquidationThreshold,
-            uint256 liquidationBonus,
-            address rateStrategyAddress,
-            bool usageAsCollateralEnabled,
-            bool borrowingEnabled,
-            bool stableBorrowRateEnabled,
-            bool isActive
-        )
-    {
-        (, ltv, liquidationThreshold, usageAsCollateralEnabled) = core.getReserveConfiguration(
-            _reserve
-        );
+    function getReserveConfigurationData(address _reserve) external view returns ( uint256 ltv,  uint256 liquidationThreshold, uint256 liquidationBonus,  address rateStrategyAddress, bool usageAsCollateralEnabled, bool borrowingEnabled, bool stableBorrowRateEnabled,  bool isActive ) {
+        (, ltv, liquidationThreshold, usageAsCollateralEnabled) = core.getReserveConfiguration( _reserve );
         stableBorrowRateEnabled = core.getReserveIsStableBorrowRateEnabled(_reserve);
         borrowingEnabled = core.isReserveBorrowingEnabled(_reserve);
         isActive = core.getReserveIsActive(_reserve);
         liquidationBonus = core.getReserveLiquidationBonus(_reserve);
-
         rateStrategyAddress = core.getReserveInterestRateStrategyAddress(_reserve);
     }
 
-    function getReserveData(address _reserve)
-        external
-        view
-        returns (
+    function getReserveData(address _reserve) external view returns (
             uint256 totalLiquidity,
             uint256 availableLiquidity,
             uint256 totalBorrowsStable,
@@ -402,10 +282,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
         lastUpdateTimestamp = core.getReserveLastUpdate(_reserve);
     }
 
-    function getUserAccountData(address _user)
-        external
-        view
-        returns (
+    function getUserAccountData(address _user) external view returns (
             uint256 totalLiquidityETH,
             uint256 totalCollateralETH,
             uint256 totalBorrowsETH,
@@ -416,29 +293,11 @@ contract LendingPoolDataProvider is VersionedInitializable {
             uint256 healthFactor
         )
     {
-        (
-            totalLiquidityETH,
-            totalCollateralETH,
-            totalBorrowsETH,
-            totalFeesETH,
-            ltv,
-            currentLiquidationThreshold,
-            healthFactor,
-
-        ) = calculateUserGlobalData(_user);
-
-        availableBorrowsETH = calculateAvailableBorrowsETHInternal(
-            totalCollateralETH,
-            totalBorrowsETH,
-            totalFeesETH,
-            ltv
-        );
+        ( totalLiquidityETH, totalCollateralETH, totalBorrowsETH, totalFeesETH, ltv,  currentLiquidationThreshold, healthFactor, ) = calculateUserGlobalData(_user);
+        availableBorrowsETH = calculateAvailableBorrowsETHInternal(  totalCollateralETH, totalBorrowsETH, totalFeesETH, ltv );
     }
 
-    function getUserReserveData(address _reserve, address _user)
-        external
-        view
-        returns (
+    function getUserReserveData(address _reserve, address _user) external view returns (
             uint256 currentATokenBalance,
             uint256 currentBorrowBalance,
             uint256 principalBorrowBalance,
@@ -453,15 +312,13 @@ contract LendingPoolDataProvider is VersionedInitializable {
     {
         currentATokenBalance = AToken(core.getReserveATokenAddress(_reserve)).balanceOf(_user);
         CoreLibrary.InterestRateMode mode = core.getUserCurrentBorrowRateMode(_reserve, _user);
-        (principalBorrowBalance, currentBorrowBalance, ) = core.getUserBorrowBalances(
-            _reserve,
-            _user
-        );
+        (principalBorrowBalance, currentBorrowBalance, ) = core.getUserBorrowBalances(  _reserve, _user  );
 
         //default is 0, if mode == CoreLibrary.InterestRateMode.NONE
         if (mode == CoreLibrary.InterestRateMode.STABLE) {
             borrowRate = core.getUserCurrentStableBorrowRate(_reserve, _user);
-        } else if (mode == CoreLibrary.InterestRateMode.VARIABLE) {
+        } 
+        else if (mode == CoreLibrary.InterestRateMode.VARIABLE) {
             borrowRate = core.getReserveCurrentVariableBorrowRate(_reserve);
         }
 
