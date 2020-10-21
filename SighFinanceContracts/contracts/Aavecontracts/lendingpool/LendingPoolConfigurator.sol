@@ -5,154 +5,72 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "../libraries/openzeppelin-upgradeability/VersionedInitializable.sol";
 import "../configuration/LendingPoolAddressesProvider.sol";
 import "./LendingPoolCore.sol";
-import "../tokenization/AToken.sol";
+import "../tokenization/IToken.sol";
 
 /**
 * @title LendingPoolConfigurator contract
 * @author Aave
-* @notice Executes configuration methods on the LendingPoolCore contract. Allows to enable/disable reserves,
+* @notice Executes configuration methods on the LendingPoolCore contract. Allows to enable/disable instruments,
 * and set different protocol parameters.
 **/
 
 contract LendingPoolConfigurator is VersionedInitializable {
+
     using SafeMath for uint256;
+    LendingPoolAddressesProvider public poolAddressesProvider;
+
+// ######################
+// ####### EVENTS #######
+// ######################
 
     /**
-    * @dev emitted when a reserve is initialized.
-    * @param _reserve the address of the reserve
-    * @param _aToken the address of the overlying aToken contract
-    * @param _interestRateStrategyAddress the address of the interest rate strategy for the reserve
+    * @dev emitted when a instrument is initialized.
+    * @param _instrument the address of the instrument
+    * @param _iToken the address of the overlying iToken contract
+    * @param _interestRateStrategyAddress the address of the interest rate strategy for the instrument
     **/
-    event ReserveInitialized(
-        address indexed _reserve,
-        address indexed _aToken,
-        address _interestRateStrategyAddress
-    );
+    event InstrumentInitialized( address indexed _instrument, address indexed _iToken, address _interestRateStrategyAddress );
+    event InstrumentRemoved( address indexed _instrument);      // emitted when a instrument is removed.
 
     /**
-    * @dev emitted when a reserve is removed.
-    * @param _reserve the address of the reserve
-    **/
-    event ReserveRemoved(
-        address indexed _reserve
-    );
-
-    /**
-    * @dev emitted when borrowing is enabled on a reserve
-    * @param _reserve the address of the reserve
+    * @dev emitted when borrowing is enabled on a instrument
+    * @param _instrument the address of the instrument
     * @param _stableRateEnabled true if stable rate borrowing is enabled, false otherwise
     **/
-    event BorrowingEnabledOnReserve(address _reserve, bool _stableRateEnabled);
+    event BorrowingEnabledOnInstrument(address _instrument, bool _stableRateEnabled);
+    event BorrowingDisabledOnInstrument(address indexed _instrument);      // emitted when borrowing is disabled on a instrument
 
     /**
-    * @dev emitted when borrowing is disabled on a reserve
-    * @param _reserve the address of the reserve
-    **/
-    event BorrowingDisabledOnReserve(address indexed _reserve);
-
-    /**
-    * @dev emitted when a reserve is enabled as collateral.
-    * @param _reserve the address of the reserve
+    * @dev emitted when a instrument is enabled as collateral.
+    * @param _instrument the address of the instrument
     * @param _ltv the loan to value of the asset when used as collateral
     * @param _liquidationThreshold the threshold at which loans using this asset as collateral will be considered undercollateralized
     * @param _liquidationBonus the bonus liquidators receive to liquidate this asset
     **/
-    event ReserveEnabledAsCollateral(
-        address indexed _reserve,
-        uint256 _ltv,
-        uint256 _liquidationThreshold,
-        uint256 _liquidationBonus
-    );
+    event InstrumentEnabledAsCollateral(  address indexed _instrument,  uint256 _ltv,  uint256 _liquidationThreshold,  uint256 _liquidationBonus );    
+    event InstrumentDisabledAsCollateral(address indexed _instrument);         // emitted when a instrument is disabled as collateral
 
-    /**
-    * @dev emitted when a reserve is disabled as collateral
-    * @param _reserve the address of the reserve
-    **/
-    event ReserveDisabledAsCollateral(address indexed _reserve);
+    event StableRateEnabledOnInstrument(address indexed _instrument);          // emitted when stable rate borrowing is enabled on a instrument
+    event StableRateDisabledOnInstrument(address indexed _instrument);         // emitted when stable rate borrowing is disabled on a instrument
 
-    /**
-    * @dev emitted when stable rate borrowing is enabled on a reserve
-    * @param _reserve the address of the reserve
-    **/
-    event StableRateEnabledOnReserve(address indexed _reserve);
+    event InstrumentActivated(address indexed _instrument);                    // emitted when a instrument is activated
+    event InstrumentDeactivated(address indexed _instrument);                  // emitted when a instrument is deactivated
 
-    /**
-    * @dev emitted when stable rate borrowing is disabled on a reserve
-    * @param _reserve the address of the reserve
-    **/
-    event StableRateDisabledOnReserve(address indexed _reserve);
-
-    /**
-    * @dev emitted when a reserve is activated
-    * @param _reserve the address of the reserve
-    **/
-    event ReserveActivated(address indexed _reserve);
-
-    /**
-    * @dev emitted when a reserve is deactivated
-    * @param _reserve the address of the reserve
-    **/
-    event ReserveDeactivated(address indexed _reserve);
-
-    /**
-    * @dev emitted when a reserve is freezed
-    * @param _reserve the address of the reserve
-    **/
-    event ReserveFreezed(address indexed _reserve);
-
-    /**
-    * @dev emitted when a reserve is unfreezed
-    * @param _reserve the address of the reserve
-    **/
-    event ReserveUnfreezed(address indexed _reserve);
-
-    /**
-    * @dev emitted when a reserve loan to value is updated
-    * @param _reserve the address of the reserve
-    * @param _ltv the new value for the loan to value
-    **/
-    event ReserveBaseLtvChanged(address _reserve, uint256 _ltv);
-
-    /**
-    * @dev emitted when a reserve liquidation threshold is updated
-    * @param _reserve the address of the reserve
-    * @param _threshold the new value for the liquidation threshold
-    **/
-    event ReserveLiquidationThresholdChanged(address _reserve, uint256 _threshold);
-
-    /**
-    * @dev emitted when a reserve liquidation bonus is updated
-    * @param _reserve the address of the reserve
-    * @param _bonus the new value for the liquidation bonus
-    **/
-    event ReserveLiquidationBonusChanged(address _reserve, uint256 _bonus);
-
-    /**
-    * @dev emitted when the reserve decimals are updated
-    * @param _reserve the address of the reserve
-    * @param _decimals the new decimals
-    **/
-    event ReserveDecimalsChanged(address _reserve, uint256 _decimals);
+    event InstrumentFreezed(address indexed _instrument);                      // emitted when a instrument is freezed    
+    event InstrumentUnfreezed(address indexed _instrument);                    // emitted when a instrument is unfreezed
 
 
-    /**
-    * @dev emitted when a reserve interest strategy contract is updated
-    * @param _reserve the address of the reserve
-    * @param _strategy the new address of the interest strategy contract
-    **/
-    event ReserveInterestRateStrategyChanged(address _reserve, address _strategy);
+    event InstrumentLiquidationThresholdChanged(address _instrument, uint256 _threshold);     // emitted when a _instrument liquidation threshold is updated
+    event InstrumentLiquidationBonusChanged(address _instrument, uint256 _bonus);             // emitted when a _instrument liquidation bonus is updated
+    
+    event InstrumentDecimalsChanged(address _instrument, uint256 _decimals);                  // emitted when the _instrument decimals are updated
+    event InstrumentInterestRateStrategyChanged(address _instrument, address _strategy);      // emitted when a _instrument interest strategy contract is updated
+    event InstrumentBaseLtvChanged(address _instrument, uint256 _ltv);            // emitted when a _instrument loan to value (ltv) is updated
 
-    LendingPoolAddressesProvider public poolAddressesProvider;
-    /**
-    * @dev only the lending pool manager can call functions affected by this modifier
-    **/
-    modifier onlyLendingPoolManager {
-        require(
-            poolAddressesProvider.getLendingPoolManager() == msg.sender,
-            "The caller must be a lending pool manager"
-        );
-        _;
-    }
+
+// #############################
+// ####### PROXY RELATED #######
+// #############################
 
     uint256 public constant CONFIGURATOR_REVISION = 0x3;
 
@@ -164,279 +82,221 @@ contract LendingPoolConfigurator is VersionedInitializable {
         poolAddressesProvider = _poolAddressesProvider;
     }
 
+// ########################
+// ####### MODIFIER #######
+// ########################
     /**
-    * @dev initializes a reserve
-    * @param _reserve the address of the reserve to be initialized
-    * @param _underlyingAssetDecimals the decimals of the reserve underlying asset
-    * @param _interestRateStrategyAddress the address of the interest rate strategy contract for this reserve
+    * @dev only the lending pool manager can call functions affected by this modifier
     **/
-    function initReserve(
-        address _reserve,
-        uint8 _underlyingAssetDecimals,
-        address _interestRateStrategyAddress
-    ) external onlyLendingPoolManager {
-        ERC20Detailed asset = ERC20Detailed(_reserve);
+    modifier onlyLendingPoolManager {
+        require( poolAddressesProvider.getLendingPoolManager() == msg.sender, "The caller must be a lending pool manager" );
+        _;
+    }
 
-        string memory aTokenName = string(abi.encodePacked("Aave Interest bearing ", asset.name()));
-        string memory aTokenSymbol = string(abi.encodePacked("a", asset.symbol()));
+// ################################################################################################
+// ####### INITIALIZE A NEW INSTRUMENT (Deploys a new IToken Contract for the INSTRUMENT) #########
+// ################################################################################################
 
-        initReserveWithData(
-            _reserve,
-            aTokenName,
-            aTokenSymbol,
-            _underlyingAssetDecimals,
-            _interestRateStrategyAddress
-        );
+    /**
+    * @dev initializes an instrument
+    * @param _instrument the address of the instrument to be initialized
+    * @param _underlyingAssetDecimals the decimals of the instrument underlying asset
+    * @param _interestRateStrategyAddress the address of the interest rate strategy contract for this instrument
+    **/
+    function initInstrument( address _instrument, uint8 _underlyingAssetDecimals, address _interestRateStrategyAddress ) external onlyLendingPoolManager {
+        ERC20Detailed asset = ERC20Detailed(_instrument);
 
+        string memory iTokenName = string(abi.encodePacked("Aave Interest bearing ", asset.name()));
+        string memory iTokenSymbol = string(abi.encodePacked("a", asset.symbol()));
+
+        initInstrumentWithData(  _instrument,  iTokenName,  iTokenSymbol,  _underlyingAssetDecimals,  _interestRateStrategyAddress );
     }
 
     /**
-    * @dev initializes a reserve using aTokenData provided externally (useful if the underlying ERC20 contract doesn't expose name or decimals)
-    * @param _reserve the address of the reserve to be initialized
-    * @param _aTokenName the name of the aToken contract
-    * @param _aTokenSymbol the symbol of the aToken contract
-    * @param _underlyingAssetDecimals the decimals of the reserve underlying asset
-    * @param _interestRateStrategyAddress the address of the interest rate strategy contract for this reserve
+    * @dev initializes a instrument using iTokenData provided externally (useful if the underlying ERC20 contract doesn't expose name or decimals)
+    * @param _instrument the address of the instrument to be initialized
+    * @param _iTokenName the name of the iToken contract
+    * @param _iTokenSymbol the symbol of the iToken contract
+    * @param _underlyingAssetDecimals the decimals of the instrument underlying asset
+    * @param _interestRateStrategyAddress the address of the interest rate strategy contract for this instrument
     **/
-    function initReserveWithData(
-        address _reserve,
-        string memory _aTokenName,
-        string memory _aTokenSymbol,
-        uint8 _underlyingAssetDecimals,
-        address _interestRateStrategyAddress
-    ) public onlyLendingPoolManager {
+    function initInstrumentWithData(  address _instrument,  string memory _iTokenName,  string memory _iTokenSymbol,  uint8 _underlyingAssetDecimals,  address _interestRateStrategyAddress ) public onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
 
-        AToken aTokenInstance = new AToken(
-            poolAddressesProvider,
-            _reserve,
-            _underlyingAssetDecimals,
-            _aTokenName,
-            _aTokenSymbol
-        );
-        core.initReserve(
-            _reserve,
-            address(aTokenInstance),
-            _underlyingAssetDecimals,
-            _interestRateStrategyAddress
-        );
+        IToken iTokenInstance = new IToken( poolAddressesProvider, _instrument, _underlyingAssetDecimals, _iTokenName, _iTokenSymbol );
+        core.initInstrument( _instrument, address(iTokenInstance), _underlyingAssetDecimals, _interestRateStrategyAddress );
 
-        emit ReserveInitialized(
-            _reserve,
-            address(aTokenInstance),
-            _interestRateStrategyAddress
-        );
+        emit InstrumentInitialized( _instrument, address(iTokenInstance), _interestRateStrategyAddress );
     }
 
     /**
-    * @dev removes the last added reserve in the list of the reserves
-    * @param _reserveToRemove the address of the reserve
+    * @dev removes the last added instrument in the list of the instruments
+    * @param _instrumentToRemove the address of the instrument
     **/
-    function removeLastAddedReserve( address _reserveToRemove) external onlyLendingPoolManager {
+    function removeLastAddedInstrument( address _instrumentToRemove) external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
-        core.removeLastAddedReserve(_reserveToRemove);
-        emit ReserveRemoved(_reserveToRemove);
+        core.removeLastAddedInstrument(_instrumentToRemove);
+        emit InstrumentRemoved(_instrumentToRemove);
     }
 
     /**
-    * @dev enables borrowing on a reserve
-    * @param _reserve the address of the reserve
-    * @param _stableBorrowRateEnabled true if stable borrow rate needs to be enabled by default on this reserve
+    * @dev enables borrowing on a instrument
+    * @param _instrument the address of the instrument
+    * @param _stableBorrowRateEnabled true if stable borrow rate needs to be enabled by default on this instrument
     **/
-    function enableBorrowingOnReserve(address _reserve, bool _stableBorrowRateEnabled)
-        external
-        onlyLendingPoolManager
-    {
+    function enableBorrowingOnInstrument(address _instrument, bool _stableBorrowRateEnabled) external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
-        core.enableBorrowingOnReserve(_reserve, _stableBorrowRateEnabled);
-        emit BorrowingEnabledOnReserve(_reserve, _stableBorrowRateEnabled);
+        core.enableBorrowingOnInstrument(_instrument, _stableBorrowRateEnabled);
+        emit BorrowingEnabledOnInstrument(_instrument, _stableBorrowRateEnabled);
     }
 
     /**
-    * @dev disables borrowing on a reserve
-    * @param _reserve the address of the reserve
+    * @dev disables borrowing on a instrument
+    * @param _instrument the address of the instrument
     **/
-    function disableBorrowingOnReserve(address _reserve) external onlyLendingPoolManager {
+    function disableBorrowingOnInstrument(address _instrument) external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
-        core.disableBorrowingOnReserve(_reserve);
-
-        emit BorrowingDisabledOnReserve(_reserve);
+        core.disableBorrowingOnInstrument(_instrument);
+        emit BorrowingDisabledOnInstrument(_instrument);
     }
 
     /**
-    * @dev enables a reserve to be used as collateral
-    * @param _reserve the address of the reserve
+    * @dev enables a instrument to be used as collateral
+    * @param _instrument the address of the instrument
     * @param _baseLTVasCollateral the loan to value of the asset when used as collateral
     * @param _liquidationThreshold the threshold at which loans using this asset as collateral will be considered undercollateralized
     * @param _liquidationBonus the bonus liquidators receive to liquidate this asset
     **/
-    function enableReserveAsCollateral(
-        address _reserve,
-        uint256 _baseLTVasCollateral,
-        uint256 _liquidationThreshold,
-        uint256 _liquidationBonus
-    ) external onlyLendingPoolManager {
+    function enableInstrumentAsCollateral( address _instrument, uint256 _baseLTVasCollateral, uint256 _liquidationThreshold, uint256 _liquidationBonus ) external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
-        core.enableReserveAsCollateral(
-            _reserve,
-            _baseLTVasCollateral,
-            _liquidationThreshold,
-            _liquidationBonus
-        );
-        emit ReserveEnabledAsCollateral(
-            _reserve,
-            _baseLTVasCollateral,
-            _liquidationThreshold,
-            _liquidationBonus
-        );
+        core.enableInstrumentAsCollateral( _instrument, _baseLTVasCollateral, _liquidationThreshold, _liquidationBonus );
+        emit InstrumentEnabledAsCollateral( _instrument, _baseLTVasCollateral, _liquidationThreshold, _liquidationBonus );
     }
 
     /**
-    * @dev disables a reserve as collateral
-    * @param _reserve the address of the reserve
+    * @dev disables a instrument as collateral
+    * @param _instrument the address of the instrument
     **/
-    function disableReserveAsCollateral(address _reserve) external onlyLendingPoolManager {
+    function disableInstrumentAsCollateral(address _instrument) external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
-        core.disableReserveAsCollateral(_reserve);
-
-        emit ReserveDisabledAsCollateral(_reserve);
+        core.disableInstrumentAsCollateral(_instrument);
+        emit InstrumentDisabledAsCollateral(_instrument);
     }
 
     /**
-    * @dev enable stable rate borrowing on a reserve
-    * @param _reserve the address of the reserve
+    * @dev enable stable rate borrowing on a instrument
+    * @param _instrument the address of the instrument
     **/
-    function enableReserveStableBorrowRate(address _reserve) external onlyLendingPoolManager {
+    function enableInstrumentStableBorrowRate(address _instrument) external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
-        core.enableReserveStableBorrowRate(_reserve);
-
-        emit StableRateEnabledOnReserve(_reserve);
+        core.enableInstrumentStableBorrowRate(_instrument);
+        emit StableRateEnabledOnInstrument(_instrument);
     }
 
     /**
-    * @dev disable stable rate borrowing on a reserve
-    * @param _reserve the address of the reserve
+    * @dev disable stable rate borrowing on a _instrument
+    * @param _instrument the address of the _instrument
     **/
-    function disableReserveStableBorrowRate(address _reserve) external onlyLendingPoolManager {
+    function disableInstrumentStableBorrowRate(address _instrument) external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
-        core.disableReserveStableBorrowRate(_reserve);
-
-        emit StableRateDisabledOnReserve(_reserve);
+        core.disableInstrumentStableBorrowRate(_instrument);
+        emit StableRateDisabledOnInstrument(_instrument);
     }
 
     /**
-    * @dev activates a reserve
-    * @param _reserve the address of the reserve
+    * @dev activates a _instrument
+    * @param _instrument the address of the _instrument
     **/
-    function activateReserve(address _reserve) external onlyLendingPoolManager {
+    function activateInstrument(address _instrument) external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
-        core.activateReserve(_reserve);
-
-        emit ReserveActivated(_reserve);
+        core.activateInstrument(_instrument);
+        emit InstrumentActivated(_instrument);
     }
 
     /**
-    * @dev deactivates a reserve
-    * @param _reserve the address of the reserve
+    * @dev deactivates a _instrument
+    * @param _instrument the address of the _instrument
     **/
-    function deactivateReserve(address _reserve) external onlyLendingPoolManager {
+    function deactivateInstrument(address _instrument) external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
-        require(core.getReserveTotalLiquidity(_reserve) == 0, "The liquidity of the reserve needs to be 0");
-        core.deactivateReserve(_reserve);
-
-        emit ReserveDeactivated(_reserve);
+        require(core.getInstrumentTotalLiquidity(_instrument) == 0, "The liquidity of the Instrument needs to be 0");
+        core.deactivateInstrument(_instrument);
+        emit InstrumentDeactivated(_instrument);
     }
 
     /**
-    * @dev freezes a reserve. A freezed reserve doesn't accept any new deposit, borrow or rate swap, but can accept repayments, liquidations, rate rebalances and redeems
-    * @param _reserve the address of the reserve
+    * @dev freezes an _instrument. A freezed _instrument doesn't accept any new deposit, borrow or rate swap, but can accept repayments, liquidations, rate rebalances and redeems
+    * @param _instrument the address of the _instrument
     **/
-    function freezeReserve(address _reserve) external onlyLendingPoolManager {
+    function freezeInstrument(address _instrument) external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
-        core.freezeReserve(_reserve);
-
-        emit ReserveFreezed(_reserve);
+        core.freezeInstrument(_instrument);
+        emit InstrumentFreezed(_instrument);
     }
 
     /**
-    * @dev unfreezes a reserve
-    * @param _reserve the address of the reserve
+    * @dev unfreezes a _instrument
+    * @param _instrument the address of the _instrument
     **/
-    function unfreezeReserve(address _reserve) external onlyLendingPoolManager {
+    function unfreezeInstrument(address _instrument) external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
-        core.unfreezeReserve(_reserve);
-
-        emit ReserveUnfreezed(_reserve);
+        core.unfreezeInstrument(_instrument);
+        emit InstrumentUnfreezed(_instrument);
     }
 
     /**
-    * @dev emitted when a reserve loan to value is updated
-    * @param _reserve the address of the reserve
+    * @dev emitted when a _instrument loan to value is updated
+    * @param _instrument the address of the _instrument
     * @param _ltv the new value for the loan to value
     **/
-    function setReserveBaseLTVasCollateral(address _reserve, uint256 _ltv)
-        external
-        onlyLendingPoolManager
-    {
+    function setInstrumentBaseLTVasCollateral(address _instrument, uint256 _ltv) external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
-        core.setReserveBaseLTVasCollateral(_reserve, _ltv);
-        emit ReserveBaseLtvChanged(_reserve, _ltv);
+        core.setInstrumentBaseLTVasCollateral(_instrument, _ltv);
+        emit InstrumentBaseLtvChanged(_instrument, _ltv);
     }
 
     /**
-    * @dev updates the liquidation threshold of a reserve.
-    * @param _reserve the address of the reserve
+    * @dev updates the liquidation threshold of a _instrument.
+    * @param _instrument the address of the _instrument
     * @param _threshold the new value for the liquidation threshold
     **/
-    function setReserveLiquidationThreshold(address _reserve, uint256 _threshold)
-        external
-        onlyLendingPoolManager
-    {
+    function setInstrumentLiquidationThreshold(address _instrument, uint256 _threshold) external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
-        core.setReserveLiquidationThreshold(_reserve, _threshold);
-        emit ReserveLiquidationThresholdChanged(_reserve, _threshold);
+        core.setInstrumentLiquidationThreshold(_instrument, _threshold);
+        emit InstrumentLiquidationThresholdChanged(_instrument, _threshold);
     }
 
     /**
-    * @dev updates the liquidation bonus of a reserve
-    * @param _reserve the address of the reserve
+    * @dev updates the liquidation bonus of a _instrument
+    * @param _instrument the address of the _instrument
     * @param _bonus the new value for the liquidation bonus
     **/
-    function setReserveLiquidationBonus(address _reserve, uint256 _bonus)
-        external
-        onlyLendingPoolManager
-    {
+    function setInstrumentLiquidationBonus(address _instrument, uint256 _bonus) external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
-        core.setReserveLiquidationBonus(_reserve, _bonus);
-        emit ReserveLiquidationBonusChanged(_reserve, _bonus);
+        core.setInstrumentLiquidationBonus(_instrument, _bonus);
+        emit InstrumentLiquidationBonusChanged(_instrument, _bonus);
     }
 
     /**
-    * @dev updates the reserve decimals
-    * @param _reserve the address of the reserve
+    * @dev updates the _instrument decimals
+    * @param _instrument the address of the _instrument
     * @param _decimals the new number of decimals
     **/
-    function setReserveDecimals(address _reserve, uint256 _decimals)
-        external
-        onlyLendingPoolManager
-    {
+    function setInstrumentDecimals(address _instrument, uint256 _decimals) external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
-        core.setReserveDecimals(_reserve, _decimals);
-        emit ReserveDecimalsChanged(_reserve, _decimals);
+        core.setInstrumentDecimals(_instrument, _decimals);
+        emit InstrumentDecimalsChanged(_instrument, _decimals);
     }
 
     /**
-    * @dev sets the interest rate strategy of a reserve
-    * @param _reserve the address of the reserve
+    * @dev sets the interest rate strategy of a _instrument
+    * @param _instrument the address of the _instrument
     * @param _rateStrategyAddress the new address of the interest strategy contract
     **/
-    function setReserveInterestRateStrategyAddress(address _reserve, address _rateStrategyAddress)
-        external
-        onlyLendingPoolManager
-    {
+    function setInstrumentInterestRateStrategyAddress(address _instrument, address _rateStrategyAddress) external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
-        core.setReserveInterestRateStrategyAddress(_reserve, _rateStrategyAddress);
-        emit ReserveInterestRateStrategyChanged(_reserve, _rateStrategyAddress);
+        core.setInstrumentInterestRateStrategyAddress(_instrument, _rateStrategyAddress);
+        emit InstrumentInterestRateStrategyChanged(_instrument, _rateStrategyAddress);
     }
 
     /**

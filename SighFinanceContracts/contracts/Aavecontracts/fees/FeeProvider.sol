@@ -11,11 +11,14 @@ import "../libraries/WadRayMath.sol";
 * @author Aave
 **/
 contract FeeProvider is IFeeProvider, VersionedInitializable {
+
     using WadRayMath for uint256;
 
-    // percentage of the fee to be calculated on the loan amount
-    uint256 public originationFeePercentage;
+    uint256 public originationFeePercentage;        // percentage of the fee to be calculated on the loan amount
 
+// ###############################
+// ###### PROXY RELATED ##########
+// ###############################
 
     uint256 constant public FEE_PROVIDER_REVISION = 0x1;
 
@@ -27,9 +30,14 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
     * @param _addressesProvider the address of the LendingPoolAddressesProvider
     */
     function initialize(address _addressesProvider) public initializer {
-        /// @notice origination fee is set as default as 25 basis points of the loan amount (0.0025%)
-        originationFeePercentage = 0.0025 * 1e18;
+        originationFeePercentage = 0.0025 * 1e18;           /// origination fee is set as default as 25 basis points of the loan amount (0.0025%)
     }
+
+// ############################################################################################################################
+// ###### EXTERNAL VIEW FUNCTIONS #############################################################################################
+// ###### 1. calculateLoanOriginationFee() : calculates the origination fee for every loan executed on the platform. ##########
+// ###### 2. getLoanOriginationFeePercentage() : returns the origination fee percentage #######################################
+// ############################################################################################################################
 
     /**
     * @dev calculates the origination fee for every loan executed on the platform.

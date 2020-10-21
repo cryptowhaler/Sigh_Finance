@@ -11,7 +11,7 @@ import "../configuration/LendingPoolAddressesProvider.sol";
 import "../interfaces/ILendingRateOracle.sol";
 import "../interfaces/IReserveInterestRateStrategy.sol";
 import "../libraries/WadRayMath.sol";
-import "../tokenization/AToken.sol";
+import "../tokenization/IToken.sol";
 import "../libraries/EthAddressLib.sol";
 
 /**
@@ -106,7 +106,7 @@ contract LendingPoolCore is VersionedInitializable {
     **/
     function updateStateOnDeposit( address _instrument, address _user, uint256 _amount, bool _isFirstDeposit) external onlyLendingPool {
         reserves[_instrument].updateCumulativeIndexes();
-        updateReserveInterestRatesAndTimestampInternal(_instrument, _amount, 0);
+        updateInstrumentInterestRatesAndTimestampInternal(_instrument, _amount, 0);
 
         if (_isFirstDeposit) {           //if this is the first deposit of the user, we configure the deposit as enabled to be used as collateral
             setUserUseInstrumentAsCollateral(_instrument, _user, true);
@@ -147,7 +147,7 @@ contract LendingPoolCore is VersionedInitializable {
     **/
     function updateStateOnRedeem( address _instrument, address _user, uint256 _amountRedeemed,  bool _userRedeemedEverything) external onlyLendingPool {
         reserves[_instrument].updateCumulativeIndexes();               //compound liquidity and variable borrow interests
-        updateReserveInterestRatesAndTimestampInternal(_instrument, 0, _amountRedeemed);
+        updateInstrumentInterestRatesAndTimestampInternal(_instrument, 0, _amountRedeemed);
 
         if (_userRedeemedEverything) {          //if user redeemed everything the useReserveAsCollateral flag is reset
             setUserUseInstrumentAsCollateral(_instrument, _user, false);
@@ -189,7 +189,7 @@ contract LendingPoolCore is VersionedInitializable {
 
         updateReserveStateOnBorrowInternal( _instrument, _user, principalBorrowBalance, balanceIncrease, _amountBorrowed, _rateMode );
         updateUserStateOnBorrowInternal( _instrument, _user, _amountBorrowed, balanceIncrease, _borrowFee, _rateMode );
-        updateReserveInterestRatesAndTimestampInternal(_instrument, 0, _amountBorrowed);
+        updateInstrumentInterestRatesAndTimestampInternal(_instrument, 0, _amountBorrowed);
 
         return (getUserCurrentBorrowRate(_instrument, _user), balanceIncrease);
     }
@@ -278,6 +278,8 @@ contract LendingPoolCore is VersionedInitializable {
 // ###### CALLED BY REPAY() FROM LENDINGPOOL CONTRACT - alongwith the internal functions that only this function uses #####
 // ########################################################################################################################
 
+
+
     /**
     * @dev updates the state of the core as a consequence of a repay action.
     * @param _instrument the address of the instrument on which the user is repaying
@@ -290,7 +292,7 @@ contract LendingPoolCore is VersionedInitializable {
     function updateStateOnRepay(  address _instrument,  address _user, uint256 _paybackAmountMinusFees,  uint256 _originationFeeRepaid,  uint256 _balanceIncrease,  bool _repaidWholeLoan ) external onlyLendingPool {
         updateReserveStateOnRepayInternal(  _instrument, _user, _paybackAmountMinusFees,  _balanceIncrease );
         updateUserStateOnRepayInternal(  _instrument, _user, _paybackAmountMinusFees,  _originationFeeRepaid, _balanceIncrease, _repaidWholeLoan  );
-        updateReserveInterestRatesAndTimestampInternal(_instrument, _paybackAmountMinusFees, 0);
+        updateInstrumentInterestRatesAndTimestampInternal(_instrument, _paybackAmountMinusFees, 0);
     }
 
     /**
@@ -344,6 +346,26 @@ contract LendingPoolCore is VersionedInitializable {
         user.lastUpdateTimestamp = uint40(block.timestamp);
     }
 
+    /**
+    * @dev transfers the protocol fees to the fees collection address
+    * @param _token the address of the token (instrument) being transferred
+    * @param _user the address of the user from where the transfer is happening
+    * @param _amount the amount being transferred
+    * @param _destination the fee receiver address
+    **/
+    function transferToFeeCollectionAddress( address _token, address _user, uint256 _amount, address _destination ) external payable onlyLendingPool {
+        address payable feeAddress = address(uint160(_destination)); //cast the address to payable
+
+        if (_token != EthAddressLib.ethAddress()) {
+            require( msg.value == 0, "User is sending ETH along with the ERC20 transfer. Check the value attribute of the transaction" );
+            ERC20(_token).safeTransferFrom(_user, feeAddress, _amount);
+        } 
+        else {
+            require(msg.value >= _amount, "The amount and the value sent to deposit do not match");
+            (bool result, ) = feeAddress.call.value(_amount).gas(50000)("");
+            require(result, "Transfer of ETH failed");
+        }
+    }
 
 // #####################################################################################################################################
 // ###### CALLED BY SWAPBORROWRATEMODE() FROM LENDINGPOOL CONTRACT - alongwith the internal functions that only this function uses #####
@@ -362,7 +384,7 @@ contract LendingPoolCore is VersionedInitializable {
     function updateStateOnSwapRate(  address _instrument, address _user, uint256 _principalBorrowBalance, uint256 _compoundedBorrowBalance, uint256 _balanceIncrease, CoreLibrary.InterestRateMode _currentRateMode ) external onlyLendingPool returns (CoreLibrary.InterestRateMode, uint256) {
         updateReserveStateOnSwapRateInternal( _instrument, _user,_principalBorrowBalance,  _compoundedBorrowBalance, _currentRateMode );
         CoreLibrary.InterestRateMode newRateMode = updateUserStateOnSwapRateInternal( _instrument, _user, _balanceIncrease, _currentRateMode );
-        updateReserveInterestRatesAndTimestampInternal(_instrument, 0, 0);
+        updateInstrumentInterestRatesAndTimestampInternal(_instrument, 0, 0);
         return (newRateMode, getUserCurrentBorrowRate(_instrument, _user));
     }
 
@@ -443,7 +465,7 @@ contract LendingPoolCore is VersionedInitializable {
     function updateStateOnRebalance(address _reserve, address _user, uint256 _balanceIncrease) external onlyLendingPool returns (uint256) {
         updateReserveStateOnRebalanceInternal(_reserve, _user, _balanceIncrease);
         updateUserStateOnRebalanceInternal(_reserve, _user, _balanceIncrease);      //update user data and rebalance the rate
-        updateReserveInterestRatesAndTimestampInternal(_reserve, 0, 0);
+        updateInstrumentInterestRatesAndTimestampInternal(_reserve, 0, 0);
         return usersReserveData[_user][_reserve].stableBorrowRate;
     }
 
@@ -516,12 +538,14 @@ contract LendingPoolCore is VersionedInitializable {
         uint256 totalLiquidityBefore = _availableLiquidityBefore.add( getInstrumentTotalBorrows(_instrument) );
         reserves[_instrument].cumulateToLiquidityIndex(totalLiquidityBefore, _income);     //compounding the received fee into the reserve
 
-        updateReserveInterestRatesAndTimestampInternal(_instrument, _income, 0);           //refresh interest rates
+        updateInstrumentInterestRatesAndTimestampInternal(_instrument, _income, 0);           //refresh interest rates
     }
 
 
 
-
+// ############################################################################################################################################################################ 
+// ###### CALLED BY LIQUIDATIONCALL() FROM LENDINGPOOL CONTRACT  (call is delegated to LendingPoolLiquidationManager.sol where the actual implementation is present)      #####
+// ############################################################################################################################################################################
 
 
 
@@ -535,61 +559,96 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _feeLiquidated the amount of origination fee being liquidated
     * @param _liquidatedCollateralForFee the amount of collateral equivalent to the origination fee + bonus
     * @param _balanceIncrease the accrued interest on the borrowed amount
-    * @param _liquidatorReceivesAToken true if the liquidator will receive aTokens, false otherwise
+    * @param _liquidatorReceivesIToken true if the liquidator will receive iTokens, false otherwise
     **/
-    function updateStateOnLiquidation( address _principalReserve, address _collateralReserve, address _user, uint256 _amountToLiquidate, uint256 _collateralToLiquidate, uint256 _feeLiquidated, uint256 _liquidatedCollateralForFee, uint256 _balanceIncrease, bool _liquidatorReceivesAToken ) external onlyLendingPool {
+    function updateStateOnLiquidation( address _principalReserve, address _collateralReserve, address _user, uint256 _amountToLiquidate, uint256 _collateralToLiquidate, uint256 _feeLiquidated, uint256 _liquidatedCollateralForFee, uint256 _balanceIncrease, bool _liquidatorReceivesIToken ) external onlyLendingPool {
 
-        updatePrincipalReserveStateOnLiquidationInternal( _principalReserve, _user, _amountToLiquidate, _balanceIncrease );
-        updateCollateralReserveStateOnLiquidationInternal(  _collateralReserve );
+        updatePrincipalInstrumentStateOnLiquidationInternal( _principalReserve, _user, _amountToLiquidate, _balanceIncrease );
+        updatePrincipalInstrumentStateOnLiquidationInternal(  _collateralReserve );
         updateUserStateOnLiquidationInternal(  _principalReserve,  _user,  _amountToLiquidate,  _feeLiquidated,  _balanceIncrease );
-        updateReserveInterestRatesAndTimestampInternal(_principalReserve, _amountToLiquidate, 0);
+        updateInstrumentInterestRatesAndTimestampInternal(_principalReserve, _amountToLiquidate, 0);
 
-        if (!_liquidatorReceivesAToken) {
-            updateReserveInterestRatesAndTimestampInternal(  _collateralReserve,  0, _collateralToLiquidate.add(_liquidatedCollateralForFee) );
+        if (!_liquidatorReceivesIToken) {
+            updateInstrumentInterestRatesAndTimestampInternal(  _collateralReserve,  0, _collateralToLiquidate.add(_liquidatedCollateralForFee) );
         }
 
     }
 
+    /**
+    * @dev updates the state of the principal instrument as a consequence of a liquidation action.
+    * @param _principalInstrument the address of the principal instrument that is being repaid
+    * @param _user the address of the borrower
+    * @param _amountToLiquidate the amount being repaid by the liquidator
+    * @param _balanceIncrease the accrued interest on the borrowed amount
+    **/
+    function updatePrincipalInstrumentStateOnLiquidationInternal( address _principalInstrument, address _user, uint256 _amountToLiquidate, uint256 _balanceIncrease ) internal {
+        CoreLibrary.ReserveData storage reserve = reserves[_principalInstrument];
+        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_principalInstrument];
 
+        reserve.updateCumulativeIndexes();      //update principal reserve data
+        CoreLibrary.InterestRateMode borrowRateMode = getUserCurrentBorrowRateMode( _principalInstrument, _user);
 
+        if (borrowRateMode == CoreLibrary.InterestRateMode.STABLE) {
+            reserve.increaseTotalBorrowsStableAndUpdateAverageRate(   _balanceIncrease, user.stableBorrowRate );        //increase the total borrows by the compounded interest
+            reserve.decreaseTotalBorrowsStableAndUpdateAverageRate(  _amountToLiquidate,  user.stableBorrowRate );      //decrease by the actual amount to liquidate
+        } 
+        else {
+            reserve.increaseTotalBorrowsVariable(_balanceIncrease);     //increase the total borrows by the compounded interest
+            reserve.decreaseTotalBorrowsVariable(_amountToLiquidate);       //decrease by the actual amount to liquidate
+        }
+    }
 
 
     /**
-    * @notice ETH/token transfer functions
+    * @dev updates the state of the collateral instrument as a consequence of a liquidation action.
+    * @param _collateralInstrument the address of the collateral instrument that is being liquidated
     **/
+    function updatePrincipalInstrumentStateOnLiquidationInternal( address _collateralInstrument ) internal {
+        reserves[_collateralInstrument].updateCumulativeIndexes();     //update collateral reserve
+    }
+
+
+    /**
+    * @dev updates the state of the user being liquidated as a consequence of a liquidation action.
+    * @param _instrument the address of the principal instrument that is being repaid
+    * @param _user the address of the borrower
+    * @param _amountToLiquidate the amount being repaid by the liquidator
+    * @param _feeLiquidated the amount of origination fee being liquidated
+    * @param _balanceIncrease the accrued interest on the borrowed amount
+    **/
+    function updateUserStateOnLiquidationInternal( address _instrument, address _user, uint256 _amountToLiquidate, uint256 _feeLiquidated, uint256 _balanceIncrease ) internal {
+        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
+        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
+        
+        user.principalBorrowBalance = user.principalBorrowBalance.add(_balanceIncrease).sub( _amountToLiquidate );  //first increase by the compounded interest, then decrease by the liquidated amount
+
+        if (  getUserCurrentBorrowRateMode(_instrument, _user) == CoreLibrary.InterestRateMode.VARIABLE ) {
+            user.lastVariableBorrowCumulativeIndex = reserve.lastVariableBorrowCumulativeIndex;
+        }
+        if(_feeLiquidated > 0){
+            user.originationFee = user.originationFee.sub(_feeLiquidated);
+        }
+        user.lastUpdateTimestamp = uint40(block.timestamp);
+    }
+
+
+
+// ################################################################################################### 
+// ###### function enforces that the caller is a contract, to support flashloan transfers ############
+// ################################################################### ###############################
 
     /**
     * @dev fallback function enforces that the caller is a contract, to support flashloan transfers
     **/
-    function() external payable {
-        //only contracts can send ETH to the core
+    function() external payable {       //only contracts can send ETH to the core        
         require(msg.sender.isContract(), "Only contracts can send ether to the Lending pool core");
 
     }
 
 
-
-    /**
-    * @dev transfers the protocol fees to the fees collection address
-    * @param _token the address of the token being transferred
-    * @param _user the address of the user from where the transfer is happening
-    * @param _amount the amount being transferred
-    * @param _destination the fee receiver address
-    **/
-
-    function transferToFeeCollectionAddress( address _token, address _user, uint256 _amount, address _destination ) external payable onlyLendingPool {
-        address payable feeAddress = address(uint160(_destination)); //cast the address to payable
-
-        if (_token != EthAddressLib.ethAddress()) {
-            require( msg.value == 0, "User is sending ETH along with the ERC20 transfer. Check the value attribute of the transaction" );
-            ERC20(_token).safeTransferFrom(_user, feeAddress, _amount);
-        } 
-        else {
-            require(msg.value >= _amount, "The amount and the value sent to deposit do not match");
-            (bool result, ) = feeAddress.call.value(_amount).gas(50000)("");
-            require(result, "Transfer of ETH failed");
-        }
-    }
+// #################################################################################################################################### 
+// ###### CALLED BY LIQUIDATIONCALL() IN LENDINGPOOL CONTRACT (delegated to LendingPoolLiquidationManager.sol which calls) ############
+// ################################################################### ################################################################
 
     /**
     * @dev transfers the fees to the fees collection address in the case of liquidation
@@ -637,13 +696,13 @@ contract LendingPoolCore is VersionedInitializable {
     }
 
     /**
-    * @dev gets the aToken contract address for the instrument
+    * @dev gets the iToken contract address for the instrument
     * @param _instrument the instrument address
-    * @return the address of the aToken contract
+    * @return the address of the iToken contract
     **/
     function getInstrumentITokenAddress(address _instrument) public view returns (address) {
         CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return reserve.aTokenAddress;
+        return reserve.iTokenAddress;
     }
 
     /**
@@ -758,7 +817,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _user the address of the user
     * @return the user deposited balance, the principal borrow balance, the fee, and if the instrument is enabled as collateral or not
     **/
-    function getUserBasicReserveData(address _instrument, address _user) external view returns (uint256, uint256, uint256, bool) {
+    function getUserBasicInstrumentData(address _instrument, address _user) external view returns (uint256, uint256, uint256, bool) {
         CoreLibrary.ReserveData storage reserve = reserves[_instrument];
         CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
 
@@ -834,7 +893,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _instrument the instrument address
     * @return the instrument liquidation bonus
     **/
-    function getReserveLiquidationBonus(address _instrument) external view returns (uint256) {
+    function getInstrumentLiquidationBonus(address _instrument) external view returns (uint256) {
         CoreLibrary.ReserveData storage reserve = reserves[_instrument];
         return reserve.liquidationBonus;
     }
@@ -1310,74 +1369,6 @@ contract LendingPoolCore is VersionedInitializable {
 
 
 
-
-
-
-
-    /**
-    * @dev updates the state of the principal instrument as a consequence of a liquidation action.
-    * @param _principalInstrument the address of the principal instrument that is being repaid
-    * @param _user the address of the borrower
-    * @param _amountToLiquidate the amount being repaid by the liquidator
-    * @param _balanceIncrease the accrued interest on the borrowed amount
-    **/
-
-    function updatePrincipalReserveStateOnLiquidationInternal( address _principalInstrument, address _user, uint256 _amountToLiquidate, uint256 _balanceIncrease ) internal {
-        CoreLibrary.ReserveData storage reserve = reserves[_principalInstrument];
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_principalInstrument];
-
-        reserve.updateCumulativeIndexes();      //update principal reserve data
-        CoreLibrary.InterestRateMode borrowRateMode = getUserCurrentBorrowRateMode( _principalInstrument, _user);
-
-        if (borrowRateMode == CoreLibrary.InterestRateMode.STABLE) {
-            reserve.increaseTotalBorrowsStableAndUpdateAverageRate(   _balanceIncrease, user.stableBorrowRate );        //increase the total borrows by the compounded interest
-            reserve.decreaseTotalBorrowsStableAndUpdateAverageRate(  _amountToLiquidate,  user.stableBorrowRate );      //decrease by the actual amount to liquidate
-        } 
-        else {
-            
-            reserve.increaseTotalBorrowsVariable(_balanceIncrease);     //increase the total borrows by the compounded interest
-            reserve.decreaseTotalBorrowsVariable(_amountToLiquidate);       //decrease by the actual amount to liquidate
-        }
-    }
-
-    /**
-    * @dev updates the state of the collateral instrument as a consequence of a liquidation action.
-    * @param _collateralInstrument the address of the collateral instrument that is being liquidated
-    **/
-    function updateCollateralReserveStateOnLiquidationInternal( address _collateralInstrument ) internal {
-        reserves[_collateralInstrument].updateCumulativeIndexes();     //update collateral reserve
-
-    }
-
-    /**
-    * @dev updates the state of the user being liquidated as a consequence of a liquidation action.
-    * @param _instrument the address of the principal instrument that is being repaid
-    * @param _user the address of the borrower
-    * @param _amountToLiquidate the amount being repaid by the liquidator
-    * @param _feeLiquidated the amount of origination fee being liquidated
-    * @param _balanceIncrease the accrued interest on the borrowed amount
-    **/
-    function updateUserStateOnLiquidationInternal( address _instrument, address _user, uint256 _amountToLiquidate, uint256 _feeLiquidated, uint256 _balanceIncrease ) internal {
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        
-        user.principalBorrowBalance = user.principalBorrowBalance.add(_balanceIncrease).sub( _amountToLiquidate );  //first increase by the compounded interest, then decrease by the liquidated amount
-
-        if (  getUserCurrentBorrowRateMode(_instrument, _user) == CoreLibrary.InterestRateMode.VARIABLE ) {
-            user.lastVariableBorrowCumulativeIndex = reserve.lastVariableBorrowCumulativeIndex;
-        }
-        if(_feeLiquidated > 0){
-            user.originationFee = user.originationFee.sub(_feeLiquidated);
-        }
-        user.lastUpdateTimestamp = uint40(block.timestamp);
-    }
-
-
-
-
-
-
-
     /**
     * @dev Updates the instrument's current stable borrow rate Rf, the current variable borrow rate Rv and the current liquidity rate Rl.
     * Also updates the lastUpdateTimestamp value. Please refer to the whitepaper for further information.
@@ -1385,7 +1376,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _liquidityAdded the amount of liquidity added to the protocol (deposit or repay) in the previous action
     * @param _liquidityTaken the amount of liquidity taken from the protocol (redeem or borrow)
     **/
-    function updateReserveInterestRatesAndTimestampInternal( address _instrument, uint256 _liquidityAdded, uint256 _liquidityTaken ) internal {
+    function updateInstrumentInterestRatesAndTimestampInternal( address _instrument, uint256 _liquidityAdded, uint256 _liquidityTaken ) internal {
         CoreLibrary.ReserveData storage reserve = reserves[_instrument];
         (uint256 newLiquidityRate, uint256 newStableRate, uint256 newVariableRate) = IReserveInterestRateStrategy( reserve.interestRateStrategyAddress).calculateInterestRates( _instrument, getInstrumentAvailableLiquidity(_instrument).add(_liquidityAdded).sub(_liquidityTaken),    reserve.totalBorrowsStable, reserve.totalBorrowsVariable, reserve.currentAverageStableBorrowRate   );
 
