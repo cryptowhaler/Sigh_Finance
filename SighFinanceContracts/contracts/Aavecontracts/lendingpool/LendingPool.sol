@@ -532,8 +532,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
 
         (uint256 returnCode, string memory returnMessage) = abi.decode(result, (uint256, string));
 
-        if (returnCode != 0) {
-            //error found
+        if (returnCode != 0) {      //error found
             revert(string(abi.encodePacked("Liquidation failed: ", returnMessage)));
         }
     }
