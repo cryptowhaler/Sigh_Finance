@@ -198,8 +198,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     }
 
     /**
-    * @dev functions affected by this modifier can only be invoked if the provided _amount input parameter
-    * is not zero.
+    * @dev functions affected by this modifier can only be invoked if the provided _amount input parameter is not zero.
     * @param _amount the amount provided
     **/
     modifier onlyAmountGreaterThanZero(uint256 _amount) {
@@ -208,10 +207,9 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     }
 
     uint256 public constant UINT_MAX_VALUE = uint256(-1);
+    uint256 public constant LENDINGPOOL_REVISION = 0x2;             // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
 
-    uint256 public constant LENDINGPOOL_REVISION = 0x2;
-
-    function getRevision() internal pure returns (uint256) {
+    function getRevision() internal pure returns (uint256) {        // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
         return LENDINGPOOL_REVISION;
     }
 
@@ -237,31 +235,22 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
 
     /**
     * @dev deposits The underlying asset into the instrument. A corresponding amount of the overlying asset (ITokens) is minted.
-    * @param _instrument the address of the instrument
+    * @param _instrument the address of the underlying instrument (to be deposited)
     * @param _amount the amount to be deposited
     * @param _referralCode integrators are assigned a referral code and can potentially receive rewards.
     **/
-    function deposit(address _instrument, uint256 _amount, uint16 _referralCode)
-        external
-        payable
-        nonReentrant
+    function deposit(address _instrument, uint256 _amount, uint16 _referralCode) external payable nonReentrant
         onlyActiveInstrument(_instrument)
         onlyUnfreezedInstrument(_instrument)
         onlyAmountGreaterThanZero(_amount)
     {
         IToken iToken = IToken(core.getInstrumentITokenAddress(_instrument));
-
         bool isFirstDeposit = iToken.balanceOf(msg.sender) == 0;
 
         core.updateStateOnDeposit(_instrument, msg.sender, _amount, isFirstDeposit);
+        iToken.mintOnDeposit(msg.sender, _amount);                                          //minting IToken to user 1:1 with the specific exchange rate
+        core.transferToReserve.value(msg.value)(_instrument, msg.sender, _amount);       //transfer to the core contract
 
-        //minting IToken to user 1:1 with the specific exchange rate
-        iToken.mintOnDeposit(msg.sender, _amount);
-
-        //transfer to the core contract
-        core.transferToInstrument.value(msg.value)(_instrument, msg.sender, _amount);
-
-        //solium-disable-next-line
         emit Deposit(_instrument, msg.sender, _amount, _referralCode, block.timestamp);
 
     }
@@ -269,7 +258,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     /**
     * @dev Redeems the underlying amount of assets requested by _user.
     * This function is executed by the overlying IToken contract in response to a redeem action.
-    * @param _instrument the address of the instrument
+    * @param _instrument the address of the instrument (underlying instrument address)
     * @param _user the address of the user performing the action
     * @param _amount the underlying amount to be redeemed
     **/
@@ -282,12 +271,9 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
         require( currentAvailableLiquidity >= _amount, "There is not enough liquidity available to redeem" );
 
         core.updateStateOnRedeem(_instrument, _user, _amount, _ITokenBalanceAfterRedeem == 0);
-
         core.transferToUser(_instrument, _user, _amount);
 
-        //solium-disable-next-line
         emit RedeemUnderlying(_instrument, _user, _amount, block.timestamp);
-
     }
 
 // #########################################
@@ -318,8 +304,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     }
 
     /**
-    * @dev Allows users to borrow a specific amount of the instrument currency, provided that the borrower
-    * already deposited enough collateral.
+    * @dev Allows users to borrow a specific amount of the instrument currency, provided that the borrower already deposited enough collateral.
     * @param _instrument the address of the instrument
     * @param _amount the amount to be borrowed
     * @param _interestRateMode the interest rate mode at which the user wants to borrow. Can be 0 (STABLE) or 1 (VARIABLE)
@@ -328,70 +313,47 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
         onlyUnfreezedInstrument(_instrument)
         onlyAmountGreaterThanZero(_amount)
     {
-        // Usage of a memory struct of vars to avoid "Stack too deep" errors due to local variables
-        BorrowLocalVars memory vars;
+        
+        BorrowLocalVars memory vars;            // Usage of a memory struct of vars to avoid "Stack too deep" errors due to local variables
+        require(core.isInstrumentBorrowingEnabled(_instrument), "Instrument is not enabled for borrowing");     //check that the instrument is enabled for borrowing
 
-        //check that the instrument is enabled for borrowing
-        require(core.isInstrumentBorrowingEnabled(_instrument), "Instrument is not enabled for borrowing");
         //validate interest rate mode
         require( uint256(CoreLibrary.InterestRateMode.VARIABLE) == _interestRateMode || uint256(CoreLibrary.InterestRateMode.STABLE) == _interestRateMode, "Invalid interest rate mode selected");
+        vars.rateMode = CoreLibrary.InterestRateMode(_interestRateMode);                //cast the rateMode to coreLibrary.interestRateMode
 
-        //cast the rateMode to coreLibrary.interestRateMode
-        vars.rateMode = CoreLibrary.InterestRateMode(_interestRateMode);
-
-        //check that the amount is available in the instrument
-        vars.availableLiquidity = core.getInstrumentAvailableLiquidity(_instrument);
-
+        vars.availableLiquidity = core.getInstrumentAvailableLiquidity(_instrument);    //check that the amount is available in the core contract
         require( vars.availableLiquidity >= _amount,"There is not enough liquidity available in the Instrument's reserve");
 
-        (
-            ,
-            vars.userCollateralBalanceETH,
-            vars.userBorrowBalanceETH,
-            vars.userTotalFeesETH,
-            vars.currentLtv,
-            vars.currentLiquidationThreshold,
-            ,
-            vars.healthFactorBelowThreshold
-        ) = dataProvider.calculateUserGlobalData(msg.sender);
+        ( , vars.userCollateralBalanceETH,  vars.userBorrowBalanceETH,  vars.userTotalFeesETH,  vars.currentLtv, vars.currentLiquidationThreshold,  , vars.healthFactorBelowThreshold  ) = dataProvider.calculateUserGlobalData(msg.sender);
 
         require(vars.userCollateralBalanceETH > 0, "The collateral balance is 0");
         require( !vars.healthFactorBelowThreshold, "The borrower can already be liquidated so he cannot borrow more");
 
-        //calculating fees
-        vars.borrowFee = feeProvider.calculateLoanOriginationFee(msg.sender, _amount);
-
+        vars.borrowFee = feeProvider.calculateLoanOriginationFee(msg.sender, _amount);          //calculating fees
         require(vars.borrowFee > 0, "The amount to borrow is too small");
 
         vars.amountOfCollateralNeededETH = dataProvider.calculateCollateralNeededInETH( _instrument,  _amount, vars.borrowFee, vars.userBorrowBalanceETH, vars.userTotalFeesETH, vars.currentLtv);
-
         require(vars.amountOfCollateralNeededETH <= vars.userCollateralBalanceETH, "There is not enough collateral to cover a new borrow");
 
         /**
         * Following conditions need to be met if the user is borrowing at a stable rate:
         * 1. Financial Instrument must be enabled for stable rate borrowing
-        * 2. Users cannot borrow from the instrument's reserve if their collateral is (mostly) the same instrument
-        *    they are borrowing, to prevent abuses.
-        * 3. Users will be able to borrow only a relatively small, configurable amount of the total
-        *    liquidity
+        * 2. Users cannot borrow from the instrument's reserve if their collateral is (mostly) the same instrument they are borrowing, to prevent abuses.
+        * 3. Users will be able to borrow only a relatively small, configurable amount of the total liquidity
         **/
 
-        if (vars.rateMode == CoreLibrary.InterestRateMode.STABLE) {
-            //check if the borrow mode is stable and if stable rate borrowing is enabled on this instrument
+        if (vars.rateMode == CoreLibrary.InterestRateMode.STABLE) {         //check if the borrow mode is stable and if stable rate borrowing is enabled on this instrument
             require( core.isUserAllowedToBorrowAtStable(_instrument, msg.sender, _amount), "User cannot borrow the selected amount with a stable rate" );
 
             //calculate the max available loan size in stable rate mode as a percentage of the available liquidity
-            uint256 maxLoanPercent = parametersProvider.getMaxStableRateBorrowSizePercent();
+            uint256 maxLoanPercent = parametersProvider.getMaxStableRateBorrowSizePercent();        
             uint256 maxLoanSizeStable = vars.availableLiquidity.mul(maxLoanPercent).div(100);
-
             require(  _amount <= maxLoanSizeStable, "User is trying to borrow too much liquidity at a stable rate");
         }
 
         //all conditions passed - borrow is accepted
         (vars.finalUserBorrowRate, vars.borrowBalanceIncrease) = core.updateStateOnBorrow( _instrument, msg.sender, _amount, vars.borrowFee, vars.rateMode);
-
-        //if we reached this point, we can transfer
-        core.transferToUser(_instrument, msg.sender, _amount);
+        core.transferToUser(_instrument, msg.sender, _amount);      //if we reached this point, we can transfer
 
         emit Borrow( _instrument, msg.sender, _amount, _interestRateMode, vars.finalUserBorrowRate, vars.borrowFee, vars.borrowBalanceIncrease, _referralCode, block.timestamp);
     }
@@ -417,9 +379,8 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     }
 
     function repay(address _instrument, uint256 _amount, address payable _onBehalfOf) external payable nonReentrant onlyActiveInstrument(_instrument) onlyAmountGreaterThanZero(_amount) {
-        // Usage of a memory struct of vars to avoid "Stack too deep" errors due to local variables
-        RepayLocalVars memory vars;
-
+        
+        RepayLocalVars memory vars;     // Usage of a memory struct of vars to avoid "Stack too deep" errors due to local variables
         ( vars.principalBorrowBalance, vars.compoundedBorrowBalance, vars.borrowBalanceIncrease ) = core.getUserBorrowBalances(_instrument, _onBehalfOf);
 
         vars.originationFee = core.getUserOriginationFee(_instrument, _onBehalfOf);
@@ -428,8 +389,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
         require(vars.compoundedBorrowBalance > 0, "The user does not have any borrow pending");
         require( _amount != UINT_MAX_VALUE || msg.sender == _onBehalfOf, "To repay on behalf of an user an explicit amount to repay is needed.");
 
-        //default to max amount
-        vars.paybackAmount = vars.compoundedBorrowBalance.add(vars.originationFee);
+        vars.paybackAmount = vars.compoundedBorrowBalance.add(vars.originationFee);     //default to max amount
 
         if (_amount != UINT_MAX_VALUE && _amount < vars.paybackAmount) {
             vars.paybackAmount = _amount;
@@ -439,7 +399,6 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
 
         //if the amount is smaller than the origination fee, just transfer the amount to the fee destination address
         if (vars.paybackAmount <= vars.originationFee) {
-
             core.updateStateOnRepay( _instrument, _onBehalfOf, 0, vars.paybackAmount, vars.borrowBalanceIncrease, false);
             core.transferToFeeCollectionAddress.value( vars.isETH ? vars.paybackAmount : 0)( _instrument, _onBehalfOf, vars.paybackAmount,  addressesProvider.getTokenDistributor() );
 
@@ -456,8 +415,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
         }
 
         //sending the total msg.value if the transfer is ETH.
-        //the transferToInstrument() function will take care of sending the
-        //excess ETH back to the caller
+        //the transferToInstrument() function will take care of sending the excess ETH back to the caller
         core.transferToInstrument.value(vars.isETH ? msg.value.sub(vars.originationFee) : 0)( _instrument, msg.sender, vars.paybackAmountMinusFees );
         emit Repay( _instrument, _onBehalfOf, msg.sender, vars.paybackAmountMinusFees, vars.originationFee, vars.borrowBalanceIncrease, block.timestamp);
     }
