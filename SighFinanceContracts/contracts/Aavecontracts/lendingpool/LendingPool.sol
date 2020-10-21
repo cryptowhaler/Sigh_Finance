@@ -415,8 +415,8 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
         }
 
         //sending the total msg.value if the transfer is ETH.
-        //the transferToInstrument() function will take care of sending the excess ETH back to the caller
-        core.transferToInstrument.value(vars.isETH ? msg.value.sub(vars.originationFee) : 0)( _instrument, msg.sender, vars.paybackAmountMinusFees );
+        //the transferToReserve() function will take care of sending the excess ETH back to the caller
+        core.transferToReserve.value(vars.isETH ? msg.value.sub(vars.originationFee) : 0)( _instrument, msg.sender, vars.paybackAmountMinusFees );
         emit Repay( _instrument, _onBehalfOf, msg.sender, vars.paybackAmountMinusFees, vars.originationFee, vars.borrowBalanceIncrease, block.timestamp);
     }
 
