@@ -22,6 +22,7 @@ library WadRayMath {
     function ray() internal pure returns (uint256) {
         return RAY;
     }
+
     function wad() internal pure returns (uint256) {
         return WAD;
     }
@@ -35,7 +36,7 @@ library WadRayMath {
     }
 
     function wadMul(uint256 a, uint256 b) internal pure returns (uint256) {
-        return halfWAD.add(a.mul(b)).div(WAD);
+        return halfWAD.add(a.mul(b)).div(WAD);      // ( 0.5e18 + (a*b) ) / 1e18
     }
 
     function wadDiv(uint256 a, uint256 b) internal pure returns (uint256) {

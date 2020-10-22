@@ -1,9 +1,11 @@
 pragma solidity ^0.5.6;
 
-import "../libraries/openzeppelin-upgradeability/InitializableAdminUpgradeabilityProxy.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "../interfaces/ILendingPoolAddressesProvider.sol";
 import "./AddressStorage.sol";
+
+import "../libraries/openzeppelin-upgradeability/InitializableAdminUpgradeabilityProxy.sol";
+import "../interfaces/ILendingPoolAddressesProvider.sol";
+
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 /**
 * @title LendingPoolAddressesProvider contract (Taken from Aave, Modified by SIGH Finance)
