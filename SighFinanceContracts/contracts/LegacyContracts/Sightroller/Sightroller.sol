@@ -7,7 +7,7 @@ import "../PriceOracle.sol";
 import "./SightrollerInterface.sol";
 import "./SightrollerStorage.sol";
 import "./Unitroller.sol";
-import "../../SIGH/SightrollerSIGHDistributionHandler.sol";
+import "../../SIGH/SIGHDistributionHandler.sol";
 
 
 /**
@@ -1067,7 +1067,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
         require(market.isListed == true, "This market is not listed");
         require(isSIGHDistributionHandlerSet, "SIGH Distribution Handler has not been initialized.");
     
-        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
+        SIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler(SIGHDistributionHandler);
         bool isMarketAdded = sighHandlerContract.addSIGHMarket(cToken);
 
         require(isMarketAdded, "SIGH market not added properly");
@@ -1084,7 +1084,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
         require(market.isListed == true, "SIGH market is not listed");
         require(isSIGHDistributionHandlerSet, "SIGH Distribution Handler has not been initialized.");
     
-        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
+        SIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler(SIGHDistributionHandler);
         bool isMarketDropped = sighHandlerContract.dropSIGHMarket(cToken);
 
         require(isMarketDropped, "SIGH market not dropped properly");
@@ -1097,7 +1097,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
     function setSIGHSpeed(uint SIGHSpeed_) public returns (bool) {
         require(msg.sender == admin, "only admin can change SIGH rate"); 
 
-        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
+        SIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler(SIGHDistributionHandler);
         bool isSpeedUpdated = sighHandlerContract.updateSIGHSpeed(SIGHSpeed_);
 
         require(isSpeedUpdated, "SIGH speed not updated properly");
@@ -1107,7 +1107,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
     function setSIGHSpeedRatioForAMarket(address cToken, uint supplierRatio) public returns (bool) {
         require(msg.sender == admin, 'Only Admin can change the SIGH Speed Distribution Ratio for a Market');
 
-        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
+        SIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler(SIGHDistributionHandler);
         bool isSIGHSpeedRatioForAMarketUpdated = sighHandlerContract.updateSIGHSpeedRatioForAMarket(cToken,supplierRatio );
 
         require(isSIGHSpeedRatioForAMarketUpdated, "market's SIGH Speed Ratio not updated properly");
@@ -1124,7 +1124,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
      */
     function refreshSIGHSpeeds() public returns (bool) {
 
-        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
+        SIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler(SIGHDistributionHandler);
         bool areSIGHSpeedsRefreshed = sighHandlerContract.refreshSIGHSpeeds();
         
         if (areSIGHSpeedsRefreshed) {
@@ -1144,7 +1144,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
      */
     function updateSIGHSupplyIndex(address cToken) internal {
         
-        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
+        SIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler(SIGHDistributionHandler);
         sighHandlerContract.updateSIGHSupplyIndex(cToken);
         
     }
@@ -1155,7 +1155,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
      */
     function updateSIGHBorrowIndex(address cToken) internal {
 
-        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
+        SIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler(SIGHDistributionHandler);
         sighHandlerContract.updateSIGHBorrowIndex(cToken);
         
     }
@@ -1170,7 +1170,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
      * @param supplier The address of the supplier to distribute SIGH to
      */
     function distributeSupplier_SIGH(address cToken, address supplier, bool distributeAll) internal {
-        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
+        SIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler(SIGHDistributionHandler);
         sighHandlerContract.distributeSupplier_SIGH(cToken,supplier,distributeAll);
     }
 
@@ -1181,7 +1181,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
      * @param borrower The address of the borrower to distribute Gsigh to
      */
     function distributeBorrower_SIGH(address cToken, address borrower, bool distributeAll) internal {
-        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
+        SIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler(SIGHDistributionHandler);
         sighHandlerContract.distributeBorrower_SIGH(cToken,borrower,distributeAll);
     }
 
@@ -1204,7 +1204,7 @@ contract Sightroller is SightrollerV3Storage, SightrollerInterface, SightrollerE
      */
     function claimSIGH(address[] memory holders, bool borrowers, bool suppliers ) public {
 
-        SightrollerSIGHDistributionHandler sighHandlerContract = SightrollerSIGHDistributionHandler(SIGHDistributionHandler);
+        SIGHDistributionHandler sighHandlerContract = SIGHDistributionHandler(SIGHDistributionHandler);
         sighHandlerContract.claimSIGH(holders,borrowers,suppliers);
         
     }

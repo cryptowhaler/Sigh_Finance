@@ -276,7 +276,7 @@ library CoreLibrary {
 
         compoundedBalance = principalBorrowBalanceRay.rayMul(cumulatedInterest).rayToWad();
 
-        if (compoundedBalance == user_instrument.principalBorrowBalance) 
+        if (compoundedBalance == user_instrument.principalBorrowBalance) {
             if (user_instrument.lastUpdateTimestamp != block.timestamp) {
                 //no interest cumulation because of the rounding - we add 1 wei
                 //as symbolic cumulated interest to avoid interest free loans.

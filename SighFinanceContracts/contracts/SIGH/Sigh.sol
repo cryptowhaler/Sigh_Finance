@@ -1,10 +1,10 @@
 pragma solidity ^0.5.16;
 
 import "./Math/ABDKMath.sol";
-import "./openzeppelin/Context.sol";
-import "./openzeppelin/IERC20.sol";
-import "./openzeppelin/SafeMath.sol";
-import "./openzeppelin/Address.sol";
+import "openzeppelin-solidity/contracts/GSN/Context.sol"; 
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
+import "openzeppelin-solidity/contracts/utils/Address.sol"; 
+import "openzeppelin-solidity/contracts/math/SafeMath.sol"; 
 
 contract SIGH is Context, IERC20 {
 

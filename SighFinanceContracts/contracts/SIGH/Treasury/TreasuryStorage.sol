@@ -1,7 +1,7 @@
 pragma solidity ^0.5.16;
 
-import "../openzeppelin/EIP20Interface.sol";
-
+// import "../openzeppelin/EIP20Interface.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
 
 contract TreasuryCoreStorage {
     /**
@@ -36,7 +36,7 @@ contract TreasuryV1Storage {
     address public pendingAdmin;
 
     /// @notice Reference to token to burn / trade (immutable)
-    EIP20Interface public sigh_token;
+    IERC20 public sigh_token;
 
     /// @notice Target to receive dripped tokens (immutable)
     address public sightroller_address;

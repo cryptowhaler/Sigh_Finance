@@ -1,18 +1,19 @@
 pragma solidity ^0.5.16;
 
 /**
- * @title Sigh Reservoir Contract
+ * @title Sigh Speed Controller Contract
  * @notice Distributes a token to a different contract at a fixed rate.
  * @dev This contract must be poked via the `drip()` function every so often.
  * @author SighFinance
  */
 
-import "../openzeppelin/EIP20Interface.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
+//import "../openzeppelin/EIP20Interface.sol";
  
 contract SighSpeedController {
 
-  /// @notice Reference to token to drip (immutable)
-  EIP20Interface public token;
+  /// @notice Reference to SIGH
+  IERC20 public token;
 
   address public admin;
   address private pendingAdmin;
@@ -42,7 +43,7 @@ contract SighSpeedController {
     * @notice Constructs a Reservoir
     * @param token_ The token to drip
     */
-  constructor(EIP20Interface token_ ) public {
+  constructor(IERC20 token_ ) public {
     admin = msg.sender;
     token = token_;
   }
@@ -146,7 +147,7 @@ contract SighSpeedController {
   function drip() public returns (uint) {
     require(isDripAllowed,'Dripping has not been initialized by the Admin');    
 
-    EIP20Interface token_ = token;
+    IERC20 token_ = token;
     
     address[] memory protocols = storedSupportedProtocols;
     uint length = protocols.length;
@@ -208,7 +209,7 @@ contract SighSpeedController {
 // ###############################################################
 
   function getSIGHBalance() external view returns (uint) {
-    EIP20Interface token_ = token;   
+    IERC20 token_ = token;   
     uint balance = token_.balanceOf(address(this));
     return balance;
   }
@@ -271,5 +272,3 @@ contract SighSpeedController {
     }
   }
 }
-
-import "../openzeppelin/EIP20Interface.sol";

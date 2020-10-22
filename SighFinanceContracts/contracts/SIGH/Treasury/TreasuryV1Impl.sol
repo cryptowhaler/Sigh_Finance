@@ -2,8 +2,8 @@ pragma solidity ^0.5.16;
 
 // interfaces
 import "./IForwarder.sol";
-import "../openzeppelin/EIP20Interface.sol";
-import "./TreasuryCore.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
+// import "../openzeppelin/EIP20Interface.sol";
 import "./TreasuryStorage.sol";
 import "./TreasuryInterface.sol";
 import "./EIP20InterfaceSIGH.sol";
@@ -11,7 +11,7 @@ import "./EIP20InterfaceSIGH.sol";
  * @title SighFinance's Treasury Contract
  * @author SighFinance
  */
-contract Treasury TreasuryV1Storage   {
+contract Treasury is TreasuryV1Storage   {
     
     uint public maxTransferAmount;
     uint public coolDownPeriod = 2; // 5 min
@@ -46,7 +46,7 @@ contract Treasury TreasuryV1Storage   {
     */    
     constructor (address sigh_token_, address sightroller_Address_ ) public {
         admin = msg.sender;
-        sigh_token = EIP20Interface(sigh_token_);
+        sigh_token = IERC20(sigh_token_);
         sightroller_address = sightroller_Address_;
     }
     
@@ -76,7 +76,7 @@ contract Treasury TreasuryV1Storage   {
             drip();
         }
 
-        EIP20Interface newToken = EIP20Interface(tokenToDrip);
+        IERC20 newToken = IERC20(tokenToDrip);
         uint currentBalance = newToken.balanceOf(address(this)); 
 
         require(currentBalance > 0, 'The Treasury does not hold these new tokens');
@@ -141,7 +141,7 @@ contract Treasury TreasuryV1Storage   {
     function drip() public returns (uint) {
         require(isDripAllowed, 'Drip is currently not allowed.');
 
-        EIP20Interface token_ = EIP20Interface(tokenBeingDripped); 
+        IERC20 token_ = IERC20(tokenBeingDripped); 
 
         uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance of the token Being Dripped
         uint blockNumber_ = block.number;
@@ -182,7 +182,7 @@ contract Treasury TreasuryV1Storage   {
         uint dif = sub(blockNumber, prevTransferBlock, 'underflow');
         require(dif > coolDownPeriod, 'The cool down period is not completed');
 
-        EIP20Interface token_ = sigh_token;
+        IERC20 token_ = sigh_token;
 
         uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
         require(treasuryBalance_ > amount , "The current treasury's SIGH balance is less than the amount to be transferred" );
@@ -201,7 +201,7 @@ contract Treasury TreasuryV1Storage   {
     }
 
     function updatemaxTransferAmount() internal returns (uint) {
-        EIP20Interface token_ = sigh_token;
+        IERC20 token_ = sigh_token;
         uint totalSupply = token_.totalSupply(); // get total Supply
         require(totalSupply > 0, 'Total Supply of SIGH tokens returned not valid');
         uint newtransferAmount = div(totalSupply,100,'updatemaxTransferAmount: Division returned error');
@@ -221,11 +221,11 @@ contract Treasury TreasuryV1Storage   {
         IForwarder forwarder;
         forwarder = IForwarder(to);
         
-        EIP20Interface bought_token;
-        bought_token = EIP20Interface(token_bought);
+        IERC20 bought_token;
+        bought_token = IERC20(token_bought);
 
-        EIP20Interface sold_token;
-        sold_token = EIP20Interface(token_sold);
+        IERC20 sold_token;
+        sold_token = IERC20(token_sold);
 
         uint prev_bought_token_amount = bought_token.balanceOf(address(this));
         uint prev_sold_token_amount = sold_token.balanceOf(address(this));
@@ -320,7 +320,7 @@ contract Treasury TreasuryV1Storage   {
 // ########################################
 
     function getSIGHBalance() external view returns (uint) {
-        EIP20Interface token_ = sigh_token;
+        IERC20 token_ = sigh_token;
         uint treasuryBalance_ = token_.balanceOf(address(this)); // get current SIGH balance
         return treasuryBalance_;
     }

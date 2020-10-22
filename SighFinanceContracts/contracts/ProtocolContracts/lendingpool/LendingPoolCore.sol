@@ -248,7 +248,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _balanceIncrease the accrued interest on the borrowed amount
     * @param _amountBorrowed the accrued interest on the borrowed amount
     **/
-    function updateInstrumentTotalBorrowsByRateModeInternal( address _instrument  address _user,  uint256 _principalBalance,  uint256 _balanceIncrease, uint256 _amountBorrowed, CoreLibrary.InterestRateMode _newBorrowRateMode ) internal {
+    function updateInstrumentTotalBorrowsByRateModeInternal( address _instrument,  address _user,  uint256 _principalBalance,  uint256 _balanceIncrease, uint256 _amountBorrowed, CoreLibrary.InterestRateMode _newBorrowRateMode ) internal {
         CoreLibrary.InterestRateMode previousRateMode = getUserCurrentBorrowRateMode( _instrument,  _user);
         CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
 
