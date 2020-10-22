@@ -16,7 +16,7 @@ import "../libraries/EthAddressLib.sol";
 
 /**
 * @title LendingPoolCore contract
-* @author Aave
+* @author Aave, SIGH Finance
 * @notice Holds the state of the lending pool and all the funds deposited
 * @dev NOTE: The core does not enforce security checks on the update of the state
 * (eg, updateStateOnBorrow() does not enforce that borrowed is enabled on the Instrument).
@@ -850,7 +850,7 @@ contract LendingPoolCore is VersionedInitializable {
     /**
     * @dev gets the normalized income of the instrument. a value of 1e27 means there is no income. A value of 2e27 means there
     * there has been 100% income.
-    * @param _instrument the instrument address
+    * @param _instrument the instrument address (the underlying address)
     * @return the instrument normalized income
     **/
     function getInstrumentNormalizedIncome(address _instrument) external view returns (uint256) {

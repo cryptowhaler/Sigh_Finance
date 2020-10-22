@@ -9,7 +9,7 @@ import "../tokenization/IToken.sol";
 
 /**
 * @title LendingPoolConfigurator contract
-* @author Aave (modified by SIGH FINANCE)
+* @author Aave, SIGH Finance (modified by SIGH FINANCE)
 * @notice Executes configuration methods on the LendingPoolCore contract. Allows to enable/disable instruments,
 * and set different protocol parameters.
 **/

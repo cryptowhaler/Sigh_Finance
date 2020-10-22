@@ -13,7 +13,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 * @notice implements the calculation of the interest rates depending on the Instrument parameters.
 * @dev if there is need to update the calculation of the interest rates for a specific Instrument,
 * a new version of this contract will be deployed.
-* @author Aave
+* @author Aave, SIGH Finance
 **/
 contract DefaultInstrumentInterestRateStrategy is I_InstrumentInterestRateStrategy {
 

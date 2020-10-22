@@ -3,26 +3,17 @@ pragma solidity ^0.5.6;
 import "../libraries/openzeppelin-upgradeability/InitializableAdminUpgradeabilityProxy.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "../interfaces/ILendingPoolAddressesProvider.sol";
+import "./AddressStorage.sol";
 
 /**
-* @title LendingPoolAddressesProvider contract (Taken from Aave, Used by SIGH Finance)
+* @title LendingPoolAddressesProvider contract (Taken from Aave, Modified by SIGH Finance)
 * @notice Is the main registry of the protocol. All the different components of the protocol are accessible
 * through the addresses provider.
-* @author Aave
+* @author Aave, SIGH Finance
 **/
 
 
-    function getAddress(bytes32 _key) public view returns (address) {
-        return addresses[_key];
-    }
-
-    function _setAddress(bytes32 _key, address _value) internal {
-        addresses[_key] = _value;
-    }
-
-contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider {
-
-    mapping(bytes32 => address) private addresses;
+contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider, AddressStorage {
 
     //events
     event LendingPoolUpdated(address indexed newAddress);
@@ -217,33 +208,35 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider 
     }
 
     /**
-    * @dev updates the address of the Lending pool liquidation manager
-    * @param _manager the new lending pool liquidation manager address
+    * @dev updates the address of the SIGH Treasury Contract
+    * @param _SIGHTreasury the new SIGH Treasury Contract address
     **/
-    function setSIGHTreasury(address _manager) public onlyOwner {   // TO BE DECIDED
-        updateImplInternal(SIGH_TREASURY, _feeProvider);
-        _setAddress(SIGH_TREASURY, _manager);
-        emit SIGHTreasuryUpdated(_manager);
+    function setSIGHTreasury(address _SIGHTreasury) public onlyOwner {   // TO BE DECIDED
+        updateImplInternal(SIGH_TREASURY, _SIGHTreasury);
+        emit SIGHTreasuryUpdated(_SIGHTreasury);
     }
 
-// #################################  ADDED FOR SIGH FINANCE 
-// ######  SIGHTreasury proxy ######  ADDED FOR SIGH FINANCE
-// #################################  ADDED FOR SIGH FINANCE 
+// #############################################  ADDED FOR SIGH FINANCE 
+// ######  SIGHDistributionHandler proxy #######  ADDED FOR SIGH FINANCE
+// #############################################  ADDED FOR SIGH FINANCE 
 
     function getSIGHDistributionHandler() public view returns (address) {
         return getAddress(SIGH_DISTRIBUTION_HANDLER);
     }
 
     /**
-    * @dev updates the address of the Lending pool liquidation manager
-    * @param _manager the new lending pool liquidation manager address
+    * @dev updates the address of the SIGH Distribution Handler Contract (Manages the SIGH Speeds)
+    * @param _SIGHDistributionHandler the new lending pool liquidation manager address
     **/
-    function setSIGHDistributionHandler(address _manager) public onlyOwner {   // TO BE DECIDED
-        updateImplInternal(SIGH_DISTRIBUTION_HANDLER, _feeProvider);
-        _setAddress(SIGH_DISTRIBUTION_HANDLER, _manager);
-        emit SIGHDistributionHandlerUpdated(_manager);
+    function setSIGHDistributionHandler(address _SIGHDistributionHandler) public onlyOwner {   // TO BE DECIDED
+        updateImplInternal(SIGH_DISTRIBUTION_HANDLER, _SIGHDistributionHandler);
+        emit SIGHDistributionHandlerUpdated(_SIGHDistributionHandler);
     }
 
+
+// ##################################################################################   
+// ######  THESE CONTRACTS ARE NOT USING PROXY SO ADDRESS IS DIRECTLY UPDATED #######  
+// ##################################################################################
 
     /**
     * @dev the functions below are storing specific addresses that are outside the context of the protocol
@@ -288,6 +281,9 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider 
         emit TokenDistributorUpdated(_tokenDistributor);
     }
 
+// ############################################# 
+// ######  FUNCTION TO UPGRADE THE PROXY #######  
+// #############################################  
 
     /**
     * @dev internal function to update the implementation of a specific component of the protocol
@@ -298,7 +294,7 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider 
         address payable proxyAddress = address(uint160(getAddress(_id)));
 
         InitializableAdminUpgradeabilityProxy proxy = InitializableAdminUpgradeabilityProxy(proxyAddress);
-        bytes memory params = abi.encodeWithSignature("initialize(address)", address(this));
+        bytes memory params = abi.encodeWithSignature("initialize(address)", address(this));            // initialize function is called in the new implementation contract
 
         if (proxyAddress == address(0)) {
             proxy = new InitializableAdminUpgradeabilityProxy();

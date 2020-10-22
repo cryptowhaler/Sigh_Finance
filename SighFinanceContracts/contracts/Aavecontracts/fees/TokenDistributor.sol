@@ -11,7 +11,7 @@ import "../libraries/EthAddressLib.sol";
 
 
 /// @title TokenDistributor
-/// @author Aave
+/// @author Aave, SIGH Finance
 /// @notice Receives tokens and manages the distribution amongst receivers
 ///  The usage is as follows:
 ///  - The distribution addresses and percentages are set up on construction

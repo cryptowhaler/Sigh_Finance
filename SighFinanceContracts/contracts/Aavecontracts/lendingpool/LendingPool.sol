@@ -24,10 +24,11 @@ import "./LendingPoolLiquidationManager.sol";
 /**
 * @title LendingPool contract (Created by Aave, modified by SIGH Finance)
 * @notice Implements the actions of the LendingPool, and exposes accessory methods to fetch the users and financial instruments data
-* @author Aave
+* @author Aave, SIGH Finance
  **/
 
 contract LendingPool is ReentrancyGuard, VersionedInitializable {
+
     using SafeMath for uint256;
     using WadRayMath for uint256;
     using Address for address;

@@ -5,7 +5,7 @@ import "./WadRayMath.sol";
 
 /**
 * @title CoreLibrary library
-* @author Aave (extended by SIGH Finance)
+* @author Aave, SIGH Finance (extended by SIGH Finance)
 * @notice Defines the data structures of the instruments and the user data
 **/
 library CoreLibrary {

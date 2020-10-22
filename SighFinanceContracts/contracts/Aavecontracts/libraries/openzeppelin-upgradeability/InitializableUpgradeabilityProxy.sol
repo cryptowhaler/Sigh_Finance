@@ -4,10 +4,10 @@ import "./BaseUpgradeabilityProxy.sol";
 
 /**
  * @title InitializableUpgradeabilityProxy
- * @dev Extends BaseUpgradeabilityProxy with an initializer for initializing
- * implementation and init data.
+ * @dev Extends BaseUpgradeabilityProxy with an initializer for initializing implementation and init data.
  */
 contract InitializableUpgradeabilityProxy is BaseUpgradeabilityProxy {
+    
     /**
    * @dev Contract initializer.
    * @param _logic Address of the initial implementation.

@@ -41,4 +41,9 @@ contract ILendingPoolAddressesProvider {
     function getLendingRateOracle() public view returns (address);
     function setLendingRateOracle(address _lendingRateOracle) public;
 
+    function getSIGHTreasury() public view returns (address);                                 //  ADDED FOR SIGH FINANCE 
+    function setSIGHTreasury(address _SIGHTreasury) public;                                   //  ADDED FOR SIGH FINANCE 
+
+    function getSIGHDistributionHandler() public view returns (address);                      //  ADDED FOR SIGH FINANCE 
+    function setSIGHDistributionHandler(address _SIGHDistributionHandler) public;             //  ADDED FOR SIGH FINANCE 
 }

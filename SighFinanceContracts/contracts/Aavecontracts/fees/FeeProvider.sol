@@ -8,7 +8,7 @@ import "../libraries/WadRayMath.sol";
 /**
 * @title FeeProvider contract
 * @notice Implements calculation for the fees applied by the protocol
-* @author Aave
+* @author Aave, SIGH Finance
 **/
 contract FeeProvider is IFeeProvider, VersionedInitializable {
 

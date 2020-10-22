@@ -19,7 +19,7 @@ import "../interfaces/IPriceOracleGetter.sol";
 
 /**
 * @title LendingPoolLiquidationManager contract
-* @author Aave
+* @author Aave, SIGH Finance
 * @notice Implements the liquidation function.
 **/
 contract LendingPoolLiquidationManager is ReentrancyGuard, VersionedInitializable {

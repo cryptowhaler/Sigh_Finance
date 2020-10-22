@@ -14,9 +14,10 @@ import "../libraries/WadRayMath.sol";
  * @title Aave ERC20 Itokens (modified by SIGH Finance)
  *
  * @dev Implementation of the interest bearing token for the protocol.
- * @author Aave (modified by SIGH Finance)
+ * @author Aave, SIGH Finance (modified by SIGH Finance)
  */
 contract IToken is ERC20, ERC20Detailed {
+
     using WadRayMath for uint256;
 
     uint256 public constant UINT_MAX_VALUE = uint256(-1);
@@ -380,7 +381,7 @@ contract IToken is ERC20, ERC20Detailed {
         uint256 previousPrincipalBalance = super.balanceOf(_user);                                         // Current IToken Balance
         uint256 balanceIncrease = balanceOf(_user).sub(previousPrincipalBalance);                          //calculate the accrued interest since the last accumulation
         _mint(_user, balanceIncrease);                                                                     //mints an amount of tokens equivalent to the amount accumulated
-        uint256 index = userIndexes[_user] = core.getReserveNormalizedIncome(underlyingAssetAddress);      //updates the user index
+        uint256 index = userIndexes[_user] = core.getInstrumentNormalizedIncome(underlyingAssetAddress);      //updates the user index
         return ( previousPrincipalBalance, previousPrincipalBalance.add(balanceIncrease), balanceIncrease, index);
     }
 
@@ -421,7 +422,7 @@ contract IToken is ERC20, ERC20Detailed {
     * @return the interest rate accrued
     **/
     function calculateCumulatedBalanceInternal( address _user,  uint256 _balance) internal view returns (uint256) {
-        return _balance.wadToRay().rayMul(core.getReserveNormalizedIncome(underlyingAssetAddress)).rayDiv(userIndexes[_user]).rayToWad();
+        return _balance.wadToRay().rayMul(core.getInstrumentNormalizedIncome(underlyingAssetAddress)).rayDiv(userIndexes[_user]).rayToWad();
     }
 
 
@@ -497,7 +498,7 @@ contract IToken is ERC20, ERC20Detailed {
         if(currentSupplyPrincipal == 0){
             return 0;
         }
-        return currentSupplyPrincipal.wadToRay().rayMul( core.getReserveNormalizedIncome(underlyingAssetAddress) ) .rayToWad();
+        return currentSupplyPrincipal.wadToRay().rayMul( core.getInstrumentNormalizedIncome(underlyingAssetAddress) ) .rayToWad();
     }
 
     /**

@@ -14,7 +14,7 @@ import "./LendingPoolCore.sol";
 
 /**
 * @title LendingPoolDataProvider contract 
-* @author Aave 
+* @author Aave, SIGH Finance 
 * @notice Implements functions to fetch data from the core, and aggregate them in order to allow computation on the compounded balances and the account balances in ETH
 **/
 contract LendingPoolDataProvider is VersionedInitializable {

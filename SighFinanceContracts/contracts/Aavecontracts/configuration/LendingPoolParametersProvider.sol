@@ -6,7 +6,7 @@ import "./UintStorage.sol";
 
 /**
 * @title LendingPoolParametersProvider (Taken from Aave, Used by SIGH Finance)
-* @author Aave
+* @author Aave, SIGH Finance
 * @notice stores the configuration parameters of the Lending Pool contract
 **/
 

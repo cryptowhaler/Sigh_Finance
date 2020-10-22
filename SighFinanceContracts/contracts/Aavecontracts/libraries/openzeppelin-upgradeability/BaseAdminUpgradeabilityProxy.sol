@@ -4,13 +4,12 @@ import "./UpgradeabilityProxy.sol";
 
 /**
  * @title BaseAdminUpgradeabilityProxy
- * @dev This contract combines an upgradeability proxy with an authorization
- * mechanism for administrative tasks.
- * All external functions in this contract must be guarded by the
- * `ifAdmin` modifier. See ethereum/solidity#3864 for a Solidity
+ * @dev This contract combines an upgradeability proxy with an authorization mechanism for administrative tasks.
+ * All external functions in this contract must be guarded by the `ifAdmin` modifier. See ethereum/solidity#3864 for a Solidity
  * feature proposal that would enable this to be done automatically.
  */
 contract BaseAdminUpgradeabilityProxy is BaseUpgradeabilityProxy {
+
     /**
    * @dev Emitted when the administration has been transferred.
    * @param previousAdmin Address of the previous admin.
@@ -20,16 +19,13 @@ contract BaseAdminUpgradeabilityProxy is BaseUpgradeabilityProxy {
 
     /**
    * @dev Storage slot with the admin of the contract.
-   * This is the keccak-256 hash of "eip1967.proxy.admin" subtracted by 1, and is
-   * validated in the constructor.
+   * This is the keccak-256 hash of "eip1967.proxy.admin" subtracted by 1, and is validated in the constructor.
    */
-
     bytes32 internal constant ADMIN_SLOT = 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103;
 
     /**
    * @dev Modifier to check whether the `msg.sender` is the admin.
-   * If it is, it will run the function. Otherwise, it will delegate the call
-   * to the implementation.
+   * If it is, it will run the function. Otherwise, it will delegate the call to the implementation.
    */
     modifier ifAdmin() {
         if (msg.sender == _admin()) {
@@ -65,8 +61,7 @@ contract BaseAdminUpgradeabilityProxy is BaseUpgradeabilityProxy {
     }
 
     /**
-   * @dev Upgrade the backing implementation of the proxy.
-   * Only the admin can call this function.
+   * @dev Upgrade the backing implementation of the proxy. Only the admin can call this function.
    * @param newImplementation Address of the new implementation.
    */
     function upgradeTo(address newImplementation) external ifAdmin {

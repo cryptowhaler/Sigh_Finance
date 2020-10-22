@@ -12,7 +12,7 @@ pragma solidity >=0.4.24 <0.6.0;
  * a parent initializer twice, or ensure that all initializers are idempotent,
  * because this is not dealt with automatically as with constructors.
  *
- * @author Aave, inspired by the OpenZeppelin Initializable contract
+ * @author Aave, SIGH Finance, inspired by the OpenZeppelin Initializable contract
  */
 contract VersionedInitializable {
     /**

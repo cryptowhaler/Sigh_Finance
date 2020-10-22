@@ -16,7 +16,7 @@ import "../../lendingpool/LendingPoolCore.sol";
 
 /*************************************************************************************
 * @title MockLendingPoolCore contract
-* @author Aave
+* @author Aave, SIGH Finance
 * @notice This is a mock contract to test upgradeability of the AddressProvider
  *************************************************************************************/
 
