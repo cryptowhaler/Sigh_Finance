@@ -5,14 +5,14 @@ import "../libraries/openzeppelin-upgradeability/VersionedInitializable.sol";
 import "./UintStorage.sol";
 
 /**
-* @title LendingPoolParametersProvider (Taken from Aave, Used by SIGH Finance)
+* @title LendingPoolParametersProvider (Taken from Aave, Modified by SIGH Finance)
 * @author Aave, SIGH Finance
 * @notice stores the configuration parameters of the Lending Pool contract
 **/
 
 contract LendingPoolParametersProvider is VersionedInitializable {
 
-    uint256 private constant MAX_STABLE_RATE_BORROW_SIZE_PERCENT = 25;
+    uint256 private constant MAX_STABLE_RATE_BORROW_SIZE_PERCENT = 25;    
     uint256 private constant REBALANCE_DOWN_RATE_DELTA = (1e27)/5;
     uint256 private constant FLASHLOAN_FEE_TOTAL = 35;
     uint256 private constant FLASHLOAN_FEE_PROTOCOL = 3000;
