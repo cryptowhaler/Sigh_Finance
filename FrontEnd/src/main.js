@@ -41,10 +41,11 @@ import '@/assets/css/colors.css';
 // by passing in our Link and a new instance of InMemoryCache (recommended caching solution). Finally, 
 // we are adding ApolloProvider to the Vue app.
 
-
+// http://graph.marlin.pro
 // const header = { Authorization: 'Bearer ' + VegaKeys.token, };
 const graphQL_subscription = new WebSocketLink({    //Link for Subscription and defining headers
-  uri: 'wss://api.thegraph.com/subgraphs/name/cryptowhaler/sigh-finance-kovan',
+  uri: 'wss://graph.marlin.pro/subgraphs/name/cryptowhaler/sigh-finance-kovan',
+  // uri: 'wss://api.thegraph.com/subgraphs/name/cryptowhaler/sigh-finance-kovan',
   options: {
     reconnect: true,
     timeout:300000,

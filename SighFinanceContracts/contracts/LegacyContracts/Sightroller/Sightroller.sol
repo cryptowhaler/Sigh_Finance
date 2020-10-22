@@ -7,7 +7,7 @@ import "../PriceOracle.sol";
 import "./SightrollerInterface.sol";
 import "./SightrollerStorage.sol";
 import "./Unitroller.sol";
-import "./SightrollerSIGHDistributionHandler.sol";
+import "../../SIGH/SightrollerSIGHDistributionHandler.sol";
 
 
 /**

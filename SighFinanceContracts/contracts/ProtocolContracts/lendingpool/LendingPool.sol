@@ -12,7 +12,7 @@ import "../libraries/EthAddressLib.sol";
 
 import "../configuration/LendingPoolAddressesProvider.sol";
 import "../configuration/LendingPoolParametersProvider.sol";
-import "../tokenization/IToken.sol";
+import "../IToken.sol";
 
 import "../interfaces/IFeeProvider.sol";
 import "../flashloan/interfaces/IFlashLoanReceiver.sol";

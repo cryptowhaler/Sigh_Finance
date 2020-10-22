@@ -9,7 +9,7 @@ import "../libraries/openzeppelin-upgradeability/VersionedInitializable.sol";
 import "../configuration/LendingPoolAddressesProvider.sol";
 import "../configuration/LendingPoolParametersProvider.sol";
 
-import "../tokenization/IToken.sol";
+import "../IToken.sol";
 
 import "../libraries/CoreLibrary.sol";
 import "../libraries/WadRayMath.sol";

@@ -11,7 +11,7 @@ import "../configuration/LendingPoolAddressesProvider.sol";
 import "../interfaces/ILendingRateOracle.sol";
 import "../interfaces/I_InstrumentInterestRateStrategy.sol";
 import "../libraries/WadRayMath.sol";
-import "../tokenization/IToken.sol";
+import "../IToken.sol";
 import "../libraries/EthAddressLib.sol";
 
 /**

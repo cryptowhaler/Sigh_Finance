@@ -32,10 +32,11 @@
   "dependencies": {
     "@0x/contracts-exchange-forwarder": "^4.2.7",
     "@0x/contracts-exchange-libs": "^4.3.7",
-    "@openzeppelin/contracts": "^3.1.0",
+    "@openzeppelin/contracts": "^2.5.1",
     "chainlink": "^0.8.2",
     "dotenv": "^8.2.0",
     "eth-saddle": "^0.1.17",
+    "openzeppelin-solidity": "^3.2.0",
     "truffle-hdwallet-provider": "^1.0.17"
   },
   "resolutions": {

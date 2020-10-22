@@ -3,12 +3,12 @@ pragma solidity ^0.5.0;
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 
-import "../configuration/LendingPoolAddressesProvider.sol";
-import "../lendingpool/LendingPool.sol";
-import "../lendingpool/LendingPoolDataProvider.sol";
-import "../lendingpool/LendingPoolCore.sol";
+import "./configuration/LendingPoolAddressesProvider.sol";
+import "./lendingpool/LendingPool.sol";
+import "./lendingpool/LendingPoolDataProvider.sol";
+import "./lendingpool/LendingPoolCore.sol";
 
-import "../libraries/WadRayMath.sol";
+import "./libraries/WadRayMath.sol";
 
 /**
  * @title Aave ERC20 Itokens (modified by SIGH Finance)

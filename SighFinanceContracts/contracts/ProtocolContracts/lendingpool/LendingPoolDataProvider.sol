@@ -8,7 +8,7 @@ import "../configuration/LendingPoolAddressesProvider.sol";
 import "../libraries/WadRayMath.sol";
 import "../interfaces/IPriceOracleGetter.sol";
 import "../interfaces/IFeeProvider.sol";
-import "../tokenization/IToken.sol";
+import "../IToken.sol";
 
 import "./LendingPoolCore.sol";
 
