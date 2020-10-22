@@ -12,8 +12,7 @@ import "../libraries/EthAddressLib.sol";
 * @title WalletBalanceProvider contract
 * @author Aave, SIGH Finance, influenced by https://github.com/wbobeirne/eth-balance-checker/blob/master/contracts/BalanceChecker.sol
 * @notice Implements a logic of getting multiple tokens balance for one user address
-* @dev NOTE: THIS CONTRACT IS NOT USED WITHIN THE AAVE PROTOCOL. It's an accessory contract used to reduce the number of calls
-* towards the blockchain from the Aave backend.
+* @dev NOTE: THIS CONTRACT IS NOT USED WITHIN THE SIGH FINANCE PROTOCOL. It's an accessory contract used to reduce the number of calls towards the blockchain from the Aave backend.
 **/
 contract WalletBalanceProvider {
 
@@ -22,10 +21,9 @@ contract WalletBalanceProvider {
     LendingPoolAddressesProvider provider;
 
     constructor(LendingPoolAddressesProvider _provider) public {
-
         provider = _provider;
-
     }
+
     /**
     @dev Fallback function, don't accept any ETH
     **/
@@ -35,7 +33,6 @@ contract WalletBalanceProvider {
 
     /**
     @dev Check the token balance of a wallet in a token contract
-
     Returns the balance of the token for user. Avoids possible errors:
       - return 0 on non-contract address
     **/
@@ -50,28 +47,28 @@ contract WalletBalanceProvider {
 
 
     /**
-    @dev provides balances of user wallet for all reserves available on the pool
+    @dev provides balances of user wallet for all instruments available on the pool
     */
     function getUserWalletBalances(address _user) public view returns (address[] memory, uint256[] memory) {
 
         LendingPoolCore core = LendingPoolCore(provider.getLendingPoolCore());
 
-        address[] memory reserves = core.getReserves();
+        address[] memory instruments = core.getInstruments();
 
-        uint256[] memory balances = new uint256[](reserves.length);
+        uint256[] memory balances = new uint256[](instruments.length);
 
-        for (uint256 j = 0; j < reserves.length; j++) {
-            if(!core.getReserveIsActive(reserves[j])){
+        for (uint256 j = 0; j < instruments.length; j++) {
+            if(!core.getInstrumentIsActive(instruments[j])){
                 balances[j] = 0;
                 continue;
             }
-            if (reserves[j] != EthAddressLib.ethAddress()) {
-                balances[j] = balanceOf(_user, reserves[j]);
+            if (instruments[j] != EthAddressLib.ethAddress()) {
+                balances[j] = balanceOf(_user, instruments[j]);
             } else {
                 balances[j] = _user.balance; // ETH balance
             }
         }
 
-        return (reserves, balances);
+        return (instruments, balances);
     }
 }

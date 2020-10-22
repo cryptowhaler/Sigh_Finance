@@ -3,8 +3,10 @@ pragma solidity ^0.5.0;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
-import "../interfaces/IFlashLoanReceiver.sol";
+
 import "../../interfaces/ILendingPoolAddressesProvider.sol";
+import "../interfaces/IFlashLoanReceiver.sol";
+
 import "../../libraries/EthAddressLib.sol";
 
 contract FlashLoanReceiverBase is IFlashLoanReceiver {
@@ -21,23 +23,31 @@ contract FlashLoanReceiverBase is IFlashLoanReceiver {
     function () external payable {
     }
 
-    function transferFundsBackToPoolInternal(address _reserve, uint256 _amount) internal {
+// ################################################################################################
+// ####   INTERNAL FUNCTION : TRANSFERS THE LOAN AMOUNT BACK TO THE LENDINGPOOLCORE CONTRACT   ####
+// ################################################################################################
+
+    function transferFundsBackToPoolInternal(address _instrument, uint256 _amount) internal {
         address payable core = addressesProvider.getLendingPoolCore();
-        transferInternal(core,_reserve, _amount);
+        transferInternal(core,_instrument, _amount);
     }
 
-    function transferInternal(address payable _destination, address _reserve, uint256  _amount) internal {
-        if(_reserve == EthAddressLib.ethAddress()) {
+    function transferInternal(address payable _destination, address _instrument, uint256  _amount) internal {
+        if(_instrument == EthAddressLib.ethAddress()) {
             _destination.call.value(_amount)("");
             return;
         }
-        IERC20(_reserve).safeTransfer(_destination, _amount);
+        IERC20(_instrument).safeTransfer(_destination, _amount);
     }
 
-    function getBalanceInternal(address _target, address _reserve) internal view returns(uint256) {
-        if(_reserve == EthAddressLib.ethAddress()) {
+// ################################################################################################
+// ####   INTERNAL VIEW FUNCTION : Instrument balance of the target address   #####################
+// ################################################################################################
+
+    function getBalanceInternal(address _target, address _instrument) internal view returns(uint256) {
+        if(_instrument == EthAddressLib.ethAddress()) {
             return _target.balance;
         }
-        return IERC20(_reserve).balanceOf(_target);
+        return IERC20(_instrument).balanceOf(_target);
     }
 }

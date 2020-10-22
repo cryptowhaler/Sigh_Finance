@@ -18,7 +18,7 @@ import "../libraries/EthAddressLib.sol";
 ///  - The Kyber Proxy is approved for a list of tokens in construction, which will be later burnt
 ///  - At any moment, anyone can call distribute() with a list of token addresses in order to distribute
 ///    the accumulated token amounts and/or ETH in this contract to all the receivers with percentages
-///  - If the address(0) is used as receiver, this contract will trade in Kyber to tokenToBurn (LEND)
+///  - If the address(0) is used as receiver, this contract will trade in Kyber to tokenToBurn (SIGH)
 ///    and burn it (sending to address(0) the tokenToBurn)
 
 contract TokenDistributor is VersionedInitializable {
@@ -49,7 +49,7 @@ contract TokenDistributor is VersionedInitializable {
     uint256 public constant DISTRIBUTION_BASE = 10000;      /// Instead of using 100 for percentages, higher base to have more precision in the distribution
 
     IKyberNetworkProxyInterface public kyberProxy;          /// Kyber Proxy contract to trade tokens/ETH to tokenToBurn
-    address public tokenToBurn;                             /// The address of the token to burn (LEND token)
+    address public tokenToBurn;                             /// The address of the token to burn (SIGH token)
 
     /// @notice Address to send tokens to "burn".
     /// Because of limitations on OZ ERC20, on dev it's needed to use the 0x00000...1 address instead of address(0)

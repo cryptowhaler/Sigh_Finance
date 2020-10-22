@@ -170,9 +170,9 @@ contract LendingPoolCore is VersionedInitializable {
         }
     }    
 
-// ########################################################################################################################
-// ###### CALLED BY BORROW() FROM LENDINGPOOL CONTRACT - alongwith the internal functios that only this function uses #####
-// ########################################################################################################################
+// #########################################################################################################################
+// ###### CALLED BY BORROW() FROM LENDINGPOOL CONTRACT - alongwith the internal functions that only this function uses #####
+// #########################################################################################################################
 
     /**
     * @dev updates the state of the core as a consequence of a borrow action.
@@ -346,26 +346,7 @@ contract LendingPoolCore is VersionedInitializable {
         user.lastUpdateTimestamp = uint40(block.timestamp);
     }
 
-    /**
-    * @dev transfers the protocol fees to the fees collection address
-    * @param _token the address of the token (instrument) being transferred
-    * @param _user the address of the user from where the transfer is happening
-    * @param _amount the amount being transferred
-    * @param _destination the fee receiver address
-    **/
-    function transferToFeeCollectionAddress( address _token, address _user, uint256 _amount, address _destination ) external payable onlyLendingPool {
-        address payable feeAddress = address(uint160(_destination)); //cast the address to payable
 
-        if (_token != EthAddressLib.ethAddress()) {
-            require( msg.value == 0, "User is sending ETH along with the ERC20 transfer. Check the value attribute of the transaction" );
-            ERC20(_token).safeTransferFrom(_user, feeAddress, _amount);
-        } 
-        else {
-            require(msg.value >= _amount, "The amount and the value sent to deposit do not match");
-            (bool result, ) = feeAddress.call.value(_amount).gas(50000)("");
-            require(result, "Transfer of ETH failed");
-        }
-    }
 
 // #####################################################################################################################################
 // ###### CALLED BY SWAPBORROWRATEMODE() FROM LENDINGPOOL CONTRACT - alongwith the internal functions that only this function uses #####
@@ -668,6 +649,32 @@ contract LendingPoolCore is VersionedInitializable {
             require(result, "Transfer of ETH failed");
         }
     }
+
+// ############################################################################################################## 
+// ###### CALLED BY REPAY() IN LENDINGPOOL CONTRACT : transfers the fee to TokenDistributor Contract ############
+// ################################################################### ########################################## 
+
+    /**
+    * @dev transfers the protocol fees to the fees collection address
+    * @param _token the address of the token (instrument) being transferred
+    * @param _user the address of the user from where the transfer is happening
+    * @param _amount the amount being transferred
+    * @param _destination the fee receiver address
+    **/
+    function transferToFeeCollectionAddress( address _token, address _user, uint256 _amount, address _destination ) external payable onlyLendingPool {
+        address payable feeAddress = address(uint160(_destination)); //cast the address to payable
+
+        if (_token != EthAddressLib.ethAddress()) {
+            require( msg.value == 0, "User is sending ETH along with the ERC20 transfer. Check the value attribute of the transaction" );
+            ERC20(_token).safeTransferFrom(_user, feeAddress, _amount);
+        } 
+        else {
+            require(msg.value >= _amount, "The amount and the value sent to deposit do not match");
+            (bool result, ) = feeAddress.call.value(_amount).gas(50000)("");
+            require(result, "Transfer of ETH failed");
+        }
+    }
+
 
 // #################################################################
 // ################     PUBLIC VIEW FUNCTIONS       ################
@@ -1361,9 +1368,9 @@ contract LendingPoolCore is VersionedInitializable {
 
 
 
-// #####################################################################
-// ################    FREQUENTLY INTERNAL FUNCTIONS    ################
-// #####################################################################
+// ##########################################################################
+// ################    FREQUENTLY USED INTERNAL FUNCTIONS    ################
+// ##########################################################################
 
 
 

@@ -1,12 +1,14 @@
 pragma solidity ^0.5.0;
 
-import "../interfaces/I_InstrumentInterestRateStrategy.sol";
-import "../libraries/WadRayMath.sol";
 import "../configuration/LendingPoolAddressesProvider.sol";
 import "./LendingPoolCore.sol";
+
+import "../interfaces/I_InstrumentInterestRateStrategy.sol";
 import "../interfaces/ILendingRateOracle.sol";
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "../libraries/WadRayMath.sol";
+
 
 /**
 * @title DefaultInstrumentInterestRateStrategy contract
@@ -29,22 +31,11 @@ contract DefaultInstrumentInterestRateStrategy is I_InstrumentInterestRateStrate
     // Added as a constant here for gas optimizations expressed in ray
     uint256 public constant EXCESS_UTILIZATION_RATE = 0.2 * 1e27;
 
-
-
-    //base variable borrow rate when Utilization rate = 0. Expressed in ray
-    uint256 public baseVariableBorrowRate;
-
-    //slope of the variable interest curve when utilization rate > 0 and <= OPTIMAL_UTILIZATION_RATE. Expressed in ray
-    uint256 public variableRateSlope1;
-
-    //slope of the variable interest curve when utilization rate > OPTIMAL_UTILIZATION_RATE. Expressed in ray
-    uint256 public variableRateSlope2;
-
-    //slope of the stable interest curve when utilization rate > 0 and <= OPTIMAL_UTILIZATION_RATE. Expressed in ray
-    uint256 public stableRateSlope1;
-
-    //slope of the stable interest curve when utilization rate > OPTIMAL_UTILIZATION_RATE. Expressed in ray
-    uint256 public stableRateSlope2;
+    uint256 public baseVariableBorrowRate;          //base variable borrow rate when Utilization rate = 0. Expressed in ray
+    uint256 public variableRateSlope1;              //slope of the variable interest curve when utilization rate > 0 and <= OPTIMAL_UTILIZATION_RATE. Expressed in ray
+    uint256 public variableRateSlope2;              //slope of the variable interest curve when utilization rate > OPTIMAL_UTILIZATION_RATE. Expressed in ray
+    uint256 public stableRateSlope1;                //slope of the stable interest curve when utilization rate > 0 and <= OPTIMAL_UTILIZATION_RATE. Expressed in ray
+    uint256 public stableRateSlope2;                //slope of the stable interest curve when utilization rate > OPTIMAL_UTILIZATION_RATE. Expressed in ray
     address public instrument;
 
     constructor( address _instrument, LendingPoolAddressesProvider _provider, uint256 _baseVariableBorrowRate, uint256 _variableRateSlope1,uint256 _variableRateSlope2, uint256 _stableRateSlope1, uint256 _stableRateSlope2 ) public {
