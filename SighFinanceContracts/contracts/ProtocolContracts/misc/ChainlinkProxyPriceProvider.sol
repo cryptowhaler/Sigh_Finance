@@ -13,11 +13,15 @@ import "../libraries/EthAddressLib.sol";
 /// - Owned by the Aave governance system, allowed to add sources for assets, replace them and change the fallbackOracle
 contract ChainlinkProxyPriceProvider is IPriceOracleGetter, Ownable {
 
+    mapping(address => IChainlinkAggregator) private assetsSources;
+    IPriceOracleGetter private fallbackOracle;
+
     event AssetSourceUpdated(address indexed asset, address indexed source);
     event FallbackOracleUpdated(address indexed fallbackOracle);
 
-    mapping(address => IChainlinkAggregator) private assetsSources;
-    IPriceOracleGetter private fallbackOracle;
+// #######################
+// ##### CONSTRUCTOR #####
+// #######################
 
     /// @notice Constructor
     /// @param _assets The addresses of the assets
@@ -28,6 +32,10 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter, Ownable {
         internalSetFallbackOracle(_fallbackOracle);
         internalSetAssetsSources(_assets, _sources);
     }
+
+// ####################################
+// ##### SET THE PRICEFEED SOURCE #####
+// ####################################
 
     /// @notice External function called by the Aave governance to set or replace sources of assets
     /// @param _assets The addresses of the assets
@@ -42,6 +50,10 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter, Ownable {
     function setFallbackOracle(address _fallbackOracle) external onlyOwner {
         internalSetFallbackOracle(_fallbackOracle);
     }
+
+// ##############################
+// ##### INTERNAL FUNCTIONS #####
+// ##############################
 
     /// @notice Internal function to set the sources for each asset
     /// @param _assets The addresses of the assets
@@ -61,21 +73,27 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter, Ownable {
         emit FallbackOracleUpdated(_fallbackOracle);
     }
 
+// ##########################
+// ##### VIEW FUNCTIONS #####
+// ##########################
+
     /// @notice Gets an asset price by address
     /// @param _asset The asset address
     function getAssetPrice(address _asset) public view returns(uint256) {
         IChainlinkAggregator source = assetsSources[_asset];
         if (_asset == EthAddressLib.ethAddress()) {
             return 1 ether;
-        } else {
-            // If there is no registered source for the asset, call the fallbackOracle
-            if (address(source) == address(0)) {
+        } 
+        else {
+            if (address(source) == address(0)) {                // If there is no registered source for the asset, call the fallbackOracle
                 return IPriceOracleGetter(fallbackOracle).getAssetPrice(_asset);
-            } else {
+            } 
+            else {
                 int256 _price = IChainlinkAggregator(source).latestAnswer();
                 if (_price > 0) {
                     return uint256(_price);
-                } else {
+                } 
+                else {
                     return IPriceOracleGetter(fallbackOracle).getAssetPrice(_asset);
                 }
             }

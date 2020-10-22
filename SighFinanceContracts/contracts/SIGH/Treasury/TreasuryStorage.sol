@@ -35,7 +35,7 @@ contract TreasuryV1Storage {
 
     address public pendingAdmin;
 
-    /// @notice Reference to token to drip (immutable)
+    /// @notice Reference to token to burn / trade (immutable)
     EIP20Interface public sigh_token;
 
     /// @notice Target to receive dripped tokens (immutable)
@@ -49,9 +49,7 @@ contract TreasuryV1Storage {
     
 
     mapping(address => uint) SIGH_Transferred;
-
     mapping (address => uint) TokenBalances;
-
     mapping (address => uint)  totalDrippedAmount;  // Stores the total amount of each token dripped
 
 }

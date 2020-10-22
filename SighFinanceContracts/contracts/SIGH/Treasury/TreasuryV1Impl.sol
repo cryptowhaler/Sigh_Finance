@@ -11,7 +11,7 @@ import "./EIP20InterfaceSIGH.sol";
  * @title SighFinance's Treasury Contract
  * @author SighFinance
  */
-contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
+contract Treasury TreasuryV1Storage   {
     
     uint public maxTransferAmount;
     uint public coolDownPeriod = 2; // 5 min
@@ -261,20 +261,21 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         
         if (isAllowed == 0) {
             is_SIGH_BurnAllowed = false;
+            updateSIGHBurnSpeedInternal(0);
         }
         else {
             is_SIGH_BurnAllowed = true;
         }
-        SIGHBurnSpeed = 0;
-
         emit SIGHBurnAllowedChanged(prevStatus, is_SIGH_BurnAllowed, block.number);
     }
         
-    function updateSIGHBurnSpeed(uint newBurnSpeed) public returns (bool) {
+    function updateSIGHBurnSpeed(uint newBurnSpeed) public {
         require (msg.sender == admin,'Only Admin can update SIGH Burn Speed');
         require (is_SIGH_BurnAllowed,'SIGH Burn is currently not allowed by the Treasury.');
-        
-        
+        updateSIGHBurnSpeedInternal(newBurnSpeed);
+    }
+
+    function updateSIGHBurnSpeedInternal(uint newBurnSpeed) internal {
         if ( SIGHBurnSpeed > 0 ) {
             burnSIGHTokens();
         } 
@@ -284,7 +285,6 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         
         require (SIGHBurnSpeed == newBurnSpeed, 'New SIGH Burn Speed not initialized properly');
         emit SIGHBurnSpeedChanged(prevBurnSpeed, SIGHBurnSpeed, block.number);
-        return true;
     }
 
     function burnSIGHTokens() public returns (bool) {
@@ -314,18 +314,6 @@ contract Treasury is TreasuryInterfaceV1,TreasuryV1Storage   {
         return true;
     }
 
-
-// ########################################################
-// ###########   BECOMES THE NEW IMPLEMENTATION  ##########
-// ########################################################
-
-      // TreasuryCore is the storage Implementation (Function calls get redirected here from there)
-  // When new Functionality contract is being initiated (Treasury Impl Contract is updated), we use this function
-  // It is used to make the new implementation to be accepted by calling a function from TreasuryCore.
-    function _become(TreasuryCore treasuryCoreAddress) public {
-        require(msg.sender == treasuryCoreAddress.admin(), "only Treasury Code Address's admin can change brains");
-        require(treasuryCoreAddress._acceptImplementation() == 0, "change not authorized");
-    }
 
 // ########################################
 // ###########   VIEW FUNCTIONS  ##########
