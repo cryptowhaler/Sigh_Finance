@@ -7,6 +7,8 @@ import "./AggregatorV3Interface.sol";
 
 contract SimplePriceOracle is PriceOracle {
 
+    bool public constant isPriceOracle = true;
+
     AggregatorV3Interface internal LINK_ETH = AggregatorV3Interface(0x3Af8C569ab77af5230596Acf0E8c2F9351d24C38); //ChainLink - ETH
     AggregatorV3Interface internal SIGH_USD = AggregatorV3Interface(0x6135b13325bfC4B00278B4abC5e20bbce2D6580e); //Bitcoin - USD
     AggregatorV3Interface internal GSIGH_USD = AggregatorV3Interface(0x777A68032a88E5A84678A77Af2CD65A7b3c0775a); //DAI - USD
@@ -25,14 +27,14 @@ contract SimplePriceOracle is PriceOracle {
     uint public currentCLock;
 
 
-    function getUnderlyingPrice(CToken cToken) public view returns (uint) {
+    function getUnderlyingPrice(IToken iToken) public view returns (uint) {
         
         return pricesList[currentCLock];
     }
 
     
 
-    function getUnderlyingPriceRefresh(CToken cToken) public returns (uint) {
+    function getUnderlyingPriceRefresh(IToken iToken) public returns (uint) {
         
         if (!initialized) {
             initializePrices();

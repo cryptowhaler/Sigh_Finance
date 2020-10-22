@@ -3,25 +3,10 @@
   "abi": [
     {
       "constant": true,
-      "inputs": [],
-      "name": "isPriceOracle",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
       "inputs": [
         {
-          "internalType": "contract CToken",
-          "name": "cToken",
+          "internalType": "contract IToken",
+          "name": "iToken",
           "type": "address"
         }
       ],
@@ -36,27 +21,48 @@
       "payable": false,
       "stateMutability": "view",
       "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "contract IToken",
+          "name": "iToken",
+          "type": "address"
+        }
+      ],
+      "name": "getUnderlyingPriceRefresh",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[{\"internalType\":\"contract CToken\",\"name\":\"cToken\",\"type\":\"address\"}],\"name\":\"getUnderlyingPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isPriceOracle\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{\"getUnderlyingPrice(address)\":{\"params\":{\"cToken\":\"The cToken to get the underlying price of\"},\"return\":\"The underlying asset price mantissa (scaled by 1e18). Zero means the price is unavailable.\"}}},\"userdoc\":{\"methods\":{\"getUnderlyingPrice(address)\":{\"notice\":\"Get the underlying price of a cToken asset\"}}}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/PriceOracle.sol\":\"PriceOracle\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ErrorReporter.sol\":{\"keccak256\":\"0xecacd5920a722868d343c2577f569636d452d99e5002a29034ccac3dc2359d7f\",\"urls\":[\"bzz-raw://7f8b7c017754046178211d452c6d96fdf6e026fa76d00afb001afb4c1ca81953\",\"dweb:/ipfs/QmSG3rLMdyYTMq7C7ZsPX53B23zGZRB9ifAX3S3qCnpG5p\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/InterestRateModels/InterestRateModel.sol\":{\"keccak256\":\"0xb516fd3b78e7f3f4d1631b8dd50d167da4d73ca870cd09d67efcffdea2ed3b05\",\"urls\":[\"bzz-raw://3427725de8a149882669f60a3fbf179f4ef9ee97723ca47e91f39b8818b548d3\",\"dweb:/ipfs/QmWimP2MCejqdsER2SNBmQSinAM4mtjUHY14KwBtS8rE2Q\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Math/CarefulMath.sol\":{\"keccak256\":\"0x0647348f27e41d22555d99eebd217dee02a4d737df6accd7cce5347a7487c7de\",\"urls\":[\"bzz-raw://08882d26c11a6d240949a5afba79a74694a8b651093c05c5ae4cc359a0181c22\",\"dweb:/ipfs/QmVXb1tDswuhMRNuDLajzohdkvx2kBmqu1Rxn1BAKUfhkV\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Math/Exponential.sol\":{\"keccak256\":\"0xde2e32d9268c376a74ad4cc82e11dfed28ce4fbcaff72e75e03cf59afafd2971\",\"urls\":[\"bzz-raw://8f8b1bdbee4a596c98066597d143399f386ee5314ba5d03aab0d7659a5d0d241\",\"dweb:/ipfs/QmaYfxmrbPVqVkrUZyhkcrxrCaA3i3aoQ7iQuDLbK3LEVo\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/PriceOracle.sol\":{\"keccak256\":\"0xca16b0fff74ee5d5b4cd64fb5957d669a22e6d15d57308a60b514174dce55d58\",\"urls\":[\"bzz-raw://4be856df7dc9c9b973e9c4e07f43dc8733fe64b1bc88a113cb2db8ca4b86007c\",\"dweb:/ipfs/QmVNREv5YubsUnGpDrXXEhee9e6BY3b6RYHxGkXd6cZYEo\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Sightroller/SightrollerInterface.sol\":{\"keccak256\":\"0xc32a0616c6a3bc2a252a8a42be7b159c6c15da7fec23ed8c62f8dd83ab965c63\",\"urls\":[\"bzz-raw://a4c6e06f1e34b0a248253ff9eb50503d75d8a98dfb0d137d6d37c8d4075a8f19\",\"dweb:/ipfs/QmaAgB56NU8fZmiTjxZHj7xTD28vURjaaiZJEj8TidU5Yd\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CToken.sol\":{\"keccak256\":\"0xfb9ff80b893b2706c256e5a30224d6177daba81222c2f7f6417029f5569e52fd\",\"urls\":[\"bzz-raw://7aadfd9d6f0cd575565d8e255eae51bdcbb76ac9769fdf61a81d9bdda48a820b\",\"dweb:/ipfs/QmXuPYknit7BmWQt81SFo1ykEgeQhenU1XBM4F5cmtnMw2\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CTokenInterfaces.sol\":{\"keccak256\":\"0x2ad76eb92f25980603fe536e7af20c5d7e8aa21d2ce72147aac1ffa6f2d468e9\",\"urls\":[\"bzz-raw://109809645b7dcac33fd3f2ebbb78da09497c871b903b18ba783f60a0e239e8df\",\"dweb:/ipfs/QmXBEvtSkTqnbu9vg7WeYq8JLv8fQ86g7wMALVmLCNkt2z\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin/EIP20Interface.sol\":{\"keccak256\":\"0xfd8ed2eac6d0b4d9ee6b32628ba68bae17544b66f190a5f7ce0c6ad024579dc8\",\"urls\":[\"bzz-raw://701be308137fe36f221f1d7c815247a272638df40917e7d1456b3b16e8402897\",\"dweb:/ipfs/QmPDkPoKiWXMjwpGa65JHBjo5NH8AA3q1nMhsewfUZHjpx\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin/EIP20NonStandardInterface.sol\":{\"keccak256\":\"0x9719f12e4b80b51147ac195553a198cf8b0c516e7e4d04fc324a23ed15cbafb2\",\"urls\":[\"bzz-raw://50c3ba49b80106c88b0171390aa4127edc86f7b29607abe3dc6d08eaefebf837\",\"dweb:/ipfs/QmP6AHNmFdwYwWUeHnhYi3drCQy4dpnnqUbkMeU3oAtokj\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[{\"internalType\":\"contract IToken\",\"name\":\"iToken\",\"type\":\"address\"}],\"name\":\"getUnderlyingPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"contract IToken\",\"name\":\"iToken\",\"type\":\"address\"}],\"name\":\"getUnderlyingPriceRefresh\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{\"getUnderlyingPrice(address)\":{\"params\":{\"iToken\":\"The iToken to get the underlying price of\"},\"return\":\"The underlying asset price mantissa (scaled by 1e18). Zero means the price is unavailable.\"}}},\"userdoc\":{\"methods\":{\"getUnderlyingPrice(address)\":{\"notice\":\"Get the underlying price of a cToken asset\"}}}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGH/PriceOracle.sol\":\"PriceOracle\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/IToken.sol\":{\"keccak256\":\"0xca02b651ef281878d7b50f7c01f49ab3c8a5600a04ea54b7be06ba71c49a8091\",\"urls\":[\"bzz-raw://87934fbe607e4da35e3fa8469b48a1f94ecbe4a3db22daa10f7af913d2541955\",\"dweb:/ipfs/Qmcvcz4JfWRaGzGUAwFm3pSjFgZNakxjJsUsTNnR5mzD9r\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/configuration/AddressStorage.sol\":{\"keccak256\":\"0x95101db0d1cf7f6c8efe9c6b8f415f0bae195c34f778b4606c13d364f6d984d1\",\"urls\":[\"bzz-raw://98474efaa62e0a27bac1ad897533e7a3f1f86e4038475a08e145da08a2b387b3\",\"dweb:/ipfs/QmQb2SJeYp8Sraw2G9yJfSaTNxnf3TgQQpwqEJMnSXHCZ5\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/configuration/LendingPoolAddressesProvider.sol\":{\"keccak256\":\"0x7bff28698d3051f785cb8777e8f46eb640d8c7b3062016036ba5fe2d2bf5aa0f\",\"urls\":[\"bzz-raw://5f7fb624ba95560c3e3eef7c356eb05efa4088aa5d8ec2b43158aed7ab135adc\",\"dweb:/ipfs/QmSTwAwFeDsEafS6Ek3BbChQF6xMAbRBhvc1u87rT8HrQ3\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/configuration/LendingPoolParametersProvider.sol\":{\"keccak256\":\"0xe9975f963d3e7690eefe0e65ae84df1944bd00fea1d43fdf4eeadf8f09bf4731\",\"urls\":[\"bzz-raw://954ce7ae0eef344ecc1451189a9c45d3fe4671e133753d8411a99e248e52e140\",\"dweb:/ipfs/QmR4G8VMWTKtqPDQSKTwz9kyvcdTrDycdUZ717S8dkcDcf\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/configuration/UintStorage.sol\":{\"keccak256\":\"0x3f74e899243a66d556c0fa81875ab95ed1e3af1909b0281d03fe89590b95121f\",\"urls\":[\"bzz-raw://be1e401270af075398906fbcaaa7d9d9b3e1a9018ee54617d92b0822eb875b27\",\"dweb:/ipfs/QmVC1qpZKqDb2cWegSpQYHzeraowgqfyryvguU19Qb8tgF\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/flashloan/interfaces/IFlashLoanReceiver.sol\":{\"keccak256\":\"0x819cd5a0cf7c4677e6e9cf90e61f0579367697efabd124f7ee4947f36f0563f1\",\"urls\":[\"bzz-raw://2eba4ef2c23ad0a5ec600dbea85b4dcad17f538b6305d6817fd665152ead2e03\",\"dweb:/ipfs/QmSi7U9jyTyU3pzm6cdKp2A9LXHwYxq9XksWev5GzUfZK9\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/interfaces/IFeeProvider.sol\":{\"keccak256\":\"0xefd33154c4d0fa175b6a78c06deca795c66a386e1f823d9e9b94b362c52bdfe4\",\"urls\":[\"bzz-raw://78e463db9777d766440c3046b4ba54b990af86ead654237518eb1cf4462a5865\",\"dweb:/ipfs/QmRdye1LYbrxgJqmaPAg3bjpU2tDZU5niXzWh62E7GVx8W\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/interfaces/ILendingPoolAddressesProvider.sol\":{\"keccak256\":\"0xa4a7b6fd34f9bfbc8403acc550c436c1a64a37937ea9e79e18afd67912252869\",\"urls\":[\"bzz-raw://0070468776cbe71b9eb7fd309efd2da8e6a24adcc543359272b42b8a5e01b09e\",\"dweb:/ipfs/QmRgNBbjC8SK3DsBnvznbF116YzmrwknADUKkoMuqJPTMJ\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/interfaces/ILendingRateOracle.sol\":{\"keccak256\":\"0x6d15213822a26f5f75a70d45b652ad179c417f50d3f7f42952acd1b631170972\",\"urls\":[\"bzz-raw://35346d875f7b882f14e5f5b8d33340afe8e29df8132a384df63985628079d7c9\",\"dweb:/ipfs/QmRQcrGHZTm1oDGnkmtYZwhHtn8SXqEiCYZfYvd7S2tFFY\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/interfaces/IPriceOracleGetter.sol\":{\"keccak256\":\"0x58175d019ae6f47b4941461ba27dfe6afcc20d146e9bdb7a949902c7330803f3\",\"urls\":[\"bzz-raw://e118d81569a54c84d66c259d46e481e32cba80f56e99300a6a083b554421be4f\",\"dweb:/ipfs/QmVhbHRHdV8y2XgqznQg4CJGF8anFQctGDSsANGNi8TER9\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/interfaces/I_InstrumentInterestRateStrategy.sol\":{\"keccak256\":\"0x899c17d33dabbc7dff8d750f00ce79980938a8eade9dee699969eae16f526f33\",\"urls\":[\"bzz-raw://6d58be974fccd745633559b7dc4cfd0cc9efdb707f93c443690a364f42f17f33\",\"dweb:/ipfs/QmXE891c3ZeJ6KZinq3HzozUwYSfcuvjdrVT7eZ3REsL77\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/lendingpool/LendingPool.sol\":{\"keccak256\":\"0xb55b3578cdc87642d0f9bc4edc0847b6f2495c3d81f8ee5c898dd5a0fdd261c6\",\"urls\":[\"bzz-raw://d91856fa2064c628235d5fc9f75f2b5d6d587990ca9d5dd62b50b44f4e8f4cd4\",\"dweb:/ipfs/QmbQdeHcMQyizqgAnPxU3DavBt2f1Hf4MA4zt6a3Ho6k55\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/lendingpool/LendingPoolCore.sol\":{\"keccak256\":\"0x47fc73015921e0e88e1ca0e16bff8af95c3d830095aaf662b39b4665671f2c5e\",\"urls\":[\"bzz-raw://43433e9ca77e429b7bdf1bc48be039cbb0b21a9584759fd7dadc4656c9e52828\",\"dweb:/ipfs/QmNXdq1wsAg5Vw3RjBnX7LoanDhthcQdv2E7RWv7dkfcQd\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/lendingpool/LendingPoolDataProvider.sol\":{\"keccak256\":\"0xbad1367efb64dedf53cb714fb2959379f85d914e7fffd2160422cce74ba573f4\",\"urls\":[\"bzz-raw://8f43a4682122b383471b9b9c0339982a90d6eb5fa48bb20a773c6de1c86ca8ac\",\"dweb:/ipfs/QmcnnnWiKrQVJezL8WGLeC8QzWzcCXZ7b7kR4tgVyWhmMx\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/lendingpool/LendingPoolLiquidationManager.sol\":{\"keccak256\":\"0x75ec47c916b435efbd21f193f971d63307173d89d7464bf2f422a9588c4ebb07\",\"urls\":[\"bzz-raw://1a44952465312336e275a1f29f6c938cfb1338e5141f67abd18feb77374a1e18\",\"dweb:/ipfs/QmPsqNRoD7G4M1oUezGbBCQP94ojYiUKtn5a2s2dYQGEKK\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/libraries/CoreLibrary.sol\":{\"keccak256\":\"0xd113338cb54fe88957b33eba30f503353888d7ff0478bf583ee5a58d77047db8\",\"urls\":[\"bzz-raw://dbfb726f34b17e3975f903f946c43722f6258885903498c6bcd4345958a5ccad\",\"dweb:/ipfs/QmcSKVHpr3zhbbMs54QhZ25zQJuwyTDmXycfBPPhUa6dMQ\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/libraries/EthAddressLib.sol\":{\"keccak256\":\"0x6d13f10408208ebff44123254f6db03121a8fb5a73d84c2d94f4e9651932b70d\",\"urls\":[\"bzz-raw://50b64d66e1544fcef496cc68e98cee61cfbab58685dfc4d57f73a1308e3aec2a\",\"dweb:/ipfs/QmQwJ5ZpaNjrfREruW7RzppzbEv8Mxxj5Ln87DX1i1iXW5\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/libraries/WadRayMath.sol\":{\"keccak256\":\"0x126c58b068a25a9721da9933c377361f9194ab839dd6ad627d8f78a062fe0cc3\",\"urls\":[\"bzz-raw://810142a1a4ecd60c3f36ab696cdcb34bfb5a52d241591229659bb5c02c40c5cc\",\"dweb:/ipfs/Qma8sCTftr1468EKegJuXnNXqTySUGtk683kAfyhMyHpiL\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/libraries/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol\":{\"keccak256\":\"0x6bb623c8fe336eeba953283dbe3014ab18e882d3a3f27f38234672a5a69885d1\",\"urls\":[\"bzz-raw://2810308c8de3ef8291356ea30e866a0b20e2729223caffc43b0f6513f7b0aaeb\",\"dweb:/ipfs/QmT6AD9CxgeeUndEj6F6z9zd8eJLDxUxJcHekcBRGop3ch\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/libraries/openzeppelin-upgradeability/BaseUpgradeabilityProxy.sol\":{\"keccak256\":\"0x99e393b97e79374c0dd133282f83ac48f15777d3894eafb9257768a1bf7acff5\",\"urls\":[\"bzz-raw://1c9d283b3442e71b7c611f8f79e792b248d97e1502a14d8507f131161b288f8b\",\"dweb:/ipfs/QmWxuFrfdLHmhJrpoGwHRujeV6zpdFydVM1DY3N5RBwNs5\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/libraries/openzeppelin-upgradeability/InitializableAdminUpgradeabilityProxy.sol\":{\"keccak256\":\"0x7928dfc5736d1ec6a29672f41458b7de688ef2d0ec31b3e4a16e6bc554b87df1\",\"urls\":[\"bzz-raw://712ce2645eeb72c5c12e40ef1e04f7161ab9f8aaae3413b82f6a1b48956d6c38\",\"dweb:/ipfs/QmcTNBeHbqBUj2UUgNob1s22oMjj4UpcLMNdXTBC2m1b6p\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/libraries/openzeppelin-upgradeability/InitializableUpgradeabilityProxy.sol\":{\"keccak256\":\"0x46052d95ea9b770116913041555f808f1b099c0a35e5c7ecbfc04ffef64a83bd\",\"urls\":[\"bzz-raw://67c2cacee01c1c8972a195be9f018abeae6917f45e45a4dc22b462fbb148150f\",\"dweb:/ipfs/QmZhM5vvrvjFbTXjzYDB3ZTtNbTf3j54v76SZoDSbFTjdU\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/libraries/openzeppelin-upgradeability/Proxy.sol\":{\"keccak256\":\"0xd8dcdaaf2f03c606a569d91506958bf78df9adfb41df76727857e5dfe956e872\",\"urls\":[\"bzz-raw://1d780033022b07478621ce08cd4e668603fc899ae3212a883eea23347937e8d5\",\"dweb:/ipfs/QmVZkBHpdDjko87qT4597e3UZ5uYdrEfPYbamEjBep52Se\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/libraries/openzeppelin-upgradeability/UpgradeabilityProxy.sol\":{\"keccak256\":\"0x5829b59012f64d1ce3ae6b98a61ddf5d6daa6e6f1a54e336ce910c8afd415c69\",\"urls\":[\"bzz-raw://28cba7d1f3d67aab91a4f88df4cb63762b443c31cb62a87e957add0b43dc8e1a\",\"dweb:/ipfs/QmUXzpQDBXA2xGSNRqjn3VMJ3o8RXmpATieU9ovvk6QDAD\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/libraries/openzeppelin-upgradeability/VersionedInitializable.sol\":{\"keccak256\":\"0x3f7fa91853dcdf84684887deaa056f5b3803b46e7efb71704dcc625a63eeac55\",\"urls\":[\"bzz-raw://c7b50d4feda87e8875541afeb44f802ab539272bfb22f7c7da84c3d26e03a266\",\"dweb:/ipfs/QmdSYn9D1Q3FRXRNDLYGGFoYb8rsN4U2MYdxciuZBTSg83\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGH/PriceOracle.sol\":{\"keccak256\":\"0x312e2ae08d8d517993e305001a1ea121e1fda13e2ee8b9b41523860c91b2c829\",\"urls\":[\"bzz-raw://11c567a50217eeb14e989e7cebdac1bf1a47c5503457957f78ae6edc2b5d78ec\",\"dweb:/ipfs/QmUR3csptBgXq7qLUtFtMzxRatSLBg7wVYx4JwxwcxjUVn\"]},\"openzeppelin-solidity/contracts/GSN/Context.sol\":{\"keccak256\":\"0xa5ce23dc71caa76caf782712dc8fef8dd2390c277f71e286474e9894d6ece97f\",\"urls\":[\"bzz-raw://cb14fd3bdc804349f070f0a372a2b6819bfe6e1b186080bb4850a1e1d024a16f\",\"dweb:/ipfs/Qmcp5Nhsq3PRRgXQYeqY41FMY1G2YbYC4JCWxFrst24MsC\"]},\"openzeppelin-solidity/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x7f293e2ee29a32416531a0bf3da9972358887c45ec1836642ec8e700cc152ba0\",\"urls\":[\"bzz-raw://e6ca40872864cb64a2dcc1b4f0be6a3cfc406f363e045fa7991f9f22f6257a63\",\"dweb:/ipfs/QmdsPdEayCcUa1fg3YTbhTPn3GTcjfNYZqnwf9EDC3QGpp\"]},\"openzeppelin-solidity/contracts/ownership/Ownable.sol\":{\"keccak256\":\"0x99c53496743c554322c1eda2e0609033759396bef546c826b192f242be39714f\",\"urls\":[\"bzz-raw://f076f3d43dc84380aee792a756d89d80fbf78327f552fd8e77cdd03b79ed8380\",\"dweb:/ipfs/QmUtBh7ts5s26yepDuedHNENs6Ts3ZNPJASHxrUNcoT4tX\"]},\"openzeppelin-solidity/contracts/token/ERC20/ERC20.sol\":{\"keccak256\":\"0xe8ce903c4fcae44e7e17b5e6f9033a424a83936a4053f110dc30d3d6b10a64a5\",\"urls\":[\"bzz-raw://39e473abefa5257df715fc3c038485f1fb548422633610fbce5cf603c5adf9f5\",\"dweb:/ipfs/QmVh6qhTWAPfBZkdYrn9eLj3Zeig9GVcm83LmskZz7zsmg\"]},\"openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol\":{\"keccak256\":\"0x4f4577659871ebf814a4adfb96bfec76b5a5e9dd7a414ca545152fe4ba1b932d\",\"urls\":[\"bzz-raw://d188138f791cdab03f888e06417d5eedfb378a3ed6f0d8e063da6403b4c6b9c6\",\"dweb:/ipfs/Qme3scJo781TbYD8Svx86JhLvyY1Tk1ekXvw5novFwaS9Y\"]},\"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0xe92a180661a6e21051d45be08a572dbf8d61e04c142d4284e503f615aed587fd\",\"urls\":[\"bzz-raw://003c6da07a3cbc576a9a59f462ed67d9041ff89e106463817ce9f005e24d83c8\",\"dweb:/ipfs/QmemQazcc1Cww2Umgc4UFYpwF8WRqajPB6z5TNdC13XJCR\"]},\"openzeppelin-solidity/contracts/token/ERC20/Initializable.sol\":{\"keccak256\":\"0xe27817d107db2266b238a10e1e06f3304f3ec4b5c28968a83386ab7ba3859aee\",\"urls\":[\"bzz-raw://f245b0b4d4271f882624302b7ac88846080417d2f5ad27ea8b81fa77eacd016b\",\"dweb:/ipfs/Qmabm1XwR2D9U43Vk14zHzByhmhjmZZoVJFft6a3dpoVRh\"]},\"openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol\":{\"keccak256\":\"0x0e9ff1feedfd4c410999c4b233612528cb3e32bb30be2e676cfc3f4204b82b3f\",\"urls\":[\"bzz-raw://307a705bd5e1c87db72eb713412f1c49d6208e65da20224867e92fc18a603bc6\",\"dweb:/ipfs/QmeTsxwMydqhphHkbM8ce48E2rtoj8UHV4npjjWDxWLYe3\"]},\"openzeppelin-solidity/contracts/utils/Address.sol\":{\"keccak256\":\"0x58543a8d0f0fc465618566ee6b3c04071965cd26ba20d1de3f9768014ed807e4\",\"urls\":[\"bzz-raw://f060c6ee3ca16eb001823e2c0f8b642ecf3ead486721bab6f6be5220158d4421\",\"dweb:/ipfs/QmWv1ms6aLAfjZ49dNnffbg49XiKmuEWHeu4wi6EinkEek\"]},\"openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol\":{\"keccak256\":\"0xe8319a13d4d3a9a518dafb829afffd958264b2675114abe5c322178cc6c3519f\",\"urls\":[\"bzz-raw://25e5847db15af6119dfadd8929642c20d731b61d11c8187dbf8064d3458cb094\",\"dweb:/ipfs/QmQhu9fnpHXp7wDKmqbaK7BAs8zWxLShRUUEdYiPiytBww\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.5.16;\n\nimport \"./Tokens/CToken.sol\";\n\ncontract PriceOracle {\n    /// @notice Indicator that this is a PriceOracle contract (for inspection)\n    bool public constant isPriceOracle = true;\n\n    /**\n      * @notice Get the underlying price of a cToken asset\n      * @param cToken The cToken to get the underlying price of\n      * @return The underlying asset price mantissa (scaled by 1e18).\n      *  Zero means the price is unavailable.\n      */\n    function getUnderlyingPrice(CToken cToken) external view returns (uint);\n}\n",
-  "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/PriceOracle.sol",
+  "source": "pragma solidity ^0.5.16;\n\nimport \"../ProtocolContracts/IToken.sol\";\n\n\ninterface PriceOracle {\n\n    /**\n      * @notice Get the underlying price of a cToken asset\n      * @param iToken The iToken to get the underlying price of\n      * @return The underlying asset price mantissa (scaled by 1e18).\n      *  Zero means the price is unavailable.\n      */\n    function getUnderlyingPrice(IToken iToken) external view returns (uint);\n\n    function getUnderlyingPriceRefresh(IToken iToken) external returns (uint);\n    \n}\n",
+  "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGH/PriceOracle.sol",
   "ast": {
-    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/PriceOracle.sol",
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGH/PriceOracle.sol",
     "exportedSymbols": {
       "PriceOracle": [
-        6733
+        30623
       ]
     },
-    "id": 6734,
+    "id": 30624,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 6721,
+        "id": 30607,
         "literals": [
           "solidity",
           "^",
@@ -64,130 +70,87 @@
           ".16"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:15"
+        "src": "0:24:116"
       },
       {
-        "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CToken.sol",
-        "file": "./Tokens/CToken.sol",
-        "id": 6722,
+        "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/IToken.sol",
+        "file": "../ProtocolContracts/IToken.sol",
+        "id": 30608,
         "nodeType": "ImportDirective",
-        "scope": 6734,
-        "sourceUnit": 18871,
-        "src": "26:29:15",
+        "scope": 30624,
+        "sourceUnit": 16044,
+        "src": "26:41:116",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "baseContracts": [],
         "contractDependencies": [],
-        "contractKind": "contract",
+        "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 6733,
+        "id": 30623,
         "linearizedBaseContracts": [
-          6733
+          30623
         ],
         "name": "PriceOracle",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "constant": true,
-            "id": 6725,
-            "name": "isPriceOracle",
-            "nodeType": "VariableDeclaration",
-            "scope": 6733,
-            "src": "163:41:15",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_bool",
-              "typeString": "bool"
-            },
-            "typeName": {
-              "id": 6723,
-              "name": "bool",
-              "nodeType": "ElementaryTypeName",
-              "src": "163:4:15",
-              "typeDescriptions": {
-                "typeIdentifier": "t_bool",
-                "typeString": "bool"
-              }
-            },
-            "value": {
-              "argumentTypes": null,
-              "hexValue": "74727565",
-              "id": 6724,
-              "isConstant": false,
-              "isLValue": false,
-              "isPure": true,
-              "kind": "bool",
-              "lValueRequested": false,
-              "nodeType": "Literal",
-              "src": "200:4:15",
-              "subdenomination": null,
-              "typeDescriptions": {
-                "typeIdentifier": "t_bool",
-                "typeString": "bool"
-              },
-              "value": "true"
-            },
-            "visibility": "public"
-          },
-          {
             "body": null,
-            "documentation": "@notice Get the underlying price of a cToken asset\n@param cToken The cToken to get the underlying price of\n@return The underlying asset price mantissa (scaled by 1e18).\n Zero means the price is unavailable.",
-            "id": 6732,
+            "documentation": "@notice Get the underlying price of a cToken asset\n@param iToken The iToken to get the underlying price of\n@return The underlying asset price mantissa (scaled by 1e18).\n Zero means the price is unavailable.",
+            "id": 30615,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getUnderlyingPrice",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6728,
+              "id": 30611,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6727,
-                  "name": "cToken",
+                  "id": 30610,
+                  "name": "iToken",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6732,
-                  "src": "495:13:15",
+                  "scope": 30615,
+                  "src": "383:13:116",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_CToken_$18870",
-                    "typeString": "contract CToken"
+                    "typeIdentifier": "t_contract$_IToken_$16043",
+                    "typeString": "contract IToken"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 6726,
-                    "name": "CToken",
+                    "id": 30609,
+                    "name": "IToken",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 18870,
-                    "src": "495:6:15",
+                    "referencedDeclaration": 16043,
+                    "src": "383:6:116",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_CToken_$18870",
-                      "typeString": "contract CToken"
+                      "typeIdentifier": "t_contract$_IToken_$16043",
+                      "typeString": "contract IToken"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "494:15:15"
+              "src": "382:15:116"
             },
             "returnParameters": {
-              "id": 6731,
+              "id": 30614,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6730,
+                  "id": 30613,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6732,
-                  "src": "533:4:15",
+                  "scope": 30615,
+                  "src": "421:4:116",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -195,10 +158,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 6729,
+                    "id": 30612,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "533:4:15",
+                    "src": "421:4:116",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -208,33 +171,116 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "532:6:15"
+              "src": "420:6:116"
             },
-            "scope": 6733,
-            "src": "467:72:15",
+            "scope": 30623,
+            "src": "355:72:116",
             "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 30622,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getUnderlyingPriceRefresh",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 30618,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 30617,
+                  "name": "iToken",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 30622,
+                  "src": "468:13:116",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IToken_$16043",
+                    "typeString": "contract IToken"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 30616,
+                    "name": "IToken",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 16043,
+                    "src": "468:6:116",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IToken_$16043",
+                      "typeString": "contract IToken"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "467:15:116"
+            },
+            "returnParameters": {
+              "id": 30621,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 30620,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 30622,
+                  "src": "501:4:116",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 30619,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "501:4:116",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "500:6:116"
+            },
+            "scope": 30623,
+            "src": "433:74:116",
+            "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 6734,
-        "src": "57:484:15"
+        "scope": 30624,
+        "src": "70:444:116"
       }
     ],
-    "src": "0:542:15"
+    "src": "0:515:116"
   },
   "legacyAST": {
-    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/PriceOracle.sol",
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGH/PriceOracle.sol",
     "exportedSymbols": {
       "PriceOracle": [
-        6733
+        30623
       ]
     },
-    "id": 6734,
+    "id": 30624,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 6721,
+        "id": 30607,
         "literals": [
           "solidity",
           "^",
@@ -242,130 +288,87 @@
           ".16"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:15"
+        "src": "0:24:116"
       },
       {
-        "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Tokens/CToken.sol",
-        "file": "./Tokens/CToken.sol",
-        "id": 6722,
+        "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/IToken.sol",
+        "file": "../ProtocolContracts/IToken.sol",
+        "id": 30608,
         "nodeType": "ImportDirective",
-        "scope": 6734,
-        "sourceUnit": 18871,
-        "src": "26:29:15",
+        "scope": 30624,
+        "sourceUnit": 16044,
+        "src": "26:41:116",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "baseContracts": [],
         "contractDependencies": [],
-        "contractKind": "contract",
+        "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 6733,
+        "id": 30623,
         "linearizedBaseContracts": [
-          6733
+          30623
         ],
         "name": "PriceOracle",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "constant": true,
-            "id": 6725,
-            "name": "isPriceOracle",
-            "nodeType": "VariableDeclaration",
-            "scope": 6733,
-            "src": "163:41:15",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_bool",
-              "typeString": "bool"
-            },
-            "typeName": {
-              "id": 6723,
-              "name": "bool",
-              "nodeType": "ElementaryTypeName",
-              "src": "163:4:15",
-              "typeDescriptions": {
-                "typeIdentifier": "t_bool",
-                "typeString": "bool"
-              }
-            },
-            "value": {
-              "argumentTypes": null,
-              "hexValue": "74727565",
-              "id": 6724,
-              "isConstant": false,
-              "isLValue": false,
-              "isPure": true,
-              "kind": "bool",
-              "lValueRequested": false,
-              "nodeType": "Literal",
-              "src": "200:4:15",
-              "subdenomination": null,
-              "typeDescriptions": {
-                "typeIdentifier": "t_bool",
-                "typeString": "bool"
-              },
-              "value": "true"
-            },
-            "visibility": "public"
-          },
-          {
             "body": null,
-            "documentation": "@notice Get the underlying price of a cToken asset\n@param cToken The cToken to get the underlying price of\n@return The underlying asset price mantissa (scaled by 1e18).\n Zero means the price is unavailable.",
-            "id": 6732,
+            "documentation": "@notice Get the underlying price of a cToken asset\n@param iToken The iToken to get the underlying price of\n@return The underlying asset price mantissa (scaled by 1e18).\n Zero means the price is unavailable.",
+            "id": 30615,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getUnderlyingPrice",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6728,
+              "id": 30611,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6727,
-                  "name": "cToken",
+                  "id": 30610,
+                  "name": "iToken",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6732,
-                  "src": "495:13:15",
+                  "scope": 30615,
+                  "src": "383:13:116",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_CToken_$18870",
-                    "typeString": "contract CToken"
+                    "typeIdentifier": "t_contract$_IToken_$16043",
+                    "typeString": "contract IToken"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 6726,
-                    "name": "CToken",
+                    "id": 30609,
+                    "name": "IToken",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 18870,
-                    "src": "495:6:15",
+                    "referencedDeclaration": 16043,
+                    "src": "383:6:116",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_CToken_$18870",
-                      "typeString": "contract CToken"
+                      "typeIdentifier": "t_contract$_IToken_$16043",
+                      "typeString": "contract IToken"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "494:15:15"
+              "src": "382:15:116"
             },
             "returnParameters": {
-              "id": 6731,
+              "id": 30614,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6730,
+                  "id": 30613,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6732,
-                  "src": "533:4:15",
+                  "scope": 30615,
+                  "src": "421:4:116",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -373,10 +376,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 6729,
+                    "id": 30612,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "533:4:15",
+                    "src": "421:4:116",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -386,20 +389,103 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "532:6:15"
+              "src": "420:6:116"
             },
-            "scope": 6733,
-            "src": "467:72:15",
+            "scope": 30623,
+            "src": "355:72:116",
             "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 30622,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getUnderlyingPriceRefresh",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 30618,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 30617,
+                  "name": "iToken",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 30622,
+                  "src": "468:13:116",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IToken_$16043",
+                    "typeString": "contract IToken"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 30616,
+                    "name": "IToken",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 16043,
+                    "src": "468:6:116",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IToken_$16043",
+                      "typeString": "contract IToken"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "467:15:116"
+            },
+            "returnParameters": {
+              "id": 30621,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 30620,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 30622,
+                  "src": "501:4:116",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 30619,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "501:4:116",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "500:6:116"
+            },
+            "scope": 30623,
+            "src": "433:74:116",
+            "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 6734,
-        "src": "57:484:15"
+        "scope": 30624,
+        "src": "70:444:116"
       }
     ],
-    "src": "0:542:15"
+    "src": "0:515:116"
   },
   "compiler": {
     "name": "solc",
@@ -407,12 +493,12 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-27T14:09:01.823Z",
+  "updatedAt": "2020-10-22T12:30:36.578Z",
   "devdoc": {
     "methods": {
       "getUnderlyingPrice(address)": {
         "params": {
-          "cToken": "The cToken to get the underlying price of"
+          "iToken": "The iToken to get the underlying price of"
         },
         "return": "The underlying asset price mantissa (scaled by 1e18). Zero means the price is unavailable."
       }

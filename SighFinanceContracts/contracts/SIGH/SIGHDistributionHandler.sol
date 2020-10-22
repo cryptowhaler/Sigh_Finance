@@ -7,10 +7,14 @@ import "./SighSpeedController.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
 // import "../openzeppelin/EIP20Interface.sol";
 
+import "../ProtocolContracts/configuration/LendingPoolAddressesProvider.sol";
+import "../ProtocolContracts/lendingpool/LendingPoolCore.sol";
 
 contract SIGHDistributionHandler is Exponential {
     
     address admin;
+    LendingPoolAddressesProvider public addressesProvider;
+
     address public sightrollerAddress;
     PriceOracle public oracle;
     address public Sigh_Address;
@@ -101,8 +105,9 @@ contract SIGHDistributionHandler is Exponential {
     event ClockUpdated( uint224 prevClock, uint224 curClock, uint timestamp );
         
         
-    constructor() public {
+    constructor(LendingPoolAddressesProvider addressesProvider_) public {
         admin = msg.sender;
+        addressesProvider = addressesProvider_; 
     }
     
     
@@ -317,7 +322,7 @@ contract SIGHDistributionHandler is Exponential {
                 Exp memory totalLossesOver24hours = Exp({mantissa: 0});
                 Exp memory previousPrice = Exp({ mantissa: sighPriceCycles[address(iToken)].recordedPriceSnapshot[curClock] });
                 Exp memory currentPrice = Exp({ mantissa: oracle.getUnderlyingPriceRefresh( iToken ) });
-                uint totalUnderlyingBalance = iToken.getCash();
+                uint totalUnderlyingBalance = iToken.totalSupply();
                 
                 require ( currentPrice.mantissa > 0, "refreshSIGHSpeedsInternal : Oracle returned Invalid Price" );
     
@@ -472,8 +477,8 @@ contract SIGHDistributionHandler is Exponential {
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
         require(sighPriceCycles[currentMarket].isListed ,"Market not supported.");
         
-        IToken currentMarketContract = IToken(currentMarket);
-        Exp memory marketBorrowIndex = Exp({mantissa: currentMarketContract.borrowIndex()});
+        LendingPoolCore lendingPoolCoreContract = LendingPoolCore(addressesProvider.getLendingPoolCore() );
+        Exp memory marketBorrowIndex = Exp({mantissa: lendingPoolCoreContract.getInstrumentVariableBorrowsCumulativeIndex( currentMarket )});
         
         SIGHMarketState storage borrowState = sighMarketBorrowState[currentMarket];
         uint borrowSpeed = SIGH_Speeds_for_Markets[address(currentMarket)].borrowers_Speed; 
@@ -484,7 +489,8 @@ contract SIGHDistributionHandler is Exponential {
         
         if (deltaBlocks > 0 && borrowSpeed > 0) {
             uint sigh_Accrued = mul_(deltaBlocks, borrowSpeed);
-            uint totalBorrows = IToken(currentMarket).totalBorrows();
+
+            uint totalBorrows =  lendingPoolCoreContract.getInstrumentTotalBorrowsStable(currentMarket) + lendingPoolCoreContract.getInstrumentTotalBorrowsVariable(currentMarket);
             uint borrowAmount = div_(totalBorrows, marketBorrowIndex);
             Double memory ratio = borrowAmount > 0 ? fraction(sigh_Accrued, borrowAmount) : Double({mantissa: 0});
             Double memory newIndex = add_(Double({mantissa: borrowState.index}), ratio);
@@ -559,15 +565,18 @@ contract SIGHDistributionHandler is Exponential {
         if (borrowerIndex.mantissa == 0 && borrowIndex.mantissa > 0) {
             borrowerIndex.mantissa = sighInitialIndex;
         }
-        
-        IToken currentMarketContract = IToken(currentMarket);
-        Exp memory marketBorrowIndex = Exp({mantissa: currentMarketContract.borrowIndex()});
+
+        LendingPoolCore lendingPoolCoreContract = LendingPoolCore(addressesProvider.getLendingPoolCore() );
+
+        Exp memory marketBorrowIndex = Exp({mantissa: lendingPoolCoreContract.getInstrumentVariableBorrowsCumulativeIndex( currentMarket )});
         
         emit distributeBorrower_SIGH_test3(currentMarket, borrowIndex.mantissa, borrowerIndex.mantissa );
 
         if (borrowerIndex.mantissa > 0) {
             Double memory deltaIndex = sub_(borrowIndex, borrowerIndex);   // , 'Distribute Borrower SIGH : borrowIndex Subtraction Underflow'
-            uint borrowBalance = IToken(currentMarket).borrowBalanceStored(borrower);
+            uint borrowBalance;
+            ( , borrowBalance , , ) = lendingPoolCoreContract.getUserBasicInstrumentData(currentMarket, borrower);
+            // uint borrowBalance = IToken(currentMarket).borrowBalanceStored(borrower);
             uint borrowerAmount = div_(borrowBalance, marketBorrowIndex);
             uint borrowerDelta = mul_(borrowerAmount, deltaIndex);
             uint borrowerAccrued = add_(SIGH_Accrued[borrower], borrowerDelta);
@@ -621,7 +630,7 @@ contract SIGHDistributionHandler is Exponential {
      */
     function transfer_Sigh(address user, uint userAccrued, uint threshold) internal returns (uint) {
         if (userAccrued >= threshold && userAccrued > 0) {
-            EIP20Interface sigh = EIP20Interface(Sigh_Address);
+            IERC20 sigh = IERC20(Sigh_Address);
             uint sigh_Remaining = sigh.balanceOf(address(this));
             if (userAccrued <= sigh_Remaining) {
                 sigh.transfer(user, userAccrued);
@@ -658,7 +667,7 @@ contract SIGHDistributionHandler is Exponential {
     }
     
     function getSIGHBalance() public view returns (uint) {
-        EIP20Interface sigh = EIP20Interface(Sigh_Address);
+        IERC20 sigh = IERC20(Sigh_Address);
         uint sigh_Remaining = sigh.balanceOf(address(this));
         return sigh_Remaining;
     }

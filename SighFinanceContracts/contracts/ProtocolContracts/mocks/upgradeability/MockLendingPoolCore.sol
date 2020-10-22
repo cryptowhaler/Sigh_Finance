@@ -35,10 +35,10 @@ contract MockLendingPoolCore is LendingPoolCore {
         refreshConfigInternal();
     }
 
-    function updateReserveInterestRatesAndTimestampInternal(address _reserve, uint256 _liquidityAdded, uint256 _liquidityTaken)
+    function updateInstrumentInterestRatesAndTimestampInternal(address _reserve, uint256 _liquidityAdded, uint256 _liquidityTaken)
         internal
     {
-        super.updateReserveInterestRatesAndTimestampInternal(_reserve, _liquidityAdded, _liquidityTaken);
+        super.updateInstrumentInterestRatesAndTimestampInternal(_reserve, _liquidityAdded, _liquidityTaken);
 
         emit ReserveUpdatedFromMock(getRevision());
 
