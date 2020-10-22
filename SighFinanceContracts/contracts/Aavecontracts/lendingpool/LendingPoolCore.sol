@@ -9,7 +9,7 @@ import "../libraries/openzeppelin-upgradeability/VersionedInitializable.sol";
 import "../libraries/CoreLibrary.sol";
 import "../configuration/LendingPoolAddressesProvider.sol";
 import "../interfaces/ILendingRateOracle.sol";
-import "../interfaces/IReserveInterestRateStrategy.sol";
+import "../interfaces/I_InstrumentInterestRateStrategy.sol";
 import "../libraries/WadRayMath.sol";
 import "../tokenization/IToken.sol";
 import "../libraries/EthAddressLib.sol";
@@ -19,7 +19,7 @@ import "../libraries/EthAddressLib.sol";
 * @author Aave
 * @notice Holds the state of the lending pool and all the funds deposited
 * @dev NOTE: The core does not enforce security checks on the update of the state
-* (eg, updateStateOnBorrow() does not enforce that borrowed is enabled on the reserve).
+* (eg, updateStateOnBorrow() does not enforce that borrowed is enabled on the Instrument).
 * The check that an action can be performed is a duty of the overlying LendingPool contract.
 **/
 
@@ -27,30 +27,30 @@ contract LendingPoolCore is VersionedInitializable {
 
     using SafeMath for uint256;
     using WadRayMath for uint256;
-    using CoreLibrary for CoreLibrary.ReserveData;
-    using CoreLibrary for CoreLibrary.UserReserveData;
+    using CoreLibrary for CoreLibrary.InstrumentData;
+    using CoreLibrary for CoreLibrary.UserInstrumentData;
     using SafeERC20 for ERC20;
     using Address for address payable;
 
     LendingPoolAddressesProvider public addressesProvider;
     address public lendingPoolAddress;
 
-    address[] public reservesList;
-    mapping(address => CoreLibrary.ReserveData) internal reserves;
-    mapping(address => mapping(address => CoreLibrary.UserReserveData)) internal usersReserveData;
+    address[] public instrumentsList;
+    mapping(address => CoreLibrary.InstrumentData) internal reserves;
+    mapping(address => mapping(address => CoreLibrary.UserInstrumentData)) internal usersInstrumentData;
 
     uint256 public constant CORE_REVISION = 0x4;          // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
 
     /**
-    * @dev Emitted when the state of a reserve is updated
-    * @param instrument the address of the reserve
+    * @dev Emitted when the state of a instrument is updated
+    * @param instrument the address of the instrument
     * @param liquidityRate the new liquidity rate
     * @param stableBorrowRate the new stable borrow rate
     * @param variableBorrowRate the new variable borrow rate
     * @param liquidityIndex the new liquidity index
     * @param variableBorrowIndex the new variable borrow index
     **/
-    event ReserveUpdated(  address indexed instrument,  uint256 liquidityRate,  uint256 stableBorrowRate,  uint256 variableBorrowRate, uint256 liquidityIndex, uint256 variableBorrowIndex );
+    event InstrumentUpdated(  address indexed instrument,  uint256 liquidityRate,  uint256 stableBorrowRate,  uint256 variableBorrowRate, uint256 liquidityIndex, uint256 variableBorrowIndex );
 
 // #######################
 // ###### MODIFIERS ######
@@ -99,7 +99,7 @@ contract LendingPoolCore is VersionedInitializable {
 
     /**
     * @dev updates the state of the core as a result of a deposit action
-    * @param _instrument the address of the reserve in which the deposit is happening
+    * @param _instrument the address of the instrument in which the deposit is happening
     * @param _user the address of the the user depositing
     * @param _amount the amount being deposited
     * @param _isFirstDeposit true if the user is depositing for the first time
@@ -114,8 +114,8 @@ contract LendingPoolCore is VersionedInitializable {
     }
 
     /**
-    * @dev transfers an amount from a user to the destination reserve
-    * @param _instrument the address of the reserve where the amount is being transferred
+    * @dev transfers an amount from a user to the destination instrument
+    * @param _instrument the address of the instrument where the amount is being transferred
     * @param _user the address of the user from where the transfer is happening
     * @param _amount the amount being transferred
     **/
@@ -149,7 +149,7 @@ contract LendingPoolCore is VersionedInitializable {
         reserves[_instrument].updateCumulativeIndexes();               //compound liquidity and variable borrow interests
         updateInstrumentInterestRatesAndTimestampInternal(_instrument, 0, _amountRedeemed);
 
-        if (_userRedeemedEverything) {          //if user redeemed everything the useReserveAsCollateral flag is reset
+        if (_userRedeemedEverything) {          //if user redeemed everything the useInstrumentAsCollateral flag is reset
             setUserUseInstrumentAsCollateral(_instrument, _user, false);
         }
     }
@@ -187,7 +187,7 @@ contract LendingPoolCore is VersionedInitializable {
         
         (uint256 principalBorrowBalance, , uint256 balanceIncrease) = getUserBorrowBalances( _instrument, _user );     // getting the previous borrow data of the user
 
-        updateReserveStateOnBorrowInternal( _instrument, _user, principalBorrowBalance, balanceIncrease, _amountBorrowed, _rateMode );
+        updateInstrumentStateOnBorrowInternal( _instrument, _user, principalBorrowBalance, balanceIncrease, _amountBorrowed, _rateMode );
         updateUserStateOnBorrowInternal( _instrument, _user, _amountBorrowed, balanceIncrease, _borrowFee, _rateMode );
         updateInstrumentInterestRatesAndTimestampInternal(_instrument, 0, _amountBorrowed);
 
@@ -203,11 +203,11 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _amountBorrowed the new amount borrowed
     * @param _rateMode the borrow rate mode (stable, variable)
     **/
-    function updateReserveStateOnBorrowInternal( address _instrument, address _user, uint256 _principalBorrowBalance, uint256 _balanceIncrease, uint256 _amountBorrowed, CoreLibrary.InterestRateMode _rateMode ) internal {
+    function updateInstrumentStateOnBorrowInternal( address _instrument, address _user, uint256 _principalBorrowBalance, uint256 _balanceIncrease, uint256 _amountBorrowed, CoreLibrary.InterestRateMode _rateMode ) internal {
         reserves[_instrument].updateCumulativeIndexes();
 
-        //increasing reserve total borrows to account for the new borrow balance of the user. NOTE: Depending on the previous borrow mode, the borrows might need to be switched from variable to stable or vice versa
-        updateReserveTotalBorrowsByRateModeInternal( _instrument, _user, _principalBorrowBalance,  _balanceIncrease, _amountBorrowed, _rateMode );
+        //increasing Instrument total borrows to account for the new borrow balance of the user. NOTE: Depending on the previous borrow mode, the borrows might need to be switched from variable to stable or vice versa
+        updateInstrumentTotalBorrowsByRateModeInternal( _instrument, _user, _principalBorrowBalance,  _balanceIncrease, _amountBorrowed, _rateMode );
     }
 
     /**
@@ -220,16 +220,16 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the final borrow rate for the user. Emitted by the borrow() event
     **/
     function updateUserStateOnBorrowInternal( address _instrument, address _user, uint256 _amountBorrowed, uint256 _balanceIncrease, uint256 _fee, CoreLibrary.InterestRateMode _rateMode  ) internal {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
 
         if (_rateMode == CoreLibrary.InterestRateMode.STABLE) {      //stable. reset the user variable index, and update the stable rate
-            user.stableBorrowRate = reserve.currentStableBorrowRate;
+            user.stableBorrowRate = instrument.currentStableBorrowRate;
             user.lastVariableBorrowCumulativeIndex = 0;
         } 
         else if (_rateMode == CoreLibrary.InterestRateMode.VARIABLE) {  //variable. reset the user stable rate, and store the new borrow index            
             user.stableBorrowRate = 0;
-            user.lastVariableBorrowCumulativeIndex = reserve.lastVariableBorrowCumulativeIndex;
+            user.lastVariableBorrowCumulativeIndex = instrument.lastVariableBorrowCumulativeIndex;
         } 
         else {
             revert("Invalid borrow rate mode");
@@ -248,25 +248,25 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _balanceIncrease the accrued interest on the borrowed amount
     * @param _amountBorrowed the accrued interest on the borrowed amount
     **/
-    function updateReserveTotalBorrowsByRateModeInternal( address _instrument  address _user,  uint256 _principalBalance,  uint256 _balanceIncrease, uint256 _amountBorrowed, CoreLibrary.InterestRateMode _newBorrowRateMode ) internal {
+    function updateInstrumentTotalBorrowsByRateModeInternal( address _instrument  address _user,  uint256 _principalBalance,  uint256 _balanceIncrease, uint256 _amountBorrowed, CoreLibrary.InterestRateMode _newBorrowRateMode ) internal {
         CoreLibrary.InterestRateMode previousRateMode = getUserCurrentBorrowRateMode( _instrument,  _user);
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
 
         if (previousRateMode == CoreLibrary.InterestRateMode.STABLE) {
-            CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
-            reserve.decreaseTotalBorrowsStableAndUpdateAverageRate( _principalBalance,  user.stableBorrowRate );
+            CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
+            instrument.decreaseTotalBorrowsStableAndUpdateAverageRate( _principalBalance,  user.stableBorrowRate );
         } 
         else if (previousRateMode == CoreLibrary.InterestRateMode.VARIABLE) {
-            reserve.decreaseTotalBorrowsVariable(_principalBalance);
+            instrument.decreaseTotalBorrowsVariable(_principalBalance);
         }
 
         uint256 newPrincipalAmount = _principalBalance.add(_balanceIncrease).add(_amountBorrowed);
 
         if (_newBorrowRateMode == CoreLibrary.InterestRateMode.STABLE) {
-            reserve.increaseTotalBorrowsStableAndUpdateAverageRate( newPrincipalAmount, reserve.currentStableBorrowRate );
+            instrument.increaseTotalBorrowsStableAndUpdateAverageRate( newPrincipalAmount, instrument.currentStableBorrowRate );
         } 
         else if (_newBorrowRateMode == CoreLibrary.InterestRateMode.VARIABLE) {
-            reserve.increaseTotalBorrowsVariable(newPrincipalAmount);
+            instrument.increaseTotalBorrowsVariable(newPrincipalAmount);
         } 
         else {
             revert("Invalid new borrow rate mode");
@@ -290,33 +290,33 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _repaidWholeLoan true if the user is repaying the whole loan
     **/
     function updateStateOnRepay(  address _instrument,  address _user, uint256 _paybackAmountMinusFees,  uint256 _originationFeeRepaid,  uint256 _balanceIncrease,  bool _repaidWholeLoan ) external onlyLendingPool {
-        updateReserveStateOnRepayInternal(  _instrument, _user, _paybackAmountMinusFees,  _balanceIncrease );
+        updateInstrumentStateOnRepayInternal(  _instrument, _user, _paybackAmountMinusFees,  _balanceIncrease );
         updateUserStateOnRepayInternal(  _instrument, _user, _paybackAmountMinusFees,  _originationFeeRepaid, _balanceIncrease, _repaidWholeLoan  );
         updateInstrumentInterestRatesAndTimestampInternal(_instrument, _paybackAmountMinusFees, 0);
     }
 
     /**
-    * @dev updates the state of the reserve as a consequence of a repay action.
+    * @dev updates the state of the instrument as a consequence of a repay action.
     * @param _instrument the address of the instrument on which the user is repaying
     * @param _user the address of the borrower
     * @param _paybackAmountMinusFees the amount being paid back minus fees
     * @param _balanceIncrease the accrued interest on the borrowed amount
     **/
-    function updateReserveStateOnRepayInternal(  address _instrument, address _user, uint256 _paybackAmountMinusFees, uint256 _balanceIncrease ) internal {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        CoreLibrary.UserReserveData storage user = usersReserveData[_instrument][_user];
+    function updateInstrumentStateOnRepayInternal(  address _instrument, address _user, uint256 _paybackAmountMinusFees, uint256 _balanceIncrease ) internal {
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_instrument][_user];
         CoreLibrary.InterestRateMode borrowRateMode = getUserCurrentBorrowRateMode(_instrument, _user);
 
         reserves[_instrument].updateCumulativeIndexes();           //update the indexes
 
         //compound the cumulated interest to the borrow balance and then subtracting the payback amount
         if (borrowRateMode == CoreLibrary.InterestRateMode.STABLE) {
-            reserve.increaseTotalBorrowsStableAndUpdateAverageRate( _balanceIncrease, user.stableBorrowRate );
-            reserve.decreaseTotalBorrowsStableAndUpdateAverageRate(  _paybackAmountMinusFees, user.stableBorrowRate );
+            instrument.increaseTotalBorrowsStableAndUpdateAverageRate( _balanceIncrease, user.stableBorrowRate );
+            instrument.decreaseTotalBorrowsStableAndUpdateAverageRate(  _paybackAmountMinusFees, user.stableBorrowRate );
         } 
         else {
-            reserve.increaseTotalBorrowsVariable(_balanceIncrease);
-            reserve.decreaseTotalBorrowsVariable(_paybackAmountMinusFees);
+            instrument.increaseTotalBorrowsVariable(_balanceIncrease);
+            instrument.decreaseTotalBorrowsVariable(_paybackAmountMinusFees);
         }
     }
 
@@ -330,12 +330,12 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _repaidWholeLoan true if the user is repaying the whole loan
     **/
     function updateUserStateOnRepayInternal( address _instrument, address _user, uint256 _paybackAmountMinusFees, uint256 _originationFeeRepaid, uint256 _balanceIncrease, bool _repaidWholeLoan ) internal {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
 
         //update the user principal borrow balance, adding the cumulated interest and then subtracting the payback amount
         user.principalBorrowBalance = user.principalBorrowBalance.add(_balanceIncrease).sub( _paybackAmountMinusFees);
-        user.lastVariableBorrowCumulativeIndex = reserve.lastVariableBorrowCumulativeIndex;
+        user.lastVariableBorrowCumulativeIndex = instrument.lastVariableBorrowCumulativeIndex;
 
         //if the balance decrease is equal to the previous principal (user is repaying the whole loan) and the rate mode is stable, we reset the interest rate mode of the user
         if (_repaidWholeLoan) {
@@ -382,7 +382,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _currentRateMode the current interest rate mode for the user
     **/
     function updateStateOnSwapRate(  address _instrument, address _user, uint256 _principalBorrowBalance, uint256 _compoundedBorrowBalance, uint256 _balanceIncrease, CoreLibrary.InterestRateMode _currentRateMode ) external onlyLendingPool returns (CoreLibrary.InterestRateMode, uint256) {
-        updateReserveStateOnSwapRateInternal( _instrument, _user,_principalBorrowBalance,  _compoundedBorrowBalance, _currentRateMode );
+        updateInstrumentStateOnSwapRateInternal( _instrument, _user,_principalBorrowBalance,  _compoundedBorrowBalance, _currentRateMode );
         CoreLibrary.InterestRateMode newRateMode = updateUserStateOnSwapRateInternal( _instrument, _user, _balanceIncrease, _currentRateMode );
         updateInstrumentInterestRatesAndTimestampInternal(_instrument, 0, 0);
         return (newRateMode, getUserCurrentBorrowRate(_instrument, _user));
@@ -396,23 +396,23 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _compoundedBorrowBalance the principal amount plus the accrued interest
     * @param _currentRateMode the rate mode at which the user borrowed
     **/
-    function updateReserveStateOnSwapRateInternal( address _instrument, address _user, uint256 _principalBorrowBalance, uint256 _compoundedBorrowBalance, CoreLibrary.InterestRateMode _currentRateMode ) internal {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
+    function updateInstrumentStateOnSwapRateInternal( address _instrument, address _user, uint256 _principalBorrowBalance, uint256 _compoundedBorrowBalance, CoreLibrary.InterestRateMode _currentRateMode ) internal {
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
 
-        reserve.updateCumulativeIndexes();      //compounding reserve indexes
+        instrument.updateCumulativeIndexes();      //compounding instrument indexes
 
         if (_currentRateMode == CoreLibrary.InterestRateMode.STABLE) {
             uint256 userCurrentStableRate = user.stableBorrowRate;
             //swap to variable
-            reserve.decreaseTotalBorrowsStableAndUpdateAverageRate( _principalBorrowBalance, userCurrentStableRate ); //decreasing stable from old principal balance
-            reserve.increaseTotalBorrowsVariable(_compoundedBorrowBalance); //increase variable borrows
+            instrument.decreaseTotalBorrowsStableAndUpdateAverageRate( _principalBorrowBalance, userCurrentStableRate ); //decreasing stable from old principal balance
+            instrument.increaseTotalBorrowsVariable(_compoundedBorrowBalance); //increase variable borrows
         } 
         else if (_currentRateMode == CoreLibrary.InterestRateMode.VARIABLE) {
             //swap to stable
-            uint256 currentStableRate = reserve.currentStableBorrowRate;
-            reserve.decreaseTotalBorrowsVariable(_principalBorrowBalance);
-            reserve.increaseTotalBorrowsStableAndUpdateAverageRate( _compoundedBorrowBalance,currentStableRate );
+            uint256 currentStableRate = instrument.currentStableBorrowRate;
+            instrument.decreaseTotalBorrowsVariable(_principalBorrowBalance);
+            instrument.increaseTotalBorrowsStableAndUpdateAverageRate( _compoundedBorrowBalance,currentStableRate );
         } 
         else {
             revert("Invalid rate mode received");
@@ -427,19 +427,19 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _currentRateMode the current rate mode of the user
     **/
     function updateUserStateOnSwapRateInternal(  address _instrument, address _user, uint256 _balanceIncrease, CoreLibrary.InterestRateMode _currentRateMode) internal returns (CoreLibrary.InterestRateMode) {
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
         CoreLibrary.InterestRateMode newMode = CoreLibrary.InterestRateMode.NONE;
 
         if (_currentRateMode == CoreLibrary.InterestRateMode.VARIABLE) {                    //switch to stable            
             newMode = CoreLibrary.InterestRateMode.STABLE;
-            user.stableBorrowRate = reserve.currentStableBorrowRate;
+            user.stableBorrowRate = instrument.currentStableBorrowRate;
             user.lastVariableBorrowCumulativeIndex = 0;
         } 
         else if (_currentRateMode == CoreLibrary.InterestRateMode.STABLE) {
             newMode = CoreLibrary.InterestRateMode.VARIABLE;
             user.stableBorrowRate = 0;
-            user.lastVariableBorrowCumulativeIndex = reserve.lastVariableBorrowCumulativeIndex;
+            user.lastVariableBorrowCumulativeIndex = instrument.lastVariableBorrowCumulativeIndex;
         } 
         else {
             revert("Invalid interest rate mode received");
@@ -457,16 +457,16 @@ contract LendingPoolCore is VersionedInitializable {
 
     /**
     * @dev updates the state of the core as a consequence of a stable rate rebalance
-    * @param _reserve the address of the principal reserve where the user borrowed
+    * @param _instrument the address of the principal instrument where the user borrowed
     * @param _user the address of the borrower
     * @param _balanceIncrease the accrued interest on the borrowed amount
     * @return the new stable rate for the user
     **/
-    function updateStateOnRebalance(address _reserve, address _user, uint256 _balanceIncrease) external onlyLendingPool returns (uint256) {
-        updateReserveStateOnRebalanceInternal(_reserve, _user, _balanceIncrease);
-        updateUserStateOnRebalanceInternal(_reserve, _user, _balanceIncrease);      //update user data and rebalance the rate
-        updateInstrumentInterestRatesAndTimestampInternal(_reserve, 0, 0);
-        return usersReserveData[_user][_reserve].stableBorrowRate;
+    function updateStateOnRebalance(address _instrument, address _user, uint256 _balanceIncrease) external onlyLendingPool returns (uint256) {
+        updateInstrumentStateOnRebalanceInternal(_instrument, _user, _balanceIncrease);
+        updateUserStateOnRebalanceInternal(_instrument, _user, _balanceIncrease);      //update user data and rebalance the rate
+        updateInstrumentInterestRatesAndTimestampInternal(_instrument, 0, 0);
+        return usersInstrumentData[_user][_instrument].stableBorrowRate;
     }
 
     /**
@@ -475,12 +475,12 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _user the address of the borrower
     * @param _balanceIncrease the accrued interest on the borrowed amount
     **/
-    function updateReserveStateOnRebalanceInternal( address _instrument, address _user, uint256 _balanceIncrease ) internal {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
+    function updateInstrumentStateOnRebalanceInternal( address _instrument, address _user, uint256 _balanceIncrease ) internal {
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
 
-        reserve.updateCumulativeIndexes();
-        reserve.increaseTotalBorrowsStableAndUpdateAverageRate( _balanceIncrease, user.stableBorrowRate );
+        instrument.updateCumulativeIndexes();
+        instrument.increaseTotalBorrowsStableAndUpdateAverageRate( _balanceIncrease, user.stableBorrowRate );
     }
 
     /**
@@ -490,11 +490,11 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _balanceIncrease the accrued interest on the borrowed amount
     **/
     function updateUserStateOnRebalanceInternal( address _instrument, address _user, uint256 _balanceIncrease ) internal {
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
 
         user.principalBorrowBalance = user.principalBorrowBalance.add(_balanceIncrease);
-        user.stableBorrowRate = reserve.currentStableBorrowRate;
+        user.stableBorrowRate = instrument.currentStableBorrowRate;
         user.lastUpdateTimestamp = uint40(block.timestamp);
     }
 
@@ -510,10 +510,10 @@ contract LendingPoolCore is VersionedInitializable {
     * @dev enables or disables a instrument as collateral
     * @param _instrument the address of the principal instrument where the user deposited
     * @param _user the address of the depositor
-    * @param _useAsCollateral true if the depositor wants to use the reserve as collateral
+    * @param _useAsCollateral true if the depositor wants to use the instrument as collateral
     **/
     function setUserUseInstrumentAsCollateral(address _instrument, address _user, bool _useAsCollateral) public onlyLendingPool {
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
         user.useAsCollateral = _useAsCollateral;
     }
 
@@ -551,8 +551,8 @@ contract LendingPoolCore is VersionedInitializable {
 
     /**
     * @dev updates the state of the core as a consequence of a liquidation action.
-    * @param _principalReserve the address of the principal reserve that is being repaid
-    * @param _collateralReserve the address of the collateral reserve that is being liquidated
+    * @param _principalInstrument the address of the principal instrument that is being repaid
+    * @param _collateralInstrument the address of the collateral instrument that is being liquidated
     * @param _user the address of the borrower
     * @param _amountToLiquidate the amount being repaid by the liquidator
     * @param _collateralToLiquidate the amount of collateral being liquidated
@@ -561,15 +561,15 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _balanceIncrease the accrued interest on the borrowed amount
     * @param _liquidatorReceivesIToken true if the liquidator will receive iTokens, false otherwise
     **/
-    function updateStateOnLiquidation( address _principalReserve, address _collateralReserve, address _user, uint256 _amountToLiquidate, uint256 _collateralToLiquidate, uint256 _feeLiquidated, uint256 _liquidatedCollateralForFee, uint256 _balanceIncrease, bool _liquidatorReceivesIToken ) external onlyLendingPool {
+    function updateStateOnLiquidation( address _principalInstrument, address _collateralInstrument, address _user, uint256 _amountToLiquidate, uint256 _collateralToLiquidate, uint256 _feeLiquidated, uint256 _liquidatedCollateralForFee, uint256 _balanceIncrease, bool _liquidatorReceivesIToken ) external onlyLendingPool {
 
-        updatePrincipalInstrumentStateOnLiquidationInternal( _principalReserve, _user, _amountToLiquidate, _balanceIncrease );
-        updatePrincipalInstrumentStateOnLiquidationInternal(  _collateralReserve );
-        updateUserStateOnLiquidationInternal(  _principalReserve,  _user,  _amountToLiquidate,  _feeLiquidated,  _balanceIncrease );
-        updateInstrumentInterestRatesAndTimestampInternal(_principalReserve, _amountToLiquidate, 0);
+        updatePrincipalInstrumentStateOnLiquidationInternal( _principalInstrument, _user, _amountToLiquidate, _balanceIncrease );
+        updatePrincipalInstrumentStateOnLiquidationInternal(  _collateralInstrument );
+        updateUserStateOnLiquidationInternal(  _principalInstrument,  _user,  _amountToLiquidate,  _feeLiquidated,  _balanceIncrease );
+        updateInstrumentInterestRatesAndTimestampInternal(_principalInstrument, _amountToLiquidate, 0);
 
         if (!_liquidatorReceivesIToken) {
-            updateInstrumentInterestRatesAndTimestampInternal(  _collateralReserve,  0, _collateralToLiquidate.add(_liquidatedCollateralForFee) );
+            updateInstrumentInterestRatesAndTimestampInternal(  _collateralInstrument,  0, _collateralToLiquidate.add(_liquidatedCollateralForFee) );
         }
 
     }
@@ -582,19 +582,19 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _balanceIncrease the accrued interest on the borrowed amount
     **/
     function updatePrincipalInstrumentStateOnLiquidationInternal( address _principalInstrument, address _user, uint256 _amountToLiquidate, uint256 _balanceIncrease ) internal {
-        CoreLibrary.ReserveData storage reserve = reserves[_principalInstrument];
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_principalInstrument];
+        CoreLibrary.InstrumentData storage instrument = reserves[_principalInstrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_principalInstrument];
 
-        reserve.updateCumulativeIndexes();      //update principal reserve data
+        instrument.updateCumulativeIndexes();      //update principal instrument data
         CoreLibrary.InterestRateMode borrowRateMode = getUserCurrentBorrowRateMode( _principalInstrument, _user);
 
         if (borrowRateMode == CoreLibrary.InterestRateMode.STABLE) {
-            reserve.increaseTotalBorrowsStableAndUpdateAverageRate(   _balanceIncrease, user.stableBorrowRate );        //increase the total borrows by the compounded interest
-            reserve.decreaseTotalBorrowsStableAndUpdateAverageRate(  _amountToLiquidate,  user.stableBorrowRate );      //decrease by the actual amount to liquidate
+            instrument.increaseTotalBorrowsStableAndUpdateAverageRate(   _balanceIncrease, user.stableBorrowRate );        //increase the total borrows by the compounded interest
+            instrument.decreaseTotalBorrowsStableAndUpdateAverageRate(  _amountToLiquidate,  user.stableBorrowRate );      //decrease by the actual amount to liquidate
         } 
         else {
-            reserve.increaseTotalBorrowsVariable(_balanceIncrease);     //increase the total borrows by the compounded interest
-            reserve.decreaseTotalBorrowsVariable(_amountToLiquidate);       //decrease by the actual amount to liquidate
+            instrument.increaseTotalBorrowsVariable(_balanceIncrease);     //increase the total borrows by the compounded interest
+            instrument.decreaseTotalBorrowsVariable(_amountToLiquidate);       //decrease by the actual amount to liquidate
         }
     }
 
@@ -604,7 +604,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _collateralInstrument the address of the collateral instrument that is being liquidated
     **/
     function updatePrincipalInstrumentStateOnLiquidationInternal( address _collateralInstrument ) internal {
-        reserves[_collateralInstrument].updateCumulativeIndexes();     //update collateral reserve
+        reserves[_collateralInstrument].updateCumulativeIndexes();     //update collateral instrument
     }
 
 
@@ -617,13 +617,13 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _balanceIncrease the accrued interest on the borrowed amount
     **/
     function updateUserStateOnLiquidationInternal( address _instrument, address _user, uint256 _amountToLiquidate, uint256 _feeLiquidated, uint256 _balanceIncrease ) internal {
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
         
         user.principalBorrowBalance = user.principalBorrowBalance.add(_balanceIncrease).sub( _amountToLiquidate );  //first increase by the compounded interest, then decrease by the liquidated amount
 
         if (  getUserCurrentBorrowRateMode(_instrument, _user) == CoreLibrary.InterestRateMode.VARIABLE ) {
-            user.lastVariableBorrowCumulativeIndex = reserve.lastVariableBorrowCumulativeIndex;
+            user.lastVariableBorrowCumulativeIndex = instrument.lastVariableBorrowCumulativeIndex;
         }
         if(_feeLiquidated > 0){
             user.originationFee = user.originationFee.sub(_feeLiquidated);
@@ -691,8 +691,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the address of the interest rate strategy contract
     **/
     function getInstrumentInterestRateStrategyAddress(address _instrument) public view returns (address) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return reserve.interestRateStrategyAddress;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.interestRateStrategyAddress;
     }
 
     /**
@@ -701,8 +701,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the address of the iToken contract
     **/
     function getInstrumentITokenAddress(address _instrument) public view returns (address) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return reserve.iTokenAddress;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.iTokenAddress;
     }
 
     /**
@@ -728,8 +728,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the total liquidity
     **/
     function getInstrumentTotalLiquidity(address _instrument) public view returns (uint256) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return getInstrumentAvailableLiquidity(_instrument).add(reserve.getTotalBorrows());
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return getInstrumentAvailableLiquidity(_instrument).add(instrument.getTotalBorrows());
     }
 
     /**
@@ -747,14 +747,14 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the instrument current stable borrow rate
     **/
     function getInstrumentCurrentStableBorrowRate(address _instrument) public view returns (uint256) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
         ILendingRateOracle oracle = ILendingRateOracle(addressesProvider.getLendingRateOracle());
 
-        if (reserve.currentStableBorrowRate == 0) {     //no stable rate borrows yet
+        if (instrument.currentStableBorrowRate == 0) {     //no stable rate borrows yet
             return oracle.getMarketBorrowRate(_instrument);
         }
 
-        return reserve.currentStableBorrowRate;
+        return instrument.currentStableBorrowRate;
     }
 
     /**
@@ -762,9 +762,9 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _instrument the instrument for which the information is needed
     * @return the utilization rate in ray
     **/
-    function getReserveUtilizationRate(address _instrument) public view returns (uint256) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        uint256 totalBorrows = reserve.getTotalBorrows();
+    function getInstrumentUtilizationRate(address _instrument) public view returns (uint256) {
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        uint256 totalBorrows = instrument.getTotalBorrows();
 
         if (totalBorrows == 0) {
             return 0;
@@ -781,7 +781,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the borrow rate mode for the user,
     **/
     function getUserCurrentBorrowRateMode(address _instrument, address _user) public view returns (CoreLibrary.InterestRateMode) {
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
 
         if (user.principalBorrowBalance == 0) {
             return CoreLibrary.InterestRateMode.NONE;
@@ -797,7 +797,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the principal borrow balance, the compounded balance and the balance increase since the last borrow/repay/swap/rebalance
     **/
     function getUserBorrowBalances(address _instrument, address _user) public view returns (uint256, uint256, uint256) {
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
         if (user.principalBorrowBalance == 0) {
             return (0, 0, 0);
         }
@@ -818,8 +818,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the user deposited balance, the principal borrow balance, the fee, and if the instrument is enabled as collateral or not
     **/
     function getUserBasicInstrumentData(address _instrument, address _user) external view returns (uint256, uint256, uint256, bool) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
 
         uint256 underlyingBalance = getUserUnderlyingAssetBalance(_instrument, _user);
 
@@ -827,7 +827,7 @@ contract LendingPoolCore is VersionedInitializable {
             return (underlyingBalance, 0, 0, user.useAsCollateral);
         }
 
-        return ( underlyingBalance, user.getCompoundedBorrowBalance(reserve), user.originationFee, user.useAsCollateral );
+        return ( underlyingBalance, user.getCompoundedBorrowBalance(instrument), user.originationFee, user.useAsCollateral );
     }
 
     /**
@@ -838,13 +838,13 @@ contract LendingPoolCore is VersionedInitializable {
     * @return true if the user is allowed to borrow at a stable rate, false otherwise
     **/
     function isUserAllowedToBorrowAtStable(address _instrument, address _user, uint256 _amount) external view returns (bool) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
 
-        if (!reserve.isStableBorrowRateEnabled) 
+        if (!instrument.isStableBorrowRateEnabled) 
             return false;
 
-        return !user.useAsCollateral || !reserve.usageAsCollateralEnabled || _amount > getUserUnderlyingAssetBalance(_instrument, _user) ;
+        return !user.useAsCollateral || !instrument.usageAsCollateralEnabled || _amount > getUserUnderlyingAssetBalance(_instrument, _user) ;
     }
 
     /**
@@ -853,9 +853,9 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _instrument the instrument address
     * @return the instrument normalized income
     **/
-    function getReserveNormalizedIncome(address _instrument) external view returns (uint256) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return reserve.getNormalizedIncome();
+    function getInstrumentNormalizedIncome(address _instrument) external view returns (uint256) {
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.getNormalizedIncome();
     }
 
     /**
@@ -864,8 +864,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the total borrows stable
     **/
     function getInstrumentTotalBorrowsStable(address _instrument) external view returns (uint256) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return reserve.totalBorrowsStable;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.totalBorrowsStable;
     }
 
     /**
@@ -874,8 +874,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the total borrows variable
     **/
     function getInstrumentTotalBorrowsVariable(address _instrument) external view returns (uint256) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return reserve.totalBorrowsVariable;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.totalBorrowsVariable;
     }
 
     /**
@@ -883,9 +883,9 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _instrument the instrument address
     * @return the instrument liquidation threshold
     **/
-    function getInstrumentLiquidationThreshold(address instrument) external view returns (uint256) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return reserve.liquidationThreshold;
+    function getInstrumentLiquidationThreshold(address _instrument) external view returns (uint256) {
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.liquidationThreshold;
     }
 
     /**
@@ -894,8 +894,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the instrument liquidation bonus
     **/
     function getInstrumentLiquidationBonus(address _instrument) external view returns (uint256) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return reserve.liquidationBonus;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.liquidationBonus;
     }
 
     /**
@@ -904,12 +904,12 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the instrument current variable borrow rate
     **/
     function getInstrumentCurrentVariableBorrowRate(address _instrument) external view returns (uint256) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
 
-        if (reserve.currentVariableBorrowRate == 0) {
-            return IReserveInterestRateStrategy(reserve.interestRateStrategyAddress).getBaseVariableBorrowRate();
+        if (instrument.currentVariableBorrowRate == 0) {
+            return I_InstrumentInterestRateStrategy(instrument.interestRateStrategyAddress).getBaseVariableBorrowRate();
         }
-        return reserve.currentVariableBorrowRate;
+        return instrument.currentVariableBorrowRate;
     }
 
     /**
@@ -919,8 +919,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the _instrument current average borrow rate
     **/
     function getInstrumentCurrentAverageStableBorrowRate(address _instrument) external view returns (uint256) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return reserve.currentAverageStableBorrowRate;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.currentAverageStableBorrowRate;
     }
 
     /**
@@ -929,8 +929,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the _instrument liquidity rate
     **/
     function getInstrumentCurrentLiquidityRate(address _instrument) external view returns (uint256) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return reserve.currentLiquidityRate;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.currentLiquidityRate;
     }
 
     /**
@@ -939,8 +939,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the _instrument liquidity cumulative index
     **/
     function getInstrumentLiquidityCumulativeIndex(address _instrument) external view returns (uint256) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return reserve.lastLiquidityCumulativeIndex;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.lastLiquidityCumulativeIndex;
     }
 
     /**
@@ -949,8 +949,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the _instrument variable borrow index
     **/
     function getInstrumentVariableBorrowsCumulativeIndex(address _instrument) external view returns (uint256) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return reserve.lastVariableBorrowCumulativeIndex;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.lastVariableBorrowCumulativeIndex;
     }
 
     /**
@@ -967,11 +967,11 @@ contract LendingPoolCore is VersionedInitializable {
         uint256 liquidationThreshold;
         bool usageAsCollateralEnabled;
 
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        decimals = reserve.decimals;
-        baseLTVasCollateral = reserve.baseLTVasCollateral;
-        liquidationThreshold = reserve.liquidationThreshold;
-        usageAsCollateralEnabled = reserve.usageAsCollateralEnabled;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        decimals = instrument.decimals;
+        baseLTVasCollateral = instrument.baseLTVasCollateral;
+        liquidationThreshold = instrument.liquidationThreshold;
+        usageAsCollateralEnabled = instrument.usageAsCollateralEnabled;
 
         return (decimals, baseLTVasCollateral, liquidationThreshold, usageAsCollateralEnabled);
     }
@@ -988,12 +988,12 @@ contract LendingPoolCore is VersionedInitializable {
     /**
     * @dev returns true if the instrument is enabled for borrowing
     * @param _instrument the instrument address
-    * @return true if the reserve is enabled for borrowing, false otherwise
+    * @return true if the instrument is enabled for borrowing, false otherwise
     **/
 
     function isInstrumentBorrowingEnabled(address _instrument) external view returns (bool) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return reserve.borrowingEnabled;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.borrowingEnabled;
     }
 
     /**
@@ -1003,8 +1003,8 @@ contract LendingPoolCore is VersionedInitializable {
     **/
 
     function isInstrumentUsageAsCollateralEnabled(address _instrument) external view returns (bool) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return reserve.usageAsCollateralEnabled;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.usageAsCollateralEnabled;
     }
 
     /**
@@ -1013,8 +1013,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @return true if the stable rate is enabled on _instrument, false otherwise
     **/
     function getInstrumentIsStableBorrowRateEnabled(address _instrument) external view returns (bool) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return reserve.isStableBorrowRateEnabled;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.isStableBorrowRateEnabled;
     }
 
     /**
@@ -1023,8 +1023,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @return true if the _instrument is active, false otherwise
     **/
     function getInstrumentIsActive(address _instrument) external view returns (bool) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return reserve.isActive;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.isActive;
     }
 
     /**
@@ -1033,8 +1033,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @return true if the _instrument is freezed, false otherwise
     **/
     function getInstrumentIsFreezed(address _instrument) external view returns (bool) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        return reserve.isFreezed;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.isFreezed;
     }
 
     /**
@@ -1043,15 +1043,15 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the last updated timestamp of the _instrument
     **/
     function getInstrumentLastUpdate(address _instrument) external view returns (uint40 timestamp) {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        timestamp = reserve.lastUpdateTimestamp;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        timestamp = instrument.lastUpdateTimestamp;
     }
 
     /**
     * @return the array of instruments configured on the core
     **/
     function getInstruments() external view returns (address[] memory) {
-        return reservesList;
+        return instrumentsList;
     }
 
     /**
@@ -1060,7 +1060,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @return true if the user has chosen to use the _instrument as collateral, false otherwise
     **/
     function isUserUseInstrumentAsCollateralEnabled(address _instrument, address _user) external view returns (bool) {
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
         return user.useAsCollateral;
     }
 
@@ -1070,7 +1070,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the origination fee for the user
     **/
     function getUserOriginationFee(address _instrument, address _user) external view returns (uint256) {
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
         return user.originationFee;
     }
 
@@ -1081,7 +1081,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the user stable rate
     **/
     function getUserCurrentStableBorrowRate(address _instrument, address _user) external  view returns (uint256) {
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
         return user.stableBorrowRate;
     }
 
@@ -1092,7 +1092,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the variable borrow index for the user
     **/
     function getUserVariableBorrowCumulativeIndex(address _instrument, address _user)  external view returns (uint256) {
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
         return user.lastVariableBorrowCumulativeIndex;
     }
 
@@ -1103,7 +1103,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the variable borrow index for the user
     **/
     function getUserLastUpdate(address _instrument, address _user) external view returns (uint256 timestamp) {
-        CoreLibrary.UserReserveData storage user = usersReserveData[_user][_instrument];
+        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
         timestamp = user.lastUpdateTimestamp;
     }
 
@@ -1124,7 +1124,7 @@ contract LendingPoolCore is VersionedInitializable {
             return 0;
         }
 
-        return rateMode == CoreLibrary.InterestRateMode.STABLE ? usersReserveData[_user][_instrument].stableBorrowRate: reserves[_instrument].currentVariableBorrowRate;
+        return rateMode == CoreLibrary.InterestRateMode.STABLE ? usersInstrumentData[_user][_instrument].stableBorrowRate: reserves[_instrument].currentVariableBorrowRate;
     }
 
 
@@ -1182,21 +1182,21 @@ contract LendingPoolCore is VersionedInitializable {
     // adds a instrument to the array of the instruments address
     function addInstrumentToListInternal(address _instrument) internal {
         bool _instrumentAlreadyAdded = false;
-        for (uint256 i = 0; i < reservesList.length; i++)
-            if (reservesList[i] == _instrument) {
+        for (uint256 i = 0; i < instrumentsList.length; i++)
+            if (instrumentsList[i] == _instrument) {
                 _instrumentAlreadyAdded = true;
             }
         if (!_instrumentAlreadyAdded) 
-            reservesList.push(_instrument);
+            instrumentsList.push(_instrument);
     }
 
     /**
-    * @dev removes the last added instrument in the reservesList array
+    * @dev removes the last added instrument in the instrumentsList array
     * @param _instrumentToRemove the address of the instrument
     **/
     function removeLastAddedInstrument(address _instrumentToRemove) external onlyLendingPoolConfigurator {
 
-        address lastInstrument = reservesList[reservesList.length-1];
+        address lastInstrument = instrumentsList[instrumentsList.length-1];
         require(lastInstrument == _instrumentToRemove, "Instrument being removed is different than the Instrument requested");
         //as we can't check if totalLiquidity is 0 (since the instrument added might not be an ERC20) we at least check that there is nothing borrowed
         require(getInstrumentTotalBorrows(lastInstrument) == 0, "Cannot remove an Instrument with liquidity deposited");
@@ -1213,7 +1213,7 @@ contract LendingPoolCore is VersionedInitializable {
         reserves[lastInstrument].liquidationBonus = 0;
         reserves[lastInstrument].interestRateStrategyAddress = address(0);
 
-        reservesList.pop();
+        instrumentsList.pop();
     }
 
     /**
@@ -1263,8 +1263,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _instrument the address of the instrument
     **/
     function enableInstrumentStableBorrowRate(address _instrument) external onlyLendingPoolConfigurator {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        reserve.isStableBorrowRateEnabled = true;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        instrument.isStableBorrowRateEnabled = true;
     }
 
     /**
@@ -1272,8 +1272,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _instrument the address of the instrument
     **/
     function disableInstrumentStableBorrowRate(address _instrument) external onlyLendingPoolConfigurator {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        reserve.isStableBorrowRateEnabled = false;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        instrument.isStableBorrowRateEnabled = false;
     }
 
     /**
@@ -1281,9 +1281,9 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _instrument the address of the instrument
     **/
     function activateInstrument(address _instrument) external onlyLendingPoolConfigurator {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        require(  reserve.lastLiquidityCumulativeIndex > 0 &&  reserve.lastVariableBorrowCumulativeIndex > 0, "Instrument has not been initialized yet");
-        reserve.isActive = true;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        require(  instrument.lastLiquidityCumulativeIndex > 0 &&  instrument.lastVariableBorrowCumulativeIndex > 0, "Instrument has not been initialized yet");
+        instrument.isActive = true;
     }
 
     /**
@@ -1291,8 +1291,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _instrument the address of the instrument
     **/
     function deactivateInstrument(address _instrument) external onlyLendingPoolConfigurator {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        reserve.isActive = false;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        instrument.isActive = false;
     }
 
     /**
@@ -1301,8 +1301,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _instrument the address of the instrument
     **/
     function freezeInstrument(address _instrument) external onlyLendingPoolConfigurator {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        reserve.isFreezed = true;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        instrument.isFreezed = true;
     }
 
     /**
@@ -1310,8 +1310,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _instrument the address of the instrument
     **/
     function unfreezeInstrument(address _instrument) external onlyLendingPoolConfigurator {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        reserve.isFreezed = false;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        instrument.isFreezed = false;
     }
 
     /**
@@ -1320,8 +1320,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _ltv the new loan to value
     **/
     function setInstrumentBaseLTVasCollateral(address _instrument, uint256 _ltv) external onlyLendingPoolConfigurator {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        reserve.baseLTVasCollateral = _ltv;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        instrument.baseLTVasCollateral = _ltv;
     }
 
     /**
@@ -1330,8 +1330,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _threshold the new liquidation threshold
     **/
     function setInstrumentLiquidationThreshold(address _instrument, uint256 _threshold) external onlyLendingPoolConfigurator {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        reserve.liquidationThreshold = _threshold;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        instrument.liquidationThreshold = _threshold;
     }
 
     /**
@@ -1340,8 +1340,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _bonus the new liquidation bonus
     **/
     function setInstrumentLiquidationBonus(address _instrument, uint256 _bonus) external  onlyLendingPoolConfigurator {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        reserve.liquidationBonus = _bonus;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        instrument.liquidationBonus = _bonus;
     }
 
     /**
@@ -1350,8 +1350,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _decimals the decimals of the instrument
     **/
     function setInstrumentDecimals(address _instrument, uint256 _decimals) external onlyLendingPoolConfigurator {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        reserve.decimals = _decimals;
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        instrument.decimals = _decimals;
     }
 
 
@@ -1377,15 +1377,15 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _liquidityTaken the amount of liquidity taken from the protocol (redeem or borrow)
     **/
     function updateInstrumentInterestRatesAndTimestampInternal( address _instrument, uint256 _liquidityAdded, uint256 _liquidityTaken ) internal {
-        CoreLibrary.ReserveData storage reserve = reserves[_instrument];
-        (uint256 newLiquidityRate, uint256 newStableRate, uint256 newVariableRate) = IReserveInterestRateStrategy( reserve.interestRateStrategyAddress).calculateInterestRates( _instrument, getInstrumentAvailableLiquidity(_instrument).add(_liquidityAdded).sub(_liquidityTaken),    reserve.totalBorrowsStable, reserve.totalBorrowsVariable, reserve.currentAverageStableBorrowRate   );
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        (uint256 newLiquidityRate, uint256 newStableRate, uint256 newVariableRate) = I_InstrumentInterestRateStrategy( instrument.interestRateStrategyAddress).calculateInterestRates( _instrument, getInstrumentAvailableLiquidity(_instrument).add(_liquidityAdded).sub(_liquidityTaken),    instrument.totalBorrowsStable, instrument.totalBorrowsVariable, instrument.currentAverageStableBorrowRate   );
 
-        reserve.currentLiquidityRate = newLiquidityRate;
-        reserve.currentStableBorrowRate = newStableRate;
-        reserve.currentVariableBorrowRate = newVariableRate;
-        reserve.lastUpdateTimestamp = uint40(block.timestamp);
+        instrument.currentLiquidityRate = newLiquidityRate;
+        instrument.currentStableBorrowRate = newStableRate;
+        instrument.currentVariableBorrowRate = newVariableRate;
+        instrument.lastUpdateTimestamp = uint40(block.timestamp);
 
-        emit ReserveUpdated(  _instrument,  newLiquidityRate,  newStableRate,  newVariableRate,  reserve.lastLiquidityCumulativeIndex,  reserve.lastVariableBorrowCumulativeIndex );
+        emit InstrumentUpdated(  _instrument,  newLiquidityRate,  newStableRate,  newVariableRate,  instrument.lastLiquidityCumulativeIndex,  instrument.lastVariableBorrowCumulativeIndex );
     }
 
     /**

@@ -9,7 +9,7 @@ import "../tokenization/IToken.sol";
 
 /**
 * @title LendingPoolConfigurator contract
-* @author Aave
+* @author Aave (modified by SIGH FINANCE)
 * @notice Executes configuration methods on the LendingPoolCore contract. Allows to enable/disable instruments,
 * and set different protocol parameters.
 **/
@@ -128,6 +128,27 @@ contract LendingPoolConfigurator is VersionedInitializable {
 
         emit InstrumentInitialized( _instrument, address(iTokenInstance), _interestRateStrategyAddress );
     }
+
+// ###################################################################################################
+// ####### FUNCTIONS WHICH INTERACT WITH LENDINGPOOLCORE CONTRACT ####################################
+// ####### --> removeLastAddedInstrument() : REMOVE INSTRUMENT    #####################################
+// ####### --> enableBorrowingOnInstrument()   :   BORROWING RELATED  #################################
+// ####### --> disableBorrowingOnInstrument()  :   BORROWING RELATED  #################################
+// ####### --> enableInstrumentAsCollateral()    :   COLLATERAL RELATED  ##############################
+// ####### --> disableInstrumentAsCollateral()   :   COLLATERAL RELATED  ##############################
+// ####### --> enableInstrumentStableBorrowRate()    :     STABLE BORROW RATE RELATED  ################
+// ####### --> disableInstrumentStableBorrowRate()   :     STABLE BORROW RATE RELATED  ################
+// ####### --> activateInstrument()      :      INSTRUMENT ACTIVATION  ################################
+// ####### --> deactivateInstrument()    :      INSTRUMENT DE-ACTIVATION  #############################
+// ####### --> freezeInstrument()     :      FREEZE INSTRUMENT  #######################################
+// ####### --> unfreezeInstrument()   :      UNFREEZE INSTRUMENT  #####################################
+// ####### --> setInstrumentBaseLTVasCollateral()    :   SETTING VARIABLES  ###########################
+// ####### --> setInstrumentLiquidationThreshold()   :   SETTING VARIABLES  ###########################
+// ####### --> setInstrumentLiquidationBonus()       :   SETTING VARIABLES  ###########################
+// ####### --> setInstrumentDecimals()               :   SETTING VARIABLES  ###########################
+// ####### --> setInstrumentInterestRateStrategyAddress()     : SETTING INTEREST RATE STRATEGY  #######
+// ####### --> refreshLendingPoolCoreConfiguration()   :   REFRESH THE ADDRESS OF CORE  ###############
+// ###################################################################################################
 
     /**
     * @dev removes the last added instrument in the list of the instruments
