@@ -4218,66 +4218,44 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
 
     let API_QUOTE_URL = 'https://api.0x.org/swap/v1/quote';
     const createQueryString = input => encodeURI( Object.entries(input).map(([name, value]) => `${name}=${value}`).join('&') );
-    console.log(sellAmount_);
+    let qs_;
+    // console.log('the sell amount is - ' + sellAmount_);
 
     if (buyAmount_ != undefined) {
-      const qs_ = createQueryString({ sellToken: sellTokenAddress,  buyToken: buyTokenAddress, buyAmount:buyAmount_.toString() });
-      const quoteUrl = `${API_QUOTE_URL}?${qs}`;
-      const response = await fetch(quoteUrl);
-      console.log(response);
-  
+      console.log('in buy amount');
+      qs_ = createQueryString({ sellToken: sellTokenAddress,  buyToken: buyTokenAddress, buyAmount:buyAmount_.toString() });
     }
     if (sellAmount_ != undefined) {
       console.log('in sell amount');
-      const qs_ = createQueryString({ sellToken: sellTokenAddress,  buyToken: buyTokenAddress, sellAmount: sellAmount_.toString(), });
-      const quoteUrl = `${API_QUOTE_URL}?${qs}`;
-      const response = await fetch(quoteUrl);
-      console.log(response);
+      qs_ = createQueryString({ sellToken: sellTokenAddress,  buyToken: buyTokenAddress, sellAmount: sellAmount_.toString(), });
       }
 
-    // console.log(qs);      // QUERY STRING
-
-    // const quoteUrl = `${API_QUOTE_URL}?${qs}`;
-    // const response = await fetch(quoteUrl);
-    // console.log(response);
-
-    // const quote = await response.json();
-    // console.log(quote);
-    // return quote;
+      console.log(qs_);
+      const quoteUrl = API_QUOTE_URL + '?' + qs_; 
+      console.log(quoteUrl);
+      const response = await fetch(quoteUrl);
+      console.log(response);
+      const quote = await response.json();
+      console.log(quote);
+      return quote;
    },
 
 
+  treasuryTokenSwapTrade: async ( {commit, state}, {allowanceTarget,to,callDataHex,token_bought,token_sold,sellAmount,gasPrice_} ) => {
 
-  treasuryTokenSwap: async ( {commit, state}, {sellToken, buyToken, sellAmount, buyAmount} ) => {
-    let buy_Amount;
-    let sell_Amount;
-    if (buyAmount != undefined) {
-      buy_Amount = baseUnitAmount(buyAmount); // we want to buy 1 unit of DAI
-      buy_Amount = buy_Amount.toString();      
+    const Treasury_ = Treasury.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
+    console.log(Treasury_);
+    if (Treasury_) {
+        let Treasury__Contract = new web3.eth.Contract(Treasury.abi, Treasury_.address);
+        console.log(Treasury__Contract);
+        try {
+          let txHash = Treasury__Contract.methods.swapTokensUsingOxAPI(allowanceTarget,to,callDataHex,token_bought,token_sold,sellAmount).sendTransactionAsync({ from:  state.web3Account, value: quote.value, gasPrice: gasPrice_});
+          console.log(txHash);
+        } 
+        catch (e) {
+          console.log(e)
+        }
     }
-    if (sellAmount != undefined) {
-      sell_Amount = baseUnitAmount(sellAmount); // we want to buy 1 unit of DAI
-      sell_Amount = sell_Amount.toString();
-    }
-
-    const params = { sellToken: sellToken, buyToken: buyToken, buyAmount: buy_Amount, sellAmount: sell_Amount,};
-    const res = await fetch(`https://kovan.api.0x.org/swap/v1/quote?${qs.stringify(params)}`);
-    const quote = await res.json();
-    console.log('Received quote:', quote); 
-
-    // const Treasury_ = Treasury.networks[state.networkId];  // Unitroller STORAGE CONTRACT (ADDRESS of Unitroller, ABI of Sightroller)
-    // console.log(Treasury_);
-    // if (Treasury_) {
-    //     let Treasury__Contract = new web3.eth.Contract(Treasury.abi, Treasury_.address);
-    //     console.log(Treasury__Contract);
-    //     try {
-    //       let txHash = Treasury__Contract.methods.swapTokensUsingOxAPI(quote.to, quote.data).sendTransactionAsync({ from:  state.web3Account, value: quote.value, gasPrice: quote.gasPrice});
-    //       console.log(txHash);
-    //     } 
-    //     catch (e) {
-    //       console.log(e)
-    //     }
-    // }
   },
 
 //   export const baseUnitAmount = (unitAmount: number, decimals = 18): BigNumber => {
