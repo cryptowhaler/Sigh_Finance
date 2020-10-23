@@ -68,7 +68,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @dev only lending pools configurator can use functions affected by this modifier
     **/
     modifier onlyLendingPoolConfigurator {
-        require( addressesProvider.getLendingPoolConfigurator() == msg.sender,  "The caller must be a lending pool configurator contract" );
+        require( addressesProvider.getLendingPoolConfigurator() == msg.sender,  "The caller must be the lending pool configurator account" );
         _;
     }
 

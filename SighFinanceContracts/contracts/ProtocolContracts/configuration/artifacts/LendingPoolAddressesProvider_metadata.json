@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.5.17+commit.d19bba13"
+		"version": "0.5.16+commit.9c3226ce"
 	},
 	"language": "Solidity",
 	"output": {
@@ -682,37 +682,7 @@
 						"type": "address"
 					}
 				],
-				"name": "setSIGHDistributionHandler",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_SIGHDistributionHandler",
-						"type": "address"
-					}
-				],
 				"name": "setSIGHDistributionHandlerImpl",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_SIGHTreasury",
-						"type": "address"
-					}
-				],
-				"name": "setSIGHTreasury",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -893,17 +863,17 @@
 			]
 		},
 		"localhost/contracts/ProtocolContracts/configuration/LendingPoolAddressesProvider.sol": {
-			"keccak256": "0x8489a7ff8ce2ade46e8b5dc7db3f5bf86d4d145615fe2fc670f712f45feaec03",
+			"keccak256": "0x5759e72ef86296797d7ad1628092daed6582185c21f837f8a6bac39b153765be",
 			"urls": [
-				"bzz-raw://a94f7837b75ab998ae82be3df8739bcdcd2d1d088d9b90702f3a00d866c5bdd2",
-				"dweb:/ipfs/QmWMQteDTxM2pwpLz9vjEDcRoJP4iNycSHCqS7dun44hnw"
+				"bzz-raw://34ffe6d8abfd5d911c8b6e6356e140eb469284b556a26435627b79f4bc194ce8",
+				"dweb:/ipfs/QmRjKMAfpCZSLScFTscrvkth6YS3An3GLjHhVRPpe1jsRb"
 			]
 		},
 		"localhost/contracts/ProtocolContracts/interfaces/ILendingPoolAddressesProvider.sol": {
-			"keccak256": "0xa4a7b6fd34f9bfbc8403acc550c436c1a64a37937ea9e79e18afd67912252869",
+			"keccak256": "0x02184cb0016f723a845a220bd05de55f8b3f12a0e13afa635da5b6aaf609cd0a",
 			"urls": [
-				"bzz-raw://0070468776cbe71b9eb7fd309efd2da8e6a24adcc543359272b42b8a5e01b09e",
-				"dweb:/ipfs/QmRgNBbjC8SK3DsBnvznbF116YzmrwknADUKkoMuqJPTMJ"
+				"bzz-raw://a1a6b63b67cc27b390ab56f013344830b0903cac305590cc4b47c3733f87e9ba",
+				"dweb:/ipfs/QmZtcWiahJwwZmUbPCcZ27KYdWGcv8s9anY2wXGMg5Vb8x"
 			]
 		},
 		"localhost/contracts/ProtocolContracts/libraries/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

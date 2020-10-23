@@ -1,0 +1,172 @@
+{
+	"compiler": {
+		"version": "0.5.16+commit.9c3226ce"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "FEE_PROVIDER_REVISION",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "calculateLoanOriginationFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getLoanOriginationFeePercentage",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_addressesProvider",
+						"type": "address"
+					}
+				],
+				"name": "initialize",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "originationFeePercentage",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "Aave, SIGH Finance*",
+			"methods": {
+				"calculateLoanOriginationFee(address,uint256)": {
+					"details": "calculates the origination fee for every loan executed on the platform.",
+					"params": {
+						"_amount": "the amount of the loan*",
+						"_user": "can be used in the future to apply discount to the origination fee based on the _user account (eg. stake AAVE tokens in the lending pool, or deposit > 1M USD etc..)"
+					}
+				},
+				"getLoanOriginationFeePercentage()": {
+					"details": "returns the origination fee percentage*"
+				},
+				"initialize(address)": {
+					"details": "initializes the FeeProvider after it's added to the proxy",
+					"params": {
+						"_addressesProvider": "the address of the LendingPoolAddressesProvider"
+					}
+				}
+			},
+			"title": "FeeProvider contract"
+		},
+		"userdoc": {
+			"methods": {},
+			"notice": "Implements calculation for the fees applied by the protocol"
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/ProtocolContracts/fees/FeeProvider.sol": "FeeProvider"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/ProtocolContracts/fees/FeeProvider.sol": {
+			"keccak256": "0x57a027d13952c4177c2cbd7406d0e39ca4cbbc84e25b152cadea846c18d62f1f",
+			"urls": [
+				"bzz-raw://8d307e5164c79e60aa3d5e167854dc4727c3be2c8996e02b61dcd551b0af7427",
+				"dweb:/ipfs/QmS3rcjTwLRDJbrkBhCQDd1XLBXDj8SwfDAmJAQ4b7uG9C"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/interfaces/IFeeProvider.sol": {
+			"keccak256": "0xefd33154c4d0fa175b6a78c06deca795c66a386e1f823d9e9b94b362c52bdfe4",
+			"urls": [
+				"bzz-raw://78e463db9777d766440c3046b4ba54b990af86ead654237518eb1cf4462a5865",
+				"dweb:/ipfs/QmRdye1LYbrxgJqmaPAg3bjpU2tDZU5niXzWh62E7GVx8W"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/libraries/WadRayMath.sol": {
+			"keccak256": "0x126c58b068a25a9721da9933c377361f9194ab839dd6ad627d8f78a062fe0cc3",
+			"urls": [
+				"bzz-raw://810142a1a4ecd60c3f36ab696cdcb34bfb5a52d241591229659bb5c02c40c5cc",
+				"dweb:/ipfs/Qma8sCTftr1468EKegJuXnNXqTySUGtk683kAfyhMyHpiL"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/libraries/openzeppelin-upgradeability/VersionedInitializable.sol": {
+			"keccak256": "0x3f7fa91853dcdf84684887deaa056f5b3803b46e7efb71704dcc625a63eeac55",
+			"urls": [
+				"bzz-raw://c7b50d4feda87e8875541afeb44f802ab539272bfb22f7c7da84c3d26e03a266",
+				"dweb:/ipfs/QmdSYn9D1Q3FRXRNDLYGGFoYb8rsN4U2MYdxciuZBTSg83"
+			]
+		},
+		"openzeppelin-solidity/contracts/math/SafeMath.sol": {
+			"keccak256": "0x7f293e2ee29a32416531a0bf3da9972358887c45ec1836642ec8e700cc152ba0",
+			"urls": [
+				"bzz-raw://e6ca40872864cb64a2dcc1b4f0be6a3cfc406f363e045fa7991f9f22f6257a63",
+				"dweb:/ipfs/QmdsPdEayCcUa1fg3YTbhTPn3GTcjfNYZqnwf9EDC3QGpp"
+			]
+		}
+	},
+	"version": 1
+}

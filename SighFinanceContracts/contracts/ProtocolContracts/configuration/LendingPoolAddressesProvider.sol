@@ -54,9 +54,9 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider,
     bytes32 private constant SIGH_TREASURY = "SIGH_TREASURY";                           // ADDED FOR SIGH FINANCE
     bytes32 private constant SIGH = "SIGH";                                            // ADDED FOR SIGH FINANCE
 
-// ################################
-// ######  SIGH ADDRESS ###########
-// ################################
+// ################################                                                     // ADDED FOR SIGH FINANCE
+// ######  SIGH ADDRESS ###########                                                     // ADDED FOR SIGH FINANCE
+// ################################                                                     // ADDED FOR SIGH FINANCE
 
     function getSIGHAddress() public view returns (address) {
         return getAddress(SIGH);
@@ -66,7 +66,6 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider,
         _setAddress(SIGH, sighAddress);
         emit SIGHAddressUpdated(sighAddress);
     }
-
 
 // ################################
 // ######  LendingPool proxy ######

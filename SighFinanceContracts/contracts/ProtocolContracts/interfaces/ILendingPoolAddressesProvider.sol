@@ -6,6 +6,9 @@ pragma solidity ^0.5.0;
  */
 
 contract ILendingPoolAddressesProvider {
+    
+    function getSIGHAddress() public view returns (address);
+    function setSIGHAddress(address sighAddress) public;    
 
     function getLendingPool() public view returns (address);
     function setLendingPoolImpl(address _pool) public;
@@ -42,8 +45,8 @@ contract ILendingPoolAddressesProvider {
     function setLendingRateOracle(address _lendingRateOracle) public;
 
     function getSIGHTreasury() public view returns (address);                                 //  ADDED FOR SIGH FINANCE 
-    function setSIGHTreasury(address _SIGHTreasury) public;                                   //  ADDED FOR SIGH FINANCE 
+    function setSIGHTreasuryImpl(address _SIGHTreasury) public;                                   //  ADDED FOR SIGH FINANCE 
 
     function getSIGHDistributionHandler() public view returns (address);                      //  ADDED FOR SIGH FINANCE 
-    function setSIGHDistributionHandler(address _SIGHDistributionHandler) public;             //  ADDED FOR SIGH FINANCE 
+    function setSIGHDistributionHandlerImpl(address _SIGHDistributionHandler) public;             //  ADDED FOR SIGH FINANCE 
 }
