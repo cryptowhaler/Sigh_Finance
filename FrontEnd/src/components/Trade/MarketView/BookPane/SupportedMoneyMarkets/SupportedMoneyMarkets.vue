@@ -86,35 +86,34 @@ export default {
         },
       },
     },
-    marlin: {
-      query: gql`query name($id: String!) {
-              market ($id: String!) {
-                  id
-                  exchangeRate
-                  underlyingPrice
-                  totalSupply
-                  totalBorrows
-                  gsighSpeed
-                  sighSpeed
-              }
-          }`,                
+    // marlin: {
+    //   query: gql`query name($id: String!) {
+    //           market ($id: String!) {
+    //               id
+    //               exchangeRate
+    //               underlyingPrice
+    //               totalSupply
+    //               totalBorrows
+    //               gsighSpeed
+    //               sighSpeed
+    //           }
 
-        client: marlinClient ,
-        
-        variables() {  return {id: this.marketAddress ,};  },
-        
-        result({data,loading,}) {
-            if (loading) {
-              console.log('loading');
-            }
-            console.log(data);
-            let market_ = [];
-            market_.push(data.market);
-            console.log(market_);
-            this.handleMarkets(market_);
-          },
+    //     client: marlinClient ,
 
-    }
+    //     variables() {  return {id: this.marketAddress ,};  },
+        
+    //     result({data,loading,}) {
+    //         if (loading) {
+    //           console.log('loading');
+    //         }
+    //         console.log(data);
+    //         let market_ = [];
+    //         market_.push(data.market);
+    //         console.log(market_);
+    //         this.handleMarkets(market_);
+    //       },
+
+    // }
 
 
 

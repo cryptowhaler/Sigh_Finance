@@ -127,7 +127,8 @@ export default {
     },
 
     async ExecuteTrade() {
-
+      
+      console.log(this.response.allowanceTarget);
       const response = await this.treasuryTokenSwapTrade( { allowanceTarget: this.response.allowanceTarget , to: this.response.to, 
                                                         callDataHex : this.response.data, token_bought: this.response.buyAddress,
                                                         token_sold: this.response.sellAddress  , sellAmount: this.response.sellAmount  
