@@ -21,14 +21,14 @@ const vueRouter = new Router({
       pageTitle: 'SIGH Finance | A money-market protocol with an Engineered Liquidity mining Pipeline addressing the volatility problem pertaining to crypto assets.',
     },
   },
-  {
-    path: '/test',
-    name: 'Testing',
-    component: newPage,
-    meta: {
-      pageTitle: 'SIGH Finance | A money-market protocol with an Engineered Liquidity mining Pipeline addressing the volatility problem pertaining to crypto assets.',
-    },
-  },
+  // {
+  //   path: '/test',
+  //   name: 'Testing',
+  //   component: newPage,
+  //   meta: {
+  //     pageTitle: 'SIGH Finance | A money-market protocol with an Engineered Liquidity mining Pipeline addressing the volatility problem pertaining to crypto assets.',
+  //   },
+  // },
   // { path: '/', name: 'home', component: Home },
   // {
   //   path: '/pool/:id',

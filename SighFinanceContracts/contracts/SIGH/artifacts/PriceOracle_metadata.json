@@ -1,0 +1,98 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "contract ITokenInterface",
+						"name": "iToken",
+						"type": "address"
+					}
+				],
+				"name": "getUnderlyingPrice",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "contract ITokenInterface",
+						"name": "iToken",
+						"type": "address"
+					}
+				],
+				"name": "getUnderlyingPriceRefresh",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"methods": {
+				"getUnderlyingPrice(address)": {
+					"params": {
+						"iToken": "The iToken to get the underlying price of"
+					},
+					"return": "The underlying asset price mantissa (scaled by 1e18). Zero means the price is unavailable."
+				}
+			}
+		},
+		"userdoc": {
+			"methods": {
+				"getUnderlyingPrice(address)": {
+					"notice": "Get the underlying price of a cToken asset"
+				}
+			}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/SIGH/PriceOracle.sol": "PriceOracle"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/ProtocolContracts/interfaces/ITokenInterface.sol": {
+			"keccak256": "0x6639b37936008333dd6bb08b7bb5dd39db56980ca48228bd9280eda1b178f0e0",
+			"urls": [
+				"bzz-raw://0fe8c2405cb0565ecb4af4b4eec1377b6aaa6e91d9d6360113ff7ef28939afcb",
+				"dweb:/ipfs/QmSur2qH6gKjr3ERDZU8VHP8CYEykHTPaLkWGenvwv58Td"
+			]
+		},
+		"localhost/contracts/SIGH/PriceOracle.sol": {
+			"keccak256": "0xa0ac5e9f83445f770b1b8aae08b65a9fdd8a35f6fc13f4707815278a8c0e3942",
+			"urls": [
+				"bzz-raw://5910526a5712015ebf2b60d945cac8c53e882b40146e333e8dee06c1ebc6a74a",
+				"dweb:/ipfs/QmWXTzZRAqxdSgE2U7D3JfrzGCoL384o6yQNcL8n686W9p"
+			]
+		}
+	},
+	"version": 1
+}

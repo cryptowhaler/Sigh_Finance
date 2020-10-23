@@ -1,6 +1,7 @@
 pragma solidity ^0.5.16;
 
-import "../ProtocolContracts/IToken.sol";
+// import "../ProtocolContracts/IToken.sol";
+import "../ProtocolContracts/interfaces/ITokenInterface.sol";
 
 
 interface PriceOracle {
@@ -11,8 +12,8 @@ interface PriceOracle {
       * @return The underlying asset price mantissa (scaled by 1e18).
       *  Zero means the price is unavailable.
       */
-    function getUnderlyingPrice(IToken iToken) external view returns (uint);
+    function getUnderlyingPrice(ITokenInterface iToken) external view returns (uint);
 
-    function getUnderlyingPriceRefresh(IToken iToken) external returns (uint);
+    function getUnderlyingPriceRefresh(ITokenInterface iToken) external returns (uint);
     
 }

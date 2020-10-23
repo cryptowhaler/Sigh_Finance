@@ -1,16 +1,14 @@
 pragma solidity ^0.5.16;
 
-import "../ProtocolContracts/IToken.sol";
-import "./Math/Exponential.sol";
-import "./PriceOracle.sol";
-import "./SighSpeedController.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
-// import "../openzeppelin/EIP20Interface.sol";
+import "../ProtocolContracts/interfaces/ITokenInterface.sol";
+import "../ProtocolContracts/interfaces/ILendingPoolAddressesProvider.sol";
+import "./Math/Exponential.sol";
+import "./PriceOracle.sol";            
 
-import "../ProtocolContracts/configuration/LendingPoolAddressesProvider.sol";
-import "../ProtocolContracts/lendingpool/LendingPoolCore.sol";
+import "../ProtocolContracts/lendingpool/LendingPoolCore.sol";      // REPLACE WITH AN INTER
 
-contract SIGHDistributionHandler is Exponential {
+contract SIGHDistributionHandler is Exponential, VersionedInitializable {
     
     address admin;
     LendingPoolAddressesProvider public addressesProvider;
@@ -21,7 +19,7 @@ contract SIGHDistributionHandler is Exponential {
 
     bool public isSpeedUpperCheckAllowed = false;
 
-    IToken[] public allMarkets;
+    ITokenInterface[] public allMarkets;
 
     mapping (address => bool) sighedMarkets;    // Markets which receive SIGH 
     
@@ -82,16 +80,16 @@ contract SIGHDistributionHandler is Exponential {
 
 
     /// @notice Emitted when a new SIGH speed is calculated for a market
-    event SuppliersSIGHSpeedUpdated(IToken iToken, uint prevSpeed, uint newSpeed);
+    event SuppliersSIGHSpeedUpdated(ITokenInterface iToken, uint prevSpeed, uint newSpeed);
 
     /// @notice Emitted when a new SIGH speed is calculated for a market
-    event BorrowersSIGHSpeedUpdated(IToken iToken, uint prevSpeed, uint newSpeed);
+    event BorrowersSIGHSpeedUpdated(ITokenInterface iToken, uint prevSpeed, uint newSpeed);
 
     /// @notice Emitted when SIGH is distributed to a supplier
-    event DistributedSupplier_SIGH(IToken iToken, address supplier, uint sighDelta, uint sighSupplyIndex);
+    event DistributedSupplier_SIGH(ITokenInterface iToken, address supplier, uint sighDelta, uint sighSupplyIndex);
 
     /// @notice Emitted when SIGH is distributed to a borrower
-    event DistributedBorrower_SIGH(IToken iToken, address borrower, uint sighDelta, uint sighBorrowIndex);
+    event DistributedBorrower_SIGH(ITokenInterface iToken, address borrower, uint sighDelta, uint sighBorrowIndex);
 
     /// @notice Emitted when SIGH is transferred to a User
     event SIGH_Transferred(address userAddress, uint amountTransferred );
@@ -104,10 +102,24 @@ contract SIGHDistributionHandler is Exponential {
 
     event ClockUpdated( uint224 prevClock, uint224 curClock, uint timestamp );
         
-        
-    constructor(LendingPoolAddressesProvider addressesProvider_) public {
+// ###############################################################################################
+// ##############        PROXY RELATED          ##################################################
+// ###############################################################################################
+
+
+    event SIGHDistributionHandlerInitialized(address msgSender, address passedAddress);
+
+    uint256 constant private DATA_PROVIDER_REVISION = 0x1;
+
+    function getRevision() internal pure returns(uint256) {
+        return DATA_PROVIDER_REVISION;
+    }
+    
+    
+    function initialize( address addressesProvider_) public initializer {
         admin = msg.sender;
-        addressesProvider = addressesProvider_; 
+        addressesProvider = LendingPoolAddressesProvider(addressesProvider_); 
+        emit SIGHDistributionHandlerInitialized(admin , address(addressesProvider) );
     }
     
     
@@ -120,7 +132,7 @@ contract SIGHDistributionHandler is Exponential {
         require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can add SIGH market");
         require(!sighPriceCycles[marketAddress_].isListed ,"Market already supported.");
 
-        allMarkets.push(IToken(marketAddress_)); // ADD THE MARKET TO THE LIST OF SUPPORTED MARKETS
+        allMarkets.push(ITokenInterface(marketAddress_)); // ADD THE MARKET TO THE LIST OF SUPPORTED MARKETS
         
         // INITIALIZE SUPPLY INDEXES
         if ( sighMarketSupplyState[marketAddress_].index == 0 && sighMarketSupplyState[marketAddress_].block_ == 0 ) {
@@ -262,13 +274,13 @@ contract SIGHDistributionHandler is Exponential {
     event MaxSpeedUsedWhenRefreshingPriceSnapshots(uint SIGHSpeed, uint maxSpeed,uint SIGH_Price,uint totalLosses_  );
         
     function refreshSIGHSpeedsInternal() internal {
-        IToken[] memory allMarkets_ = allMarkets;
+        ITokenInterface[] memory allMarkets_ = allMarkets;
         uint blockNumber = getBlockNumber();   
         
 
         // ###### accure the indexes ######
         for (uint i = 0; i < allMarkets_.length; i++) {
-            IToken currentMarket = allMarkets_[i];
+            ITokenInterface currentMarket = allMarkets_[i];
             updateSIGHSupplyIndex(address(currentMarket));
             updateSIGHBorrowIndex(address(currentMarket));
         }
@@ -304,7 +316,7 @@ contract SIGHDistributionHandler is Exponential {
         // ######         Adds the loss of the current Market to total loss             ######
         // ######         It updates the stored Price for the current CLock             ######
         for (uint i = 0; i < allMarkets_.length; i++) {
-            IToken iToken = allMarkets_[i];
+            ITokenInterface iToken = allMarkets_[i];
             
             if ( !sighedMarkets[address(iToken)]  ) { 
                 marketLosses[i] = Exp({mantissa: 0});
@@ -366,7 +378,7 @@ contract SIGHDistributionHandler is Exponential {
         uint maxSpeed = SIGHSpeed;
         uint SIGH_Price;
         if (isSpeedUpperCheckAllowed) {
-            SIGH_Price = oracle.getUnderlyingPrice( IToken(Sigh_Address) );
+            SIGH_Price = oracle.getUnderlyingPrice( ITokenInterface(Sigh_Address) );
             uint max_valueDistributedPerBlock = mul_(SIGH_Price,SIGHSpeed);
             uint totalLosses_ = totalLosses.mantissa;
             if ( SIGH_Price == 0 || totalLosses_ > max_valueDistributedPerBlock ) {
@@ -382,7 +394,7 @@ contract SIGHDistributionHandler is Exponential {
         // ###### Updates the Speed (loss driven) for the Supported Markets ######
         // ###### Updates the Speed (loss driven) for the Supported Markets ######        
         for (uint i=0 ; i < allMarkets_.length ; i++) {
-            IToken current_market = allMarkets[i];
+            ITokenInterface current_market = allMarkets[i];
             
             uint prevSpeedSupplier =  SIGH_Speeds_for_Markets[address(current_market)].suppliers_Speed ;
             uint prevSpeedBorrower =  SIGH_Speeds_for_Markets[address(current_market)].borrowers_Speed ;
@@ -450,7 +462,7 @@ contract SIGHDistributionHandler is Exponential {
         
         if (deltaBlocks > 0 && supplySpeed > 0) {
             uint sigh_Accrued = mul_(deltaBlocks, supplySpeed);
-            uint supplyTokens = IToken(currentMarket).totalSupply();
+            uint supplyTokens = ITokenInterface(currentMarket).totalSupply();
             Double memory ratio = supplyTokens > 0 ? fraction(sigh_Accrued, supplyTokens) : Double({mantissa: 0});
             Double memory newIndex = add_(Double({mantissa: supplyState.index}), ratio);
             emit updateSIGHSupplyIndex_test2( currentMarket, supplyTokens, sigh_Accrued, ratio.mantissa , newIndex.mantissa );
@@ -535,13 +547,13 @@ contract SIGHDistributionHandler is Exponential {
         emit distributeSupplier_SIGH_test3(currentMarket, supplyIndex.mantissa, supplierIndex.mantissa );
 
         Double memory deltaIndex = sub_(supplyIndex, supplierIndex);    // , 'Distribute Supplier SIGH : supplyIndex Subtraction Underflow'
-        uint supplierTokens = IToken(currentMarket).balanceOf(supplier);
+        uint supplierTokens = ITokenInterface(currentMarket).balanceOf(supplier);
         uint supplierDelta = mul_(supplierTokens, deltaIndex);
         uint supplierAccrued = add_(SIGH_Accrued[supplier], supplierDelta);
         emit distributeSupplier_SIGH_test4(currentMarket, deltaIndex.mantissa , supplierTokens, supplierDelta , supplierAccrued);
         SIGH_Accrued[supplier] = transfer_Sigh(supplier, supplierAccrued, SIGH_ClaimThreshold);
         uint sigh_accured_by_supplier = SIGH_Accrued[supplier];         
-        emit DistributedSupplier_SIGH(IToken(currentMarket), supplier, supplierDelta, sigh_accured_by_supplier);
+        emit DistributedSupplier_SIGH(ITokenInterface(currentMarket), supplier, supplierDelta, sigh_accured_by_supplier);
     }
 
     event distributeBorrower_SIGH_test3(address market,uint borrowIndex, uint borrowerIndex );
@@ -576,7 +588,7 @@ contract SIGHDistributionHandler is Exponential {
             Double memory deltaIndex = sub_(borrowIndex, borrowerIndex);   // , 'Distribute Borrower SIGH : borrowIndex Subtraction Underflow'
             uint borrowBalance;
             ( , borrowBalance , , ) = lendingPoolCoreContract.getUserBasicInstrumentData(currentMarket, borrower);
-            // uint borrowBalance = IToken(currentMarket).borrowBalanceStored(borrower);
+            // uint borrowBalance = ITokenInterface(currentMarket).borrowBalanceStored(borrower);
             uint borrowerAmount = div_(borrowBalance, marketBorrowIndex);
             uint borrowerDelta = mul_(borrowerAmount, deltaIndex);
             uint borrowerAccrued = add_(SIGH_Accrued[borrower], borrowerDelta);
@@ -594,7 +606,7 @@ contract SIGHDistributionHandler is Exponential {
     function claimSIGH(address[] memory holders, bool borrowers, bool suppliers ) public {
         
         for (uint i = 0; i < allMarkets.length; i++) {  
-            IToken currentMarket = allMarkets[i];
+            ITokenInterface currentMarket = allMarkets[i];
 
             if (borrowers == true) {
                 updateSIGHBorrowIndex(address(currentMarket));

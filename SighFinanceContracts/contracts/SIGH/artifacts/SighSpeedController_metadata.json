@@ -568,11 +568,18 @@
 		"remappings": []
 	},
 	"sources": {
-		"localhost/contracts/SIGH/SighSpeedController.sol": {
-			"keccak256": "0xb2dca98620227d6b12dc4df786e7638fa06025c2c65ff35e51b86caf3ee36d7e",
+		"localhost/contracts/SIGH/Interfaces/ISighSpeedController.sol": {
+			"keccak256": "0xc101915c8fb6b45e453b295a1ae099f7992ea0562830e3a95e76ee2dd37aa043",
 			"urls": [
-				"bzz-raw://ca96306d990d64c482b4d26ca8769f3a8c22c7523f3f64e0360e4ff8b87271eb",
-				"dweb:/ipfs/QmeM9DKCFfd3qYeHZ5CJJSoriAUJgc6Q1ymGBTRV222Z7f"
+				"bzz-raw://32323143a687cd786b9dc8faa7369efe27a7fc8cb8b845d35b24fae91d7ee4c8",
+				"dweb:/ipfs/QmWFmrvhvSvpkD2FKqaJkicRZfwXw35Z9myeCWUsHptJqf"
+			]
+		},
+		"localhost/contracts/SIGH/SighSpeedController.sol": {
+			"keccak256": "0x2767549b93c61b28265251facf0faebd830e748ab8830aaf942bd030f7c1eb92",
+			"urls": [
+				"bzz-raw://fa7d9764240e932d11a2efa7dfacc1db5194ab5736ddf65486b36a7d7ec82ac4",
+				"dweb:/ipfs/QmXXXeuSTcmtLJBxAUrJBEA7esqXX9WZJPuCd2pq6pGtJE"
 			]
 		},
 		"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {

@@ -32,6 +32,7 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider,
     event TokenDistributorUpdated(address indexed newAddress);
     event SIGHDistributionHandlerUpdated(address indexed newAddress);   // ADDED FOR SIGH FINANCE
     event SIGHTreasuryUpdated(address indexed newAddress);              // ADDED FOR SIGH FINANCE
+    event SIGHAddressUpdated(address indexed sighAddress);              // ADDED FOR SIGH FINANCE
 
     event ProxyCreated(bytes32 id, address indexed newAddress);
 
@@ -51,6 +52,20 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider,
     bytes32 private constant TOKEN_DISTRIBUTOR = "TOKEN_DISTRIBUTOR";
     bytes32 private constant SIGH_DISTRIBUTION_HANDLER = "SIGH_DISTRIBUTION_HANDLER";   // ADDED FOR SIGH FINANCE
     bytes32 private constant SIGH_TREASURY = "SIGH_TREASURY";                           // ADDED FOR SIGH FINANCE
+    bytes32 private constant SIGH = "SIGH";                                            // ADDED FOR SIGH FINANCE
+
+// ################################
+// ######  SIGH ADDRESS ###########
+// ################################
+
+    function getSIGHAddress() public view returns (address) {
+        return getAddress(SIGH);
+    }
+
+    function setSIGHAddress(address sighAddress) public onlyOwner {     // LATER CHANGE TO MAKE IT INITIALIZABLE ONLY ONCE
+        _setAddress(SIGH, sighAddress);
+        emit SIGHAddressUpdated(sighAddress);
+    }
 
 
 // ################################
@@ -213,7 +228,7 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider,
     * @dev updates the address of the SIGH Treasury Contract
     * @param _SIGHTreasury the new SIGH Treasury Contract address
     **/
-    function setSIGHTreasury(address _SIGHTreasury) public onlyOwner {   // TO BE DECIDED
+    function setSIGHTreasuryImpl(address _SIGHTreasury) public onlyOwner {   // TO BE DECIDED
         updateImplInternal(SIGH_TREASURY, _SIGHTreasury);
         emit SIGHTreasuryUpdated(_SIGHTreasury);
     }
@@ -230,7 +245,7 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider,
     * @dev updates the address of the SIGH Distribution Handler Contract (Manages the SIGH Speeds)
     * @param _SIGHDistributionHandler the new lending pool liquidation manager address
     **/
-    function setSIGHDistributionHandler(address _SIGHDistributionHandler) public onlyOwner {   // TO BE DECIDED
+    function setSIGHDistributionHandlerImpl(address _SIGHDistributionHandler) public onlyOwner {   // TO BE DECIDED
         updateImplInternal(SIGH_DISTRIBUTION_HANDLER, _SIGHDistributionHandler);
         emit SIGHDistributionHandlerUpdated(_SIGHDistributionHandler);
     }

@@ -8,9 +8,9 @@ pragma solidity ^0.5.16;
  */
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
-//import "../openzeppelin/EIP20Interface.sol";
+import "./Interfaces/ISighSpeedController.sol";
  
-contract SighSpeedController {
+contract SighSpeedController is ISighSpeedController {
 
   /// @notice Reference to SIGH
   IERC20 public token;
@@ -52,7 +52,7 @@ contract SighSpeedController {
 // ###########   SIGH DISTRIBUTION : INITIALIZED DRIPPING (Can be called only once)   ##########
 // #############################################################################################
 
-  function beginDripping () public returns (bool) {
+  function beginDripping () external returns (bool) {
     require(admin == msg.sender,"Dripping can only be initialized by the Admin");
     require(!isDripAllowed,"Dripping can only be initialized once");
 
@@ -67,12 +67,12 @@ contract SighSpeedController {
 // ###########   SIGH DISTRIBUTION : ADDING / REMOVING NEW PROTOCOL WHICH WILL RECEIVE SIGH TOKENS   ##########
 // ############################################################################################################
 
-  function supportNewProtocol( address newProtocolAddress, uint sighSpeed ) public returns (bool)  {
+  function supportNewProtocol( address newProtocolAddress, uint sighSpeed ) external returns (bool)  {
     require(admin == msg.sender,"New Protocol can only be added by the Admin");
     require (!supportedProtocols[newProtocolAddress], 'This Protocol is already supported by the Sigh Speed Controller');
 
     if (isDripAllowed) {
-        drip();
+        dripInternal();
     }
     
     storedSupportedProtocols.push(newProtocolAddress);
@@ -89,7 +89,7 @@ contract SighSpeedController {
   }
   
 //   ######### WE DO NOT DRIP WHEN REMOVING A PROTOCOL  ######### 
-  function removeSupportedProtocol(address protocolAddress_ ) public returns (bool) {
+  function removeSupportedProtocol(address protocolAddress_ ) external returns (bool) {
     require(admin == msg.sender,"Protocol can only be removed by the Admin");
     require(supportedProtocols[protocolAddress_],'The Protocol is already not Supported by the Sigh Speed Controller' );
     
@@ -121,11 +121,11 @@ contract SighSpeedController {
 // ###########   SIGH DISTRIBUTION : FUNCTIONS TO UPDATE DISTRIBUTION SPEEDS   ##########
 // ######################################################################################
 
-  function changeProtocolSIGHSpeed (address targetAddress, uint newSpeed_) public returns (bool) {
+  function changeProtocolSIGHSpeed (address targetAddress, uint newSpeed_) external returns (bool) {
     require(admin == msg.sender,"Drip rate can only be changed by the Admin");
     require(supportedProtocols[targetAddress],'The Protocol is not Supported by the Sigh Speed Controller' );
     if (isDripAllowed) {
-        drip();
+        dripInternal();
     }
     uint prevSpeed = distributionSpeeds[targetAddress];
     distributionSpeeds[targetAddress] = newSpeed_;
@@ -146,7 +146,10 @@ contract SighSpeedController {
     */
   function drip() public returns (uint) {
     require(isDripAllowed,'Dripping has not been initialized by the Admin');    
-
+    dripInternal();
+  }
+  
+  function dripInternal() internal {
     IERC20 token_ = token;
     
     address[] memory protocols = storedSupportedProtocols;
@@ -180,11 +183,12 @@ contract SighSpeedController {
     lastDripBlockNumber = block.number;
   }
 
+
 // ########################################################
 // ###########   FUNCTIONS TO CHANGE THE ADMIN   ##########
 // ########################################################
 
- function changeAdmin(address newAdmin) public returns (bool) {
+ function changeAdmin(address newAdmin) external returns (bool) {
     require(admin == msg.sender,"Stored Admin can only be changed by the current Admin");
     address prevPendingAdmin = pendingAdmin;
     pendingAdmin = newAdmin;
@@ -192,7 +196,7 @@ contract SighSpeedController {
     return true;
  }
 
- function acceptAdmin() public returns (bool) {
+ function acceptAdmin() external returns (bool) {
     require(pendingAdmin == msg.sender,"Only the pending admin can call this function");
     address prevAdmin = admin;
     admin = pendingAdmin;

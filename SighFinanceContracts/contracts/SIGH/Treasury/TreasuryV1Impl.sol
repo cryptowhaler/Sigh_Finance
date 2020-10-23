@@ -11,7 +11,7 @@ import "./EIP20InterfaceSIGH.sol";
  * @title SighFinance's Treasury Contract
  * @author SighFinance
  */
-contract Treasury is TreasuryV1Storage   {
+contract Treasury is TreasuryV1Storage, VersionedInitializable   {
     
     uint public maxTransferAmount;
     uint public coolDownPeriod = 2; // 5 min
@@ -39,15 +39,26 @@ contract Treasury is TreasuryV1Storage   {
     event SIGH_Burned(address sigh_Address, uint amount, uint totalSIGHBurned, uint remaining_balance, uint blockNumber);
     event SIGHBurnSpeedChanged(uint prevSpeed, uint newSpeed, uint blockNumber);
 
-    /**
-      * @notice Constructor
-      * @param sigh_token_ The SIGH Token Address
-      * @param SIGHDistributionHandler_Address_ The SIGHDistributionHandler Contract Address 
-    */    
-    constructor (address sigh_token_, address SIGHDistributionHandler_Address_ ) public {
+// ###############################################################################################
+// ##############        PROXY RELATED          ##################################################
+// ###############################################################################################
+
+
+    event SIGHTreasuryInitialized(address msgSender, address addressesProvider, address SIGH, address sighDistributionHandler);
+
+    uint256 constant private DATA_PROVIDER_REVISION = 0x1;
+
+    function getRevision() internal pure returns(uint256) {
+        return DATA_PROVIDER_REVISION;
+    }
+    
+    
+    function initialize( address addressesProvider_) public initializer {
         admin = msg.sender;
-        sigh_token = IERC20(sigh_token_);
-        SIGHDistributionHandler_address = SIGHDistributionHandler_Address_;
+        addressesProvider = LendingPoolAddressesProvider(addressesProvider_); 
+        sigh_token = IERC20( addressesProvider.getSIGHAddress() );
+        SIGHDistributionHandler_address = addressesProvider.getSIGHDistributionHandler();
+        emit SIGHTreasuryInitialized(admin , address(addressesProvider), sigh_token, SIGHDistributionHandler_address   );
     }
     
     // Testing   
