@@ -75,7 +75,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/Treasury/TreasuryStorage.sol": "TreasuryCoreStorage"
+			"localhost/contracts/SIGH/Treasury/TreasuryStorage.sol": "TreasuryCoreStorage"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -86,18 +86,18 @@
 		"remappings": []
 	},
 	"sources": {
-		"localhost/Treasury/TreasuryStorage.sol": {
-			"keccak256": "0x9fb4add88d9d25fd05b11de9dfd284edc23a6aaf4d96ccebefc09e4b14f562e8",
+		"localhost/contracts/SIGH/Treasury/TreasuryStorage.sol": {
+			"keccak256": "0x139a87a23fae9dcc557facc42fe73949c0116359401b65662867cfc3a1c18c04",
 			"urls": [
-				"bzz-raw://59ec9f5f759f5e5cfe46390dea8ded1a0265cd6bb92b25715698532a3619b129",
-				"dweb:/ipfs/Qmc3i15RUbdP6CR9qAyXnyjgM3V2nsYNZ5yanvBvcdDFVN"
+				"bzz-raw://3fe6e87de9c25d8b226ff1c990d8d891f3478545962985ec2808fc8b8fcab08c",
+				"dweb:/ipfs/Qmdb24WqcMLiWuofDeQHsdQM1NdukN7kE1XNgb4spa3295"
 			]
 		},
-		"localhost/openzeppelin/EIP20Interface.sol": {
-			"keccak256": "0xfd8ed2eac6d0b4d9ee6b32628ba68bae17544b66f190a5f7ce0c6ad024579dc8",
+		"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0xe92a180661a6e21051d45be08a572dbf8d61e04c142d4284e503f615aed587fd",
 			"urls": [
-				"bzz-raw://701be308137fe36f221f1d7c815247a272638df40917e7d1456b3b16e8402897",
-				"dweb:/ipfs/QmPDkPoKiWXMjwpGa65JHBjo5NH8AA3q1nMhsewfUZHjpx"
+				"bzz-raw://003c6da07a3cbc576a9a59f462ed67d9041ff89e106463817ce9f005e24d83c8",
+				"dweb:/ipfs/QmemQazcc1Cww2Umgc4UFYpwF8WRqajPB6z5TNdC13XJCR"
 			]
 		}
 	},

@@ -10,6 +10,7 @@
             </div>
             <keep-alive>
                 <trade-tab v-if="activeTab === 'Supply / Borrow'" />
+                <Swap-Tokens-0xAPI v-if="activeTab === 'Treasury Fund'" />
                 <!-- <ticker v-if="activeTab === 'Account Events'" /> -->
                 <balance v-if="activeTab === 'Account Balance'" />
                 <!-- <news v-if="activeTab === 'News'" /> -->

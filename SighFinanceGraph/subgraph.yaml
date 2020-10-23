@@ -74,7 +74,7 @@ dataSources:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/mapping/sighReservoir.ts
+      file: ./src/mapping/sighTreasury.ts
       entities:
         - SIGHTreasury
       abis:
@@ -97,7 +97,7 @@ dataSources:
           handler: handleTokensBought             
         - event: TokensSold(address,string,uint256,uint256)
           handler: handleTokensSold    
-          - event: SIGH_Burned(address,uint256,uint256,uint256,uint256)
+        - event: SIGH_Burned(address,uint256,uint256,uint256,uint256)
           handler: handleSIGH_Burned  
           
           

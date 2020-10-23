@@ -180,7 +180,7 @@ contract SIGH is Context, IERC20 {
     // ################################################
 
     function isMintingPossible() private returns (bool) {
-        if ( mintingActivated && Current_Cycle < 3711 && _getElapsedSeconds(previousMintTimeStamp,now) > CYCLE_SECONDS ) {
+        if ( mintingActivated && Current_Cycle < 3711 && _getElapsedSeconds(now, previousMintTimeStamp) > CYCLE_SECONDS ) {
             uint prevCycle = Current_Cycle;      
             uint newCycle = add(Current_Cycle,uint256(1),'Overflow');
             Current_Cycle = newCycle;  // CURRENT CYCLE IS UPDATED 
@@ -213,7 +213,7 @@ contract SIGH is Context, IERC20 {
 
 
         balances[_msgSender()] = balances[_msgSender()].add(prize_amount);         // 500 coins given to caller for calling the mint successfully
-        uint256 SpeedController_amount = newCoins.sub(prize_amount);
+        uint256 SpeedController_amount = sub(newCoins,prize_amount,"Prize Amount: Subtraction Underflow");
         balances[SpeedController] = balances[SpeedController].add(SpeedController_amount);     //newly minted coins provided to SpeedController
 
         recentMinter = _msgSender();
@@ -226,8 +226,9 @@ contract SIGH is Context, IERC20 {
         return true;        
     }
 
-    function _getElapsedSeconds(uint256 startTime, uint256 currentTime) private pure returns(uint256) {
-        return currentTime.sub(startTime);
+    function _getElapsedSeconds(uint256 currentTime , uint256 startTime) private pure returns(uint256) {
+        uint ans = sub(currentTime,startTime,"GetElapsedSeconds: Subtraction Underflow");
+        return ans;
     }
 
     function _CalculateCurrentEra() private view returns (uint256) {

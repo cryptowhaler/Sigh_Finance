@@ -42,23 +42,23 @@ contract Treasury is TreasuryV1Storage   {
     /**
       * @notice Constructor
       * @param sigh_token_ The SIGH Token Address
-      * @param sightroller_Address_ The Sightroller Contract Address 
+      * @param SIGHDistributionHandler_Address_ The SIGHDistributionHandler Contract Address 
     */    
-    constructor (address sigh_token_, address sightroller_Address_ ) public {
+    constructor (address sigh_token_, address SIGHDistributionHandler_Address_ ) public {
         admin = msg.sender;
         sigh_token = IERC20(sigh_token_);
-        sightroller_address = sightroller_Address_;
+        SIGHDistributionHandler_address = SIGHDistributionHandler_Address_;
     }
     
-    // Testing
-    function updateSighTrollerAddress(address newSightroller) public returns (bool) {
-        require(msg.sender == admin,'Only Admin can change sightroller_address');
-        sightroller_address = newSightroller;
+    // Testing   
+    function updateSIGHDistributionHandlerAddress(address newSIGHDistributionHandler) public returns (bool) {
+        require(msg.sender == admin,'Only Admin can change SIGHDistributionHandler_address');
+        SIGHDistributionHandler_address = newSIGHDistributionHandler;
     }
 
 
 // ##############################################################################################################################
-// ###########   TREASURY CAN DISTRIBUTE ANY TOKEN TO THE SIGHTROLLER AT A PER BLOCK BASIS                           ############
+// ###########   TREASURY CAN DISTRIBUTE ANY TOKEN TO THE SIGHDistributionHandler AT A PER BLOCK BASIS               ############
 // ###########   1. ChangeTokenBeingDripped() --> Change the token being dripped to the Protocol's Core Contract     ############
 // ###########   2. ChangeDrippingStatus() --> Switch to ON/OFF Dripping                // ######################################
 // ###########   3. changeDripSpeed() --> To change the Current Drip Speed              // ######################################
@@ -135,7 +135,7 @@ contract Treasury is TreasuryV1Storage   {
 // ################################################################################
 
     /**
-      * @notice Drips the Tokens to the SIGHtroller
+      * @notice Drips the Tokens to the SIGHDistributionHandler
       * @return returns the Dripped Amount
     */    
     function drip() public returns (uint) {
@@ -149,7 +149,7 @@ contract Treasury is TreasuryV1Storage   {
         uint toDrip_ = min(treasuryBalance_, deltaDrip_);
         
         require(treasuryBalance_ != 0, 'The treasury currently does not have any of tokens which are being Dripped');
-        require(token_.transfer(sightroller_address, toDrip_), 'The transfer did not complete.' );
+        require(token_.transfer(SIGHDistributionHandler_address, toDrip_), 'The transfer did not complete.' );
         
         lastDripBlockNumber = blockNumber_; // setting the block number when the Drip is made
         uint prevTotalDrippedAmount = totalDrippedAmount[tokenBeingDripped];
@@ -215,11 +215,9 @@ contract Treasury is TreasuryV1Storage   {
 // ################################################# 
 // ###########   FUNCTION TO SWAP TOKENS  ##########
 // ################################################# 
-
-    function swapTokensUsingOxAPI( address to, bytes memory callDataHex, address token_bought, address token_sold ) public payable returns (bool) {
+    // 
+    function swapTokensUsingOxAPI( address allowanceTarget, address payable to, bytes memory callDataHex, address token_bought, address token_sold, uint sellAmount ) public payable returns (bool) {
         require(msg.sender == admin, 'Only Admin can call Token Swap Function on 0x API');
-        IForwarder forwarder;
-        forwarder = IForwarder(to);
         
         IERC20 bought_token;
         bought_token = IERC20(token_bought);
@@ -230,8 +228,17 @@ contract Treasury is TreasuryV1Storage   {
         uint prev_bought_token_amount = bought_token.balanceOf(address(this));
         uint prev_sold_token_amount = sold_token.balanceOf(address(this));
 
+        require(sold_token.approve(allowanceTarget, uint256(sellAmount)));   // Allow the allowanceTarget address to spent an infinite amount
+        (bool success, bytes memory _data) = to.call.value(msg.value)(callDataHex);          // Calling the encoded swap() function. ETH passed to cover for fee
+    
+        require(success, 'TOKEN SWAP FAILED');
+        
+        // IForwarder forwarder;
+        // forwarder = IForwarder(to);
+        
 
-        (bool success, bytes memory _data) = address(forwarder).call.value(msg.value)(callDataHex);
+
+        // (bool success, bytes memory _data) = address(forwarder).call.value(msg.value)(callDataHex);
 
         if (success) {
             uint new_bought_token_amount = bought_token.balanceOf(address(this));

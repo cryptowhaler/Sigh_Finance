@@ -39,7 +39,7 @@ contract TreasuryV1Storage {
     IERC20 public sigh_token;
 
     /// @notice Target to receive dripped tokens (immutable)
-    address public sightroller_address;
+    address public SIGHDistributionHandler_address;
 
     address public tokenBeingDripped; 
     uint DripSpeed;

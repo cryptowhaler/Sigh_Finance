@@ -25,6 +25,7 @@
         <supply v-if="activeTab === 'Supply '" />
         <borrow-order v-else-if="activeTab === 'Borrow '" style="padding-right: 42px; padding-left: 42px;" />
         <Redeem-Component v-else-if="activeTab === 'Redeem'" />
+        <!-- <Swap-Tokens-0xAPI v-else-if="activeTab === 'SwapTokens0xAPI'" /> -->
         <!-- <stop-market-order v-else-if="activeTab === 'Stop Market'" /> -->
     </keep-alive>
     </div>

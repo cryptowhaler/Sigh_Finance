@@ -44,8 +44,8 @@ import '@/assets/css/colors.css';
 // http://graph.marlin.pro
 // const header = { Authorization: 'Bearer ' + VegaKeys.token, };
 const graphQL_subscription = new WebSocketLink({    //Link for Subscription and defining headers
-  uri: 'wss://graph.marlin.pro/subgraphs/name/cryptowhaler/sigh-finance-kovan',
-  // uri: 'wss://api.thegraph.com/subgraphs/name/cryptowhaler/sigh-finance-kovan',
+  // uri: 'wss://graph.marlin.pro/subgraphs/name/cryptowhaler/sigh-finance-kovan',
+  uri: 'wss://api.thegraph.com/subgraphs/name/cryptowhaler/sigh-finance-kovan',
   options: {
     reconnect: true,
     timeout:300000,

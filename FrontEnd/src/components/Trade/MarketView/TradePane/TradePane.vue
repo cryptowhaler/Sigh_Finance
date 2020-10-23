@@ -3,6 +3,7 @@
 <script>
 import Vue from 'vue';
 import TradeTab from './TradeTab/TradeTab.vue';
+import SwapTokens0xAPI from './SwapTokens0xAPI/SwapTokens0xAPI.vue';
 import TabBar from '@/components/TabBar/TabBar.vue';
 import Balance from './Balance/Balance.vue';
 import EventBus, { EventNames, } from '@/eventBuses/default';
@@ -13,14 +14,15 @@ export default {
     TabBar,
     TradeTab,
     Balance,
+    SwapTokens0xAPI,
   },
 
   data() {
     return {
       activeTab: 'Supply / Borrow',
       tabs: {
-        walletNotConnectedTabs: ['Supply / Borrow'],
-        walletConnectedTabs: ['Supply / Borrow',],
+        walletNotConnectedTabs: ['Supply / Borrow','Treasury Fund'],
+        walletConnectedTabs: ['Supply / Borrow','Treasury Fund'],
       },
       height: 0,
       tabBarEventBus: new Vue(),

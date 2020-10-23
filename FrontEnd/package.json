@@ -36,6 +36,7 @@
         "izitoast": "^1.2.0",
         "luxon": "^1.16.0",
         "platform": "^1.3.6",
+        "qs": "^6.9.4",
         "scrypt": "^6.0.3",
         "serialize-javascript": "^2.1.1",
         "setprotocol.js": "^1.2.9-rc1",

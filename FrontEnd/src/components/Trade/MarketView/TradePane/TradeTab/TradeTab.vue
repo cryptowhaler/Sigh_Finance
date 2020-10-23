@@ -5,7 +5,7 @@ import TabBar from '@/components/TabBar/TabBar.vue';
 import Supply from './Supply/Supply.vue';
 import BorrowOrder from './BorrowOrder/BorrowOrder.vue';
 import RedeemComponent from './RedeemOrder/RedeemOrder.vue';
-
+// import SwapTokens0xAPI from './SwapTokens0xAPI/SwapTokens0xAPI.vue';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 
 export default {
