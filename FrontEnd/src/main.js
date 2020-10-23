@@ -15,6 +15,7 @@ import '@vuikit/theme';
 import '@/assets/scss/base/icons.scss';
 import ApolloClient from 'apollo-client';     //Apollo GraphQL
 import {WebSocketLink,} from 'apollo-link-ws'; //Apollo GraphQL
+import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache, } from 'apollo-cache-inmemory';  //Apollo GraphQL
 import VueApollo from 'vue-apollo';   //Vue-Apollo plugin
 // import ApolloClient from "apollo-boost";  //BETTER
@@ -43,23 +44,13 @@ import '@/assets/css/colors.css';
 
 // http://graph.marlin.pro
 // const header = { Authorization: 'Bearer ' + VegaKeys.token, };
-const graphQL_subscription = new WebSocketLink({    //Link for Subscription and defining headers
   // uri: 'wss://graph.marlin.pro/subgraphs/name/cryptowhaler/sigh-finance-kovan',
-  uri: 'wss://api.thegraph.com/subgraphs/name/cryptowhaler/sigh-finance-kovan',
-  options: {
-    reconnect: true,
-    timeout:300000,
-  },
-});
+  //Link for Subscription and defining headers
+  const graphQL_subscription = new WebSocketLink({     uri: 'wss://api.thegraph.com/subgraphs/name/cryptowhaler/sigh-finance-kovan', options: { reconnect: true, timeout:300000, }, });
+  const subscriptionClient = new ApolloClient({ link: graphQL_subscription, cache: new InMemoryCache({ addTypename: true, }),});
 
-// subscriptionClient.maxConnectTimeGenerator.duration = () => subscriptionClient.maxConnectTimeGenerator.max
-
-const client = new ApolloClient({
-  link: graphQL_subscription,
-  cache: new InMemoryCache({
-    addTypename: true,
-  }),
-});
+  const marlinCache = new HttpLink ({uri: 'http://graph.marlin.pro/subgraphs/name/cryptowhaler/sigh-finance-kovan'});
+  const marlinClient = new ApolloClient({ link: marlinCache, cache: new InMemoryCache(), connectToDevTools: true });
 
 Vue.use(VueApollo);
 
@@ -68,7 +59,8 @@ Vue.use(BootstrapVue);
 
 
 const apolloProvider = new VueApollo({  //holds the Apollo client instances that can then be used by all the child components
-  defaultClient: client,
+  clients: { subscriptionClient,  marlinClient},  
+  defaultClient: subscriptionClient,
 });
 
 if (!LocalStorage.get(Keys.pingUuid)) {       

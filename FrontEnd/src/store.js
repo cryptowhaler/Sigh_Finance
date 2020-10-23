@@ -19,6 +19,7 @@ import GovernorAlpha from '@/contracts/GovernorAlpha.json';
 import Timelock from '@/contracts/Timelock.json';
 import GSighReservoir from '@/contracts/GSighReservoir.json';
 import SighLens from '@/contracts/SighLens.json';
+import Treasury from '@/contracts/Treasury.json';
 
 import CErc20Impl from '@/contracts/CErc20Delegate.json';      // IMPLEMENTATION CONTRACT (CAN BE UPDATED)
 import CErc20 from '@/contracts/CErc20Delegator.json';   // INTERACTING WITH STORAGE CONTRACT
