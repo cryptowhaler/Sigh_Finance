@@ -14,6 +14,8 @@ import "../libraries/WadRayMath.sol";
 import "../IToken.sol";
 import "../libraries/EthAddressLib.sol";
 
+import "../../SIGH/Interfaces/ISIGHDipMechanism.sol";
+
 /**
 * @title LendingPoolCore contract
 * @author Aave, SIGH Finance
@@ -1183,7 +1185,8 @@ contract LendingPoolCore is VersionedInitializable {
     function initInstrument( address _instrument, address _iTokenAddress,  uint256 _decimals, address _interestRateStrategyAddress ) external onlyLendingPoolConfigurator {
         reserves[_instrument].init(_iTokenAddress, _decimals, _interestRateStrategyAddress);
         addInstrumentToListInternal(_instrument);
-
+        ISIGHDipMechanism sighMechanism = ISIGHDipMechanism( addressesProvider.getSIGHMechanismHandler()  );        // ADDED BY SIGH FINANCE
+        require ( sighMechanism.addInstrument( _instrument, _iTokenAddress, _decimals ), "Market failed to be properly added to the list of Instruments supported by the SIGH Tokenomic Model" ); // ADDED BY SIGH FINANCE
     }
 
     // adds a instrument to the array of the instruments address

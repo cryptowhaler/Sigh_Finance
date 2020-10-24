@@ -51,7 +51,7 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider,
     bytes32 private constant FEE_PROVIDER = "FEE_PROVIDER";
     bytes32 private constant WALLET_BALANCE_PROVIDER = "WALLET_BALANCE_PROVIDER";
     bytes32 private constant TOKEN_DISTRIBUTOR = "TOKEN_DISTRIBUTOR";
-    bytes32 private constant SIGH_DISTRIBUTION_HANDLER = "SIGH_DISTRIBUTION_HANDLER";   // ADDED FOR SIGH FINANCE
+    bytes32 private constant SIGH_MECHANISM_HANDLER = "SIGH_MECHANISM_HANDLER";   // ADDED FOR SIGH FINANCE
     bytes32 private constant SIGH_TREASURY = "SIGH_TREASURY";                           // ADDED FOR SIGH FINANCE
     bytes32 private constant SIGH = "SIGH";                                            // ADDED FOR SIGH FINANCE
     bytes32 private constant SIGH_MECHANISM_MANAGER = "SIGH_MECHANISM_MANAGER";    // ADDED FOR SIGH FINANCE
@@ -234,20 +234,20 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider,
     }
 
 // #############################################  ADDED FOR SIGH FINANCE 
-// ######  SIGHDistributionHandler proxy #######  ADDED FOR SIGH FINANCE
+// ######  SIGHMechanismHandler proxy #######  ADDED FOR SIGH FINANCE
 // #############################################  ADDED FOR SIGH FINANCE 
 
-    function getSIGHDistributionHandler() public view returns (address) {
-        return getAddress(SIGH_DISTRIBUTION_HANDLER);
+    function getSIGHMechanismHandler() public view returns (address) {
+        return getAddress(SIGH_MECHANISM_HANDLER);
     }
 
     /**
     * @dev updates the address of the SIGH Distribution Handler Contract (Manages the SIGH Speeds)
     * @param _SIGHDistributionHandler the new lending pool liquidation manager address
     **/
-    function setSIGHDistributionHandlerImpl(address _SIGHDistributionHandler) public onlyOwner {   // TO BE DECIDED
-        updateImplInternal(SIGH_DISTRIBUTION_HANDLER, _SIGHDistributionHandler);
-        emit SIGHDistributionHandlerUpdated(_SIGHDistributionHandler);
+    function setSIGHMechanismHandlerImpl(address _SIGHMechanismHandler) public onlyOwner {   // TO BE DECIDED
+        updateImplInternal(SIGH_MECHANISM_HANDLER, _SIGHMechanismHandler);
+        emit SIGHDistributionHandlerUpdated(_SIGHMechanismHandler);
     }
 
 
