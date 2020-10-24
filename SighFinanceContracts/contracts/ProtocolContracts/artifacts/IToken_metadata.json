@@ -1,0 +1,1230 @@
+{
+	"compiler": {
+		"version": "0.5.16+commit.9c3226ce"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "contract ILendingPoolAddressesProvider",
+						"name": "_addressesProvider",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_underlyingAsset",
+						"type": "address"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_underlyingAssetDecimals",
+						"type": "uint8"
+					},
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_symbol",
+						"type": "string"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					}
+				],
+				"name": "Approval",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_from",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_value",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_fromBalanceIncrease",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_toBalanceIncrease",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_fromIndex",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_toIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "BalanceTransfer",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_from",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_value",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_fromBalanceIncrease",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_fromIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "BurnOnLiquidation",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_from",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "InterestRedirectionAllowanceChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_from",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_redirectedBalance",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_fromBalanceIncrease",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_fromIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "InterestStreamRedirected",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_from",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_value",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_fromBalanceIncrease",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_fromIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "MintOnDeposit",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_from",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_value",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_fromBalanceIncrease",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_fromIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "Redeem",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_targetAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_targetBalanceIncrease",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_targetIndex",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_redirectedBalanceAdded",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_redirectedBalanceRemoved",
+						"type": "uint256"
+					}
+				],
+				"name": "RedirectedBalanceUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					}
+				],
+				"name": "Transfer",
+				"type": "event"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "UINT_MAX_VALUE",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "allowInterestRedirectionTo",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					}
+				],
+				"name": "allowance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "approve",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "balanceOf",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_account",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_value",
+						"type": "uint256"
+					}
+				],
+				"name": "burnOnLiquidation",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "decimals",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "subtractedValue",
+						"type": "uint256"
+					}
+				],
+				"name": "decreaseAllowance",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "getInterestRedirectionAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "getRedirectedBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "getUserIndex",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "addedValue",
+						"type": "uint256"
+					}
+				],
+				"name": "increaseAllowance",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "isTransferAllowed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_account",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "mintOnDeposit",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "name",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "principalBalanceOf",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "redeem",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "redirectInterestStream",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "redirectInterestStreamOf",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "symbol",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "totalSupply",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "transfer",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "transferFrom",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_value",
+						"type": "uint256"
+					}
+				],
+				"name": "transferOnLiquidation",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "underlyingAssetAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "Aave, SIGH Finance (modified by SIGH Finance)",
+			"details": "Implementation of the interest bearing token for the protocol.",
+			"methods": {
+				"allowInterestRedirectionTo(address)": {
+					"details": "gives allowance to an address to execute the interest redirection on behalf of the caller.",
+					"params": {
+						"_to": "the address to which the interest will be redirected. Pass address(0) to reset the allowance.*"
+					}
+				},
+				"allowance(address,address)": {
+					"details": "See {IERC20-allowance}."
+				},
+				"approve(address,uint256)": {
+					"details": "See {IERC20-approve}.     * Requirements:     * - `spender` cannot be the zero address."
+				},
+				"balanceOf(address)": {
+					"details": "calculates the balance of the user, which is the principal balance + interest generated by the principal balance + interest generated by the redirected balance",
+					"params": {
+						"_user": "the user for which the balance is being calculated"
+					},
+					"return": "the total balance of the user*"
+				},
+				"burnOnLiquidation(address,uint256)": {
+					"details": "burns token in the event of a borrow being liquidated, in case the liquidators reclaims the underlying asset Transfer of the liquidated asset is executed by the lending pool contract. only lending pools can call this function",
+					"params": {
+						"_account": "the address from which burn the Itokens",
+						"_value": "the amount to burn*"
+					}
+				},
+				"decimals()": {
+					"details": "Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5,05` (`505 / 10 ** 2`).     * Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei.     * NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}."
+				},
+				"decreaseAllowance(address,uint256)": {
+					"details": "Atomically decreases the allowance granted to `spender` by the caller.     * This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}.     * Emits an {Approval} event indicating the updated allowance.     * Requirements:     * - `spender` cannot be the zero address. - `spender` must have allowance for the caller of at least `subtractedValue`."
+				},
+				"getInterestRedirectionAddress(address)": {
+					"details": "returns the address to which the interest is redirected",
+					"params": {
+						"_user": "address of the user"
+					},
+					"return": "0 if there is no redirection, an address otherwise*"
+				},
+				"getRedirectedBalance(address)": {
+					"details": "returns the redirected balance of the user. The redirected balance is the balance redirected by other accounts to the user, that is accrueing interest for him.",
+					"params": {
+						"_user": "address of the user"
+					},
+					"return": "the total redirected balance*"
+				},
+				"getUserIndex(address)": {
+					"details": "returns the last index of the user, used to calculate the balance of the user",
+					"params": {
+						"_user": "address of the user"
+					},
+					"return": "the last user index*"
+				},
+				"increaseAllowance(address,uint256)": {
+					"details": "Atomically increases the allowance granted to `spender` by the caller.     * This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}.     * Emits an {Approval} event indicating the updated allowance.     * Requirements:     * - `spender` cannot be the zero address."
+				},
+				"isTransferAllowed(address,uint256)": {
+					"details": "Used to validate transfers before actually executing them.",
+					"params": {
+						"_amount": "the amount to check",
+						"_user": "address of the user to check"
+					},
+					"return": "true if the _user can transfer _amount, false otherwise*"
+				},
+				"mintOnDeposit(address,uint256)": {
+					"details": "mints token in the event of users depositing the underlying asset into the lending pool. Only lending pools can call this function",
+					"params": {
+						"_account": "the address receiving the minted tokens",
+						"_amount": "the amount of tokens to mint"
+					}
+				},
+				"name()": {
+					"details": "Returns the name of the token."
+				},
+				"principalBalanceOf(address)": {
+					"details": "returns the principal balance of the user. The principal balance is the last updated stored balance, which does not consider the perpetually accruing interest.",
+					"params": {
+						"_user": "the address of the user"
+					},
+					"return": "the principal balance of the user*"
+				},
+				"redeem(uint256)": {
+					"details": "redeems Itoken for the underlying asset",
+					"params": {
+						"_amount": "the amount being redeemed*"
+					}
+				},
+				"redirectInterestStream(address)": {
+					"details": "redirects the interest generated to a target address. When the interest is redirected, the user balance is added to the recepient redirected balance.",
+					"params": {
+						"_to": "the address to which the interest will be redirected*"
+					}
+				},
+				"redirectInterestStreamOf(address,address)": {
+					"details": "redirects the interest generated by _from to a target address. The caller needs to have allowance on the interest redirection to be able to execute the function.",
+					"params": {
+						"_from": "the address of the user whom interest is being redirected",
+						"_to": "the address to which the interest will be redirected*"
+					}
+				},
+				"symbol()": {
+					"details": "Returns the symbol of the token, usually a shorter version of the name."
+				},
+				"totalSupply()": {
+					"details": "calculates the total supply of the specific Itoken. since the balance of every single user increases over time, the total supply does that too.",
+					"return": "the current total supply*"
+				},
+				"transfer(address,uint256)": {
+					"details": "See {IERC20-transfer}.     * Requirements:     * - `recipient` cannot be the zero address. - the caller must have a balance of at least `amount`."
+				},
+				"transferFrom(address,address,uint256)": {
+					"details": "See {IERC20-transferFrom}.     * Emits an {Approval} event indicating the updated allowance. This is not required by the EIP. See the note at the beginning of {ERC20};     * Requirements: - `sender` and `recipient` cannot be the zero address. - `sender` must have a balance of at least `amount`. - the caller must have allowance for `sender`'s tokens of at least `amount`."
+				},
+				"transferOnLiquidation(address,address,uint256)": {
+					"details": "transfers tokens in the event of a borrow being liquidated, in case the liquidators reclaims the Itoken  only lending pools can call this function",
+					"params": {
+						"_from": "the address from which transfer the Itokens",
+						"_to": "the destination address",
+						"_value": "the amount to transfer*"
+					}
+				}
+			},
+			"title": "Aave ERC20 Itokens (modified by SIGH Finance)"
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/ProtocolContracts/IToken.sol": "IToken"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/ProtocolContracts/IToken.sol": {
+			"keccak256": "0x0d3694fee720cc3cfd5a83ba10d73514e91ffe00ac7a3ca5b437987105ccff49",
+			"urls": [
+				"bzz-raw://386a2843bc93321eefc501dea0920c1f37eaccb80d8f5d00e1bd248eb61a2cc7",
+				"dweb:/ipfs/QmNmr34VMHJWa8GbeeHsc8K3znTpmFUVrfk5L36x2gZGQf"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/configuration/AddressStorage.sol": {
+			"keccak256": "0x95101db0d1cf7f6c8efe9c6b8f415f0bae195c34f778b4606c13d364f6d984d1",
+			"urls": [
+				"bzz-raw://98474efaa62e0a27bac1ad897533e7a3f1f86e4038475a08e145da08a2b387b3",
+				"dweb:/ipfs/QmQb2SJeYp8Sraw2G9yJfSaTNxnf3TgQQpwqEJMnSXHCZ5"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/configuration/LendingPoolAddressesProvider.sol": {
+			"keccak256": "0xcabf8b0513d32af4ff5d12884abfb92891f9eeb7ecbf2d8508124b8d2ee18e10",
+			"urls": [
+				"bzz-raw://706176ae15a659d970b3fcfba89830494a5ef0138faa21265489a12472e2cba6",
+				"dweb:/ipfs/QmerKM7KVj4zn7UfqG2poqdR9U9Mwg5wGYEY9WnN8eGv28"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/configuration/LendingPoolParametersProvider.sol": {
+			"keccak256": "0xe9975f963d3e7690eefe0e65ae84df1944bd00fea1d43fdf4eeadf8f09bf4731",
+			"urls": [
+				"bzz-raw://954ce7ae0eef344ecc1451189a9c45d3fe4671e133753d8411a99e248e52e140",
+				"dweb:/ipfs/QmR4G8VMWTKtqPDQSKTwz9kyvcdTrDycdUZ717S8dkcDcf"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/configuration/UintStorage.sol": {
+			"keccak256": "0x3f74e899243a66d556c0fa81875ab95ed1e3af1909b0281d03fe89590b95121f",
+			"urls": [
+				"bzz-raw://be1e401270af075398906fbcaaa7d9d9b3e1a9018ee54617d92b0822eb875b27",
+				"dweb:/ipfs/QmVC1qpZKqDb2cWegSpQYHzeraowgqfyryvguU19Qb8tgF"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/flashloan/interfaces/IFlashLoanReceiver.sol": {
+			"keccak256": "0x819cd5a0cf7c4677e6e9cf90e61f0579367697efabd124f7ee4947f36f0563f1",
+			"urls": [
+				"bzz-raw://2eba4ef2c23ad0a5ec600dbea85b4dcad17f538b6305d6817fd665152ead2e03",
+				"dweb:/ipfs/QmSi7U9jyTyU3pzm6cdKp2A9LXHwYxq9XksWev5GzUfZK9"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/interfaces/IFeeProvider.sol": {
+			"keccak256": "0xefd33154c4d0fa175b6a78c06deca795c66a386e1f823d9e9b94b362c52bdfe4",
+			"urls": [
+				"bzz-raw://78e463db9777d766440c3046b4ba54b990af86ead654237518eb1cf4462a5865",
+				"dweb:/ipfs/QmRdye1LYbrxgJqmaPAg3bjpU2tDZU5niXzWh62E7GVx8W"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/interfaces/ILendingPoolAddressesProvider.sol": {
+			"keccak256": "0x02184cb0016f723a845a220bd05de55f8b3f12a0e13afa635da5b6aaf609cd0a",
+			"urls": [
+				"bzz-raw://a1a6b63b67cc27b390ab56f013344830b0903cac305590cc4b47c3733f87e9ba",
+				"dweb:/ipfs/QmZtcWiahJwwZmUbPCcZ27KYdWGcv8s9anY2wXGMg5Vb8x"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/interfaces/ILendingRateOracle.sol": {
+			"keccak256": "0x6d15213822a26f5f75a70d45b652ad179c417f50d3f7f42952acd1b631170972",
+			"urls": [
+				"bzz-raw://35346d875f7b882f14e5f5b8d33340afe8e29df8132a384df63985628079d7c9",
+				"dweb:/ipfs/QmRQcrGHZTm1oDGnkmtYZwhHtn8SXqEiCYZfYvd7S2tFFY"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/interfaces/IPriceOracleGetter.sol": {
+			"keccak256": "0x58175d019ae6f47b4941461ba27dfe6afcc20d146e9bdb7a949902c7330803f3",
+			"urls": [
+				"bzz-raw://e118d81569a54c84d66c259d46e481e32cba80f56e99300a6a083b554421be4f",
+				"dweb:/ipfs/QmVhbHRHdV8y2XgqznQg4CJGF8anFQctGDSsANGNi8TER9"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/interfaces/I_InstrumentInterestRateStrategy.sol": {
+			"keccak256": "0x899c17d33dabbc7dff8d750f00ce79980938a8eade9dee699969eae16f526f33",
+			"urls": [
+				"bzz-raw://6d58be974fccd745633559b7dc4cfd0cc9efdb707f93c443690a364f42f17f33",
+				"dweb:/ipfs/QmXE891c3ZeJ6KZinq3HzozUwYSfcuvjdrVT7eZ3REsL77"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/lendingpool/LendingPool.sol": {
+			"keccak256": "0x25f2bc4daa11064480cb3dd10c652946cb3d324ddc826a167cf21f6b8ab0b1b8",
+			"urls": [
+				"bzz-raw://df40670a1d8fcda300c8f0b4541c12930af8c22c99d5a69290b0402c4e73b2ef",
+				"dweb:/ipfs/QmXVhxeVNNa2CgAMUwWFs279TtxQvQV6PLvoim2mmEvEqh"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/lendingpool/LendingPoolCore.sol": {
+			"keccak256": "0x43bc2388e98ea25a214ebeeea517319623c4e7bc8738eb2f5542e7a4bd203aa4",
+			"urls": [
+				"bzz-raw://00b60245b313b3dccf9cc01403c7f10da618fac04219cd7fdc1a39b340877c71",
+				"dweb:/ipfs/QmcdQ5kXczG6MKgL9rbY9jCbqwnhoqQ4WofvPUjbPRm562"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/lendingpool/LendingPoolDataProvider.sol": {
+			"keccak256": "0xbad1367efb64dedf53cb714fb2959379f85d914e7fffd2160422cce74ba573f4",
+			"urls": [
+				"bzz-raw://8f43a4682122b383471b9b9c0339982a90d6eb5fa48bb20a773c6de1c86ca8ac",
+				"dweb:/ipfs/QmcnnnWiKrQVJezL8WGLeC8QzWzcCXZ7b7kR4tgVyWhmMx"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/lendingpool/LendingPoolLiquidationManager.sol": {
+			"keccak256": "0xc8d39f3d51ae2f9194a4bb86fe23adf43ec0e92fda3eb3aba0f1cc2f4d329965",
+			"urls": [
+				"bzz-raw://408475dc5a1e6efb94c077cdc9943b928374782ed84bbdf94f44ac42efdaf93f",
+				"dweb:/ipfs/QmbsrnJxaQEKT8JJLbwEzXZP13cHjioVivcsi1Z9ddWdQd"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/libraries/CoreLibrary.sol": {
+			"keccak256": "0xd113338cb54fe88957b33eba30f503353888d7ff0478bf583ee5a58d77047db8",
+			"urls": [
+				"bzz-raw://dbfb726f34b17e3975f903f946c43722f6258885903498c6bcd4345958a5ccad",
+				"dweb:/ipfs/QmcSKVHpr3zhbbMs54QhZ25zQJuwyTDmXycfBPPhUa6dMQ"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/libraries/EthAddressLib.sol": {
+			"keccak256": "0x6d13f10408208ebff44123254f6db03121a8fb5a73d84c2d94f4e9651932b70d",
+			"urls": [
+				"bzz-raw://50b64d66e1544fcef496cc68e98cee61cfbab58685dfc4d57f73a1308e3aec2a",
+				"dweb:/ipfs/QmQwJ5ZpaNjrfREruW7RzppzbEv8Mxxj5Ln87DX1i1iXW5"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/libraries/WadRayMath.sol": {
+			"keccak256": "0x126c58b068a25a9721da9933c377361f9194ab839dd6ad627d8f78a062fe0cc3",
+			"urls": [
+				"bzz-raw://810142a1a4ecd60c3f36ab696cdcb34bfb5a52d241591229659bb5c02c40c5cc",
+				"dweb:/ipfs/Qma8sCTftr1468EKegJuXnNXqTySUGtk683kAfyhMyHpiL"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/libraries/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {
+			"keccak256": "0x6bb623c8fe336eeba953283dbe3014ab18e882d3a3f27f38234672a5a69885d1",
+			"urls": [
+				"bzz-raw://2810308c8de3ef8291356ea30e866a0b20e2729223caffc43b0f6513f7b0aaeb",
+				"dweb:/ipfs/QmT6AD9CxgeeUndEj6F6z9zd8eJLDxUxJcHekcBRGop3ch"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/libraries/openzeppelin-upgradeability/BaseUpgradeabilityProxy.sol": {
+			"keccak256": "0x99e393b97e79374c0dd133282f83ac48f15777d3894eafb9257768a1bf7acff5",
+			"urls": [
+				"bzz-raw://1c9d283b3442e71b7c611f8f79e792b248d97e1502a14d8507f131161b288f8b",
+				"dweb:/ipfs/QmWxuFrfdLHmhJrpoGwHRujeV6zpdFydVM1DY3N5RBwNs5"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/libraries/openzeppelin-upgradeability/InitializableAdminUpgradeabilityProxy.sol": {
+			"keccak256": "0x7928dfc5736d1ec6a29672f41458b7de688ef2d0ec31b3e4a16e6bc554b87df1",
+			"urls": [
+				"bzz-raw://712ce2645eeb72c5c12e40ef1e04f7161ab9f8aaae3413b82f6a1b48956d6c38",
+				"dweb:/ipfs/QmcTNBeHbqBUj2UUgNob1s22oMjj4UpcLMNdXTBC2m1b6p"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/libraries/openzeppelin-upgradeability/InitializableUpgradeabilityProxy.sol": {
+			"keccak256": "0x46052d95ea9b770116913041555f808f1b099c0a35e5c7ecbfc04ffef64a83bd",
+			"urls": [
+				"bzz-raw://67c2cacee01c1c8972a195be9f018abeae6917f45e45a4dc22b462fbb148150f",
+				"dweb:/ipfs/QmZhM5vvrvjFbTXjzYDB3ZTtNbTf3j54v76SZoDSbFTjdU"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/libraries/openzeppelin-upgradeability/Proxy.sol": {
+			"keccak256": "0xd8dcdaaf2f03c606a569d91506958bf78df9adfb41df76727857e5dfe956e872",
+			"urls": [
+				"bzz-raw://1d780033022b07478621ce08cd4e668603fc899ae3212a883eea23347937e8d5",
+				"dweb:/ipfs/QmVZkBHpdDjko87qT4597e3UZ5uYdrEfPYbamEjBep52Se"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/libraries/openzeppelin-upgradeability/UpgradeabilityProxy.sol": {
+			"keccak256": "0x5829b59012f64d1ce3ae6b98a61ddf5d6daa6e6f1a54e336ce910c8afd415c69",
+			"urls": [
+				"bzz-raw://28cba7d1f3d67aab91a4f88df4cb63762b443c31cb62a87e957add0b43dc8e1a",
+				"dweb:/ipfs/QmUXzpQDBXA2xGSNRqjn3VMJ3o8RXmpATieU9ovvk6QDAD"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/libraries/openzeppelin-upgradeability/VersionedInitializable.sol": {
+			"keccak256": "0x3f7fa91853dcdf84684887deaa056f5b3803b46e7efb71704dcc625a63eeac55",
+			"urls": [
+				"bzz-raw://c7b50d4feda87e8875541afeb44f802ab539272bfb22f7c7da84c3d26e03a266",
+				"dweb:/ipfs/QmdSYn9D1Q3FRXRNDLYGGFoYb8rsN4U2MYdxciuZBTSg83"
+			]
+		},
+		"openzeppelin-solidity/contracts/GSN/Context.sol": {
+			"keccak256": "0xa5ce23dc71caa76caf782712dc8fef8dd2390c277f71e286474e9894d6ece97f",
+			"urls": [
+				"bzz-raw://cb14fd3bdc804349f070f0a372a2b6819bfe6e1b186080bb4850a1e1d024a16f",
+				"dweb:/ipfs/Qmcp5Nhsq3PRRgXQYeqY41FMY1G2YbYC4JCWxFrst24MsC"
+			]
+		},
+		"openzeppelin-solidity/contracts/math/SafeMath.sol": {
+			"keccak256": "0x7f293e2ee29a32416531a0bf3da9972358887c45ec1836642ec8e700cc152ba0",
+			"urls": [
+				"bzz-raw://e6ca40872864cb64a2dcc1b4f0be6a3cfc406f363e045fa7991f9f22f6257a63",
+				"dweb:/ipfs/QmdsPdEayCcUa1fg3YTbhTPn3GTcjfNYZqnwf9EDC3QGpp"
+			]
+		},
+		"openzeppelin-solidity/contracts/ownership/Ownable.sol": {
+			"keccak256": "0x99c53496743c554322c1eda2e0609033759396bef546c826b192f242be39714f",
+			"urls": [
+				"bzz-raw://f076f3d43dc84380aee792a756d89d80fbf78327f552fd8e77cdd03b79ed8380",
+				"dweb:/ipfs/QmUtBh7ts5s26yepDuedHNENs6Ts3ZNPJASHxrUNcoT4tX"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/ERC20.sol": {
+			"keccak256": "0xe8ce903c4fcae44e7e17b5e6f9033a424a83936a4053f110dc30d3d6b10a64a5",
+			"urls": [
+				"bzz-raw://39e473abefa5257df715fc3c038485f1fb548422633610fbce5cf603c5adf9f5",
+				"dweb:/ipfs/QmVh6qhTWAPfBZkdYrn9eLj3Zeig9GVcm83LmskZz7zsmg"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol": {
+			"keccak256": "0x4f4577659871ebf814a4adfb96bfec76b5a5e9dd7a414ca545152fe4ba1b932d",
+			"urls": [
+				"bzz-raw://d188138f791cdab03f888e06417d5eedfb378a3ed6f0d8e063da6403b4c6b9c6",
+				"dweb:/ipfs/Qme3scJo781TbYD8Svx86JhLvyY1Tk1ekXvw5novFwaS9Y"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0xe92a180661a6e21051d45be08a572dbf8d61e04c142d4284e503f615aed587fd",
+			"urls": [
+				"bzz-raw://003c6da07a3cbc576a9a59f462ed67d9041ff89e106463817ce9f005e24d83c8",
+				"dweb:/ipfs/QmemQazcc1Cww2Umgc4UFYpwF8WRqajPB6z5TNdC13XJCR"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/Initializable.sol": {
+			"keccak256": "0xe27817d107db2266b238a10e1e06f3304f3ec4b5c28968a83386ab7ba3859aee",
+			"urls": [
+				"bzz-raw://f245b0b4d4271f882624302b7ac88846080417d2f5ad27ea8b81fa77eacd016b",
+				"dweb:/ipfs/Qmabm1XwR2D9U43Vk14zHzByhmhjmZZoVJFft6a3dpoVRh"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol": {
+			"keccak256": "0x0e9ff1feedfd4c410999c4b233612528cb3e32bb30be2e676cfc3f4204b82b3f",
+			"urls": [
+				"bzz-raw://307a705bd5e1c87db72eb713412f1c49d6208e65da20224867e92fc18a603bc6",
+				"dweb:/ipfs/QmeTsxwMydqhphHkbM8ce48E2rtoj8UHV4npjjWDxWLYe3"
+			]
+		},
+		"openzeppelin-solidity/contracts/utils/Address.sol": {
+			"keccak256": "0x58543a8d0f0fc465618566ee6b3c04071965cd26ba20d1de3f9768014ed807e4",
+			"urls": [
+				"bzz-raw://f060c6ee3ca16eb001823e2c0f8b642ecf3ead486721bab6f6be5220158d4421",
+				"dweb:/ipfs/QmWv1ms6aLAfjZ49dNnffbg49XiKmuEWHeu4wi6EinkEek"
+			]
+		},
+		"openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol": {
+			"keccak256": "0xe8319a13d4d3a9a518dafb829afffd958264b2675114abe5c322178cc6c3519f",
+			"urls": [
+				"bzz-raw://25e5847db15af6119dfadd8929642c20d731b61d11c8187dbf8064d3458cb094",
+				"dweb:/ipfs/QmQhu9fnpHXp7wDKmqbaK7BAs8zWxLShRUUEdYiPiytBww"
+			]
+		}
+	},
+	"version": 1
+}

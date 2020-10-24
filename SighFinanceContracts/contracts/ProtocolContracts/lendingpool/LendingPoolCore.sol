@@ -1385,7 +1385,7 @@ contract LendingPoolCore is VersionedInitializable {
     **/
     function updateInstrumentInterestRatesAndTimestampInternal( address _instrument, uint256 _liquidityAdded, uint256 _liquidityTaken ) internal {
         CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
-        (uint256 newLiquidityRate, uint256 newStableRate, uint256 newVariableRate) = I_InstrumentInterestRateStrategy( instrument.interestRateStrategyAddress).calculateInterestRates( _instrument, getInstrumentAvailableLiquidity(_instrument).add(_liquidityAdded).sub(_liquidityTaken),    instrument.totalBorrowsStable, instrument.totalBorrowsVariable, instrument.currentAverageStableBorrowRate   );
+        (uint256 newLiquidityRate, uint256 newStableRate, uint256 newVariableRate) = I_InstrumentInterestRateStrategy(instrument.interestRateStrategyAddress).calculateInterestRates( _instrument, getInstrumentAvailableLiquidity(_instrument).add(_liquidityAdded).sub(_liquidityTaken),    instrument.totalBorrowsStable, instrument.totalBorrowsVariable, instrument.currentAverageStableBorrowRate   );
 
         instrument.currentLiquidityRate = newLiquidityRate;
         instrument.currentStableBorrowRate = newStableRate;
