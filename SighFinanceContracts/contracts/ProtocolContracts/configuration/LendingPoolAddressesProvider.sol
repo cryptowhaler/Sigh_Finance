@@ -121,7 +121,7 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider,
     function getLendingPoolConfigurator() public view returns (address) {
         return getAddress(LENDING_POOL_CONFIGURATOR);
     }
-
+     
     /**
     * @dev updates the implementation of the lending pool configurator
     * @param _configurator the new lending pool configurator implementation

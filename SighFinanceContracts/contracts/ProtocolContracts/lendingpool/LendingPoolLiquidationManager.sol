@@ -5,14 +5,13 @@ import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 import "openzeppelin-solidity/contracts/utils/Address.sol";
 import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 import "../libraries/openzeppelin-upgradeability/VersionedInitializable.sol";
+import "../libraries/CoreLibrary.sol";
+import "../libraries/WadRayMath.sol";
 
 import "../configuration/LendingPoolAddressesProvider.sol";
 import "../configuration/LendingPoolParametersProvider.sol";
 
 import "../IToken.sol";
-
-import "../libraries/CoreLibrary.sol";
-import "../libraries/WadRayMath.sol";
 import "./LendingPoolCore.sol";
 import "./LendingPoolDataProvider.sol";
 import "../interfaces/IPriceOracleGetter.sol";

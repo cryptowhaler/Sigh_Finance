@@ -1,0 +1,482 @@
+{
+	"compiler": {
+		"version": "0.5.16+commit.9c3226ce"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "Burn",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "receiver",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "percentage",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "Distributed",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address[]",
+						"name": "receivers",
+						"type": "address[]"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256[]",
+						"name": "percentages",
+						"type": "uint256[]"
+					}
+				],
+				"name": "DistributionUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "tokenToBurn",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "kyberProxy",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "_recipientBurn",
+						"type": "address"
+					}
+				],
+				"name": "Setup",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "fromAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "toAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "Trade",
+				"type": "event"
+			},
+			{
+				"payable": true,
+				"stateMutability": "payable",
+				"type": "fallback"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "DISTRIBUTION_BASE",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "IMPLEMENTATION_REVISION",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "KYBER_ETH_MOCK_ADDRESS",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "MAX_UINT",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "MAX_UINT_MINUS_ONE",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "MIN_CONVERSION_RATE",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "contract IERC20[]",
+						"name": "_tokens",
+						"type": "address[]"
+					}
+				],
+				"name": "approveKyber",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "contract IERC20[]",
+						"name": "_tokens",
+						"type": "address[]"
+					}
+				],
+				"name": "distribute",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getDistribution",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "receivers",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "percentages",
+						"type": "uint256[]"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_recipientBurn",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_tokenToBurn",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_kyberProxy",
+						"type": "address"
+					},
+					{
+						"internalType": "address[]",
+						"name": "_receivers",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "_percentages",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "contract IERC20[]",
+						"name": "_tokens",
+						"type": "address[]"
+					}
+				],
+				"name": "initialize",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "kyberProxy",
+				"outputs": [
+					{
+						"internalType": "contract IKyberNetworkProxyInterface",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "recipientBurn",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "tokenToBurn",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "Aave, SIGH Finance",
+			"methods": {
+				"approveKyber(address[])": {
+					"params": {
+						"_tokens": "List of IERC20 to approve"
+					}
+				},
+				"distribute(address[])": {
+					"params": {
+						"_tokens": "list of ERC20 tokens to distribute"
+					}
+				},
+				"getDistribution()": {
+					"return": "receivers array of addresses and percentages array on uints"
+				}
+			},
+			"title": "TokenDistributor"
+		},
+		"userdoc": {
+			"methods": {
+				"approveKyber(address[])": {
+					"notice": "\"Infinite\" approval for all the tokens initialized"
+				},
+				"distribute(address[])": {
+					"notice": "Distributes a list of _tokens balances in this contract, depending on the distribution"
+				},
+				"getDistribution()": {
+					"notice": "Returns the receivers and percentages of the contract Distribution"
+				},
+				"initialize(address,address,address,address[],uint256[],address[])": {
+					"notice": "Called by the proxy when setting this contract as implementation"
+				}
+			},
+			"notice": "Receives tokens and manages the distribution amongst receivers  The usage is as follows:  - The distribution addresses and percentages are set up on construction  - The Kyber Proxy is approved for a list of tokens in construction, which will be later burnt  - At any moment, anyone can call distribute() with a list of token addresses in order to distribute    the accumulated token amounts and/or ETH in this contract to all the receivers with percentages  - If the address(0) is used as receiver, this contract will trade in Kyber to tokenToBurn (SIGH)    and burn it (sending to address(0) the tokenToBurn)"
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/ProtocolContracts/fees/TokenDistributor.sol": "TokenDistributor"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/ProtocolContracts/fees/TokenDistributor.sol": {
+			"keccak256": "0x07034f4c612471837e9dbc7e4981234a14180ae9d97aeb01e858492e5dec9a06",
+			"urls": [
+				"bzz-raw://9d277e7e0e4e42cb78b202b845b13a69f94f9b63ac81c35d7c3cb6642cfb9f91",
+				"dweb:/ipfs/QmboiQYdiEYU8L8M9bupUVVrccbHKqCWfocfnePGipuLdY"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/interfaces/IKyberNetworkProxyInterface.sol": {
+			"keccak256": "0xd070fadaadc257b744a6457177f3c9b87665052aba59aa6653caea501b674245",
+			"urls": [
+				"bzz-raw://30c4cf88839dbd1313dd3565301b90b291108ca9a064792f9687e985693c6671",
+				"dweb:/ipfs/QmPmBzwGPAHV9eZNmqQccsUg1YLDzLk8mdxZwHXTJ5rjgp"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/libraries/EthAddressLib.sol": {
+			"keccak256": "0x6d13f10408208ebff44123254f6db03121a8fb5a73d84c2d94f4e9651932b70d",
+			"urls": [
+				"bzz-raw://50b64d66e1544fcef496cc68e98cee61cfbab58685dfc4d57f73a1308e3aec2a",
+				"dweb:/ipfs/QmQwJ5ZpaNjrfREruW7RzppzbEv8Mxxj5Ln87DX1i1iXW5"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/libraries/openzeppelin-upgradeability/VersionedInitializable.sol": {
+			"keccak256": "0x3f7fa91853dcdf84684887deaa056f5b3803b46e7efb71704dcc625a63eeac55",
+			"urls": [
+				"bzz-raw://c7b50d4feda87e8875541afeb44f802ab539272bfb22f7c7da84c3d26e03a266",
+				"dweb:/ipfs/QmdSYn9D1Q3FRXRNDLYGGFoYb8rsN4U2MYdxciuZBTSg83"
+			]
+		},
+		"openzeppelin-solidity/contracts/GSN/Context.sol": {
+			"keccak256": "0xa5ce23dc71caa76caf782712dc8fef8dd2390c277f71e286474e9894d6ece97f",
+			"urls": [
+				"bzz-raw://cb14fd3bdc804349f070f0a372a2b6819bfe6e1b186080bb4850a1e1d024a16f",
+				"dweb:/ipfs/Qmcp5Nhsq3PRRgXQYeqY41FMY1G2YbYC4JCWxFrst24MsC"
+			]
+		},
+		"openzeppelin-solidity/contracts/math/SafeMath.sol": {
+			"keccak256": "0x7f293e2ee29a32416531a0bf3da9972358887c45ec1836642ec8e700cc152ba0",
+			"urls": [
+				"bzz-raw://e6ca40872864cb64a2dcc1b4f0be6a3cfc406f363e045fa7991f9f22f6257a63",
+				"dweb:/ipfs/QmdsPdEayCcUa1fg3YTbhTPn3GTcjfNYZqnwf9EDC3QGpp"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/ERC20.sol": {
+			"keccak256": "0xe8ce903c4fcae44e7e17b5e6f9033a424a83936a4053f110dc30d3d6b10a64a5",
+			"urls": [
+				"bzz-raw://39e473abefa5257df715fc3c038485f1fb548422633610fbce5cf603c5adf9f5",
+				"dweb:/ipfs/QmVh6qhTWAPfBZkdYrn9eLj3Zeig9GVcm83LmskZz7zsmg"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/ERC20Burnable.sol": {
+			"keccak256": "0x2eaaaebea75a38946c380f3c1b70d5db656359f9623db695f88b16c6a7d9ca8f",
+			"urls": [
+				"bzz-raw://496397bcc47cd64ff80ed0a3f615e49092e8b10adace3ed9850c8e20a67e05af",
+				"dweb:/ipfs/Qmczr88zLm6fvnFFVH2wuj6sSNepsp5VKU95oVj3sj9ogM"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0xe92a180661a6e21051d45be08a572dbf8d61e04c142d4284e503f615aed587fd",
+			"urls": [
+				"bzz-raw://003c6da07a3cbc576a9a59f462ed67d9041ff89e106463817ce9f005e24d83c8",
+				"dweb:/ipfs/QmemQazcc1Cww2Umgc4UFYpwF8WRqajPB6z5TNdC13XJCR"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/Initializable.sol": {
+			"keccak256": "0xe27817d107db2266b238a10e1e06f3304f3ec4b5c28968a83386ab7ba3859aee",
+			"urls": [
+				"bzz-raw://f245b0b4d4271f882624302b7ac88846080417d2f5ad27ea8b81fa77eacd016b",
+				"dweb:/ipfs/Qmabm1XwR2D9U43Vk14zHzByhmhjmZZoVJFft6a3dpoVRh"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol": {
+			"keccak256": "0x0e9ff1feedfd4c410999c4b233612528cb3e32bb30be2e676cfc3f4204b82b3f",
+			"urls": [
+				"bzz-raw://307a705bd5e1c87db72eb713412f1c49d6208e65da20224867e92fc18a603bc6",
+				"dweb:/ipfs/QmeTsxwMydqhphHkbM8ce48E2rtoj8UHV4npjjWDxWLYe3"
+			]
+		},
+		"openzeppelin-solidity/contracts/utils/Address.sol": {
+			"keccak256": "0x58543a8d0f0fc465618566ee6b3c04071965cd26ba20d1de3f9768014ed807e4",
+			"urls": [
+				"bzz-raw://f060c6ee3ca16eb001823e2c0f8b642ecf3ead486721bab6f6be5220158d4421",
+				"dweb:/ipfs/QmWv1ms6aLAfjZ49dNnffbg49XiKmuEWHeu4wi6EinkEek"
+			]
+		}
+	},
+	"version": 1
+}
