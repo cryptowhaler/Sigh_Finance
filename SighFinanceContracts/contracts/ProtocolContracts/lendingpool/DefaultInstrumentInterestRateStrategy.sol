@@ -36,16 +36,25 @@ contract DefaultInstrumentInterestRateStrategy is I_InstrumentInterestRateStrate
     uint256 public variableRateSlope2;              //slope of the variable interest curve when utilization rate > OPTIMAL_UTILIZATION_RATE. Expressed in ray
     uint256 public stableRateSlope1;                //slope of the stable interest curve when utilization rate > 0 and <= OPTIMAL_UTILIZATION_RATE. Expressed in ray
     uint256 public stableRateSlope2;                //slope of the stable interest curve when utilization rate > OPTIMAL_UTILIZATION_RATE. Expressed in ray
-    address public instrument;
+    // address public instrument;
 
-    constructor( address _instrument, LendingPoolAddressesProvider _provider, uint256 _baseVariableBorrowRate, uint256 _variableRateSlope1,uint256 _variableRateSlope2, uint256 _stableRateSlope1, uint256 _stableRateSlope2 ) public {
+    /**
+    * @dev only the lending pool manager can call functions affected by this modifier
+    **/
+    modifier onlyLendingPoolManager {
+        require( addressesProvider.getLendingPoolManager() == msg.sender, "The caller must be the lending pool manager" );
+        _;
+    }
+
+
+    constructor( LendingPoolAddressesProvider _provider, uint256 _baseVariableBorrowRate, uint256 _variableRateSlope1,uint256 _variableRateSlope2, uint256 _stableRateSlope1, uint256 _stableRateSlope2 ) public {
         addressesProvider = _provider;
         baseVariableBorrowRate = _baseVariableBorrowRate;
         variableRateSlope1 = _variableRateSlope1;
         variableRateSlope2 = _variableRateSlope2;
         stableRateSlope1 = _stableRateSlope1;
         stableRateSlope2 = _stableRateSlope2;
-        instrument = _instrument;
+        // instrument = _instrument;
     }
 
     // ######################################################
@@ -55,23 +64,42 @@ contract DefaultInstrumentInterestRateStrategy is I_InstrumentInterestRateStrate
     function getBaseVariableBorrowRate() external view returns (uint256) {
         return baseVariableBorrowRate;
     }
+    
+    function setBaseVariableBorrowRate(uint256 newBorrowRate) external onlyLendingPoolManager {
+        baseVariableBorrowRate = newBorrowRate;
+    }
 
     function getVariableRateSlope1() external view returns (uint256) {
         return variableRateSlope1;
     }
 
+    function setVariableRateSlope1(uint256 newVariableRateSlope1) external onlyLendingPoolManager {
+        variableRateSlope1 = newVariableRateSlope1;
+    }
+
     function getVariableRateSlope2() external view returns (uint256) {
         return variableRateSlope2;
+    }
+    
+    function setVariableRateSlope2(uint256 newVariableRateSlope2) external onlyLendingPoolManager {
+        variableRateSlope2 = newVariableRateSlope2;
     }
 
     function getStableRateSlope1() external view returns (uint256) {
         return stableRateSlope1;
     }
 
+    function setStableRateSlope1(uint256 newstableRateSlope1) external onlyLendingPoolManager {
+        stableRateSlope1 = newstableRateSlope1;
+    }
+    
     function getStableRateSlope2() external view returns (uint256) {
         return stableRateSlope2;
     }
 
+    function setStableRateSlope2(uint256 newstableRateSlope2) external onlyLendingPoolManager {
+        stableRateSlope2 = newstableRateSlope2;
+    }
 
     // ##################################################################################################################
     // ####### THE MAIN INTEREST RATE FUNCTIONS (VIEW)   ################################################################

@@ -23,19 +23,28 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter, Ownable {
 // ##### CONSTRUCTOR #####
 // #######################
 
-    /// @notice Constructor
-    /// @param _assets The addresses of the assets
-    /// @param _sources The address of the source of each asset
-    /// @param _fallbackOracle The address of the fallback oracle to use if the data of an
-    ///        aggregator is not consistent
-    constructor(address[] memory _assets, address[] memory _sources, address _fallbackOracle) public {
-        internalSetFallbackOracle(_fallbackOracle);
-        internalSetAssetsSources(_assets, _sources);
+    // / @notice Constructor
+    // / @param _assets The addresses of the assets
+    // / @param _sources The address of the source of each asset
+    // / @param _fallbackOracle The address of the fallback oracle to use if the data of an aggregator is not consistent
+        // constructor(address[] memory _assets, address[] memory _sources, address _fallbackOracle) public {
+
+    constructor() public {
+        // internalSetFallbackOracle(_fallbackOracle);
+        // internalSetAssetsSources(_assets, _sources);
     }
 
 // ####################################
 // ##### SET THE PRICEFEED SOURCE #####
 // ####################################
+    
+    function supportNewAsset(address asset_, address source_) public onlyOwner {
+        address[] memory assets = new address[](1);
+        address[] memory sources = new address[](1) ;
+        assets[0] = asset_;
+        sources[0] = source_;
+        internalSetAssetsSources(assets,sources);
+    }
 
     /// @notice External function called by the Aave governance to set or replace sources of assets
     /// @param _assets The addresses of the assets

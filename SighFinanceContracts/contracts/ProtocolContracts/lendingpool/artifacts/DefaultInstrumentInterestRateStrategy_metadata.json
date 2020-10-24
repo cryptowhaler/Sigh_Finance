@@ -6,9 +6,46 @@
 	"output": {
 		"abi": [
 			{
+				"inputs": [
+					{
+						"internalType": "contract LendingPoolAddressesProvider",
+						"name": "_provider",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_baseVariableBorrowRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_variableRateSlope1",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_variableRateSlope2",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_stableRateSlope1",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_stableRateSlope2",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
 				"constant": true,
 				"inputs": [],
-				"name": "DATA_PROVIDER_REVISION",
+				"name": "EXCESS_UTILIZATION_RATE",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -23,7 +60,7 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "HEALTH_FACTOR_LIQUIDATION_THRESHOLD",
+				"name": "OPTIMAL_UTILIZATION_RATE",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -52,70 +89,8 @@
 			},
 			{
 				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_user",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_amount",
-						"type": "uint256"
-					}
-				],
-				"name": "balanceDecreaseAllowed",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_amount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_fee",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_userCurrentBorrowBalanceTH",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_userCurrentFeesETH",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_userCurrentLtv",
-						"type": "uint256"
-					}
-				],
-				"name": "calculateCollateralNeededInETH",
+				"inputs": [],
+				"name": "baseVariableBorrowRate",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -132,51 +107,46 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_user",
+						"name": "_instrument",
 						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_availableLiquidity",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_totalBorrowsStable",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_totalBorrowsVariable",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_averageStableBorrowRate",
+						"type": "uint256"
 					}
 				],
-				"name": "calculateUserGlobalData",
+				"name": "calculateInterestRates",
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "totalLiquidityBalanceETH",
+						"name": "currentLiquidityRate",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
-						"name": "totalCollateralBalanceETH",
+						"name": "currentStableBorrowRate",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
-						"name": "totalBorrowBalanceETH",
+						"name": "currentVariableBorrowRate",
 						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "totalFeesETH",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "currentLtv",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "currentLiquidationThreshold",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "healthFactor",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bool",
-						"name": "healthFactorBelowThreshold",
-						"type": "bool"
 					}
 				],
 				"payable": false,
@@ -186,12 +156,12 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "core",
+				"name": "getBaseVariableBorrowRate",
 				"outputs": [
 					{
-						"internalType": "contract LendingPoolCore",
+						"internalType": "uint256",
 						"name": "",
-						"type": "address"
+						"type": "uint256"
 					}
 				],
 				"payable": false,
@@ -201,7 +171,7 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "getHealthFactorLiquidationThreshold",
+				"name": "getStableRateSlope1",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -210,195 +180,17 @@
 					}
 				],
 				"payable": false,
-				"stateMutability": "pure",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					}
-				],
-				"name": "getInstrumentConfigurationData",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "ltv",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "liquidationThreshold",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "liquidationBonus",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "rateStrategyAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "bool",
-						"name": "usageAsCollateralEnabled",
-						"type": "bool"
-					},
-					{
-						"internalType": "bool",
-						"name": "borrowingEnabled",
-						"type": "bool"
-					},
-					{
-						"internalType": "bool",
-						"name": "stableBorrowRateEnabled",
-						"type": "bool"
-					},
-					{
-						"internalType": "bool",
-						"name": "isActive",
-						"type": "bool"
-					}
-				],
-				"payable": false,
 				"stateMutability": "view",
 				"type": "function"
 			},
 			{
 				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					}
-				],
-				"name": "getInstrumentData",
+				"inputs": [],
+				"name": "getStableRateSlope2",
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "totalLiquidity",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "availableLiquidity",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "totalBorrowsStable",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "totalBorrowsVariable",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "liquidityRate",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "variableBorrowRate",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "stableBorrowRate",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "averageStableBorrowRate",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "utilizationRate",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "liquidityIndex",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "variableBorrowIndex",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "iTokenAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "uint40",
-						"name": "lastUpdateTimestamp",
-						"type": "uint40"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_user",
-						"type": "address"
-					}
-				],
-				"name": "getUserAccountData",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "totalLiquidityETH",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "totalCollateralETH",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "totalBorrowsETH",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "totalFeesETH",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "availableBorrowsETH",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "currentLiquidationThreshold",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "ltv",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "healthFactor",
+						"name": "",
 						"type": "uint256"
 					}
 				],
@@ -408,69 +200,28 @@
 			},
 			{
 				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_user",
-						"type": "address"
-					}
-				],
-				"name": "getUserInstrumentData",
+				"inputs": [],
+				"name": "getVariableRateSlope1",
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "currentITokenBalance",
+						"name": "",
 						"type": "uint256"
-					},
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getVariableRateSlope2",
+				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "currentBorrowBalance",
+						"name": "",
 						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "principalBorrowBalance",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "borrowRateMode",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "borrowRate",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "liquidityRate",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "originationFee",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "variableBorrowIndex",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "lastUpdateTimestamp",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bool",
-						"name": "usageAsCollateralEnabled",
-						"type": "bool"
 					}
 				],
 				"payable": false,
@@ -481,65 +232,164 @@
 				"constant": false,
 				"inputs": [
 					{
-						"internalType": "contract LendingPoolAddressesProvider",
-						"name": "_addressesProvider",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "newBorrowRate",
+						"type": "uint256"
 					}
 				],
-				"name": "initialize",
+				"name": "setBaseVariableBorrowRate",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newstableRateSlope1",
+						"type": "uint256"
+					}
+				],
+				"name": "setStableRateSlope1",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newstableRateSlope2",
+						"type": "uint256"
+					}
+				],
+				"name": "setStableRateSlope2",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newVariableRateSlope1",
+						"type": "uint256"
+					}
+				],
+				"name": "setVariableRateSlope1",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newVariableRateSlope2",
+						"type": "uint256"
+					}
+				],
+				"name": "setVariableRateSlope2",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "stableRateSlope1",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "stableRateSlope2",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "variableRateSlope1",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "variableRateSlope2",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
 			}
 		],
 		"devdoc": {
-			"author": "Aave, SIGH Finance ",
+			"author": "Aave, SIGH Finance*",
+			"details": "if there is need to update the calculation of the interest rates for a specific Instrument, a new version of this contract will be deployed.",
 			"methods": {
-				"balanceDecreaseAllowed(address,address,uint256)": {
-					"details": "check if a specific balance decrease is allowed (i.e. doesn't bring the user borrow position health factor under 1e18)",
+				"calculateInterestRates(address,uint256,uint256,uint256,uint256)": {
+					"details": "calculates the interest rates depending on the available liquidity and the total borrowed.",
 					"params": {
-						"_amount": "the amount to decrease",
+						"_availableLiquidity": "the liquidity available in the instrument",
+						"_averageStableBorrowRate": "the weighted average of all the stable rate borrows",
 						"_instrument": "the address of the instrument",
-						"_user": "the address of the user"
+						"_totalBorrowsStable": "the total borrowed from the instrument a stable rate",
+						"_totalBorrowsVariable": "the total borrowed from the instrument at a variable rate"
 					},
-					"return": "true if the decrease of the balance is allowed*"
-				},
-				"calculateCollateralNeededInETH(address,uint256,uint256,uint256,uint256,uint256)": {
-					"params": {
-						"_amount": "the amount the user wants to borrow",
-						"_fee": "the fee for the amount that the user needs to cover",
-						"_instrument": "the instrument from which the user wants to borrow",
-						"_userCurrentBorrowBalanceTH": "the current borrow balance of the user (before the borrow)",
-						"_userCurrentLtv": "the average ltv of the user given his current collateral"
-					},
-					"return": "the total amount of collateral in ETH to cover the current borrow balance + the new amount + fee*"
-				},
-				"calculateUserGlobalData(address)": {
-					"details": "calculates the user data across the instruments. this includes the total liquidity/collateral/borrow balances in ETH, the average Loan To Value, the average Liquidation Ratio, and the Health factor.",
-					"params": {
-						"_user": "the address of the user"
-					},
-					"return": "the total liquidity, total collateral, total borrow balances of the user in ETH. also the average Ltv, liquidation threshold, and the health factor*"
-				},
-				"getInstrumentConfigurationData(address)": {
-					"details": "accessory functions to fetch data from the lendingPoolCore*"
+					"return": "the liquidity rate, stable borrow rate and variable borrow rate calculated from the input parameters*"
 				}
 			},
-			"title": "LendingPoolDataProvider contract "
+			"title": "DefaultInstrumentInterestRateStrategy contract"
 		},
 		"userdoc": {
-			"methods": {
-				"calculateCollateralNeededInETH(address,uint256,uint256,uint256,uint256,uint256)": {
-					"notice": "calculates the amount of collateral needed in ETH to cover a new borrow."
-				}
-			},
-			"notice": "Implements functions to fetch data from the core, and aggregate them in order to allow computation on the compounded balances and the account balances in ETH*"
+			"methods": {},
+			"notice": "implements the calculation of the interest rates depending on the Instrument parameters."
 		}
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/contracts/ProtocolContracts/lendingpool/LendingPoolDataProvider.sol": "LendingPoolDataProvider"
+			"localhost/contracts/ProtocolContracts/lendingpool/DefaultInstrumentInterestRateStrategy.sol": "DefaultInstrumentInterestRateStrategy"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -627,11 +477,18 @@
 				"dweb:/ipfs/QmXE891c3ZeJ6KZinq3HzozUwYSfcuvjdrVT7eZ3REsL77"
 			]
 		},
-		"localhost/contracts/ProtocolContracts/lendingpool/LendingPool.sol": {
-			"keccak256": "0xb55b3578cdc87642d0f9bc4edc0847b6f2495c3d81f8ee5c898dd5a0fdd261c6",
+		"localhost/contracts/ProtocolContracts/lendingpool/DefaultInstrumentInterestRateStrategy.sol": {
+			"keccak256": "0x4c288d3ac8d7ba88b3b18041184da0df05f237a997dd6a1eff52c79123d7d5e6",
 			"urls": [
-				"bzz-raw://d91856fa2064c628235d5fc9f75f2b5d6d587990ca9d5dd62b50b44f4e8f4cd4",
-				"dweb:/ipfs/QmbQdeHcMQyizqgAnPxU3DavBt2f1Hf4MA4zt6a3Ho6k55"
+				"bzz-raw://50f742d36acbd4b3ff8c1794e9e9b342b0d838f2e0daa3b55e0fd11fb4ee89c6",
+				"dweb:/ipfs/QmX9KFZdRRQyBAFcRDGCik3n9o52kGB1ieCu1SWvHw6NnK"
+			]
+		},
+		"localhost/contracts/ProtocolContracts/lendingpool/LendingPool.sol": {
+			"keccak256": "0x25f2bc4daa11064480cb3dd10c652946cb3d324ddc826a167cf21f6b8ab0b1b8",
+			"urls": [
+				"bzz-raw://df40670a1d8fcda300c8f0b4541c12930af8c22c99d5a69290b0402c4e73b2ef",
+				"dweb:/ipfs/QmXVhxeVNNa2CgAMUwWFs279TtxQvQV6PLvoim2mmEvEqh"
 			]
 		},
 		"localhost/contracts/ProtocolContracts/lendingpool/LendingPoolCore.sol": {

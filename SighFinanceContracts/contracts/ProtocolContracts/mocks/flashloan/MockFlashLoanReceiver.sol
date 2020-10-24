@@ -21,11 +21,7 @@ contract MockFlashLoanReceiver is FlashLoanReceiverBase {
         failExecution = _fail;
     }
 
-    function executeOperation(
-        address _reserve,
-        uint256 _amount,
-        uint256 _fee,
-        bytes memory _params) public {
+    function executeOperation( address _reserve, uint256 _amount, uint256 _fee, bytes memory _params) public {
         //mint to this contract the specific amount
         MintableERC20 token = MintableERC20(_reserve);
 

@@ -208,7 +208,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     }
 
     uint256 public constant UINT_MAX_VALUE = uint256(-1);
-    uint256 public constant LENDINGPOOL_REVISION = 0x2;             // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
+    uint256 public constant LENDINGPOOL_REVISION = 0x1;             // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
 
     function getRevision() internal pure returns (uint256) {        // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
         return LENDINGPOOL_REVISION;

@@ -107,8 +107,8 @@ contract LendingPoolConfigurator is VersionedInitializable {
     function initInstrument( address _instrument, uint8 _underlyingAssetDecimals, address _interestRateStrategyAddress ) external onlyLendingPoolManager {
         ERC20Detailed asset = ERC20Detailed(_instrument);
 
-        string memory iTokenName = string(abi.encodePacked("Aave Interest bearing ", asset.name()));
-        string memory iTokenSymbol = string(abi.encodePacked("a", asset.symbol()));
+        string memory iTokenName = string(abi.encodePacked("SIGH's supported Instrument - ", asset.name()));
+        string memory iTokenSymbol = string(abi.encodePacked("i", asset.symbol()));
 
         initInstrumentWithData(  _instrument,  iTokenName,  iTokenSymbol,  _underlyingAssetDecimals,  _interestRateStrategyAddress );
     }
@@ -124,7 +124,7 @@ contract LendingPoolConfigurator is VersionedInitializable {
     function initInstrumentWithData(  address _instrument,  string memory _iTokenName,  string memory _iTokenSymbol,  uint8 _underlyingAssetDecimals,  address _interestRateStrategyAddress ) public onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
 
-        IToken iTokenInstance = new IToken( poolAddressesProvider, _instrument, _underlyingAssetDecimals, _iTokenName, _iTokenSymbol );
+        IToken iTokenInstance = new IToken( poolAddressesProvider, _instrument, _underlyingAssetDecimals, _iTokenName, _iTokenSymbol ); // DEPLOYS A NEW ITOKEN CONTRACT
         core.initInstrument( _instrument, address(iTokenInstance), _underlyingAssetDecimals, _interestRateStrategyAddress );
 
         emit InstrumentInitialized( _instrument, address(iTokenInstance), _interestRateStrategyAddress );
