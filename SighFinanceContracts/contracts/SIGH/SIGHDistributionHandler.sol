@@ -10,10 +10,7 @@ import "../ProtocolContracts/lendingpool/LendingPoolCore.sol";      // REPLACE W
 
 contract SIGHDistributionHandler is Exponential, VersionedInitializable {
     
-    address admin;
     LendingPoolAddressesProvider public addressesProvider;
-
-    address public sightrollerAddress;
     PriceOracle public oracle;
     address public Sigh_Address;
 
@@ -58,32 +55,28 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
     mapping(address => mapping(address => uint)) public SIGHSupplierIndex;
     mapping(address => mapping(address => uint)) public SIGHBorrowerIndex;
 
-    mapping(address => uint) public SIGH_Accrued;           /// @notice The SIGH accrued but not yet transferred to each user
+    mapping(address => uint) public SIGH_Accrued;               /// @notice The SIGH accrued but not yet transferred to each user
 
     uint public constant SIGH_ClaimThreshold = 0.001e18;        /// @notice The threshold above which the flywheel transfers SIGH, in wei
     uint224 public constant sighInitialIndex = 1e36;            /// @notice The initial SIGH index for a market
 
 
-    event MarketAdded (address marketAddress_,uint blockNumber); 
+    event MarketAdded (address instrumentAddress_, address iTokenAddress, uint blockNumber); 
+    event MarketSIGHed(address instrumentAddress_, address iTokenAddress, bool isSIGHed);    /// @notice Emitted when market isSIGHed status is changed
 
-    /// @notice Emitted when market isSIGHed status is changed
-    event MarketSIGHed(address marketAddress, bool isSIGHed);
+    event NewSIGHSpeed(uint oldSIGHSpeed, uint newSIGHSpeed, uint blockNumber_);     /// @notice Emitted when SIGH rate is changed
+    event StakingSpeedUpdated(address instrumentAddress_, address iTokenAddress, uint prevStakingSpeed, uint new_staking_Speed, uint blockNumber );
+    event SuppliersSIGHSpeedUpdated(address instrument, address iToken, uint prevSpeed, uint newSpeed, uint blockNumber);  /// @notice Emitted when a new SIGH speed is calculated for an Instrument
+    event BorrowersSIGHSpeedUpdated(address instrument, address iToken, uint prevSpeed, uint newSpeed, uint blockNumber);  /// @notice Emitted when a new SIGH speed is calculated for an Instrument
+    event SpeedUpperCheckAllowedSwitched(bool previsSpeedUpperCheckAllowed, bool isSpeedUpperCheckAllowed );
 
-    /// @notice Emitted when SIGH rate is changed
-    event NewSIGHSpeed(uint oldSIGHSpeed, uint newSIGHSpeed, uint blockNumber_);
-    
-    event StakingSpeedUpdated(address marketAddress, uint prevStakingSpeed, uint new_staking_Speed, uint blockNumber );
+    event ClockUpdated( uint224 prevClock, uint224 curClock, uint timestamp, uint blockNumber );
+    event PriceSnapped(address instrument, address iToken, uint prevPrice, uint currentPrice, uint currentClock);   /// @notice Emitted when Price snapshot is taken
 
     event SIGH_Speeds_Supplier_Ratio_Mantissa_Updated(address iToken, uint prevRatio, uint newRatio);
 
-    event SpeedUpperCheckAllowedSwitched(bool previsSpeedUpperCheckAllowed, bool isSpeedUpperCheckAllowed );
 
-
-    /// @notice Emitted when a new SIGH speed is calculated for a market
-    event SuppliersSIGHSpeedUpdated(ITokenInterface iToken, uint prevSpeed, uint newSpeed);
-
-    /// @notice Emitted when a new SIGH speed is calculated for a market
-    event BorrowersSIGHSpeedUpdated(ITokenInterface iToken, uint prevSpeed, uint newSpeed);
+    
 
     /// @notice Emitted when SIGH is distributed to a supplier
     event DistributedSupplier_SIGH(ITokenInterface iToken, address supplier, uint sighDelta, uint sighSupplyIndex);
@@ -94,32 +87,48 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
     /// @notice Emitted when SIGH is transferred to a User
     event SIGH_Transferred(address userAddress, uint amountTransferred );
 
-    /// @notice Emitted when Price snapshot is taken
-    event PriceSnapped(address iToken, uint prevPrice, uint currentPrice);
+    
+
 
     event PriceSnappedCheck(address iToken, uint prevPrice, uint currentPrice,uint32 currentCounter, uint blockNumber);
 
 
-    event ClockUpdated( uint224 prevClock, uint224 curClock, uint timestamp );
+// #######################################################
+// ##############        MODIFIERS          ##############
+// #######################################################
         
-// ###############################################################################################
-// ##############        PROXY RELATED          ##################################################
-// ###############################################################################################
+        
+    //only LendingPoolCore can use functions affected by this modifier
+    modifier onlyLendingPoolCore {
+        require(addressesProvider.getLendingPoolCore() == msg.sender, "The caller must be the lending pool Core contract");
+        _;
+    }   
+    
+    //only SIGH Distribution Manager can use functions affected by this modifier
+    modifier onlySIGHDistributionManager {
+        require(addressesProvider.getSIGHDistributionManager() == msg.sender, "The caller must be the lending pool Core contract");
+        _;
+    }
+        
+        
+// ############################################################
+// ##############        PROXY RELATED          ###############
+// ############################################################
 
 
-    event SIGHDistributionHandlerInitialized(address msgSender, address passedAddress);
+    event SIGHDistributionHandlerInitialized(address addressesProvider, address Sigh_Address, address priceOracle);
 
-    uint256 constant private DATA_PROVIDER_REVISION = 0x1;
+    uint256 constant private SIGH_DISTRIBUTION_REVISION = 0x1;
 
     function getRevision() internal pure returns(uint256) {
-        return DATA_PROVIDER_REVISION;
+        return SIGH_DISTRIBUTION_REVISION;
     }
     
-    
     function initialize( address addressesProvider_) public initializer {
-        admin = msg.sender;
         addressesProvider = LendingPoolAddressesProvider(addressesProvider_); 
-        emit SIGHDistributionHandlerInitialized(admin , address(addressesProvider) );
+        Sigh_Address = addressesProvider.getSIGHAddress();
+        oracle = PriceOracle( addressesProvider.getPriceOracle() );
+        emit SIGHDistributionHandlerInitialized( address(addressesProvider), Sigh_Address, oracle );
     }
     
     

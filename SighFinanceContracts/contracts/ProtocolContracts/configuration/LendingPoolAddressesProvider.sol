@@ -30,9 +30,10 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider,
     event LendingRateOracleUpdated(address indexed newAddress);
     event FeeProviderUpdated(address indexed newAddress);
     event TokenDistributorUpdated(address indexed newAddress);
-    event SIGHDistributionHandlerUpdated(address indexed newAddress);   // ADDED FOR SIGH FINANCE
-    event SIGHTreasuryUpdated(address indexed newAddress);              // ADDED FOR SIGH FINANCE
-    event SIGHAddressUpdated(address indexed sighAddress);              // ADDED FOR SIGH FINANCE
+    event SIGHDistributionHandlerUpdated(address indexed newAddress);               // ADDED FOR SIGH FINANCE
+    event SIGHTreasuryUpdated(address indexed newAddress);                           // ADDED FOR SIGH FINANCE
+    event SIGHAddressUpdated(address indexed sighAddress);                           // ADDED FOR SIGH FINANCE
+    event SIGHDistributionManagerUpdated(address indexed SIGHDistributionManagerAddress);   // ADDED FOR SIGH FINANCE
 
     event ProxyCreated(bytes32 id, address indexed newAddress);
 
@@ -53,7 +54,7 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider,
     bytes32 private constant SIGH_DISTRIBUTION_HANDLER = "SIGH_DISTRIBUTION_HANDLER";   // ADDED FOR SIGH FINANCE
     bytes32 private constant SIGH_TREASURY = "SIGH_TREASURY";                           // ADDED FOR SIGH FINANCE
     bytes32 private constant SIGH = "SIGH";                                            // ADDED FOR SIGH FINANCE
-
+    bytes32 private constant SIGH_DISTRIBUTION_MANAGER = "SIGH_DISTRIBUTION_MANAGER";    // ADDED FOR SIGH FINANCE
 // ################################                                                     // ADDED FOR SIGH FINANCE
 // ######  SIGH ADDRESS ###########                                                     // ADDED FOR SIGH FINANCE
 // ################################                                                     // ADDED FOR SIGH FINANCE
@@ -296,6 +297,16 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider,
         _setAddress(TOKEN_DISTRIBUTOR, _tokenDistributor);
         emit TokenDistributorUpdated(_tokenDistributor);
     }
+    
+    function getSIGHDistributionManager() public view returns (address) {                        // ADDED BY SIGH FINANCE
+        return getAddress(SIGH_DISTRIBUTION_MANAGER);
+    }
+
+    function setSIGHDistributionManager(address _SIGHDistributionManager) public onlyOwner {     // ADDED BY SIGH FINANCE
+        _setAddress(SIGH_DISTRIBUTION_MANAGER, _SIGHDistributionManager);
+        emit SIGHDistributionManagerUpdated(_SIGHDistributionManager);
+    }
+    
 
 // ############################################# 
 // ######  FUNCTION TO UPGRADE THE PROXY #######  

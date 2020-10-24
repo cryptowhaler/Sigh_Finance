@@ -906,10 +906,10 @@
 			]
 		},
 		"localhost/contracts/ProtocolContracts/configuration/LendingPoolAddressesProvider.sol": {
-			"keccak256": "0x704e0786b9ffb6452b30251fc8f4d31b29cdbd0f38a409215e69588260a106b1",
+			"keccak256": "0x1251e42cc092ebd4ddc9de9f16ca5f4bcdf89df6afa11a4be172cb879e0c156d",
 			"urls": [
-				"bzz-raw://a625b2c3cedd7bb3ff152efcde0609fd6856559876a570bd1f96f05b861f548d",
-				"dweb:/ipfs/QmRfD5L8KadyZaVWPFCJvRjfZcrYbqL1S1qMCXAyFPbuiQ"
+				"bzz-raw://3bfbb831aab508e867feacb4cbf89a403a4ea14721c1916274778bdeba0aa33e",
+				"dweb:/ipfs/QmbVsmupfGndAeCMUWbThTms1EKVHCaPvTM4zDF3GfNXxA"
 			]
 		},
 		"localhost/contracts/ProtocolContracts/interfaces/ILendingPoolAddressesProvider.sol": {
