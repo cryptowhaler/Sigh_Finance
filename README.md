@@ -50,10 +50,16 @@ This is my first full blown Dapp which i am making individually, so learnt a lot
 Support for tokenized basket of crypto assets, integration with AI modelling techniques (initially it will be tested thoroughly, before it goes live in the production environment), and a plan regarding how to take the SIGH Finance protocol live on chain (token sale, listing, liquidity supply etc).
 
 ## Built With
-graph
+0x API (https://0x.org/api)
+Marlin Protocol (https://www.marlin.pro/)
+Graph Protocol 
 solidity
-vue
+vueJs
 web3
+
+## In Progress
+Integration & Testing. 
+Website being updated.
 
 ## Try it out
 [sigh.finance](sigh.finance)
