@@ -54,7 +54,7 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider,
     bytes32 private constant SIGH_DISTRIBUTION_HANDLER = "SIGH_DISTRIBUTION_HANDLER";   // ADDED FOR SIGH FINANCE
     bytes32 private constant SIGH_TREASURY = "SIGH_TREASURY";                           // ADDED FOR SIGH FINANCE
     bytes32 private constant SIGH = "SIGH";                                            // ADDED FOR SIGH FINANCE
-    bytes32 private constant SIGH_DISTRIBUTION_MANAGER = "SIGH_DISTRIBUTION_MANAGER";    // ADDED FOR SIGH FINANCE
+    bytes32 private constant SIGH_MECHANISM_MANAGER = "SIGH_MECHANISM_MANAGER";    // ADDED FOR SIGH FINANCE
 // ################################                                                     // ADDED FOR SIGH FINANCE
 // ######  SIGH ADDRESS ###########                                                     // ADDED FOR SIGH FINANCE
 // ################################                                                     // ADDED FOR SIGH FINANCE
@@ -298,13 +298,13 @@ contract LendingPoolAddressesProvider is Ownable, ILendingPoolAddressesProvider,
         emit TokenDistributorUpdated(_tokenDistributor);
     }
     
-    function getSIGHDistributionManager() public view returns (address) {                        // ADDED BY SIGH FINANCE
-        return getAddress(SIGH_DISTRIBUTION_MANAGER);
+    function getSIGHMechanismManager() public view returns (address) {                        // ADDED BY SIGH FINANCE
+        return getAddress(SIGH_MECHANISM_MANAGER);
     }
 
-    function setSIGHDistributionManager(address _SIGHDistributionManager) public onlyOwner {     // ADDED BY SIGH FINANCE
-        _setAddress(SIGH_DISTRIBUTION_MANAGER, _SIGHDistributionManager);
-        emit SIGHDistributionManagerUpdated(_SIGHDistributionManager);
+    function setSIGHMechanismManager(address _SIGHMechanismManager) public onlyOwner {     // ADDED BY SIGH FINANCE
+        _setAddress(SIGH_MECHANISM_MANAGER, _SIGHMechanismManager);
+        emit SIGHMechanismManagerUpdated(_SIGHMechanismManager);
     }
     
 
