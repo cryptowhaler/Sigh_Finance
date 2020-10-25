@@ -9,13 +9,13 @@ import "./LendingPoolCore.sol";
 import "../IToken.sol";
 
 /**
-* @title FlowMechanismConfigurator contract
+* @title SighFinanceConfigurator contract
 * @author SIGH Finance
 * @notice Executes configuration methods on the LendingPoolCore contract, SIGHDistributionHandler and the SighStaking Contract
 * to efficiently regulate the distribution economics
 **/
 
-contract FlowMechanismConfigurator is VersionedInitializable {
+contract SighFinanceConfigurator is VersionedInitializable {
 
     using SafeMath for uint256;
     GlobalAddressesProvider public poolAddressesProvider;
