@@ -3,7 +3,7 @@ pragma solidity ^0.5.0;
 import "openzeppelin-solidity/contracts/utils/Address.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-import "../configuration/LendingPoolAddressesProvider.sol";
+import "../../configuration/GlobalAddressesProvider.sol";
 import "../lendingpool/LendingPoolCore.sol";
 import "../libraries/EthAddressLib.sol";
 
@@ -18,9 +18,9 @@ contract WalletBalanceProvider {
 
     using Address for address;
 
-    LendingPoolAddressesProvider provider;
+    GlobalAddressesProvider provider;
 
-    constructor(LendingPoolAddressesProvider _provider) public {
+    constructor(GlobalAddressesProvider _provider) public {
         provider = _provider;
     }
 

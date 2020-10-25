@@ -4,7 +4,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
 
-import "../../interfaces/ILendingPoolAddressesProvider.sol";
+import "../../../configuration/GlobalAddressesProvider.sol";
 import "../interfaces/IFlashLoanReceiver.sol";
 
 import "../../libraries/EthAddressLib.sol";
@@ -14,9 +14,9 @@ contract FlashLoanReceiverBase is IFlashLoanReceiver {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
-    ILendingPoolAddressesProvider public addressesProvider;
+    GlobalAddressesProvider public addressesProvider;
 
-    constructor(ILendingPoolAddressesProvider _provider) public {
+    constructor(GlobalAddressesProvider _provider) public {
         addressesProvider = _provider;
     }
 

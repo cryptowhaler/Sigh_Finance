@@ -7,7 +7,7 @@ import "openzeppelin-solidity/contracts/utils/Address.sol";
 import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 
 import "../libraries/CoreLibrary.sol";
-import "../configuration/LendingPoolAddressesProvider.sol";
+import "../../configuration/GlobalAddressesProvider.sol";
 import "../interfaces/ILendingRateOracle.sol";
 import "../interfaces/I_InstrumentInterestRateStrategy.sol";
 import "../libraries/WadRayMath.sol";
@@ -34,7 +34,7 @@ contract LendingPoolCore is VersionedInitializable {
     using SafeERC20 for ERC20;
     using Address for address payable;
 
-    LendingPoolAddressesProvider public addressesProvider;
+    GlobalAddressesProvider public addressesProvider;
     address public lendingPoolAddress;
 
     address[] public instrumentsList;
@@ -90,7 +90,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _addressesProvider the addressesProvider contract
     **/
 
-    function initialize(LendingPoolAddressesProvider _addressesProvider) public initializer {
+    function initialize(GlobalAddressesProvider _addressesProvider) public initializer {
         addressesProvider = _addressesProvider;
         refreshConfigInternal();
     }

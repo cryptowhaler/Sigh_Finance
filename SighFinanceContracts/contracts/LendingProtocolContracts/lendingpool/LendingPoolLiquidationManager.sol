@@ -8,7 +8,7 @@ import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 import "../libraries/CoreLibrary.sol";
 import "../libraries/WadRayMath.sol";
 
-import "../configuration/LendingPoolAddressesProvider.sol";
+import "../../configuration/GlobalAddressesProvider.sol";
 import "../configuration/LendingPoolParametersProvider.sol";
 
 import "../IToken.sol";
@@ -27,7 +27,7 @@ contract LendingPoolLiquidationManager is ReentrancyGuard, VersionedInitializabl
     using WadRayMath for uint256;
     using Address for address;
 
-    LendingPoolAddressesProvider public addressesProvider;
+    GlobalAddressesProvider public addressesProvider;
     LendingPoolCore core;
     LendingPoolDataProvider dataProvider;
     LendingPoolParametersProvider parametersProvider;

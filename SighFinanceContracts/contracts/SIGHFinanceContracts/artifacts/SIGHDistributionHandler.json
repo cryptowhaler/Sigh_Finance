@@ -1265,7 +1265,7 @@
 			"name": "addressesProvider",
 			"outputs": [
 				{
-					"internalType": "contract LendingPoolAddressesProvider",
+					"internalType": "contract GlobalAddressesProvider",
 					"name": "",
 					"type": "address"
 				}

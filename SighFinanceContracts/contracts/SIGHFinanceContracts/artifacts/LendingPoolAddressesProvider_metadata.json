@@ -878,7 +878,7 @@
 					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
 				}
 			},
-			"title": "LendingPoolAddressesProvider contract (Taken from Aave, Modified by SIGH Finance)"
+			"title": "GlobalAddressesProvider contract (Taken from Aave, Modified by SIGH Finance)"
 		},
 		"userdoc": {
 			"methods": {},
@@ -887,7 +887,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/contracts/ProtocolContracts/configuration/LendingPoolAddressesProvider.sol": "LendingPoolAddressesProvider"
+			"localhost/contracts/ProtocolContracts/configuration/GlobalAddressesProvider.sol": "GlobalAddressesProvider"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -905,14 +905,14 @@
 				"dweb:/ipfs/QmQb2SJeYp8Sraw2G9yJfSaTNxnf3TgQQpwqEJMnSXHCZ5"
 			]
 		},
-		"localhost/contracts/ProtocolContracts/configuration/LendingPoolAddressesProvider.sol": {
+		"localhost/contracts/ProtocolContracts/configuration/GlobalAddressesProvider.sol": {
 			"keccak256": "0x1251e42cc092ebd4ddc9de9f16ca5f4bcdf89df6afa11a4be172cb879e0c156d",
 			"urls": [
 				"bzz-raw://3bfbb831aab508e867feacb4cbf89a403a4ea14721c1916274778bdeba0aa33e",
 				"dweb:/ipfs/QmbVsmupfGndAeCMUWbThTms1EKVHCaPvTM4zDF3GfNXxA"
 			]
 		},
-		"localhost/contracts/ProtocolContracts/interfaces/ILendingPoolAddressesProvider.sol": {
+		"localhost/contracts/ProtocolContracts/interfaces/GlobalAddressesProvider.sol": {
 			"keccak256": "0x02184cb0016f723a845a220bd05de55f8b3f12a0e13afa635da5b6aaf609cd0a",
 			"urls": [
 				"bzz-raw://a1a6b63b67cc27b390ab56f013344830b0903cac305590cc4b47c3733f87e9ba",

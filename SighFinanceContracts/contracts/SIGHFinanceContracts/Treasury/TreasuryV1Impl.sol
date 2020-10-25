@@ -55,7 +55,7 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
     
     function initialize( address addressesProvider_) public initializer {
         admin = msg.sender;
-        addressesProvider = LendingPoolAddressesProvider(addressesProvider_); 
+        addressesProvider = GlobalAddressesProvider(addressesProvider_); 
         sigh_token = IERC20( addressesProvider.getSIGHAddress() );
         SIGHDistributionHandler_address = addressesProvider.getSIGHDistributionHandler();
         emit SIGHTreasuryInitialized(admin , address(addressesProvider), sigh_token, SIGHDistributionHandler_address   );

@@ -29,7 +29,7 @@ contract LendingPoolParametersProvider is VersionedInitializable {
 
     /**
     * @dev initializes the LendingPoolParametersProvider after it's added to the proxy
-    * @param _addressesProvider the address of the LendingPoolAddressesProvider
+    * @param _addressesProvider the address of the GlobalAddressesProvider
     */
     function initialize(address _addressesProvider) public initializer {
     }

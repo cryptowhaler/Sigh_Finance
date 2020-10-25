@@ -1,11 +1,11 @@
 pragma solidity ^0.5.0;
 
 /**
-@title ILendingPoolAddressesProvider interface
+@title GlobalAddressesProvider interface
 @notice provides the interface to fetch the LendingPoolCore address
  */
 
-contract ILendingPoolAddressesProvider {
+contract GlobalAddressesProvider {
     
     function getSIGHAddress() public view returns (address);
     function setSIGHAddress(address sighAddress) public;    

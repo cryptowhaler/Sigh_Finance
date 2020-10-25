@@ -7,7 +7,7 @@ import "openzeppelin-solidity/contracts/utils/Address.sol";
 import "../../../openzeppelin-upgradeability/VersionedInitializable.sol";
 
 import "../../libraries/CoreLibrary.sol";
-import "../../configuration/LendingPoolAddressesProvider.sol";
+import "../../../configuration/GlobalAddressesProvider.sol";
 import "../../interfaces/ILendingRateOracle.sol";
 import "../../interfaces/I_InstrumentInterestRateStrategy.sol";
 import "../../libraries/WadRayMath.sol";
@@ -30,7 +30,7 @@ contract MockLendingPoolCore is LendingPoolCore {
         return CORE_REVISION;
     }
 
-    function initialize(LendingPoolAddressesProvider _addressesProvider) public initializer {
+    function initialize(GlobalAddressesProvider _addressesProvider) public initializer {
         addressesProvider = _addressesProvider;
         refreshConfigInternal();
     }

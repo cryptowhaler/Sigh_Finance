@@ -14,7 +14,7 @@ contract MockFlashLoanReceiver is FlashLoanReceiverBase {
 
     bool failExecution = false;
 
-    constructor(ILendingPoolAddressesProvider _provider) FlashLoanReceiverBase(_provider)  public {
+    constructor(GlobalAddressesProvider _provider) FlashLoanReceiverBase(_provider)  public {
     }
 
     function setFailExecutionTransfer(bool _fail) public {

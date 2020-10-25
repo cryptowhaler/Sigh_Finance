@@ -3,7 +3,7 @@ pragma solidity ^0.5.0;
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 
-import "./interfaces/ILendingPoolAddressesProvider.sol";
+import "./interfaces/GlobalAddressesProvider.sol";
 import "./lendingpool/LendingPool.sol";
 import "./lendingpool/LendingPoolDataProvider.sol";
 import "./lendingpool/LendingPoolCore.sol";
@@ -24,7 +24,7 @@ contract IToken is ERC20, ERC20Detailed {
 
     address public underlyingAssetAddress;
 
-    ILendingPoolAddressesProvider private addressesProvider;     // Only used in Constructor()
+    GlobalAddressesProvider private addressesProvider;     // Only used in Constructor()
     LendingPoolCore private core;
     LendingPool private pool;
     LendingPoolDataProvider private dataProvider;
@@ -126,11 +126,11 @@ contract IToken is ERC20, ERC20Detailed {
 // ################################################################################################################################################
 // ######  CONSTRUCTOR ############################################################################################################################
 // ######  1. Sets the UNDERLYINGASSETADDRESS, name, symbol, decimals.              ###############################################################
-// ######  2. The LendingPoolAddressesProvider's address is used to get the LendingPoolCore #######################################################
+// ######  2. The GlobalAddressesProvider's address is used to get the LendingPoolCore #######################################################
 // ######     contract address, LendingPool contract address, and the LendingPoolDataProvider contract address and set them.    ###################
 // ################################################################################################################################################
 
-   constructor( ILendingPoolAddressesProvider _addressesProvider,    address _underlyingAsset, uint8 _underlyingAssetDecimals, string memory _name, string memory _symbol) public ERC20Detailed(_name, _symbol, _underlyingAssetDecimals) {
+   constructor( GlobalAddressesProvider _addressesProvider,    address _underlyingAsset, uint8 _underlyingAssetDecimals, string memory _name, string memory _symbol) public ERC20Detailed(_name, _symbol, _underlyingAssetDecimals) {
 
         addressesProvider = _addressesProvider;
         core = LendingPoolCore(addressesProvider.getLendingPoolCore());

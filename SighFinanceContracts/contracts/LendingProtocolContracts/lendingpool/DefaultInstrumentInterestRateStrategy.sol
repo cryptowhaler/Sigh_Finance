@@ -1,6 +1,6 @@
 pragma solidity ^0.5.0;
 
-import "../configuration/LendingPoolAddressesProvider.sol";
+import "../../configuration/GlobalAddressesProvider.sol";
 import "./LendingPoolCore.sol";
 
 import "../interfaces/I_InstrumentInterestRateStrategy.sol";
@@ -22,7 +22,7 @@ contract DefaultInstrumentInterestRateStrategy is I_InstrumentInterestRateStrate
     using WadRayMath for uint256;
     using SafeMath for uint256;
 
-    LendingPoolAddressesProvider public addressesProvider;
+    GlobalAddressesProvider public addressesProvider;
 
     // this constant represents the utilization rate at which the pool aims to obtain most competitive borrow rates expressed in ray
     uint256 public constant OPTIMAL_UTILIZATION_RATE = 0.8 * 1e27;
@@ -47,7 +47,7 @@ contract DefaultInstrumentInterestRateStrategy is I_InstrumentInterestRateStrate
     }
 
 
-    constructor( LendingPoolAddressesProvider _provider, uint256 _baseVariableBorrowRate, uint256 _variableRateSlope1,uint256 _variableRateSlope2, uint256 _stableRateSlope1, uint256 _stableRateSlope2 ) public {
+    constructor( GlobalAddressesProvider _provider, uint256 _baseVariableBorrowRate, uint256 _variableRateSlope1,uint256 _variableRateSlope2, uint256 _stableRateSlope1, uint256 _stableRateSlope2 ) public {
         addressesProvider = _provider;
         baseVariableBorrowRate = _baseVariableBorrowRate;
         variableRateSlope1 = _variableRateSlope1;

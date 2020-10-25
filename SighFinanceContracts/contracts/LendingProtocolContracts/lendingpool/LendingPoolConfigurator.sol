@@ -4,7 +4,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 
-import "../interfaces/ILendingPoolAddressesProvider.sol";
+import "../../configuration/GlobalAddressesProvider.sol";
 import "./LendingPoolCore.sol";
 import "../IToken.sol";
 
@@ -18,7 +18,7 @@ import "../IToken.sol";
 contract LendingPoolConfigurator is VersionedInitializable {
 
     using SafeMath for uint256;
-    ILendingPoolAddressesProvider public poolAddressesProvider;
+    GlobalAddressesProvider public poolAddressesProvider;
 
 // ######################
 // ####### EVENTS #######
@@ -79,7 +79,7 @@ contract LendingPoolConfigurator is VersionedInitializable {
         return CONFIGURATOR_REVISION;
     }
 
-    function initialize(ILendingPoolAddressesProvider _poolAddressesProvider) public initializer {
+    function initialize(GlobalAddressesProvider _poolAddressesProvider) public initializer {
         poolAddressesProvider = _poolAddressesProvider;
     }
 

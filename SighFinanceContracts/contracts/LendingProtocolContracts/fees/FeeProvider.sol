@@ -27,7 +27,7 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
     }
     /**
     * @dev initializes the FeeProvider after it's added to the proxy
-    * @param _addressesProvider the address of the LendingPoolAddressesProvider
+    * @param _addressesProvider the address of the GlobalAddressesProvider
     */
     function initialize(address _addressesProvider) public initializer {
         originationFeePercentage = 0.0025 * 1e18;           /// origination fee is set as default as 25 basis points of the loan amount (0.0025%)

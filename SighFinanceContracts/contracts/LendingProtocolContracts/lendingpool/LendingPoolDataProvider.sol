@@ -4,7 +4,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 
 import "../libraries/CoreLibrary.sol";
-import "../configuration/LendingPoolAddressesProvider.sol";
+import "../../configuration/GlobalAddressesProvider.sol";
 import "../libraries/WadRayMath.sol";
 import "../interfaces/IPriceOracleGetter.sol";
 import "../interfaces/IFeeProvider.sol";
@@ -22,7 +22,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
     using WadRayMath for uint256;
 
     LendingPoolCore public core;
-    LendingPoolAddressesProvider public addressesProvider;
+    GlobalAddressesProvider public addressesProvider;
 
     //specifies the health factor threshold at which the user position is liquidated. 1e18 by default, if the health factor drops below 1e18, the loan can be liquidated.
     uint256 public constant HEALTH_FACTOR_LIQUIDATION_THRESHOLD = 1e18;
@@ -32,7 +32,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
         return DATA_PROVIDER_REVISION;
     }
 
-    function initialize(LendingPoolAddressesProvider _addressesProvider) public initializer {       // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
+    function initialize(GlobalAddressesProvider _addressesProvider) public initializer {       // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
         addressesProvider = _addressesProvider;
         core = LendingPoolCore(_addressesProvider.getLendingPoolCore());
     }

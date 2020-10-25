@@ -10,7 +10,7 @@ import "../libraries/CoreLibrary.sol";
 import "../libraries/WadRayMath.sol";
 import "../libraries/EthAddressLib.sol";
 
-import "../configuration/LendingPoolAddressesProvider.sol";
+import "../../configuration/GlobalAddressesProvider.sol";
 import "../configuration/LendingPoolParametersProvider.sol";
 import "../IToken.sol";
 
@@ -33,7 +33,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     using WadRayMath for uint256;
     using Address for address;
 
-    LendingPoolAddressesProvider public addressesProvider;
+    GlobalAddressesProvider public addressesProvider;
     LendingPoolCore public core;
     LendingPoolDataProvider public dataProvider;
     LendingPoolParametersProvider public parametersProvider;
@@ -220,9 +220,9 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
 
     /**
     * @dev this function is invoked by the proxy contract when the LendingPool contract is added to the AddressesProvider.
-    * @param _addressesProvider the address of the LendingPoolAddressesProvider registry
+    * @param _addressesProvider the address of the GlobalAddressesProvider registry
     **/
-    function initialize(LendingPoolAddressesProvider _addressesProvider) public initializer {
+    function initialize(GlobalAddressesProvider _addressesProvider) public initializer {
         addressesProvider = _addressesProvider;
         core = LendingPoolCore(addressesProvider.getLendingPoolCore());
         dataProvider = LendingPoolDataProvider(addressesProvider.getLendingPoolDataProvider());
