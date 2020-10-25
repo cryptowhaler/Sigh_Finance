@@ -4,7 +4,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 import "openzeppelin-solidity/contracts/utils/Address.sol";
 import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
-import "../libraries/openzeppelin-upgradeability/VersionedInitializable.sol";
+import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 import "../libraries/CoreLibrary.sol";
 import "../libraries/WadRayMath.sol";
 

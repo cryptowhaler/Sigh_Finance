@@ -1,7 +1,7 @@
 pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../libraries/openzeppelin-upgradeability/VersionedInitializable.sol";
+import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 
 import "../libraries/CoreLibrary.sol";
 import "../configuration/LendingPoolAddressesProvider.sol";

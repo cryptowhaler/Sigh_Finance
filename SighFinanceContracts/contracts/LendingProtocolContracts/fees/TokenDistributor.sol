@@ -5,7 +5,7 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Burnable.sol";
 
-import "../libraries/openzeppelin-upgradeability/VersionedInitializable.sol";
+import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 import "../interfaces/IKyberNetworkProxyInterface.sol";
 import "../libraries/EthAddressLib.sol";
 

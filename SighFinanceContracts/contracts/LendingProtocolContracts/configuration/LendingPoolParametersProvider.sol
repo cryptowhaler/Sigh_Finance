@@ -1,7 +1,7 @@
 pragma solidity ^0.5.0;
 
 
-import "../libraries/openzeppelin-upgradeability/VersionedInitializable.sol";
+import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 import "./UintStorage.sol";
 
 /**
