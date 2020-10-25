@@ -1,14 +1,12 @@
 pragma solidity ^0.5.16;
 
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
 import "./Math/Exponential.sol";
 
-import "../ProtocolContracts/interfaces/GlobalAddressesProvider.sol";
+import "../Configuration/GlobalAddressesProvider.sol";
 import "./PriceOracle.sol";            
 
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
 // import "../ProtocolContracts/interfaces/ITokenInterface.sol";
-
-
 import "../ProtocolContracts/lendingpool/LendingPoolCore.sol";      // REPLACE WITH AN INTER
 
 contract SIGHDistributionHandler is Exponential, VersionedInitializable {
