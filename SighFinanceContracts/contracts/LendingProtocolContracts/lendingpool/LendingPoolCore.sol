@@ -189,8 +189,11 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the new borrow rate for the user
     **/
     function updateStateOnBorrow( address _instrument, address _user, uint256 _amountBorrowed, uint256 _borrowFee,  CoreLibrary.InterestRateMode _rateMode ) external onlyLendingPool returns (uint256, uint256) {
-        
+        sighMechanism.updateSIGHBorrowIndex(_instrument);              // ADDED BY SIGH FINANCE (Instrument Index is updated)        
         (uint256 principalBorrowBalance, , uint256 balanceIncrease) = getUserBorrowBalances( _instrument, _user );     // getting the previous borrow data of the user
+    
+        IToken iToken = IToken( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
+        iToken.accure_Borrower_SIGH(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
 
         updateInstrumentStateOnBorrowInternal( _instrument, _user, principalBorrowBalance, balanceIncrease, _amountBorrowed, _rateMode );
         updateUserStateOnBorrowInternal( _instrument, _user, _amountBorrowed, balanceIncrease, _borrowFee, _rateMode );
@@ -295,6 +298,11 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _repaidWholeLoan true if the user is repaying the whole loan
     **/
     function updateStateOnRepay(  address _instrument,  address _user, uint256 _paybackAmountMinusFees,  uint256 _originationFeeRepaid,  uint256 _balanceIncrease,  bool _repaidWholeLoan ) external onlyLendingPool {
+        sighMechanism.updateSIGHBorrowIndex(_instrument);              // ADDED BY SIGH FINANCE (Instrument Index is updated)        
+
+        IToken iToken = IToken( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
+        iToken.accure_Borrower_SIGH(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
+
         updateInstrumentStateOnRepayInternal(  _instrument, _user, _paybackAmountMinusFees,  _balanceIncrease );
         updateUserStateOnRepayInternal(  _instrument, _user, _paybackAmountMinusFees,  _originationFeeRepaid, _balanceIncrease, _repaidWholeLoan  );
         updateInstrumentInterestRatesAndTimestampInternal(_instrument, _paybackAmountMinusFees, 0);
@@ -368,6 +376,11 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _currentRateMode the current interest rate mode for the user
     **/
     function updateStateOnSwapRate(  address _instrument, address _user, uint256 _principalBorrowBalance, uint256 _compoundedBorrowBalance, uint256 _balanceIncrease, CoreLibrary.InterestRateMode _currentRateMode ) external onlyLendingPool returns (CoreLibrary.InterestRateMode, uint256) {
+        sighMechanism.updateSIGHBorrowIndex(_instrument);              // ADDED BY SIGH FINANCE (Instrument Index is updated)        
+
+        IToken iToken = IToken( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
+        iToken.accure_Borrower_SIGH(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
+
         updateInstrumentStateOnSwapRateInternal( _instrument, _user,_principalBorrowBalance,  _compoundedBorrowBalance, _currentRateMode );
         CoreLibrary.InterestRateMode newRateMode = updateUserStateOnSwapRateInternal( _instrument, _user, _balanceIncrease, _currentRateMode );
         updateInstrumentInterestRatesAndTimestampInternal(_instrument, 0, 0);
@@ -449,6 +462,10 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the new stable rate for the user
     **/
     function updateStateOnRebalance(address _instrument, address _user, uint256 _balanceIncrease) external onlyLendingPool returns (uint256) {
+        sighMechanism.updateSIGHBorrowIndex(_instrument);              // ADDED BY SIGH FINANCE (Instrument Index is updated)        
+        IToken iToken = IToken( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
+        iToken.accure_Borrower_SIGH(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
+
         updateInstrumentStateOnRebalanceInternal(_instrument, _user, _balanceIncrease);
         updateUserStateOnRebalanceInternal(_instrument, _user, _balanceIncrease);      //update user data and rebalance the rate
         updateInstrumentInterestRatesAndTimestampInternal(_instrument, 0, 0);
@@ -490,8 +507,6 @@ contract LendingPoolCore is VersionedInitializable {
 // ###### CALLED BY SETUSERUSEINSTRUMENTASCOLLATERAL() FROM LENDINGPOOL CONTRACT (also some internal calls from this contract )        #####
 // #########################################################################################################################################
 
-
-
     /**
     * @dev enables or disables a instrument as collateral
     * @param _instrument the address of the principal instrument where the user deposited
@@ -503,13 +518,9 @@ contract LendingPoolCore is VersionedInitializable {
         user.useAsCollateral = _useAsCollateral;
     }
 
-
-
 // ################################################################### 
 // ###### CALLED BY FLASHLOAN() FROM LENDINGPOOL CONTRACT        #####
 // ################################################################### 
-
-
 
     /**
     * @dev updates the state of the core as a result of a flashloan action
@@ -527,13 +538,9 @@ contract LendingPoolCore is VersionedInitializable {
         updateInstrumentInterestRatesAndTimestampInternal(_instrument, _income, 0);           //refresh interest rates
     }
 
-
-
 // ############################################################################################################################################################################ 
 // ###### CALLED BY LIQUIDATIONCALL() FROM LENDINGPOOL CONTRACT  (call is delegated to LendingPoolLiquidationManager.sol where the actual implementation is present)      #####
 // ############################################################################################################################################################################
-
-
 
     /**
     * @dev updates the state of the core as a consequence of a liquidation action.
@@ -548,6 +555,11 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _liquidatorReceivesIToken true if the liquidator will receive iTokens, false otherwise
     **/
     function updateStateOnLiquidation( address _principalInstrument, address _collateralInstrument, address _user, uint256 _amountToLiquidate, uint256 _collateralToLiquidate, uint256 _feeLiquidated, uint256 _liquidatedCollateralForFee, uint256 _balanceIncrease, bool _liquidatorReceivesIToken ) external onlyLendingPool {
+        sighMechanism.updateSIGHBorrowIndex(_principalInstrument);               // ADDED BY SIGH FINANCE (Instrument Index is updated)        
+        sighMechanism.updateSIGHSupplyIndex(_collateralInstrument);              // ADDED BY SIGH FINANCE (Instrument Index is updated)        
+
+        IToken iToken = IToken( reserves[_principalInstrument].iTokenAddress );  // ITOKEN ADDRESS
+        iToken.accure_Borrower_SIGH(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
 
         updatePrincipalInstrumentStateOnLiquidationInternal( _principalInstrument, _user, _amountToLiquidate, _balanceIncrease );
         updatePrincipalInstrumentStateOnLiquidationInternal(  _collateralInstrument );
@@ -1188,7 +1200,7 @@ contract LendingPoolCore is VersionedInitializable {
     function initInstrument( address _instrument, address _iTokenAddress,  uint256 _decimals, address _interestRateStrategyAddress ) external onlyLendingPoolConfigurator {
         reserves[_instrument].init(_iTokenAddress, _decimals, _interestRateStrategyAddress);
         addInstrumentToListInternal(_instrument);
-        ISighDistributionHandler sighMechanism = ISighDistributionHandler( addressesProvider.getSIGHMechanismHandler()  );        // ADDED BY SIGH FINANCE
+        // ADDED BY SIGH FINANCE
         require ( sighMechanism.addInstrument( _instrument, _iTokenAddress, _decimals ), "Instrument failed to be properly added to the list of Instruments supported by SIGH Finance" ); // ADDED BY SIGH FINANCE
     }
 

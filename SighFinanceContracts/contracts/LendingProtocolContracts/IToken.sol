@@ -25,6 +25,10 @@ contract IToken is ERC20, ERC20Detailed {
         uint mantissa;
     }
 
+    struct Exp {
+        uint mantissa;
+    }
+
     uint256 public constant UINT_MAX_VALUE = uint256(-1);
 
     address public underlyingInstrumentAddress;
@@ -122,6 +126,11 @@ contract IToken is ERC20, ERC20Detailed {
         _;
     }
 
+    modifier onlyLendingPoolCore {
+        require( msg.sender == address(core), "The caller of this function must be the lending pool Core");
+        _;
+    }
+
     modifier whenTransferAllowed(address _from, uint256 _amount) {
         require(isTransferAllowed(_from, _amount), "Transfer cannot be allowed.");
         _;
@@ -150,18 +159,18 @@ contract IToken is ERC20, ERC20Detailed {
         core = LendingPoolCore(addressesProvider.getLendingPoolCore());
         pool = LendingPool(addressesProvider.getLendingPool());
         dataProvider = LendingPoolDataProvider(addressesProvider.getLendingPoolDataProvider());
-        underlyingInstrumentAddress = _underlyingAsset;
         sighDistributionHandlerContract = SIGHDistributionHandler(addressesProvider.getSIGHMechanismHandler());
+        underlyingInstrumentAddress = _underlyingAsset;
     }
 
-// #################################################################
-// ######  MINT NEW ITOKENS ON DEPOST ##############################
-// ######  1. Can only be called by lendingPool Contract (called after amount is transferred) 
-// ######  2. If interest is being redirected, it adds the amount which is 
-// ######     deposited to the increase in balance (through interest) and 
-// ######     updates the redirected balance. 
-// ######  3. It then mints new ITokens  
-// #################################################################
+// ###############################################################################################
+// ######  MINT NEW ITOKENS ON DEPOST ############################################################
+// ######  1. Can only be called by lendingPool Contract (called after amount is transferred) $$$$
+// ######  2. If interest is being redirected, it adds the amount which is #######################
+// ######     deposited to the increase in balance (through interest) and ########################
+// ######     updates the redirected balance. ####################################################
+// ######  3. It then mints new ITokens  #########################################################
+// ###############################################################################################
 
     /**
      * @dev mints token in the event of users depositing the underlying asset into the lending pool. Only lending pools can call this function
@@ -179,13 +188,13 @@ contract IToken is ERC20, ERC20Detailed {
         emit MintOnDeposit(_account, _amount, balanceIncrease, index);
     }
 
-// ###############################################################
-// ######  REDEEM UNDERLYING TOKENS ##############################
-// ######  1. If interest is being redirected, it adds the increase in balance (through interest) and 
-// ######     subtracts the amount to be redeemed to the redirected balance. 
-// ######  2. It then burns the ITokens equal to amount to be redeemed
-// ######  3. It then calls redeemUnderlying function of lendingPool Contract to transfer the underlying amount
-// ###############################################################
+// ###########################################################################################################################
+// ######  REDEEM UNDERLYING TOKENS ##########################################################################################
+// ######  1. If interest is being redirected, it adds the increase in balance (through interest) and ########################
+// ######     subtracts the amount to be redeemed to the redirected balance. #################################################
+// ######  2. It then burns the ITokens equal to amount to be redeemed  ###################################################### 
+// ######  3. It then calls redeemUnderlying function of lendingPool Contract to transfer the underlying amount  #############
+// ###########################################################################################################################
 
     /**
     * @dev redeems Itoken for the underlying asset
@@ -206,6 +215,9 @@ contract IToken is ERC20, ERC20Detailed {
         require(amountToRedeem <= currentBalance, "User cannot redeem more than the available balance");
         require(isTransferAllowed(msg.sender, amountToRedeem), "Transfer cannot be allowed.");       //check that the user is allowed to redeem the amount
 
+        pool.redeemUnderlying( underlyingInstrumentAddress, msg.sender, amountToRedeem, currentBalance.sub(amountToRedeem) );   // executes redeem of the underlying asset
+        accure_Supplier_SIGH(msg.sender);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR REDEEMER)
+
         //if the user is redirecting his interest towards someone else,
         //we update the redirected balance of the redirection address by adding the accrued interest, and removing the amount to redeem
         updateRedirectedBalanceOfRedirectionAddressInternal(msg.sender, balanceIncrease, amountToRedeem);
@@ -218,19 +230,16 @@ contract IToken is ERC20, ERC20Detailed {
             userIndexReset = resetDataOnZeroBalanceInternal(msg.sender);
         }
 
-        pool.redeemUnderlying( underlyingInstrumentAddress, msg.sender, amountToRedeem, currentBalance.sub(amountToRedeem) );   // executes redeem of the underlying asset
-        accure_Supplier_SIGH(msg.sender);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR DEPOSITOR)
-
         emit Redeem(msg.sender, amountToRedeem, balanceIncrease, userIndexReset ? 0 : index);
     }
 
-// ###########################################################################
-// ######  BURN ITOKENS WHEN LIQUIDATION OCCURS ##############################
-// ######  1. Can only be called by lendingPool Contract
-// ######  1. If interest is being redirected, it adds the increase in balance (through interest) and 
-// ######     subtracts the amount to be burnt to the redirected balance. 
-// ######  2. It then burns the ITokens equal to amount to be burnt
-// ###########################################################################
+// #########################################################################################################
+// ######  BURN ITOKENS WHEN LIQUIDATION OCCURS ############################################################
+// ######  1. Can only be called by lendingPool Contract  ##################################################
+// ######  1. If interest is being redirected, it adds the increase in balance (through interest) and  #####
+// ######     subtracts the amount to be burnt to the redirected balance. ##################################
+// ######  2. It then burns the ITokens equal to amount to be burnt   ######################################
+// #########################################################################################################
 
     /**
      * @dev burns token in the event of a borrow being liquidated, in case the liquidators reclaims the underlying asset
@@ -240,7 +249,7 @@ contract IToken is ERC20, ERC20Detailed {
      * @param _value the amount to burn
      **/
     function burnOnLiquidation(address _account, uint256 _value) external onlyLendingPool {
-        
+        accure_Supplier_SIGH(_account);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR REDEEMER)
         (,uint256 accountBalance,uint256 balanceIncrease,uint256 index) = cumulateBalanceInternal(_account);    //cumulates the balance of the user being liquidated
 
         //adds the accrued interest and substracts the burned amount to the redirected balance
@@ -255,12 +264,12 @@ contract IToken is ERC20, ERC20Detailed {
         emit BurnOnLiquidation(_account, _value, balanceIncrease, userIndexReset ? 0 : index);
     }
 
-// ###########################################################################
-// ######  TRANSFER FUNCTIONALITY ########################################
-// ######  1. transferOnLiquidation() : Can only be called by lendingPool Contract. Called to transfer Collateral when liquidating
-// ######  2. _transfer() : Over-rides the internal _transfer() called by the ERC20's transfer() & transferFrom() 
-// ######  3. executeTransferInternal() --> It actually executes the transfer. Accures interest and updates redirected balances before executing transfer.
-// ###########################################################################
+// ##################################################################################################################################################################
+// ######  TRANSFER FUNCTIONALITY ###################################################################################################################################
+// ######  1. transferOnLiquidation() : Can only be called by lendingPool Contract. Called to transfer Collateral when liquidating  #################################
+// ######  2. _transfer() : Over-rides the internal _transfer() called by the ERC20's transfer() & transferFrom() ###################################################
+// ######  3. executeTransferInternal() --> It actually executes the transfer. Accures interest and updates redirected balances before executing transfer.  #########
+// ##################################################################################################################################################################
 
     /**
      * @dev transfers tokens in the event of a borrow being liquidated, in case the liquidators reclaims the Itoken  only lending pools can call this function
@@ -288,7 +297,9 @@ contract IToken is ERC20, ERC20Detailed {
     **/
     function executeTransferInternal( address _from, address _to,  uint256 _value) internal {
         require(_value > 0, "Transferred amount needs to be greater than zero");
-
+        accure_Supplier_SIGH(_from);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR From Account)
+        accure_Supplier_SIGH(_to);                                                            // ADDED BY SIGH FINANCE (ACCURS SIGH FOR To Account)
+        
         (, uint256 fromBalance, uint256 fromBalanceIncrease, uint256 fromIndex ) = cumulateBalanceInternal(_from);   //cumulate the balance of the sender
         (, , uint256 toBalanceIncrease, uint256 toIndex ) = cumulateBalanceInternal(_to);       //cumulate the balance of the receiver
 
@@ -308,13 +319,13 @@ contract IToken is ERC20, ERC20Detailed {
         emit BalanceTransfer(  _from, _to, _value, fromBalanceIncrease, toBalanceIncrease, fromIndexReset ? 0 : fromIndex, toIndex);
     }
 
-// ###########################################################################
-// ######  REDIRECTING INTEREST STREAMS: FUNCTIONALITY ########################################
-// ######  1. redirectInterestStream() : User himself redirects his interest stream.
-// ######  2. allowInterestRedirectionTo() : User gives the permission of redirecting the interest stream to another account
-// ######  2. redirectInterestStreamOf() : When account given the permission to redirect interest stream (by the user) redirects the stream.
-// ######  3. redirectInterestStreamInternal() --> Executes the redirecting of the interest stream
-// ###########################################################################
+// ###########################################################################################################################################################
+// ######  REDIRECTING INTEREST STREAMS: FUNCTIONALITY #######################################################################################################
+// ######  1. redirectInterestStream() : User himself redirects his interest stream.  ########################################################################
+// ######  2. allowInterestRedirectionTo() : User gives the permission of redirecting the interest stream to another account  ################################ 
+// ######  2. redirectInterestStreamOf() : When account given the permission to redirect interest stream (by the user) redirects the stream.  ################
+// ######  3. redirectInterestStreamInternal() --> Executes the redirecting of the interest stream  ##########################################################
+// ###########################################################################################################################################################
 
     /**
     * @dev redirects the interest generated to a target address. When the interest is redirected, the user balance is added to the recepient redirected balance.
@@ -378,13 +389,13 @@ contract IToken is ERC20, ERC20Detailed {
         emit InterestStreamRedirected( _from, _to, fromBalance, balanceIncrease, fromIndex);
     }
 
-// #########################################################################################################
-// ### cumulateBalanceInternal( user ) --> returns 4 values and mints the balanceIncrease amount
-// ###  1. previousPrincipalBalance : IToken balance of the user
-// ###  2. newPrincipalBalance : new balance after adding balanceIncrease
-// ###  3. balanceIncrease : increase in balance based on interest from both principal and redirected interest streams
-// ###  4. index : updated user Index (gets the value from the core lending pool contract)
-// #########################################################################################################
+// ##################################################################################################################################
+// ### cumulateBalanceInternal( user ) --> returns 4 values and mints the balanceIncrease amount  ###################################
+// ###  1. previousPrincipalBalance : IToken balance of the user  ###################################################################
+// ###  2. newPrincipalBalance : new balance after adding balanceIncrease  ##########################################################
+// ###  3. balanceIncrease : increase in balance based on interest from both principal and redirected interest streams  #############
+// ###  4. index : updated user Index (gets the value from the core lending pool contract)  #########################################
+// ##################################################################################################################################
 
     /**
     * @dev accumulates the accrued interest of the user to the principal balance
@@ -400,29 +411,6 @@ contract IToken is ERC20, ERC20Detailed {
         uint256 index = userIndexes[_user] = core.getInstrumentNormalizedIncome(underlyingInstrumentAddress);      //updates the user index
         return ( previousPrincipalBalance, previousPrincipalBalance.add(balanceIncrease), balanceIncrease, index);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // #########################################################################################################
@@ -464,8 +452,6 @@ contract IToken is ERC20, ERC20Detailed {
     function calculateCumulatedBalanceInternal( address _user,  uint256 _balance) internal view returns (uint256) {
         return _balance.wadToRay().rayMul(core.getInstrumentNormalizedIncome(underlyingInstrumentAddress)).rayDiv(userIndexes[_user]).rayToWad();
     }
-
-
 
 
 // #################################################
@@ -576,7 +562,7 @@ contract IToken is ERC20, ERC20Detailed {
 // ############ 2. claimSIGH() [EXTERNAL]  : Accepts an array of users. Same as 1 but for array of users.
 // ############ 3. claimSighInternal() [INTERNAL] : CAlled from 1. and 2.
 // ############ 1. accure_Supplier_SIGH() [INTERNAL] :
-// ############ 2. accure_Borrower_SIGH() [INTERNAL] :
+// ############ 2. accure_Borrower_SIGH() [EXTERNAL] : Calls accure_Borrower_SIGH_Internal.
 // ############ 3. accureSigh() [INTERNAL] : 
 // ############ 4. transferSigh() [INTERNAL] :  
 
@@ -593,17 +579,11 @@ contract IToken is ERC20, ERC20Detailed {
 
     function claimSighInternal(address user) internal {
         accure_Supplier_SIGH(user);
-        accure_Borrower_SIGH(user);
+        accure_Borrower_SIGH_Internal(user);
         if (AccuredSighBalances[user] > 0) {
             transferSigh(user);
         }
     } 
-
-
-    event distributeSupplier_SIGH_test3(address market,uint supplyIndex, uint supplierIndex );
-    event distributeSupplier_SIGH_test4(address market, uint deltaIndex ,uint supplierTokens, uint supplierDelta , uint supplierAccrued);
-
-
 
     // Supply Index tracks the SIGH Accured per Instrument. Supplier Index tracks the Sigh Accured by the Supplier per Instrument
     // Delta Index = Supply Index - Supplier Index
@@ -637,7 +617,11 @@ contract IToken is ERC20, ERC20Detailed {
      * @param currentInstrument The market in which the borrower is interacting
      * @param borrower The address of the borrower to distribute Gsigh to
      */
-    function accure_Borrower_SIGH(address borrower) internal {
+    function accure_Borrower_SIGH(address borrower) external onlyLendingPoolCore {
+        accure_Borrower_SIGH_Internal(borrower);
+    }
+
+    function accure_Borrower_SIGH_Internal(address borrower) internal {
         borrowIndex = sighDistributionHandlerContract.getInstrumentBorrowIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHDistributionHandler Contract
         require(borrowIndex > 0, "SIGH Distribution Handler returned invalid borrow Index for the instrument");
         
@@ -760,12 +744,40 @@ contract IToken is ERC20, ERC20Detailed {
         emit SighStreamRedirected( _from, _to, block.number);
     }
 
+// ########################################################### 
+// ######  VIEW FUNCTIONS (SIGH RELATED)    ################## 
 
+    function getSighAccured() external view returns (uint) {
+        return AccuredSighBalances[msg.sender];
+    }
 
+    function getSighAccuredForAccount(address account) external view returns (uint) {
+        return AccuredSighBalances[account];
+    }
 
+    function getSighStreamRedirectedTo() external view returns (address) {
+        return sighRedirectionAddresses[msg.sender];
+    }
 
+    function getSighStreamRedirectedTo(address account) external view returns (address) {
+        return sighRedirectionAddresses[account];
+    }
 
+    function getSighStreamAllowances() external view returns (address) {
+        return sighRedirectionAllowances[msg.sender];
+    }
 
+    function getSighStreamAllowances(address account) external view returns (address) {
+        return sighRedirectionAllowances[account];
+    }    
+
+    function getSupplierIndexes(address account) external view returns (uint) {
+        return SupplierIndexes[account];
+    }    
+
+    function getBorrowerIndexes(address account) external view returns (uint) {
+        return BorrowerIndexes[account];
+    }    
 
 // 
 // ###### SAFE MATH ######

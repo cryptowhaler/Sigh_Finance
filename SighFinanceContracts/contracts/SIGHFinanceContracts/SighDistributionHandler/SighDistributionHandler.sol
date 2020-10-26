@@ -15,6 +15,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
     GlobalAddressesProvider public addressesProvider;
     PriceOracle public oracle;
     address public Sigh_Address;
+    address public lendingPoolCore;
 
 // ######## PARAMETERS ########
     uint public constant SIGH_ClaimThreshold = 0.001e18;        ///  The threshold above which the flywheel transfers SIGH, in wei
@@ -66,22 +67,11 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
     uint256 public deltaBlocksForSpeed = 1; // 60 * 60 
     uint256 public prevSpeedRefreshBlock;
 
+    // ####################################
+    // ############## EVENTS ##############
+    // ####################################
 
-
-
-
-
-
-
-
-    mapping(address => mapping(address => uint)) public SIGHSupplierIndex;
-    mapping(address => mapping(address => uint)) public SIGHBorrowerIndex;
-
-    mapping(address => uint) public SIGH_Accrued;               /// @notice The SIGH accrued but not yet transferred to each user
-
-
-
-    event MarketAdded (address instrumentAddress_, address iTokenAddress, uint blockNumber); 
+    event InstrumentAdded (address instrumentAddress_, address iTokenAddress, uint blockNumber); 
     event InstrumentSIGHed(address instrumentAddress_, address iTokenAddress, bool isCoverDripsMechanismActivated);    /// @notice Emitted when market isCoverDripsMechanismActivated status is changed
 
     event NewSIGHSpeed(uint oldSIGHSpeed, uint newSIGHSpeed, uint blockNumber_);     /// @notice Emitted when SIGH rate is changed
@@ -95,18 +85,6 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
 
     event Instrument_Sigh_Speed_Supplier_Ratio_Mantissa_Updated(address iToken, uint prevRatio, uint newRatio);
 
-    /// @notice Emitted when SIGH is distributed to a supplier
-    event DistributedSupplier_SIGH(ITokenInterface iToken, address supplier, uint sighDelta, uint sighSupplyIndex);
-
-    /// @notice Emitted when SIGH is distributed to a borrower
-    event DistributedBorrower_SIGH(ITokenInterface iToken, address borrower, uint sighDelta, uint sighBorrowIndex);
-
-    /// @notice Emitted when SIGH is transferred to a User
-    event SIGH_Transferred(address userAddress, uint amountTransferred );
-
-    
-
-
     event PriceSnappedCheck(address iToken, uint prevPrice, uint currentPrice,uint32 currentCounter, uint blockNumber);
 
 
@@ -116,13 +94,19 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         
     //only LendingPoolCore can use functions affected by this modifier
     modifier onlyLendingPoolCore {
-        require(addressesProvider.getLendingPoolCore() == msg.sender, "The caller must be the Lending pool Core contract");
+        require(lendingPoolCore == msg.sender, "The caller must be the Lending pool Core contract");
         _;
     }   
     
     //only SIGH Distribution Manager can use functions affected by this modifier
     modifier onlySighFinanceConfigurator {
         require(addressesProvider.getSIGHFinanceConfigurator() == msg.sender, "The caller must be the SIGH Finanace Configurator Contract");
+        _;
+    }
+
+    //only Lending Pool Manager can use functions affected by this modifier
+    modifier onlyLendingPoolConfigurator {
+        require(addressesProvider.getLendingPoolConfigurator() == msg.sender, "The caller must be the Lending Pool Configurator Contract");
         _;
     }
 
@@ -134,9 +118,9 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         _;
     }
         
-// ############################################################
-// ##############        PROXY RELATED          ###############
-// ############################################################
+// ######################################################################################
+// ##############        PROXY RELATED  & ADDRESSES INITIALIZATION        ###############
+// ######################################################################################
 
     event SIGHDistributionHandlerInitialized(address addressesProvider, address Sigh_Address, address priceOracle);
 
@@ -147,11 +131,21 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
     }
     
     function initialize( address addressesProvider_) public initializer {
-        addressesProvider = GlobalAddressesProvider(addressesProvider_); 
-        Sigh_Address = addressesProvider.getSIGHAddress();
-        oracle = PriceOracle( addressesProvider.getPriceOracle() );
+        addressesProvider = GlobalAddressesProvider(addressesProvider_);
+        refreshConfigInternal(); 
         emit SIGHDistributionHandlerInitialized( address(addressesProvider), Sigh_Address, oracle );
     }
+
+    function refreshConfig() external onlySighFinanceConfigurator() {
+        refreshConfigInternal(); 
+    }
+
+    function refreshConfigInternal() internal {
+        Sigh_Address = addressesProvider.getSIGHAddress();
+        oracle = PriceOracle( addressesProvider.getPriceOracle() );
+        lendingPoolCore = addressesProvider.getLendingPoolCore();
+    }
+
     
 // #####################################################################################################################################################
 // ##############        ADDING INSTRUMENTS AND ENABLING / DISABLING SIGH's LOSS MINIMIZING DISTRIBUTION MECHANISM       ###############################
@@ -194,7 +188,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
             instrumentPriceCycles[_instrument] = InstrumentPriceCycle({ recordedPriceSnapshot : emptyPrices, initializationCounter: 0 }) ;
         }   
 
-        emit MarketAdded(_instrument, _decimals,  _iTokenAddress block.number); 
+        emit InstrumentAdded(_instrument, _decimals,  _iTokenAddress block.number); 
         return true;
     }
 
@@ -254,25 +248,6 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         emit NewSIGHSpeed(oldSpeed, SIGHSpeed, getBlockNumber());         
         return true;
     }
-
-    /**
-     * @notice Sets the distribution ratio for an Instrument among Suppliers / Borrowers - Decided by the LendingPool Manager who 
-     * can call this function through the lendingPool Configurator (through LendingPool Core)
-     * @param instrument_ The instrument
-     * @param supplierRatio The % (in 1e18) of SIGH to be given to the suppliers, and rest to the borrowers
-     */
-    function updateSIGHSpeedRatioForAnInstrument(address instrument_, uint supplierRatio) external onlyLendingPoolCore returns (bool) {
-        require(financial_instruments[instrument_].isListed ,"Instrument not supported.");
-        require( supplierRatio > 0.5e18, 'The new Supplier Ratio must be greater than 0.5e18 (50%) ');
-        require( supplierRatio <= 1e18, 'The new Supplier Ratio must be less than 1e18 (100%)');
-
-        uint prevRatio = Instrument_Sigh_Speeds[instrument_].speeds_Ratio_Mantissa ;
-        Instrument_Sigh_Speeds[instrument_].speeds_Ratio_Mantissa = supplierRatio;
-        emit Instrument_Sigh_Speed_Supplier_Ratio_Mantissa_Updated( instrument_, prevRatio , Instrument_Sigh_Speeds[marketAddress].speeds_Ratio_Mantissa, getBlockNumber() );
-        
-        refreshSIGHSpeeds();
-        return true;
-    }
     
     /**
      * @notice Sets the staking speed for an Instrument - Decided by the SIGH Finance Manager who 
@@ -322,6 +297,25 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         deltaBlocksForSpeed = deltaBlocksLimit;
         emit minimumBlocksForSpeedRefreshUpdated( prevdeltaBlocksForSpeed,deltaBlocksForSpeed, getBlockNumber()  );
     }
+
+    /**
+     * @notice Sets the distribution ratio for an Instrument among Suppliers / Borrowers - Decided by the LendingPool Manager who 
+     * can call this function through the lendingPool Configurator (through LendingPool Core)
+     * @param instrument_ The instrument
+     * @param supplierRatio The % (in 1e18) of SIGH to be given to the suppliers, and rest to the borrowers
+     */
+    function updateSIGHSpeedRatioForAnInstrument(address instrument_, uint supplierRatio) external onlyLendingPoolConfigurator returns (bool) {
+        require(financial_instruments[instrument_].isListed ,"Instrument not supported.");
+        require( supplierRatio > 0.5e18, 'The new Supplier Ratio must be greater than 0.5e18 (50%) ');
+        require( supplierRatio <= 1e18, 'The new Supplier Ratio must be less than 1e18 (100%)');
+
+        uint prevRatio = Instrument_Sigh_Speeds[instrument_].speeds_Ratio_Mantissa ;
+        Instrument_Sigh_Speeds[instrument_].speeds_Ratio_Mantissa = supplierRatio;
+        emit Instrument_Sigh_Speed_Supplier_Ratio_Mantissa_Updated( instrument_, prevRatio , Instrument_Sigh_Speeds[marketAddress].speeds_Ratio_Mantissa, getBlockNumber() );
+        
+        refreshSIGHSpeeds();
+        return true;
+    }    
     
     // #########################################################################################################
     // ################ REFRESH SIGH DISTRIBUTION SPEEDS FOR INSTRUMENTS (INITIALLY EVERY HOUR) ################
@@ -485,8 +479,8 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
     function updatedInstrumentIndexesInternal() internal returns (bool) {
         for (uint i = 0; i < all_Instruments_.length; i++) {
             ITokenInterface currentInstrument = all_Instruments_[i];
-            updateSIGHSupplyIndex(address(currentInstrument));
-            updateSIGHBorrowIndex(address(currentInstrument));
+            updateSIGHSupplyIndexInternal(address(currentInstrument));
+            updateSIGHBorrowIndexInternal(address(currentInstrument));
         }
         return true;
     }
@@ -528,11 +522,11 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
 
 
     // #####################################################################################################################################
-    // ################ UPDATE SIGH DISTRIBUTION INDEXES ###################################################################################
+    // ################ UPDATE SIGH DISTRIBUTION INDEXES (Called from LendingPoolCore) #####################################################
     // ################ 1. updateSIGHSupplyIndex() : Called by LendingPoolCore              ################################################
     // ################ --> updateSIGHSupplyIndexInternal() Internal function with actual implementation  ################################## 
     // ################ 2. updateSIGHBorrowIndex() : Called by LendingPoolCore ############################################################# 
-    // ################ --> updateSIGHBorrowIndexInternal() : Internal function with actual implementation ##################################
+    // ################ --> updateSIGHBorrowIndexInternal() : Internal function with actual implementation #################################
     // #####################################################################################################################################
 
     event updateSIGHSupplyIndex_test1(address market,uint speed,uint currentIndex,  uint prevBlock, uint curBlock, uint deltaBlocks );
@@ -543,7 +537,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
      * @notice Accrue SIGH to the Instrument by updating the supply index
      * @param currentInstrument The Instrument whose supply index to update
      */
-    function updateSIGHSupplyIndex(address currentInstrument) external onlyLendingPoolCore returns (bool) {    
+    function updateSIGHSupplyIndex(address currentInstrument) external onlyLendingPoolCore returns (bool) {     // Called on each Deposit, Redeem and Liquidation (collateral)
         require(financial_instruments[currentInstrument].isListed ,"Instrument not supported.");
         require(updateSIGHSupplyIndexInternal( currentInstrument ), "Updating Sigh Supply Indexes operation failed" );
         return true;
@@ -591,7 +585,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
      * @notice Accrue SIGH to the market by updating the borrow index
      * @param currentInstrument The market whose borrow index to update
      */
-    function updateSIGHBorrowIndex(address currentInstrument) external onlyLendingPoolCore returns (bool) {     
+    function updateSIGHBorrowIndex(address currentInstrument) external onlyLendingPoolCore returns (bool) {     // Called during Borrow, repay, SwapRate, Rebalance, Liquidation
         require(financial_instruments[currentInstrument].isListed ,"Instrument not supported.");
         require( updateSIGHBorrowIndexInternal(currentInstrument), "Updating Sigh Borrow Indexes operation failed" ) ;
         return true;
@@ -636,114 +630,6 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         return true;
     }
 
-
-    // #########################################################################################
-    // ################ DISTRIBUTE ACCURED SIGH AMONG THE NETWORK PARTICIPANTS  ################
-    // #########################################################################################
-
-
-    // /**
-    //  * @notice Calculate SIGH accrued by a supplier and possibly transfer it to them
-    //  * @param currentInstrument The market in which the supplier is interacting
-    //  * @param supplier The address of the supplier to distribute SIGH to
-    //  */
-    // function distributeSupplier_SIGH(address currentInstrument, address supplier ) public {
-    //     require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
-    //     require(instrumentPriceCycles[currentInstrument].isListed ,"Market not supported.");
-
-    //     SIGHInstrumentState storage supplyState = sighMarketSupplyState[currentInstrument];
-    //     Double memory supplyIndex = Double({mantissa: supplyState.index});
-    //     Double memory supplierIndex = Double({mantissa: SIGHSupplierIndex[currentInstrument][supplier]});
-    //     SIGHSupplierIndex[currentInstrument][supplier] = supplyIndex.mantissa;     // UPDATED
-
-    //     if (supplierIndex.mantissa == 0 && supplyIndex.mantissa > 0) {
-    //         supplierIndex.mantissa = sighInitialIndex;
-    //     }
-
-    //     emit distributeSupplier_SIGH_test3(currentInstrument, supplyIndex.mantissa, supplierIndex.mantissa );
-
-    //     Double memory deltaIndex = sub_(supplyIndex, supplierIndex);    // , 'Distribute Supplier SIGH : supplyIndex Subtraction Underflow'
-    //     uint supplierTokens = ITokenInterface(currentInstrument).balanceOf(supplier);
-    //     uint supplierDelta = mul_(supplierTokens, deltaIndex);
-    //     uint supplierAccrued = add_(SIGH_Accrued[supplier], supplierDelta);
-    //     emit distributeSupplier_SIGH_test4(currentInstrument, deltaIndex.mantissa , supplierTokens, supplierDelta , supplierAccrued);
-    //     SIGH_Accrued[supplier] = transfer_Sigh(supplier, supplierAccrued, SIGH_ClaimThreshold);
-    //     uint sigh_accured_by_supplier = SIGH_Accrued[supplier];         
-    //     emit DistributedSupplier_SIGH(ITokenInterface(currentInstrument), supplier, supplierDelta, sigh_accured_by_supplier);
-    // }
-
-    // event distributeBorrower_SIGH_test3(address market,uint borrowIndex, uint borrowerIndex );
-    // event distributeBorrower_SIGH_test4(address market, uint deltaIndex ,uint borrowBalance, uint borrowerDelta , uint borrowerAccrued);
-
-    // /**
-    //  * @notice Calculate SIGH accrued by a borrower and possibly transfer it to them
-    //  * @dev Borrowers will not begin to accrue until after the first interaction with the protocol.
-    //  * @param currentInstrument The market in which the borrower is interacting
-    //  * @param borrower The address of the borrower to distribute Gsigh to
-    //  */
-    // function distributeBorrower_SIGH(address currentInstrument, address borrower) public {
-    //     require(msg.sender == sightrollerAddress || msg.sender == admin, "only admin/Sightroller can update SIGH Supply Index"); 
-    //     require(instrumentPriceCycles[currentInstrument].isListed ,"Market not supported.");
-
-    //     SIGHInstrumentState storage borrowState = sighMarketBorrowState[currentInstrument];
-    //     Double memory borrowIndex = Double({mantissa: borrowState.index});
-    //     Double memory borrowerIndex = Double({mantissa: SIGHBorrowerIndex[currentInstrument][borrower]});
-    //     SIGHBorrowerIndex[currentInstrument][borrower] = borrowIndex.mantissa; // Updated
-
-    //     if (borrowerIndex.mantissa == 0 && borrowIndex.mantissa > 0) {
-    //         borrowerIndex.mantissa = sighInitialIndex;
-    //     }
-
-    //     LendingPoolCore lendingPoolCoreContract = LendingPoolCore(addressesProvider.getLendingPoolCore() );
-
-    //     Exp memory marketBorrowIndex = Exp({mantissa: lendingPoolCoreContract.getInstrumentVariableBorrowsCumulativeIndex( currentInstrument )});
-        
-    //     emit distributeBorrower_SIGH_test3(currentInstrument, borrowIndex.mantissa, borrowerIndex.mantissa );
-
-    //     if (borrowerIndex.mantissa > 0) {
-    //         Double memory deltaIndex = sub_(borrowIndex, borrowerIndex);   // , 'Distribute Borrower SIGH : borrowIndex Subtraction Underflow'
-    //         uint borrowBalance;
-    //         ( , borrowBalance , , ) = lendingPoolCoreContract.getUserBasicInstrumentData(currentInstrument, borrower);
-    //         // uint borrowBalance = ITokenInterface(currentInstrument).borrowBalanceStored(borrower);
-    //         uint borrowerAmount = div_(borrowBalance, marketBorrowIndex);
-    //         uint borrowerDelta = mul_(borrowerAmount, deltaIndex);
-    //         uint borrowerAccrued = add_(SIGH_Accrued[borrower], borrowerDelta);
-    //         emit distributeBorrower_SIGH_test4(currentInstrument, deltaIndex.mantissa , borrowerAmount, borrowerDelta , borrowerAccrued);
-    //         SIGH_Accrued[borrower] = transfer_Sigh(borrower, borrowerAccrued, SIGH_ClaimThreshold);
-    //         uint sigh_accured_by_borrower = SIGH_Accrued[borrower]; 
-    //         emit distributeBorrower_SIGH_test4(currentInstrument, deltaIndex.mantissa, borrowerAmount, borrowerDelta, sigh_accured_by_borrower);
-    //     }
-    // }
-
-    // #########################################################################################
-    // ################### MARKET PARTICIPANTS CAN CLAIM THEIR ACCURED SIGH  ###################
-    // #########################################################################################
-
-    // function claimSIGH(address[] memory holders, bool borrowers, bool suppliers ) public {
-        
-    //     for (uint i = 0; i < all_Instruments.length; i++) {  
-    //         ITokenInterface currentInstrument = all_Instruments[i];
-
-    //         if (borrowers == true) {
-    //             updateSIGHBorrowIndex(address(currentInstrument));
-    //             for (uint j = 0; j < holders.length; j++) {
-    //                 distributeBorrower_SIGH(address(currentInstrument), holders[j] );
-    //             }
-    //         }
-
-    //         if (suppliers == true) {
-    //             updateSIGHSupplyIndex(address(currentInstrument));
-    //             for (uint j = 0; j < holders.length; j++) {
-    //                 distributeSupplier_SIGH(address(currentInstrument), holders[j] );
-    //             }
-    //         }
-            
-    //         for (uint j = 0; j < holders.length; j++) {
-    //             SIGH_Accrued[holders[i]] = transfer_Sigh(holders[i] , SIGH_Accrued[ holders[i] ] , 0 );
-    //         }
-    //     }
-    // }
-
     // #########################################################################################
     // ################### TRANSFERS THE SIGH TO THE MARKET PARTICIPANT  ###################
     // #########################################################################################
@@ -769,56 +655,31 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         return sigh_not_transferred;
     }
 
-
-
-
-
     // #########################################################
     // ################### GENERAL PARAMETER FUNCTIONS ###################
     // #########################################################
 
-    function getInstrumentSupplyIndex(address instrument_) external view returns (uint) {
-        require(financial_instruments[instrument_].isListed,"The provided instrument address is not supported");
-        return financial_instruments[instrument_].supplyindex;
-    }
-
-    function getInstrumentBorrowIndex(address instrument_) external view returns (uint) {
-        require(financial_instruments[instrument_].isListed,"The provided instrument address is not supported");
-        return financial_instruments[instrument_].borrowIndex;
-    }
-
-    // SIGHTROLLER - GETTER AND SETTER
-    function setSightrollerAddress(address newSightroller) public returns (bool) {
-        require(msg.sender == admin, "only admin can set SIGHTROLLER");
-        sightrollerAddress = newSightroller;
-        return true;
-    }
-
-    // SIGH - GETTER AND SETTER
-    function setSighAddress(address Sigh_Address__) public returns (address) {
-        require(msg.sender == admin, "only admin can set Sigh_Address");
-        Sigh_Address = Sigh_Address__;
-        return Sigh_Address;
-    }
-    
-    // ORACLE - SETTER
-    function setOracle(address newOracle) public returns (bool) {
-        require(msg.sender == admin, "only admin can set oracle");
-        oracle = PriceOracle(newOracle);
-        return true;
-    }
-    
     function getSIGHBalance() public view returns (uint) {
         IERC20 sigh = IERC20(Sigh_Address);
         uint sigh_Remaining = sigh.balanceOf(address(this));
         return sigh_Remaining;
     }
-    
-    function setMinimumDeltaBlocksForSpeed(uint224 newMinimumDeltaBlocks) public {
-        require(msg.sender == admin, "only admin can set oracle");
-        deltaBlocksForSpeed = newMinimumDeltaBlocks;
+
+    function getInstrumentSupplyIndex(address instrument_) external view returns (uint) {
+        if (financial_instruments[instrument_].isListed) { //"The provided instrument address is not supported");
+            return financial_instruments[instrument_].supplyindex;
+        }
+        return uint(0);
     }
 
+    function getInstrumentBorrowIndex(address instrument_) external view returns (uint) {
+        if (financial_instruments[instrument_].isListed) { //,"The provided instrument address is not supported");
+            return financial_instruments[instrument_].borrowIndex;
+        }
+        return uint(0);
+    }
+    
+    
     function getBlockNumber() public view returns (uint32) {
         return uint32(block.number);
     }

@@ -328,4 +328,20 @@ contract LendingPoolConfigurator is VersionedInitializable {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
         core.refreshConfiguration();
     }
+
+    // ##########################################################################################
+    // ###############  LENDING POOL CONFIGURATOR'S CONTROL OVER SIGH MECHANICS  ################
+    // ##########################################################################################
+
+    /**
+    * @dev refreshes the lending pool core configuration to update the cached address
+    **/
+    function updateSIGHSpeedRatioForAnInstrument(address instrument_, uint supplierRatio) external onlyLendingPoolManager {
+        ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );        
+        sigh_distribution_mechanism.updateSIGHSpeedRatioForAnInstrument( instrument_,  supplierRatio);
+    }
+
+
+
+
 }
