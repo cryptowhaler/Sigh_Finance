@@ -250,7 +250,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
 
         core.updateStateOnDeposit(_instrument, msg.sender, _amount, isFirstDeposit);
         iToken.mintOnDeposit(msg.sender, _amount);                                          //minting IToken to user 1:1 with the specific exchange rate
-        core.transferToReserve.value(msg.value)(_instrument, msg.sender, _amount);       //transfer to the core contract
+        core.transferToReserve.value(msg.value)(_instrument, msg.sender, _amount);          //transfer to the core contract
 
         emit Deposit(_instrument, msg.sender, _amount, _referralCode, block.timestamp);
 

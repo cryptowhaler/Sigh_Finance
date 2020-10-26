@@ -169,7 +169,7 @@ contract IToken is ERC20, ERC20Detailed {
      * @param _amount the amount of tokens to mint
      */
     function mintOnDeposit(address _account, uint256 _amount) external onlyLendingPool {
-        
+        accure_Supplier_SIGH(_account);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR DEPOSITOR)
         (, , uint256 balanceIncrease, uint256 index) = cumulateBalanceInternal(_account);       //calculates new interest generated and mints the ITokens (based on interest)
 
          //if the user is redirecting his interest towards someone else, we update the redirected balance of the redirection address by adding the accrued interest and the amount deposited
@@ -194,9 +194,8 @@ contract IToken is ERC20, ERC20Detailed {
     function redeem(uint256 _amount) external {
 
         require(_amount > 0, "Amount to redeem needs to be > 0");
-
-        //cumulates the balance of the user
-        (, uint256 currentBalance, uint256 balanceIncrease, uint256 index) = cumulateBalanceInternal(msg.sender);
+        
+        (, uint256 currentBalance, uint256 balanceIncrease, uint256 index) = cumulateBalanceInternal(msg.sender);   //cumulates the balance of the user
         uint256 amountToRedeem = _amount;
 
         //if amount is equal to uint(-1), the user wants to redeem everything
@@ -220,6 +219,8 @@ contract IToken is ERC20, ERC20Detailed {
         }
 
         pool.redeemUnderlying( underlyingInstrumentAddress, msg.sender, amountToRedeem, currentBalance.sub(amountToRedeem) );   // executes redeem of the underlying asset
+        accure_Supplier_SIGH(msg.sender);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR DEPOSITOR)
+
         emit Redeem(msg.sender, amountToRedeem, balanceIncrease, userIndexReset ? 0 : index);
     }
 
@@ -569,9 +570,39 @@ contract IToken is ERC20, ERC20Detailed {
 
 
 
+// ###########################################################################
+// ############ ______SIGH ACCURING AND STREAMING FUNCTIONS______ ############
+// ############ 1. claimMySIGH() [EXTERNAL] : All accured SIGH is transferred to the transacting account.
+// ############ 2. claimSIGH() [EXTERNAL]  : Accepts an array of users. Same as 1 but for array of users.
+// ############ 3. claimSighInternal() [INTERNAL] : CAlled from 1. and 2.
+// ############ 1. accure_Supplier_SIGH() [INTERNAL] :
+// ############ 2. accure_Borrower_SIGH() [INTERNAL] :
+// ############ 3. accureSigh() [INTERNAL] : 
+// ############ 4. transferSigh() [INTERNAL] :  
+
+
+    function claimMySIGH() external {
+        claimSighInternal(msg.sender);
+    }
+
+    function claimSIGH(address[] memory holders ) external {        
+        for (uint i = 0; i < holders.length; i++) {
+            claimSighInternal(holders[i]);
+        }
+    }
+
+    function claimSighInternal(address user) internal {
+        accure_Supplier_SIGH(user);
+        accure_Borrower_SIGH(user);
+        if (AccuredSighBalances[user] > 0) {
+            transferSigh(user);
+        }
+    } 
+
 
     event distributeSupplier_SIGH_test3(address market,uint supplyIndex, uint supplierIndex );
     event distributeSupplier_SIGH_test4(address market, uint deltaIndex ,uint supplierTokens, uint supplierDelta , uint supplierAccrued);
+
 
 
     // Supply Index tracks the SIGH Accured per Instrument. Supplier Index tracks the Sigh Accured by the Supplier per Instrument
@@ -625,7 +656,7 @@ contract IToken is ERC20, ERC20Detailed {
         if (deltaIndex.mantissa > 0) {
             Exp memory marketBorrowIndex = Exp({mantissa: core.getInstrumentVariableBorrowsCumulativeIndex( currentInstrument )});  // Getting index from LendingPool Core
             uint borrowBalance;
-            ( , borrowBalance , , ) = core.getUserBasicInstrumentData(currentInstrument, borrower);                                 // Getting Borrow Balance of the User from LendingPool Core 
+            ( , borrowBalance , , ) = core.getUserBasicInstrumentData(underlyingInstrumentAddress, borrower);                                 // Getting Borrow Balance of the User from LendingPool Core 
             uint borrowerAmount = div_(borrowBalance, marketBorrowIndex);
             uint borrowerSIGHDelta = mul_(borrowerAmount, deltaIndex);        // Additional Sigh Accured by the Borrower
             accureSigh( borrower,borrowerSIGHDelta );            // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the BORROWER or the address to which SIGH is being redirected to 
@@ -665,16 +696,69 @@ contract IToken is ERC20, ERC20Detailed {
         AccuredSighBalances[user] = sighDistributionHandlerContract.transferSighTotheUser( underlyingInstrumentAddress, user, amountToBeTransferred ); // Pending Amount Not Transferred is returned
     }
 
+// ###########################################################################################################################################################
+// ######  ____REDIRECTING Sigh STREAMS____     ##############################################################################################################
+// ######  1. redirectSighStream() [EXTERNAL] : User himself redirects his Sigh stream.      #################################################################
+// ######  2. allowSighRedirectionTo() [EXTERNAL] : User gives the permission of redirecting the Sigh stream to another account     ##########################
+// ######  2. redirectSighStreamOf() [EXTERNAL] : When account given the permission to redirect Sigh stream (by the user) redirects the stream.    ###########
+// ######  3. redirectSighStreamInternal() [INTERNAL] --> Executes the redirecting of the Sigh stream    #####################################################
+// ###########################################################################################################################################################
+    event SighRedirectionAllowanceChanged( address user, address allowedAccount );
+    event SighStreamRedirected( address fromAccount, address toAccount );
 
+    /**
+    * @dev redirects the Sigh being generated to a target address. 
+    * @param _to the address to which the Sigh will be redirected
+    **/
+    function redirectSighStream(address _to) external {
+        redirectSighStreamInternal(msg.sender, _to);
+    }
 
+    /**
+    * @dev gives allowance to an address to execute the Sigh redirection on behalf of the caller.
+    * @param _to the address to which the Sigh redirection permission is given. Pass address(0) to reset the allowance.
+    **/
+    function allowSighRedirectionTo(address _to) external {
+        require(_to != msg.sender, "User cannot give allowance to himself");
+        sighRedirectionAllowances[msg.sender] = _to;
+        emit SighRedirectionAllowanceChanged( msg.sender, _to);
+    }
 
+    /**
+    * @dev redirects the Sigh generated by _from to a target address.
+    * The caller needs to have allowance on the Sigh redirection to be able to execute the function.
+    * @param _from the address of the user whom Sigh is being redirected
+    * @param _to the address to which the Sigh will be redirected
+    **/
+    function redirectSighStreamOf(address _from, address _to) external {
+        require( msg.sender == sighRedirectionAllowances[_from], "Caller is not allowed to redirect the Sigh of the user");
+        redirectSighStreamInternal(_from,_to);
+    }
 
+    /**
+    * @dev executes the redirection of the Sigh from one address to another.
+    * immediately after redirection, the destination address will start to accrue Sigh.
+    * @param _from the source address
+    * @param _to the destination address
+    **/
+    function redirectSighStreamInternal( address _from, address _to) internal {
 
+        address currentRedirectionAddress = sighRedirectionAddresses[_from];
+        require(_to != currentRedirectionAddress, "Sigh is already redirected to the provided account");
+        
+        uint userSupplyBalance = super.balanceOf(_from);                                                        // SUPPLIED BALANCE
+        ( , borrowBalance , , ) = core.getUserBasicInstrumentData(underlyingInstrumentAddress, _from);          // DEPOSITED BALANCE
+        require(userSupplyBalance > 0 || borrowBalance > 0 , "Sigh stream can only be redirected if there is a valid Supply or Borrow balance");
 
-
-
-
-
+        if(_to == _from) {               //   if the user is redirecting the Sigh back to himself, we simply set to 0 the Sigh redirection address
+            sighRedirectionAddresses[_from] = address(0);
+            emit SighStreamRedirected( _from, address(0), block.number);
+            return;
+        }
+        
+        sighRedirectionAddresses[_from] = _to;                                      // set the redirection address to the new recipient
+        emit SighStreamRedirected( _from, _to, block.number);
+    }
 
 
 

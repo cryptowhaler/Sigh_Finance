@@ -36,6 +36,7 @@ contract LendingPoolCore is VersionedInitializable {
 
     GlobalAddressesProvider public addressesProvider;
     address public lendingPoolAddress;
+    ISighDistributionHandler public sighMechanism;          // ADDED BY SIGH FINANCE
 
     address[] public instrumentsList;
     mapping(address => CoreLibrary.InstrumentData) internal reserves;
@@ -107,6 +108,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _isFirstDeposit true if the user is depositing for the first time
     **/
     function updateStateOnDeposit( address _instrument, address _user, uint256 _amount, bool _isFirstDeposit) external onlyLendingPool {
+        sighMechanism.updateSIGHSupplyIndex(_instrument);                                 // ADDED BY SIGH FINANCE (Instrument Index is updated)
         reserves[_instrument].updateCumulativeIndexes();
         updateInstrumentInterestRatesAndTimestampInternal(_instrument, _amount, 0);
 
@@ -148,6 +150,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _userRedeemedEverything true if the user is redeeming everything
     **/
     function updateStateOnRedeem( address _instrument, address _user, uint256 _amountRedeemed,  bool _userRedeemedEverything) external onlyLendingPool {
+        sighMechanism.updateSIGHSupplyIndex(_instrument);              // ADDED BY SIGH FINANCE (Instrument Index is updated)
         reserves[_instrument].updateCumulativeIndexes();               //compound liquidity and variable borrow interests
         updateInstrumentInterestRatesAndTimestampInternal(_instrument, 0, _amountRedeemed);
 
@@ -691,7 +694,6 @@ contract LendingPoolCore is VersionedInitializable {
     function getUserUnderlyingAssetBalance(address _instrument, address _user) public view returns (uint256) {
         IToken iToken = IToken(reserves[_instrument].iTokenAddress);
         return iToken.balanceOf(_user);
-
     }
 
     /**
@@ -1168,9 +1170,10 @@ contract LendingPoolCore is VersionedInitializable {
         refreshConfigInternal();
     }
 
-    // updates the internal configuration of the core
+    // updates the internal configuration of the core (lendingPool Address and SIGH Mechanism Address)
     function refreshConfigInternal() internal {
         lendingPoolAddress = addressesProvider.getLendingPool();
+        sighMechanism = ISighDistributionHandler( addressesProvider.getSIGHMechanismHandler()  );        // ADDED BY SIGH FINANCE
     }    
 
     // ###########      ADDING & INITITALIZING A NEW INSTRUMENT      ###########
