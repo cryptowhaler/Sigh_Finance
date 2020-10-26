@@ -19,20 +19,34 @@ import "./libraries/WadRayMath.sol";
 contract IToken is ERC20, ERC20Detailed {
 
     using WadRayMath for uint256;
+    sighInitialIndex = 1e36;        // INDEX (SIGH RELATED)
+
+    struct Double {
+        uint mantissa;
+    }
 
     uint256 public constant UINT_MAX_VALUE = uint256(-1);
 
-    address public underlyingAssetAddress;
+    address public underlyingInstrumentAddress;
 
     GlobalAddressesProvider private addressesProvider;     // Only used in Constructor()
     LendingPoolCore private core;
     LendingPool private pool;
     LendingPoolDataProvider private dataProvider;
+    SIGHDistributionHandler sighDistributionHandlerContract; // SIGH DISTRIBUTION HANDLER - ADDED BY SIGH FINANCE
     
     mapping (address => uint256) private userIndexes;                       // index values. Taken from core lending pool contract
     mapping (address => address) private interestRedirectionAddresses;      // Address to which the interest stream is being redirected
     mapping (address => uint256) private redirectedBalances;
     mapping (address => address) private interestRedirectionAllowances;     // Address allowed to perform interest redirection by the user
+
+    uint public sigh_Transfer_Threshold = 1e18;         // SIGH Transferred when accured >= 5 SIGH (in ETH)
+    mapping (address => uint256) private AccuredSighBalances;
+    mapping (address => uint256) private SupplierIndexes;
+    mapping (address => uint256) private BorrowerIndexes;
+    mapping (address => address) private sighRedirectionAddresses;     
+    mapping (address => address) private sighRedirectionAllowances;    
+
 
 // ########################
 // ######  EVENTS #########
@@ -120,12 +134,12 @@ contract IToken is ERC20, ERC20Detailed {
      * @return true if the _user can transfer _amount, false otherwise
      **/
     function isTransferAllowed(address _user, uint256 _amount) public view returns (bool) {
-        return dataProvider.balanceDecreaseAllowed(underlyingAssetAddress, _user, _amount);
+        return dataProvider.balanceDecreaseAllowed(underlyingInstrumentAddress, _user, _amount);
     }
 
 // ################################################################################################################################################
 // ######  CONSTRUCTOR ############################################################################################################################
-// ######  1. Sets the UNDERLYINGASSETADDRESS, name, symbol, decimals.              ###############################################################
+// ######  1. Sets the underlyingInstrumentAddress, name, symbol, decimals.              ###############################################################
 // ######  2. The GlobalAddressesProvider's address is used to get the LendingPoolCore #######################################################
 // ######     contract address, LendingPool contract address, and the LendingPoolDataProvider contract address and set them.    ###################
 // ################################################################################################################################################
@@ -136,7 +150,8 @@ contract IToken is ERC20, ERC20Detailed {
         core = LendingPoolCore(addressesProvider.getLendingPoolCore());
         pool = LendingPool(addressesProvider.getLendingPool());
         dataProvider = LendingPoolDataProvider(addressesProvider.getLendingPoolDataProvider());
-        underlyingAssetAddress = _underlyingAsset;
+        underlyingInstrumentAddress = _underlyingAsset;
+        sighDistributionHandlerContract = SIGHDistributionHandler(addressesProvider.getSIGHMechanismHandler());
     }
 
 // #################################################################
@@ -204,7 +219,7 @@ contract IToken is ERC20, ERC20Detailed {
             userIndexReset = resetDataOnZeroBalanceInternal(msg.sender);
         }
 
-        pool.redeemUnderlying( underlyingAssetAddress, msg.sender, amountToRedeem, currentBalance.sub(amountToRedeem) );   // executes redeem of the underlying asset
+        pool.redeemUnderlying( underlyingInstrumentAddress, msg.sender, amountToRedeem, currentBalance.sub(amountToRedeem) );   // executes redeem of the underlying asset
         emit Redeem(msg.sender, amountToRedeem, balanceIncrease, userIndexReset ? 0 : index);
     }
 
@@ -381,9 +396,33 @@ contract IToken is ERC20, ERC20Detailed {
         uint256 previousPrincipalBalance = super.balanceOf(_user);                                         // Current IToken Balance
         uint256 balanceIncrease = balanceOf(_user).sub(previousPrincipalBalance);                          //calculate the accrued interest since the last accumulation
         _mint(_user, balanceIncrease);                                                                     //mints an amount of tokens equivalent to the amount accumulated
-        uint256 index = userIndexes[_user] = core.getInstrumentNormalizedIncome(underlyingAssetAddress);      //updates the user index
+        uint256 index = userIndexes[_user] = core.getInstrumentNormalizedIncome(underlyingInstrumentAddress);      //updates the user index
         return ( previousPrincipalBalance, previousPrincipalBalance.add(balanceIncrease), balanceIncrease, index);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // #########################################################################################################
 // ### updateRedirectedBalanceOfRedirectionAddressInternal( user ) --> updates the redirected balance of the user
@@ -422,7 +461,7 @@ contract IToken is ERC20, ERC20Detailed {
     * @return the interest rate accrued
     **/
     function calculateCumulatedBalanceInternal( address _user,  uint256 _balance) internal view returns (uint256) {
-        return _balance.wadToRay().rayMul(core.getInstrumentNormalizedIncome(underlyingAssetAddress)).rayDiv(userIndexes[_user]).rayToWad();
+        return _balance.wadToRay().rayMul(core.getInstrumentNormalizedIncome(underlyingInstrumentAddress)).rayDiv(userIndexes[_user]).rayToWad();
     }
 
 
@@ -498,7 +537,7 @@ contract IToken is ERC20, ERC20Detailed {
         if(currentSupplyPrincipal == 0){
             return 0;
         }
-        return currentSupplyPrincipal.wadToRay().rayMul( core.getInstrumentNormalizedIncome(underlyingAssetAddress) ) .rayToWad();
+        return currentSupplyPrincipal.wadToRay().rayMul( core.getInstrumentNormalizedIncome(underlyingInstrumentAddress) ) .rayToWad();
     }
 
     /**
@@ -526,6 +565,171 @@ contract IToken is ERC20, ERC20Detailed {
     **/
     function getRedirectedBalance(address _user) external view returns(uint256) {
         return redirectedBalances[_user];
+    }
+
+
+
+
+    event distributeSupplier_SIGH_test3(address market,uint supplyIndex, uint supplierIndex );
+    event distributeSupplier_SIGH_test4(address market, uint deltaIndex ,uint supplierTokens, uint supplierDelta , uint supplierAccrued);
+
+
+    // Supply Index tracks the SIGH Accured per Instrument. Supplier Index tracks the Sigh Accured by the Supplier per Instrument
+    // Delta Index = Supply Index - Supplier Index
+    // SIGH Accured by Supplier = Supplier's Instrument Balance * Delta Index
+    function accure_Supplier_SIGH( address supplier ) internal {
+        supplyIndex = sighDistributionHandlerContract.getInstrumentSupplyIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHDistributionHandler Contract
+        require(supplyIndex > 0, "SIGH Distribution Handler returned invalid supply Index for the instrument");
+
+        Double memory supplyIndex_ = Double({mantissa: supplyIndex});                        // Instrument Index
+        Double memory supplierIndex = Double({mantissa: SupplierIndexes[supplier]}) ;      // Stored Supplier Index
+        SupplierIndexes[supplier] = supplyIndex_.mantissa;                                   // Supplier Index is UPDATED
+
+        if (supplierIndex.mantissa == 0 && supplyIndex_.mantissa > 0) {
+            supplierIndex.mantissa = sighInitialIndex;
+        }
+
+        emit distributeSupplier_SIGH_test3(supplier, supplyIndex_.mantissa, supplierIndex.mantissa );
+
+        uint supplierTokens = super.balanceOf(supplier);                                                // Current Supplier IToken (1:1 mapping with instrument) Balance
+        Double memory deltaIndex = sub_(supplyIndex_, supplierIndex);                                // , 'Distribute Supplier SIGH : supplyIndex Subtraction Underflow'
+
+        if (deltaIndex.mantissa > 0) {
+            uint supplierSighDelta = mul_(supplierTokens, deltaIndex);                                      // Supplier Delta = Balance * Double(DeltaIndex)/DoubleScale
+            accureSigh(supplier, supplierSighDelta )        // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the Supplier or the address to which SIGH is being redirected to 
+        }
+    }
+
+    /**
+     * @notice Calculate SIGH accrued by a borrower and possibly transfer it to them
+     * @dev Borrowers will not begin to accrue until after the first interaction with the protocol.
+     * @param currentInstrument The market in which the borrower is interacting
+     * @param borrower The address of the borrower to distribute Gsigh to
+     */
+    function accure_Borrower_SIGH(address borrower) internal {
+        borrowIndex = sighDistributionHandlerContract.getInstrumentBorrowIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHDistributionHandler Contract
+        require(borrowIndex > 0, "SIGH Distribution Handler returned invalid borrow Index for the instrument");
+        
+        Double memory borrowIndex_ = Double({mantissa: borrowIndex});                        // Instrument Index
+        Double memory borrowerIndex = Double({mantissa: BorrowerIndexes[borrower]}) ;      // Stored Borrower Index
+        BorrowerIndexes[borrower] = borrowIndex_.mantissa;                                   // Borrower Index is UPDATED
+
+        if (borrowerIndex.mantissa == 0 && borrowIndex.mantissa > 0) {
+            borrowerIndex.mantissa = sighInitialIndex;
+        }
+
+        emit distributeBorrower_SIGH_test3(borrower, borrowIndex.mantissa, borrowerIndex.mantissa );
+
+        Double memory deltaIndex = sub_(borrowIndex_, borrowerIndex);                                                         // Sigh accured per instrument
+
+        if (deltaIndex.mantissa > 0) {
+            Exp memory marketBorrowIndex = Exp({mantissa: core.getInstrumentVariableBorrowsCumulativeIndex( currentInstrument )});  // Getting index from LendingPool Core
+            uint borrowBalance;
+            ( , borrowBalance , , ) = core.getUserBasicInstrumentData(currentInstrument, borrower);                                 // Getting Borrow Balance of the User from LendingPool Core 
+            uint borrowerAmount = div_(borrowBalance, marketBorrowIndex);
+            uint borrowerSIGHDelta = mul_(borrowerAmount, deltaIndex);        // Additional Sigh Accured by the Borrower
+            accureSigh( borrower,borrowerSIGHDelta );            // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the BORROWER or the address to which SIGH is being redirected to 
+        }
+    }
+
+    /**
+     * @notice Accured SIGH amount is added to the ACCURED_SIGH_BALANCES of the Supplier/Borrower or the address to which SIGH is being redirected to.
+     * @param user The user for which SIGH is being accured
+     * @param accuredSighAmount The amount of SIGH accured
+     */
+    function accureSigh( address user, uint accuredSighAmount ) internal {
+        address sighAccuredTo = user;
+
+        if ( sighRedirectionAddresses[sighAccuredTo] == address(0) ) {
+            AccuredSighBalances[sighAccuredTo] = AccuredSighBalances[sighAccuredTo].add(accuredSighAmount);   // Accured SIGH added to the user's sigh balance
+        }
+        else {
+            sighAccuredTo = sighRedirectionAddresses[user];
+            AccuredSighBalances[sighAccuredTo] = AccuredSighBalances[sighAccuredTo].add(accuredSighAmount);   // Accured SIGH added to the redirected user's sigh balance            
+        }
+        emit distributeSupplier_SIGH_test4( user , sighAccuredTo, accuredSighAmount );
+
+        if ( AccuredSighBalances[sighAccuredTo] > sigh_Transfer_Threshold ) {   // SIGH is Transferred is SIGH_ACCURED_BALANCE > 1e18 SIGH
+            transferSigh( sighAccuredTo );
+        }
+        emit SighAccured( user, sighAccuredTo, AccuredSighBalances[sighAccuredTo] );
+    }
+
+    /**
+     * @notice Transfers all accured SIGH to the user
+     * @dev Calls the transferSighTotheUser() of the sighDistributionHandlerContract which transfers SIGH to the user
+     * @param user The user to which the accured SIGH is transferred
+     */
+    function transferSigh( address user ) internal {
+        uint amountToBeTransferred = AccuredSighBalances[user];
+        AccuredSighBalances[user] = sighDistributionHandlerContract.transferSighTotheUser( underlyingInstrumentAddress, user, amountToBeTransferred ); // Pending Amount Not Transferred is returned
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 
+// ###### SAFE MATH ######
+// 
+
+
+    function sub_(Double memory a, Double memory b) pure internal returns (Double memory) {
+        return Double({mantissa: sub_(a.mantissa, b.mantissa)});
+    }
+
+    function sub_(uint a, uint b) pure internal returns (uint) {
+        return sub_(a, b, "subtraction underflow");
+    }
+
+    function sub_(uint a, uint b, string memory errorMessage) pure internal returns (uint) {
+        require(b <= a, errorMessage);
+        return a - b;
+    }
+
+    function mul_(uint a, Double memory b) pure internal returns (uint) {
+        uint doubleScale = 1e36;
+        return mul_(a, b.mantissa) / doubleScale;
+    }
+
+    function mul_(uint a, uint b) pure internal returns (uint) {
+        return mul_(a, b, "multiplication overflow");
+    }
+
+    function mul_(uint a, uint b, string memory errorMessage) pure internal returns (uint) {
+        if (a == 0 || b == 0) {
+            return 0;
+        }
+        uint c = a * b;
+        require(c / a == b, errorMessage);
+        return c;
+    }
+
+    function div_(uint a, Exp memory b) pure internal returns (uint) {
+        return div_(mul_(a, expScale), b.mantissa);
+    }
+
+    function div_(uint a, uint b) pure internal returns (uint) {
+        return div_(a, b, "divide by zero");
+    }
+
+    function div_(uint a, uint b, string memory errorMessage) pure internal returns (uint) {
+        require(b > 0, errorMessage);
+        return a / b;
     }
 
 }
