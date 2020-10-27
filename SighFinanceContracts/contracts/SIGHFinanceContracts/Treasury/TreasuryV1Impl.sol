@@ -23,10 +23,10 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
 
     uint public lastDripBlockNumber; 
 
-    event tokenBeingDistributedChanged(address prevToken, address newToken, uint blockNumber);
+    event instrumentBeingDistributedChanged(address prevInstrument, address newToken, uint blockNumber);
     event DripAllowedChanged(bool prevDripAllowed , bool newDripAllowed, uint blockNumber); 
     event DripSpeedChanged(uint prevDripSpeed , uint curDripSpeed,  uint blockNumber ); 
-    event AmountDripped(address tokenBeingDripped, uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
+    event AmountDripped(address instrumentBeingDripped, uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
 
     event maxTransferAmountUpdated(uint prevmaxTransferAmount, uint newmaxTransferAmount);
     event SIGHTransferred(address indexed TargetAddress, uint amountTransferred, uint totalAmountTransferred, uint blockNumber);
@@ -196,39 +196,47 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
 
 // ##############################################################################################################################
 // ###########   TREASURY CAN DISTRIBUTE ANY TOKEN TO ANY ADDRESS AT A PER BLOCK BASIS               ############
-// ###########   1. ChangeTokenBeingDripped() --> Change the token being dripped to the Protocol's Core Contract     ############
+// ###########   1. initializeInstrumentDistribution() --> To initiate an Instrument distribution Session.    ############
 // ###########   2. ChangeDrippingStatus() --> Switch to ON/OFF Dripping                // ######################################
 // ###########   3. changeDripSpeed() --> To change the Current Drip Speed              // ######################################
 // ##############################################################################################################################
 
+    function initializeInstrumentDistribution (address targetAddress, address instrumentToBeDistributed, uint distributionSpeed) external onlySighFinanceConfigurator returns (bool) {
+        require(!isDripAllowed,"Instrument distribution needs to be reset before it can be initialized Again");
 
-function setTargetAddressForDripping(address targetAddress ) external
+        targetAddressForDripping = targetAddress;                           // Sets the address to which these instruments will be distributed
+        require(changeInstrumentBeingDrippedInternal(instrumentToBeDistributed),"Instrument to be distributed not assigned properly");    // Sets the instrument which will be distributed
+        updateDripSpeedInternal(distributionSpeed);                         // Sets the distribution Speed
 
-
+        isDripAllowed = true;                                               // INITIATES DISTRIBUTION
+        lastDripBlockNumber = block.number;                                 // Distribution commences from current block
+        return true;
+    }
 
     /**
-      * @notice Change the token being dripped to the Protocol's Core Contract
-      * @param tokenToDrip Address of the token to be dripped
+      * @notice Change the token being dripped to the Target Address
+      * @param instrumentToDrip Address of the token to be dripped
       * @return returns the address of the token that will be Dripped
     */    
-    function ChangeTokenBeingDripped(address tokenToDrip ) public returns (address) {
-        require(msg.sender == admin,'Only Admin can begin/stop Dripping');
-
-        if ( isDripAllowed ) {
+    function changeInstrumentBeingDripped(address instrumentToDrip ) external onlySighFinanceConfigurator returns (bool) {
+        if ( isDripAllowed ) {  // First Distribute the remaining amount
             drip();
         }
+        require(changeInstrumentBeingDrippedInternal(instrumentToDrip),"Instrument to be distributed not assigned properly");
 
-        IERC20 newToken = IERC20(tokenToDrip);
+    }
+
+    function changeInstrumentBeingDrippedInternal(address instrumentToDrip) internal returns (bool) {
+        IERC20 newToken = IERC20(instrumentToDrip);
         uint currentBalance = newToken.balanceOf(address(this)); 
+        require(currentBalance > 0, 'The Treasury does not hold these new instruments');
 
-        require(currentBalance > 0, 'The Treasury does not hold these new tokens');
+        address prevInstrument = instrumentBeingDripped;
+        instrumentBeingDripped = instrumentToDrip;
+        require(instrumentBeingDripped == instrumentToDrip, 'Address for the instrument to be Dripped not assigned properly');
 
-        address prevToken = tokenBeingDripped;
-        tokenBeingDripped = tokenToDrip;
-        require(tokenBeingDripped == tokenToDrip, 'Address for the token to be Dripped not assigned properly');
-
-        emit tokenBeingDistributedChanged(prevToken, tokenBeingDripped, block.number);
-        return tokenBeingDripped;
+        emit instrumentBeingDistributedChanged(prevInstrument, instrumentBeingDripped, block.number);
+        return true;
     }
 
     /**
@@ -236,7 +244,7 @@ function setTargetAddressForDripping(address targetAddress ) external
       * @param val If 0, dripping is disabled, else enabled
       * @return retursn is Dripping is allowed or not
     */    
-    function ChangeDrippingStatus( uint val ) public returns (bool) {
+    function resetInstrumentDistribution( uint val ) public returns (bool) {
         require(msg.sender == admin,'Only Admin can begin/stop Dripping');
         bool prevDripAllowed = isDripAllowed;
 
@@ -283,7 +291,7 @@ function setTargetAddressForDripping(address targetAddress ) external
     function drip() public returns (uint) {
         require(isDripAllowed, 'Drip is currently not allowed.');
 
-        IERC20 token_ = IERC20(tokenBeingDripped); 
+        IERC20 token_ = IERC20(instrumentBeingDripped); 
 
         uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance of the token Being Dripped
         uint blockNumber_ = block.number;
@@ -294,13 +302,13 @@ function setTargetAddressForDripping(address targetAddress ) external
         require(token_.transfer(SIGHDistributionHandler_address, toDrip_), 'The transfer did not complete.' );
         
         lastDripBlockNumber = blockNumber_; // setting the block number when the Drip is made
-        uint prevTotalDrippedAmount = totalDrippedAmount[tokenBeingDripped];
-        totalDrippedAmount[tokenBeingDripped] = add(prevTotalDrippedAmount,toDrip_,"Overflow");
+        uint prevTotalDrippedAmount = totalDrippedAmount[instrumentBeingDripped];
+        totalDrippedAmount[instrumentBeingDripped] = add(prevTotalDrippedAmount,toDrip_,"Overflow");
         treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
 
-        TokenBalances[tokenBeingDripped] = treasuryBalance_;
+        TokenBalances[instrumentBeingDripped] = treasuryBalance_;
 
-        emit AmountDripped( tokenBeingDripped, treasuryBalance_, toDrip_ , totalDrippedAmount[tokenBeingDripped] ); 
+        emit AmountDripped( instrumentBeingDripped, treasuryBalance_, toDrip_ , totalDrippedAmount[instrumentBeingDripped] ); 
         
         return toDrip_;
     }
@@ -388,9 +396,9 @@ function setTargetAddressForDripping(address targetAddress ) external
         return 0;
     }
     
-    function getTokenBeingDripped() external view returns (address) {
+    function getinstrumentBeingDripped() external view returns (address) {
         if (isDripAllowed) {
-            return tokenBeingDripped;
+            return instrumentBeingDripped;
         }
         return address(0);
     }
