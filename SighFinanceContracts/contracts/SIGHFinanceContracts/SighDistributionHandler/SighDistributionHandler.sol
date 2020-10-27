@@ -1,5 +1,12 @@
 pragma solidity ^0.5.16;
 
+/**
+ * @title Sigh Distribution Handler Contract
+ * @notice Handles the SIGH Loss Minimizing Mechanism for the Lending Protocol
+ * @dev Accures SIGH for the supported markets based on losses made every 24 hours, along with Staking speeds. This accuring speed is updated every hour
+ * @author SIGH Finance
+ */
+ 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
 import "../Math/Exponential.sol";
 

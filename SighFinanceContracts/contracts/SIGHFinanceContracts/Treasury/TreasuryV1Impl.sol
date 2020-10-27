@@ -1,16 +1,20 @@
 pragma solidity ^0.5.16;
 
-// interfaces
-import "./IForwarder.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
-// import "../openzeppelin/EIP20Interface.sol";
-import "./TreasuryStorage.sol";
-import "./TreasuryInterface.sol";
-import "./EIP20InterfaceSIGH.sol";
 /**
- * @title SighFinance's Treasury Contract
- * @author SighFinance
+ * @title Sigh Treasury Contract Interface
+ * @notice The Treasury Contract for SIGH Finance
+ * @dev Used to Swap Tokens, burns SIGH Tokens, and can ERC20 token can be distributed to a target address on a per block basis
+ * @author SIGH Finance
  */
+
+// interfaces
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
+import "./TreasuryStorage.sol";
+import "./EIP20InterfaceSIGH.sol";
+
+// import "./IForwarder.sol";
+// import "../openzeppelin/EIP20Interface.sol";
+
 contract Treasury is TreasuryV1Storage, VersionedInitializable   {
     
     uint public maxTransferAmount;

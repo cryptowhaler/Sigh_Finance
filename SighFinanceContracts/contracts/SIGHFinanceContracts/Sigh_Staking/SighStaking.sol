@@ -1,5 +1,13 @@
 pragma solidity ^0.5.0;
 
+/**
+ * @title Sigh Staking Contract
+ * @notice Distributes rewards (Fee collected from Lending Protocol ) to SIGH Stakers
+ * @dev 
+ * @author SIGH Finance
+ */
+
+
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
@@ -10,88 +18,59 @@ import "../interfaces/IKyberNetworkProxyInterface.sol";
 import "../libraries/EthAddressLib.sol";
 
 
-/// @title TokenDistributor
-/// @author Aave, SIGH Finance
-/// @notice Receives tokens and manages the distribution amongst receivers
-///  The usage is as follows:
-///  - The distribution addresses and percentages are set up on construction
-///  - The Kyber Proxy is approved for a list of tokens in construction, which will be later burnt
-///  - At any moment, anyone can call distribute() with a list of token addresses in order to distribute
-///    the accumulated token amounts and/or ETH in this contract to all the receivers with percentages
-///  - If the address(0) is used as receiver, this contract will trade in Kyber to tokenToBurn (SIGH)
-///    and burn it (sending to address(0) the tokenToBurn)
+contract SighStaking is VersionedInitializable {
 
-contract TokenDistributor is VersionedInitializable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
-    struct Distribution {
-        address[] receivers;
-        uint256[] percentages;
-    }
+    mapping (address => uint256) private stakingBalances;
+    uint private totalStakedSigh;
 
-    event DistributionUpdated(address[] receivers, uint256[] percentages);
-    event Distributed(address receiver, uint256 percentage, uint256 amount);
-    event Setup(address tokenToBurn, address kyberProxy, address _recipientBurn);
-    event Trade(address indexed from, uint256 fromAmount, uint256 toAmount);
-    event Burn(uint256 amount);
+    event SighStaked(address staker, uint256 amount, uint256 totalStakedAmountByStaker, uint256 totalStakedSigh );
 
     uint256 public constant IMPLEMENTATION_REVISION = 0x1;
-    uint256 public constant MAX_UINT = 2**256 - 1;
-    uint256 public constant MAX_UINT_MINUS_ONE = (2**256 - 1) - 1;
 
-    /// @notice A value of 1 will execute the trade according to market price in the time of the transaction confirmation
-    uint256 public constant MIN_CONVERSION_RATE = 1;
-    address public constant KYBER_ETH_MOCK_ADDRESS = address(0x00eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee);
-
-
-    Distribution private distribution;                      /// Defines how tokens and ETH are distributed on each call to .distribute()
-    uint256 public constant DISTRIBUTION_BASE = 10000;      /// Instead of using 100 for percentages, higher base to have more precision in the distribution
-
-    IKyberNetworkProxyInterface public kyberProxy;          /// Kyber Proxy contract to trade tokens/ETH to tokenToBurn
-    address public tokenToBurn;                             /// The address of the token to burn (SIGH token)
-
-    /// @notice Address to send tokens to "burn".
-    /// Because of limitations on OZ ERC20, on dev it's needed to use the 0x00000...1 address instead of address(0)
-    /// So this param needs to be received on construction
-    address public recipientBurn;
 
 // ########################################################
 // ##############  INITIALIZING THE STATE   ###############
 // ########################################################
 
     /// @notice Called by the proxy when setting this contract as implementation
-    function initialize(  address _recipientBurn,  address _tokenToBurn,  address _kyberProxy,  address[] memory _receivers,  uint256[] memory _percentages,  IERC20[] memory _tokens ) public initializer {
-        recipientBurn = _recipientBurn;
-        tokenToBurn = _tokenToBurn;
-        kyberProxy = IKyberNetworkProxyInterface(_kyberProxy);
-        internalSetTokenDistribution(_receivers, _percentages);
-        approveKyber(_tokens);
-        emit Setup(_tokenToBurn, _kyberProxy, _recipientBurn);
+    function initialize(  address addressesProvider_ ) public initializer {
+        addressesProvider = addressesProvider_;
     }
 
-    /// @notice "Infinite" approval for all the tokens initialized
-    /// @param _tokens List of IERC20 to approve
-    function approveKyber(IERC20[] memory _tokens) public {
-        for (uint256 i = 0; i < _tokens.length; i++) {
-            if (address(_tokens[i]) != EthAddressLib.ethAddress()) {
-                _tokens[i].safeApprove(address(kyberProxy), MAX_UINT_MINUS_ONE);
-            }
-        }
-    }
 
-    /// @notice Sets _receivers addresses with _percentages for each one
-    /// @param _receivers Array of addresses receiving a percentage of the distribution, both user addresses or contracts
-    /// @param _percentages Array of percentages each _receivers member will get
-    function internalSetTokenDistribution(address[] memory _receivers, uint256[] memory _percentages) internal {
-        require(_receivers.length == _percentages.length, "Array lengths should be equal");
-        distribution = Distribution({receivers: _receivers, percentages: _percentages});
-        emit DistributionUpdated(_receivers, _percentages);
-    }
 
 // ################################################################
-// ##############  DISTRIBUTE THE COLLECTED TOKENS  ###############
+// ##############  STAKE SIGH   ###############
 // ################################################################
+
+
+    function stakeSigh(uint amount) external returns (bool) {
+
+        uint prevBalance = sigh_Instrument.balanceOf(address(this));
+        require(sigh_Instrument.transferFrom( msg.sender, address(this), amount ),"SIGH could not be transferred to the Staking Contract" );
+        uint newBalance = sigh_Instrument.balanceOf(address(this));
+
+        uint diff = sub( newBalance,prevBalance,"New Sigh balance is less than the previous balance." );
+        require(diff == amount,"Amount to be staked and the amount transferred do not match");
+
+        uint prevStakedAmount = stakingBalances[msg.sender];
+        stakingBalances[msg.sender] = add(prevStakedAmount,amount,"New Staking balance overflow");
+
+        uint prevStakedSigh = totalStakedSigh;
+        totalStakedSigh = add(prevStakedSigh, amount,"Total Staked Sigh overflow");
+
+        SighStaked( msg.sender, amount, stakingBalances[msg.sender], totalStakedSigh  );
+        return true;
+    }
+
+    function unstakeSigh(uint amount) external returns (bool) {
+        
+    }
+
+
 
     /// @notice Distributes a list of _tokens balances in this contract, depending on the distribution
     /// @param _tokens list of ERC20 tokens to distribute

@@ -13,6 +13,7 @@ interface ISighSpeedController {
 // ###########   SIGH DISTRIBUTION : INITIALIZED DRIPPING (Can be called only once)   ##########
 // #############################################################################################
 
+  function setAddressProvider(address _addressesProvider) external returns bool;
   function beginDripping () external returns (bool);
 
 // ############################################################################################################
@@ -34,8 +35,8 @@ interface ISighSpeedController {
 // ###########   FUNCTIONS TO CHANGE THE ADMIN   ##########
 // ########################################################
 
- function changeAdmin(address newAdmin) external returns (bool);
- function acceptAdmin() external returns (bool);
+//  function changeAdmin(address newAdmin) external returns (bool);
+//  function acceptAdmin() external returns (bool);
  
 
 // ###############################################################
@@ -44,6 +45,7 @@ interface ISighSpeedController {
 
   function getSIGHBalance() external view returns (uint);
   function getSighAddress() external view returns (address);
+  function getSupportedProtocols() external view returns (address[]);  
   function isThisProtocolSupported(address protocolAddress) external view returns (bool);
   function getTotalAmountDistributedToProtocol(address protocolAddress) external view returns (uint);
   function getRecentAmountDistributedToProtocol(address protocolAddress) external view returns (uint);

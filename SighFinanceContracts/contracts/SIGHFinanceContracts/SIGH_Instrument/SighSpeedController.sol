@@ -16,7 +16,8 @@ contract SighSpeedController is ISighSpeedController {
   IERC20 public token;
 
   address public admin;
-  address private pendingAdmin;
+  address private addressesProvider;
+  bool private isAddressesSet = false;
 
   bool public isDripAllowed = false;  
   uint public lastDripBlockNumber;    
@@ -72,6 +73,8 @@ contract SighSpeedController is ISighSpeedController {
 
   function setAddressProvider(address _addressesProvider) external returns bool {
     require(admin == msg.sender,"Dripping can only be initialized by the Admin");
+    require(!isAddressesSet,"AddressProvider can only be initialized once");
+    isAddressesSet = true;
     addressesProvider = _addressesProvider;
     require(addressesProvider == _addressesProvider, " AddressesProvider not initialized Properly ");
     admin = address(0);
@@ -81,7 +84,7 @@ contract SighSpeedController is ISighSpeedController {
 // ###########   SIGH DISTRIBUTION : INITIALIZED DRIPPING (Can be called only once)   ##########
 // #############################################################################################
 
-  function beginDripping () external onlySIGHFinanceManager returns (bool) {
+  function beginDripping () external onlySighFinanceConfigurator returns (bool) {
     require(!isDripAllowed,"Dripping can only be initialized once");
 
     isDripAllowed = true;

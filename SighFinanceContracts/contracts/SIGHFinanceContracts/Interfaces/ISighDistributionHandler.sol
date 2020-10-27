@@ -1,10 +1,10 @@
 pragma solidity ^0.5.16;
 
 /**
- * @title Sigh Speed Controller Contract
- * @notice Distributes a token to a different contract at a fixed rate.
- * @dev This contract must be poked via the `drip()` function every so often.
- * @author SighFinance
+ * @title Sigh Distribution Handler Contract
+ * @notice Handles the SIGH Loss Minimizing Mechanism for the Lending Protocol
+ * @dev Accures SIGH for the supported markets based on losses made every 24 hours, along with Staking speeds. This accuring speed is updated every hour
+ * @author SIGH Finance
  */
 
 interface ISighDistributionHandler {
