@@ -59,9 +59,9 @@ contract SighFinanceConfigurator is VersionedInitializable {
         _;
     }
 
-// ################################################################################################
-// ####### INITIALIZE A NEW INSTRUMENT (Deploys a new IToken Contract for the INSTRUMENT) #########
-// ################################################################################################
+// #####################################################
+// ####### SIGH DISTRIBUTION HANDLER FUNCTIONS #########
+// #####################################################
 
     function sigh_instrument(address instrument_) external onlySIGHFinanceManager return bool { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
@@ -104,9 +104,53 @@ contract SighFinanceConfigurator is VersionedInitializable {
         return true;
     } 
 
+// #########################################
+// ####### SIGH TREASURY FUNCTIONS #########
+// #########################################
 
+    function refreshTreasuryConfig() external onlySIGHFinanceManager { 
+        ISighTreasury sigh_treasury = ISighTreasury( globalAddressesProvider.getSIGHTreasury() );
+        sigh_treasury.refreshConfig();
+    } 
 
+    function changeSIGHBurnAllowed( uint val) external onlySIGHFinanceManager { 
+        ISighTreasury sigh_treasury = ISighTreasury( globalAddressesProvider.getSIGHTreasury() );
+        sigh_treasury.changeSIGHBurnAllowed(val);
+    } 
 
+    function updateSIGHBurnSpeed( uint newSpeed) external onlySIGHFinanceManager { 
+        ISighTreasury sigh_treasury = ISighTreasury( globalAddressesProvider.getSIGHTreasury() );
+        sigh_treasury.updateSIGHBurnSpeed(newSpeed);
+    } 
+
+    function initializeInstrumentDistribution(address targetAddress, address instrumnetToBeDistributed, uint distributionSpeed) external onlySIGHFinanceManager { 
+        ISighTreasury sigh_treasury = ISighTreasury( globalAddressesProvider.getSIGHTreasury() );
+        require(sigh_treasury.initializeInstrumentDistribution(targetAddress, instrumnetToBeDistributed, distributionSpeed),"Instrument Distribution function failed");
+    } 
+
+    function changeInstrumentBeingDripped(address targetAddress, address instrumnetToBeDistributed, uint distributionSpeed) external onlySIGHFinanceManager { 
+        ISighTreasury sigh_treasury = ISighTreasury( globalAddressesProvider.getSIGHTreasury() );
+        require(sigh_treasury.changeInstrumentBeingDripped(newInstrumnetToBeDistributed),"Change Instrument being Distributed function failed");
+    } 
+
+    function updateDripSpeed( uint newdistributionSpeed ) external onlySIGHFinanceManager { 
+        ISighTreasury sigh_treasury = ISighTreasury( globalAddressesProvider.getSIGHTreasury() );
+        require(sigh_treasury.updateDripSpeed(newdistributionSpeed),"Change Instrument dripping speed function failed");
+    } 
+
+   function resetInstrumentDistribution() external onlySIGHFinanceManager { 
+        ISighTreasury sigh_treasury = ISighTreasury( globalAddressesProvider.getSIGHTreasury() );
+        require(sigh_treasury.resetInstrumentDistribution(),"Reset Instrument distribution function failed");
+    } 
+
+   function transferSighTo(address target, uint amount) external onlySIGHFinanceManager { 
+        ISighTreasury sigh_treasury = ISighTreasury( globalAddressesProvider.getSIGHTreasury() );
+        require(sigh_treasury.transferSighTo(target, amount),"Transfer SIGH from the treasury function failed");
+    } 
+
+// #########################################
+// ####### SIGH STAKING FUNCTIONS ##########
+// #########################################
 
 
 

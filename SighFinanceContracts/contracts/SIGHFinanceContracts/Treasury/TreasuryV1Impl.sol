@@ -31,8 +31,8 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
     event maxTransferAmountUpdated(uint prevmaxTransferAmount, uint newmaxTransferAmount);
     event SIGHTransferred(address indexed TargetAddress, uint amountTransferred, uint totalAmountTransferred, uint blockNumber);
 
-    event TokensBought( address indexed token_Address, uint prev_balance, uint new_balance );
-    event TokensSold( address indexed token_Address, uint prev_balance, uint new_balance );
+    event TokensBought( address indexed instrument_address, uint prev_balance, uint new_balance );
+    event TokensSold( address indexed instrument_address, uint prev_balance, uint new_balance );
     event TokenSwapTransactionData( bytes data );
 
     event SIGHBurnAllowedChanged(bool prevBurnAllowed , bool newBurnAllowed, uint blockNumber); 
@@ -42,6 +42,7 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
 // ########################
 // ####### MODIFIER #######
 // ########################
+
     /**
     * @dev only the SIGH Finance Manager can call functions affected by this modifier
     **/
@@ -55,7 +56,6 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
         require(addressesProvider.getSIGHFinanceConfigurator() == msg.sender, "The caller must be the SIGH Finanace Configurator Contract");
         _;
     }
-
 
 // ###############################################################################################
 // ##############        PROXY RELATED          ##################################################
@@ -112,8 +112,8 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
             uint new_bought_token_amount = bought_token.balanceOf(address(this));       // New Bought Tokens Balance
             uint new_sold_token_amount = sold_token.balanceOf(address(this));           // New Tokens to be Sold Balance
             
-            TokenBalances[token_bought] = new_bought_token_amount;
-            TokenBalances[token_sold] = new_sold_token_amount;
+            InstrumentBalances[token_bought] = new_bought_token_amount;
+            InstrumentBalances[token_sold] = new_sold_token_amount;
 
             uint tokenBoughtAmount = sub(new_bought_token_amount,prev_bought_token_amount,"New Token Balance for tokens that are being Bought is lower than its initial balance");
             uint tokenSoldAmount = sub(prev_sold_token_amount,new_sold_token_amount,"New Token Balance for tokens that are being Sold is higher than its initial balance");
@@ -145,6 +145,7 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
             is_SIGH_BurnAllowed = true;
         }
         emit SIGHBurnAllowedChanged(prevStatus, is_SIGH_BurnAllowed, block.number);
+        return is_SIGH_BurnAllowed;
     }
         
     function updateSIGHBurnSpeed(uint newBurnSpeed) external onlySighFinanceConfigurator {
@@ -186,7 +187,7 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
         totalBurntSIGH = add(prevTotalBurntAmount,toBurn_,"Total Sigh Burnt Overflow");
         treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
 
-        TokenBalances[address(sigh_Instrument)] = treasuryBalance_;
+        InstrumentBalances[address(sigh_Instrument)] = treasuryBalance_;
 
         emit SIGH_Burned( address(sigh_Instrument), toBurn_, totalBurntSIGH,  treasuryBalance_, lastBurnBlockNumber ); 
 
@@ -194,19 +195,20 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
     }
 
 
-// ##############################################################################################################################
-// ###########   TREASURY CAN DISTRIBUTE ANY TOKEN TO ANY ADDRESS AT A PER BLOCK BASIS               ############
-// ###########   1. initializeInstrumentDistribution() --> To initiate an Instrument distribution Session.    ############
-// ###########   2. ChangeDrippingStatus() --> Switch to ON/OFF Dripping                // ######################################
-// ###########   3. changeDripSpeed() --> To change the Current Drip Speed              // ######################################
-// ##############################################################################################################################
+// #########################################################################################################################################################
+// ###########   _______TREASURY CAN DISTRIBUTE ANY TOKEN TO ANY ADDRESS AT A PER BLOCK BASIS_______ #######################################################
+// ###########   1. initializeInstrumentDistribution() --> To initiate an Instrument distribution Session. (onlySighFinanceConfigurator)   #################
+// ###########   2. changeInstrumentBeingDripped() --> Change the instrument being distributed (onlySighFinanceConfigurator)  ##############################
+// ###########   3. updateDripSpeed() --> To update the current Dripping Speed (onlySighFinanceConfigurator) ###############################################
+// ###########   4. resetInstrumentDistribution() --> Reset instrument distribution to start a new session (onlySighFinanceConfigurator)  ##################
+// #########################################################################################################################################################
 
     function initializeInstrumentDistribution (address targetAddress, address instrumentToBeDistributed, uint distributionSpeed) external onlySighFinanceConfigurator returns (bool) {
         require(!isDripAllowed,"Instrument distribution needs to be reset before it can be initialized Again");
 
         targetAddressForDripping = targetAddress;                           // Sets the address to which these instruments will be distributed
         require(changeInstrumentBeingDrippedInternal(instrumentToBeDistributed),"Instrument to be distributed not assigned properly");    // Sets the instrument which will be distributed
-        updateDripSpeedInternal(distributionSpeed);                         // Sets the distribution Speed
+        require(updateDripSpeedInternal(distributionSpeed),"Distribution Speed not initialized properly.");                         // Sets the distribution Speed
 
         isDripAllowed = true;                                               // INITIATES DISTRIBUTION
         lastDripBlockNumber = block.number;                                 // Distribution commences from current block
@@ -240,48 +242,44 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
     }
 
     /**
-      * @notice Switch to ON/OFF Dripping
-      * @param val If 0, dripping is disabled, else enabled
-      * @return retursn is Dripping is allowed or not
-    */    
-    function resetInstrumentDistribution( uint val ) public returns (bool) {
-        require(msg.sender == admin,'Only Admin can begin/stop Dripping');
-        bool prevDripAllowed = isDripAllowed;
-
-        if (isDripAllowed) {
-            drip();
-        }
-
-        if (val == 0 ) {
-            isDripAllowed = false;
-        }
-        else if (val > 0) {
-            isDripAllowed = true;
-            lastDripBlockNumber = block.number;
-        }
-
-        emit DripAllowedChanged(prevDripAllowed , isDripAllowed, block.number);
-        return true;
-    }
-
-    /**
       * @notice To change the Current Drip Speed
       * @param DripSpeed_ New Drip Speed
       * @return returns a Boolean True is Successful 
     */    
-    function changeDripSpeed (uint DripSpeed_) public returns (bool) {
-        require(admin == msg.sender,"Drip rate can only be changed by the Admin");
+    function updateDripSpeed (uint DripSpeed_) external onlySighFinanceConfigurator returns (bool) {
         if (isDripAllowed) {
             drip();
         }
+        require(updateDripSpeedInternal(DripSpeed_),"Distribution Speed not initialized properly.");
+        return true;
+  }
+
+   function updateDripSpeedInternal( uint DripSpeed_ ) internal returns (bool) {
         uint prevDripSpeed = DripSpeed;
         DripSpeed = DripSpeed_;
         emit DripSpeedChanged(prevDripSpeed , DripSpeed, block.number);
         return true;
-  }
+   }
+
+    /**
+      * @notice Switch to Reset (OFF) Dripping
+      * @return return is Dripping is allowed or not
+    */    
+    function resetInstrumentDistribution() external onlySighFinanceConfigurator returns (bool) {
+        if (!isDripAllowed) {
+            return true;
+        }
+        drip();
+        isDripAllowed = false;
+        DripSpeed = uint(0);
+        instrumentBeingDripped = address(0);
+        targetAddressForDripping = address(0);
+        emit DripAllowedChanged(true , isDripAllowed, block.number);
+        return true;
+    }
 
 // ################################################################################
-// ###########   THE FUNCTION TO DRIP THE TOKENS TO THE CORE CONTRACT  ############
+// ###########   THE FUNCTION TO DRIP THE TOKENS TO THE TARGET ADDRESS  ###########
 // ################################################################################
 
     /**
@@ -289,27 +287,27 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
       * @return returns the Dripped Amount
     */    
     function drip() public returns (uint) {
-        require(isDripAllowed, 'Drip is currently not allowed.');
+        require(isDripAllowed, 'Instrument distribution is currently not initialized.');
+        require(targetAddressForDripping != address(0),"The target address is not valid");
+        require(DripSpeed > 0,"The distribution speed is set to zero");
 
         IERC20 token_ = IERC20(instrumentBeingDripped); 
-
         uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance of the token Being Dripped
         uint blockNumber_ = block.number;
-        uint deltaDrip_ = mul(DripSpeed, blockNumber_ - lastDripBlockNumber, "dripTotal overflow");
+        uint deltaBlocks = sub(blockNumber_,lastDripBlockNumber,"Blocks Substraction overrflow");
+        uint deltaDrip_ = mul(DripSpeed, deltaBlocks, "dripTotal overflow");
         uint toDrip_ = min(treasuryBalance_, deltaDrip_);
         
         require(treasuryBalance_ != 0, 'The treasury currently does not have any of tokens which are being Dripped');
-        require(token_.transfer(SIGHDistributionHandler_address, toDrip_), 'The transfer did not complete.' );
+        require(token_.transfer(targetAddressForDripping, toDrip_), 'The Instrument transfer did not complete.' );
         
-        lastDripBlockNumber = blockNumber_; // setting the block number when the Drip is made
+        lastDripBlockNumber = blockNumber_;                         // setting the block number when the Drip is made
         uint prevTotalDrippedAmount = totalDrippedAmount[instrumentBeingDripped];
-        totalDrippedAmount[instrumentBeingDripped] = add(prevTotalDrippedAmount,toDrip_,"Overflow");
+        totalDrippedAmount[instrumentBeingDripped] = add(prevTotalDrippedAmount,toDrip_,"Overflow");   
         treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
 
-        TokenBalances[instrumentBeingDripped] = treasuryBalance_;
-
-        emit AmountDripped( instrumentBeingDripped, treasuryBalance_, toDrip_ , totalDrippedAmount[instrumentBeingDripped] ); 
-        
+        InstrumentBalances[instrumentBeingDripped] = treasuryBalance_;   // Update the instrument balance
+        emit AmountDripped( targetAddressForDripping, instrumentBeingDripped, toDrip_, treasuryBalance_, totalDrippedAmount[instrumentBeingDripped] ); 
         return toDrip_;
     }
 
@@ -323,14 +321,13 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
       * @param amount The Amount to be transferred
       * @return returns the Dripped Amount
     */    
-    function transferSighTo(address target_, uint amount) public returns (bool) {
-        require (msg.sender == admin, "Only Admin can transfer tokens from the Treasury");
+    function transferSighTo(address target_, uint amount) external onlySighFinanceConfigurator returns (bool) {
         updatemaxTransferAmount();
         require (amount < maxTransferAmount, "The amount provided is greater than the amount allowed");
 
         uint blockNumber = block.number;
         uint dif = sub(blockNumber, prevTransferBlock, 'underflow');
-        require(dif > coolDownPeriod, 'The cool down period is not completed');
+        require(dif > coolDownPeriod, 'The cool down period is not yet completed');
 
         IERC20 token_ = sigh_Instrument;
 
@@ -338,23 +335,23 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
         require(treasuryBalance_ > amount , "The current treasury's SIGH balance is less than the amount to be transferred" );
         require(token_.transfer(target_, amount), 'The transfer did not complete.' );
 
-        uint prevTransferAmount = SIGH_Transferred[target_];
-        uint totalTransferAmount = add(prevTransferAmount,amount,"Overflow");
-        SIGH_Transferred[target_] = totalTransferAmount;
+        // uint prevTransferAmount = SIGH_Transferred[target_];
+        // uint totalTransferAmount = add(prevTransferAmount,amount,"Overflow");
+        // SIGH_Transferred[target_] = totalTransferAmount;
         prevTransferBlock = block.number;
-
         uint new_sigh_balance = token_.balanceOf(address(this));
-        TokenBalances[address(sigh_Instrument)] = new_sigh_balance;
+        InstrumentBalances[address(sigh_Instrument)] = new_sigh_balance;
 
         emit SIGHTransferred( target_ , amount, totalTransferAmount,  block.number );
         return true;
     }
-
+    
+    // Maximum of 0.1% of total supply can be transferred from the treasury in a day
     function updatemaxTransferAmount() internal returns (uint) {
         IERC20 token_ = sigh_Instrument;
         uint totalSupply = token_.totalSupply(); // get total Supply
         require(totalSupply > 0, 'Total Supply of SIGH tokens returned not valid');
-        uint newtransferAmount = div(totalSupply,100,'updatemaxTransferAmount: Division returned error');
+        uint newtransferAmount = div(totalSupply,1000,'updatemaxTransferAmount: Division returned error');
 
         uint prevmaxTransferAmount = maxTransferAmount;
         maxTransferAmount = newtransferAmount;
@@ -368,34 +365,35 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
 // ###########   VIEW FUNCTIONS  ##########
 // ########################################
 
+    // rechecks the balance and updates the stored balances array
+    function updateInstrumentBalance(address instrument_address) external returns (uint) {
+        IERC20 token_ = IERC20(instrument_address);
+        uint balance = token_.balanceOf(address(this));
+        if (balance == 0) {
+            return 0;
+        }
+        InstrumentBalances[instrument_address] = balance;
+        return InstrumentBalances[instrument_address];
+    }
+
     function getSIGHBalance() external view returns (uint) {
         IERC20 token_ = sigh_Instrument;
         uint treasuryBalance_ = token_.balanceOf(address(this)); // get current SIGH balance
         return treasuryBalance_;
     }
 
-    function getTokenBalance(address token_address) external view returns (uint) {
-        return TokenBalances[token_address];
+    function getInstrumentBalance(address instrument_address) external view returns (uint) {
+        return InstrumentBalances[instrument_address];
     }
 
-    function getAmountTransferred(address target) external view returns (uint) {
-        return SIGH_Transferred[target];
+    function isDistributionAllowed() external view returns (bool) {
+        return isDripAllowed;
     }
 
-    function getDripSpeed() external view returns (uint) {
-        if (isDripAllowed) {
-            return DripSpeed;
-        }
-        return 0;
+    function getTargetAddressForDistribution() external view returns (address) {
+        return targetAddressForDripping;
     }
 
-    function getBurnSpeed() external view returns (uint) {
-        if (is_SIGH_BurnAllowed) {
-            return SIGHBurnSpeed;
-        }
-        return 0;
-    }
-    
     function getinstrumentBeingDripped() external view returns (address) {
         if (isDripAllowed) {
             return instrumentBeingDripped;
@@ -403,10 +401,34 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
         return address(0);
     }
     
-
     function getTotalDrippedAmount(address token) external view returns (uint) {
         return totalDrippedAmount[token];
     }
+
+    function getDistributionSpeed() external view returns (uint) {
+        if (isDripAllowed) {
+            return DripSpeed;
+        }
+        return 0;
+    }
+
+
+    // function getAmountTransferred(address target) external view returns (uint) {
+    //     return SIGH_Transferred[target];
+    // }
+
+
+    function getBurnSpeed() external view returns (uint) {
+        if (is_SIGH_BurnAllowed) {
+            return SIGHBurnSpeed;
+        }
+        return 0;
+    }
+
+    function getTotalBurntSigh() external view returns (uint) {
+        return totalBurntSIGH;
+    }
+    
 
 // ####################################################
 // ###########   Internal helper functions  ##########

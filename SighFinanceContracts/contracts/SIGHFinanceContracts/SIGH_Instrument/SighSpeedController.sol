@@ -39,6 +39,28 @@ contract SighSpeedController is ISighSpeedController {
   event pendingAdminUpdated(address prevPendingAdmin, address pendingAdmin );
   event newAdminAssigned(address prevAdmin, address admin);
 
+// ########################
+// ####### MODIFIER #######
+// ########################
+
+    /**
+    * @dev only the SIGH Finance Manager can call functions affected by this modifier
+    **/
+    modifier onlySIGHFinanceManager {
+        require( addressesProvider.getSIGHFinanceManager() == msg.sender, "The caller must be the SIGH Mechanism Manager" );
+        _;
+    }
+
+    //only SIGH Finance Configurator can use functions affected by this modifier
+    modifier onlySighFinanceConfigurator {
+        require(addressesProvider.getSIGHFinanceConfigurator() == msg.sender, "The caller must be the SIGH Finanace Configurator Contract");
+        _;
+    }
+
+// ###########################
+// ####### CONSTRUCTOR #######
+// ###########################
+
   /**
     * @notice Constructs a Reservoir
     * @param token_ The token to drip
@@ -48,12 +70,18 @@ contract SighSpeedController is ISighSpeedController {
     token = token_;
   }
 
+  function setAddressProvider(address _addressesProvider) external returns bool {
+    require(admin == msg.sender,"Dripping can only be initialized by the Admin");
+    addressesProvider = _addressesProvider;
+    require(addressesProvider == _addressesProvider, " AddressesProvider not initialized Properly ");
+    admin = address(0);
+  }
+
 // #############################################################################################
 // ###########   SIGH DISTRIBUTION : INITIALIZED DRIPPING (Can be called only once)   ##########
 // #############################################################################################
 
-  function beginDripping () external returns (bool) {
-    require(admin == msg.sender,"Dripping can only be initialized by the Admin");
+  function beginDripping () external onlySIGHFinanceManager returns (bool) {
     require(!isDripAllowed,"Dripping can only be initialized once");
 
     isDripAllowed = true;
@@ -67,8 +95,7 @@ contract SighSpeedController is ISighSpeedController {
 // ###########   SIGH DISTRIBUTION : ADDING / REMOVING NEW PROTOCOL WHICH WILL RECEIVE SIGH TOKENS   ##########
 // ############################################################################################################
 
-  function supportNewProtocol( address newProtocolAddress, uint sighSpeed ) external returns (bool)  {
-    require(admin == msg.sender,"New Protocol can only be added by the Admin");
+  function supportNewProtocol( address newProtocolAddress, uint sighSpeed ) external onlySighFinanceConfigurator returns (bool)  {
     require (!supportedProtocols[newProtocolAddress], 'This Protocol is already supported by the Sigh Speed Controller');
 
     if (isDripAllowed) {
@@ -89,8 +116,7 @@ contract SighSpeedController is ISighSpeedController {
   }
   
 //   ######### WE DO NOT DRIP WHEN REMOVING A PROTOCOL  ######### 
-  function removeSupportedProtocol(address protocolAddress_ ) external returns (bool) {
-    require(admin == msg.sender,"Protocol can only be removed by the Admin");
+  function removeSupportedProtocol(address protocolAddress_ ) external onlySighFinanceConfigurator returns (bool) {
     require(supportedProtocols[protocolAddress_],'The Protocol is already not Supported by the Sigh Speed Controller' );
     
     uint index = 0;
@@ -114,15 +140,14 @@ contract SighSpeedController is ISighSpeedController {
     require (supportedProtocols[protocolAddress_] == false, 'Error occured when removing the protocol.');
     require (distributionSpeeds[protocolAddress_] == 0, 'SIGH Speed was not properly assigned to 0.');
 
-      emit ProtocolRemoved( protocolAddress_,  totalDrippedAmount[protocolAddress_] );
+    emit ProtocolRemoved( protocolAddress_,  totalDrippedAmount[protocolAddress_] );
   }
   
 // ######################################################################################
 // ###########   SIGH DISTRIBUTION : FUNCTIONS TO UPDATE DISTRIBUTION SPEEDS   ##########
 // ######################################################################################
 
-  function changeProtocolSIGHSpeed (address targetAddress, uint newSpeed_) external returns (bool) {
-    require(admin == msg.sender,"Drip rate can only be changed by the Admin");
+  function changeProtocolSIGHSpeed (address targetAddress, uint newSpeed_) external onlySighFinanceConfigurator returns (bool) {
     require(supportedProtocols[targetAddress],'The Protocol is not Supported by the Sigh Speed Controller' );
     if (isDripAllowed) {
         dripInternal();
@@ -145,7 +170,7 @@ contract SighSpeedController is ISighSpeedController {
     * @return The amount of tokens dripped in this call
     */
   function drip() public returns (uint) {
-    require(isDripAllowed,'Dripping has not been initialized by the Admin');    
+    require(isDripAllowed,'Dripping has not been initialized by the SIGH Finance Manager');    
     dripInternal();
   }
   
@@ -188,24 +213,24 @@ contract SighSpeedController is ISighSpeedController {
 // ###########   FUNCTIONS TO CHANGE THE ADMIN   ##########
 // ########################################################
 
- function changeAdmin(address newAdmin) external returns (bool) {
-    require(admin == msg.sender,"Stored Admin can only be changed by the current Admin");
-    address prevPendingAdmin = pendingAdmin;
-    pendingAdmin = newAdmin;
-    emit pendingAdminUpdated(prevPendingAdmin,pendingAdmin );
-    return true;
- }
+//  function changeAdmin(address newAdmin) external returns (bool) {
+//     require(admin == msg.sender,"Stored Admin can only be changed by the current Admin");
+//     address prevPendingAdmin = pendingAdmin;
+//     pendingAdmin = newAdmin;
+//     emit pendingAdminUpdated(prevPendingAdmin,pendingAdmin );
+//     return true;
+//  }
 
- function acceptAdmin() external returns (bool) {
-    require(pendingAdmin == msg.sender,"Only the pending admin can call this function");
-    address prevAdmin = admin;
-    admin = pendingAdmin;
-    pendingAdmin = address(0);
-    require (admin == pendingAdmin,'Admin not assigned properly');
+//  function acceptAdmin() external returns (bool) {
+//     require(pendingAdmin == msg.sender,"Only the pending admin can call this function");
+//     address prevAdmin = admin;
+//     admin = pendingAdmin;
+//     pendingAdmin = address(0);
+//     require (admin == pendingAdmin,'Admin not assigned properly');
     
-    emit newAdminAssigned(prevAdmin, admin);
+//     emit newAdminAssigned(prevAdmin, admin);
      
- } 
+//  } 
  
 
 // ###############################################################
@@ -220,6 +245,10 @@ contract SighSpeedController is ISighSpeedController {
 
   function getSighAddress() external view returns (address) {
     return address(token);
+  }
+
+  function getSupportedProtocols() external view returns (address[]) {
+    return storedSupportedProtocols;
   }
 
   function isThisProtocolSupported(address protocolAddress) external view returns (bool) {
