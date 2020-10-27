@@ -39,7 +39,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         uint256 borrowlastupdatedblock;
     }
 
-    mapping (address => SIGHInstrument) financial_instruments;    // FINANCIAL INSTRUMENTS
+    mapping (address => SIGHInstrument) private financial_instruments;    // FINANCIAL INSTRUMENTS
     
 // ######## 24 HOUR PRICE HISTORY FOR EACH INSTRUMENT AND THE BLOCK NUMBER WHEN THEY WERE TAKEN ########
 
@@ -54,7 +54,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
 
 // ######## SIGH DISTRIBUTION SPEED FOR EACH INSTRUMENT ########
 
-    uint public SIGHSpeed;
+    uint private SIGHSpeed;
 
     struct Instrument_Sigh_Speed {
         uint256 suppliers_Speed;
@@ -63,9 +63,9 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         uint256 staking_Speed;
     }
 
-    mapping(address => Instrument_Sigh_Speed) public Instrument_Sigh_Speeds;
-    uint256 public deltaBlocksForSpeed = 1; // 60 * 60 
-    uint256 public prevSpeedRefreshBlock;
+    mapping(address => Instrument_Sigh_Speed) private Instrument_Sigh_Speeds;
+    uint256 private deltaBlocksForSpeed = 1; // 60 * 60 
+    uint256 private prevSpeedRefreshBlock;
 
     // ####################################
     // ############## EVENTS ##############
@@ -665,6 +665,10 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         return sigh_Remaining;
     }
 
+    function isInstrumentSupported (address instrument_) external view returns (bool) {
+        return financial_instruments[instrument_].isListed;
+    } 
+
     function getInstrumentSupplyIndex(address instrument_) external view returns (uint) {
         if (financial_instruments[instrument_].isListed) { //"The provided instrument address is not supported");
             return financial_instruments[instrument_].supplyindex;
@@ -678,19 +682,74 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         }
         return uint(0);
     }
+
+    function getInstrumentData (address instrument_) external view returns (address, uint256,bool,uint256,uint256,uint256,uint256  ) {
+        return ( financial_instruments[instrument_].iTokenAddress,    
+                 financial_instruments[instrument_].decimals,
+                 financial_instruments[instrument_].isCoverDipsMechanismActivated,
+                 financial_instruments[instrument_].supplyindex,
+                 financial_instruments[instrument_].supplylastupdatedblock,
+                 financial_instruments[instrument_].borrowindex,
+                 financial_instruments[instrument_].borrowlastupdatedblock 
+                ) 
+    }
+
+    function getupperCheckProfitPercentage () external view returns (uint) {
+        return upperCheckProfitPercentage.mantissa;
+    } 
+
+    function totalInstrumentsSupported() external view returns (uint) {
+        return uint(all_Instruments.length); 
+    }    
+
+    function checkPriceSnapshots(address instrument_, uint clock) external view returns (uint256) {
+        return instrumentPriceCycles[instrument_].recordedPriceSnapshot[clock];
+    }
     
+    function checkinitializationCounter(address instrument_) external view returns (uint32) {
+        return instrumentPriceCycles[instrument_].initializationCounter;
+    }
+
+    function getSIGHSpeed() external view returns (uint) {
+        return SIGHSpeed;
+    }
+
+    function getInstrumentSupplierSIGHSpeed(address instrument_) external view returns (uint) {
+        return Instrument_Sigh_Speeds[instrument_].suppliers_Speed;
+    }    
+
+    function getInstrumentBorrowerSIGHSpeed(address instrument_) external view returns (uint) {
+        return Instrument_Sigh_Speeds[instrument_].borrowers_Speed;
+    }    
+
+    function getInstrumentStakingSIGHSpeed(address instrument_) external view returns (uint) {
+        return Instrument_Sigh_Speeds[instrument_].staking_Speed;
+    }  
+
+    function getInstrumentSpeedRatio(address instrument_) external view returns (uint) {
+        return Instrument_Sigh_Speeds[instrument_].speeds_Ratio_Mantissa;
+    }  
+
+    function getDeltaBlocksForSpeed() external view returns (uint) {
+        return deltaBlocksForSpeed;
+    }  
+
+    function getPrevSpeedRefreshBlock() external view returns (uint) {
+        return prevSpeedRefreshBlock;
+    }  
+
+    function getBlocksRemainingToNextSpeedRefresh() external view returns (uint) {
+        uint blocksElapsed = sub_(block.number,prevSpeedRefreshBlock); 
+        if ( deltaBlocksForSpeed > blocksElapsed) {
+            return sub_(deltaBlocksForSpeed,blocksElapsed);
+        }
+        return uint(0);
+    }
     
     function getBlockNumber() public view returns (uint32) {
         return uint32(block.number);
     }
     
-    function checkPriceSnapshots(address market_, uint clock) public view returns (uint224) {
-        return instrumentPriceCycles[market_].recordedPriceSnapshot[clock];
-    }
-    
-    function checkinitializationCounter(address market_) public view returns (uint224) {
-        return instrumentPriceCycles[market_].initializationCounter;
-    }
     
 
 }

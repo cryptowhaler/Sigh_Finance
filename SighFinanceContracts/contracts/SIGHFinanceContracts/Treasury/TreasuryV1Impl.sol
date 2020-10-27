@@ -39,6 +39,24 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
     event SIGH_Burned(address sigh_Address, uint amount, uint totalSIGHBurned, uint remaining_balance, uint blockNumber);
     event SIGHBurnSpeedChanged(uint prevSpeed, uint newSpeed, uint blockNumber);
 
+// ########################
+// ####### MODIFIER #######
+// ########################
+    /**
+    * @dev only the SIGH Finance Manager can call functions affected by this modifier
+    **/
+    modifier onlySIGHFinanceManager {
+        require( addressesProvider.getSIGHFinanceManager() == msg.sender, "The caller must be the SIGH Mechanism Manager" );
+        _;
+    }
+
+    //only SIGH Finance Configurator can use functions affected by this modifier
+    modifier onlySighFinanceConfigurator {
+        require(addressesProvider.getSIGHFinanceConfigurator() == msg.sender, "The caller must be the SIGH Finanace Configurator Contract");
+        _;
+    }
+
+
 // ###############################################################################################
 // ##############        PROXY RELATED          ##################################################
 // ###############################################################################################
@@ -56,24 +74,137 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
     function initialize( address addressesProvider_) public initializer {
         admin = msg.sender;
         addressesProvider = GlobalAddressesProvider(addressesProvider_); 
-        sigh_token = IERC20( addressesProvider.getSIGHAddress() );
-        SIGHDistributionHandler_address = addressesProvider.getSIGHDistributionHandler();
-        emit SIGHTreasuryInitialized(admin , address(addressesProvider), sigh_token, SIGHDistributionHandler_address   );
+        refreshConfigInternal();        
+        // emit SIGHTreasuryInitialized(admin , address(addressesProvider), sigh_Instrument, SIGHDistributionHandler_address   );
     }
     
-    // Testing   
-    function updateSIGHDistributionHandlerAddress(address newSIGHDistributionHandler) public returns (bool) {
-        require(msg.sender == admin,'Only Admin can change SIGHDistributionHandler_address');
-        SIGHDistributionHandler_address = newSIGHDistributionHandler;
+    function refreshConfig() external onlySighFinanceConfigurator() {
+        refreshConfigInternal(); 
+    }
+
+    function refreshConfigInternal() internal {
+        sigh_Instrument = addressesProvider.getSIGHAddress();           // SIGH TOKEN
+        oracle = PriceOracle( addressesProvider.getPriceOracle() );     // PRICE ORACLE
+        // lendingPoolCore = addressesProvider.getLendingPoolCore();       // 
+    }
+
+// ######################################################################################################
+// ###########   THE HEDGE FUND MECHANISM - Only Sigh Finance Manager can call this function ############
+// ######################################################################################################
+    // 
+    function swapTokensUsingOxAPI( address allowanceTarget, address payable to, bytes memory callDataHex, address token_bought, address token_sold, uint sellAmount ) external payable onlySIGHFinanceManager returns (bool) {
+
+        IERC20 bought_token;
+        bought_token = IERC20(token_bought);
+
+        IERC20 sold_token;
+        sold_token = IERC20(token_sold);
+
+        uint prev_bought_token_amount = bought_token.balanceOf(address(this));  // Current Bought Tokens Balance
+        uint prev_sold_token_amount = sold_token.balanceOf(address(this));      // Current Tokens to be Sold Balance
+
+        require(sold_token.approve(allowanceTarget, uint256(sellAmount)));                   // Allow the allowanceTarget address to spend an the needed amount
+        (bool success, bytes memory _data) = to.call.value(msg.value)(callDataHex);          // Calling the encoded swap() function. ETH passed to cover for fee
+    
+        require(success, 'TOKEN SWAP FAILED');
+        
+        if (success) {
+            uint new_bought_token_amount = bought_token.balanceOf(address(this));       // New Bought Tokens Balance
+            uint new_sold_token_amount = sold_token.balanceOf(address(this));           // New Tokens to be Sold Balance
+            
+            TokenBalances[token_bought] = new_bought_token_amount;
+            TokenBalances[token_sold] = new_sold_token_amount;
+
+            uint tokenBoughtAmount = sub(new_bought_token_amount,prev_bought_token_amount,"New Token Balance for tokens that are being Bought is lower than its initial balance");
+            uint tokenSoldAmount = sub(prev_sold_token_amount,new_sold_token_amount,"New Token Balance for tokens that are being Sold is higher than its initial balance");
+
+            emit TokensBought( token_bought, prev_bought_token_amount, tokenBoughtAmount,  new_bought_token_amount);
+            emit TokensSold( token_sold, prev_sold_token_amount, tokenSoldAmount, new_sold_token_amount );   
+            emit TokenSwapTransactionData( _data );
+            return true;         
+        }
+
+        return false;
+    }
+
+// ################################################################################################################ 
+// ###########   BURN SIGH TOKENS  ################################################################################
+// ###########   1. changeSIGHBurnAllowed() : Activates / Deactivates SIGH Burn (onlySighFinanceConfigurator) #####
+// ###########   2. updateSIGHBurnSpeed() : Updates the SIGH Burn Speed (onlySighFinanceConfigurator) #############
+// ###########   3. burnSIGHTokens() : Public Function. Allows anyone to burn SIGH Tokens. ########################
+// ################################################################################################################
+
+
+    function changeSIGHBurnAllowed(uint isAllowed) external onlySighFinanceConfigurator returns (bool) {
+        bool prevStatus = is_SIGH_BurnAllowed;
+        if (isAllowed == 0) {
+            is_SIGH_BurnAllowed = false;
+            updateSIGHBurnSpeedInternal(0);
+        }
+        else {
+            is_SIGH_BurnAllowed = true;
+        }
+        emit SIGHBurnAllowedChanged(prevStatus, is_SIGH_BurnAllowed, block.number);
+    }
+        
+    function updateSIGHBurnSpeed(uint newBurnSpeed) external onlySighFinanceConfigurator {
+        require(updateSIGHBurnSpeedInternal(newBurnSpeed),"Sigh Burn speed was not updated properly");
+    }
+
+    function updateSIGHBurnSpeedInternal(uint newBurnSpeed) internal returns (bool) {
+        if ( SIGHBurnSpeed > 0 ) {
+            burnSIGHTokens();
+        } 
+        uint prevBurnSpeed = SIGHBurnSpeed;
+        SIGHBurnSpeed = newBurnSpeed;
+        lastBurnBlockNumber = block.number;
+        
+        require (SIGHBurnSpeed == newBurnSpeed, 'New SIGH Burn Speed not initialized properly');
+        emit SIGHBurnSpeedChanged(prevBurnSpeed, SIGHBurnSpeed, block.number);
+        return true;
+    }
+
+    function burnSIGHTokens() public returns (uint) {
+        if (!is_SIGH_BurnAllowed ||SIGHBurnSpeed ==0)  {
+            return uint(0);
+        }
+        
+        address sighTokenAddress = address(sigh_Instrument);
+        EIP20InterfaceSIGH token_ = EIP20InterfaceSIGH(sighTokenAddress);
+
+        uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance of SIGH
+        uint blockNumber_ = block.number;
+        uint deltaBlocks = sub(blockNumber_,lastBurnBlockNumber,"Block Numbers Substraction gave error");
+        uint deltaBurn_ = mul(SIGHBurnSpeed, deltaBlocks, "BurnTotal overflow");
+        uint toBurn_ = min(treasuryBalance_, deltaBurn_);
+        
+        require(treasuryBalance_ != 0, 'The treasury currently does not have any SIGH tokens.');
+        require(token_.burn(toBurn_), 'The SIGH burn was not successful' );
+        
+        lastBurnBlockNumber = blockNumber_;                         // setting the block number when the Burn is made
+        uint prevTotalBurntAmount = totalBurntSIGH ;
+        totalBurntSIGH = add(prevTotalBurntAmount,toBurn_,"Total Sigh Burnt Overflow");
+        treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
+
+        TokenBalances[address(sigh_Instrument)] = treasuryBalance_;
+
+        emit SIGH_Burned( address(sigh_Instrument), toBurn_, totalBurntSIGH,  treasuryBalance_, lastBurnBlockNumber ); 
+
+        return toBurn_;
     }
 
 
 // ##############################################################################################################################
-// ###########   TREASURY CAN DISTRIBUTE ANY TOKEN TO THE SIGHDistributionHandler AT A PER BLOCK BASIS               ############
+// ###########   TREASURY CAN DISTRIBUTE ANY TOKEN TO ANY ADDRESS AT A PER BLOCK BASIS               ############
 // ###########   1. ChangeTokenBeingDripped() --> Change the token being dripped to the Protocol's Core Contract     ############
 // ###########   2. ChangeDrippingStatus() --> Switch to ON/OFF Dripping                // ######################################
 // ###########   3. changeDripSpeed() --> To change the Current Drip Speed              // ######################################
 // ##############################################################################################################################
+
+
+function setTargetAddressForDripping(address targetAddress ) external
+
+
 
     /**
       * @notice Change the token being dripped to the Protocol's Core Contract
@@ -193,7 +324,7 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
         uint dif = sub(blockNumber, prevTransferBlock, 'underflow');
         require(dif > coolDownPeriod, 'The cool down period is not completed');
 
-        IERC20 token_ = sigh_token;
+        IERC20 token_ = sigh_Instrument;
 
         uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
         require(treasuryBalance_ > amount , "The current treasury's SIGH balance is less than the amount to be transferred" );
@@ -205,14 +336,14 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
         prevTransferBlock = block.number;
 
         uint new_sigh_balance = token_.balanceOf(address(this));
-        TokenBalances[address(sigh_token)] = new_sigh_balance;
+        TokenBalances[address(sigh_Instrument)] = new_sigh_balance;
 
         emit SIGHTransferred( target_ , amount, totalTransferAmount,  block.number );
         return true;
     }
 
     function updatemaxTransferAmount() internal returns (uint) {
-        IERC20 token_ = sigh_token;
+        IERC20 token_ = sigh_Instrument;
         uint totalSupply = token_.totalSupply(); // get total Supply
         require(totalSupply > 0, 'Total Supply of SIGH tokens returned not valid');
         uint newtransferAmount = div(totalSupply,100,'updatemaxTransferAmount: Division returned error');
@@ -223,114 +354,6 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
         return maxTransferAmount;
     }
 
-// ################################################# 
-// ###########   FUNCTION TO SWAP TOKENS  ##########
-// ################################################# 
-    // 
-    function swapTokensUsingOxAPI( address allowanceTarget, address payable to, bytes memory callDataHex, address token_bought, address token_sold, uint sellAmount ) public payable returns (bool) {
-        require(msg.sender == admin, 'Only Admin can call Token Swap Function on 0x API');
-        
-        IERC20 bought_token;
-        bought_token = IERC20(token_bought);
-
-        IERC20 sold_token;
-        sold_token = IERC20(token_sold);
-
-        uint prev_bought_token_amount = bought_token.balanceOf(address(this));
-        uint prev_sold_token_amount = sold_token.balanceOf(address(this));
-
-        require(sold_token.approve(allowanceTarget, uint256(sellAmount)));   // Allow the allowanceTarget address to spent an infinite amount
-        (bool success, bytes memory _data) = to.call.value(msg.value)(callDataHex);          // Calling the encoded swap() function. ETH passed to cover for fee
-    
-        require(success, 'TOKEN SWAP FAILED');
-        
-        // IForwarder forwarder;
-        // forwarder = IForwarder(to);
-        
-
-
-        // (bool success, bytes memory _data) = address(forwarder).call.value(msg.value)(callDataHex);
-
-        if (success) {
-            uint new_bought_token_amount = bought_token.balanceOf(address(this));
-            uint new_sold_token_amount = sold_token.balanceOf(address(this));
-            
-            TokenBalances[token_bought] = new_bought_token_amount;
-            TokenBalances[token_sold] = new_sold_token_amount;
-
-            emit TokensBought( token_bought, prev_bought_token_amount, new_bought_token_amount);
-            emit TokensSold( token_sold, prev_sold_token_amount, new_sold_token_amount );   
-            emit TokenSwapTransactionData( _data );
-            return true;         
-        }
-
-        return false;
-    }
-
-// ################################################# 
-// ###########   BURN SIGH TOKENS  ##########
-// ################################################# 
-
-
-    function changeSIGHBurnAllowed(uint isAllowed) public returns (bool) {
-        require (msg.sender == admin,'Only Admin can decide is SIGH Burn is currently allowed or not.');
-
-        bool prevStatus = is_SIGH_BurnAllowed;
-        
-        if (isAllowed == 0) {
-            is_SIGH_BurnAllowed = false;
-            updateSIGHBurnSpeedInternal(0);
-        }
-        else {
-            is_SIGH_BurnAllowed = true;
-        }
-        emit SIGHBurnAllowedChanged(prevStatus, is_SIGH_BurnAllowed, block.number);
-    }
-        
-    function updateSIGHBurnSpeed(uint newBurnSpeed) public {
-        require (msg.sender == admin,'Only Admin can update SIGH Burn Speed');
-        require (is_SIGH_BurnAllowed,'SIGH Burn is currently not allowed by the Treasury.');
-        updateSIGHBurnSpeedInternal(newBurnSpeed);
-    }
-
-    function updateSIGHBurnSpeedInternal(uint newBurnSpeed) internal {
-        if ( SIGHBurnSpeed > 0 ) {
-            burnSIGHTokens();
-        } 
-        uint prevBurnSpeed = SIGHBurnSpeed;
-        SIGHBurnSpeed = newBurnSpeed;
-        lastBurnBlockNumber = block.number;
-        
-        require (SIGHBurnSpeed == newBurnSpeed, 'New SIGH Burn Speed not initialized properly');
-        emit SIGHBurnSpeedChanged(prevBurnSpeed, SIGHBurnSpeed, block.number);
-    }
-
-    function burnSIGHTokens() public returns (bool) {
-        require (is_SIGH_BurnAllowed,'SIGH Burn is currently not allowed by the Treasury.');
-        
-        address sighTokenAddress = address(sigh_token);
-        EIP20InterfaceSIGH token_ = EIP20InterfaceSIGH(sighTokenAddress);
-
-
-        uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance of SIGH
-        uint blockNumber_ = block.number;
-        uint deltaBurn_ = mul(SIGHBurnSpeed, blockNumber_ - lastBurnBlockNumber, "BurnTotal overflow");
-        uint toBurn_ = min(treasuryBalance_, deltaBurn_);
-        
-        require(treasuryBalance_ != 0, 'The treasury currently does not have any SIGH tokens.');
-        require(token_.burn(toBurn_), 'The burn did not complete.' );
-        
-        lastBurnBlockNumber = blockNumber_;                         // setting the block number when the Burn is made
-        uint prevTotalBurntAmount = totalBurntSIGH ;
-        totalBurntSIGH = add(prevTotalBurntAmount,toBurn_,"Overflow");
-        treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
-
-        TokenBalances[address(sigh_token)] = treasuryBalance_;
-
-        emit SIGH_Burned( address(sigh_token), toBurn_, totalBurntSIGH,  treasuryBalance_, lastBurnBlockNumber ); 
-
-        return true;
-    }
 
 
 // ########################################
@@ -338,7 +361,7 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
 // ########################################
 
     function getSIGHBalance() external view returns (uint) {
-        IERC20 token_ = sigh_token;
+        IERC20 token_ = sigh_Instrument;
         uint treasuryBalance_ = token_.balanceOf(address(this)); // get current SIGH balance
         return treasuryBalance_;
     }
