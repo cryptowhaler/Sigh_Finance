@@ -1419,7 +1419,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _amount the amount being transferred
     **/
     function transferFlashLoanProtocolFeeInternal(address _token, uint256 _amount) internal {
-        address payable receiver = address(uint160(addressesProvider.getTokenDistributor()));
+        address payable receiver = address(uint160(addressesProvider.getSIGHStaking()));
 
         if (_token != EthAddressLib.ethAddress()) {
             ERC20(_token).safeTransfer(receiver, _amount);

@@ -2,7 +2,7 @@ pragma solidity ^0.5.0;
 
 /**
  * @title Sigh Staking Contract
- * @notice Distributes rewards (Fee collected from Lending Protocol ) to SIGH Stakers
+ * @notice Distributes rewards (Fee + % of Interest collected from Lending Protocol ) to SIGH Stakers
  * @author SIGH Finance
  */
 
@@ -120,6 +120,26 @@ contract SighStaking is VersionedInitializable {
         return true;
     }
 
+    function updateStakedBalanceForStreaming(address staker, uint amount) onlySighDistributionHandler external returns (bool) {
+
+        updateRewardIndexInternal();                    // UPDATES INSTRUMENT INDEX
+        if (stakingBalances[msg.sender].alreadyAStaker) {
+            updateUserIndexInternal();                  // UPDATES USER INDEX
+        }
+
+        uint prevBalance = stakingBalances[staker].stakedBalance;
+        stakingBalances[staker].stakedBalance = add_(prevBalance, amount,"New Staked Balance addition error");
+
+        uint prevTotalStakedBalance = totalStakedSigh ;                  
+        totalStakedSigh = add_(prevTotalStakedBalance, amount);                                                         // "TOTAL STAKED SIGH" [ADDITION] (STATE UPDATE)
+
+        if (!stakingBalances[staker].alreadyAStaker) {
+            initializeStakerStateInternal(staker);
+        }
+
+        StreamingSighStaked( staker, amount, prevBalance, stakingBalances[staker].stakedBalance, totalStakedSigh,  block.number   );
+    }
+
 // ##############################################
 // ##############  UNSTAKE SIGH   ###############
 // ##############################################
@@ -158,27 +178,7 @@ contract SighStaking is VersionedInitializable {
         return true;
     }
 
-    function updateStakedBalanceForStreaming(address staker, uint amount) onlySighDistributionHandler external returns (bool) {
 
-        updateRewardIndexInternal();                    // UPDATES INSTRUMENT INDEX
-        if (stakingBalances[msg.sender].alreadyAStaker) {
-            updateUserIndexInternal();                  // UPDATES USER INDEX
-        }
-
-        uint prevBalance = stakingBalances[staker].stakedBalance;
-        stakingBalances[staker].stakedBalance = add_(prevBalance, amount,"New Staked Balance addition error");
-
-        uint prevTotalStakedBalance = totalStakedSigh ;                  
-        totalStakedSigh = add_(prevTotalStakedBalance, amount);                                                         // "TOTAL STAKED SIGH" [ADDITION] (STATE UPDATE)
-
-        if (!stakingBalances[staker].alreadyAStaker) {
-            initializeStakerStateInternal(staker);
-        }
-
-
-        StreamingSighStaked( staker, amount, prevBalance, stakingBalances[staker].stakedBalance, totalStakedSigh,  block.number   );
-
-    }
 
 // #######################################################################################################
 // ##############  INTERNAL FUNCTIONS TO UPDATE INSTRUMENT DISTRIBUTION AND USER INDEXES   ###############
@@ -240,7 +240,7 @@ contract SighStaking is VersionedInitializable {
 // ##############  FUNCTION RELATED TO INSTRUMENT TRANSFER   ###############
 // ################################################################################
 
-    function claimAllAccumulatedInstrumentsForAccount( address[] stakingAddresses ) external {
+    function claimAllAccumulatedInstrumentsForUsers( address[] stakingAddresses ) external {
         for (int i=0;i<stakingAddresses.length;i++) {
             transferAllAccumulatedRewardsInternal(msg.sender);
         }
@@ -422,31 +422,5 @@ contract SighStaking is VersionedInitializable {
     function maxSighThatCanBeStaked()  external view returns (uint) { 
         return maxSighThatCanBeStaked;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

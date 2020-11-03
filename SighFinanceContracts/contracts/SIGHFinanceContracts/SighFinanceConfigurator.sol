@@ -152,6 +152,19 @@ contract SighFinanceConfigurator is VersionedInitializable {
 // ####### SIGH STAKING FUNCTIONS ##########
 // #########################################
 
+   function supportNewInstrumentForDistribution(address instrument, uint speed) external onlySIGHFinanceManager { 
+        ISighStaking sigh_staking = ISighStaking( globalAddressesProvider.getSIGHStaking() );
+        require(sigh_staking.supportNewInstrumentForDistribution(instrument, speed),"Addition of new instrument as SIGH Staking reward failed");
+    } 
 
+   function setDistributionSpeedForStakingReward(address instrument, uint speed) external onlySIGHFinanceManager { 
+        ISighStaking sigh_staking = ISighStaking( globalAddressesProvider.getSIGHStaking() );
+        require(sigh_staking.setDistributionSpeed(instrument, speed),"Updating distribution speed for SIGH Staking reward failed");
+    } 
+
+   function updateMaxSighThatCanBeStaked( uint amount) external onlySIGHFinanceManager { 
+        ISighStaking sigh_staking = ISighStaking( globalAddressesProvider.getSIGHStaking() );
+        require(sigh_staking.updateMaxSighThatCanBeStaked(amount),"Updating Maximum SIGH Staking limit failed");
+    } 
 
 }
