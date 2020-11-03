@@ -32,31 +32,35 @@ contract SighStaking is VersionedInitializable {
     }
 
     mapping (address => instrumentState) private instrumentStates;
-    address[] private instrumentsRewarded;
-    address private instrumentBeingRewarded;                // Instrument being distributed among the stakers
-    uint private totalStakedSigh;
-
-    uint private rewardDistributionSpeed;
+    address[] private instrumentsRewarded;                             // Array of all the instruments that heve been rewarded
+    address private instrumentBeingRewarded;                         // Instrument currently being distributed among the stakers
+    uint private rewardDistributionSpeed;                             // Distribution speed (per block) of the instrument being rewarded
 
     struct stakingBalance {
         bool alreadyAStaker;
-        uint256 index;
-        mapping (address => uint)  instrumentAccumulated;
         uint stakedBalance;
+        mapping (address => uint) instrumentIndex;
+        mapping (address => uint)  instrumentAccumulated;
     }
 
-    mapping (address => stakingBalance ) private stakingBalances;
+    uint private totalStakedSigh;
     uint private numberOfStakers;
 
     uint256 public constant IMPLEMENTATION_REVISION = 0x1;
 
+// ########################################### 
+// ##############  MODIFIERS   ###############
+// ########################################### 
 
+    modifier onlySIGHFinanceManager {
+        require( globalAddressesProvider.getSIGHFinanceManager() == msg.sender, "The caller must be the SIGH Finance Manager" );
+        _;
+    }
     //only SIGH Distribution Manager can use functions affected by this modifier
     modifier onlySighFinanceConfigurator {
         require(addressesProvider.getSIGHFinanceConfigurator() == msg.sender, "The caller must be the SIGH Finanace Configurator Contract");
         _;
     }
-
 
 // ########################################################
 // ##############  INITIALIZING THE STATE   ###############
@@ -82,20 +86,20 @@ contract SighStaking is VersionedInitializable {
     function stake_SIGH(uint amount) external returns (bool) {
         require(amount > 0,"SIGH to be Staked cannot be zero.");
 
-        updateRewardIndexInternal();
+        updateRewardIndexInternal();                    // UPDATES INSTRUMENT INDEX
         if (stakingBalances[msg.sender].alreadyAStaker) {
-            updateUserIndexInternal();
+            updateUserIndexInternal();                  // UPDATES USER INDEX
         }
 
         uint prevBalance = sigh_Instrument.balanceOf(address(this));
         require(sigh_Instrument.transferFrom( msg.sender, address(this), amount ),"SIGH could not be transferred to the Staking Contract" );
         uint newBalance = sigh_Instrument.balanceOf(address(this));
 
-        uint diff = sub( newBalance, prevBalance, "New Sigh balance is less than the previous balance." );
+        uint diff = sub_( newBalance, prevBalance, "New Sigh balance is less than the previous balance." );
         require(diff == amount,"Amount to be staked and the amount transferred do not match");
 
         uint prevStakedBalance = stakingBalances[msg.sender].stakedBalance ;                  
-        stakingBalances[msg.sender].stakedBalance = add(prevStakedBalance, amount, "New Staking balance overflow");    // "STAKED BALANCE" UPDATED [ADDITION] (STATE UPDATE)
+        stakingBalances[msg.sender].stakedBalance = add_(prevStakedBalance, amount, "New Staking balance overflow");    // "STAKED BALANCE" UPDATED [ADDITION] (STATE UPDATE)
 
         uint prevTotalStakedBalance = totalStakedSigh ;                  
         totalStakedSigh = add_(prevTotalStakedBalance, amount);                                                         // "TOTAL STAKED SIGH" [ADDITION] (STATE UPDATE)
@@ -119,8 +123,8 @@ contract SighStaking is VersionedInitializable {
         require(amount > 0,"SIGH to be Un-Staked cannot be zero.");
         require(stakingBalances[msg.sender].alreadyAStaker,"User doesn't have any Staked amount");
 
-        updateRewardIndexInternal();
-        updateUserIndexInternal();
+        updateRewardIndexInternal();          // UPDATES INSTRUMENT INDEX
+        updateUserIndexInternal();             // UPDATES USER INDEX
 
         if ( amount > stakingBalances[msg.sender].stakedBalance ) {     // Unstake the complete amount
             amount = stakingBalances[msg.sender].stakedBalance;
@@ -214,7 +218,9 @@ contract SighStaking is VersionedInitializable {
 // ##############  CONFIGURATION FUNCTIONS   ###############
 // ######################################################### 
 
-function setDistributionSpeed(uint newSpeed) onlySighFinanceConfigurator returns (bool) {}
+function setDistributionSpeed(uint newSpeed) onlySighFinanceConfigurator returns (bool) {
+
+}
 
 
 
