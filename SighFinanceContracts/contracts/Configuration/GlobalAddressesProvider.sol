@@ -1,8 +1,8 @@
 pragma solidity ^0.5.6;
 
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "../openzeppelin-upgradeability/InitializableAdminUpgradeabilityProxy.sol";
+import "./IGlobalAddressesProvider.sol";
 import "./AddressStorage.sol";
+import "../openzeppelin-upgradeability/InitializableAdminUpgradeabilityProxy.sol";
 
 /**
 * @title GlobalAddressesProvider contract (Taken from Aave, Modified by SIGH Finance)
@@ -12,21 +12,20 @@ import "./AddressStorage.sol";
 **/
 
 
-contract GlobalAddressesProvider is Ownable, AddressStorage {
+contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
 
     bool isSighInitialized = false;     // ADDED BY SIGH FINANCE
 
     //events
     event PendingSIGHFinanceManagerUpdated( address _pendingSighFinanceManager );           
     event SIGHFinanceManagerUpdated( _sighFinanceManager );    
-    event PendingLendingPoolManagerUpdated( address _pendingSighFinanceManager );
-    event LendingPoolManagerUpdated( address _sighFinanceManager );   
+    event PendingLendingPoolManagerUpdated( address _pendingLendingPoolManager );
+    event LendingPoolManagerUpdated( address _lendingPoolManager );   
 
     event LendingPoolConfiguratorUpdated(address indexed newAddress);
     event LendingPoolUpdated(address indexed newAddress);
     event LendingPoolCoreUpdated(address indexed newAddress);
     event LendingPoolParametersProviderUpdated(address indexed newAddress);
-    event PendingLendingPoolManagerUpdated(address indexed newAddress);
     event LendingPoolLiquidationManagerUpdated(address indexed newAddress);
     event LendingPoolDataProviderUpdated(address indexed newAddress);
     event LendingRateOracleUpdated(address indexed newAddress);
@@ -286,7 +285,7 @@ contract GlobalAddressesProvider is Ownable, AddressStorage {
     }
 
 // ##################################################
-// ######  LendingPoolLiquidationManager proxy ######
+// ######  LendingPoolLiquidationManager ######
 // ##################################################
     /**
     * @dev returns the address of the LendingPoolLiquidationManager. Since the manager is used
@@ -309,14 +308,14 @@ contract GlobalAddressesProvider is Ownable, AddressStorage {
     }
 
 // ##################################################
-// ######  LendingRateOracle proxy ##################
+// ######  LendingRateOracle ##################
 // ##################################################
 
     function getLendingRateOracle() public view returns (address) {
         return getAddress(LENDING_RATE_ORACLE);
     }
 
-    function setLendingRateOracle(address _lendingRateOracle) public onlyOwner {
+    function setLendingRateOracle(address _lendingRateOracle) public onlyLendingPoolManager {
         _setAddress(LENDING_RATE_ORACLE, _lendingRateOracle);
         emit LendingRateOracleUpdated(_lendingRateOracle);
     }
@@ -397,7 +396,7 @@ contract GlobalAddressesProvider is Ownable, AddressStorage {
 
     /**
     * @dev updates the address of the SIGH Distribution Handler Contract (Manages the SIGH Speeds)
-    * @param _SIGHDistributionHandler the new lending pool liquidation manager address
+    * @param _SIGHMechanismHandler the new SIGH Distribution Handler (Impl) Address
     **/
     function setSIGHMechanismHandlerImpl(address _SIGHMechanismHandler) public onlySIGHFinanceManager  {   
         updateImplInternal(SIGH_MECHANISM_HANDLER, _SIGHMechanismHandler);
@@ -409,7 +408,7 @@ contract GlobalAddressesProvider is Ownable, AddressStorage {
 // #############################################  ADDED BY SIGH FINANCE 
 
     function getSIGHStaking() public view returns (address) {
-        return getAddress(SIGH_MECHANISM_HANDLER);
+        return getAddress(SIGH_STAKING);
     }
 
     /**
@@ -434,22 +433,11 @@ contract GlobalAddressesProvider is Ownable, AddressStorage {
         return getAddress(PRICE_ORACLE);
     }
 
-    function setPriceOracle(address _priceOracle) public onlyOwner {
+    function setPriceOracle(address _priceOracle) public onlyLendingPoolManager {
         _setAddress(PRICE_ORACLE, _priceOracle);
         emit PriceOracleUpdated(_priceOracle);
     }
-
-    function getTokenDistributor() public view returns (address) {
-        return getAddress(TOKEN_DISTRIBUTOR);
-    }
-
-    function setTokenDistributor(address _tokenDistributor) public onlyOwner {
-        _setAddress(TOKEN_DISTRIBUTOR, _tokenDistributor);
-        emit TokenDistributorUpdated(_tokenDistributor);
-    }
-    
-
-    
+        
 
 // ############################################# 
 // ######  FUNCTION TO UPGRADE THE PROXY #######  
