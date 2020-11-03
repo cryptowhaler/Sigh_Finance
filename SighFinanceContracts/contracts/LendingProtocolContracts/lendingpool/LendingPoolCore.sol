@@ -668,7 +668,7 @@ contract LendingPoolCore is VersionedInitializable {
     }
 
 // ############################################################################################################## 
-// ###### CALLED BY REPAY() IN LENDINGPOOL CONTRACT : transfers the fee to TokenDistributor Contract ############
+// ###### CALLED BY REPAY() IN LENDINGPOOL CONTRACT : transfers the fee to SIGH Staking Contract ############
 // ################################################################### ########################################## 
 
     /**
