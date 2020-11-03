@@ -2,7 +2,7 @@ pragma solidity ^0.5.0;
 
 /************
 @title IFeeProvider interface
-@notice Interface for the SIGH Finance fee provider.
+@notice Interface for the SIGH Finance's Lending Protocol fee provider.
 */
 
 interface IFeeProvider {
