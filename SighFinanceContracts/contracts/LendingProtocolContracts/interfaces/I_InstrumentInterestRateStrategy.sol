@@ -7,11 +7,14 @@ pragma solidity ^0.5.0;
 
 interface I_InstrumentInterestRateStrategy {
 
-    /**
-    * @dev returns the base variable borrow rate, in rays
-    */
-
     function getBaseVariableBorrowRate() external view returns (uint256);
+
+    function getVariableRateSlope1() external view returns (uint256);
+    function getVariableRateSlope2() external view returns (uint256);
+
+    function getStableRateSlope1() external view returns (uint256);
+    function getStableRateSlope2() external view returns (uint256);
+
     /**
     * @dev calculates the liquidity, stable, and variable rates depending on the current utilization rate and the base parameters
     *

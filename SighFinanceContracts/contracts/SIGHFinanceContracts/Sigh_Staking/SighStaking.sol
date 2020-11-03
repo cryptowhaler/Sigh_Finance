@@ -12,8 +12,6 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "../Math/Exponential.sol";
 
 import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
-import "../interfaces/IKyberNetworkProxyInterface.sol";
-import "../libraries/EthAddressLib.sol";
 
 
 contract SighStaking is VersionedInitializable {

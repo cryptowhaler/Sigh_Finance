@@ -2,9 +2,10 @@ pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
-import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 
+import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 import "../../configuration/GlobalAddressesProvider.sol";
+
 import "./LendingPoolCore.sol";
 import "../IToken.sol";
 
@@ -73,7 +74,7 @@ contract LendingPoolConfigurator is VersionedInitializable {
 // ####### PROXY RELATED #######
 // #############################
 
-    uint256 public constant CONFIGURATOR_REVISION = 0x3;
+    uint256 public constant CONFIGURATOR_REVISION = 0x1;
 
     function getRevision() internal pure returns (uint256) {
         return CONFIGURATOR_REVISION;

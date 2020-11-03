@@ -11,9 +11,9 @@ import "../libraries/WadRayMath.sol";
 import "../libraries/EthAddressLib.sol";
 
 import "../../configuration/GlobalAddressesProvider.sol";
-import "../configuration/LendingPoolParametersProvider.sol";
 import "../IToken.sol";
 
+import "../interfaces/ILendingPoolParametersProvider.sol";
 import "../interfaces/IFeeProvider.sol";
 import "../flashloan/interfaces/IFlashLoanReceiver.sol";
 
@@ -21,13 +21,15 @@ import "./LendingPoolCore.sol";
 import "./LendingPoolDataProvider.sol";
 import "./LendingPoolLiquidationManager.sol";
 
+import "../interfaces/ILendingPool.sol";
+
 /**
 * @title LendingPool contract (Created by Aave, modified by SIGH Finance)
 * @notice Implements the actions of the LendingPool, and exposes accessory methods to fetch the users and financial instruments data
 * @author Aave, SIGH Finance
  **/
 
-contract LendingPool is ReentrancyGuard, VersionedInitializable {
+contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
 
     using SafeMath for uint256;
     using WadRayMath for uint256;
@@ -37,7 +39,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     LendingPoolCore public core;
     LendingPoolDataProvider public dataProvider;
     LendingPoolParametersProvider public parametersProvider;
-    IFeeProvider feeProvider;
+    IFeeProvider public feeProvider;
 
 // #####################
 // ######  EVENTS ######
@@ -208,15 +210,16 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     }
 
     uint256 public constant UINT_MAX_VALUE = uint256(-1);
+
+// ############################################################################################################
+// ######  initialize() function called by proxy contract when LendingPool is added to AddressesProvider ######
+// ############################################################################################################
+
     uint256 public constant LENDINGPOOL_REVISION = 0x1;             // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
 
     function getRevision() internal pure returns (uint256) {        // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
         return LENDINGPOOL_REVISION;
     }
-
-// ############################################################################################################
-// ######  initialize() function called by proxy contract when LendingPool is added to AddressesProvider ######
-// ############################################################################################################
 
     /**
     * @dev this function is invoked by the proxy contract when the LendingPool contract is added to the AddressesProvider.
