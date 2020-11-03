@@ -581,7 +581,7 @@ contract IToken is ERC20, ERC20Detailed {
         accure_Supplier_SIGH(user);
         accure_Borrower_SIGH_Internal(user);
         if (AccuredSighBalances[user] > 0) {
-            transferSigh(user);
+            transferSigh(user, user);
         }
     } 
 
@@ -665,7 +665,7 @@ contract IToken is ERC20, ERC20Detailed {
         emit distributeSupplier_SIGH_test4( user , sighAccuredTo, accuredSighAmount );
 
         if ( AccuredSighBalances[sighAccuredTo] > sigh_Transfer_Threshold ) {   // SIGH is Transferred is SIGH_ACCURED_BALANCE > 1e18 SIGH
-            transferSigh( sighAccuredTo );
+            transferSigh( user, sighAccuredTo );
         }
         emit SighAccured( user, sighAccuredTo, AccuredSighBalances[sighAccuredTo] );
     }
@@ -675,9 +675,9 @@ contract IToken is ERC20, ERC20Detailed {
      * @dev Calls the transferSighTotheUser() of the sighDistributionHandlerContract which transfers SIGH to the user
      * @param user The user to which the accured SIGH is transferred
      */
-    function transferSigh( address user ) internal {
-        uint amountToBeTransferred = AccuredSighBalances[user];
-        AccuredSighBalances[user] = sighDistributionHandlerContract.transferSighTotheUser( underlyingInstrumentAddress, user, amountToBeTransferred ); // Pending Amount Not Transferred is returned
+    function transferSigh( address user,  address sighAccuredTo ) internal {
+        uint amountToBeTransferred = AccuredSighBalances[sighAccuredTo];
+        AccuredSighBalances[sighAccuredTo] = sighDistributionHandlerContract.transferSighTotheUser( underlyingInstrumentAddress, user, sighAccuredTo, amountToBeTransferred ); // Pending Amount Not Transferred is returned
     }
 
 // ###########################################################################################################################################################

@@ -649,11 +649,15 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
      * @param sigh_Amount The amount of SIGH to (possibly) transfer
      * @return The amount of SIGH which was NOT transferred to the user
      */
-    function transferSighTotheUser(address instrument, address user, uint sigh_Amount) external onlyITokenContract(instrument) returns (uint) {
+    function transferSighTotheUser(address instrument, address user, address sighAccuredTo, uint sigh_Amount) external onlyITokenContract(instrument) returns (uint) {
         IERC20 sigh = IERC20(Sigh_Address);
         uint sigh_not_transferred;
         if ( sigh.balanceOf(address(this)) > sigh_Amount ) {   // NO SIGH TRANSFERRED IF CONTRACT LACKS REQUIRED SIGH AMOUNT
-            require(sigh.transfer( user, sigh_Amount ), "Failed to transfer accured SIGH to the user." );
+            require(sigh.transfer( sighAccuredTo, sigh_Amount ), "Failed to transfer accured SIGH to the user." );
+            if (sighAccuredTo == addressesProvider.getSIGHStaking() ) {                          // When SIGH is directly being streamed to the Staking Contract
+                ISighStaking stakingContract = ISighStaking(addressesProvider.getSIGHStaking());
+                stakingContract.updateStakedBalanceForStreaming(user,sigh_Amount )              // UPDATES STAKED BALANCE (STREAMING SIGH FUNCTIONALITY) 
+            }
             emit AccuredSIGHTransferredToTheUser( instrument, user, sigh_Amount );
         }
         else {
