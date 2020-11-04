@@ -64,7 +64,8 @@ contract WalletBalanceProvider {
             }
             if (instruments[j] != EthAddressLib.ethAddress()) {
                 balances[j] = balanceOf(_user, instruments[j]);
-            } else {
+            } 
+            else {
                 balances[j] = _user.balance; // ETH balance
             }
         }

@@ -1,7 +1,5 @@
 pragma solidity ^0.5.0;
 
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-
 import "../interfaces/IPriceOracleGetter.sol";
 import "../interfaces/IChainlinkAggregator.sol";
 import "../libraries/EthAddressLib.sol";
@@ -10,8 +8,10 @@ import "../libraries/EthAddressLib.sol";
 /// @author Aave, SIGH Finance
 /// @notice Proxy smart contract to get the price of an asset from a price source, with Chainlink Aggregator smart contracts as primary option
 /// - If the returned price by a Chainlink aggregator is <= 0, the call is forwarded to a fallbackOracle
-/// - Owned by the Aave governance system, allowed to add sources for assets, replace them and change the fallbackOracle
-contract ChainlinkProxyPriceProvider is IPriceOracleGetter, Ownable {
+
+contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
+
+    address public globalAddressesProvider;
 
     mapping(address => IChainlinkAggregator) private assetsSources;
     IPriceOracleGetter private fallbackOracle;
@@ -19,26 +19,24 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter, Ownable {
     event AssetSourceUpdated(address indexed asset, address indexed source);
     event FallbackOracleUpdated(address indexed fallbackOracle);
 
+    modifier onlyLendingPoolConfigurator {
+        require(msg.sender == globalAddressesProvider.getLendingPoolConfigurator(),"New Source / fallback oracle can only be set by the LendingPool Configurator.");
+        _;
+    }
+
 // #######################
 // ##### CONSTRUCTOR #####
 // #######################
 
-    // / @notice Constructor
-    // / @param _assets The addresses of the assets
-    // / @param _sources The address of the source of each asset
-    // / @param _fallbackOracle The address of the fallback oracle to use if the data of an aggregator is not consistent
-        // constructor(address[] memory _assets, address[] memory _sources, address _fallbackOracle) public {
-
-    constructor() public {
-        // internalSetFallbackOracle(_fallbackOracle);
-        // internalSetAssetsSources(_assets, _sources);
+    constructor( address globalAddressesProvider_ ) public {
+        globalAddressesProvider = globalAddressesProvider_;
     }
 
 // ####################################
 // ##### SET THE PRICEFEED SOURCE #####
 // ####################################
     
-    function supportNewAsset(address asset_, address source_) public onlyOwner {
+    function supportNewAsset(address asset_, address source_) public onlyLendingPoolConfigurator {
         address[] memory assets = new address[](1);
         address[] memory sources = new address[](1) ;
         assets[0] = asset_;
@@ -49,14 +47,14 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter, Ownable {
     /// @notice External function called by the Aave governance to set or replace sources of assets
     /// @param _assets The addresses of the assets
     /// @param _sources The address of the source of each asset
-    function setAssetSources(address[] calldata _assets, address[] calldata _sources) external onlyOwner {
+    function setAssetSources(address[] calldata _assets, address[] calldata _sources) external onlyLendingPoolConfigurator {
         internalSetAssetsSources(_assets, _sources);
     }
 
     /// @notice Sets the fallbackOracle
     /// - Callable only by the Aave governance
     /// @param _fallbackOracle The address of the fallbackOracle
-    function setFallbackOracle(address _fallbackOracle) external onlyOwner {
+    function setFallbackOracle(address _fallbackOracle) external onlyLendingPoolConfigurator {
         internalSetFallbackOracle(_fallbackOracle);
     }
 

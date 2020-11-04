@@ -322,12 +322,30 @@ contract LendingPoolConfigurator is VersionedInitializable {
         emit InstrumentInterestRateStrategyChanged(_instrument, _rateStrategyAddress);
     }
 
-    /**
-    * @dev refreshes the lending pool core configuration to update the cached address
-    **/
+    // refreshes the lending pool core configuration to update the cached address
     function refreshLendingPoolCoreConfiguration() external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
         core.refreshConfiguration();
+    }
+
+    // ############################################################################
+    // ###############  ADDING NEW SOURCE ETC TO THE PRICE ORACLE  ################
+    // ############################################################################
+
+    function supportNewAsset(address asset_, address source_) external onlyLendingPoolManager {
+        ChainlinkProxyPriceProvider priceProvider = ChainlinkProxyPriceProvider(poolAddressesProvider.getPriceOracle());
+        priceProvider.supportNewAsset(asset_,source_);
+    }
+
+    function setAssetSources(address[] calldata _assets, address[] calldata _sources) external onlyLendingPoolManager {
+        ChainlinkProxyPriceProvider priceProvider = ChainlinkProxyPriceProvider(poolAddressesProvider.getPriceOracle());
+        priceProvider.setAssetSources(_assets,_sources);
+    }
+
+
+    function setFallbackOracle(address _fallbackOracle) external onlyLendingPoolManager {
+        ChainlinkProxyPriceProvider priceProvider = ChainlinkProxyPriceProvider(poolAddressesProvider.getPriceOracle());
+        priceProvider.setFallbackOracle(_fallbackOracle);
     }
 
     // ##########################################################################################
