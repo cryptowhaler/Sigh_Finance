@@ -14,7 +14,7 @@ import "../libraries/WadRayMath.sol";
 import "../IToken.sol";
 import "../libraries/EthAddressLib.sol";
 
-import "../../SIGH/Interfaces/ISighDistributionHandler.sol";
+import "../../SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol";
 
 /**
 * @title LendingPoolCore contract

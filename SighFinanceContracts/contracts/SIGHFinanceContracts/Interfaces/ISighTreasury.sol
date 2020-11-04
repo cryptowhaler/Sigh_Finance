@@ -7,7 +7,7 @@ pragma solidity ^0.5.16;
  * @author SIGH Finance
  */
 
-interface ISighSpeedController {
+interface ISighTreasury {
 
     function initialize( address addressesProvider_) public;
     function refreshConfig() external;
