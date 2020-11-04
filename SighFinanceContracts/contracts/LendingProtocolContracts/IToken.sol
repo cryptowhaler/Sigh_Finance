@@ -4,9 +4,9 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 
 import "../Configuration/GlobalAddressesProvider.sol";
-import "./lendingpool/LendingPool.sol";
-import "./lendingpool/LendingPoolDataProvider.sol";
-import "./lendingpool/LendingPoolCore.sol";
+import "./interfaces/ILendingPool.sol";
+import "./interfaces/ILendingPoolDataProvider.sol";
+import "./interfaces/ILendingPoolCore.sol";
 import "../SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol";
 
 import "./libraries/WadRayMath.sol";
@@ -20,7 +20,7 @@ import "./libraries/WadRayMath.sol";
 contract IToken is ERC20, ERC20Detailed {
 
     using WadRayMath for uint256;
-    sighInitialIndex = 1e36;        // INDEX (SIGH RELATED)
+    uint private sighInitialIndex = 1e36;        // INDEX (SIGH RELATED)
 
     struct Double {
         uint mantissa;
@@ -610,7 +610,7 @@ contract IToken is ERC20, ERC20Detailed {
 
         if (deltaIndex.mantissa > 0) {
             uint supplierSighDelta = mul_(supplierTokens, deltaIndex);                                      // Supplier Delta = Balance * Double(DeltaIndex)/DoubleScale
-            accureSigh(supplier, supplierSighDelta )        // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the Supplier or the address to which SIGH is being redirected to 
+            accureSigh(supplier, supplierSighDelta );        // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the Supplier or the address to which SIGH is being redirected to 
         }
     }
 

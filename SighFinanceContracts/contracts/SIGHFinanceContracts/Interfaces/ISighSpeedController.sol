@@ -13,7 +13,7 @@ interface ISighSpeedController {
 // ###########   SIGH DISTRIBUTION : INITIALIZED DRIPPING (Can be called only once)   ##########
 // #############################################################################################
 
-  function setAddressProvider(address _addressesProvider) external returns bool;
+  function setAddressProvider(address _addressesProvider) external returns (bool);
   function beginDripping () external returns (bool);
 
 // ############################################################################################################

@@ -2,16 +2,17 @@ pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
-import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
+import "../openzeppelin-upgradeability/VersionedInitializable.sol";
 
-import "../../configuration/GlobalAddressesProvider.sol";
-import "./LendingPoolCore.sol";
-import "../IToken.sol";
+import "../configuration/GlobalAddressesProvider.sol";
+import "./Interfaces/ISighDistributionHandler.sol";
+import "./Interfaces/ISighTreasury.sol";
+import "./Interfaces/ISighStaking.sol";
 
 /**
 * @title SighFinanceConfigurator contract
 * @author SIGH Finance
-* @notice Executes configuration methods on the LendingPoolCore contract, SIGHDistributionHandler and the SighStaking Contract
+* @notice Executes configuration methods for SIGH FINANCE contract, SIGHDistributionHandler and the SighStaking Contract
 * to efficiently regulate the SIGH economics
 **/
 
@@ -63,19 +64,19 @@ contract SighFinanceConfigurator is VersionedInitializable {
 // ####### SIGH DISTRIBUTION HANDLER FUNCTIONS #########
 // #####################################################
 
-    function sigh_instrument(address instrument_) external onlySIGHFinanceManager return bool { 
+    function sigh_instrument(address instrument_) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
         require(sigh_distribution_mechanism.Instrument_SIGHed( instrument_ ), "Instrument_SIGHed() execution failed." );
         return true;
     }
 
-    function UNsigh_instrument(address instrument_) external onlySIGHFinanceManager return bool { 
+    function UNsigh_instrument(address instrument_) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
         require(sigh_distribution_mechanism.Instrument_UNSIGHed( instrument_ ), "Instrument_UNSIGHed() execution failed." );
         return true;
     }
 
-    function updateSIGHSpeed(uint newSighSpeed) external onlySIGHFinanceManager return bool { 
+    function updateSIGHSpeed(uint newSighSpeed) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
         require(sigh_distribution_mechanism.updateSIGHSpeed( newSighSpeed ), "updateSIGHSpeed() execution failed." );
         return true;
@@ -86,19 +87,19 @@ contract SighFinanceConfigurator is VersionedInitializable {
         sigh_distribution_mechanism.refreshConfig() ;
     }
 
-    function updateStakingSpeedForAnInstrument(address instrument_, uint newStakingSpeed) external onlySIGHFinanceManager return bool { 
+    function updateStakingSpeedForAnInstrument(address instrument_, uint newStakingSpeed) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
         require(sigh_distribution_mechanism.updateStakingSpeedForAnInstrument( instrument_, newStakingSpeed ), "updateStakingSpeedForAnInstrument() execution failed." );
         return true;
     }        
 
-    function SpeedUpperCheckSwitch(bool isActivated, uint profitPercentage) external onlySIGHFinanceManager return bool { 
+    function SpeedUpperCheckSwitch(bool isActivated, uint profitPercentage) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
         require(sigh_distribution_mechanism.SpeedUpperCheckSwitch( isActivated, profitPercentage ), "SpeedUpperCheckSwitch() execution failed." );
         return true;
     }        
 
-    function updateDeltaBlocksForSpeedRefresh(uint deltaBlocksLimit) external onlySIGHFinanceManager return bool { 
+    function updateDeltaBlocksForSpeedRefresh(uint deltaBlocksLimit) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
         require(sigh_distribution_mechanism.updateDeltaBlocksForSpeedRefresh( deltaBlocksLimit ), "updateDeltaBlocksForSpeedRefresh() execution failed." );
         return true;

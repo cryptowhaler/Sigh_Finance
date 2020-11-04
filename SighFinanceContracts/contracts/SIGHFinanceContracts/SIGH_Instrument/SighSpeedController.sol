@@ -8,7 +8,7 @@ pragma solidity ^0.5.16;
  */
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
-import "./Interfaces/ISighSpeedController.sol";
+import "../Interfaces/ISighSpeedController.sol";
  
 contract SighSpeedController is ISighSpeedController {
 
@@ -71,7 +71,7 @@ contract SighSpeedController is ISighSpeedController {
     token = token_;
   }
 
-  function setAddressProvider(address _addressesProvider) external returns bool {
+  function setAddressProvider(address _addressesProvider) external returns (bool) {
     require(admin == msg.sender,"Dripping can only be initialized by the Admin");
     require(!isAddressesSet,"AddressProvider can only be initialized once");
     isAddressesSet = true;
@@ -113,7 +113,7 @@ contract SighSpeedController is ISighSpeedController {
                                                            recentlyDrippedAmount: uint(0)
                                                            });
     
-    require (supportedProtocols[newProtocolAddress]isSupported, 'Error occured when adding the new protocol address to the supported protocols list.');
+    require (supportedProtocols[newProtocolAddress].isSupported, 'Error occured when adding the new protocol');
     require (supportedProtocols[newProtocolAddress].distributionSpeed == sighSpeed, 'SIGH Speed for the new protocol was not initialized properly.');
     
     emit NewProtocolSupported(newProtocolAddress, supportedProtocols[newProtocolAddress].distributionSpeed);
@@ -250,11 +250,11 @@ contract SighSpeedController is ISighSpeedController {
   }
 
   function getRecentAmountDistributedToProtocol(address protocolAddress) external view returns (uint) {
-    return supportedProtocols.[protocolAddress].recentlyDrippedAmount;
+    return supportedProtocols[protocolAddress].recentlyDrippedAmount;
   }
   
   function getSIGHSpeedForProtocol(address protocolAddress) external view returns (uint) {
-      return supportedProtocols.[protocolAddress].distributionSpeed;
+      return supportedProtocols[protocolAddress].distributionSpeed;
   }
   
   function totalProtocolsSupported() external view returns (uint) {

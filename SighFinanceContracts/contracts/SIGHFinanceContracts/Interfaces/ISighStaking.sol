@@ -42,9 +42,9 @@ interface SighStaking {
 // ##############  CONFIGURATION FUNCTIONS (SIGH FINANCE CONFIGURATOR ONLY)   ###############
 // ##########################################################################################
 
-    function supportNewInstrumentForDistribution(address newInstrument, uint speed)  returns (bool) ;
-    function setDistributionSpeed(address instrumentAddress , uint newSpeed)  returns (bool) ;
-    function updateMaxSighThatCanBeStaked(uint amount)   returns (bool) ;
+    function supportNewInstrumentForDistribution(address newInstrument, uint speed) external  returns (bool) ;
+    function setDistributionSpeed(address instrumentAddress , uint newSpeed) external returns (bool) ;
+    function updateMaxSighThatCanBeStaked(uint amount) external  returns (bool) ;
 
 // ################################################## 
 // ##############  PUBLIC FUNCTIONS   ###############
@@ -66,7 +66,7 @@ interface SighStaking {
 
     function getTotalStakedSIGH()  external view returns (uint);
     function getTotalStakers()  external view returns (uint);
-    function maxSighThatCanBeStaked()  external view returns (uint);
+    function getmaxSighThatCanBeStaked()  external view returns (uint);
 
 
 

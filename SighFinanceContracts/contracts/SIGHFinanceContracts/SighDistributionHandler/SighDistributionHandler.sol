@@ -11,16 +11,15 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "../Math/Exponential.sol";
 
 import "../../Configuration/GlobalAddressesProvider.sol";
-import "./PriceOracle.sol";            
+import "../../LendingProtocolContracts/interfaces/IPriceOracleGetter.sol";            
+import "../../LendingProtocolContracts/interfaces/ILendingPoolCore.sol";            
 
-// import "../ProtocolContracts/interfaces/ITokenInterface.sol";
-import "../../ProtocolContracts/lendingpool/LendingPoolCore.sol";      // REPLACE WITH AN INTER
 
 contract SIGHDistributionHandler is Exponential, VersionedInitializable {
     
 // ######## CONTRACT ADDRESSES ########
     GlobalAddressesProvider public addressesProvider;
-    PriceOracle public oracle;
+    IPriceOracleGetter public oracle;
     address public Sigh_Address;
     address public lendingPoolCore;
 
@@ -149,7 +148,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
 
     function refreshConfigInternal() internal {
         Sigh_Address = addressesProvider.getSIGHAddress();
-        oracle = PriceOracle( addressesProvider.getPriceOracle() );
+        oracle = IPriceOracleGetter( addressesProvider.getPriceOracle() );
         lendingPoolCore = addressesProvider.getLendingPoolCore();
     }
 
@@ -181,9 +180,9 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
                                                                 supplylastupdatedblock: getBlockNumber(), 
                                                                 borrowindex : safe224(sighInitialIndex,"sighInitialIndex exceeds 224 bits"), 
                                                                 borrowlastupdatedblock : getBlockNumber()
-                                                                } )
+                                                                } );
         // INITITALIZE INSTRUMENT SPEEDS
-        Instrument_Sigh_Speeds[_instrument] = Instrument_Sigh_Speed( { suppliers_Speed: uint(0),
+        Instrument_Sigh_Speeds[_instrument] = Instrument_Sigh_Speed({ suppliers_Speed: uint(0),
                                                                        borrowers_Speed: uint(0),
                                                                        speeds_Ratio_Mantissa: uint(1e18),
                                                                        staking_Speed: uint(0)
@@ -195,7 +194,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
             instrumentPriceCycles[_instrument] = InstrumentPriceCycle({ recordedPriceSnapshot : emptyPrices, initializationCounter: 0 }) ;
         }   
 
-        emit InstrumentAdded(_instrument, _decimals,  _iTokenAddress block.number); 
+        emit InstrumentAdded(_instrument, _decimals,  _iTokenAddress, block.number); 
         return true;
     }
 
@@ -394,7 +393,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
             }
             else {
 
-                LendingPoolCore lendngPoolCoreContract = LendingPoolCore( addressesProvider.getLendingPoolCore() );
+                ILendingPoolCore lendngPoolCoreContract = ILendingPoolCore( addressesProvider.getLendingPoolCore() );
                 uint totalUnderlyingLiquidity = lendngPoolCoreContract.getInstrumentTotalLiquidity( _currentInstrument ); // Total Liquidity in the lending protocol for current instrument
 
                 Exp memory totalLossesOver24hours = Exp({mantissa: 0});
@@ -605,7 +604,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
             return true;
         }
 
-        LendingPoolCore lendingPoolCoreContract = LendingPoolCore(addressesProvider.getLendingPoolCore() );
+        ILendingPoolCore lendingPoolCoreContract = ILendingPoolCore(addressesProvider.getLendingPoolCore() );
         Exp memory marketBorrowIndex = Exp({mantissa: lendingPoolCoreContract.getInstrumentVariableBorrowsCumulativeIndex( currentInstrument )});   // GETTING BORROW INDEX. TO BE VERIFIED
         
         SIGHInstrument storage instrumentState = financial_instruments[currentInstrument];
@@ -656,7 +655,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
             require(sigh.transfer( sighAccuredTo, sigh_Amount ), "Failed to transfer accured SIGH to the user." );
             if (sighAccuredTo == addressesProvider.getSIGHStaking() ) {                          // When SIGH is directly being streamed to the Staking Contract
                 ISighStaking stakingContract = ISighStaking(addressesProvider.getSIGHStaking());
-                stakingContract.updateStakedBalanceForStreaming(user,sigh_Amount )              // UPDATES STAKED BALANCE (STREAMING SIGH FUNCTIONALITY) 
+                stakingContract.updateStakedBalanceForStreaming(user,sigh_Amount );              // UPDATES STAKED BALANCE (STREAMING SIGH FUNCTIONALITY) 
             }
             emit AccuredSIGHTransferredToTheUser( instrument, user, sigh_Amount );
         }
@@ -694,7 +693,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         return uint(0);
     }
 
-    function getInstrumentData (address instrument_) external view returns (address, uint256,bool,uint256,uint256,uint256,uint256  ) {
+    function getInstrumentData (address instrument_) external view returns (address iTokenAddress, uint256 decimals,bool isCoverDipsMechanismActivated,uint256 supplyindex,uint256 supplylastupdatedblock,uint256 borrowindex,uint256 borrowlastupdatedblock  ) {
         return ( financial_instruments[instrument_].iTokenAddress,    
                  financial_instruments[instrument_].decimals,
                  financial_instruments[instrument_].isCoverDipsMechanismActivated,
@@ -702,7 +701,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
                  financial_instruments[instrument_].supplylastupdatedblock,
                  financial_instruments[instrument_].borrowindex,
                  financial_instruments[instrument_].borrowlastupdatedblock 
-                ) 
+                ); 
     }
 
     function getupperCheckProfitPercentage () external view returns (uint) {

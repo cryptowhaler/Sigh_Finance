@@ -312,7 +312,7 @@ contract SighStaking is VersionedInitializable {
 // ##############  CONFIGURATION FUNCTIONS (SIGH FINANCE CONFIGURATOR ONLY)   ###############
 // ##########################################################################################
 
-    function supportNewInstrumentForDistribution(address newInstrument, uint speed) onlySighFinanceConfigurator returns (bool) {
+    function supportNewInstrumentForDistribution(address newInstrument, uint speed) external onlySighFinanceConfigurator returns (bool) {
         require(instrumentStates[newInstrument].index == 0, "The provided instrument address has already been added for distribution among the stakers");
         updateRewardIndexInternal();
 
@@ -323,7 +323,7 @@ contract SighStaking is VersionedInitializable {
                                                             rewardDistributionSpeed: speed, 
                                                             totalAmountRewarded: uint(0), 
                                                             lastUpdatedBlock: block.number,
-                                                            balance: instrumentContract.balanceOf(address(this));
+                                                            balance: instrumentContract.balanceOf(address(this))
                                                         });         // STATE UPDATE - NEW INSTRUMENT STATE INITIALIZED
 
         emit NewInstrumentForDistributionAdded( newInstrument, instrumentStates[newInstrument].name, instrumentStates[newInstrument].index, instrumentStates[newInstrument].rewardDistributionSpeed, instrumentStates[newInstrument].totalAmountRewarded, instrumentStates[newInstrument].balance, instrumentStates[newInstrument].lastUpdatedBlock  );
@@ -331,7 +331,7 @@ contract SighStaking is VersionedInitializable {
     }
 
 
-    function setDistributionSpeed(address instrumentAddress , uint newSpeed) onlySighFinanceConfigurator returns (bool) {
+    function setDistributionSpeed(address instrumentAddress , uint newSpeed) external onlySighFinanceConfigurator returns (bool) {
         require(instrumentStates[instrumentAddress].index > 0, "The provided instrument address has not been added for distribution among the stakers");
 
         if ( instrumentStates[instrumentAddress].rewardDistributionSpeed > 0) {
@@ -343,7 +343,7 @@ contract SighStaking is VersionedInitializable {
         return true;
     }
 
-    function updateMaxSighThatCanBeStaked(uint amount)  onlySighFinanceConfigurator returns (bool) { 
+    function updateMaxSighThatCanBeStaked(uint amount) external  onlySighFinanceConfigurator returns (bool) { 
         uint prevLimit = maxSighThatCanBeStaked;
         maxSighThatCanBeStaked = amount;
         require(maxSighThatCanBeStaked == amount, "New value not assigned properly");
@@ -417,7 +417,7 @@ contract SighStaking is VersionedInitializable {
         return numberOfStakers;
     }
 
-    function maxSighThatCanBeStaked()  external view returns (uint) { 
+    function getmaxSighThatCanBeStaked()  external view returns (uint) { 
         return maxSighThatCanBeStaked;
     }
 

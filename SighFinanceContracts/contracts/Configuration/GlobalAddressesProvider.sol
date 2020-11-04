@@ -31,7 +31,7 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
     event LendingRateOracleUpdated(address indexed newAddress);
     event FeeProviderUpdated(address indexed newAddress);
 
-    event SIGHFinanceConfiguratorUpdated(address indexed sighFinanceConfigAddress)       // ADDED BY SIGH FINANCE
+    event SIGHFinanceConfiguratorUpdated(address indexed sighFinanceConfigAddress);       // ADDED BY SIGH FINANCE
     event SIGHAddressUpdated(address indexed sighAddress);                               // ADDED BY SIGH FINANCE
     event SIGHMechanismHandlerImplUpdated(address indexed newAddress);                   // ADDED BY SIGH FINANCE
     event SIGHTreasuryImplUpdated(address indexed newAddress);                           // ADDED BY SIGH FINANCE

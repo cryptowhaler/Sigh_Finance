@@ -6,13 +6,14 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin-solidity/contracts/utils/Address.sol";
 import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 
+import "../libraries/WadRayMath.sol";
+import "../libraries/EthAddressLib.sol";
+
 import "../libraries/CoreLibrary.sol";
 import "../../configuration/GlobalAddressesProvider.sol";
 import "../interfaces/ILendingRateOracle.sol";
 import "../interfaces/I_InstrumentInterestRateStrategy.sol";
-import "../libraries/WadRayMath.sol";
-import "../IToken.sol";
-import "../libraries/EthAddressLib.sol";
+import "../interfaces/ITokenInterface.sol";
 
 import "../../SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol";
 
@@ -192,7 +193,7 @@ contract LendingPoolCore is VersionedInitializable {
         sighMechanism.updateSIGHBorrowIndex(_instrument);              // ADDED BY SIGH FINANCE (Instrument Index is updated)        
         (uint256 principalBorrowBalance, , uint256 balanceIncrease) = getUserBorrowBalances( _instrument, _user );     // getting the previous borrow data of the user
     
-        IToken iToken = IToken( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
+        ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
         iToken.accure_Borrower_SIGH(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
 
         updateInstrumentStateOnBorrowInternal( _instrument, _user, principalBorrowBalance, balanceIncrease, _amountBorrowed, _rateMode );
@@ -300,7 +301,7 @@ contract LendingPoolCore is VersionedInitializable {
     function updateStateOnRepay(  address _instrument,  address _user, uint256 _paybackAmountMinusFees,  uint256 _originationFeeRepaid,  uint256 _balanceIncrease,  bool _repaidWholeLoan ) external onlyLendingPool {
         sighMechanism.updateSIGHBorrowIndex(_instrument);              // ADDED BY SIGH FINANCE (Instrument Index is updated)        
 
-        IToken iToken = IToken( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
+        ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
         iToken.accure_Borrower_SIGH(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
 
         updateInstrumentStateOnRepayInternal(  _instrument, _user, _paybackAmountMinusFees,  _balanceIncrease );
@@ -378,7 +379,7 @@ contract LendingPoolCore is VersionedInitializable {
     function updateStateOnSwapRate(  address _instrument, address _user, uint256 _principalBorrowBalance, uint256 _compoundedBorrowBalance, uint256 _balanceIncrease, CoreLibrary.InterestRateMode _currentRateMode ) external onlyLendingPool returns (CoreLibrary.InterestRateMode, uint256) {
         sighMechanism.updateSIGHBorrowIndex(_instrument);              // ADDED BY SIGH FINANCE (Instrument Index is updated)        
 
-        IToken iToken = IToken( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
+        ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
         iToken.accure_Borrower_SIGH(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
 
         updateInstrumentStateOnSwapRateInternal( _instrument, _user,_principalBorrowBalance,  _compoundedBorrowBalance, _currentRateMode );
@@ -463,7 +464,7 @@ contract LendingPoolCore is VersionedInitializable {
     **/
     function updateStateOnRebalance(address _instrument, address _user, uint256 _balanceIncrease) external onlyLendingPool returns (uint256) {
         sighMechanism.updateSIGHBorrowIndex(_instrument);              // ADDED BY SIGH FINANCE (Instrument Index is updated)        
-        IToken iToken = IToken( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
+        ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
         iToken.accure_Borrower_SIGH(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
 
         updateInstrumentStateOnRebalanceInternal(_instrument, _user, _balanceIncrease);
@@ -558,7 +559,7 @@ contract LendingPoolCore is VersionedInitializable {
         sighMechanism.updateSIGHBorrowIndex(_principalInstrument);               // ADDED BY SIGH FINANCE (Instrument Index is updated)        
         sighMechanism.updateSIGHSupplyIndex(_collateralInstrument);              // ADDED BY SIGH FINANCE (Instrument Index is updated)        
 
-        IToken iToken = IToken( reserves[_principalInstrument].iTokenAddress );  // ITOKEN ADDRESS
+        ITokenInterface iToken = ITokenInterface( reserves[_principalInstrument].iTokenAddress );  // ITOKEN ADDRESS
         iToken.accure_Borrower_SIGH(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
 
         updatePrincipalInstrumentStateOnLiquidationInternal( _principalInstrument, _user, _amountToLiquidate, _balanceIncrease );
@@ -704,7 +705,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @return the underlying deposit balance of the user
     **/
     function getUserUnderlyingAssetBalance(address _instrument, address _user) public view returns (uint256) {
-        IToken iToken = IToken(reserves[_instrument].iTokenAddress);
+        ITokenInterface iToken = ITokenInterface(reserves[_instrument].iTokenAddress);
         return iToken.balanceOf(_user);
     }
 

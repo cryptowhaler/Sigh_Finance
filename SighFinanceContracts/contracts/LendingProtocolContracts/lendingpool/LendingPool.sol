@@ -11,17 +11,17 @@ import "../libraries/WadRayMath.sol";
 import "../libraries/EthAddressLib.sol";
 
 import "../../configuration/GlobalAddressesProvider.sol";
-import "../IToken.sol";
-
 import "../interfaces/ILendingPoolParametersProvider.sol";
+import "../interfaces/ITokenInterface.sol";
 import "../interfaces/IFeeProvider.sol";
+import "../interfaces/ILendingPoolCore.sol";
+import "../interfaces/ILendingPoolDataProvider.sol";
+import "../interfaces/ILendingPool.sol";
+
 import "../flashloan/interfaces/IFlashLoanReceiver.sol";
 
-import "./LendingPoolCore.sol";
-import "./LendingPoolDataProvider.sol";
 import "./LendingPoolLiquidationManager.sol";
 
-import "../interfaces/ILendingPool.sol";
 
 /**
 * @title LendingPool contract (Created by Aave, modified by SIGH Finance)
@@ -36,9 +36,9 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
     using Address for address;
 
     GlobalAddressesProvider public addressesProvider;
-    LendingPoolCore public core;
-    LendingPoolDataProvider public dataProvider;
-    LendingPoolParametersProvider public parametersProvider;
+    ILendingPoolCore public core;
+    ILendingPoolDataProvider public dataProvider;
+    ILendingPoolParametersProvider public parametersProvider;
     IFeeProvider public feeProvider;
 
 // #####################
@@ -227,9 +227,9 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
     **/
     function initialize(GlobalAddressesProvider _addressesProvider) public initializer {
         addressesProvider = _addressesProvider;
-        core = LendingPoolCore(addressesProvider.getLendingPoolCore());
-        dataProvider = LendingPoolDataProvider(addressesProvider.getLendingPoolDataProvider());
-        parametersProvider = LendingPoolParametersProvider(addressesProvider.getLendingPoolParametersProvider());
+        core = ILendingPoolCore(addressesProvider.getLendingPoolCore());
+        dataProvider = ILendingPoolDataProvider(addressesProvider.getLendingPoolDataProvider());
+        parametersProvider = ILendingPoolParametersProvider(addressesProvider.getLendingPoolParametersProvider());
         feeProvider = IFeeProvider(addressesProvider.getFeeProvider());
     }
 

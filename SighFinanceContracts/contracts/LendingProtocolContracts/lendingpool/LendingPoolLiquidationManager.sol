@@ -9,11 +9,11 @@ import "../libraries/CoreLibrary.sol";
 import "../libraries/WadRayMath.sol";
 
 import "../../configuration/GlobalAddressesProvider.sol";
-import "../configuration/LendingPoolParametersProvider.sol";
 
-import "../IToken.sol";
-import "./LendingPoolCore.sol";
-import "./LendingPoolDataProvider.sol";
+import "../interfaces/ILendingPoolParametersProvider.sol";
+import "../interfaces/ITokenInterface.sol";
+import "../interfaces/ILendingPoolCore.sol";
+import "../interfaces/ILendingPoolDataProvider.sol";
 import "../interfaces/IPriceOracleGetter.sol";
 
 /**
@@ -28,9 +28,9 @@ contract LendingPoolLiquidationManager is ReentrancyGuard, VersionedInitializabl
     using Address for address;
 
     GlobalAddressesProvider public addressesProvider;
-    LendingPoolCore core;
-    LendingPoolDataProvider dataProvider;
-    LendingPoolParametersProvider parametersProvider;
+    ILendingPoolCore core;
+    ILendingPoolDataProvider dataProvider;
+    ILendingPoolParametersProvider parametersProvider;
     IFeeProvider feeProvider;
     address ethereumAddress;
 
@@ -167,7 +167,7 @@ contract LendingPoolLiquidationManager is ReentrancyGuard, VersionedInitializabl
         }
 
         core.updateStateOnLiquidation( _instrument, _collateral, _user, vars.actualAmountToLiquidate, maxCollateralToLiquidate, vars.feeLiquidated, vars.liquidatedCollateralForFee, vars.borrowBalanceIncrease, _receiveIToken );
-        IToken collateralIToken = IToken(core.getInstrumentITokenAddress(_collateral));
+        ITokenInterface collateralIToken = ITokenInterface(core.getInstrumentITokenAddress(_collateral));
         
         if (_receiveIToken) {               //if liquidator reclaims the iToken, he receives the equivalent iToken amount
             collateralIToken.transferOnLiquidation(_user, msg.sender, maxCollateralToLiquidate);

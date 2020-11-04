@@ -41,8 +41,8 @@ interface ISighTreasury {
 
     function initializeInstrumentDistribution (address targetAddress, address instrumentToBeDistributed, uint distributionSpeed) external returns (bool);
     function changeInstrumentBeingDripped(address instrumentToDrip ) external returns (bool);
-    function updateDripSpeed (uint DripSpeed_) external onlySighFinanceConfigurator returns (bool);
-    function resetInstrumentDistribution() external onlySighFinanceConfigurator returns (bool);
+    function updateDripSpeed (uint DripSpeed_) external returns (bool);
+    function resetInstrumentDistribution() external returns (bool);
 
 // ################################################################################
 // ###########   THE FUNCTION TO DRIP THE TOKENS TO THE TARGET ADDRESS  ###########
@@ -55,7 +55,7 @@ interface ISighTreasury {
 // ##########################################################
 
 
-    function transferSighTo(address target_, uint amount) external onlySighFinanceConfigurator returns (bool);
+    function transferSighTo(address target_, uint amount) external returns (bool);
     
     // rechecks the balance and updates the stored balances array
     function updateInstrumentBalance(address instrument_address) external returns (uint);
@@ -77,6 +77,7 @@ interface ISighTreasury {
     function getBurnSpeed() external view returns (uint) ;
     function getTotalBurntSigh() external view returns (uint);
 
+}
     // function getAmountTransferred(address target) external view returns (uint) {
     //     return SIGH_Transferred[target];
     // }

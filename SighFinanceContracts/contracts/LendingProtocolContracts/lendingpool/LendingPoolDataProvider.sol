@@ -4,13 +4,13 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 
 import "../libraries/CoreLibrary.sol";
-import "../../configuration/GlobalAddressesProvider.sol";
 import "../libraries/WadRayMath.sol";
+
+import "../../configuration/GlobalAddressesProvider.sol";
 import "../interfaces/IPriceOracleGetter.sol";
 import "../interfaces/IFeeProvider.sol";
-import "../IToken.sol";
-
-import "./LendingPoolCore.sol";
+import "../interfaces/ITokenInterface.sol";
+import "../interfaces/ILendingPoolCore.sol";
 
 /**
 * @title LendingPoolDataProvider contract 
