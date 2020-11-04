@@ -30,9 +30,6 @@ contract LendingPoolLiquidationManager is ReentrancyGuard, VersionedInitializabl
     GlobalAddressesProvider public addressesProvider;
     ILendingPoolCore core;
     ILendingPoolDataProvider dataProvider;
-    ILendingPoolParametersProvider parametersProvider;
-    IFeeProvider feeProvider;
-    address ethereumAddress;
 
     uint256 constant LIQUIDATION_CLOSE_FACTOR_PERCENT = 50;
 

@@ -18,7 +18,7 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
 
     //events
     event PendingSIGHFinanceManagerUpdated( address _pendingSighFinanceManager );           
-    event SIGHFinanceManagerUpdated( _sighFinanceManager );    
+    event SIGHFinanceManagerUpdated( address _sighFinanceManager );    
     event PendingLendingPoolManagerUpdated( address _pendingLendingPoolManager );
     event LendingPoolManagerUpdated( address _lendingPoolManager );   
 

@@ -248,7 +248,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
         onlyUnfreezedInstrument(_instrument)
         onlyAmountGreaterThanZero(_amount)
     {
-        IToken iToken = IToken(core.getInstrumentITokenAddress(_instrument));
+        ITokenInterface iToken = ITokenInterface(core.getInstrumentITokenAddress(_instrument));
         bool isFirstDeposit = iToken.balanceOf(msg.sender) == 0;
 
         core.updateStateOnDeposit(_instrument, msg.sender, _amount, isFirstDeposit);

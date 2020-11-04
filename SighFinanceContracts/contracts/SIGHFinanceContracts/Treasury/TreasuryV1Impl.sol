@@ -9,6 +9,8 @@ pragma solidity ^0.5.16;
 
 // interfaces
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
+import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
+
 import "./TreasuryStorage.sol";
 import "./EIP20InterfaceSIGH.sol";
 
@@ -96,7 +98,7 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
 // ###########   THE HEDGE FUND MECHANISM - Only Sigh Finance Manager can call this function ############
 // ######################################################################################################
     // 
-    function swapTokensUsingOxAPI( address allowanceTarget, address payable to, bytes memory callDataHex, address token_bought, address token_sold, uint sellAmount ) external payable onlySIGHFinanceManager returns (bool) {
+    function swapTokensUsingOxAPI( address allowanceTarget, address payable to, bytes calldata callDataHex, address token_bought, address token_sold, uint sellAmount ) external payable onlySIGHFinanceManager returns (bool) {
 
         IERC20 bought_token;
         bought_token = IERC20(token_bought);

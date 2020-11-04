@@ -147,7 +147,7 @@ contract SighSpeedController is ISighSpeedController {
     require (supportedProtocols[protocolAddress_] == false, 'Error occured when removing the protocol.');
     require (supportedProtocols[protocolAddress_] == 0, 'SIGH Speed was not properly assigned to 0.');
 
-    emit ProtocolRemoved( protocolAddress_,  supportedProtocols[current_protocol].totalDrippedAmount );
+    emit ProtocolRemoved( protocolAddress_,  supportedProtocols[protocolAddress_].totalDrippedAmount );
   }
   
 // ######################################################################################
@@ -229,7 +229,7 @@ contract SighSpeedController is ISighSpeedController {
     return address(token);
   }
 
-  function getSupportedProtocols() external view returns (address[]) {
+  function getSupportedProtocols() external view returns (address[] memory) {
     return storedSupportedProtocols;
   }
 

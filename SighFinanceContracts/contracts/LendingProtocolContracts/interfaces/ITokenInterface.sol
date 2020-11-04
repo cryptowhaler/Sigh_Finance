@@ -56,7 +56,7 @@ interface ITokenInterface {
 // ####################################
 
     function claimMySIGH() external;
-    function claimSIGH(address[] memory holders ) external;    
+    function claimSIGH(address[] calldata holders ) external;    
     function accure_Borrower_SIGH(address borrower) external;
 
 // ##########################################

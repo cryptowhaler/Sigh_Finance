@@ -28,7 +28,7 @@ interface SighStaking {
 // ##############  FUNCTION RELATED TO INSTRUMENT TRANSFER   ###############
 // ################################################################################
 
-    function claimAllAccumulatedInstrumentsForUsers( address[] stakingAddresses ) external;
+    function claimAllAccumulatedInstrumentsForUsers( address[] calldata ) external;
     function claimAllAccumulatedInstruments() external ;
     function claimAccumulatedInstrument(address instrumentToBeClaimed) external;
 
@@ -36,7 +36,7 @@ interface SighStaking {
 // ##############  TOKEN SWAP FUNCTION   ###############
 // ##################################################### 
 
-    function swapTokensUsingOxAPI( address allowanceTarget, address payable to, bytes memory callDataHex, address token_bought, address token_sold, uint sellAmount ) external payable returns (bool);
+    function swapTokensUsingOxAPI( address allowanceTarget, address payable to, bytes calldata callDataHex, address token_bought, address token_sold, uint sellAmount ) external payable returns (bool);
 
 // ########################################################################################## 
 // ##############  CONFIGURATION FUNCTIONS (SIGH FINANCE CONFIGURATOR ONLY)   ###############
@@ -56,7 +56,7 @@ interface SighStaking {
 // ##############  VIEW FUNCTIONS   ###############
 // ################################################## 
 
-    function getInstrumentsSupported() external view returns (address[]);
+    function getInstrumentsSupported() external view returns (address[] memory);
     function isInstrumentSupported(address instrument) external view returns (bool);
     function getDistributionSpeed(address instrument) external view returns (uint);
     function getInstrumentState(address instrumentAddress) external view returns(string memory, uint, uint,uint,uint ) ;

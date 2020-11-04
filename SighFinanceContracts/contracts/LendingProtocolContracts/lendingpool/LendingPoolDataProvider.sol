@@ -21,7 +21,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
     using SafeMath for uint256;
     using WadRayMath for uint256;
 
-    LendingPoolCore public core;
+    ILendingPoolCore public core;
     GlobalAddressesProvider public addressesProvider;
 
     //specifies the health factor threshold at which the user position is liquidated. 1e18 by default, if the health factor drops below 1e18, the loan can be liquidated.
@@ -34,7 +34,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
 
     function initialize(GlobalAddressesProvider _addressesProvider) public initializer {       // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
         addressesProvider = _addressesProvider;
-        core = LendingPoolCore(_addressesProvider.getLendingPoolCore());
+        core = ILendingPoolCore(_addressesProvider.getLendingPoolCore());
     }
 
 // #############################################################################################################################
@@ -268,7 +268,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
             bool usageAsCollateralEnabled
         )
     {
-        currentITokenBalance = IToken(core.getInstrumentITokenAddress(_instrument)).balanceOf(_user);
+        currentITokenBalance = ITokenInterface(core.getInstrumentITokenAddress(_instrument)).balanceOf(_user);
         CoreLibrary.InterestRateMode mode = core.getUserCurrentBorrowRateMode(_instrument, _user);
         (principalBorrowBalance, currentBorrowBalance, ) = core.getUserBorrowBalances(  _instrument, _user  );
 

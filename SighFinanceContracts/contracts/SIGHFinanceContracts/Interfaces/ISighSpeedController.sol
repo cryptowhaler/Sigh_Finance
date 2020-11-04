@@ -36,7 +36,7 @@ interface ISighSpeedController {
 
   function getSIGHBalance() external view returns (uint);
   function getSighAddress() external view returns (address);
-  function getSupportedProtocols() external view returns (address[]);  
+  function getSupportedProtocols() external view returns (address[] memory);  
   function isThisProtocolSupported(address protocolAddress) external view returns (bool);
   function getSupportedProtocolState(address protocolAddress) external view returns (bool isSupported,
                                                                                     uint distributionSpeed,

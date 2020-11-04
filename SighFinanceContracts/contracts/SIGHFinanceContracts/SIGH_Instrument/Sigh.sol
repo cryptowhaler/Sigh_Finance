@@ -162,7 +162,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
 
         uint currentSupply = totalSupply();
         uint256 newCoins = currentSupply.div(_eras[Current_Era].divisibilityFactor);                // Calculate the number of new tokens to be minted.
-        mintSnapshot currentMintSnapshot = mintSnapshot({ cycle:Current_Cycle, era:Current_Era, mintedAmount:newCoins, newTotalSupply:totalSupply(), minter: msg.sender, timestamp: now, blockNumber: block.number });
+        mintSnapshot storage currentMintSnapshot = mintSnapshot({ cycle:Current_Cycle, era:Current_Era, mintedAmount:newCoins, newTotalSupply:totalSupply(), minter: msg.sender, timestamp: now, blockNumber: block.number });
 
         if (newCoins > prize_amount) {
             newCoins = newCoins.sub(prize_amount);
@@ -186,6 +186,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
         return deltaBlocks;
     }
 
+    event eraCalc(uint C_Era_sub, uint _newEra );
     function _CalculateCurrentEra() private view returns (uint256) {
 
         if (Current_Cycle <= 7 && Current_Cycle >= 0 ) {

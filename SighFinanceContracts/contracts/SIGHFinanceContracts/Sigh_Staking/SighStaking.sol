@@ -238,7 +238,7 @@ contract SighStaking is VersionedInitializable {
 // ##############  FUNCTION RELATED TO INSTRUMENT TRANSFER   ###############
 // ################################################################################
 
-    function claimAllAccumulatedInstrumentsForUsers( address[] stakingAddresses ) external {
+    function claimAllAccumulatedInstrumentsForUsers( address[] calldata stakingAddresses ) external {
         for (int i=0;i<stakingAddresses.length;i++) {
             transferAllAccumulatedRewardsInternal(msg.sender);
         }
@@ -273,7 +273,7 @@ contract SighStaking is VersionedInitializable {
 // ##############  TOKEN SWAP FUNCTION   ###############
 // ##################################################### 
 
-    function swapTokensUsingOxAPI( address allowanceTarget, address payable to, bytes memory callDataHex, address token_bought, address token_sold, uint sellAmount ) external payable onlySIGHFinanceManager returns (bool) {
+    function swapTokensUsingOxAPI( address allowanceTarget, address payable to, bytes calldata callDataHex, address token_bought, address token_sold, uint sellAmount ) external payable onlySIGHFinanceManager returns (bool) {
 
         IERC20 bought_token;
         bought_token = IERC20(token_bought);
@@ -369,7 +369,7 @@ contract SighStaking is VersionedInitializable {
 // ##############  VIEW FUNCTIONS   ###############
 // ################################################## 
 
-    function getInstrumentsSupported() external view returns (address[]) {
+    function getInstrumentsSupported() external view returns (address[] memory) {
         return instrumentsRewarded;
     }
 

@@ -3,7 +3,7 @@ pragma solidity ^0.5.0;
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 
-import "../Configuration/GlobalAddressesProvider.sol";
+import "../Configuration/IGlobalAddressesProvider.sol";
 import "./interfaces/ILendingPool.sol";
 import "./interfaces/ILendingPoolDataProvider.sol";
 import "./interfaces/ILendingPoolCore.sol";
@@ -34,11 +34,11 @@ contract IToken is ERC20, ERC20Detailed {
 
     address public underlyingInstrumentAddress;
 
-    GlobalAddressesProvider private addressesProvider;     // Only used in Constructor()
-    LendingPoolCore private core;
-    LendingPool private pool;
-    LendingPoolDataProvider private dataProvider;
-    SIGHDistributionHandler public sighDistributionHandlerContract; // SIGH DISTRIBUTION HANDLER - ADDED BY SIGH FINANCE
+    IGlobalAddressesProvider private addressesProvider;     // Only used in Constructor()
+    ILendingPoolCore private core;
+    ILendingPool private pool;
+    ILendingPoolDataProvider private dataProvider;
+    ISighDistributionHandler public sighDistributionHandlerContract; // SIGH DISTRIBUTION HANDLER - ADDED BY SIGH FINANCE
     
     mapping (address => uint256) private userIndexes;                       // index values. Taken from core lending pool contract
     mapping (address => address) private interestRedirectionAddresses;      // Address to which the interest stream is being redirected
@@ -154,13 +154,13 @@ contract IToken is ERC20, ERC20Detailed {
 // ######     contract address, LendingPool contract address, and the LendingPoolDataProvider contract address and set them.    ###################
 // ################################################################################################################################################
 
-   constructor( GlobalAddressesProvider _addressesProvider,    address _underlyingAsset, uint8 _underlyingAssetDecimals, string memory _name, string memory _symbol) public ERC20Detailed(_name, _symbol, _underlyingAssetDecimals) {
+   constructor( address _addressesProvider,    address _underlyingAsset, uint8 _underlyingAssetDecimals, string memory _name, string memory _symbol) public ERC20Detailed(_name, _symbol, _underlyingAssetDecimals) {
 
-        addressesProvider = _addressesProvider;
-        core = LendingPoolCore(addressesProvider.getLendingPoolCore());
-        pool = LendingPool(addressesProvider.getLendingPool());
-        dataProvider = LendingPoolDataProvider(addressesProvider.getLendingPoolDataProvider());
-        sighDistributionHandlerContract = SIGHDistributionHandler(addressesProvider.getSIGHMechanismHandler());
+        addressesProvider = IGlobalAddressesProvider(_addressesProvider);
+        core = ILendingPoolCore(addressesProvider.getLendingPoolCore());
+        pool = ILendingPool(addressesProvider.getLendingPool());
+        dataProvider = ILendingPoolDataProvider(addressesProvider.getLendingPoolDataProvider());
+        sighDistributionHandlerContract = ISighDistributionHandler(addressesProvider.getSIGHMechanismHandler());
         underlyingInstrumentAddress = _underlyingAsset;
     }
 
@@ -572,7 +572,7 @@ contract IToken is ERC20, ERC20Detailed {
         claimSighInternal(msg.sender);
     }
 
-    function claimSIGH(address[] memory holders ) external {        
+    function claimSIGH(address[] calldata holders ) external {        
         for (uint i = 0; i < holders.length; i++) {
             claimSighInternal(holders[i]);
         }
@@ -586,11 +586,14 @@ contract IToken is ERC20, ERC20Detailed {
         }
     } 
 
+    event distributeSupplier_SIGH_test3(address supplier, uint supplyIndex_mantissa, uint supplierIndex_mantissa );
+    event distributeSupplier_SIGH_test4(uint SupplierIndexes_,uint supplierTokens,uint deltaIndex_mantissa,uint supplierSighDelta );
+
     // Supply Index tracks the SIGH Accured per Instrument. Supplier Index tracks the Sigh Accured by the Supplier per Instrument
     // Delta Index = Supply Index - Supplier Index
     // SIGH Accured by Supplier = Supplier's Instrument Balance * Delta Index
     function accure_Supplier_SIGH( address supplier ) internal {
-        supplyIndex = sighDistributionHandlerContract.getInstrumentSupplyIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHDistributionHandler Contract
+        uint supplyIndex = sighDistributionHandlerContract.getInstrumentSupplyIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHDistributionHandler Contract
         require(supplyIndex > 0, "SIGH Distribution Handler returned invalid supply Index for the instrument");
 
         Double memory supplyIndex_ = Double({mantissa: supplyIndex});                        // Instrument Index
@@ -617,15 +620,17 @@ contract IToken is ERC20, ERC20Detailed {
     /**
      * @notice Calculate SIGH accrued by a borrower and possibly transfer it to them
      * @dev Borrowers will not begin to accrue until after the first interaction with the protocol.
-     * @param currentInstrument The market in which the borrower is interacting
      * @param borrower The address of the borrower to distribute Gsigh to
      */
     function accure_Borrower_SIGH(address borrower) external onlyLendingPoolCore {
         accure_Borrower_SIGH_Internal(borrower);
     }
 
+    event distributeBorrower_SIGH_test3(address borrower, uint borrowIndex_mantissa, uint borrowerIndex_mantissa );
+    event distributeBorrower_SIGH_test4(uint BorrowerIndexes, uint deltaIndex,uint marketBorrowIndex, uint borrowBalance,uint borrowerAmount, uint borrowerSIGHDelta );
+
     function accure_Borrower_SIGH_Internal(address borrower) internal {
-        borrowIndex = sighDistributionHandlerContract.getInstrumentBorrowIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHDistributionHandler Contract
+        uint borrowIndex = sighDistributionHandlerContract.getInstrumentBorrowIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHDistributionHandler Contract
         require(borrowIndex > 0, "SIGH Distribution Handler returned invalid borrow Index for the instrument");
         
         Double memory borrowIndex_ = Double({mantissa: borrowIndex});                        // Instrument Index
@@ -642,7 +647,7 @@ contract IToken is ERC20, ERC20Detailed {
 
 
         // if (deltaIndex.mantissa > 0) {
-            Exp memory marketBorrowIndex = Exp({mantissa: core.getInstrumentVariableBorrowsCumulativeIndex( currentInstrument )});  // Getting index from LendingPool Core
+            Exp memory marketBorrowIndex = Exp({mantissa: core.getInstrumentVariableBorrowsCumulativeIndex( underlyingInstrumentAddress )});  // Getting index from LendingPool Core
             uint borrowBalance;
             ( , borrowBalance , , ) = core.getUserBasicInstrumentData(underlyingInstrumentAddress, borrower);                                 // Getting Borrow Balance of the User from LendingPool Core 
             uint borrowerAmount = div_(borrowBalance, marketBorrowIndex);
@@ -653,6 +658,8 @@ contract IToken is ERC20, ERC20Detailed {
             accureSigh( borrower,borrowerSIGHDelta );            // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the BORROWER or the address to which SIGH is being redirected to 
         // }
     }
+
+    event SighAccured(address user, address sighAccuredTo, uint AccuredSighBalance );
 
     /**
      * @notice Accured SIGH amount is added to the ACCURED_SIGH_BALANCES of the Supplier/Borrower or the address to which SIGH is being redirected to.
@@ -738,6 +745,7 @@ contract IToken is ERC20, ERC20Detailed {
         require(_to != currentRedirectionAddress, "Sigh is already redirected to the provided account");
         
         uint userSupplyBalance = super.balanceOf(_from);                                                        // SUPPLIED BALANCE
+        uint borrowBalance;
         ( , borrowBalance , , ) = core.getUserBasicInstrumentData(underlyingInstrumentAddress, _from);          // DEPOSITED BALANCE
         require(userSupplyBalance > 0 || borrowBalance > 0 , "Sigh stream can only be redirected if there is a valid Supply or Borrow balance");
 
@@ -828,6 +836,7 @@ contract IToken is ERC20, ERC20Detailed {
     }
 
     function div_(uint a, Exp memory b) pure internal returns (uint) {
+        uint expScale = 1e18;
         return div_(mul_(a, expScale), b.mantissa);
     }
 

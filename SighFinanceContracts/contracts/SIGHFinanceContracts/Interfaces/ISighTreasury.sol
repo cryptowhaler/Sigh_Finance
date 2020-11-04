@@ -16,7 +16,7 @@ interface ISighTreasury {
 // ###########   THE HEDGE FUND MECHANISM - Only Sigh Finance Manager can call this function ############
 // ######################################################################################################
 
-    function swapTokensUsingOxAPI( address allowanceTarget, address payable to, bytes memory callDataHex, address token_bought, address token_sold, uint sellAmount ) external payable returns (bool);
+    function swapTokensUsingOxAPI( address allowanceTarget, address payable to, bytes calldata callDataHex, address token_bought, address token_sold, uint sellAmount ) external payable returns (bool);
 
 // ################################################################################################################ 
 // ###########   BURN SIGH TOKENS  ################################################################################
