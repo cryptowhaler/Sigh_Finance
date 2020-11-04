@@ -22,12 +22,15 @@ contract SighSpeedController is ISighSpeedController {
   bool public isDripAllowed = false;  
   uint public lastDripBlockNumber;    
     
-  address[] private storedSupportedProtocols; 
-  mapping (address => bool) supportedProtocols;
-  mapping (address => uint) distributionSpeeds;
+  struct protocolState {
+    bool isSupported;
+    uint distributionSpeed;
+    uint totalDrippedAmount;
+    uint recentlyDrippedAmount;
+  }
 
-  mapping (address => uint) public totalDrippedAmount; 
-  mapping (address => uint) public recentlyDrippedAmount;
+  mapping (address => protocolState) private supportedProtocols;
+  address[] private storedSupportedProtocols; 
 
   event DistributionInitialized(uint blockNumber);
 
@@ -37,9 +40,6 @@ contract SighSpeedController is ISighSpeedController {
   event DistributionSpeedChanged(address protocolAddress, uint prevSpeed , uint newSpeed );  
   event Dripped(address protocolAddress, uint currentBalance, uint AmountDripped, uint totalAmountDripped ); 
 
-  event pendingAdminUpdated(address prevPendingAdmin, address pendingAdmin );
-  event newAdminAssigned(address prevAdmin, address admin);
-
 // ########################
 // ####### MODIFIER #######
 // ########################
@@ -48,7 +48,7 @@ contract SighSpeedController is ISighSpeedController {
     * @dev only the SIGH Finance Manager can call functions affected by this modifier
     **/
     modifier onlySIGHFinanceManager {
-        require( addressesProvider.getSIGHFinanceManager() == msg.sender, "The caller must be the SIGH Mechanism Manager" );
+        require( addressesProvider.getSIGHFinanceManager() == msg.sender, "The caller must be the SIGH Finance Manager" );
         _;
     }
 
@@ -99,28 +99,33 @@ contract SighSpeedController is ISighSpeedController {
 // ############################################################################################################
 
   function supportNewProtocol( address newProtocolAddress, uint sighSpeed ) external onlySighFinanceConfigurator returns (bool)  {
-    require (!supportedProtocols[newProtocolAddress], 'This Protocol is already supported by the Sigh Speed Controller');
+    require (!supportedProtocols[newProtocolAddress].isSupported, 'This Protocol is already supported by the Sigh Speed Controller');
 
     if (isDripAllowed) {
         dripInternal();
     }
     
-    storedSupportedProtocols.push(newProtocolAddress);
+    storedSupportedProtocols.push(newProtocolAddress);  // ADDED TO THE LIST
     
-    supportedProtocols[newProtocolAddress] = true;
-    distributionSpeeds[newProtocolAddress] = sighSpeed;
-    totalDrippedAmount[newProtocolAddress] = 0;
-    recentlyDrippedAmount[newProtocolAddress] = 0;
+    supportedProtocols[newProtocolAddress] = protocolState({ isSupported: true,
+                                                           distributionSpeed: sighSpeed,
+                                                           totalDrippedAmount: uint(0),
+                                                           recentlyDrippedAmount: uint(0)
+                                                           });
     
-    require (supportedProtocols[newProtocolAddress], 'Error occured when adding the new protocol address to the supported protocols list.');
-    require (distributionSpeeds[newProtocolAddress] == sighSpeed, 'SIGH Speed for the new protocl was not initialized properly.');
+    require (supportedProtocols[newProtocolAddress]isSupported, 'Error occured when adding the new protocol address to the supported protocols list.');
+    require (supportedProtocols[newProtocolAddress].distributionSpeed == sighSpeed, 'SIGH Speed for the new protocol was not initialized properly.');
     
-    emit NewProtocolSupported(newProtocolAddress, sighSpeed);
+    emit NewProtocolSupported(newProtocolAddress, supportedProtocols[newProtocolAddress].distributionSpeed);
   }
   
-//   ######### WE DO NOT DRIP WHEN REMOVING A PROTOCOL  ######### 
+
   function removeSupportedProtocol(address protocolAddress_ ) external onlySighFinanceConfigurator returns (bool) {
-    require(supportedProtocols[protocolAddress_],'The Protocol is already not Supported by the Sigh Speed Controller' );
+    require(supportedProtocols[protocolAddress_].isSupported,'The Protocol is already not Supported by the Sigh Speed Controller' );
+    
+    if (isDripAllowed) {
+        dripInternal();
+    }
     
     uint index = 0;
     uint len = storedSupportedProtocols.length;
@@ -137,13 +142,12 @@ contract SighSpeedController is ISighSpeedController {
     uint newLength = len - 1;
     require(storedSupportedProtocols.length == newLength, 'The length of the list was not properly decremented.' );
     
-    supportedProtocols[protocolAddress_] = false;
-    distributionSpeeds[protocolAddress_] = 0;
-
+    supportedProtocols[protocolAddress_].isSupported = false;
+    supportedProtocols[protocolAddress_].distributionSpeed = 0;
     require (supportedProtocols[protocolAddress_] == false, 'Error occured when removing the protocol.');
-    require (distributionSpeeds[protocolAddress_] == 0, 'SIGH Speed was not properly assigned to 0.');
+    require (supportedProtocols[protocolAddress_] == 0, 'SIGH Speed was not properly assigned to 0.');
 
-    emit ProtocolRemoved( protocolAddress_,  totalDrippedAmount[protocolAddress_] );
+    emit ProtocolRemoved( protocolAddress_,  supportedProtocols[current_protocol].totalDrippedAmount );
   }
   
 // ######################################################################################
@@ -151,14 +155,14 @@ contract SighSpeedController is ISighSpeedController {
 // ######################################################################################
 
   function changeProtocolSIGHSpeed (address targetAddress, uint newSpeed_) external onlySighFinanceConfigurator returns (bool) {
-    require(supportedProtocols[targetAddress],'The Protocol is not Supported by the Sigh Speed Controller' );
+    require(supportedProtocols[targetAddress].isSupported,'The Protocol is not Supported by the Sigh Speed Controller' );
     if (isDripAllowed) {
         dripInternal();
     }
-    uint prevSpeed = distributionSpeeds[targetAddress];
-    distributionSpeeds[targetAddress] = newSpeed_;
-    require(distributionSpeeds[targetAddress] == newSpeed_, " Protocol's SIGH speed was not properly updated");
-    emit DistributionSpeedChanged(targetAddress, prevSpeed , distributionSpeeds[targetAddress]);
+    uint prevSpeed = supportedProtocols[targetAddress].distributionSpeed;
+    supportedProtocols[targetAddress].distributionSpeed = newSpeed_;
+    require(supportedProtocols[targetAddress].distributionSpeed == newSpeed_, " Protocol's SIGH speed was not properly updated");
+    emit DistributionSpeedChanged(targetAddress, prevSpeed , supportedProtocols[targetAddress].distributionSpeed );
     return true;
   }
 
@@ -184,57 +188,32 @@ contract SighSpeedController is ISighSpeedController {
     uint length = protocols.length;
     
     if (length > 0) {
-        
         for ( uint i=0; i < length; i++) {
-            
             address current_protocol = protocols[i];
             
-            if ( supportedProtocols[ current_protocol ] ) {
+            if ( supportedProtocols[ current_protocol ].isSupported ) {
                 
                 uint reservoirBalance_ = token_.balanceOf(address(this)); 
                 uint blockNumber_ = block.number;
-                uint deltaDrip_ = mul(distributionSpeeds[ current_protocol ], blockNumber_ - lastDripBlockNumber, "dripTotal overflow");
+                uint deltaBlocks = sub(blockNumber_,lastDripBlockNumber,"Delta Blocks gave error");
+                uint deltaDrip_ = mul(supportedProtocols[ current_protocol ].distributionSpeed, deltaBlocks , "dripTotal overflow");
                 uint toDrip_ = min(reservoirBalance_, deltaDrip_);
             
                 require(reservoirBalance_ != 0, 'Protocol Transfer: The reservoir currently does not have any SIGH tokens' );
                 require(token_.transfer(current_protocol, toDrip_), 'Protocol Transfer: The transfer did not complete.' );
                 
-                uint prevDrippedAmount = totalDrippedAmount[current_protocol];
-                totalDrippedAmount[current_protocol] = add(prevDrippedAmount,toDrip_,"Overflow");
-                recentlyDrippedAmount[current_protocol] = toDrip_;
+                uint prevDrippedAmount = supportedProtocols[current_protocol].totalDrippedAmount;
+                supportedProtocols[current_protocol].totalDrippedAmount = add(prevDrippedAmount,toDrip_,"Overflow");
+                supportedProtocols[current_protocol].recentlyDrippedAmount = toDrip_;
                 reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
             
-                emit Dripped( current_protocol, reservoirBalance_, toDrip_ , totalDrippedAmount[current_protocol] ); 
+                emit Dripped( current_protocol, reservoirBalance_, toDrip_ , supportedProtocols[current_protocol].totalDrippedAmount ); 
             }
         }
     }
     lastDripBlockNumber = block.number;
   }
 
-
-// ########################################################
-// ###########   FUNCTIONS TO CHANGE THE ADMIN   ##########
-// ########################################################
-
-//  function changeAdmin(address newAdmin) external returns (bool) {
-//     require(admin == msg.sender,"Stored Admin can only be changed by the current Admin");
-//     address prevPendingAdmin = pendingAdmin;
-//     pendingAdmin = newAdmin;
-//     emit pendingAdminUpdated(prevPendingAdmin,pendingAdmin );
-//     return true;
-//  }
-
-//  function acceptAdmin() external returns (bool) {
-//     require(pendingAdmin == msg.sender,"Only the pending admin can call this function");
-//     address prevAdmin = admin;
-//     admin = pendingAdmin;
-//     pendingAdmin = address(0);
-//     require (admin == pendingAdmin,'Admin not assigned properly');
-    
-//     emit newAdminAssigned(prevAdmin, admin);
-     
-//  } 
- 
 
 // ###############################################################
 // ###########   EXTERNAL VIEW functions TO GET STATE   ##########
@@ -255,19 +234,27 @@ contract SighSpeedController is ISighSpeedController {
   }
 
   function isThisProtocolSupported(address protocolAddress) external view returns (bool) {
-    return supportedProtocols[protocolAddress];
+    return supportedProtocols[protocolAddress].isSupported;
+  }
+
+  function getSupportedProtocolState(address protocolAddress) external view returns (bool isSupported,uint distributionSpeed,uint totalDrippedAmount,uint recentlyDrippedAmount ) {
+  return (supportedProtocols[protocolAddress].isSupported,
+          supportedProtocols[protocolAddress].distributionSpeed,
+          supportedProtocols[protocolAddress].totalDrippedAmount,
+          supportedProtocols[protocolAddress].recentlyDrippedAmount  );
+  
   }
 
   function getTotalAmountDistributedToProtocol(address protocolAddress) external view returns (uint) {
-    return totalDrippedAmount[protocolAddress];
+    return supportedProtocols[protocolAddress].totalDrippedAmount;
   }
 
   function getRecentAmountDistributedToProtocol(address protocolAddress) external view returns (uint) {
-    return recentlyDrippedAmount[protocolAddress];
+    return supportedProtocols.[protocolAddress].recentlyDrippedAmount;
   }
   
   function getSIGHSpeedForProtocol(address protocolAddress) external view returns (uint) {
-      return distributionSpeeds[protocolAddress];
+      return supportedProtocols.[protocolAddress].distributionSpeed;
   }
   
   function totalProtocolsSupported() external view returns (uint) {

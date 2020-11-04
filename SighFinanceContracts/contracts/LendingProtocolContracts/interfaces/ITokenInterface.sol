@@ -8,7 +8,10 @@ pragma solidity ^0.5.0;
  */
 interface ITokenInterface {
 
-    // ######### ERC20 FUNCTIONS  #########
+// #############################
+// #####  ERC20 FUNCTIONS  #####
+// #############################
+
     function transfer(address recipient, uint256 amount) external returns (bool);
     function allowance(address owner, address spender) external view returns (uint256);
     function approve(address spender, uint256 amount) external returns (bool);
@@ -19,30 +22,58 @@ interface ITokenInterface {
     function totalSupply() external view returns (uint256);
     function balanceOf(address who) external view returns (uint256);    
 
-    // #########  ITOKEN FUNCTIONS  #########
-    // function isTransferAllowed(address _user, uint256 _amount) public view returns (bool);
+// ################################################
+// #####  ITOKEN (LENDING RELATED) FUNCTIONS  #####
+// ################################################
+
     function mintOnDeposit(address _account, uint256 _amount) external;
     function redeem(uint256 _amount) external;
     function burnOnLiquidation(address _account, uint256 _value) external;
     function transferOnLiquidation(address _from, address _to, uint256 _value) external;
 
-
-// ###########################################################################
-// ######  REDIRECTING INTEREST STREAMS: FUNCTIONALITY ########################################
-// ######  1. redirectInterestStream() : User himself redirects his interest stream.
-// ######  2. allowInterestRedirectionTo() : User gives the permission of redirecting the interest stream to another account
-// ######  3. redirectInterestStreamOf() : When account given the permission to redirect interest stream (by the user) redirects the stream.
-// ###########################################################################
+// #################################################################################################################################################
+// ######  REDIRECTING INTEREST STREAMS: FUNCTIONALITY #############################################################################################
+// ######  1. redirectInterestStream() : User himself redirects his interest stream.  ##############################################################
+// ######  2. allowInterestRedirectionTo() : User gives the permission of redirecting the interest stream to another account  ######################
+// ######  3. redirectInterestStreamOf() : When account given the permission to redirect interest stream (by the user) redirects the stream.  ######
+// #################################################################################################################################################
 
     function redirectInterestStream(address _to) external;
     function allowInterestRedirectionTo(address _to) external;
     function redirectInterestStreamOf(address _from, address _to) external;
 
-    // #########  VIEW FUNCTIONS  #########
-    // function balanceOf(address _user) public view returns(uint256);
+// ##############################################
+// #####  VIEW (LENDING RELATED) FUNCTIONS  #####
+// ##############################################
+
     function principalBalanceOf(address _user) external view returns(uint256);
-    // function totalSupply() public view returns(uint256);
     function getUserIndex(address _user) external view returns(uint256);
     function getInterestRedirectionAddress(address _user) external view returns(address);
     function getRedirectedBalance(address _user) external view returns(uint256);
+
+// ####################################
+// #####  SIGH RELATED FUNCTIONS  #####
+// ####################################
+
+    function claimMySIGH() external;
+    function claimSIGH(address[] memory holders ) external;    
+    function accure_Borrower_SIGH(address borrower) external;
+
+// ##########################################
+// ######  SIGH RELATED VIEW FUNCTIONS ######
+// ##########################################
+
+    function getSighAccured() external view returns (uint);
+    function getSighAccuredForAccount(address account) external view returns (uint);
+
+    function getSighStreamRedirectedTo() external view returns (address);
+    function getSighStreamRedirectedTo(address account) external view returns (address);
+
+    function getSighStreamAllowances() external view returns (address);
+    function getSighStreamAllowances(address account) external view returns (address);
+
+    function getSupplierIndexes(address account) external view returns (uint);     
+    function getBorrowerIndexes(address account) external view returns (uint);
+
+
 }

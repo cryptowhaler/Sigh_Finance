@@ -30,15 +30,6 @@ interface ISighSpeedController {
 
   function drip() external returns (uint);
 
-
-// ########################################################
-// ###########   FUNCTIONS TO CHANGE THE ADMIN   ##########
-// ########################################################
-
-//  function changeAdmin(address newAdmin) external returns (bool);
-//  function acceptAdmin() external returns (bool);
- 
-
 // ###############################################################
 // ###########   EXTERNAL VIEW functions TO GET STATE   ##########
 // ###############################################################
@@ -47,6 +38,10 @@ interface ISighSpeedController {
   function getSighAddress() external view returns (address);
   function getSupportedProtocols() external view returns (address[]);  
   function isThisProtocolSupported(address protocolAddress) external view returns (bool);
+  function getSupportedProtocolState(address protocolAddress) external view returns (bool isSupported,
+                                                                                    uint distributionSpeed,
+                                                                                    uint totalDrippedAmount,
+                                                                                    uint recentlyDrippedAmount );  
   function getTotalAmountDistributedToProtocol(address protocolAddress) external view returns (uint);
   function getRecentAmountDistributedToProtocol(address protocolAddress) external view returns (uint);
   function getSIGHSpeedForProtocol(address protocolAddress) external view returns (uint);

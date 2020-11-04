@@ -3,10 +3,11 @@ pragma solidity ^0.5.0;
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 
-import "./interfaces/GlobalAddressesProvider.sol";
+import "../Configuration/GlobalAddressesProvider.sol";
 import "./lendingpool/LendingPool.sol";
 import "./lendingpool/LendingPoolDataProvider.sol";
 import "./lendingpool/LendingPoolCore.sol";
+import "../SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol";
 
 import "./libraries/WadRayMath.sol";
 
@@ -37,19 +38,19 @@ contract IToken is ERC20, ERC20Detailed {
     LendingPoolCore private core;
     LendingPool private pool;
     LendingPoolDataProvider private dataProvider;
-    SIGHDistributionHandler sighDistributionHandlerContract; // SIGH DISTRIBUTION HANDLER - ADDED BY SIGH FINANCE
+    SIGHDistributionHandler public sighDistributionHandlerContract; // SIGH DISTRIBUTION HANDLER - ADDED BY SIGH FINANCE
     
     mapping (address => uint256) private userIndexes;                       // index values. Taken from core lending pool contract
     mapping (address => address) private interestRedirectionAddresses;      // Address to which the interest stream is being redirected
     mapping (address => uint256) private redirectedBalances;
     mapping (address => address) private interestRedirectionAllowances;     // Address allowed to perform interest redirection by the user
 
-    uint public sigh_Transfer_Threshold = 1e18;         // SIGH Transferred when accured >= 5 SIGH (in ETH)
-    mapping (address => uint256) private AccuredSighBalances;
-    mapping (address => uint256) private SupplierIndexes;
-    mapping (address => uint256) private BorrowerIndexes;
-    mapping (address => address) private sighRedirectionAddresses;     
-    mapping (address => address) private sighRedirectionAllowances;    
+    uint public sigh_Transfer_Threshold = 1e18;                         // SIGH Transferred when accured >= 1 SIGH (in ETH)
+    mapping (address => uint256) private AccuredSighBalances;           // SIGH Collected - ADDED BY SIGH FINANCE
+    mapping (address => uint256) private SupplierIndexes;               // SupplierIndex - ADDED BY SIGH FINANCE
+    mapping (address => uint256) private BorrowerIndexes;               // BorrowerIndex - ADDED BY SIGH FINANCE
+    mapping (address => address) private sighRedirectionAddresses;      // Redirection Address - ADDED BY SIGH FINANCE
+    mapping (address => address) private sighRedirectionAllowances;    // Allowance - ADDED BY SIGH FINANCE
 
 
 // ########################
@@ -597,13 +598,15 @@ contract IToken is ERC20, ERC20Detailed {
         SupplierIndexes[supplier] = supplyIndex_.mantissa;                                   // Supplier Index is UPDATED
 
         if (supplierIndex.mantissa == 0 && supplyIndex_.mantissa > 0) {
-            supplierIndex.mantissa = sighInitialIndex;
+            supplierIndex.mantissa = supplyIndex_.mantissa; // sighInitialIndex;
         }
 
         emit distributeSupplier_SIGH_test3(supplier, supplyIndex_.mantissa, supplierIndex.mantissa );
 
         uint supplierTokens = super.balanceOf(supplier);                                                // Current Supplier IToken (1:1 mapping with instrument) Balance
         Double memory deltaIndex = sub_(supplyIndex_, supplierIndex);                                // , 'Distribute Supplier SIGH : supplyIndex Subtraction Underflow'
+
+        emit distributeSupplier_SIGH_test4(SupplierIndexes[supplier], supplierTokens, deltaIndex.mantissa, mul_(supplierTokens, deltaIndex) );
 
         if (deltaIndex.mantissa > 0) {
             uint supplierSighDelta = mul_(supplierTokens, deltaIndex);                                      // Supplier Delta = Balance * Double(DeltaIndex)/DoubleScale
@@ -630,21 +633,25 @@ contract IToken is ERC20, ERC20Detailed {
         BorrowerIndexes[borrower] = borrowIndex_.mantissa;                                   // Borrower Index is UPDATED
 
         if (borrowerIndex.mantissa == 0 && borrowIndex.mantissa > 0) {
-            borrowerIndex.mantissa = sighInitialIndex;
+            borrowerIndex.mantissa = borrowIndex_.mantissa; //sighInitialIndex;
         }
 
         emit distributeBorrower_SIGH_test3(borrower, borrowIndex.mantissa, borrowerIndex.mantissa );
 
         Double memory deltaIndex = sub_(borrowIndex_, borrowerIndex);                                                         // Sigh accured per instrument
 
-        if (deltaIndex.mantissa > 0) {
+
+        // if (deltaIndex.mantissa > 0) {
             Exp memory marketBorrowIndex = Exp({mantissa: core.getInstrumentVariableBorrowsCumulativeIndex( currentInstrument )});  // Getting index from LendingPool Core
             uint borrowBalance;
             ( , borrowBalance , , ) = core.getUserBasicInstrumentData(underlyingInstrumentAddress, borrower);                                 // Getting Borrow Balance of the User from LendingPool Core 
             uint borrowerAmount = div_(borrowBalance, marketBorrowIndex);
             uint borrowerSIGHDelta = mul_(borrowerAmount, deltaIndex);        // Additional Sigh Accured by the Borrower
+
+            emit distributeBorrower_SIGH_test4(BorrowerIndexes[borrower], deltaIndex, marketBorrowIndex, borrowBalance, borrowerAmount, borrowerSIGHDelta );
+
             accureSigh( borrower,borrowerSIGHDelta );            // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the BORROWER or the address to which SIGH is being redirected to 
-        }
+        // }
     }
 
     /**
@@ -738,6 +745,11 @@ contract IToken is ERC20, ERC20Detailed {
             sighRedirectionAddresses[_from] = address(0);
             emit SighStreamRedirected( _from, address(0), block.number);
             return;
+        }
+
+        if (currentRedirectionAddress != address(0)) {      // If the SIGH stream is currently redirected, we transfer the amount to that address before changing it
+            accure_Supplier_SIGH(_from);
+            accure_Borrower_SIGH_Internal(_from);
         }
         
         sighRedirectionAddresses[_from] = _to;                                      // set the redirection address to the new recipient
