@@ -7,7 +7,7 @@ import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 // import "../../configuration/IGlobalAddressesProvider.sol";
 
 import "../interfaces/ILendingPoolCore.sol";
-import "../interfaces/IPriceOracleGetter.sol";
+import "../interfaces/IPriceOracle.sol";
 
 import "../IToken.sol";
 
@@ -330,26 +330,6 @@ contract LendingPoolConfigurator is VersionedInitializable {
         core.refreshConfiguration();
     }
 
-    // ############################################################################
-    // ###############  ADDING NEW SOURCE ETC TO THE PRICE ORACLE  ################
-    // ############################################################################
-
-    function supportNewAsset(address asset_, address source_) external onlyLendingPoolManager {
-        IPriceOracleGetter priceProvider = IPriceOracleGetter(globalAddressesProvider.getPriceOracle());
-        priceProvider.supportNewAsset(asset_,source_);
-    }
-
-    function setAssetSources(address[] calldata _assets, address[] calldata _sources) external onlyLendingPoolManager {
-        IPriceOracleGetter priceProvider = IPriceOracleGetter(globalAddressesProvider.getPriceOracle());
-        priceProvider.setAssetSources(_assets,_sources);
-    }
-
-
-    function setFallbackOracle(address _fallbackOracle) external onlyLendingPoolManager {
-        IPriceOracleGetter priceProvider = IPriceOracleGetter(globalAddressesProvider.getPriceOracle());
-        priceProvider.setFallbackOracle(_fallbackOracle);
-    }
-
     // ##########################################################################################
     // ###############  LENDING POOL CONFIGURATOR'S CONTROL OVER SIGH MECHANICS  ################
     // ##########################################################################################
@@ -360,6 +340,26 @@ contract LendingPoolConfigurator is VersionedInitializable {
     function updateSIGHSpeedRatioForAnInstrument(address instrument_, uint supplierRatio) external onlyLendingPoolManager {
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );        
         sigh_distribution_mechanism.updateSIGHSpeedRatioForAnInstrument( instrument_,  supplierRatio);
+    }
+
+    // ############################################################################
+    // ###############  ADDING NEW SOURCE ETC TO THE PRICE ORACLE  ################
+    // ############################################################################
+
+    function supportNewAsset(address asset_, address source_) external onlyLendingPoolManager {
+        IPriceOracle priceProvider = IPriceOracle(globalAddressesProvider.getPriceOracle());
+        priceProvider.supportNewAsset(asset_,source_);
+    }
+
+    function setAssetSources(address[] calldata _assets, address[] calldata _sources) external onlyLendingPoolManager {
+        IPriceOracle priceProvider = IPriceOracle(globalAddressesProvider.getPriceOracle());
+        priceProvider.setAssetSources(_assets,_sources);
+    }
+
+
+    function setFallbackOracle(address _fallbackOracle) external onlyLendingPoolManager {
+        IPriceOracle priceProvider = IPriceOracle(globalAddressesProvider.getPriceOracle());
+        priceProvider.setFallbackOracle(_fallbackOracle);
     }
 
 

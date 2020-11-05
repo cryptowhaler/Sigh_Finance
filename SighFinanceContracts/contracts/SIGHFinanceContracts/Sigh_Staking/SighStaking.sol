@@ -9,6 +9,7 @@ pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
 
 import "../Math/Exponential.sol";
@@ -101,7 +102,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
 
     /// @notice Called by the proxy when setting this contract as implementation
     function initialize(  address addressesProvider_ ) public initializer {
-        addressesProvider = addressesProvider_;
+        addressesProvider = GlobalAddressesProvider(addressesProvider_);
     }
 
 
@@ -114,7 +115,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
 
         updateRewardIndexInternal();                    // UPDATES INSTRUMENT INDEX
         if (stakingBalances[msg.sender].alreadyAStaker) {
-            updateUserIndexInternal();                  // UPDATES USER INDEX
+            updateUserIndexInternal(msg.sender);                  // UPDATES USER INDEX
         }
 
         uint prevBalance = sigh_Instrument.balanceOf(address(this));
@@ -142,7 +143,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
 
         updateRewardIndexInternal();                    // UPDATES INSTRUMENT INDEX
         if (stakingBalances[msg.sender].alreadyAStaker) {
-            updateUserIndexInternal();                  // UPDATES USER INDEX
+            updateUserIndexInternal(staker);                  // UPDATES USER INDEX
         }
 
         uint prevBalance = stakingBalances[staker].stakedBalance;
@@ -167,7 +168,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
         require(stakingBalances[msg.sender].alreadyAStaker,"User doesn't have any Staked amount");
 
         updateRewardIndexInternal();          // UPDATES INSTRUMENT INDEX
-        updateUserIndexInternal();             // UPDATES USER INDEX
+        updateUserIndexInternal(msg.sender);             // UPDATES USER INDEX
 
         if ( amount > stakingBalances[msg.sender].stakedBalance ) {     // Unstake the complete amount
             amount = stakingBalances[msg.sender].stakedBalance;
@@ -206,7 +207,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
 
         uint blockNumber = block.number;
 
-        for (int i =0 ; i<instrumentsRewarded.length ; i++ ) {
+        for (uint i =0 ; i<instrumentsRewarded.length ; i++ ) {
 
             instrumentState storage currentRewardInstrument = instrumentStates[ instrumentsRewarded[i] ];
             uint deltaBlocks = sub_(blockNumber, uint( currentRewardInstrument.lastUpdatedBlock ), 'updateRewardIndex : Block Subtraction Underflow');    // Delta Blocks 
@@ -231,7 +232,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
 
     function updateUserIndexInternal(address staker) internal {
 
-        for (int i =0 ; i<instrumentsRewarded.length ; i++ ) { 
+        for (uint i =0 ; i<instrumentsRewarded.length ; i++ ) { 
 
             uint instrumentIndex = instrumentStates[instrumentsRewarded[i]].index;
             uint stakerIndex = stakingBalances[staker].instrumentIndex[instrumentsRewarded[i]];
@@ -248,7 +249,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
     }
 
     function initializeStakerStateInternal(address staker) internal {
-        for (int i=0; i < instrumentsRewarded.length ; i++) {
+        for (uint i=0; i < instrumentsRewarded.length ; i++) {
             stakingBalances[staker].instrumentIndex[ instrumentsRewarded[i] ] = instrumentStates[ instrumentsRewarded[i] ].index;
         }
         stakingBalances[staker].alreadyAStaker = true;
@@ -259,7 +260,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
 // ################################################################################
 
     function claimAllAccumulatedInstrumentsForUsers( address[] calldata stakingAddresses ) external {
-        for (int i=0;i<stakingAddresses.length;i++) {
+        for (uint i=0;i<stakingAddresses.length;i++) {
             transferAllAccumulatedRewardsInternal(msg.sender);
         }
     }
@@ -273,7 +274,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
     }
 
     function transferAllAccumulatedRewardsInternal(address staker ) internal {
-        for (int i =0 ; i<instrumentsRewarded.length ; i++ ) { 
+        for (uint i =0 ; i<instrumentsRewarded.length ; i++ ) { 
             transferAccumulatedRewardsInternal(staker, instrumentsRewarded[i] );
         }        
     }
@@ -338,7 +339,8 @@ contract SighStaking is VersionedInitializable, Exponential  {
 
         instrumentsRewarded.push(newInstrument);                // STATE UPDATE - NEW INSTRUMENT ADDED TO THE LIST OF INSTRUMENTS BEING DISTRIBUTED
         IERC20 instrumentContract = IERC20(newInstrument);
-        instrumentStates[newInstrument] = instrumentState({ name: instrumentContract.name(), 
+        ERC20Detailed instrumentContract_ = ERC20Detailed(newInstrument);
+        instrumentStates[newInstrument] = instrumentState({ name: instrumentContract_.name(), 
                                                             index: instrumentInitialIndex, 
                                                             rewardDistributionSpeed: speed, 
                                                             totalAmountRewarded: uint(0), 
@@ -407,7 +409,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
         return uint(0); 
     }
 
-    function getInstrumentState(address instrumentAddress) external view returns(string memory, uint, uint,uint,uint ) {
+    function getInstrumentState(address instrumentAddress) external view returns(string memory name, uint index, uint rewardDistributionSpeed,uint totalAmountRewarded, uint balance, uint lastUpdatedBlock) {
         // if (instrumentStates[instrumentAddress].index > 0 ) { 
             return ( instrumentStates[instrumentAddress].name, 
                     instrumentStates[instrumentAddress].index, 

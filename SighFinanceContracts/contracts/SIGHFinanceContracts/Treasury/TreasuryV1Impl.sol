@@ -48,13 +48,13 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
     event instrumentBeingDistributedChanged(address prevInstrument, address newToken, uint blockNumber);
     event DripAllowedChanged(bool prevDripAllowed , bool newDripAllowed, uint blockNumber); 
     event DripSpeedChanged(uint prevDripSpeed , uint curDripSpeed,  uint blockNumber ); 
-    event AmountDripped(address instrumentBeingDripped, uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
+    event AmountDripped(address targetAddress, address instrumentBeingDripped, uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
 
     event maxTransferAmountUpdated(uint prevmaxTransferAmount, uint newmaxTransferAmount);
-    event SIGHTransferred(address indexed TargetAddress, uint amountTransferred, uint totalAmountTransferred, uint blockNumber);
+    event SIGHTransferred(address indexed TargetAddress, uint amountTransferred, uint blockNumber);
 
-    event TokensBought( address indexed instrument_address, uint prev_balance, uint new_balance );
-    event TokensSold( address indexed instrument_address, uint prev_balance, uint new_balance );
+    event TokensBought( address indexed instrument_address, uint prev_balance, uint amount, uint new_balance );
+    event TokensSold( address indexed instrument_address, uint prev_balance, uint amount, uint new_balance );
     event TokenSwapTransactionData( bytes data );
 
     event SIGHBurnAllowedChanged(bool prevBurnAllowed , bool newBurnAllowed, uint blockNumber); 

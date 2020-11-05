@@ -9,6 +9,7 @@ pragma solidity ^0.5.16;
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
 import "../Interfaces/ISighSpeedController.sol";
+import "../../configuration/IGlobalAddressesProvider.sol";
  
 contract SighSpeedController is ISighSpeedController {
 
@@ -16,7 +17,7 @@ contract SighSpeedController is ISighSpeedController {
   IERC20 public token;
 
   address public admin;
-  address private addressesProvider;
+  IGlobalAddressesProvider private addressesProvider;
   bool private isAddressesSet = false;
 
   bool public isDripAllowed = false;  
@@ -75,8 +76,8 @@ contract SighSpeedController is ISighSpeedController {
     require(admin == msg.sender,"Dripping can only be initialized by the Admin");
     require(!isAddressesSet,"AddressProvider can only be initialized once");
     isAddressesSet = true;
-    addressesProvider = _addressesProvider;
-    require(addressesProvider == _addressesProvider, " AddressesProvider not initialized Properly ");
+    addressesProvider = IGlobalAddressesProvider(_addressesProvider);
+    require(address(addressesProvider) == _addressesProvider, " AddressesProvider not initialized Properly ");
     admin = address(0);
   }
 
@@ -144,8 +145,8 @@ contract SighSpeedController is ISighSpeedController {
     
     supportedProtocols[protocolAddress_].isSupported = false;
     supportedProtocols[protocolAddress_].distributionSpeed = 0;
-    require (supportedProtocols[protocolAddress_] == false, 'Error occured when removing the protocol.');
-    require (supportedProtocols[protocolAddress_] == 0, 'SIGH Speed was not properly assigned to 0.');
+    require (supportedProtocols[protocolAddress_].isSupported == false, 'Error occured when removing the protocol.');
+    require (supportedProtocols[protocolAddress_].distributionSpeed == 0, 'SIGH Speed was not properly assigned to 0.');
 
     emit ProtocolRemoved( protocolAddress_,  supportedProtocols[protocolAddress_].totalDrippedAmount );
   }

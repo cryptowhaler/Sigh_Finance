@@ -9,7 +9,7 @@ pragma solidity ^0.5.16;
 
 interface ISighTreasury {
 
-    function initialize( address addressesProvider_) public;
+    function initialize( address addressesProvider_) external;
     function refreshConfig() external;
 
 // ######################################################################################################
@@ -28,7 +28,7 @@ interface ISighTreasury {
 
     function changeSIGHBurnAllowed(uint isAllowed) external returns (bool);
     function updateSIGHBurnSpeed(uint newBurnSpeed) external;
-    function burnSIGHTokens() public returns (uint);
+    function burnSIGHTokens() external returns (uint);
 
 
 // #########################################################################################################################################################
@@ -48,7 +48,7 @@ interface ISighTreasury {
 // ###########   THE FUNCTION TO DRIP THE TOKENS TO THE TARGET ADDRESS  ###########
 // ################################################################################
 
-    function drip() public returns (uint);
+    function drip() external returns (uint);
 
 // ##########################################################
 // ###########   FUNCTION TO TRANSFER SIGH TOKENS  ##########

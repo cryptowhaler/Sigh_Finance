@@ -14,7 +14,7 @@ interface ILendingPoolConfigurator {
     // ################################################################################################
 
     function initInstrument( address _instrument, uint8 _underlyingAssetDecimals, address _interestRateStrategyAddress ) external;
-    function initInstrumentWithData(  address _instrument,  string memory _iTokenName,  string memory _iTokenSymbol,  uint8 _underlyingAssetDecimals,  address _interestRateStrategyAddress ) external ;
+    function initInstrumentWithData(  address _instrument,  string calldata _iTokenName,  string calldata _iTokenSymbol,  uint8 _underlyingAssetDecimals,  address _interestRateStrategyAddress ) external ;
 
     // ###################################################################################################
     // ####### FUNCTIONS WHICH INTERACT WITH LENDINGPOOLCORE CONTRACT ####################################
@@ -70,5 +70,17 @@ interface ILendingPoolConfigurator {
     // ##########################################################################################
 
     function updateSIGHSpeedRatioForAnInstrument(address instrument_, uint supplierRatio) external ;
+
+    // ############################################################################
+    // ###############  ADDING NEW SOURCE ETC TO THE PRICE ORACLE  ################
+    // ############################################################################
+
+    function supportNewAsset(address asset_, address source_) external;
+
+    function setAssetSources(address[] calldata _assets, address[] calldata _sources) external;
+
+    function setFallbackOracle(address _fallbackOracle) external ;
+
+
 
 }

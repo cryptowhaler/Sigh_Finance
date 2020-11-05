@@ -12,7 +12,6 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
     using Address for address;
 
     address private _owner;
-    address private pendingOwner;
     address public treasury; 
     address public SpeedController;
 
@@ -57,7 +56,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
 
     event MintingInitialized(address speedController, address treasury, uint256 blockNumber);
 
-    event SIGHMinted(uint256 cycle, uint256 Era, address minter, uint256 amountMinted, uint256 current_supply, uint256 block_number, uint timestamp);
+    event SIGHMinted( address minter, uint256 cycle, uint256 Era, uint256 amountMinted, uint256 current_supply, uint timestamp, uint256 block_number);
     event SIGHBurned(address userAddress, uint256 amount, uint256 totalBurnedAmount, uint256 currentSupply);
 
     // constructing  
@@ -162,7 +161,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
 
         uint currentSupply = totalSupply();
         uint256 newCoins = currentSupply.div(_eras[Current_Era].divisibilityFactor);                // Calculate the number of new tokens to be minted.
-        mintSnapshot storage currentMintSnapshot = mintSnapshot({ cycle:Current_Cycle, era:Current_Era, mintedAmount:newCoins, newTotalSupply:totalSupply(), minter: msg.sender, timestamp: now, blockNumber: block.number });
+        mintSnapshot  memory currentMintSnapshot = mintSnapshot({ cycle:Current_Cycle, era:Current_Era, mintedAmount:newCoins, newTotalSupply:totalSupply(), minter: msg.sender, timestamp: now, blockNumber: block.number });
 
         if (newCoins > prize_amount) {
             newCoins = newCoins.sub(prize_amount);
@@ -181,13 +180,13 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
         return true;        
     }
 
-    function _getElapsedBlocks(uint256 currentBlock , uint256 prevBlock) private pure returns(uint256) {
+    function _getElapsedBlocks(uint256 currentBlock , uint256 prevBlock) internal pure returns(uint256) {
         uint deltaBlocks = sub(currentBlock,prevBlock,"GetElapsedBlocks: Subtraction Underflow");
         return deltaBlocks;
     }
 
     event eraCalc(uint C_Era_sub, uint _newEra );
-    function _CalculateCurrentEra() private view returns (uint256) {
+    function _CalculateCurrentEra() internal returns (uint256) {
 
         if (Current_Cycle <= 7 && Current_Cycle >= 0 ) {
             return uint256(0);
@@ -213,6 +212,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
         require( msg.sender == treasury,"Only Treasury can burn SIGH Tokens");
         _burn(treasury,amount) ;
         uint total_amount_burnt = add(totalAmountBurnt , amount, 'burn : Total Number of tokens burnt gave addition overflow');
+        totalAmountBurnt = total_amount_burnt;
         emit SIGHBurned(msg.sender, amount, totalAmountBurnt, totalSupply() );
         return true;
     }    

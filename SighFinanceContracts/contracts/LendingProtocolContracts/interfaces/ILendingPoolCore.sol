@@ -20,7 +20,7 @@ interface ILendingPoolCore {
 // ###### CALLED BY BORROW() FROM LENDINGPOOL CONTRACT - alongwith the internal functions that only this function uses #####
 // #########################################################################################################################
 
-    function updateStateOnBorrow( address _instrument, address _user, uint256 _amountBorrowed, uint256 _borrowFee,  CoreLibrary.InterestRateMode _rateMode ) external;
+    function updateStateOnBorrow( address _instrument, address _user, uint256 _amountBorrowed, uint256 _borrowFee,  CoreLibrary.InterestRateMode _rateMode ) external returns (uint256, uint256);
 
 // ########################################################################################################################
 // ###### CALLED BY REPAY() FROM LENDINGPOOL CONTRACT - alongwith the internal functions that only this function uses #####
@@ -33,14 +33,14 @@ interface ILendingPoolCore {
 // #####################################################################################################################################
 
 
-    function updateStateOnSwapRate(  address _instrument, address _user, uint256 _principalBorrowBalance, uint256 _compoundedBorrowBalance, uint256 _balanceIncrease, CoreLibrary.InterestRateMode _currentRateMode ) external;
+    function updateStateOnSwapRate(  address _instrument, address _user, uint256 _principalBorrowBalance, uint256 _compoundedBorrowBalance, uint256 _balanceIncrease, CoreLibrary.InterestRateMode _currentRateMode ) external returns (CoreLibrary.InterestRateMode, uint256);
 
 
 // #########################################################################################################################################
 // ###### CALLED BY UPDATESTATEONREBALANCE() FROM LENDINGPOOL CONTRACT - alongwith the internal functions that only this function uses #####
 // #########################################################################################################################################
 
-    function updateStateOnRebalance(address _instrument, address _user, uint256 _balanceIncrease) external ;
+    function updateStateOnRebalance(address _instrument, address _user, uint256 _balanceIncrease) external returns (uint256)  ;
 
 
 // #########################################################################################################################################

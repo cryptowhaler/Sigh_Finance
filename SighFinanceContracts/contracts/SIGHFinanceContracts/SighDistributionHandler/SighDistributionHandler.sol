@@ -80,19 +80,19 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
     // ############## EVENTS ##############
     // ####################################
 
-    event InstrumentAdded (address instrumentAddress_, address iTokenAddress, uint blockNumber); 
-    event InstrumentSIGHed(address instrumentAddress_, address iTokenAddress, bool isCoverDripsMechanismActivated);    /// @notice Emitted when market isCoverDripsMechanismActivated status is changed
+    event InstrumentAdded (address instrumentAddress_, uint decimals , address iTokenAddress, uint blockNumber); 
+    event InstrumentSIGHed(address instrumentAddress_, bool isSighed, uint blockNumber);    /// @notice Emitted when market isCoverDripsMechanismActivated status is changed
 
     event NewSIGHSpeed(uint oldSIGHSpeed, uint newSIGHSpeed, uint blockNumber_);     /// @notice Emitted when SIGH rate is changed
-    event StakingSpeedUpdated(address instrumentAddress_, address iTokenAddress, uint prevStakingSpeed, uint new_staking_Speed, uint blockNumber );
-    event SuppliersSIGHSpeedUpdated(address instrument, address iToken, uint prevSpeed, uint newSpeed, uint blockNumber);  /// @notice Emitted when a new SIGH speed is calculated for an Instrument
-    event BorrowersSIGHSpeedUpdated(address instrument, address iToken, uint prevSpeed, uint newSpeed, uint blockNumber);  /// @notice Emitted when a new SIGH speed is calculated for an Instrument
-    event SpeedUpperCheckSwitched(bool previsSpeedUpperCheckAllowed, bool isSpeedUpperCheckAllowed );
+    event StakingSpeedUpdated(address instrumentAddress_ , uint prevStakingSpeed, uint new_staking_Speed, uint blockNumber );
+    event SuppliersSIGHSpeedUpdated(address instrument, uint prevSpeed, uint newSpeed, uint blockNumber);  /// @notice Emitted when a new SIGH speed is calculated for an Instrument
+    event BorrowersSIGHSpeedUpdated(address instrument, uint prevSpeed, uint newSpeed, uint blockNumber);  /// @notice Emitted when a new SIGH speed is calculated for an Instrument
+    event SpeedUpperCheckSwitched(bool previsSpeedUpperCheckAllowed, uint upperCheckProfitPercentage, uint blockNumber );
 
-    event ClockUpdated( uint224 prevClock, uint224 curClock, uint timestamp, uint blockNumber );
-    event PriceSnapped(address instrument, address iToken, uint prevPrice, uint currentPrice, uint currentClock);   /// @notice Emitted when Price snapshot is taken
+    event ClockUpdated( uint224 prevClock, uint224 curClock, uint blockNumber );
+    event PriceSnapped(address instrument, uint prevPrice, uint currentPrice, uint currentClock);   /// @notice Emitted when Price snapshot is taken
 
-    event Instrument_Sigh_Speed_Supplier_Ratio_Mantissa_Updated(address iToken, uint prevRatio, uint newRatio);
+    event Instrument_Sigh_Speed_Supplier_Ratio_Mantissa_Updated(address iToken, uint prevRatio, uint newRatio, uint blockNumber);
 
     event PriceSnappedCheck(address iToken, uint prevPrice, uint currentPrice,uint32 currentCounter, uint blockNumber);
 
@@ -123,7 +123,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
 
     // This function can only be called by the Instrument's IToken Contract
     modifier onlyITokenContract(address instrument) {
-           SIGHInstrument memory currentInstrument = financial_instruments(instrument);
+           SIGHInstrument memory currentInstrument = financial_instruments[instrument];
            require( currentInstrument.isListed, "This instrument is not supported by SIGH Distribution Handler");
            require( msg.sender == currentInstrument.iTokenAddress, "This function can only be called by the Instrument's IToken Contract");
         _;
@@ -144,7 +144,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
     function initialize( address addressesProvider_) public initializer {
         addressesProvider = GlobalAddressesProvider(addressesProvider_);
         refreshConfigInternal(); 
-        emit SIGHDistributionHandlerInitialized( address(addressesProvider), Sigh_Address, oracle );
+        emit SIGHDistributionHandlerInitialized( address(addressesProvider), Sigh_Address, address(oracle) );
     }
 
     function refreshConfig() external onlySighFinanceConfigurator() {
@@ -195,7 +195,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
 
         // INITIALIZE PRICECYCLES
         if ( instrumentPriceCycles[_instrument].initializationCounter == 0 ) {
-            uint224[24] memory emptyPrices;
+            uint256[24] memory emptyPrices;
             instrumentPriceCycles[_instrument] = InstrumentPriceCycle({ recordedPriceSnapshot : emptyPrices, initializationCounter: 0 }) ;
         }   
 
@@ -228,7 +228,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         require(financial_instruments[instrument_].isCoverDipsMechanismActivated, "Instrument already not supported by the SIGH Distribution Mechanism");
 
         // Recorded Price snapshots initialized to 0. 
-        uint224[24] memory emptyPrices;
+        uint256[24] memory emptyPrices;
         instrumentPriceCycles[instrument_] = InstrumentPriceCycle({ recordedPriceSnapshot : emptyPrices, initializationCounter: 0 }) ;
 
         financial_instruments[instrument_].isCoverDipsMechanismActivated = false;
@@ -352,7 +352,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
 
     event maxSpeedCheck(uint SIGH);
     event blockNumberForSnapshotUpdated(uint224 curClock,uint prevBlockNumberForSnapshot,uint blockNumbersForPriceSnapshots, uint deltaBlocks_,uint blocknumber );    
-    event MaxSpeedUsedWhenRefreshingPriceSnapshots(uint SIGHSpeed, uint maxSpeed,uint SIGH_Price,uint totalLosses_  );
+    event MaxSpeedUsedWhenRefreshingPriceSnapshots(uint SIGHSpeed, uint sigh_speed_used, uint sighPrice, uint totalLossesPerBlockAverage, uint max_valueDistributionLimi  );
         
     /**
      * @notice Recalculate and update SIGH speeds for all Supported SIGH markets
@@ -399,11 +399,11 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
             else {
 
                 ILendingPoolCore lendngPoolCoreContract = ILendingPoolCore( addressesProvider.getLendingPoolCore() );
-                uint totalUnderlyingLiquidity = lendngPoolCoreContract.getInstrumentTotalLiquidity( _currentInstrument ); // Total Liquidity in the lending protocol for current instrument
+                uint totalUnderlyingLiquidity = lendngPoolCoreContract.getInstrumentTotalLiquidity( address(_currentInstrument) ); // Total Liquidity in the lending protocol for current instrument
 
                 Exp memory totalLossesOver24hours = Exp({mantissa: 0});
                 Exp memory previousPrice = Exp({ mantissa: instrumentPriceCycles[address(_currentInstrument)].recordedPriceSnapshot[curClock] });   // 24hr old price snapshot
-                Exp memory currentPrice = Exp({ mantissa: oracle.getAssetPrice( _currentInstrument ) });                                            // current price from the oracle
+                Exp memory currentPrice = Exp({ mantissa: oracle.getAssetPrice( address(_currentInstrument) ) });                                            // current price from the oracle
                 
                 require ( currentPrice.mantissa > 0, "refreshSIGHSpeedsInternal : Oracle returned Invalid Price" );
     
@@ -423,7 +423,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
                 emit refreshingSighSpeeds_1( address(_currentInstrument) , curMarketLoss, totalLosses.mantissa );
     
                 uint32 prevCounter;
-                instrumentPriceCycles[address(_currentInstrument)].recordedPriceSnapshot[curClock] =  safe224(uint224(currentPrice.mantissa), 'Assigning current price failed. Price overflows uint224.' );
+                instrumentPriceCycles[address(_currentInstrument)].recordedPriceSnapshot[curClock] =  uint256(currentPrice.mantissa); //, 'Assigning current price failed. Price overflows uint224.' );
     
                 //    Newly Sighed Instrument needs to reach 24 (priceSnapshots need to be taken) before it can be assigned a Sigh Speed based on LOSSES   
                 if (instrumentPriceCycles[address(_currentInstrument)].initializationCounter < 24 ) {
@@ -431,7 +431,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
                     instrumentPriceCycles[address(_currentInstrument)].initializationCounter = uint32(add_(prevCounter,uint32(1),'Price Counter addition failed.'));
                 }
                 
-                emit PriceSnapped(address(_currentInstrument), previousPrice.mantissa, currentPrice.mantissa );
+                emit PriceSnapped(address(_currentInstrument), previousPrice.mantissa, currentPrice.mantissa, curClock );
                 emit PriceSnappedCheck(address(_currentInstrument), previousPrice.mantissa, instrumentPriceCycles[address(_currentInstrument)].recordedPriceSnapshot[curClock] ,  instrumentPriceCycles[address(_currentInstrument)].initializationCounter, blockNumber );
             }
         }
@@ -478,8 +478,8 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
             Instrument_Sigh_Speeds[address(_currentInstrument)].borrowers_Speed = borrowerNewSpeed;  
 
             emit refreshingSighSpeeds_2( address(_currentInstrument) ,newSpeed_, stakingSpeed,  newSpeedFinal  );
-            emit SuppliersSIGHSpeedUpdated(_currentInstrument, prevSpeedSupplier, Instrument_Sigh_Speeds[address(_currentInstrument)].suppliers_Speed   );
-            emit BorrowersSIGHSpeedUpdated(_currentInstrument, prevSpeedBorrower, Instrument_Sigh_Speeds[address(_currentInstrument)].borrowers_Speed   );
+            emit SuppliersSIGHSpeedUpdated(address(_currentInstrument), prevSpeedSupplier, Instrument_Sigh_Speeds[address(_currentInstrument)].suppliers_Speed, block.number  );
+            emit BorrowersSIGHSpeedUpdated(address(_currentInstrument), prevSpeedBorrower, Instrument_Sigh_Speeds[address(_currentInstrument)].borrowers_Speed, block.number  );
         }
 
         uint224 prevClock = curClock;  
@@ -503,25 +503,27 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
             uint max_valueDistributionLimit = mul_(current_Sigh_Price,sigh_speed_used);   // MAX Value that can be distributed per block
 
             if ( current_Sigh_Price == 0 || max_valueDistributionLimit <=  totalLossesPerBlockAverage ) {
+                emit MaxSpeedUsedWhenRefreshingPriceSnapshots(SIGHSpeed, sigh_speed_used, current_Sigh_Price, totalLossesPerBlockAverage, max_valueDistributionLimit  );
                 return sigh_speed_used;
             }
             else {
                 uint profitPotentialPerBlock = mul_(totalLossesPerBlockAverage, upperCheckProfitPercentage ); // (a * b)/1e18 [b is in Exp Scale]
                 uint lossesPlusProfitPotentialPerBlock = add_( totalLossesPerBlockAverage,profitPotentialPerBlock,"Potential losses addition gave overflow" );
                 if ( max_valueDistributionLimit <=  lossesPlusProfitPotentialPerBlock ) {
+                    emit MaxSpeedUsedWhenRefreshingPriceSnapshots(SIGHSpeed, sigh_speed_used, current_Sigh_Price, totalLossesPerBlockAverage, max_valueDistributionLimit  );
                     return sigh_speed_used;
                 }
                 else {
                     sigh_speed_used = div_( lossesPlusProfitPotentialPerBlock, current_Sigh_Price, "Max Speed division gave error" );
+                    emit MaxSpeedUsedWhenRefreshingPriceSnapshots(SIGHSpeed, sigh_speed_used, current_Sigh_Price, totalLossesPerBlockAverage, max_valueDistributionLimit  );
                     return sigh_speed_used;
                 }
             }
-        emit MaxSpeedUsedWhenRefreshingPriceSnapshots(SIGHSpeed, sigh_speed_used, current_Sigh_Price, totalLossesPerBlockAverage, max_valueDistributionLimit  );
     }
 
     // Updates the Current CLock (global variable tracking the current hour )
     function updateCurrentClockInternal() internal returns (bool) {
-        uint prevClock = curClock;
+        uint224 prevClock = curClock;
         if (curClock == 23) {
             curClock = 0;               // Global clock Updated
         }
@@ -543,7 +545,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
 
     event updateSIGHSupplyIndex_test1(address market,uint speed,uint currentIndex,  uint prevBlock, uint curBlock, uint deltaBlocks );
     event updateSIGHSupplyIndex_test2(address market,uint supplyTokens, uint sigh_Accrued, uint ratio, uint index );
-    event updateSIGHSupplyIndex_test3(address market,uint previndex, uint newIndex, uint blockNum );
+    event updateSIGHSupplyIndex_test3(address market  , uint newIndex, uint blockNum );
 
     /**
      * @notice Accrue SIGH to the Instrument by updating the supply index
@@ -575,7 +577,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
             Double memory newIndex = add_(Double({mantissa: instrumentState.supplyindex}), ratio);                                      // Updated Index
             emit updateSIGHSupplyIndex_test2( currentInstrument, supplyTokens, sigh_Accrued, ratio.mantissa , newIndex.mantissa );  
 
-            instrumentState.supplyindex = newIndex;                 // New Index Committed to Storage 
+            instrumentState.supplyindex = newIndex.mantissa;                 // New Index Committed to Storage 
             instrumentState.supplylastupdatedblock = blockNumber;   // Block number updated
         } 
         else if (deltaBlocks > 0) {         // When no Sigh is accured. Block number updated
@@ -630,7 +632,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
             Double memory newIndex = add_(Double({mantissa: instrumentState.borrowindex}), ratio);                      // New Index
             emit updateSIGHBorrowIndex_test2( currentInstrument, borrowAmount, sigh_Accrued, ratio.mantissa , newIndex.mantissa );
 
-            instrumentState.borrowindex = newIndex;
+            instrumentState.borrowindex = newIndex.mantissa ;
             instrumentState.borrowlastupdatedblock = blockNumber;
         } 
         else if (deltaBlocks > 0) {                 // When no SIGH is accured
@@ -694,7 +696,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
 
     function getInstrumentBorrowIndex(address instrument_) external view returns (uint) {
         if (financial_instruments[instrument_].isListed) { //,"The provided instrument address is not supported");
-            return financial_instruments[instrument_].borrowIndex;
+            return financial_instruments[instrument_].borrowindex;
         }
         return uint(0);
     }
