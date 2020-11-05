@@ -32,25 +32,25 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_fee\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_params\",\"type\":\"bytes\"}],\"name\":\"executeOperation\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Aave, SIGH Finance\",\"details\":\"implement this interface to develop a flashloan-compatible flashLoanReceiver contract*\",\"methods\":{},\"title\":\"IFlashLoanReceiver interface\"},\"userdoc\":{\"methods\":{},\"notice\":\"Interface for the SIGH fee IFlashLoanReceiver.\"}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/flashloan/interfaces/IFlashLoanReceiver.sol\":\"IFlashLoanReceiver\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/flashloan/interfaces/IFlashLoanReceiver.sol\":{\"keccak256\":\"0x819cd5a0cf7c4677e6e9cf90e61f0579367697efabd124f7ee4947f36f0563f1\",\"urls\":[\"bzz-raw://2eba4ef2c23ad0a5ec600dbea85b4dcad17f538b6305d6817fd665152ead2e03\",\"dweb:/ipfs/QmSi7U9jyTyU3pzm6cdKp2A9LXHwYxq9XksWev5GzUfZK9\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_fee\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_params\",\"type\":\"bytes\"}],\"name\":\"executeOperation\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Aave, SIGH Finance\",\"details\":\"implement this interface to develop a flashloan-compatible flashLoanReceiver contract*\",\"methods\":{},\"title\":\"IFlashLoanReceiver interface\"},\"userdoc\":{\"methods\":{},\"notice\":\"Interface for the SIGH fee IFlashLoanReceiver.\"}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/flashloan/interfaces/IFlashLoanReceiver.sol\":\"IFlashLoanReceiver\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/flashloan/interfaces/IFlashLoanReceiver.sol\":{\"keccak256\":\"0x819cd5a0cf7c4677e6e9cf90e61f0579367697efabd124f7ee4947f36f0563f1\",\"urls\":[\"bzz-raw://2eba4ef2c23ad0a5ec600dbea85b4dcad17f538b6305d6817fd665152ead2e03\",\"dweb:/ipfs/QmSi7U9jyTyU3pzm6cdKp2A9LXHwYxq9XksWev5GzUfZK9\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.5.0;\n\n/**\n* @title IFlashLoanReceiver interface\n* @notice Interface for the SIGH fee IFlashLoanReceiver.\n* @author Aave, SIGH Finance\n* @dev implement this interface to develop a flashloan-compatible flashLoanReceiver contract\n**/\ninterface IFlashLoanReceiver {\n\n    function executeOperation(address _instrument, uint256 _amount, uint256 _fee, bytes calldata _params) external;\n}\n",
-  "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/flashloan/interfaces/IFlashLoanReceiver.sol",
+  "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/flashloan/interfaces/IFlashLoanReceiver.sol",
   "ast": {
-    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/flashloan/interfaces/IFlashLoanReceiver.sol",
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/flashloan/interfaces/IFlashLoanReceiver.sol",
     "exportedSymbols": {
       "IFlashLoanReceiver": [
-        17439
+        3772
       ]
     },
-    "id": 17440,
+    "id": 3773,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 17427,
+        "id": 3760,
         "literals": [
           "solidity",
           "^",
@@ -58,7 +58,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:47"
+        "src": "0:23:9"
       },
       {
         "baseContracts": [],
@@ -66,9 +66,9 @@
         "contractKind": "interface",
         "documentation": "@title IFlashLoanReceiver interface\n@notice Interface for the SIGH fee IFlashLoanReceiver.\n@author Aave, SIGH Finance\n@dev implement this interface to develop a flashloan-compatible flashLoanReceiver contract*",
         "fullyImplemented": false,
-        "id": 17439,
+        "id": 3772,
         "linearizedBaseContracts": [
-          17439
+          3772
         ],
         "name": "IFlashLoanReceiver",
         "nodeType": "ContractDefinition",
@@ -76,23 +76,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 17438,
+            "id": 3771,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "executeOperation",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 17436,
+              "id": 3769,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 17429,
+                  "id": 3762,
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17438,
-                  "src": "312:19:47",
+                  "scope": 3771,
+                  "src": "312:19:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -100,10 +100,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 17428,
+                    "id": 3761,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "312:7:47",
+                    "src": "312:7:9",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -115,11 +115,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 17431,
+                  "id": 3764,
                   "name": "_amount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17438,
-                  "src": "333:15:47",
+                  "scope": 3771,
+                  "src": "333:15:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -127,10 +127,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 17430,
+                    "id": 3763,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "333:7:47",
+                    "src": "333:7:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -141,11 +141,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 17433,
+                  "id": 3766,
                   "name": "_fee",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17438,
-                  "src": "350:12:47",
+                  "scope": 3771,
+                  "src": "350:12:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -153,10 +153,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 17432,
+                    "id": 3765,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "350:7:47",
+                    "src": "350:7:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -167,11 +167,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 17435,
+                  "id": 3768,
                   "name": "_params",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17438,
-                  "src": "364:22:47",
+                  "scope": 3771,
+                  "src": "364:22:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
                   "typeDescriptions": {
@@ -179,10 +179,10 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 17434,
+                    "id": 3767,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
-                    "src": "364:5:47",
+                    "src": "364:5:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes_storage_ptr",
                       "typeString": "bytes"
@@ -192,39 +192,39 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "311:76:47"
+              "src": "311:76:9"
             },
             "returnParameters": {
-              "id": 17437,
+              "id": 3770,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "396:0:47"
+              "src": "396:0:9"
             },
-            "scope": 17439,
-            "src": "286:111:47",
+            "scope": 3772,
+            "src": "286:111:9",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 17440,
-        "src": "250:149:47"
+        "scope": 3773,
+        "src": "250:149:9"
       }
     ],
-    "src": "0:400:47"
+    "src": "0:400:9"
   },
   "legacyAST": {
-    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/flashloan/interfaces/IFlashLoanReceiver.sol",
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/flashloan/interfaces/IFlashLoanReceiver.sol",
     "exportedSymbols": {
       "IFlashLoanReceiver": [
-        17439
+        3772
       ]
     },
-    "id": 17440,
+    "id": 3773,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 17427,
+        "id": 3760,
         "literals": [
           "solidity",
           "^",
@@ -232,7 +232,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:47"
+        "src": "0:23:9"
       },
       {
         "baseContracts": [],
@@ -240,9 +240,9 @@
         "contractKind": "interface",
         "documentation": "@title IFlashLoanReceiver interface\n@notice Interface for the SIGH fee IFlashLoanReceiver.\n@author Aave, SIGH Finance\n@dev implement this interface to develop a flashloan-compatible flashLoanReceiver contract*",
         "fullyImplemented": false,
-        "id": 17439,
+        "id": 3772,
         "linearizedBaseContracts": [
-          17439
+          3772
         ],
         "name": "IFlashLoanReceiver",
         "nodeType": "ContractDefinition",
@@ -250,23 +250,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 17438,
+            "id": 3771,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "executeOperation",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 17436,
+              "id": 3769,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 17429,
+                  "id": 3762,
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17438,
-                  "src": "312:19:47",
+                  "scope": 3771,
+                  "src": "312:19:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -274,10 +274,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 17428,
+                    "id": 3761,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "312:7:47",
+                    "src": "312:7:9",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -289,11 +289,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 17431,
+                  "id": 3764,
                   "name": "_amount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17438,
-                  "src": "333:15:47",
+                  "scope": 3771,
+                  "src": "333:15:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -301,10 +301,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 17430,
+                    "id": 3763,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "333:7:47",
+                    "src": "333:7:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -315,11 +315,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 17433,
+                  "id": 3766,
                   "name": "_fee",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17438,
-                  "src": "350:12:47",
+                  "scope": 3771,
+                  "src": "350:12:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -327,10 +327,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 17432,
+                    "id": 3765,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "350:7:47",
+                    "src": "350:7:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -341,11 +341,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 17435,
+                  "id": 3768,
                   "name": "_params",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17438,
-                  "src": "364:22:47",
+                  "scope": 3771,
+                  "src": "364:22:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
                   "typeDescriptions": {
@@ -353,10 +353,10 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 17434,
+                    "id": 3767,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
-                    "src": "364:5:47",
+                    "src": "364:5:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes_storage_ptr",
                       "typeString": "bytes"
@@ -366,26 +366,26 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "311:76:47"
+              "src": "311:76:9"
             },
             "returnParameters": {
-              "id": 17437,
+              "id": 3770,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "396:0:47"
+              "src": "396:0:9"
             },
-            "scope": 17439,
-            "src": "286:111:47",
+            "scope": 3772,
+            "src": "286:111:9",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 17440,
-        "src": "250:149:47"
+        "scope": 3773,
+        "src": "250:149:9"
       }
     ],
-    "src": "0:400:47"
+    "src": "0:400:9"
   },
   "compiler": {
     "name": "solc",
@@ -393,7 +393,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-10-22T12:30:37.252Z",
+  "updatedAt": "2020-11-05T05:43:31.440Z",
   "devdoc": {
     "author": "Aave, SIGH Finance",
     "details": "implement this interface to develop a flashloan-compatible flashLoanReceiver contract*",

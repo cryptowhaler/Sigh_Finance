@@ -1,104 +1,25 @@
 {
   "contractName": "TreasuryV1Storage",
-  "abi": [
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "admin",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "pendingAdmin",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "sigh_token",
-      "outputs": [
-        {
-          "internalType": "contract IERC20",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "sightroller_address",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "tokenBeingDripped",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    }
-  ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[],\"name\":\"admin\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"pendingAdmin\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"sigh_token\",\"outputs\":[{\"internalType\":\"contract IERC20\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"sightroller_address\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"tokenBeingDripped\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGH/Treasury/TreasuryStorage.sol\":\"TreasuryV1Storage\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGH/Treasury/TreasuryStorage.sol\":{\"keccak256\":\"0x9308f830f3f46ff98a33f3542fedae8f89bd736b32e340f7190eb3d5d7c108b6\",\"urls\":[\"bzz-raw://5b4379b9e06076cf8f69ffd246035925be68925085d8604843aae3380d2830c6\",\"dweb:/ipfs/QmZmXZ85w65CKZ4ZgBNKrHFzdM3XiN4biCT8yuUvJgB6d7\"]},\"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0xe92a180661a6e21051d45be08a572dbf8d61e04c142d4284e503f615aed587fd\",\"urls\":[\"bzz-raw://003c6da07a3cbc576a9a59f462ed67d9041ff89e106463817ce9f005e24d83c8\",\"dweb:/ipfs/QmemQazcc1Cww2Umgc4UFYpwF8WRqajPB6z5TNdC13XJCR\"]}},\"version\":1}",
-  "bytecode": "0x60806040526006805460ff1916905534801561001a57600080fd5b5061010f8061002a6000396000f3fe6080604052348015600f57600080fd5b506004361060505760003560e01c8063267822471460555780634079141c146077578063e04878da14607d578063ecdb222d146083578063f851a440146089575b600080fd5b605b608f565b604080516001600160a01b039092168252519081900360200190f35b605b609e565b605b60ad565b605b60bc565b605b60cb565b6001546001600160a01b031681565b6002546001600160a01b031681565b6003546001600160a01b031681565b6004546001600160a01b031681565b6000546001600160a01b03168156fea265627a7a723158206d8ededb3a235c837473d38475d73bea37ba30fdf8f0d2e1edceb9ecdf40c91464736f6c63430005100032",
-  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060505760003560e01c8063267822471460555780634079141c146077578063e04878da14607d578063ecdb222d146083578063f851a440146089575b600080fd5b605b608f565b604080516001600160a01b039092168252519081900360200190f35b605b609e565b605b60ad565b605b60bc565b605b60cb565b6001546001600160a01b031681565b6002546001600160a01b031681565b6003546001600160a01b031681565b6004546001600160a01b031681565b6000546001600160a01b03168156fea265627a7a723158206d8ededb3a235c837473d38475d73bea37ba30fdf8f0d2e1edceb9ecdf40c91464736f6c63430005100032",
-  "sourceMap": "575:608:131:-;;;925:26;;;-1:-1:-1;;925:26:131;;;575:608;5:2:-1;;;;30:1;27;20:12;5:2;575:608:131;;;;;;;",
-  "deployedSourceMap": "575:608:131:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;575:608:131;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;636:27;;;:::i;:::-;;;;-1:-1:-1;;;;;636:27:131;;;;;;;;;;;;;;733:24;;;:::i;825:34::-;;;:::i;866:32::-;;;:::i;609:20::-;;;:::i;636:27::-;;;-1:-1:-1;;;;;636:27:131;;:::o;733:24::-;;;-1:-1:-1;;;;;733:24:131;;:::o;825:34::-;;;-1:-1:-1;;;;;825:34:131;;:::o;866:32::-;;;-1:-1:-1;;;;;866:32:131;;:::o;609:20::-;;;-1:-1:-1;;;;;609:20:131;;:::o",
-  "source": "pragma solidity ^0.5.16;\n\n// import \"../openzeppelin/EIP20Interface.sol\";\nimport \"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol\"; \n\ncontract TreasuryCoreStorage {\n    /**\n    * @notice Administrator for this contract\n    */\n    address public admin;\n\n    /**\n    * @notice Pending administrator for this contract\n    */\n    address public pendingAdmin;\n\n    /**\n    * @notice Active brains of Treasury\n    */\n    address public treasuryImplementation;\n\n    /**\n    * @notice Pending brains of Treasury\n    */\n    address public pendingTreasuryImplementation;\n}\n\n\n\n\n\ncontract TreasuryV1Storage {\n\n    address public admin;\n\n    address public pendingAdmin;\n\n    /// @notice Reference to token to burn / trade (immutable)\n    IERC20 public sigh_token;\n\n    /// @notice Target to receive dripped tokens (immutable)\n    address public sightroller_address;\n\n    address public tokenBeingDripped; \n    uint DripSpeed;\n    bool isDripAllowed = false;\n    \n    uint SIGHBurnSpeed;\n    \n\n    mapping(address => uint) SIGH_Transferred;\n    mapping (address => uint) TokenBalances;\n    mapping (address => uint)  totalDrippedAmount;  // Stores the total amount of each token dripped\n\n}",
-  "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGH/Treasury/TreasuryStorage.sol",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGHFinanceContracts/Treasury/TreasuryStorage.sol\":\"TreasuryV1Storage\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGHFinanceContracts/Treasury/TreasuryStorage.sol\":{\"keccak256\":\"0xd86b61b8d66860af6d1217b70b9c5a387de489140d7c2004aa32987012d5b1c1\",\"urls\":[\"bzz-raw://be84655f0910331f07ed79b27f501d0a448316b84d60ab1f3f917cec77f2f383\",\"dweb:/ipfs/QmVsqhSova6QatNHS1BWFcGXswXhgeZA5TZChrTM59ingn\"]},\"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0xe92a180661a6e21051d45be08a572dbf8d61e04c142d4284e503f615aed587fd\",\"urls\":[\"bzz-raw://003c6da07a3cbc576a9a59f462ed67d9041ff89e106463817ce9f005e24d83c8\",\"dweb:/ipfs/QmemQazcc1Cww2Umgc4UFYpwF8WRqajPB6z5TNdC13XJCR\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea265627a7a72315820f011a0369de1130272ff4cbb361c8a8e16ca885cf29c5fd737a8211271a2b54f64736f6c63430005100032",
+  "deployedBytecode": "0x6080604052600080fdfea265627a7a72315820f011a0369de1130272ff4cbb361c8a8e16ca885cf29c5fd737a8211271a2b54f64736f6c63430005100032",
+  "sourceMap": "143:65:91:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;143:65:91;;;;;;;",
+  "deployedSourceMap": "143:65:91:-;;;;;",
+  "source": "pragma solidity ^0.5.16;\n\n// import \"../openzeppelin/EIP20Interface.sol\";\nimport \"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol\"; \n\n\n\ncontract TreasuryV1Storage {\n\n    \n    uint SIGHBurnSpeed;\n    \n}",
+  "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGHFinanceContracts/Treasury/TreasuryStorage.sol",
   "ast": {
-    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGH/Treasury/TreasuryStorage.sol",
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGHFinanceContracts/Treasury/TreasuryStorage.sol",
     "exportedSymbols": {
-      "TreasuryCoreStorage": [
-        37060
-      ],
       "TreasuryV1Storage": [
-        37090
+        26211
       ]
     },
-    "id": 37091,
+    "id": 26212,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 37050,
+        "id": 26207,
         "literals": [
           "solidity",
           "^",
@@ -106,16 +27,16 @@
           ".16"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:131"
+        "src": "0:24:91"
       },
       {
         "absolutePath": "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol",
         "file": "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol",
-        "id": 37051,
+        "id": 26208,
         "nodeType": "ImportDirective",
-        "scope": 37091,
-        "sourceUnit": 39213,
-        "src": "74:64:131",
+        "scope": 26212,
+        "sourceUnit": 30039,
+        "src": "74:64:91",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -125,350 +46,20 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 37060,
+        "id": 26211,
         "linearizedBaseContracts": [
-          37060
-        ],
-        "name": "TreasuryCoreStorage",
-        "nodeType": "ContractDefinition",
-        "nodes": [
-          {
-            "constant": false,
-            "id": 37053,
-            "name": "admin",
-            "nodeType": "VariableDeclaration",
-            "scope": 37060,
-            "src": "237:20:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 37052,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "237:7:131",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 37055,
-            "name": "pendingAdmin",
-            "nodeType": "VariableDeclaration",
-            "scope": 37060,
-            "src": "333:27:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 37054,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "333:7:131",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 37057,
-            "name": "treasuryImplementation",
-            "nodeType": "VariableDeclaration",
-            "scope": 37060,
-            "src": "422:37:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 37056,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "422:7:131",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 37059,
-            "name": "pendingTreasuryImplementation",
-            "nodeType": "VariableDeclaration",
-            "scope": 37060,
-            "src": "522:44:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 37058,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "522:7:131",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          }
-        ],
-        "scope": 37091,
-        "src": "141:428:131"
-      },
-      {
-        "baseContracts": [],
-        "contractDependencies": [],
-        "contractKind": "contract",
-        "documentation": null,
-        "fullyImplemented": true,
-        "id": 37090,
-        "linearizedBaseContracts": [
-          37090
+          26211
         ],
         "name": "TreasuryV1Storage",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 37062,
-            "name": "admin",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "609:20:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 37061,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "609:7:131",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 37064,
-            "name": "pendingAdmin",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "636:27:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 37063,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "636:7:131",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 37066,
-            "name": "sigh_token",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "733:24:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_contract$_IERC20_$39212",
-              "typeString": "contract IERC20"
-            },
-            "typeName": {
-              "contractScope": null,
-              "id": 37065,
-              "name": "IERC20",
-              "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 39212,
-              "src": "733:6:131",
-              "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IERC20_$39212",
-                "typeString": "contract IERC20"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 37068,
-            "name": "sightroller_address",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "825:34:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 37067,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "825:7:131",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 37070,
-            "name": "tokenBeingDripped",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "866:32:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 37069,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "866:7:131",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 37072,
-            "name": "DripSpeed",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "905:14:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_uint256",
-              "typeString": "uint256"
-            },
-            "typeName": {
-              "id": 37071,
-              "name": "uint",
-              "nodeType": "ElementaryTypeName",
-              "src": "905:4:131",
-              "typeDescriptions": {
-                "typeIdentifier": "t_uint256",
-                "typeString": "uint256"
-              }
-            },
-            "value": null,
-            "visibility": "internal"
-          },
-          {
-            "constant": false,
-            "id": 37075,
-            "name": "isDripAllowed",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "925:26:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_bool",
-              "typeString": "bool"
-            },
-            "typeName": {
-              "id": 37073,
-              "name": "bool",
-              "nodeType": "ElementaryTypeName",
-              "src": "925:4:131",
-              "typeDescriptions": {
-                "typeIdentifier": "t_bool",
-                "typeString": "bool"
-              }
-            },
-            "value": {
-              "argumentTypes": null,
-              "hexValue": "66616c7365",
-              "id": 37074,
-              "isConstant": false,
-              "isLValue": false,
-              "isPure": true,
-              "kind": "bool",
-              "lValueRequested": false,
-              "nodeType": "Literal",
-              "src": "946:5:131",
-              "subdenomination": null,
-              "typeDescriptions": {
-                "typeIdentifier": "t_bool",
-                "typeString": "bool"
-              },
-              "value": "false"
-            },
-            "visibility": "internal"
-          },
-          {
-            "constant": false,
-            "id": 37077,
+            "id": 26210,
             "name": "SIGHBurnSpeed",
             "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "962:18:131",
+            "scope": 26211,
+            "src": "182:18:91",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -476,175 +67,37 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 37076,
+              "id": 26209,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
-              "src": "962:4:131",
+              "src": "182:4:91",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
-              }
-            },
-            "value": null,
-            "visibility": "internal"
-          },
-          {
-            "constant": false,
-            "id": 37081,
-            "name": "SIGH_Transferred",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "992:41:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-              "typeString": "mapping(address => uint256)"
-            },
-            "typeName": {
-              "id": 37080,
-              "keyType": {
-                "id": 37078,
-                "name": "address",
-                "nodeType": "ElementaryTypeName",
-                "src": "1000:7:131",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_address",
-                  "typeString": "address"
-                }
-              },
-              "nodeType": "Mapping",
-              "src": "992:24:131",
-              "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-                "typeString": "mapping(address => uint256)"
-              },
-              "valueType": {
-                "id": 37079,
-                "name": "uint",
-                "nodeType": "ElementaryTypeName",
-                "src": "1011:4:131",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_uint256",
-                  "typeString": "uint256"
-                }
-              }
-            },
-            "value": null,
-            "visibility": "internal"
-          },
-          {
-            "constant": false,
-            "id": 37085,
-            "name": "TokenBalances",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "1039:39:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-              "typeString": "mapping(address => uint256)"
-            },
-            "typeName": {
-              "id": 37084,
-              "keyType": {
-                "id": 37082,
-                "name": "address",
-                "nodeType": "ElementaryTypeName",
-                "src": "1048:7:131",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_address",
-                  "typeString": "address"
-                }
-              },
-              "nodeType": "Mapping",
-              "src": "1039:25:131",
-              "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-                "typeString": "mapping(address => uint256)"
-              },
-              "valueType": {
-                "id": 37083,
-                "name": "uint",
-                "nodeType": "ElementaryTypeName",
-                "src": "1059:4:131",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_uint256",
-                  "typeString": "uint256"
-                }
-              }
-            },
-            "value": null,
-            "visibility": "internal"
-          },
-          {
-            "constant": false,
-            "id": 37089,
-            "name": "totalDrippedAmount",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "1084:45:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-              "typeString": "mapping(address => uint256)"
-            },
-            "typeName": {
-              "id": 37088,
-              "keyType": {
-                "id": 37086,
-                "name": "address",
-                "nodeType": "ElementaryTypeName",
-                "src": "1093:7:131",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_address",
-                  "typeString": "address"
-                }
-              },
-              "nodeType": "Mapping",
-              "src": "1084:25:131",
-              "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-                "typeString": "mapping(address => uint256)"
-              },
-              "valueType": {
-                "id": 37087,
-                "name": "uint",
-                "nodeType": "ElementaryTypeName",
-                "src": "1104:4:131",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_uint256",
-                  "typeString": "uint256"
-                }
               }
             },
             "value": null,
             "visibility": "internal"
           }
         ],
-        "scope": 37091,
-        "src": "575:608:131"
+        "scope": 26212,
+        "src": "143:65:91"
       }
     ],
-    "src": "0:1183:131"
+    "src": "0:208:91"
   },
   "legacyAST": {
-    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGH/Treasury/TreasuryStorage.sol",
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGHFinanceContracts/Treasury/TreasuryStorage.sol",
     "exportedSymbols": {
-      "TreasuryCoreStorage": [
-        37060
-      ],
       "TreasuryV1Storage": [
-        37090
+        26211
       ]
     },
-    "id": 37091,
+    "id": 26212,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 37050,
+        "id": 26207,
         "literals": [
           "solidity",
           "^",
@@ -652,16 +105,16 @@
           ".16"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:131"
+        "src": "0:24:91"
       },
       {
         "absolutePath": "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol",
         "file": "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol",
-        "id": 37051,
+        "id": 26208,
         "nodeType": "ImportDirective",
-        "scope": 37091,
-        "sourceUnit": 39213,
-        "src": "74:64:131",
+        "scope": 26212,
+        "sourceUnit": 30039,
+        "src": "74:64:91",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -671,350 +124,20 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 37060,
+        "id": 26211,
         "linearizedBaseContracts": [
-          37060
-        ],
-        "name": "TreasuryCoreStorage",
-        "nodeType": "ContractDefinition",
-        "nodes": [
-          {
-            "constant": false,
-            "id": 37053,
-            "name": "admin",
-            "nodeType": "VariableDeclaration",
-            "scope": 37060,
-            "src": "237:20:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 37052,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "237:7:131",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 37055,
-            "name": "pendingAdmin",
-            "nodeType": "VariableDeclaration",
-            "scope": 37060,
-            "src": "333:27:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 37054,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "333:7:131",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 37057,
-            "name": "treasuryImplementation",
-            "nodeType": "VariableDeclaration",
-            "scope": 37060,
-            "src": "422:37:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 37056,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "422:7:131",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 37059,
-            "name": "pendingTreasuryImplementation",
-            "nodeType": "VariableDeclaration",
-            "scope": 37060,
-            "src": "522:44:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 37058,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "522:7:131",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          }
-        ],
-        "scope": 37091,
-        "src": "141:428:131"
-      },
-      {
-        "baseContracts": [],
-        "contractDependencies": [],
-        "contractKind": "contract",
-        "documentation": null,
-        "fullyImplemented": true,
-        "id": 37090,
-        "linearizedBaseContracts": [
-          37090
+          26211
         ],
         "name": "TreasuryV1Storage",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 37062,
-            "name": "admin",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "609:20:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 37061,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "609:7:131",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 37064,
-            "name": "pendingAdmin",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "636:27:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 37063,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "636:7:131",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 37066,
-            "name": "sigh_token",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "733:24:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_contract$_IERC20_$39212",
-              "typeString": "contract IERC20"
-            },
-            "typeName": {
-              "contractScope": null,
-              "id": 37065,
-              "name": "IERC20",
-              "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 39212,
-              "src": "733:6:131",
-              "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IERC20_$39212",
-                "typeString": "contract IERC20"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 37068,
-            "name": "sightroller_address",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "825:34:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 37067,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "825:7:131",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 37070,
-            "name": "tokenBeingDripped",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "866:32:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 37069,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "866:7:131",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "id": 37072,
-            "name": "DripSpeed",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "905:14:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_uint256",
-              "typeString": "uint256"
-            },
-            "typeName": {
-              "id": 37071,
-              "name": "uint",
-              "nodeType": "ElementaryTypeName",
-              "src": "905:4:131",
-              "typeDescriptions": {
-                "typeIdentifier": "t_uint256",
-                "typeString": "uint256"
-              }
-            },
-            "value": null,
-            "visibility": "internal"
-          },
-          {
-            "constant": false,
-            "id": 37075,
-            "name": "isDripAllowed",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "925:26:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_bool",
-              "typeString": "bool"
-            },
-            "typeName": {
-              "id": 37073,
-              "name": "bool",
-              "nodeType": "ElementaryTypeName",
-              "src": "925:4:131",
-              "typeDescriptions": {
-                "typeIdentifier": "t_bool",
-                "typeString": "bool"
-              }
-            },
-            "value": {
-              "argumentTypes": null,
-              "hexValue": "66616c7365",
-              "id": 37074,
-              "isConstant": false,
-              "isLValue": false,
-              "isPure": true,
-              "kind": "bool",
-              "lValueRequested": false,
-              "nodeType": "Literal",
-              "src": "946:5:131",
-              "subdenomination": null,
-              "typeDescriptions": {
-                "typeIdentifier": "t_bool",
-                "typeString": "bool"
-              },
-              "value": "false"
-            },
-            "visibility": "internal"
-          },
-          {
-            "constant": false,
-            "id": 37077,
+            "id": 26210,
             "name": "SIGHBurnSpeed",
             "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "962:18:131",
+            "scope": 26211,
+            "src": "182:18:91",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -1022,159 +145,24 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 37076,
+              "id": 26209,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
-              "src": "962:4:131",
+              "src": "182:4:91",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
-              }
-            },
-            "value": null,
-            "visibility": "internal"
-          },
-          {
-            "constant": false,
-            "id": 37081,
-            "name": "SIGH_Transferred",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "992:41:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-              "typeString": "mapping(address => uint256)"
-            },
-            "typeName": {
-              "id": 37080,
-              "keyType": {
-                "id": 37078,
-                "name": "address",
-                "nodeType": "ElementaryTypeName",
-                "src": "1000:7:131",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_address",
-                  "typeString": "address"
-                }
-              },
-              "nodeType": "Mapping",
-              "src": "992:24:131",
-              "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-                "typeString": "mapping(address => uint256)"
-              },
-              "valueType": {
-                "id": 37079,
-                "name": "uint",
-                "nodeType": "ElementaryTypeName",
-                "src": "1011:4:131",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_uint256",
-                  "typeString": "uint256"
-                }
-              }
-            },
-            "value": null,
-            "visibility": "internal"
-          },
-          {
-            "constant": false,
-            "id": 37085,
-            "name": "TokenBalances",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "1039:39:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-              "typeString": "mapping(address => uint256)"
-            },
-            "typeName": {
-              "id": 37084,
-              "keyType": {
-                "id": 37082,
-                "name": "address",
-                "nodeType": "ElementaryTypeName",
-                "src": "1048:7:131",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_address",
-                  "typeString": "address"
-                }
-              },
-              "nodeType": "Mapping",
-              "src": "1039:25:131",
-              "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-                "typeString": "mapping(address => uint256)"
-              },
-              "valueType": {
-                "id": 37083,
-                "name": "uint",
-                "nodeType": "ElementaryTypeName",
-                "src": "1059:4:131",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_uint256",
-                  "typeString": "uint256"
-                }
-              }
-            },
-            "value": null,
-            "visibility": "internal"
-          },
-          {
-            "constant": false,
-            "id": 37089,
-            "name": "totalDrippedAmount",
-            "nodeType": "VariableDeclaration",
-            "scope": 37090,
-            "src": "1084:45:131",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-              "typeString": "mapping(address => uint256)"
-            },
-            "typeName": {
-              "id": 37088,
-              "keyType": {
-                "id": 37086,
-                "name": "address",
-                "nodeType": "ElementaryTypeName",
-                "src": "1093:7:131",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_address",
-                  "typeString": "address"
-                }
-              },
-              "nodeType": "Mapping",
-              "src": "1084:25:131",
-              "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-                "typeString": "mapping(address => uint256)"
-              },
-              "valueType": {
-                "id": 37087,
-                "name": "uint",
-                "nodeType": "ElementaryTypeName",
-                "src": "1104:4:131",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_uint256",
-                  "typeString": "uint256"
-                }
               }
             },
             "value": null,
             "visibility": "internal"
           }
         ],
-        "scope": 37091,
-        "src": "575:608:131"
+        "scope": 26212,
+        "src": "143:65:91"
       }
     ],
-    "src": "0:1183:131"
+    "src": "0:208:91"
   },
   "compiler": {
     "name": "solc",
@@ -1182,7 +170,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-10-22T12:30:37.711Z",
+  "updatedAt": "2020-11-05T05:43:32.845Z",
   "devdoc": {
     "methods": {}
   },

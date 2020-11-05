@@ -23,45 +23,116 @@
       "type": "function"
     },
     {
-      "constant": false,
+      "constant": true,
       "inputs": [
         {
           "internalType": "address",
           "name": "_asset",
           "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_price",
-          "type": "uint256"
         }
       ],
-      "name": "setAssetPrice",
+      "name": "getSourceOfAsset",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getFallbackOracle",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "asset_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "source_",
+          "type": "address"
+        }
+      ],
+      "name": "supportNewAsset",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_assets",
+          "type": "address[]"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_sources",
+          "type": "address[]"
+        }
+      ],
+      "name": "setAssetSources",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_fallbackOracle",
+          "type": "address"
+        }
+      ],
+      "name": "setFallbackOracle",
       "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_asset\",\"type\":\"address\"}],\"name\":\"getAssetPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_asset\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_price\",\"type\":\"uint256\"}],\"name\":\"setAssetPrice\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{\"getAssetPrice(address)\":{\"details\":\"returns the asset price in ETH\"},\"setAssetPrice(address,uint256)\":{\"details\":\"sets the asset price, in wei\"}},\"title\":\"IPriceOracle interface\"},\"userdoc\":{\"methods\":{\"getAssetPrice(address)\":{\"notice\":\"*********\"},\"setAssetPrice(address,uint256)\":{\"notice\":\"*********\"}},\"notice\":\"**********Interface for the Aave price oracle.\"}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/interfaces/IPriceOracle.sol\":\"IPriceOracle\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/interfaces/IPriceOracle.sol\":{\"keccak256\":\"0xc0e9e1167ea1be00cd5bb7d16bb2cfbed1f9709eb686e2ac614b7dff7d4e2212\",\"urls\":[\"bzz-raw://596dce9acfac84920a093c837e69be0314d0f6f12f548b453fadcac642b4c1a9\",\"dweb:/ipfs/Qmdu7qtugdc7xZbmwTxe9ujtgmWkKxr3TdXktCFam4VL5W\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_asset\",\"type\":\"address\"}],\"name\":\"getAssetPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getFallbackOracle\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_asset\",\"type\":\"address\"}],\"name\":\"getSourceOfAsset\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_assets\",\"type\":\"address[]\"},{\"internalType\":\"address[]\",\"name\":\"_sources\",\"type\":\"address[]\"}],\"name\":\"setAssetSources\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_fallbackOracle\",\"type\":\"address\"}],\"name\":\"setFallbackOracle\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"asset_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"source_\",\"type\":\"address\"}],\"name\":\"supportNewAsset\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{},\"title\":\"IPriceOracle interface\"},\"userdoc\":{\"methods\":{},\"notice\":\"**********Interface for the price oracle.\"}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/IPriceOracle.sol\":\"IPriceOracle\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/IPriceOracle.sol\":{\"keccak256\":\"0xbf67ed414afd7f71d11508e289dcf4f044daa86c4f4eabfa0c1d6601d27235ec\",\"urls\":[\"bzz-raw://4665c2d923598f5d5cbd1ec5a22f799d9cc2013402490dff543e6e017f57a75b\",\"dweb:/ipfs/QmQSiWkQri5Tc12odv741bG93U7CL9LkC41ShRWMtn3Tg6\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.5.0;\n\n/************\n@title IPriceOracle interface\n@notice Interface for the Aave price oracle.*/\ninterface IPriceOracle {\n    /***********\n    @dev returns the asset price in ETH\n     */\n    function getAssetPrice(address _asset) external view returns (uint256);\n\n    /***********\n    @dev sets the asset price, in wei\n     */\n    function setAssetPrice(address _asset, uint256 _price) external;\n\n}\n",
-  "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/interfaces/IPriceOracle.sol",
+  "source": "pragma solidity ^0.5.0;\n\n/************\n@title IPriceOracle interface\n@notice Interface for the price oracle.*/\ninterface IPriceOracle {\n\n// ##################################\n// ######### VIEW FUNCTIONS #########\n// ##################################\n\n    function getAssetPrice(address _asset) external view returns (uint256);\n    function getSourceOfAsset(address _asset) external view returns(address);\n    function getFallbackOracle() external view returns(address);\n\n// #######################################################\n// ######### CALLED BY LENDING POOL CONFIGURATOR #########\n// #######################################################\n\n    function supportNewAsset(address asset_, address source_) external;\n\n    function setAssetSources(address[] calldata _assets, address[] calldata _sources) external;\n    function setFallbackOracle(address _fallbackOracle) external;    \n\n}\n        ",
+  "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/IPriceOracle.sol",
   "ast": {
-    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/interfaces/IPriceOracle.sol",
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/IPriceOracle.sol",
     "exportedSymbols": {
       "IPriceOracle": [
-        17740
+        4986
       ]
     },
-    "id": 17741,
+    "id": 4987,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 17725,
+        "id": 4945,
         "literals": [
           "solidity",
           "^",
@@ -69,41 +140,41 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:53"
+        "src": "0:23:18"
       },
       {
         "baseContracts": [],
         "contractDependencies": [],
         "contractKind": "interface",
-        "documentation": "**********\n@title IPriceOracle interface\n@notice Interface for the Aave price oracle.",
+        "documentation": "**********\n@title IPriceOracle interface\n@notice Interface for the price oracle.",
         "fullyImplemented": false,
-        "id": 17740,
+        "id": 4986,
         "linearizedBaseContracts": [
-          17740
+          4986
         ],
         "name": "IPriceOracle",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": null,
-            "documentation": "*********\n@dev returns the asset price in ETH",
-            "id": 17732,
+            "documentation": null,
+            "id": 4952,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getAssetPrice",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 17728,
+              "id": 4948,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 17727,
+                  "id": 4947,
                   "name": "_asset",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17732,
-                  "src": "233:14:53",
+                  "scope": 4952,
+                  "src": "279:14:18",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -111,10 +182,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 17726,
+                    "id": 4946,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "233:7:53",
+                    "src": "279:7:18",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -125,19 +196,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "232:16:53"
+              "src": "278:16:18"
             },
             "returnParameters": {
-              "id": 17731,
+              "id": 4951,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 17730,
+                  "id": 4950,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17732,
-                  "src": "272:7:53",
+                  "scope": 4952,
+                  "src": "318:7:18",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -145,10 +216,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 17729,
+                    "id": 4949,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "272:7:53",
+                    "src": "318:7:18",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -158,34 +229,34 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "271:9:53"
+              "src": "317:9:18"
             },
-            "scope": 17740,
-            "src": "210:71:53",
+            "scope": 4986,
+            "src": "256:71:18",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           },
           {
             "body": null,
-            "documentation": "*********\n@dev sets the asset price, in wei",
-            "id": 17739,
+            "documentation": null,
+            "id": 4959,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "setAssetPrice",
+            "name": "getSourceOfAsset",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 17737,
+              "id": 4955,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 17734,
+                  "id": 4954,
                   "name": "_asset",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17739,
-                  "src": "373:14:53",
+                  "scope": 4959,
+                  "src": "358:14:18",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -193,10 +264,148 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 17733,
+                    "id": 4953,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "373:7:53",
+                    "src": "358:7:18",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "357:16:18"
+            },
+            "returnParameters": {
+              "id": 4958,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4957,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4959,
+                  "src": "396:7:18",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4956,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "396:7:18",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "395:9:18"
+            },
+            "scope": 4986,
+            "src": "332:73:18",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 4964,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getFallbackOracle",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4960,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "436:2:18"
+            },
+            "returnParameters": {
+              "id": 4963,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4962,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4964,
+                  "src": "461:7:18",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4961,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "461:7:18",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "460:9:18"
+            },
+            "scope": 4986,
+            "src": "410:60:18",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 4971,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "supportNewAsset",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4969,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4966,
+                  "name": "asset_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4971,
+                  "src": "679:14:18",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4965,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "679:7:18",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -208,64 +417,222 @@
                 },
                 {
                   "constant": false,
-                  "id": 17736,
-                  "name": "_price",
+                  "id": 4968,
+                  "name": "source_",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17739,
-                  "src": "389:14:53",
+                  "scope": 4971,
+                  "src": "695:15:18",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
                   },
                   "typeName": {
-                    "id": 17735,
-                    "name": "uint256",
+                    "id": 4967,
+                    "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "389:7:53",
+                    "src": "695:7:18",
+                    "stateMutability": "nonpayable",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "372:32:53"
+              "src": "678:33:18"
             },
             "returnParameters": {
-              "id": 17738,
+              "id": 4970,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "413:0:53"
+              "src": "720:0:18"
             },
-            "scope": 17740,
-            "src": "350:64:53",
+            "scope": 4986,
+            "src": "654:67:18",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 4980,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setAssetSources",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4978,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4974,
+                  "name": "_assets",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4980,
+                  "src": "752:26:18",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_calldata_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 4972,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "752:7:18",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 4973,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "752:9:18",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4977,
+                  "name": "_sources",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4980,
+                  "src": "780:27:18",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_calldata_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 4975,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "780:7:18",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 4976,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "780:9:18",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "751:57:18"
+            },
+            "returnParameters": {
+              "id": 4979,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "817:0:18"
+            },
+            "scope": 4986,
+            "src": "727:91:18",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 4985,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setFallbackOracle",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4983,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4982,
+                  "name": "_fallbackOracle",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4985,
+                  "src": "850:23:18",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4981,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "850:7:18",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "849:25:18"
+            },
+            "returnParameters": {
+              "id": 4984,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "883:0:18"
+            },
+            "scope": 4986,
+            "src": "823:61:18",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 17741,
-        "src": "116:301:53"
+        "scope": 4987,
+        "src": "111:780:18"
       }
     ],
-    "src": "0:418:53"
+    "src": "0:900:18"
   },
   "legacyAST": {
-    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/interfaces/IPriceOracle.sol",
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/IPriceOracle.sol",
     "exportedSymbols": {
       "IPriceOracle": [
-        17740
+        4986
       ]
     },
-    "id": 17741,
+    "id": 4987,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 17725,
+        "id": 4945,
         "literals": [
           "solidity",
           "^",
@@ -273,41 +640,41 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:53"
+        "src": "0:23:18"
       },
       {
         "baseContracts": [],
         "contractDependencies": [],
         "contractKind": "interface",
-        "documentation": "**********\n@title IPriceOracle interface\n@notice Interface for the Aave price oracle.",
+        "documentation": "**********\n@title IPriceOracle interface\n@notice Interface for the price oracle.",
         "fullyImplemented": false,
-        "id": 17740,
+        "id": 4986,
         "linearizedBaseContracts": [
-          17740
+          4986
         ],
         "name": "IPriceOracle",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": null,
-            "documentation": "*********\n@dev returns the asset price in ETH",
-            "id": 17732,
+            "documentation": null,
+            "id": 4952,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getAssetPrice",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 17728,
+              "id": 4948,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 17727,
+                  "id": 4947,
                   "name": "_asset",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17732,
-                  "src": "233:14:53",
+                  "scope": 4952,
+                  "src": "279:14:18",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -315,10 +682,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 17726,
+                    "id": 4946,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "233:7:53",
+                    "src": "279:7:18",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -329,19 +696,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "232:16:53"
+              "src": "278:16:18"
             },
             "returnParameters": {
-              "id": 17731,
+              "id": 4951,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 17730,
+                  "id": 4950,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17732,
-                  "src": "272:7:53",
+                  "scope": 4952,
+                  "src": "318:7:18",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -349,10 +716,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 17729,
+                    "id": 4949,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "272:7:53",
+                    "src": "318:7:18",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -362,34 +729,34 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "271:9:53"
+              "src": "317:9:18"
             },
-            "scope": 17740,
-            "src": "210:71:53",
+            "scope": 4986,
+            "src": "256:71:18",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           },
           {
             "body": null,
-            "documentation": "*********\n@dev sets the asset price, in wei",
-            "id": 17739,
+            "documentation": null,
+            "id": 4959,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "setAssetPrice",
+            "name": "getSourceOfAsset",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 17737,
+              "id": 4955,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 17734,
+                  "id": 4954,
                   "name": "_asset",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17739,
-                  "src": "373:14:53",
+                  "scope": 4959,
+                  "src": "358:14:18",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -397,10 +764,148 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 17733,
+                    "id": 4953,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "373:7:53",
+                    "src": "358:7:18",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "357:16:18"
+            },
+            "returnParameters": {
+              "id": 4958,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4957,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4959,
+                  "src": "396:7:18",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4956,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "396:7:18",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "395:9:18"
+            },
+            "scope": 4986,
+            "src": "332:73:18",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 4964,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getFallbackOracle",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4960,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "436:2:18"
+            },
+            "returnParameters": {
+              "id": 4963,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4962,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4964,
+                  "src": "461:7:18",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4961,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "461:7:18",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "460:9:18"
+            },
+            "scope": 4986,
+            "src": "410:60:18",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 4971,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "supportNewAsset",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4969,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4966,
+                  "name": "asset_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4971,
+                  "src": "679:14:18",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4965,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "679:7:18",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -412,51 +917,209 @@
                 },
                 {
                   "constant": false,
-                  "id": 17736,
-                  "name": "_price",
+                  "id": 4968,
+                  "name": "source_",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17739,
-                  "src": "389:14:53",
+                  "scope": 4971,
+                  "src": "695:15:18",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
                   },
                   "typeName": {
-                    "id": 17735,
-                    "name": "uint256",
+                    "id": 4967,
+                    "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "389:7:53",
+                    "src": "695:7:18",
+                    "stateMutability": "nonpayable",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "372:32:53"
+              "src": "678:33:18"
             },
             "returnParameters": {
-              "id": 17738,
+              "id": 4970,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "413:0:53"
+              "src": "720:0:18"
             },
-            "scope": 17740,
-            "src": "350:64:53",
+            "scope": 4986,
+            "src": "654:67:18",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 4980,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setAssetSources",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4978,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4974,
+                  "name": "_assets",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4980,
+                  "src": "752:26:18",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_calldata_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 4972,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "752:7:18",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 4973,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "752:9:18",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4977,
+                  "name": "_sources",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4980,
+                  "src": "780:27:18",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_calldata_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 4975,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "780:7:18",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 4976,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "780:9:18",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "751:57:18"
+            },
+            "returnParameters": {
+              "id": 4979,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "817:0:18"
+            },
+            "scope": 4986,
+            "src": "727:91:18",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 4985,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setFallbackOracle",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4983,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4982,
+                  "name": "_fallbackOracle",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4985,
+                  "src": "850:23:18",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4981,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "850:7:18",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "849:25:18"
+            },
+            "returnParameters": {
+              "id": 4984,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "883:0:18"
+            },
+            "scope": 4986,
+            "src": "823:61:18",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 17741,
-        "src": "116:301:53"
+        "scope": 4987,
+        "src": "111:780:18"
       }
     ],
-    "src": "0:418:53"
+    "src": "0:900:18"
   },
   "compiler": {
     "name": "solc",
@@ -464,27 +1127,13 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-10-22T12:30:37.259Z",
+  "updatedAt": "2020-11-05T05:43:31.482Z",
   "devdoc": {
-    "methods": {
-      "getAssetPrice(address)": {
-        "details": "returns the asset price in ETH"
-      },
-      "setAssetPrice(address,uint256)": {
-        "details": "sets the asset price, in wei"
-      }
-    },
+    "methods": {},
     "title": "IPriceOracle interface"
   },
   "userdoc": {
-    "methods": {
-      "getAssetPrice(address)": {
-        "notice": "*********"
-      },
-      "setAssetPrice(address,uint256)": {
-        "notice": "*********"
-      }
-    },
-    "notice": "**********Interface for the Aave price oracle."
+    "methods": {},
+    "notice": "**********Interface for the price oracle."
   }
 }

@@ -43,25 +43,25 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"calculateLoanOriginationFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLoanOriginationFeePercentage\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{},\"title\":\"IFeeProvider interface\"},\"userdoc\":{\"methods\":{},\"notice\":\"**********Interface for the SIGH Finance fee provider.\"}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/interfaces/IFeeProvider.sol\":\"IFeeProvider\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/interfaces/IFeeProvider.sol\":{\"keccak256\":\"0xefd33154c4d0fa175b6a78c06deca795c66a386e1f823d9e9b94b362c52bdfe4\",\"urls\":[\"bzz-raw://78e463db9777d766440c3046b4ba54b990af86ead654237518eb1cf4462a5865\",\"dweb:/ipfs/QmRdye1LYbrxgJqmaPAg3bjpU2tDZU5niXzWh62E7GVx8W\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"calculateLoanOriginationFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLoanOriginationFeePercentage\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{},\"title\":\"IFeeProvider interface\"},\"userdoc\":{\"methods\":{},\"notice\":\"**********Interface for the SIGH Finance's Lending Protocol fee provider.\"}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/IFeeProvider.sol\":\"IFeeProvider\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/IFeeProvider.sol\":{\"keccak256\":\"0x40a163478b768ca5639ccc04466e2667eec5e86582dc5b2a9b18496a5e9c2423\",\"urls\":[\"bzz-raw://a021b7e9c79fd6053a0213e72ef307e58e1bb89392e9b24a6cc4063e49e5461a\",\"dweb:/ipfs/QmNb5Uh8bbudTma2hxnDc6JSR6MKS1U5PGggstGZhnwiQn\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.5.0;\n\n/************\n@title IFeeProvider interface\n@notice Interface for the SIGH Finance fee provider.\n*/\n\ninterface IFeeProvider {\n    function calculateLoanOriginationFee(address _user, uint256 _amount) external view returns (uint256);\n    function getLoanOriginationFeePercentage() external view returns (uint256);\n}\n",
-  "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/interfaces/IFeeProvider.sol",
+  "source": "pragma solidity ^0.5.0;\n\n/************\n@title IFeeProvider interface\n@notice Interface for the SIGH Finance's Lending Protocol fee provider.\n*/\n\ninterface IFeeProvider {\n    function calculateLoanOriginationFee(address _user, uint256 _amount) external view returns (uint256);\n    function getLoanOriginationFeePercentage() external view returns (uint256);\n}\n",
+  "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/IFeeProvider.sol",
   "ast": {
-    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/interfaces/IFeeProvider.sol",
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/IFeeProvider.sol",
     "exportedSymbols": {
       "IFeeProvider": [
-        17502
+        3835
       ]
     },
-    "id": 17503,
+    "id": 3836,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 17487,
+        "id": 3820,
         "literals": [
           "solidity",
           "^",
@@ -69,17 +69,17 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:49"
+        "src": "0:23:11"
       },
       {
         "baseContracts": [],
         "contractDependencies": [],
         "contractKind": "interface",
-        "documentation": "**********\n@title IFeeProvider interface\n@notice Interface for the SIGH Finance fee provider.",
+        "documentation": "**********\n@title IFeeProvider interface\n@notice Interface for the SIGH Finance's Lending Protocol fee provider.",
         "fullyImplemented": false,
-        "id": 17502,
+        "id": 3835,
         "linearizedBaseContracts": [
-          17502
+          3835
         ],
         "name": "IFeeProvider",
         "nodeType": "ContractDefinition",
@@ -87,23 +87,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 17496,
+            "id": 3829,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "calculateLoanOriginationFee",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 17492,
+              "id": 3825,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 17489,
+                  "id": 3822,
                   "name": "_user",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17496,
-                  "src": "192:13:49",
+                  "scope": 3829,
+                  "src": "211:13:11",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -111,10 +111,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 17488,
+                    "id": 3821,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "192:7:49",
+                    "src": "211:7:11",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -126,11 +126,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 17491,
+                  "id": 3824,
                   "name": "_amount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17496,
-                  "src": "207:15:49",
+                  "scope": 3829,
+                  "src": "226:15:11",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -138,10 +138,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 17490,
+                    "id": 3823,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "207:7:49",
+                    "src": "226:7:11",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -151,19 +151,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "191:32:49"
+              "src": "210:32:11"
             },
             "returnParameters": {
-              "id": 17495,
+              "id": 3828,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 17494,
+                  "id": 3827,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17496,
-                  "src": "247:7:49",
+                  "scope": 3829,
+                  "src": "266:7:11",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -171,10 +171,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 17493,
+                    "id": 3826,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "247:7:49",
+                    "src": "266:7:11",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -184,10 +184,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "246:9:49"
+              "src": "265:9:11"
             },
-            "scope": 17502,
-            "src": "155:101:49",
+            "scope": 3835,
+            "src": "174:101:11",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
@@ -195,29 +195,29 @@
           {
             "body": null,
             "documentation": null,
-            "id": 17501,
+            "id": 3834,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLoanOriginationFeePercentage",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 17497,
+              "id": 3830,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "301:2:49"
+              "src": "320:2:11"
             },
             "returnParameters": {
-              "id": 17500,
+              "id": 3833,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 17499,
+                  "id": 3832,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17501,
-                  "src": "327:7:49",
+                  "scope": 3834,
+                  "src": "346:7:11",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -225,10 +225,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 17498,
+                    "id": 3831,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "327:7:49",
+                    "src": "346:7:11",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -238,33 +238,33 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "326:9:49"
+              "src": "345:9:11"
             },
-            "scope": 17502,
-            "src": "261:75:49",
+            "scope": 3835,
+            "src": "280:75:11",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 17503,
-        "src": "126:212:49"
+        "scope": 3836,
+        "src": "145:212:11"
       }
     ],
-    "src": "0:339:49"
+    "src": "0:358:11"
   },
   "legacyAST": {
-    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/ProtocolContracts/interfaces/IFeeProvider.sol",
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/IFeeProvider.sol",
     "exportedSymbols": {
       "IFeeProvider": [
-        17502
+        3835
       ]
     },
-    "id": 17503,
+    "id": 3836,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 17487,
+        "id": 3820,
         "literals": [
           "solidity",
           "^",
@@ -272,17 +272,17 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:49"
+        "src": "0:23:11"
       },
       {
         "baseContracts": [],
         "contractDependencies": [],
         "contractKind": "interface",
-        "documentation": "**********\n@title IFeeProvider interface\n@notice Interface for the SIGH Finance fee provider.",
+        "documentation": "**********\n@title IFeeProvider interface\n@notice Interface for the SIGH Finance's Lending Protocol fee provider.",
         "fullyImplemented": false,
-        "id": 17502,
+        "id": 3835,
         "linearizedBaseContracts": [
-          17502
+          3835
         ],
         "name": "IFeeProvider",
         "nodeType": "ContractDefinition",
@@ -290,23 +290,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 17496,
+            "id": 3829,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "calculateLoanOriginationFee",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 17492,
+              "id": 3825,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 17489,
+                  "id": 3822,
                   "name": "_user",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17496,
-                  "src": "192:13:49",
+                  "scope": 3829,
+                  "src": "211:13:11",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -314,10 +314,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 17488,
+                    "id": 3821,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "192:7:49",
+                    "src": "211:7:11",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -329,11 +329,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 17491,
+                  "id": 3824,
                   "name": "_amount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17496,
-                  "src": "207:15:49",
+                  "scope": 3829,
+                  "src": "226:15:11",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -341,10 +341,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 17490,
+                    "id": 3823,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "207:7:49",
+                    "src": "226:7:11",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -354,19 +354,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "191:32:49"
+              "src": "210:32:11"
             },
             "returnParameters": {
-              "id": 17495,
+              "id": 3828,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 17494,
+                  "id": 3827,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17496,
-                  "src": "247:7:49",
+                  "scope": 3829,
+                  "src": "266:7:11",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -374,10 +374,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 17493,
+                    "id": 3826,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "247:7:49",
+                    "src": "266:7:11",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -387,10 +387,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "246:9:49"
+              "src": "265:9:11"
             },
-            "scope": 17502,
-            "src": "155:101:49",
+            "scope": 3835,
+            "src": "174:101:11",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
@@ -398,29 +398,29 @@
           {
             "body": null,
             "documentation": null,
-            "id": 17501,
+            "id": 3834,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLoanOriginationFeePercentage",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 17497,
+              "id": 3830,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "301:2:49"
+              "src": "320:2:11"
             },
             "returnParameters": {
-              "id": 17500,
+              "id": 3833,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 17499,
+                  "id": 3832,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 17501,
-                  "src": "327:7:49",
+                  "scope": 3834,
+                  "src": "346:7:11",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -428,10 +428,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 17498,
+                    "id": 3831,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "327:7:49",
+                    "src": "346:7:11",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -441,20 +441,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "326:9:49"
+              "src": "345:9:11"
             },
-            "scope": 17502,
-            "src": "261:75:49",
+            "scope": 3835,
+            "src": "280:75:11",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 17503,
-        "src": "126:212:49"
+        "scope": 3836,
+        "src": "145:212:11"
       }
     ],
-    "src": "0:339:49"
+    "src": "0:358:11"
   },
   "compiler": {
     "name": "solc",
@@ -462,13 +462,13 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-10-22T12:30:37.253Z",
+  "updatedAt": "2020-11-05T05:43:31.459Z",
   "devdoc": {
     "methods": {},
     "title": "IFeeProvider interface"
   },
   "userdoc": {
     "methods": {},
-    "notice": "**********Interface for the SIGH Finance fee provider."
+    "notice": "**********Interface for the SIGH Finance's Lending Protocol fee provider."
   }
 }

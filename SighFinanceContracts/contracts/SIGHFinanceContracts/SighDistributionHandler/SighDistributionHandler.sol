@@ -94,7 +94,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
 
     event Instrument_Sigh_Speed_Supplier_Ratio_Mantissa_Updated(address iToken, uint prevRatio, uint newRatio, uint blockNumber);
 
-    event PriceSnappedCheck(address iToken, uint prevPrice, uint currentPrice,uint32 currentCounter, uint blockNumber);
+    event PriceSnappedCheck(address iToken, uint prevPrice, uint currentPrice,uint32 currentCounter);
 
     event minimumBlocksForSpeedRefreshUpdated( uint prevDeltaBlocksForSpeed,uint newDeltaBlocksForSpeed, uint blockNumber );
     event AccuredSIGHTransferredToTheUser(address instrument, address user, uint sigh_Amount );
@@ -432,7 +432,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
                 }
                 
                 emit PriceSnapped(address(_currentInstrument), previousPrice.mantissa, currentPrice.mantissa, curClock );
-                emit PriceSnappedCheck(address(_currentInstrument), previousPrice.mantissa, instrumentPriceCycles[address(_currentInstrument)].recordedPriceSnapshot[curClock] ,  instrumentPriceCycles[address(_currentInstrument)].initializationCounter, blockNumber );
+                emit PriceSnappedCheck(address(_currentInstrument), previousPrice.mantissa, instrumentPriceCycles[address(_currentInstrument)].recordedPriceSnapshot[curClock] ,  instrumentPriceCycles[address(_currentInstrument)].initializationCounter );
             }
         }
         
