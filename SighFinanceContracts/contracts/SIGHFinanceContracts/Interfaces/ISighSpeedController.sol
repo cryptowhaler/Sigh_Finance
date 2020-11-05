@@ -13,7 +13,6 @@ interface ISighSpeedController {
 // ###########   SIGH DISTRIBUTION : INITIALIZED DRIPPING (Can be called only once)   ##########
 // #############################################################################################
 
-  function setAddressProvider(address _addressesProvider) external returns (bool);
   function beginDripping () external returns (bool);
 
 // ############################################################################################################
@@ -28,14 +27,15 @@ interface ISighSpeedController {
 // ###########   SIGH DISTRIBUTION FUNCTION - DRIP FUNCTION   ##########
 // #####################################################################
 
-  function drip() external returns (uint);
+  function drip() external ;
 
 // ###############################################################
 // ###########   EXTERNAL VIEW functions TO GET STATE   ##########
 // ###############################################################
 
-  function getSIGHBalance() external view returns (uint);
+  function getGlobalAddressProvider() external view returns (address);
   function getSighAddress() external view returns (address);
+  function getSIGHBalance() external view returns (uint);
   function getSupportedProtocols() external view returns (address[] memory);  
   function isThisProtocolSupported(address protocolAddress) external view returns (bool);
   function getSupportedProtocolState(address protocolAddress) external view returns (bool isSupported,
@@ -46,6 +46,6 @@ interface ISighSpeedController {
   function getRecentAmountDistributedToProtocol(address protocolAddress) external view returns (uint);
   function getSIGHSpeedForProtocol(address protocolAddress) external view returns (uint);
   function totalProtocolsSupported() external view returns (uint);
-
-
+  function _isDripAllowed() external view returns (bool);
+  function getlastDripBlockNumber() external view returns (uint);
 }

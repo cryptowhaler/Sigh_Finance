@@ -14,8 +14,8 @@ import "../openzeppelin-upgradeability/InitializableAdminUpgradeabilityProxy.sol
 
 contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
 
-    bool isSighInitialized = false;     // ADDED BY SIGH FINANCE
-
+    bool isSighInitialized = false;                             // ADDED BY SIGH FINANCE
+    bool isSighSpeedControllerInitialized = false;              // ADDED BY SIGH FINANCE
     //events
     event PendingSIGHFinanceManagerUpdated( address _pendingSighFinanceManager );           
     event SIGHFinanceManagerUpdated( address _sighFinanceManager );    
@@ -33,6 +33,7 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
 
     event SIGHFinanceConfiguratorUpdated(address indexed sighFinanceConfigAddress);       // ADDED BY SIGH FINANCE
     event SIGHAddressUpdated(address indexed sighAddress);                               // ADDED BY SIGH FINANCE
+    event SIGHSpeedControllerUpdated(address indexed speedControllerAddress);
     event SIGHMechanismHandlerImplUpdated(address indexed newAddress);                   // ADDED BY SIGH FINANCE
     event SIGHTreasuryImplUpdated(address indexed newAddress);                           // ADDED BY SIGH FINANCE
     event SIGHStakingImplUpdated(address indexed SIGHStakingAddress);                    // ADDED BY SIGH FINANCE
@@ -62,6 +63,7 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
     bytes32 private constant WALLET_BALANCE_PROVIDER = "WALLET_BALANCE_PROVIDER";
 
     bytes32 private constant SIGH = "SIGH";                                             // ADDED BY SIGH FINANCE
+    bytes32 private constant SIGH_SPEED_CONTROLLER = "SIGH_SPEED_CONTROLLER";           // ADDED BY SIGH FINANCE
     bytes32 private constant SIGH_MECHANISM_HANDLER = "SIGH_MECHANISM_HANDLER";         // ADDED BY SIGH FINANCE
     bytes32 private constant SIGH_TREASURY = "SIGH_TREASURY";                           // ADDED BY SIGH FINANCE
     bytes32 private constant SIGH_STAKING = "SIGH_STAKING";                             // ADDED BY SIGH FINANCE
@@ -327,9 +329,10 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
 // ####___________ SIGH FINANCE RELATED CONTRACTS _____________########################
 // ########## 1. SIGH (Initialized only once) #########################################
 // ########## 2. SIGHFinanceConfigurator (Upgradagble) ################################
-// ########## 2. SIGHTreasury (Upgradagble) ###########################################
-// ########## 3. SIGHMechanismHandler (Upgradagble) ###################################
-// ########## 3. SIGHMechanismHandler (Upgradagble) ###################################
+// ########## 2. SIGH Speed Controller (Initialized only once) ######################## 
+// ########## 3. SIGHTreasury (Upgradagble) ###########################################
+// ########## 4. SIGHMechanismHandler (Upgradagble) ###################################
+// ########## 5. SIGHStaking (Upgradagble) ###################################
 // ####################################################################################
 
 // ################################                                                     // ADDED BY SIGH FINANCE
@@ -367,6 +370,30 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
         updateImplInternal(SIGH_FINANCE_CONFIGURATOR, _configurator);
         emit SIGHFinanceConfiguratorUpdated(_configurator);
     }
+
+// ############################################
+// ######  SIGH Speed Controller ########
+// ############################################
+
+    /**
+    * @dev returns the address of the SIGH_SPEED_CONTROLLER proxy
+    * @return the SIGH Speed Controller address
+    **/
+    function getSIGHSpeedController() external view returns (address) {
+        return getAddress(SIGH_SPEED_CONTROLLER);
+    }
+     
+    /**
+    * @dev sets the address of the SIGH Speed Controller
+    * @param _SIGHSpeedController the SIGH Speed Controller implementation
+    **/
+    function setSIGHSpeedController(address _SIGHSpeedController) external onlySIGHFinanceManager {
+        // require (!isSighSpeedControllerInitialized, "SIGH Speed Controller address can only be initialized once.");
+        isSighSpeedControllerInitialized  = true;
+        _setAddress(SIGH_SPEED_CONTROLLER, _SIGHSpeedController);
+        emit SIGHSpeedControllerUpdated(_SIGHSpeedController);
+    }
+
 
 
 // #################################  ADDED BY SIGH FINANCE 

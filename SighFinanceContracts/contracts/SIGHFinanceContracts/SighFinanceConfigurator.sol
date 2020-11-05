@@ -8,6 +8,7 @@ import "../configuration/GlobalAddressesProvider.sol";
 import "./Interfaces/ISighDistributionHandler.sol";
 import "./Interfaces/ISighTreasury.sol";
 import "./Interfaces/ISighStaking.sol";
+import "./Interfaces/ISighSpeedController.sol";
 
 /**
 * @title SighFinanceConfigurator contract
@@ -60,11 +61,41 @@ contract SighFinanceConfigurator is VersionedInitializable {
         _;
     }
 
+
+// #################################################
+// ####### SIGH SPEED CONTROLLER FUNCTIONS #########
+// #################################################
+
+    function beginDrippingFromSIGHSpeedController() external onlySIGHFinanceManager returns (bool) { 
+        ISighSpeedController sigh_speed_Controller = ISighSpeedController( globalAddressesProvider.getSIGHSpeedController() );
+        require(sigh_speed_Controller.beginDripping(), "SIGH Dripping initialization from SIGH Speed Controller failed." );
+        return true;
+    }
+
+    function supportNewProtocolInSIGHSpeedController( address newProtocolAddress, uint sighSpeed ) external onlySIGHFinanceManager returns (bool) { 
+        ISighSpeedController sigh_speed_Controller = ISighSpeedController( globalAddressesProvider.getSIGHSpeedController() );
+        require(sigh_speed_Controller.supportNewProtocol(newProtocolAddress, sighSpeed), "New Protocol addition to SIGH Speed Controller failed." );
+        return true;
+    }
+    
+    function removeSupportedProtocolFromSIGHSpeedController(address protocolAddress_) external onlySIGHFinanceManager returns (bool) { 
+        ISighSpeedController sigh_speed_Controller = ISighSpeedController( globalAddressesProvider.getSIGHSpeedController() );
+        require(sigh_speed_Controller.removeSupportedProtocol(protocolAddress_), " Protocol removal from SIGH Speed Controller failed." );
+        return true;
+    }    
+
+    function changeProtocolSIGHSpeedInSIGHSpeedController(address targetAddress, uint newSpeed_) external onlySIGHFinanceManager returns (bool) { 
+        ISighSpeedController sigh_speed_Controller = ISighSpeedController( globalAddressesProvider.getSIGHSpeedController() );
+        require(sigh_speed_Controller.changeProtocolSIGHSpeed(targetAddress, newSpeed_), " Protocol SIGH Distribution speed update in SIGH Speed Controller failed." );
+        return true;
+    }    
+
+
 // #####################################################
 // ####### SIGH DISTRIBUTION HANDLER FUNCTIONS #########
 // #####################################################
 
-    function sigh_instrument(address instrument_) external onlySIGHFinanceManager returns (bool) { 
+    function SIGH_the_instrument(address instrument_) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
         require(sigh_distribution_mechanism.Instrument_SIGHed( instrument_ ), "Instrument_SIGHed() execution failed." );
         return true;

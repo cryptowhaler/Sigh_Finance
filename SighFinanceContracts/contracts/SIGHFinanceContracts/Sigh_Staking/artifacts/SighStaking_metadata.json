@@ -11,115 +11,15 @@
 					{
 						"indexed": false,
 						"internalType": "address",
-						"name": "targetAddress",
+						"name": "instrumentAddress",
 						"type": "address"
 					},
 					{
 						"indexed": false,
-						"internalType": "address",
-						"name": "instrumentBeingDripped",
-						"type": "address"
+						"internalType": "string",
+						"name": "instrument_name",
+						"type": "string"
 					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "currentBalance",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "AmountDripped",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "totalAmountDripped",
-						"type": "uint256"
-					}
-				],
-				"name": "AmountDripped",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "bool",
-						"name": "prevDripAllowed",
-						"type": "bool"
-					},
-					{
-						"indexed": false,
-						"internalType": "bool",
-						"name": "newDripAllowed",
-						"type": "bool"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "blockNumber",
-						"type": "uint256"
-					}
-				],
-				"name": "DripAllowedChanged",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "prevDripSpeed",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "curDripSpeed",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "blockNumber",
-						"type": "uint256"
-					}
-				],
-				"name": "DripSpeedChanged",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "bool",
-						"name": "prevBurnAllowed",
-						"type": "bool"
-					},
-					{
-						"indexed": false,
-						"internalType": "bool",
-						"name": "newBurnAllowed",
-						"type": "bool"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "blockNumber",
-						"type": "uint256"
-					}
-				],
-				"name": "SIGHBurnAllowedChanged",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
 					{
 						"indexed": false,
 						"internalType": "uint256",
@@ -129,42 +29,17 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "newSpeed",
+						"name": "instrument_DistributionSpeed",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "blockNumber",
+						"name": "block_number",
 						"type": "uint256"
 					}
 				],
-				"name": "SIGHBurnSpeedChanged",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "TargetAddress",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "amountTransferred",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "blockNumber",
-						"type": "uint256"
-					}
-				],
-				"name": "SIGHTransferred",
+				"name": "DistributionSpeedUpdated",
 				"type": "event"
 			},
 			{
@@ -173,29 +48,47 @@
 					{
 						"indexed": false,
 						"internalType": "address",
-						"name": "msgSender",
+						"name": "newInstrument",
 						"type": "address"
 					},
 					{
 						"indexed": false,
-						"internalType": "address",
-						"name": "addressesProvider",
-						"type": "address"
+						"internalType": "string",
+						"name": "instrument_name",
+						"type": "string"
 					},
 					{
 						"indexed": false,
-						"internalType": "address",
-						"name": "SIGH",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "instrument_index",
+						"type": "uint256"
 					},
 					{
 						"indexed": false,
-						"internalType": "address",
-						"name": "sighDistributionHandler",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "instrument_DistributionSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "instrument_totalAmountRewarded",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "instrument_balance",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "instrument_lastUpdatedBlock",
+						"type": "uint256"
 					}
 				],
-				"name": "SIGHTreasuryInitialized",
+				"name": "NewInstrumentForDistributionAdded",
 				"type": "event"
 			},
 			{
@@ -204,7 +97,7 @@
 					{
 						"indexed": false,
 						"internalType": "address",
-						"name": "sigh_Address",
+						"name": "staker",
 						"type": "address"
 					},
 					{
@@ -216,23 +109,139 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "totalSIGHBurned",
+						"name": "prevStakedBalance",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "remaining_balance",
+						"name": "staker_stakedBalance",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "blockNumber",
+						"name": "prevTotalStakedBalance",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalStakedSigh",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "numberOfStakers",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blocknumber",
 						"type": "uint256"
 					}
 				],
-				"name": "SIGH_Burned",
+				"name": "SighStaked",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "staker",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "prevStakedBalance",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "staker_stakedBalance",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "prevTotalStakedBalance",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalStakedSigh",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "numberOfStakers",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blocknumber",
+						"type": "uint256"
+					}
+				],
+				"name": "SighUnstaked",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "staker",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "prevBalance",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "staker_stakedBalance",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalStakedSigh",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "block_number",
+						"type": "uint256"
+					}
+				],
+				"name": "StreamingSighStaked",
 				"type": "event"
 			},
 			{
@@ -241,7 +250,7 @@
 					{
 						"indexed": false,
 						"internalType": "bytes",
-						"name": "data",
+						"name": "_data",
 						"type": "bytes"
 					}
 				],
@@ -252,27 +261,27 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": true,
+						"indexed": false,
 						"internalType": "address",
-						"name": "instrument_address",
+						"name": "token_bought",
 						"type": "address"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "prev_balance",
+						"name": "prev_bought_token_amount",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "amount",
+						"name": "tokenBoughtAmount",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "new_balance",
+						"name": "new_bought_token_amount",
 						"type": "uint256"
 					}
 				],
@@ -283,27 +292,27 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": true,
+						"indexed": false,
 						"internalType": "address",
-						"name": "instrument_address",
+						"name": "token_sold",
 						"type": "address"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "prev_balance",
+						"name": "prev_sold_token_amount",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "amount",
+						"name": "tokenSoldAmount",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "new_balance",
+						"name": "new_sold_token_amount",
 						"type": "uint256"
 					}
 				],
@@ -316,23 +325,35 @@
 					{
 						"indexed": false,
 						"internalType": "address",
-						"name": "prevInstrument",
+						"name": "staker",
 						"type": "address"
 					},
 					{
 						"indexed": false,
 						"internalType": "address",
-						"name": "newToken",
+						"name": "instrumentToBeClaimed",
 						"type": "address"
 					},
 					{
 						"indexed": false,
+						"internalType": "string",
+						"name": "instrument_name",
+						"type": "string"
+					},
+					{
+						"indexed": false,
 						"internalType": "uint256",
-						"name": "blockNumber",
+						"name": "amountToBeTransferred",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "block_number",
 						"type": "uint256"
 					}
 				],
-				"name": "instrumentBeingDistributedChanged",
+				"name": "instrumentTransferred",
 				"type": "event"
 			},
 			{
@@ -341,17 +362,121 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "prevmaxTransferAmount",
+						"name": "prevLimit",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "newmaxTransferAmount",
+						"name": "maxSighThatCanBeStaked",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "block_number",
 						"type": "uint256"
 					}
 				],
-				"name": "maxTransferAmountUpdated",
+				"name": "maxSighThatCanBeStakedUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "staker",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "instrumentIndex",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "stakerIndex",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "deltaIndexes",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newInstrumentAccumulated",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "staker_instrumentIndex_instrumentRewarded",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "staker_instrumentAccumulated_instrumentBeingRewarded",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "block_number",
+						"type": "uint256"
+					}
+				],
+				"name": "updateStakerIndexUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "instrument_Rewarded",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "instrument_name",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "instrument_DistributionSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "instrument_index",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "instrument_totalAmountRewarded",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "instrument_lastUpdatedBlock",
+						"type": "uint256"
+					}
+				],
+				"name": "updatedInstrumnetBeingDistributedIndex",
 				"type": "event"
 			},
 			{
@@ -371,36 +496,24 @@
 			},
 			{
 				"constant": false,
-				"inputs": [],
-				"name": "burnSIGHTokens",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "instrumentToDrip",
+						"name": "instrumentToBeClaimed",
 						"type": "address"
 					}
 				],
-				"name": "changeInstrumentBeingDripped",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
+				"name": "claimAccumulatedInstrument",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "claimAllAccumulatedInstruments",
+				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -409,71 +522,26 @@
 				"constant": false,
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "isAllowed",
-						"type": "uint256"
+						"internalType": "address[]",
+						"name": "stakingAddresses",
+						"type": "address[]"
 					}
 				],
-				"name": "changeSIGHBurnAllowed",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
+				"name": "claimAllAccumulatedInstrumentsForUsers",
+				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"constant": true,
-				"inputs": [],
-				"name": "coolDownPeriod",
-				"outputs": [
+				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
+						"internalType": "address",
+						"name": "instrument",
+						"type": "address"
 					}
 				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [],
-				"name": "drip",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getBurnSpeed",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
 				"name": "getDistributionSpeed",
 				"outputs": [
 					{
@@ -491,15 +559,40 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "instrument_address",
+						"name": "instrumentAddress",
 						"type": "address"
 					}
 				],
-				"name": "getInstrumentBalance",
+				"name": "getInstrumentState",
 				"outputs": [
 					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
 						"internalType": "uint256",
-						"name": "",
+						"name": "index",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "rewardDistributionSpeed",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalAmountRewarded",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "balance",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "lastUpdatedBlock",
 						"type": "uint256"
 					}
 				],
@@ -510,12 +603,12 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "getSIGHBalance",
+				"name": "getInstrumentsSupported",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "address[]",
 						"name": "",
-						"type": "uint256"
+						"type": "address[]"
 					}
 				],
 				"payable": false,
@@ -524,23 +617,14 @@
 			},
 			{
 				"constant": true,
-				"inputs": [],
-				"name": "getTargetAddressForDistribution",
-				"outputs": [
+				"inputs": [
 					{
 						"internalType": "address",
-						"name": "",
+						"name": "account",
 						"type": "address"
 					}
 				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getTotalBurntSigh",
+				"name": "getStakedBalanceForStaker",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -557,11 +641,16 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "token",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "instrument",
 						"type": "address"
 					}
 				],
-				"name": "getTotalDrippedAmount",
+				"name": "getStakersAccumulatedInstrumentAmount",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -576,12 +665,42 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "getinstrumentBeingDripped",
+				"name": "getTotalStakedSIGH",
 				"outputs": [
 					{
-						"internalType": "address",
+						"internalType": "uint256",
 						"name": "",
-						"type": "address"
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getTotalStakers",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getmaxSighThatCanBeStaked",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"payable": false,
@@ -592,7 +711,7 @@
 				"constant": false,
 				"inputs": [
 					{
-						"internalType": "address",
+						"internalType": "contract GlobalAddressesProvider",
 						"name": "addressesProvider_",
 						"type": "address"
 					}
@@ -604,154 +723,129 @@
 				"type": "function"
 			},
 			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrument",
+						"type": "address"
+					}
+				],
+				"name": "isInstrumentSupported",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"constant": false,
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "targetAddress",
+						"name": "instrumentAddress",
 						"type": "address"
 					},
+					{
+						"internalType": "uint256",
+						"name": "newSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "setDistributionSpeed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "sigh_Instrument",
+				"outputs": [
+					{
+						"internalType": "contract IERC20",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "stake_SIGH",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
 					{
 						"internalType": "address",
-						"name": "instrumentToBeDistributed",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "stakingBalances",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "alreadyAStaker",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "stakedBalance",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newInstrument",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "distributionSpeed",
+						"name": "speed",
 						"type": "uint256"
 					}
 				],
-				"name": "initializeInstrumentDistribution",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "isDistributionAllowed",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "is_SIGH_BurnAllowed",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "lastBurnBlockNumber",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "lastDripBlockNumber",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "maxTransferAmount",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "oracle",
-				"outputs": [
-					{
-						"internalType": "contract IPriceOracleGetter",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "prevTransferBlock",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [],
-				"name": "refreshConfig",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [],
-				"name": "resetInstrumentDistribution",
+				"name": "supportNewInstrumentForDistribution",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -813,8 +907,71 @@
 				"constant": false,
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "unstake_SIGH",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
 						"internalType": "address",
-						"name": "target_",
+						"name": "instrument",
+						"type": "address"
+					}
+				],
+				"name": "updateBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "updateMaxSighThatCanBeStaked",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "staker",
 						"type": "address"
 					},
 					{
@@ -823,7 +980,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "transferSighTo",
+				"name": "updateStakedBalanceForStreaming",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -831,120 +988,25 @@
 						"type": "bool"
 					}
 				],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "DripSpeed_",
-						"type": "uint256"
-					}
-				],
-				"name": "updateDripSpeed",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "instrument_address",
-						"type": "address"
-					}
-				],
-				"name": "updateInstrumentBalance",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "newBurnSpeed",
-						"type": "uint256"
-					}
-				],
-				"name": "updateSIGHBurnSpeed",
-				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
 		"devdoc": {
-			"methods": {
-				"changeInstrumentBeingDripped(address)": {
-					"params": {
-						"instrumentToDrip": "Address of the token to be dripped"
-					},
-					"return": "returns the address of the token that will be Dripped"
-				},
-				"drip()": {
-					"return": "returns the Dripped Amount"
-				},
-				"resetInstrumentDistribution()": {
-					"return": "return is Dripping is allowed or not"
-				},
-				"transferSighTo(address,uint256)": {
-					"params": {
-						"amount": "The Amount to be transferred",
-						"target_": "Address to which the amount is to be transferred"
-					},
-					"return": "returns the Dripped Amount"
-				},
-				"updateDripSpeed(uint256)": {
-					"params": {
-						"DripSpeed_": "New Drip Speed"
-					},
-					"return": "returns a Boolean True is Successful "
-				}
-			}
+			"methods": {}
 		},
 		"userdoc": {
 			"methods": {
-				"changeInstrumentBeingDripped(address)": {
-					"notice": "Change the token being dripped to the Target Address"
-				},
-				"drip()": {
-					"notice": "Drips the Tokens to the SIGHDistributionHandler"
-				},
-				"resetInstrumentDistribution()": {
-					"notice": "Switch to Reset (OFF) Dripping"
-				},
-				"transferSighTo(address,uint256)": {
-					"notice": "Transfers the SIGH Tokens to the Target Address"
-				},
-				"updateDripSpeed(uint256)": {
-					"notice": "To change the Current Drip Speed"
+				"initialize(address)": {
+					"notice": "Called by the proxy when setting this contract as implementation"
 				}
 			}
 		}
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/contracts/SIGHFinanceContracts/Treasury/TreasuryV1Impl.sol": "Treasury"
+			"localhost/contracts/SIGHFinanceContracts/Sigh_Staking/SighStaking.sol": "SighStaking"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -955,25 +1017,25 @@
 		"remappings": []
 	},
 	"sources": {
-		"localhost/contracts/LendingProtocolContracts/interfaces/IPriceOracleGetter.sol": {
-			"keccak256": "0x58175d019ae6f47b4941461ba27dfe6afcc20d146e9bdb7a949902c7330803f3",
+		"localhost/contracts/SIGHFinanceContracts/Math/CarefulMath.sol": {
+			"keccak256": "0x0647348f27e41d22555d99eebd217dee02a4d737df6accd7cce5347a7487c7de",
 			"urls": [
-				"bzz-raw://e118d81569a54c84d66c259d46e481e32cba80f56e99300a6a083b554421be4f",
-				"dweb:/ipfs/QmVhbHRHdV8y2XgqznQg4CJGF8anFQctGDSsANGNi8TER9"
+				"bzz-raw://08882d26c11a6d240949a5afba79a74694a8b651093c05c5ae4cc359a0181c22",
+				"dweb:/ipfs/QmVXb1tDswuhMRNuDLajzohdkvx2kBmqu1Rxn1BAKUfhkV"
 			]
 		},
-		"localhost/contracts/SIGHFinanceContracts/Treasury/EIP20InterfaceSIGH.sol": {
-			"keccak256": "0x23d6b5c907cf140011678898a10dc22195f21ec6adc038a8fb1d9682000ccbd1",
+		"localhost/contracts/SIGHFinanceContracts/Math/Exponential.sol": {
+			"keccak256": "0x16208257a4d106dde7208fc88cb424f26dbc18cca1fd46c3c15d875275170f30",
 			"urls": [
-				"bzz-raw://5098f11afe1b0e5d5796e4231cc870e23ae7e528055f63d8a4e478769ca1ec16",
-				"dweb:/ipfs/QmQVVa2MHESeLT5p8jaudjpawabZx6x8cfrPcci73ehiCS"
+				"bzz-raw://cf54f88f8c8c99c8c22b31e58c9dc5dd4c6c19dbb2fe1b437632f8268ca9e1b8",
+				"dweb:/ipfs/QmVsaomWuGu3sQRdQ3BWtkTNLG9KB3MWu5hKZwiqSmbob4"
 			]
 		},
-		"localhost/contracts/SIGHFinanceContracts/Treasury/TreasuryV1Impl.sol": {
-			"keccak256": "0x06f8097a313e9cd2cbffa7078a4421d3e85e5c60a439cad8f0e3c1cd729e2c0f",
+		"localhost/contracts/SIGHFinanceContracts/Sigh_Staking/SighStaking.sol": {
+			"keccak256": "0x208cd4d9d5aa1eb53118cd8d2b8d51f2110d80a7769eb1740a02263068c4499a",
 			"urls": [
-				"bzz-raw://855cf94bdafa7d4fad3b01f2f64b72025f4906809da32284855cca7c0ffda9fd",
-				"dweb:/ipfs/QmU71k8brina4cs7rgxRZDJxBk6r38FD1MQPSnLyRVaMEv"
+				"bzz-raw://539b1b607fa3ece2a15554a27b778d8d2114015b06f00d290176d42d0df0ce9f",
+				"dweb:/ipfs/Qmc7thCPHewVzWsGwAk52aHpsKDqpXivAZkBo4dnY6oSzz"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {
@@ -1046,11 +1108,32 @@
 				"dweb:/ipfs/QmdSYn9D1Q3FRXRNDLYGGFoYb8rsN4U2MYdxciuZBTSg83"
 			]
 		},
+		"openzeppelin-solidity/contracts/math/SafeMath.sol": {
+			"keccak256": "0x7f293e2ee29a32416531a0bf3da9972358887c45ec1836642ec8e700cc152ba0",
+			"urls": [
+				"bzz-raw://e6ca40872864cb64a2dcc1b4f0be6a3cfc406f363e045fa7991f9f22f6257a63",
+				"dweb:/ipfs/QmdsPdEayCcUa1fg3YTbhTPn3GTcjfNYZqnwf9EDC3QGpp"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol": {
+			"keccak256": "0x4f4577659871ebf814a4adfb96bfec76b5a5e9dd7a414ca545152fe4ba1b932d",
+			"urls": [
+				"bzz-raw://d188138f791cdab03f888e06417d5eedfb378a3ed6f0d8e063da6403b4c6b9c6",
+				"dweb:/ipfs/Qme3scJo781TbYD8Svx86JhLvyY1Tk1ekXvw5novFwaS9Y"
+			]
+		},
 		"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
 			"keccak256": "0xe92a180661a6e21051d45be08a572dbf8d61e04c142d4284e503f615aed587fd",
 			"urls": [
 				"bzz-raw://003c6da07a3cbc576a9a59f462ed67d9041ff89e106463817ce9f005e24d83c8",
 				"dweb:/ipfs/QmemQazcc1Cww2Umgc4UFYpwF8WRqajPB6z5TNdC13XJCR"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol": {
+			"keccak256": "0x0e9ff1feedfd4c410999c4b233612528cb3e32bb30be2e676cfc3f4204b82b3f",
+			"urls": [
+				"bzz-raw://307a705bd5e1c87db72eb713412f1c49d6208e65da20224867e92fc18a603bc6",
+				"dweb:/ipfs/QmeTsxwMydqhphHkbM8ce48E2rtoj8UHV4npjjWDxWLYe3"
 			]
 		},
 		"openzeppelin-solidity/contracts/utils/Address.sol": {

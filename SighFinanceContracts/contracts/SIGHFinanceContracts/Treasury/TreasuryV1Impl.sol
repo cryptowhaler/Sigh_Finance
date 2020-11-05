@@ -11,7 +11,6 @@ pragma solidity ^0.5.16;
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
 import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 
-import "./TreasuryStorage.sol";
 import "./EIP20InterfaceSIGH.sol";
 import "../../configuration/GlobalAddressesProvider.sol";
 import "../../LendingProtocolContracts/interfaces/IPriceOracleGetter.sol";
@@ -19,7 +18,7 @@ import "../../LendingProtocolContracts/interfaces/IPriceOracleGetter.sol";
 // import "./IForwarder.sol";
 // import "../openzeppelin/EIP20Interface.sol";
 
-contract Treasury is TreasuryV1Storage, VersionedInitializable   {
+contract Treasury is VersionedInitializable   {
 
     IERC20 private sigh_Instrument;    
     GlobalAddressesProvider public addressesProvider;

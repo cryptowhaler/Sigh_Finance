@@ -14,14 +14,11 @@ import "../../configuration/IGlobalAddressesProvider.sol";
 contract SighSpeedController is ISighSpeedController {
 
   /// @notice Reference to SIGH
-  IERC20 public token;
-
-  address public admin;
+  IERC20 private sighInstrument;
   IGlobalAddressesProvider private addressesProvider;
-  bool private isAddressesSet = false;
 
-  bool public isDripAllowed = false;  
-  uint public lastDripBlockNumber;    
+  bool private isDripAllowed = false;  
+  uint private lastDripBlockNumber;    
     
   struct protocolState {
     bool isSupported;
@@ -35,7 +32,7 @@ contract SighSpeedController is ISighSpeedController {
 
   event DistributionInitialized(uint blockNumber);
 
-  event NewProtocolSupported (address protocolAddress, uint sighSpeed);
+  event NewProtocolSupported (address protocolAddress, uint sighSpeed, uint totalDrippedAmount);
   event ProtocolRemoved(address protocolAddress, uint totalDrippedToProtocol);
   
   event DistributionSpeedChanged(address protocolAddress, uint prevSpeed , uint newSpeed );  
@@ -44,14 +41,6 @@ contract SighSpeedController is ISighSpeedController {
 // ########################
 // ####### MODIFIER #######
 // ########################
-
-    /**
-    * @dev only the SIGH Finance Manager can call functions affected by this modifier
-    **/
-    modifier onlySIGHFinanceManager {
-        require( addressesProvider.getSIGHFinanceManager() == msg.sender, "The caller must be the SIGH Finance Manager" );
-        _;
-    }
 
     //only SIGH Finance Configurator can use functions affected by this modifier
     modifier onlySighFinanceConfigurator {
@@ -65,21 +54,17 @@ contract SighSpeedController is ISighSpeedController {
 
   /**
     * @notice Constructs a Reservoir
-    * @param token_ The token to drip
+    * @param sighInstrument_ The token to drip
+    * @param _addressesProvider The global addresses provider
     */
-  constructor(IERC20 token_ ) public {
-    admin = msg.sender;
-    token = token_;
+  constructor(address sighInstrument_, address _addressesProvider ) public {
+    sighInstrument = IERC20(sighInstrument_);
+    addressesProvider = IGlobalAddressesProvider(_addressesProvider);
+    require(address(sighInstrument) == sighInstrument_, " SIGH Instrument not initialized Properly ");
+    require(address(addressesProvider) == _addressesProvider, " AddressesProvider not initialized Properly ");
+    
   }
 
-  function setAddressProvider(address _addressesProvider) external returns (bool) {
-    require(admin == msg.sender,"Dripping can only be initialized by the Admin");
-    require(!isAddressesSet,"AddressProvider can only be initialized once");
-    isAddressesSet = true;
-    addressesProvider = IGlobalAddressesProvider(_addressesProvider);
-    require(address(addressesProvider) == _addressesProvider, " AddressesProvider not initialized Properly ");
-    admin = address(0);
-  }
 
 // #############################################################################################
 // ###########   SIGH DISTRIBUTION : INITIALIZED DRIPPING (Can be called only once)   ##########
@@ -96,7 +81,7 @@ contract SighSpeedController is ISighSpeedController {
   }
 
 // ############################################################################################################
-// ###########   SIGH DISTRIBUTION : ADDING / REMOVING NEW PROTOCOL WHICH WILL RECEIVE SIGH TOKENS   ##########
+// ###########   SIGH DISTRIBUTION : ADDING / REMOVING NEW PROTOCOL WHICH WILL RECEIVE SIGH INSTRUMENTS   ##########
 // ############################################################################################################
 
   function supportNewProtocol( address newProtocolAddress, uint sighSpeed ) external onlySighFinanceConfigurator returns (bool)  {
@@ -106,18 +91,22 @@ contract SighSpeedController is ISighSpeedController {
         dripInternal();
     }
     
-    storedSupportedProtocols.push(newProtocolAddress);  // ADDED TO THE LIST
+    storedSupportedProtocols.push(newProtocolAddress);                              // ADDED TO THE LIST
     
-    supportedProtocols[newProtocolAddress] = protocolState({ isSupported: true,
-                                                           distributionSpeed: sighSpeed,
-                                                           totalDrippedAmount: uint(0),
-                                                           recentlyDrippedAmount: uint(0)
-                                                           });
+    if ( supportedProtocols[newProtocolAddress].totalDrippedAmount > 0 ) {
+        supportedProtocols[newProtocolAddress].isSupported = true;
+        supportedProtocols[newProtocolAddress].distributionSpeed = sighSpeed;
+    }
+    else {
+        supportedProtocols[newProtocolAddress] = protocolState({ isSupported: true, distributionSpeed: sighSpeed, totalDrippedAmount: uint(0), recentlyDrippedAmount: uint(0) });
+    }
+    
     
     require (supportedProtocols[newProtocolAddress].isSupported, 'Error occured when adding the new protocol');
     require (supportedProtocols[newProtocolAddress].distributionSpeed == sighSpeed, 'SIGH Speed for the new protocol was not initialized properly.');
     
-    emit NewProtocolSupported(newProtocolAddress, supportedProtocols[newProtocolAddress].distributionSpeed);
+    emit NewProtocolSupported(newProtocolAddress, supportedProtocols[newProtocolAddress].distributionSpeed, supportedProtocols[newProtocolAddress].totalDrippedAmount);
+    return true;
   }
   
 
@@ -149,6 +138,7 @@ contract SighSpeedController is ISighSpeedController {
     require (supportedProtocols[protocolAddress_].distributionSpeed == 0, 'SIGH Speed was not properly assigned to 0.');
 
     emit ProtocolRemoved( protocolAddress_,  supportedProtocols[protocolAddress_].totalDrippedAmount );
+    return true;
   }
   
 // ######################################################################################
@@ -173,17 +163,21 @@ contract SighSpeedController is ISighSpeedController {
 // #####################################################################
 
   /**
-    * @notice Drips the maximum amount of tokens to match the drip rate since inception
-    * @dev Note: this will only drip up to the amount of tokens available.
-    * @return The amount of tokens dripped in this call
+    * @notice Drips the maximum amount of sighInstruments to match the drip rate since inception
+    * @dev Note: this will only drip up to the amount of sighInstruments available.
     */
-  function drip() public returns (uint) {
+  function drip() public {
     require(isDripAllowed,'Dripping has not been initialized by the SIGH Finance Manager');    
     dripInternal();
   }
   
   function dripInternal() internal {
-    IERC20 token_ = token;
+     
+    if (lastDripBlockNumber == block.number) {
+        return;
+    }
+      
+    IERC20 sighInstrument_ = sighInstrument;
     
     address[] memory protocols = storedSupportedProtocols;
     uint length = protocols.length;
@@ -194,19 +188,19 @@ contract SighSpeedController is ISighSpeedController {
             
             if ( supportedProtocols[ current_protocol ].isSupported ) {
                 
-                uint reservoirBalance_ = token_.balanceOf(address(this)); 
+                uint reservoirBalance_ = sighInstrument_.balanceOf(address(this)); 
                 uint blockNumber_ = block.number;
                 uint deltaBlocks = sub(blockNumber_,lastDripBlockNumber,"Delta Blocks gave error");
                 uint deltaDrip_ = mul(supportedProtocols[ current_protocol ].distributionSpeed, deltaBlocks , "dripTotal overflow");
                 uint toDrip_ = min(reservoirBalance_, deltaDrip_);
             
-                require(reservoirBalance_ != 0, 'Protocol Transfer: The reservoir currently does not have any SIGH tokens' );
-                require(token_.transfer(current_protocol, toDrip_), 'Protocol Transfer: The transfer did not complete.' );
+                require(reservoirBalance_ != 0, 'Protocol Transfer: The reservoir currently does not have any SIGH Instruments' );
+                require(sighInstrument_.transfer(current_protocol, toDrip_), 'Protocol Transfer: The transfer did not complete.' );
                 
                 uint prevDrippedAmount = supportedProtocols[current_protocol].totalDrippedAmount;
                 supportedProtocols[current_protocol].totalDrippedAmount = add(prevDrippedAmount,toDrip_,"Overflow");
                 supportedProtocols[current_protocol].recentlyDrippedAmount = toDrip_;
-                reservoirBalance_ = token_.balanceOf(address(this)); // TODO: Verify this is a static call
+                reservoirBalance_ = sighInstrument_.balanceOf(address(this)); // TODO: Verify this is a static call
             
                 emit Dripped( current_protocol, reservoirBalance_, toDrip_ , supportedProtocols[current_protocol].totalDrippedAmount ); 
             }
@@ -220,16 +214,20 @@ contract SighSpeedController is ISighSpeedController {
 // ###########   EXTERNAL VIEW functions TO GET STATE   ##########
 // ###############################################################
 
+  function getSighAddress() external view returns (address) {
+    return address(sighInstrument);
+  }
+
+  function getGlobalAddressProvider() external view returns (address) {
+    return address(addressesProvider);
+  }
+
   function getSIGHBalance() external view returns (uint) {
-    IERC20 token_ = token;   
-    uint balance = token_.balanceOf(address(this));
+    IERC20 sighInstrument_ = sighInstrument;   
+    uint balance = sighInstrument_.balanceOf(address(this));
     return balance;
   }
-
-  function getSighAddress() external view returns (address) {
-    return address(token);
-  }
-
+  
   function getSupportedProtocols() external view returns (address[] memory) {
     return storedSupportedProtocols;
   }
@@ -261,6 +259,15 @@ contract SighSpeedController is ISighSpeedController {
   function totalProtocolsSupported() external view returns (uint) {
       uint len = storedSupportedProtocols.length;
       return len;
+  }
+  
+
+  function _isDripAllowed() external view returns (bool) {
+      return isDripAllowed; 
+  }
+  
+  function getlastDripBlockNumber() external view returns (uint) {
+      return lastDripBlockNumber;
   }
 
 // ###############################################################

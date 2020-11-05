@@ -63,6 +63,7 @@ interface IGlobalAddressesProvider  {
 // ####___________ SIGH FINANCE RELATED CONTRACTS _____________########################
 // ########## 1. SIGH (Initialized only once) #########################################
 // ########## 2. SIGH Finance Configurator (Upgradagble) ################################
+// ########## 2. SIGH Speed Controller (Initialized only once) ######################## 
 // ########## 3. SIGH Treasury (Upgradagble) ###########################################
 // ########## 4. SIGH Mechanism Handler (Upgradagble) ###################################
 // ########## 5. SIGH Staking (Upgradagble) ###################################
@@ -73,6 +74,9 @@ interface IGlobalAddressesProvider  {
 
     function getSIGHFinanceConfigurator() external view returns (address);
     function setSIGHFinanceConfiguratorImpl(address sighAddress) external;    
+    
+    function getSIGHSpeedController() external view returns (address);
+    function setSIGHSpeedController(address _SIGHSpeedController) external;
 
     function getSIGHTreasury() external view returns (address);                                 //  ADDED FOR SIGH FINANCE 
     function setSIGHTreasuryImpl(address _SIGHTreasury) external;                                   //  ADDED FOR SIGH FINANCE 
