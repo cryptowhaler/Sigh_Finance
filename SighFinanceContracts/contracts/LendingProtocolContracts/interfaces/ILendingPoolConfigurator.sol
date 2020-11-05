@@ -14,7 +14,7 @@ interface ILendingPoolConfigurator {
     // ################################################################################################
 
     function initInstrument( address _instrument, uint8 _underlyingAssetDecimals, address _interestRateStrategyAddress ) external;
-    function initInstrumentWithData(  address _instrument,  string memory _iTokenName,  string memory _iTokenSymbol,  uint8 _underlyingAssetDecimals,  address _interestRateStrategyAddress ) public ;
+    function initInstrumentWithData(  address _instrument,  string memory _iTokenName,  string memory _iTokenSymbol,  uint8 _underlyingAssetDecimals,  address _interestRateStrategyAddress ) external ;
 
     // ###################################################################################################
     // ####### FUNCTIONS WHICH INTERACT WITH LENDINGPOOLCORE CONTRACT ####################################

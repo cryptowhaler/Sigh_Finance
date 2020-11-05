@@ -1,6 +1,5 @@
 pragma solidity ^0.5.0;
 
-
 interface ILendingPool {
 
 // ###########################################################
@@ -23,7 +22,7 @@ interface ILendingPool {
 
     function liquidationCall( address _collateral, address _instrument, address _user, uint256 _purchaseAmount, bool _receiveIToken ) external payable;
 
-    function flashLoan(address _receiver, address _instrument, uint256 _amount, bytes memory _params)  public;
+    function flashLoan(address _receiver, address _instrument, uint256 _amount, bytes calldata _params)  external;
 
 // ##############################
 // ######  VIEW FUNCTIONS  ######

@@ -19,11 +19,11 @@ interface ISighDistributionHandler {
     function updateDeltaBlocksForSpeedRefresh(uint deltaBlocksLimit) external returns (bool);                               // onlySighFinanceConfigurator
     function updateSIGHSpeedRatioForAnInstrument(address instrument_, uint supplierRatio) external returns (bool);          // onlyLendingPoolConfigurator
 
-    function refreshSIGHSpeeds() public returns (bool);
+    function refreshSIGHSpeeds() external returns (bool);
 
     function updateSIGHSupplyIndex(address currentInstrument) external  returns (bool);                                      // onlyLendingPoolCore
     function updateSIGHBorrowIndex(address currentInstrument) external  returns (bool);                                      // onlyLendingPoolCore
-    function transferSighTotheUser(address instrument, address user, uint sigh_Amount) external  returns (uint);             // onlyITokenContract(instrument)
+    function transferSighTotheUser(address instrument, address user, address sighAccuredTo, uint sigh_Amount) external  returns (uint);             // onlyITokenContract(instrument)
 
     // ###### VIEW FUNCTIONS ######
     function isInstrumentSupported (address instrument_) external view returns (bool);

@@ -47,7 +47,7 @@ interface ILendingPoolCore {
 // ###### CALLED BY SETUSERUSEINSTRUMENTASCOLLATERAL() FROM LENDINGPOOL CONTRACT (also some internal calls from this contract )        #####
 // #########################################################################################################################################
 
-    function setUserUseInstrumentAsCollateral(address _instrument, address _user, bool _useAsCollateral) public ;
+    function setUserUseInstrumentAsCollateral(address _instrument, address _user, bool _useAsCollateral) external ;
 
 // ################################################################### 
 // ###### CALLED BY FLASHLOAN() FROM LENDINGPOOL CONTRACT        #####
@@ -74,19 +74,6 @@ interface ILendingPoolCore {
     function updateStateOnLiquidation( address _principalInstrument, address _collateralInstrument, address _user, uint256 _amountToLiquidate, uint256 _collateralToLiquidate, uint256 _feeLiquidated, uint256 _liquidatedCollateralForFee, uint256 _balanceIncrease, bool _liquidatorReceivesIToken ) external ;
 
 
-// ################################################################################################### 
-// ###### function enforces that the caller is a contract, to support flashloan transfers ############
-// ################################################################### ###############################
-
-    /**
-    * @dev fallback function enforces that the caller is a contract, to support flashloan transfers
-    **/
-    function() external payable {       //only contracts can send ETH to the core        
-        require(msg.sender.isContract(), "Only contracts can send ether to the Lending pool core");
-
-    }
-
-
 // #################################################################################################################################### 
 // ###### CALLED BY LIQUIDATIONCALL() IN LENDINGPOOL CONTRACT (delegated to LendingPoolLiquidationManager.sol which calls) ############
 // ################################################################### ################################################################
@@ -109,21 +96,21 @@ interface ILendingPoolCore {
 // ################     PUBLIC VIEW FUNCTIONS       ################
 // #################################################################
 
-    function getUserUnderlyingAssetBalance(address _instrument, address _user) public view returns (uint256) ;
+    function getUserUnderlyingAssetBalance(address _instrument, address _user) external view returns (uint256) ;
 
-    function getInstrumentInterestRateStrategyAddress(address _instrument) public view returns (address);
-    function getInstrumentITokenAddress(address _instrument) public view returns (address);
+    function getInstrumentInterestRateStrategyAddress(address _instrument) external view returns (address);
+    function getInstrumentITokenAddress(address _instrument) external view returns (address);
 
-    function getInstrumentAvailableLiquidity(address _instrument) public view returns (uint256);
-    function getInstrumentTotalLiquidity(address _instrument) public view returns (uint256);
+    function getInstrumentAvailableLiquidity(address _instrument) external view returns (uint256);
+    function getInstrumentTotalLiquidity(address _instrument) external view returns (uint256);
 
-    function getInstrumentTotalBorrows(address _instrument) public view returns (uint256) ;
+    function getInstrumentTotalBorrows(address _instrument) external view returns (uint256) ;
 
-    function getInstrumentCurrentStableBorrowRate(address _instrument) public view returns (uint256) ;
-    function getInstrumentUtilizationRate(address _instrument) public view returns (uint256) ;
+    function getInstrumentCurrentStableBorrowRate(address _instrument) external view returns (uint256) ;
+    function getInstrumentUtilizationRate(address _instrument) external view returns (uint256) ;
 
-    function getUserCurrentBorrowRateMode(address _instrument, address _user) public view returns (CoreLibrary.InterestRateMode) ;
-    function getUserBorrowBalances(address _instrument, address _user) public view returns (uint256, uint256, uint256) ;
+    function getUserCurrentBorrowRateMode(address _instrument, address _user) external view returns (CoreLibrary.InterestRateMode) ;
+    function getUserBorrowBalances(address _instrument, address _user) external view returns (uint256, uint256, uint256) ;
 
 // ###################################################################
 // ################     EXTERNAL VIEW FUNCTIONS       ################

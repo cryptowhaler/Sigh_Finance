@@ -129,9 +129,9 @@ contract SighFinanceConfigurator is VersionedInitializable {
         require(sigh_treasury.initializeInstrumentDistribution(targetAddress, instrumnetToBeDistributed, distributionSpeed),"Instrument Distribution function failed");
     } 
 
-    function changeInstrumentBeingDripped(address targetAddress, address instrumnetToBeDistributed, uint distributionSpeed) external onlySIGHFinanceManager { 
+    function changeInstrumentBeingDripped(address instrumentToBeDistributed, uint distributionSpeed) external onlySIGHFinanceManager { 
         ISighTreasury sigh_treasury = ISighTreasury( globalAddressesProvider.getSIGHTreasury() );
-        require(sigh_treasury.changeInstrumentBeingDripped(newInstrumnetToBeDistributed),"Change Instrument being Distributed function failed");
+        require(sigh_treasury.changeInstrumentBeingDripped(instrumentToBeDistributed),"Change Instrument being Distributed function failed");
     } 
 
     function updateDripSpeed( uint newdistributionSpeed ) external onlySIGHFinanceManager { 

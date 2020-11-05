@@ -13,7 +13,9 @@ import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 
 import "../../Configuration/GlobalAddressesProvider.sol";
 import "../../LendingProtocolContracts/interfaces/IPriceOracleGetter.sol";            
-import "../../LendingProtocolContracts/interfaces/ILendingPoolCore.sol";            
+import "../../LendingProtocolContracts/interfaces/ILendingPoolCore.sol";     
+import "../Interfaces/ISighStaking.sol";       
+// import "../../LendingProtocolContracts/interfaces/ITokenInterface.sol";            
 
 
 contract SIGHDistributionHandler is Exponential, VersionedInitializable {
@@ -94,6 +96,8 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
 
     event PriceSnappedCheck(address iToken, uint prevPrice, uint currentPrice,uint32 currentCounter, uint blockNumber);
 
+    event minimumBlocksForSpeedRefreshUpdated( uint prevDeltaBlocksForSpeed,uint newDeltaBlocksForSpeed, uint blockNumber );
+    event AccuredSIGHTransferredToTheUser(address instrument, address user, uint sigh_Amount );
 
 // #######################################################
 // ##############        MODIFIERS          ##############
@@ -119,7 +123,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
 
     // This function can only be called by the Instrument's IToken Contract
     modifier onlyITokenContract(address instrument) {
-           SIGHInstrument currentInstrument = financial_instruments(instrument);
+           SIGHInstrument memory currentInstrument = financial_instruments(instrument);
            require( currentInstrument.isListed, "This instrument is not supported by SIGH Distribution Handler");
            require( msg.sender == currentInstrument.iTokenAddress, "This function can only be called by the Instrument's IToken Contract");
         _;
@@ -269,7 +273,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         Instrument_Sigh_Speeds[instrument_].staking_Speed = newStakingSpeed;
         // refreshSIGHSpeeds();
 
-        emit StakingSpeedUpdated(instrument_, prevStakingSpeed, Instrument_Sigh_Speeds[marketAddress].staking_Speed, getBlockNumber() );
+        emit StakingSpeedUpdated(instrument_, prevStakingSpeed, Instrument_Sigh_Speeds[instrument_].staking_Speed, getBlockNumber() );
         return true;
         
     }
@@ -318,7 +322,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
 
         uint prevRatio = Instrument_Sigh_Speeds[instrument_].speeds_Ratio_Mantissa ;
         Instrument_Sigh_Speeds[instrument_].speeds_Ratio_Mantissa = supplierRatio;
-        emit Instrument_Sigh_Speed_Supplier_Ratio_Mantissa_Updated( instrument_, prevRatio , Instrument_Sigh_Speeds[marketAddress].speeds_Ratio_Mantissa, getBlockNumber() );
+        emit Instrument_Sigh_Speed_Supplier_Ratio_Mantissa_Updated( instrument_, prevRatio , Instrument_Sigh_Speeds[instrument_].speeds_Ratio_Mantissa, getBlockNumber() );
         
         refreshSIGHSpeeds();
         return true;
@@ -362,7 +366,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
      * 5.1 Current Clock updated
      */    
     function refreshSIGHSpeedsInternal() internal {
-        ITokenInterface[] memory all_Instruments_ = all_Instruments;
+        IERC20[] memory all_Instruments_ = all_Instruments;
         uint blockNumber = getBlockNumber();   
         
         require(updatedInstrumentIndexesInternal(), "Updating Instrument Indexes Failed");       //  accure the indexes 
@@ -484,8 +488,8 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
 
     //  Updates the Supply & Borrow Indexes for all the Supported Instruments
     function updatedInstrumentIndexesInternal() internal returns (bool) {
-        for (uint i = 0; i < all_Instruments_.length; i++) {
-            ITokenInterface currentInstrument = all_Instruments_[i];
+        for (uint i = 0; i < all_Instruments.length; i++) {
+            IERC20 currentInstrument = all_Instruments[i];
             updateSIGHSupplyIndexInternal(address(currentInstrument));
             updateSIGHBorrowIndexInternal(address(currentInstrument));
         }
@@ -503,7 +507,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
             }
             else {
                 uint profitPotentialPerBlock = mul_(totalLossesPerBlockAverage, upperCheckProfitPercentage ); // (a * b)/1e18 [b is in Exp Scale]
-                lossesPlusProfitPotentialPerBlock = add_( totalLossesPerBlockAverage,profitPotentialPerBlock,"Potential losses addition gave overflow" );
+                uint lossesPlusProfitPotentialPerBlock = add_( totalLossesPerBlockAverage,profitPotentialPerBlock,"Potential losses addition gave overflow" );
                 if ( max_valueDistributionLimit <=  lossesPlusProfitPotentialPerBlock ) {
                     return sigh_speed_used;
                 }
@@ -517,6 +521,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
 
     // Updates the Current CLock (global variable tracking the current hour )
     function updateCurrentClockInternal() internal returns (bool) {
+        uint prevClock = curClock;
         if (curClock == 23) {
             curClock = 0;               // Global clock Updated
         }
@@ -565,7 +570,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         
         if (deltaBlocks > 0 && supplySpeed > 0) {       // In case SIGH would have accured
             uint sigh_Accrued = mul_(deltaBlocks, supplySpeed);                                                                         // SIGH Accured
-            uint supplyTokens = ITokenInterface(currentInstrument).totalSupply();                                       
+            uint supplyTokens = IERC20(currentInstrument).totalSupply();                                       
             Double memory ratio = supplyTokens > 0 ? fraction(sigh_Accrued, supplyTokens) : Double({mantissa: 0});                      // SIGH Accured per Supplied Instrument Token
             Double memory newIndex = add_(Double({mantissa: instrumentState.supplyindex}), ratio);                                      // Updated Index
             emit updateSIGHSupplyIndex_test2( currentInstrument, supplyTokens, sigh_Accrued, ratio.mantissa , newIndex.mantissa );  

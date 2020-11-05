@@ -13,21 +13,37 @@ import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 
 import "./TreasuryStorage.sol";
 import "./EIP20InterfaceSIGH.sol";
+import "../../configuration/GlobalAddressesProvider.sol";
+import "../../LendingProtocolContracts/interfaces/IPriceOracleGetter.sol";
 
 // import "./IForwarder.sol";
 // import "../openzeppelin/EIP20Interface.sol";
 
 contract Treasury is TreasuryV1Storage, VersionedInitializable   {
-    
+
+    IERC20 private sigh_Instrument;    
+    GlobalAddressesProvider public addressesProvider;
+    IPriceOracleGetter public oracle;
+
+    mapping (address => uint) InstrumentBalances;
+    mapping (address => uint)  totalDrippedAmount;  // Stores the total amount of each instrument dripped
+ 
+    bool isDripAllowed = false;    
+    address private instrumentBeingDripped;
+    address private targetAddressForDripping;
+    uint private DripSpeed;
+    uint public lastDripBlockNumber; 
+
     uint public maxTransferAmount;
     uint public coolDownPeriod = 2; // 5 min
     uint public prevTransferBlock;
     
     bool public is_SIGH_BurnAllowed;
-    uint public totalBurntSIGH = 0;
+    uint private SIGHBurnSpeed;
+    uint private totalBurntSIGH = 0;
     uint public lastBurnBlockNumber;
 
-    uint public lastDripBlockNumber; 
+
 
     event instrumentBeingDistributedChanged(address prevInstrument, address newToken, uint blockNumber);
     event DripAllowedChanged(bool prevDripAllowed , bool newDripAllowed, uint blockNumber); 
@@ -78,10 +94,8 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
     
     
     function initialize( address addressesProvider_) public initializer {
-        admin = msg.sender;
         addressesProvider = GlobalAddressesProvider(addressesProvider_); 
         refreshConfigInternal();        
-        // emit SIGHTreasuryInitialized(admin , address(addressesProvider), sigh_Instrument, SIGHDistributionHandler_address   );
     }
     
     function refreshConfig() external onlySighFinanceConfigurator() {
@@ -89,8 +103,8 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
     }
 
     function refreshConfigInternal() internal {
-        sigh_Instrument = addressesProvider.getSIGHAddress();           // SIGH TOKEN
-        oracle = PriceOracle( addressesProvider.getPriceOracle() );     // PRICE ORACLE
+        sigh_Instrument = IERC20(addressesProvider.getSIGHAddress());           // SIGH TOKEN
+        oracle = IPriceOracleGetter( addressesProvider.getPriceOracle() );     // PRICE ORACLE
         // lendingPoolCore = addressesProvider.getLendingPoolCore();       // 
     }
 
@@ -348,7 +362,7 @@ contract Treasury is TreasuryV1Storage, VersionedInitializable   {
         uint new_sigh_balance = token_.balanceOf(address(this));
         InstrumentBalances[address(sigh_Instrument)] = new_sigh_balance;
 
-        emit SIGHTransferred( target_ , amount, totalTransferAmount,  block.number );
+        emit SIGHTransferred( target_ , amount,  block.number );
         return true;
     }
     

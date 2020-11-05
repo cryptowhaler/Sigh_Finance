@@ -292,7 +292,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
 // ############ returns the health factor liquidation threshold  #######################
 // #####################################################################################
 
-    function getHealthFactorLiquidationThreshold() public pure returns (uint256) {
+    function getHealthFactorLiquidationThreshold() external pure returns (uint256) {
         return HEALTH_FACTOR_LIQUIDATION_THRESHOLD;
     }
 

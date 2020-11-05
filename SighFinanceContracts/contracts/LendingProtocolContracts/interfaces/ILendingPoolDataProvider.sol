@@ -22,7 +22,7 @@ interface ILendingPoolDataProvider {
     * @return the total liquidity, total collateral, total borrow balances of the user in ETH.
     * also the average Ltv, liquidation threshold, and the health factor
     **/
-    function calculateUserGlobalData(address _user) public view returns (
+    function calculateUserGlobalData(address _user) external view returns (
             uint256 totalLiquidityBalanceETH,
             uint256 totalCollateralBalanceETH,
             uint256 totalBorrowBalanceETH,
@@ -118,7 +118,7 @@ interface ILendingPoolDataProvider {
 // ############ returns the health factor liquidation threshold  #######################
 // #####################################################################################
 
-    function getHealthFactorLiquidationThreshold() public pure returns (uint256) ;
+    function getHealthFactorLiquidationThreshold() external pure returns (uint256) ;
 
 
 // ################################################################################################

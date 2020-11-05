@@ -9,17 +9,21 @@ pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
+
 import "../Math/Exponential.sol";
 
 import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
+import "../../configuration/GlobalAddressesProvider.sol";
 
 
-contract SighStaking is VersionedInitializable {
+contract SighStaking is VersionedInitializable, Exponential  {
 
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
     IERC20 private sigh_Instrument;
+    GlobalAddressesProvider public addressesProvider;
 
      struct instrumentState {
         string name;
@@ -48,12 +52,28 @@ contract SighStaking is VersionedInitializable {
 
     uint256 public constant IMPLEMENTATION_REVISION = 0x1;
 
+    event SighStaked( address staker,uint amount, uint prevStakedBalance, uint staker_stakedBalance ,uint prevTotalStakedBalance, uint totalStakedSigh, uint numberOfStakers, uint blocknumber   );
+    event SighUnstaked( address staker, uint amount, uint prevStakedBalance, uint staker_stakedBalance, uint prevTotalStakedBalance, uint totalStakedSigh, uint numberOfStakers, uint blocknumber   );
+
+    event StreamingSighStaked( address staker, uint amount, uint prevBalance, uint staker_stakedBalance,uint totalStakedSigh, uint block_number   );
+
+    event updatedInstrumnetBeingDistributedIndex( address instrument_Rewarded, string instrument_name, uint instrument_DistributionSpeed, uint instrument_index, uint instrument_totalAmountRewarded,  uint instrument_lastUpdatedBlock );
+    event updateStakerIndexUpdated( address staker, uint instrumentIndex, uint stakerIndex, uint deltaIndexes, uint newInstrumentAccumulated, uint staker_instrumentIndex_instrumentRewarded, uint staker_instrumentAccumulated_instrumentBeingRewarded, uint block_number );    
+    event instrumentTransferred( address staker, address instrumentToBeClaimed, string instrument_name, uint amountToBeTransferred, uint block_number );
+    event TokensBought( address token_bought, uint prev_bought_token_amount, uint tokenBoughtAmount, uint new_bought_token_amount);
+    event TokensSold( address token_sold, uint prev_sold_token_amount, uint tokenSoldAmount, uint new_sold_token_amount );   
+    event TokenSwapTransactionData( bytes _data );
+
+    event NewInstrumentForDistributionAdded( address newInstrument, string instrument_name, uint instrument_index, uint instrument_DistributionSpeed, uint instrument_totalAmountRewarded, uint instrument_balance,  uint instrument_lastUpdatedBlock  );
+    event maxSighThatCanBeStakedUpdated( uint prevLimit, uint maxSighThatCanBeStaked, uint block_number);
+    event DistributionSpeedUpdated( address instrumentAddress, string instrument_name, uint prevSpeed , uint instrument_DistributionSpeed, uint block_number );
+
 // ########################################### 
 // ##############  MODIFIERS   ###############
 // ########################################### 
 
     modifier onlySIGHFinanceManager {
-        require( globalAddressesProvider.getSIGHFinanceManager() == msg.sender, "The caller must be the SIGH Finance Manager" );
+        require( addressesProvider.getSIGHFinanceManager() == msg.sender, "The caller must be the SIGH Finance Manager" );
         _;
     }
     //only SIGH Distribution Manager can use functions affected by this modifier
@@ -114,7 +134,7 @@ contract SighStaking is VersionedInitializable {
             initializeStakerStateInternal(msg.sender);
         }
 
-        SighStaked( msg.sender, amount, prevStakedBalance, stakingBalances[msg.sender].stakedBalance , prevTotalStakedBalance,  totalStakedSigh, numberOfStakers,  block.number   );
+        emit SighStaked( msg.sender, amount, prevStakedBalance, stakingBalances[msg.sender].stakedBalance , prevTotalStakedBalance,  totalStakedSigh, numberOfStakers,  block.number   );
         return true;
     }
 
@@ -135,7 +155,7 @@ contract SighStaking is VersionedInitializable {
             initializeStakerStateInternal(staker);
         }
 
-        StreamingSighStaked( staker, amount, prevBalance, stakingBalances[staker].stakedBalance, totalStakedSigh,  block.number   );
+        emit StreamingSighStaked( staker, amount, prevBalance, stakingBalances[staker].stakedBalance, totalStakedSigh,  block.number   );
     }
 
 // ##############################################
@@ -157,7 +177,7 @@ contract SighStaking is VersionedInitializable {
         require(sigh_Instrument.transfer( msg.sender, amount ),"SIGH could not be transferred to the User" );
         uint newBalance = sigh_Instrument.balanceOf(address(this));
 
-        uint diff = sub( prevBalance, newBalance, "New Sigh balance is greater than the previous balance." );
+        uint diff = sub_( prevBalance, newBalance, "New Sigh balance is greater than the previous balance." );
         require(diff == amount,"Amount to be un-staked and the amount transferred do not match");
 
         uint prevStakedBalance = stakingBalances[msg.sender].stakedBalance;                  
@@ -172,7 +192,7 @@ contract SighStaking is VersionedInitializable {
             numberOfStakers = sub_(numberOfStakers, uint(1));
         }
 
-        SighUnstaked( msg.sender, amount, prevStakedBalance, stakingBalances[msg.sender].stakedBalance, prevTotalStakedBalance, totalStakedSigh, numberOfStakers, block.number   );
+        emit SighUnstaked( msg.sender, amount, prevStakedBalance, stakingBalances[msg.sender].stakedBalance, prevTotalStakedBalance, totalStakedSigh, numberOfStakers, block.number   );
         return true;
     }
 
@@ -223,11 +243,11 @@ contract SighStaking is VersionedInitializable {
             uint prevInstrumentAccumulated   = stakingBalances[staker].instrumentAccumulated[instrumentsRewarded[i]];
             stakingBalances[staker].instrumentAccumulated[instrumentsRewarded[i]] = add_(prevInstrumentAccumulated, newInstrumentAccumulated);   // STATE UPDATE - STAKER's "INSTRUMENT ACCUMULATED AMOUNT" UPDATED  
 
-            emit updateStakerIndexUpdated( staker, instrumentIndex, stakerIndex, deltaIndexes, newInstrumentAccumulated, stakingBalances[staker].instrumentIndex[instrumentsRewarded[i]], stakingBalances[staker].instrumentAccumulated[instrumentBeingRewarded], block.number );    
+            emit updateStakerIndexUpdated( staker, instrumentIndex, stakerIndex, deltaIndexes, newInstrumentAccumulated, stakingBalances[staker].instrumentIndex[instrumentsRewarded[i]], stakingBalances[staker].instrumentAccumulated[instrumentsRewarded[i]], block.number );    
         }
     }
 
-    function initializeStakerStateInternal(staker) internal {
+    function initializeStakerStateInternal(address staker) internal {
         for (int i=0; i < instrumentsRewarded.length ; i++) {
             stakingBalances[staker].instrumentIndex[ instrumentsRewarded[i] ] = instrumentStates[ instrumentsRewarded[i] ].index;
         }
@@ -296,8 +316,8 @@ contract SighStaking is VersionedInitializable {
             uint amountSold = sub_(prev_sold_token_amount, new_sold_token_amount, "Amount Sold underflow");
             require( amountSold ==  sellAmount,"The sell amount mentioned and the actual amount transferred do not match" );
 
-            uint tokenBoughtAmount = sub(new_bought_token_amount,prev_bought_token_amount,"New Token Balance for tokens that are being Bought is lower than its initial balance");
-            uint tokenSoldAmount = sub(prev_sold_token_amount,new_sold_token_amount,"New Token Balance for tokens that are being Sold is higher than its initial balance");
+            uint tokenBoughtAmount = sub_(new_bought_token_amount,prev_bought_token_amount,"New Token Balance for tokens that are being Bought is lower than its initial balance");
+            uint tokenSoldAmount = sub_(prev_sold_token_amount,new_sold_token_amount,"New Token Balance for tokens that are being Sold is higher than its initial balance");
 
             emit TokensBought( token_bought, prev_bought_token_amount, tokenBoughtAmount,  new_bought_token_amount);
             emit TokensSold( token_sold, prev_sold_token_amount, tokenSoldAmount, new_sold_token_amount );   

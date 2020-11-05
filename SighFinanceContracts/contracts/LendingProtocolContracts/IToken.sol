@@ -637,11 +637,11 @@ contract IToken is ERC20, ERC20Detailed {
         Double memory borrowerIndex = Double({mantissa: BorrowerIndexes[borrower]}) ;      // Stored Borrower Index
         BorrowerIndexes[borrower] = borrowIndex_.mantissa;                                   // Borrower Index is UPDATED
 
-        if (borrowerIndex.mantissa == 0 && borrowIndex.mantissa > 0) {
+        if (borrowerIndex.mantissa == 0 && borrowIndex_.mantissa > 0) {
             borrowerIndex.mantissa = borrowIndex_.mantissa; //sighInitialIndex;
         }
 
-        emit distributeBorrower_SIGH_test3(borrower, borrowIndex.mantissa, borrowerIndex.mantissa );
+        emit distributeBorrower_SIGH_test3(borrower, borrowIndex_.mantissa, borrowerIndex.mantissa );
 
         Double memory deltaIndex = sub_(borrowIndex_, borrowerIndex);                                                         // Sigh accured per instrument
 
@@ -653,12 +653,13 @@ contract IToken is ERC20, ERC20Detailed {
             uint borrowerAmount = div_(borrowBalance, marketBorrowIndex);
             uint borrowerSIGHDelta = mul_(borrowerAmount, deltaIndex);        // Additional Sigh Accured by the Borrower
 
-            emit distributeBorrower_SIGH_test4(BorrowerIndexes[borrower], deltaIndex, marketBorrowIndex, borrowBalance, borrowerAmount, borrowerSIGHDelta );
+            emit distributeBorrower_SIGH_test4(BorrowerIndexes[borrower], deltaIndex.mantissa, marketBorrowIndex.mantissa , borrowBalance, borrowerAmount, borrowerSIGHDelta );
 
             accureSigh( borrower,borrowerSIGHDelta );            // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the BORROWER or the address to which SIGH is being redirected to 
         // }
     }
 
+    event SighAccured_(address user, address sighAccuredTo, uint AccuredSighBalance );
     event SighAccured(address user, address sighAccuredTo, uint AccuredSighBalance );
 
     /**
@@ -676,7 +677,7 @@ contract IToken is ERC20, ERC20Detailed {
             sighAccuredTo = sighRedirectionAddresses[user];
             AccuredSighBalances[sighAccuredTo] = AccuredSighBalances[sighAccuredTo].add(accuredSighAmount);   // Accured SIGH added to the redirected user's sigh balance            
         }
-        emit distributeSupplier_SIGH_test4( user , sighAccuredTo, accuredSighAmount );
+        emit SighAccured_( user , sighAccuredTo, accuredSighAmount );
 
         if ( AccuredSighBalances[sighAccuredTo] > sigh_Transfer_Threshold ) {   // SIGH is Transferred is SIGH_ACCURED_BALANCE > 1e18 SIGH
             transferSigh( user, sighAccuredTo );
@@ -702,7 +703,7 @@ contract IToken is ERC20, ERC20Detailed {
 // ######  3. redirectSighStreamInternal() [INTERNAL] --> Executes the redirecting of the Sigh stream    #####################################################
 // ###########################################################################################################################################################
     event SighRedirectionAllowanceChanged( address user, address allowedAccount );
-    event SighStreamRedirected( address fromAccount, address toAccount );
+    event SighStreamRedirected( address fromAccount, address toAccount, uint blockNumber );
 
     /**
     * @dev redirects the Sigh being generated to a target address. 

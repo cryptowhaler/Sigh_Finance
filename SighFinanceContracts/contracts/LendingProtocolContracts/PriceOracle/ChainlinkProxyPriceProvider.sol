@@ -1,5 +1,6 @@
 pragma solidity ^0.5.0;
 
+import "../../configuration/IGlobalAddressesProvider.sol";
 import "../interfaces/IPriceOracleGetter.sol";
 import "../interfaces/IChainlinkAggregator.sol";
 import "../libraries/EthAddressLib.sol";
@@ -11,7 +12,7 @@ import "../libraries/EthAddressLib.sol";
 
 contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
 
-    address public globalAddressesProvider;
+    IGlobalAddressesProvider public globalAddressesProvider;
 
     mapping(address => IChainlinkAggregator) private assetsSources;
     IPriceOracleGetter private fallbackOracle;
@@ -29,7 +30,7 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
 // #######################
 
     constructor( address globalAddressesProvider_ ) public {
-        globalAddressesProvider = globalAddressesProvider_;
+        globalAddressesProvider = IGlobalAddressesProvider(globalAddressesProvider_);
     }
 
 // ####################################

@@ -178,7 +178,7 @@ contract LendingPoolLiquidationManager is ReentrancyGuard, VersionedInitializabl
 
         if (vars.feeLiquidated > 0) {           //if there is enough collateral to liquidate the fee, first transfer burn an equivalent amount of iTokens of the user            
             collateralIToken.burnOnLiquidation(_user, vars.liquidatedCollateralForFee);
-            core.liquidateFee( _collateral, vars.liquidatedCollateralForFee, addressesProvider.getTokenDistributor() );     //then liquidate the fee by transferring it to the fee collection address
+            core.liquidateFee( _collateral, vars.liquidatedCollateralForFee, addressesProvider.getSIGHStaking() );     //then liquidate the fee by transferring it to the fee collection address
             emit OriginationFeeLiquidated( _collateral, _instrument, _user, vars.feeLiquidated, vars.liquidatedCollateralForFee,  block.timestamp );
         }
         emit LiquidationCall(  _collateral,  _instrument,  _user,  vars.actualAmountToLiquidate,  maxCollateralToLiquidate,  vars.borrowBalanceIncrease,  msg.sender,  _receiveIToken, block.timestamp  );

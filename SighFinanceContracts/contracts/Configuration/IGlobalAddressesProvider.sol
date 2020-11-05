@@ -11,17 +11,17 @@ interface IGlobalAddressesProvider  {
 // #########  PROTOCOL MANAGERS ( LendingPool Manager and SighFinance Manager ) ###########                                              
 // ########################################################################################
 
-    function getLendingPoolManager() public view returns (address);
-    function getPendingLendingPoolManager() public view returns (address);
+    function getLendingPoolManager() external view returns (address);
+    function getPendingLendingPoolManager() external view returns (address);
 
-    function setPendingLendingPoolManager(address _pendinglendingPoolManager) public;    
-    function acceptLendingPoolManager() public;    
+    function setPendingLendingPoolManager(address _pendinglendingPoolManager) external;    
+    function acceptLendingPoolManager() external;    
 
-    function getSIGHFinanceManager() public view returns (address);
-    function getPendingSIGHFinanceManager() public view returns (address);
+    function getSIGHFinanceManager() external view returns (address);
+    function getPendingSIGHFinanceManager() external view returns (address);
 
-    function setPendingSIGHFinanceManager(address _PendingSIGHFinanceManager) public;    
-    function acceptSIGHFinanceManager() public;    
+    function setPendingSIGHFinanceManager(address _PendingSIGHFinanceManager) external;    
+    function acceptSIGHFinanceManager() external;    
 
 // #########################################################################
 // ####___________ LENDING POOL PROTOCOL CONTRACTS _____________############
@@ -35,29 +35,29 @@ interface IGlobalAddressesProvider  {
 // ########## 8. LendingRateOracle (Directly Changed) ######################
 // #########################################################################
 
-    function getLendingPoolConfigurator() public view returns (address);
-    function setLendingPoolConfiguratorImpl(address _configurator) public;
+    function getLendingPoolConfigurator() external view returns (address);
+    function setLendingPoolConfiguratorImpl(address _configurator) external;
 
-    function getLendingPoolCore() public view returns (address payable);
-    function setLendingPoolCoreImpl(address _lendingPoolCore) public;
+    function getLendingPoolCore() external view returns (address payable);
+    function setLendingPoolCoreImpl(address _lendingPoolCore) external;
 
-    function getLendingPool() public view returns (address);
-    function setLendingPoolImpl(address _pool) public;
+    function getLendingPool() external view returns (address);
+    function setLendingPoolImpl(address _pool) external;
 
-    function getLendingPoolDataProvider() public view returns (address);
-    function setLendingPoolDataProviderImpl(address _provider) public;
+    function getLendingPoolDataProvider() external view returns (address);
+    function setLendingPoolDataProviderImpl(address _provider) external;
 
-    function getLendingPoolParametersProvider() public view returns (address);
-    function setLendingPoolParametersProviderImpl(address _parametersProvider) public;
+    function getLendingPoolParametersProvider() external view returns (address);
+    function setLendingPoolParametersProviderImpl(address _parametersProvider) external;
 
-    function getFeeProvider() public view returns (address);
-    function setFeeProviderImpl(address _feeProvider) public;
+    function getFeeProvider() external view returns (address);
+    function setFeeProviderImpl(address _feeProvider) external;
 
-    function getLendingPoolLiquidationManager() public view returns (address);
-    function setLendingPoolLiquidationManager(address _manager) public;
+    function getLendingPoolLiquidationManager() external view returns (address);
+    function setLendingPoolLiquidationManager(address _manager) external;
 
-    function getLendingRateOracle() public view returns (address);
-    function setLendingRateOracle(address _lendingRateOracle) public;
+    function getLendingRateOracle() external view returns (address);
+    function setLendingRateOracle(address _lendingRateOracle) external;
 
 // ####################################################################################
 // ####___________ SIGH FINANCE RELATED CONTRACTS _____________########################
@@ -68,27 +68,27 @@ interface IGlobalAddressesProvider  {
 // ########## 5. SIGH Staking (Upgradagble) ###################################
 // ####################################################################################
 
-    function getSIGHAddress() public view returns (address);
-    function setSIGHAddress(address sighAddress) public;    
+    function getSIGHAddress() external view returns (address);
+    function setSIGHAddress(address sighAddress) external;    
 
-    function getSIGHFinanceConfigurator() public view returns (address);
-    function setSIGHFinanceConfiguratorImpl(address sighAddress) public;    
+    function getSIGHFinanceConfigurator() external view returns (address);
+    function setSIGHFinanceConfiguratorImpl(address sighAddress) external;    
 
-    function getSIGHTreasury() public view returns (address);                                 //  ADDED FOR SIGH FINANCE 
-    function setSIGHTreasuryImpl(address _SIGHTreasury) public;                                   //  ADDED FOR SIGH FINANCE 
+    function getSIGHTreasury() external view returns (address);                                 //  ADDED FOR SIGH FINANCE 
+    function setSIGHTreasuryImpl(address _SIGHTreasury) external;                                   //  ADDED FOR SIGH FINANCE 
 
-    function getSIGHMechanismHandler() public view returns (address);                      //  ADDED FOR SIGH FINANCE 
-    function setSIGHMechanismHandlerImpl(address _SIGHDistributionHandler) public;             //  ADDED FOR SIGH FINANCE 
+    function getSIGHMechanismHandler() external view returns (address);                      //  ADDED FOR SIGH FINANCE 
+    function setSIGHMechanismHandlerImpl(address _SIGHDistributionHandler) external;             //  ADDED FOR SIGH FINANCE 
 
-    function getSIGHStaking() public view returns (address);                      //  ADDED FOR SIGH FINANCE 
-    function setSIGHStakingImpl(address _SIGHDistributionHandler) public;             //  ADDED FOR SIGH FINANCE 
+    function getSIGHStaking() external view returns (address);                      //  ADDED FOR SIGH FINANCE 
+    function setSIGHStakingImpl(address _SIGHDistributionHandler) external;             //  ADDED FOR SIGH FINANCE 
 
 // #######################################################
 // ####___________ PRICE ORACLE CONTRACT _____________####
 // #######################################################
 
-    function getPriceOracle() public view returns (address);
-    function setPriceOracle(address _priceOracle) public;
+    function getPriceOracle() external view returns (address);
+    function setPriceOracle(address _priceOracle) external;
 
 
 
