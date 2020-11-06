@@ -120,12 +120,14 @@ contract Treasury is VersionedInitializable   {
         refreshConfigInternal();        
     }
     
-    function refreshConfig() external onlySighFinanceConfigurator() {
-        refreshConfigInternal(); 
+    function refreshConfig() external onlySighFinanceConfigurator() returns (bool) {
+        require(refreshConfigInternal(),"Something went wrong"); 
+        return true;
     }
 
-    function refreshConfigInternal() internal {
+    function refreshConfigInternal() internal returns (bool) {
         sigh_Instrument = IERC20(addressesProvider.getSIGHAddress());           // SIGH TOKEN
+        return true;
     }
 
 // ################################################################################################################ 

@@ -9,7 +9,6 @@ pragma solidity ^0.5.16;
 
 interface ISighTreasury {
 
-    function initialize( address addressesProvider_) external;
     function refreshConfig() external;
 
 

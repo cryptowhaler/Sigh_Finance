@@ -25,9 +25,11 @@ interface ISighDistributionHandler {
 
     function updateSIGHSupplyIndex(address currentInstrument) external  returns (bool);                                      // onlyLendingPoolCore
     function updateSIGHBorrowIndex(address currentInstrument) external  returns (bool);                                      // onlyLendingPoolCore
+
     function transferSighTotheUser(address instrument, address user, address sighAccuredTo, uint sigh_Amount) external  returns (uint);             // onlyITokenContract(instrument)
 
     // ###### VIEW FUNCTIONS ######
+    function getSIGHBalance() public view returns (uint);
     function isInstrumentSupported (address instrument_) external view returns (bool);
     function totalInstrumentsSupported() external view returns (uint);
 
@@ -36,6 +38,7 @@ interface ISighDistributionHandler {
     function getInstrumentData (address instrument_) external view returns (address, uint256,bool,uint256,uint256,uint256,uint256  );
 
     function getupperCheckProfitPercentage () external view returns (uint);
+    function getAllPriceSnapshots(address instrument_ ) external view returns (uint256[24] memory);    
     function checkPriceSnapshots(address instrument_, uint clock) external view returns (uint256);
     function checkinitializationCounter(address instrument_) external view returns (uint32);
 
@@ -43,7 +46,6 @@ interface ISighDistributionHandler {
     function getInstrumentSupplierSIGHSpeed(address instrument_) external view returns (uint);
     function getInstrumentBorrowerSIGHSpeed(address instrument_) external view returns (uint);
     function getInstrumentStakingSIGHSpeed(address instrument_) external view returns (uint);
-    function getInstrumentSpeedRatio(address instrument_) external view returns (uint);
 
     function getDeltaBlocksForSpeed() external view returns (uint);
     function getPrevSpeedRefreshBlock() external view returns (uint);

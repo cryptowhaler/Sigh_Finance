@@ -114,12 +114,6 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         _;
     }
 
-    //only Lending Pool Manager can use functions affected by this modifier
-    modifier onlyLendingPoolConfigurator {
-        require(addressesProvider.getLendingPoolConfigurator() == msg.sender, "The caller must be the Lending Pool Configurator Contract");
-        _;
-    }
-
     // This function can only be called by the Instrument's IToken Contract
     modifier onlyITokenContract(address instrument) {
            SIGHInstrument memory currentInstrument = financial_instruments[instrument];
@@ -650,6 +644,10 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         return financial_instruments[instrument_].isListed;
     } 
 
+    function totalInstrumentsSupported() external view returns (uint) {
+        return uint(all_Instruments.length); 
+    }    
+
     function getInstrumentSupplyIndex(address instrument_) external view returns (uint) {
         if (financial_instruments[instrument_].isListed) { //"The provided instrument address is not supported");
             return financial_instruments[instrument_].supplyindex;
@@ -679,9 +677,6 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         return upperCheckProfitPercentage.mantissa;
     } 
 
-    function totalInstrumentsSupported() external view returns (uint) {
-        return uint(all_Instruments.length); 
-    }    
 
     function getAllPriceSnapshots(address instrument_ ) external view returns (uint256[24] memory) {
         return instrumentPriceCycles[instrument_].recordedPriceSnapshot;
