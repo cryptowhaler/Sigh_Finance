@@ -13,7 +13,6 @@ import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 
 import "./EIP20InterfaceSIGH.sol";
 import "../../configuration/GlobalAddressesProvider.sol";
-import "../../LendingProtocolContracts/interfaces/IPriceOracleGetter.sol";
 
 // import "./IForwarder.sol";
 // import "../openzeppelin/EIP20Interface.sol";
@@ -23,7 +22,6 @@ contract Treasury is VersionedInitializable   {
     // OTHER CONTRACTS INTERACTED WITH
     IERC20 private sigh_Instrument;    
     GlobalAddressesProvider private addressesProvider;
-    IPriceOracleGetter private oracle;
     
     // STATE OF THE INSTRUMENTS HELD IN THE TREASURY
     struct instrumentState {
@@ -62,7 +60,7 @@ contract Treasury is VersionedInitializable   {
 
     uint private maxSIGHTransferLimit;                  // MAX SIGH that can be traded/transferred during a period
     uint private totalSighTradedAndTransferred;      // SIGH that has been traded/transferred during the current period
-    uint public periodLength = 2;                      // Period Length
+    uint public constant periodLength = 2;                      // Period Length
     uint private periodInitializationBlock;            
     
 
@@ -128,7 +126,6 @@ contract Treasury is VersionedInitializable   {
 
     function refreshConfigInternal() internal {
         sigh_Instrument = IERC20(addressesProvider.getSIGHAddress());           // SIGH TOKEN
-        oracle = IPriceOracleGetter( addressesProvider.getPriceOracle() );     // PRICE ORACLE
     }
 
 // ################################################################################################################ 
