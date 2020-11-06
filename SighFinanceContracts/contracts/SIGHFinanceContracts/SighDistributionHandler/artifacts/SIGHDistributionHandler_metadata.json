@@ -97,6 +97,12 @@
 					},
 					{
 						"indexed": false,
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"indexed": false,
 						"internalType": "uint256",
 						"name": "decimals",
 						"type": "uint256"
@@ -147,37 +153,6 @@
 				"inputs": [
 					{
 						"indexed": false,
-						"internalType": "address",
-						"name": "iToken",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "prevRatio",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "newRatio",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "blockNumber",
-						"type": "uint256"
-					}
-				],
-				"name": "Instrument_Sigh_Speed_Supplier_Ratio_Mantissa_Updated",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
 						"internalType": "uint256",
 						"name": "SIGHSpeed",
 						"type": "uint256"
@@ -197,13 +172,25 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
+						"name": "max_valueDistributionLimit",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
 						"name": "totalLossesPerBlockAverage",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "max_valueDistributionLimi",
+						"name": "profitPotentialPerBlock",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "lossesPlusProfitPotentialPerBlock",
 						"type": "uint256"
 					}
 				],
@@ -317,6 +304,12 @@
 						"internalType": "address",
 						"name": "priceOracle",
 						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "lendingPoolCore",
+						"type": "address"
 					}
 				],
 				"name": "SIGHDistributionHandlerInitialized",
@@ -421,12 +414,6 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "prevBlockNumberForSnapshot",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
 						"name": "blockNumbersForPriceSnapshots",
 						"type": "uint256"
 					},
@@ -496,7 +483,13 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "instrumentLosses",
+						"name": "supplierLoss",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "borrowerLoss",
 						"type": "uint256"
 					},
 					{
@@ -801,25 +794,10 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "SIGH_ClaimThreshold",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
 				"name": "Sigh_Address",
 				"outputs": [
 					{
-						"internalType": "address",
+						"internalType": "contract IERC20",
 						"name": "",
 						"type": "address"
 					}
@@ -904,48 +882,6 @@
 				"constant": true,
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "all_Instruments",
-				"outputs": [
-					{
-						"internalType": "contract IERC20",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "blockNumbersForPriceSnapshots_",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
 						"internalType": "address",
 						"name": "instrument_",
 						"type": "address"
@@ -983,21 +919,6 @@
 						"internalType": "uint32",
 						"name": "",
 						"type": "uint32"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "curClock",
-				"outputs": [
-					{
-						"internalType": "uint224",
-						"name": "",
-						"type": "uint224"
 					}
 				],
 				"payable": false,
@@ -1114,7 +1035,7 @@
 					},
 					{
 						"internalType": "bool",
-						"name": "isCoverDipsMechanismActivated",
+						"name": "isSIGHMechanismActivated",
 						"type": "bool"
 					},
 					{
@@ -1135,27 +1056,6 @@
 					{
 						"internalType": "uint256",
 						"name": "borrowlastupdatedblock",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "instrument_",
-						"type": "address"
-					}
-				],
-				"name": "getInstrumentSpeedRatio",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
 						"type": "uint256"
 					}
 				],
@@ -1290,7 +1190,7 @@
 				"constant": false,
 				"inputs": [
 					{
-						"internalType": "address",
+						"internalType": "contract GlobalAddressesProvider",
 						"name": "addressesProvider_",
 						"type": "address"
 					}
@@ -1299,27 +1199,6 @@
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "instrumentPriceCycles",
-				"outputs": [
-					{
-						"internalType": "uint32",
-						"name": "initializationCounter",
-						"type": "uint32"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -1346,25 +1225,10 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "isSpeedUpperCheckAllowed",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
 				"name": "lendingPoolCore",
 				"outputs": [
 					{
-						"internalType": "address",
+						"internalType": "contract ILendingPoolCore",
 						"name": "",
 						"type": "address"
 					}
@@ -1410,21 +1274,6 @@
 				],
 				"payable": false,
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "sighInitialIndex",
-				"outputs": [
-					{
-						"internalType": "uint224",
-						"name": "",
-						"type": "uint224"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -1546,32 +1395,6 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "instrument_",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "supplierRatio",
-						"type": "uint256"
-					}
-				],
-				"name": "updateSIGHSpeedRatioForAnInstrument",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
 						"name": "currentInstrument",
 						"type": "address"
 					}
@@ -1667,12 +1490,6 @@
 						"SIGHSpeed_": "The amount of SIGH wei per block to distribute"
 					}
 				},
-				"updateSIGHSpeedRatioForAnInstrument(address,uint256)": {
-					"params": {
-						"instrument_": "The instrument",
-						"supplierRatio": "The % (in 1e18) of SIGH to be given to the suppliers, and rest to the borrowers"
-					}
-				},
 				"updateSIGHSupplyIndex(address)": {
 					"params": {
 						"currentInstrument": "The Instrument whose supply index to update"
@@ -1706,9 +1523,6 @@
 				"updateSIGHSpeed(uint256)": {
 					"notice": "Sets the amount of Global SIGH distributed per block - - Decided by the SIGH Finance Manager who  can call this function through the Sigh Finance Configurator"
 				},
-				"updateSIGHSpeedRatioForAnInstrument(address,uint256)": {
-					"notice": "Sets the distribution ratio for an Instrument among Suppliers / Borrowers - Decided by the LendingPool Manager who  can call this function through the lendingPool Configurator (through LendingPool Core)"
-				},
 				"updateSIGHSupplyIndex(address)": {
 					"notice": "Accrue SIGH to the Instrument by updating the supply index"
 				},
@@ -1725,7 +1539,7 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
@@ -1781,10 +1595,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighStaking.sol": {
-			"keccak256": "0x85b7daf6c23b6605d6096a282fa7a55f543c4cb82c3ca60e51abfa53c48f40dd",
+			"keccak256": "0xf2bfeb935ef79c95c6d767e77fb2c469658fd5cc660755c001d6c9c852f38332",
 			"urls": [
-				"bzz-raw://df8e0871993218480f97a33045a7eac6847bf178ce785959bf2bd76463a51a59",
-				"dweb:/ipfs/QmcGo4tv2N1pd9ZDf75ioJTjw4UYQQj6mx17yLWZJt5pyd"
+				"bzz-raw://488c9ca887a5b6592cde0bed3727e0fc1b352248a405f18a0c14645a2b2871aa",
+				"dweb:/ipfs/QmeHJgDYzts2PrjzMQJxCZU2oFc3hvgN5MkJCxiqBcY85F"
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Math/CarefulMath.sol": {
@@ -1802,10 +1616,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighDistributionHandler/SighDistributionHandler.sol": {
-			"keccak256": "0x614337c9aedad4e632ff40ca315744862c28669953c17c96be0e10200e17443c",
+			"keccak256": "0x073f0c14a3f9b261529e836fac456c27fa8ab0ebeb673774c2e8bb40cad63458",
 			"urls": [
-				"bzz-raw://25373b8ea90603d601095d9fdf24028a5096a21c753a08de85639bf8b85c3f61",
-				"dweb:/ipfs/QmZgvMCRugmss63kUpT4UMcaz3Wwnk81eQ9KsSuAKX8wTQ"
+				"bzz-raw://1debdff86a73c8089c6f1799edd846b4ad40311ebabe0bf1a740e7fef50a7c51",
+				"dweb:/ipfs/QmTPyEBuheRyYbw45Yw3LaeY5oziP9TGMFJaaf5hjgUGsS"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {
@@ -1862,6 +1676,13 @@
 			"urls": [
 				"bzz-raw://e6ca40872864cb64a2dcc1b4f0be6a3cfc406f363e045fa7991f9f22f6257a63",
 				"dweb:/ipfs/QmdsPdEayCcUa1fg3YTbhTPn3GTcjfNYZqnwf9EDC3QGpp"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol": {
+			"keccak256": "0x4f4577659871ebf814a4adfb96bfec76b5a5e9dd7a414ca545152fe4ba1b932d",
+			"urls": [
+				"bzz-raw://d188138f791cdab03f888e06417d5eedfb378a3ed6f0d8e063da6403b4c6b9c6",
+				"dweb:/ipfs/Qme3scJo781TbYD8Svx86JhLvyY1Tk1ekXvw5novFwaS9Y"
 			]
 		},
 		"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
