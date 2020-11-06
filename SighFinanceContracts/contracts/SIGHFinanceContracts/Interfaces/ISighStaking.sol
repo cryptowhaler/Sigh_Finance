@@ -60,6 +60,7 @@ interface ISighStaking {
     function isInstrumentSupported(address instrument) external view returns (bool);
     function getDistributionSpeed(address instrument) external view returns (uint);
     function getInstrumentState(address instrumentAddress) external view returns(string memory name, uint index, uint rewardDistributionSpeed,uint totalAmountRewarded, uint balance, uint lastUpdatedBlock) ;
+    function getInstrumentBalance(address instrument) external view returns (uint);
 
     function getStakedBalanceForStaker(address account) external view returns (uint);
     function getStakersAccumulatedInstrumentAmount(address account, address instrument)  external view returns (uint) ;

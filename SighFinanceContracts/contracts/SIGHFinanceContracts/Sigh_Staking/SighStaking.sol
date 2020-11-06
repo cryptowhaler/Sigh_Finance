@@ -46,7 +46,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
         mapping (address => uint)  instrumentAccumulated;
     }
 
-    mapping (address => stakingBalance) public stakingBalances;
+    mapping (address => stakingBalance) private stakingBalances;
     uint private totalStakedSigh;
     uint private numberOfStakers;
     uint private maxSighThatCanBeStaked = uint(-1);
@@ -136,9 +136,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
         uint prevTotalStakedBalance = totalStakedSigh ;                  
         totalStakedSigh = add_(prevTotalStakedBalance, amount);                                                         // "TOTAL STAKED SIGH" [ADDITION] (STATE UPDATE)
         
-        if (totalStakedSigh > maxSighThatCanBeStaked ) {
-            return false;
-        }
+        require(totalStakedSigh > maxSighThatCanBeStaked,"Maximum SIGH that can be staked limit reached" );
 
         emit SighStaked( msg.sender, amount, prevStakedBalance, stakingBalances[msg.sender].stakedBalance , prevTotalStakedBalance,  totalStakedSigh, numberOfStakers,  block.number   );
         return true;
@@ -159,10 +157,6 @@ contract SighStaking is VersionedInitializable, Exponential  {
 
         uint prevTotalStakedBalance = totalStakedSigh ;                  
         totalStakedSigh = add_(prevTotalStakedBalance, amount);                                                         // "TOTAL STAKED SIGH" [ADDITION] (STATE UPDATE)
-
-        if (totalStakedSigh > maxSighThatCanBeStaked ) {
-            return false;
-        }
 
         emit StreamingSighStaked( staker, amount, prevBalance, stakingBalances[staker].stakedBalance, totalStakedSigh,  block.number   );
         return true;
@@ -271,7 +265,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
 
     function claimAllAccumulatedInstrumentsForUsers( address[] calldata stakingAddresses ) external {
         for (uint i=0;i<stakingAddresses.length;i++) {
-            transferAllAccumulatedRewardsInternal(msg.sender);
+            transferAllAccumulatedRewardsInternal(stakingAddresses[i]);
         }
     }
 
@@ -294,7 +288,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
         uint amountToBeTransferred =  stakingBalances[staker].instrumentAccumulated[instrumentToBeClaimed];  
         if (amountToBeTransferred > 0 && instrumentAccumulated_.balanceOf(address(this)) >= amountToBeTransferred ) {
             require(instrumentAccumulated_.transfer(staker, amountToBeTransferred ),"Instrument Accumulated failed to be transferred to the User");
-            stakingBalances[msg.sender].instrumentAccumulated[instrumentToBeClaimed] = uint(0);                                      // STATE UPDATE (USER"s ACCUMULATED INSTRUMENT UPDATED)
+            stakingBalances[staker].instrumentAccumulated[instrumentToBeClaimed] = uint(0);                                      // STATE UPDATE (USER"s ACCUMULATED INSTRUMENT UPDATED)
             instrumentStates[instrumentToBeClaimed].balance = instrumentAccumulated_.balanceOf(address(this));                       // STATE UPDATE (BALANCE OF THE INSTRUMENT UPDATED)
             emit instrumentTransferred( staker, instrumentToBeClaimed, instrumentStates[instrumentToBeClaimed].name, amountToBeTransferred, block.number );
         }
@@ -306,6 +300,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
 
     function swapTokensUsingOxAPI( address allowanceTarget, address payable to, bytes calldata callDataHex, address token_bought, address token_sold, uint sellAmount ) external payable onlySIGHFinanceManager returns (bool) {
         require( token_sold != address(sigh_Instrument),"Staked SIGH Instrument cannot be sold by the staking contract");
+
         IERC20 bought_token;
         bought_token = IERC20(token_bought);
 
@@ -346,7 +341,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
         require(instrumentStates[newInstrument].index == 0, "The provided instrument address has already been added for distribution among the stakers");
         updateRewardIndexInternal();
 
-        instrumentsRewarded.push(newInstrument);                // STATE UPDATE - NEW INSTRUMENT ADDED TO THE LIST OF INSTRUMENTS BEING DISTRIBUTED
+        instrumentsRewarded.push(newInstrument);                                                                        // STATE UPDATE - NEW INSTRUMENT ADDED TO THE LIST OF INSTRUMENTS BEING DISTRIBUTED
         IERC20 instrumentContract = IERC20(newInstrument);
         ERC20Detailed instrumentContract_ = ERC20Detailed(newInstrument);
         instrumentStates[newInstrument] = instrumentState({ name: instrumentContract_.name(), 
@@ -355,7 +350,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
                                                             totalAmountRewarded: uint(0), 
                                                             lastUpdatedBlock: block.number,
                                                             balance: instrumentContract.balanceOf(address(this))
-                                                        });         // STATE UPDATE - NEW INSTRUMENT STATE INITIALIZED
+                                                        });                                                              // STATE UPDATE - NEW INSTRUMENT STATE INITIALIZED
 
         emit NewInstrumentForDistributionAdded( newInstrument, instrumentStates[newInstrument].name, instrumentStates[newInstrument].index, instrumentStates[newInstrument].rewardDistributionSpeed, instrumentStates[newInstrument].totalAmountRewarded, instrumentStates[newInstrument].balance, instrumentStates[newInstrument].lastUpdatedBlock  );
         return true;
@@ -368,8 +363,11 @@ contract SighStaking is VersionedInitializable, Exponential  {
         if ( instrumentStates[instrumentAddress].rewardDistributionSpeed > 0) {
             updateRewardIndexInternal();
         }
+        
         uint prevSpeed = instrumentStates[instrumentAddress].rewardDistributionSpeed;
-        instrumentStates[instrumentAddress].rewardDistributionSpeed = newSpeed;
+        instrumentStates[instrumentAddress].rewardDistributionSpeed = newSpeed;                 // STATE UPDATE - DISTRIBUTION SPEED UPDATED
+        instrumentStates[instrumentAddress].lastUpdatedBlock = block.number;                    // STATE UPDATE - BLOCK NUMBER FOR THE INSTRUMENT STATE UPDATED
+        
         emit DistributionSpeedUpdated( instrumentAddress, instrumentStates[instrumentAddress].name, prevSpeed , instrumentStates[instrumentAddress].rewardDistributionSpeed, block.number );
         return true;
     }
@@ -430,6 +428,12 @@ contract SighStaking is VersionedInitializable, Exponential  {
         // }
         // string memory name = '';
         // return ( name, )
+    }
+    
+    function getInstrumentBalance(address instrument) external view returns (uint) {
+        IERC20 instrumentContract = IERC20(instrument);
+        uint current_balance = instrumentContract.balanceOf(address(this));
+        return current_balance;
     }
 
     function getStakedBalanceForStaker(address account) external view returns (uint) {

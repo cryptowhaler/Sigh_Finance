@@ -559,6 +559,27 @@
 				"inputs": [
 					{
 						"internalType": "address",
+						"name": "instrument",
+						"type": "address"
+					}
+				],
+				"name": "getInstrumentBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
 						"name": "instrumentAddress",
 						"type": "address"
 					}
@@ -806,32 +827,6 @@
 				"type": "function"
 			},
 			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "stakingBalances",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "alreadyAStaker",
-						"type": "bool"
-					},
-					{
-						"internalType": "uint256",
-						"name": "stakedBalance",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"constant": false,
 				"inputs": [
 					{
@@ -1032,10 +1027,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Sigh_Staking/SighStaking.sol": {
-			"keccak256": "0x208cd4d9d5aa1eb53118cd8d2b8d51f2110d80a7769eb1740a02263068c4499a",
+			"keccak256": "0xc7de325c3b5027ce7b7a5fefd561c89625393ed28c2d51fd0ff9686bf76ee42b",
 			"urls": [
-				"bzz-raw://539b1b607fa3ece2a15554a27b778d8d2114015b06f00d290176d42d0df0ce9f",
-				"dweb:/ipfs/Qmc7thCPHewVzWsGwAk52aHpsKDqpXivAZkBo4dnY6oSzz"
+				"bzz-raw://6ec264eefe64059cb081923a7f60ccc83fa47c112262127143de09f7ec42d1b8",
+				"dweb:/ipfs/QmRSqfHzYkfWAmYRMBbZfCU7PPaXZ83kcvnsVt252joMSm"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {

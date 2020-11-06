@@ -12,11 +12,6 @@ interface ISighTreasury {
     function initialize( address addressesProvider_) external;
     function refreshConfig() external;
 
-// ######################################################################################################
-// ###########   THE HEDGE FUND MECHANISM - Only Sigh Finance Manager can call this function ############
-// ######################################################################################################
-
-    function swapTokensUsingOxAPI( address allowanceTarget, address payable to, bytes calldata callDataHex, address token_bought, address token_sold, uint sellAmount ) external payable returns (bool);
 
 // ################################################################################################################ 
 // ###########   BURN SIGH TOKENS  ################################################################################
@@ -27,7 +22,7 @@ interface ISighTreasury {
 
 
     function changeSIGHBurnAllowed(uint isAllowed) external returns (bool);
-    function updateSIGHBurnSpeed(uint newBurnSpeed) external;
+    function updateSIGHBurnSpeed(uint newBurnSpeed) external returns (bool);
     function burnSIGHTokens() external returns (uint);
 
 
@@ -50,33 +45,42 @@ interface ISighTreasury {
 
     function drip() external returns (uint);
 
-// ##########################################################
-// ###########   FUNCTION TO TRANSFER SIGH TOKENS  ##########
-// ##########################################################
+// ##################################################################################################
+// ###########   initializeInstrumentState() : INITIALIZING INSTRUMENTS #############################
+// ###########   updateInstrumentBalance() : updates the stored balance                  ############
+// ###########   swapTokensUsingOxAPI() : THE HEDGE FUND MECHANISM AND THE SIGH TRANSFER ############
+// ###########   transferSighTo() : FUNCTION TO TRANSFER SIGH TOKENS     ############################
+// ##################################################################################################
 
-
-    function transferSighTo(address target_, uint amount) external returns (bool);
-    
-    // rechecks the balance and updates the stored balances array
-    function updateInstrumentBalance(address instrument_address) external returns (uint);
-
-
+    function initializeInstrumentState(address instrument) external returns (bool);
+    function updateInstrumentBalance(address instrument_address) external returns (uint);       // rechecks the balance and updates the stored balances array
+    function swapTokensUsingOxAPI( address allowanceTarget, address payable to, bytes calldata callDataHex, address token_bought, address token_sold, uint sellAmount ) external payable returns (bool);
+    function transferSighTo(address target_, uint amount) external returns (uint);
 
 // ########################################
 // ###########   VIEW FUNCTIONS  ##########
 // ########################################
-
-
-    function getSIGHBalance() external view returns (uint);
+    
+    function getInstrumentState(address instrument) external view returns ( bool initialized, string memory name, uint balance, uint totalAmountDripped, uint totalAmountTransferred);
+    function getAllInstruments() external view returns (address[] memory);
+    function totalInstruments() external view returns (uint);
     function getInstrumentBalance(address instrument_address) external view returns (uint);
+    function getTotalDrippedAmount(address token) external view returns (uint);
+    function getTotalTransferredAmount(address instrument_address) external view returns (uint);
+    function getSIGHBalance() external view returns (uint);
+    
+    function getDistributionState() external view returns( bool isAllowed, address targetAddress, address instrumentBeingDistributed, uint speed );
     function isDistributionAllowed() external view returns (bool);
     function getTargetAddressForDistribution() external view returns (address);
     function getinstrumentBeingDripped() external view returns (address) ;
-    function getTotalDrippedAmount(address token) external view returns (uint);
     function getDistributionSpeed() external view returns (uint);
+
+    function getBurnState() external view returns ( bool isAllowed, uint burnSpeed, uint totalSighBurnt, uint sighBalance);
     function getBurnSpeed() external view returns (uint) ;
     function getTotalBurntSigh() external view returns (uint);
 
+    function getCurrentSIGHTransferState() external view returns (uint maxSIGHSpentLimit, uint totalSighTransferredAndTraded );
+    function blocksRemainingForNextPeriod() external view returns (uint);
 }
     // function getAmountTransferred(address target) external view returns (uint) {
     //     return SIGH_Transferred[target];

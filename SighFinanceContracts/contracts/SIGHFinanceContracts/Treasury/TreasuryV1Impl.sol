@@ -7,8 +7,8 @@ pragma solidity ^0.5.16;
  * @author SIGH Finance
  */
 
-// interfaces
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
+import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 
 import "./EIP20InterfaceSIGH.sol";
@@ -20,29 +20,54 @@ import "../../LendingProtocolContracts/interfaces/IPriceOracleGetter.sol";
 
 contract Treasury is VersionedInitializable   {
 
+    // OTHER CONTRACTS INTERACTED WITH
     IERC20 private sigh_Instrument;    
-    GlobalAddressesProvider public addressesProvider;
-    IPriceOracleGetter public oracle;
-
-    mapping (address => uint) InstrumentBalances;
-    mapping (address => uint)  totalDrippedAmount;  // Stores the total amount of each instrument dripped
- 
-    bool isDripAllowed = false;    
-    address private instrumentBeingDripped;
-    address private targetAddressForDripping;
-    uint private DripSpeed;
-    uint public lastDripBlockNumber; 
-
-    uint public maxTransferAmount;
-    uint public coolDownPeriod = 2; // 5 min
-    uint public prevTransferBlock;
+    GlobalAddressesProvider private addressesProvider;
+    IPriceOracleGetter private oracle;
     
-    bool public is_SIGH_BurnAllowed;
-    uint private SIGHBurnSpeed;
-    uint private totalBurntSIGH = 0;
-    uint public lastBurnBlockNumber;
+    // STATE OF THE INSTRUMENTS HELD IN THE TREASURY
+    struct instrumentState {
+        bool initialized;
+        string name;
+        uint balance;
+        uint totalAmountDripped;
+        uint totalAmountTransferred;
+    }
+
+    mapping (address => instrumentState) instrumentStates;
+    address[] private allInstruments;
+
+    // TREASURY's DRIPPING STATE PARAMETERS
+    struct dripState {
+        bool isDripAllowed;    
+        address targetAddressForDripping;
+        address instrumentBeingDripped;
+        uint DripSpeed;
+        uint lastDripBlockNumber; 
+    }
+    
+    dripState private treasuryDripState;
+
+    // TREASURY's SIGH BURN STATE PARAMETERS
+    struct burnState {
+        bool is_SIGH_BurnAllowed;
+        uint SIGHBurnSpeed;
+        uint totalBurntSIGH;
+        uint lastBurnBlockNumber;
+    }
+    
+    burnState private sighBurnState;
+
+    // SIGH TRANSFER RELATED FUNCTIONS
+
+    uint private maxSIGHTransferLimit;                  // MAX SIGH that can be traded/transferred during a period
+    uint private totalSighTradedAndTransferred;      // SIGH that has been traded/transferred during the current period
+    uint public periodLength = 2;                      // Period Length
+    uint private periodInitializationBlock;            
+    
 
 
+    event InstrumentInitialized( address instrument, string name, uint balance, uint totalAmountDripped, uint totalAmountTransferred  );
 
     event instrumentBeingDistributedChanged(address prevInstrument, address newToken, uint blockNumber);
     event DripAllowedChanged(bool prevDripAllowed , bool newDripAllowed, uint blockNumber); 
@@ -92,8 +117,8 @@ contract Treasury is VersionedInitializable   {
     }
     
     
-    function initialize( address addressesProvider_) public initializer {
-        addressesProvider = GlobalAddressesProvider(addressesProvider_); 
+    function initialize( GlobalAddressesProvider addressesProvider_) public initializer {
+        addressesProvider = addressesProvider_; 
         refreshConfigInternal();        
     }
     
@@ -104,22 +129,239 @@ contract Treasury is VersionedInitializable   {
     function refreshConfigInternal() internal {
         sigh_Instrument = IERC20(addressesProvider.getSIGHAddress());           // SIGH TOKEN
         oracle = IPriceOracleGetter( addressesProvider.getPriceOracle() );     // PRICE ORACLE
-        // lendingPoolCore = addressesProvider.getLendingPoolCore();       // 
     }
 
-// ######################################################################################################
-// ###########   THE HEDGE FUND MECHANISM - Only Sigh Finance Manager can call this function ############
-// ######################################################################################################
+// ################################################################################################################ 
+// ###########   BURN SIGH TOKENS  ################################################################################
+// ###########   1. changeSIGHBurnAllowed() : Activates / Deactivates SIGH Burn (onlySighFinanceConfigurator) #####
+// ###########   2. updateSIGHBurnSpeed() : Updates the SIGH Burn Speed (onlySighFinanceConfigurator) #############
+// ###########   3. burnSIGHTokens() : Public Function. Allows anyone to burn SIGH Tokens. ########################
+// ################################################################################################################
+
+    function changeSIGHBurnAllowed(uint isAllowed) external onlySighFinanceConfigurator returns (bool) {
+        bool prevStatus = sighBurnState.is_SIGH_BurnAllowed;
+        if (isAllowed == 0) {
+            burnSIGHTokens();
+            sighBurnState.is_SIGH_BurnAllowed = false;          // STATE UPDATE : is_SIGH_BurnAllowed switched
+            updateSIGHBurnSpeedInternal(0);
+        }
+        else {
+            sighBurnState.is_SIGH_BurnAllowed = true;           // STATE UPDATE : is_SIGH_BurnAllowed switched
+        }
+        emit SIGHBurnAllowedChanged(prevStatus, sighBurnState.is_SIGH_BurnAllowed, block.number);
+        return sighBurnState.is_SIGH_BurnAllowed;
+    }
+        
+    function updateSIGHBurnSpeed(uint newBurnSpeed) external onlySighFinanceConfigurator returns (bool) {
+        require(updateSIGHBurnSpeedInternal(newBurnSpeed),"Sigh Burn speed was not updated properly");
+        return true;
+    }
+
+    function burnSIGHTokens() public returns (uint) {
+        if ( !instrumentStates[address(sigh_Instrument)].initialized || !sighBurnState.is_SIGH_BurnAllowed || sighBurnState.SIGHBurnSpeed == 0 || (sighBurnState.lastBurnBlockNumber == block.number) )  {
+            return uint(0);
+        }
+        
+        address sighTokenAddress = address(sigh_Instrument);
+        EIP20InterfaceSIGH token_ = EIP20InterfaceSIGH(sighTokenAddress);
+
+        uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance of SIGH
+        uint blockNumber_ = block.number;
+        uint deltaBlocks = sub(blockNumber_,sighBurnState.lastBurnBlockNumber,"Block Numbers Substraction gave error");
+        uint deltaBurn_ = mul(sighBurnState.SIGHBurnSpeed, deltaBlocks, "BurnTotal overflow");
+        uint toBurn_ = min(treasuryBalance_, deltaBurn_);
+        
+        require(treasuryBalance_ != 0, 'The treasury currently does not have any SIGH tokens.');
+        require(token_.burn(toBurn_), 'The SIGH burn was not successful' );
+        
+        sighBurnState.lastBurnBlockNumber = blockNumber_;                         // setting the block number when the Burn is made
+        uint prevTotalBurntAmount = sighBurnState.totalBurntSIGH ;
+        sighBurnState.totalBurntSIGH = add(prevTotalBurntAmount,toBurn_,"Total Sigh Burnt Overflow");
+        treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
+
+        instrumentStates[address(sigh_Instrument)].balance = treasuryBalance_;
+
+        emit SIGH_Burned( address(sigh_Instrument), toBurn_, sighBurnState.totalBurntSIGH,  treasuryBalance_, sighBurnState.lastBurnBlockNumber ); 
+
+        return toBurn_;
+    }
+
+    // INTERNAL FUNCTION
+
+    function updateSIGHBurnSpeedInternal(uint newBurnSpeed) internal returns (bool) {
+        if ( sighBurnState.SIGHBurnSpeed > 0 ) {
+            burnSIGHTokens();
+        } 
+        uint prevBurnSpeed = sighBurnState.SIGHBurnSpeed;
+        sighBurnState.SIGHBurnSpeed = newBurnSpeed;
+        sighBurnState.lastBurnBlockNumber = block.number;
+        
+        require (sighBurnState.SIGHBurnSpeed == newBurnSpeed, 'New SIGH Burn Speed not initialized properly');
+        emit SIGHBurnSpeedChanged(prevBurnSpeed, sighBurnState.SIGHBurnSpeed, block.number);
+        return true;
+    }
+
+// #########################################################################################################################################################
+// ###########   _______TREASURY CAN DISTRIBUTE ANY TOKEN TO ANY ADDRESS AT A PER BLOCK BASIS_______ #######################################################
+// ###########   1. initializeInstrumentDistribution() --> To initiate an Instrument distribution Session. (onlySighFinanceConfigurator)   #################
+// ###########   2. changeInstrumentBeingDripped() --> Change the instrument being distributed (onlySighFinanceConfigurator)  ##############################
+// ###########   3. updateDripSpeed() --> To update the current Dripping Speed (onlySighFinanceConfigurator) ###############################################
+// ###########   4. resetInstrumentDistribution() --> Reset instrument distribution to start a new session (onlySighFinanceConfigurator)  ##################
+// #########################################################################################################################################################
+
+    function initializeInstrumentDistribution (address targetAddress, address instrumentToBeDistributed, uint distributionSpeed) external onlySighFinanceConfigurator returns (bool) {
+        require(!treasuryDripState.isDripAllowed,"Instrument distribution needs to be reset before it can be initialized Again");
+        require( instrumentStates[address(instrumentToBeDistributed)].initialized, "Instrument to be distributed is not initialized yet" );        
+        
+        treasuryDripState.targetAddressForDripping = targetAddress;                           // STATE UPDATE : Sets the address to which these instruments will be distributed
+        require(changeInstrumentBeingDrippedInternal(instrumentToBeDistributed),"Instrument to be distributed not assigned properly");    // Sets the instrument which will be distributed
+        require(updateDripSpeedInternal(distributionSpeed),"Distribution Speed not initialized properly.");                         // Sets the distribution Speed
+
+        treasuryDripState.isDripAllowed = true;                                               // STATE UPDATE : INITIATES DISTRIBUTION
+        treasuryDripState.lastDripBlockNumber = block.number;                                 // STATE UPDATE : Distribution commences from current block
+        return true;
+    }
+
+    /**
+      * @notice Change the token being dripped to the Target Address
+      * @param instrumentToDrip Address of the token to be dripped
+      * @return returns the address of the token that will be Dripped
+    */    
+    function changeInstrumentBeingDripped(address instrumentToDrip ) external onlySighFinanceConfigurator returns (bool) {
+        require( instrumentStates[address(instrumentToDrip)].initialized, "Instrument to be distributed is not initialized yet" );        
+        if ( treasuryDripState.isDripAllowed ) {  // First Distribute the remaining amount
+            drip();
+        }
+        require(changeInstrumentBeingDrippedInternal(instrumentToDrip),"Instrument to be distributed not assigned properly");
+        return true;
+    }
+
+    function updateDripSpeed (uint DripSpeed_) external onlySighFinanceConfigurator returns (bool) {
+        if (treasuryDripState.isDripAllowed) {
+            drip();
+        }
+        require(updateDripSpeedInternal(DripSpeed_),"Distribution Speed not initialized properly.");
+        return true;
+  }
+
+    /**
+      * @notice Switch to Reset (OFF) Dripping
+      * @return return is Dripping is allowed or not
+    */    
+    function resetInstrumentDistribution() external onlySighFinanceConfigurator returns (bool) {
+        if (!treasuryDripState.isDripAllowed) {
+            return true;
+        }
+        drip();
+        
+        treasuryDripState.isDripAllowed = false;                                // STATE UPDATE : DRIPPING FUNCTIONALITY BEING RESET
+        treasuryDripState.DripSpeed = uint(0);                                  // STATE UPDATE : DRIPPING FUNCTIONALITY BEING RESET
+        treasuryDripState.instrumentBeingDripped = address(0);                  // STATE UPDATE : DRIPPING FUNCTIONALITY BEING RESET
+        treasuryDripState.targetAddressForDripping = address(0);                // STATE UPDATE : DRIPPING FUNCTIONALITY BEING RESET
+        treasuryDripState.targetAddressForDripping = address(0);                // STATE UPDATE : DRIPPING FUNCTIONALITY BEING RESET
+        
+        emit DripAllowedChanged(true , treasuryDripState.isDripAllowed, block.number);
+        return true;
+    }
+    
+   function updateDripSpeedInternal( uint dripSpeed_ ) internal returns (bool) {
+        uint prevDripSpeed = treasuryDripState.DripSpeed;
+        treasuryDripState.DripSpeed = dripSpeed_;                                           // STATE UPDATE : DRIPPING SPEED UPDATED
+        emit DripSpeedChanged(prevDripSpeed , treasuryDripState.DripSpeed, block.number);
+        return true;
+   }    
+   
+    function changeInstrumentBeingDrippedInternal(address instrumentToDrip) internal returns (bool) {
+        IERC20 newToken = IERC20(instrumentToDrip);
+        uint currentBalance = newToken.balanceOf(address(this)); 
+        require(currentBalance > 0, 'The Treasury does not hold these new instruments');
+
+        address prevInstrument = treasuryDripState.instrumentBeingDripped;
+        treasuryDripState.instrumentBeingDripped = instrumentToDrip;                    // STATE UPDATE : INSTRUMENT BEING DRIPPED UPDATED
+        require(treasuryDripState.instrumentBeingDripped == instrumentToDrip, 'Address for the instrument to be Dripped not assigned properly');
+
+        emit instrumentBeingDistributedChanged(prevInstrument, treasuryDripState.instrumentBeingDripped, block.number);
+        return true;
+    }  
+
+// ################################################################################
+// ###########   THE FUNCTION TO DRIP THE TOKENS TO THE TARGET ADDRESS  ###########
+// ################################################################################
+
+    /**
+      * @notice Drips the Tokens to the SIGHDistributionHandler
+      * @return returns the Dripped Amount
+    */    
+    function drip() public returns (uint) {
+        if ( !treasuryDripState.isDripAllowed || (treasuryDripState.DripSpeed == 0)  || (treasuryDripState.targetAddressForDripping == address(0)) || (treasuryDripState.lastDripBlockNumber == block.number)  ) {
+            return uint(0);
+        }
+
+        IERC20 token_ = IERC20(treasuryDripState.instrumentBeingDripped); 
+        uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance of the token Being Dripped
+        uint blockNumber_ = block.number;
+        uint deltaBlocks = sub(blockNumber_,treasuryDripState.lastDripBlockNumber,"Blocks Substraction overrflow");
+        uint deltaDrip_ = mul(treasuryDripState.DripSpeed, deltaBlocks, "dripTotal overflow");
+        uint toDrip_ = min(treasuryBalance_, deltaDrip_);
+        
+        require(treasuryBalance_ != 0, 'The treasury currently does not have any of tokens which are being Dripped');
+        require(token_.transfer(treasuryDripState.targetAddressForDripping, toDrip_), 'The Instrument transfer did not complete.' );      // ONLY INSTRUMENTS WHICH IMPLEMENT STANDARD ERC20 CAN BE DISTRIBUTED BY THE TREASURY
+        
+        treasuryDripState.lastDripBlockNumber = blockNumber_;                                                                               // STATE UPDATE : setting the block number when the Drip is made
+        uint prevTotalDrippedAmount = instrumentStates[treasuryDripState.instrumentBeingDripped].totalAmountDripped;
+        instrumentStates[treasuryDripState.instrumentBeingDripped].totalAmountDripped = add(prevTotalDrippedAmount,toDrip_,"Overflow");     // STATE UPDATE : Total amount dripped for the instrument updated
+        treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
+
+        instrumentStates[treasuryDripState.instrumentBeingDripped].balance = treasuryBalance_;                                              // STATE UPDATE: Update the instrument balance
+        emit AmountDripped( treasuryDripState.targetAddressForDripping, treasuryDripState.instrumentBeingDripped, toDrip_, treasuryBalance_, instrumentStates[treasuryDripState.instrumentBeingDripped].totalAmountDripped ); 
+        return toDrip_;
+    }
+
+
+// ##################################################################################################
+// ###########   initializeInstrumentState() : INITIALIZING INSTRUMENTS #############################
+// ###########   updateInstrumentBalance() : updates the stored balance                  ############
+// ###########   swapTokensUsingOxAPI() : THE HEDGE FUND MECHANISM AND THE SIGH TRANSFER ############
+// ###########   transferSighTo() : FUNCTION TO TRANSFER SIGH TOKENS     ############################
+// ##################################################################################################
+
+    function initializeInstrumentState(address instrument) external onlySighFinanceConfigurator returns (bool) {
+        require( !instrumentStates[instrument].initialized,"The provided instrument has already been initialized" );
+
+        IERC20 instrumentContract = IERC20(instrument);
+        ERC20Detailed instrumentContractDetailed = ERC20Detailed(instrument);
+
+        // STATE UPDATE : NEW INSTRUMENT INITIALIZED
+        instrumentStates[instrument] = instrumentState({ initialized: true, name: instrumentContractDetailed.name(), balance: instrumentContract.balanceOf(address(this)), totalAmountDripped: uint(0), totalAmountTransferred: uint(0) });
+        allInstruments.push(instrument);        // STATE UPDATE : INSTRUMENT ADDED TO THE LIST
+        
+        emit InstrumentInitialized( instrument, instrumentStates[instrument].name, instrumentStates[instrument].balance, instrumentStates[instrument].totalAmountDripped, instrumentStates[instrument].totalAmountTransferred  );
+        return true;
+    }
+    
+    // rechecks the balance and updates the stored balance for the instrument
+    function updateInstrumentBalance(address instrument_address) external returns (uint) {
+        require(instrumentStates[instrument_address].initialized,"This instrument is current not initialized");
+        IERC20 token_ = IERC20(instrument_address);
+        instrumentStates[instrument_address].balance = token_.balanceOf(address(this));
+        return instrumentStates[instrument_address].balance;
+    }
+
+
     // 
     function swapTokensUsingOxAPI( address allowanceTarget, address payable to, bytes calldata callDataHex, address token_bought, address token_sold, uint sellAmount ) external payable onlySIGHFinanceManager returns (bool) {
+        require(instrumentStates[token_bought].initialized,"Instrument to be purchased has not been initialized yet.");
+        require(instrumentStates[token_sold].initialized,"Instrument to be sold has not been initialized yet.");
 
-        IERC20 bought_token;
-        bought_token = IERC20(token_bought);
-
-        IERC20 sold_token;
-        sold_token = IERC20(token_sold);
-
+        if (token_sold == address(sigh_Instrument)) {
+            uint currentTradeSize = updatemaxTransferAmount(sellAmount);
+            require(sellAmount == currentTradeSize,"It is not possible to trade the provided number of SIGH tokens at the moment");
+        }
+        
+        IERC20 bought_token = IERC20(token_bought);
         uint prev_bought_token_amount = bought_token.balanceOf(address(this));  // Current Bought Tokens Balance
+
+        IERC20 sold_token = IERC20(token_sold);
         uint prev_sold_token_amount = sold_token.balanceOf(address(this));      // Current Tokens to be Sold Balance
 
         require(sold_token.approve(allowanceTarget, uint256(sellAmount)));                   // Allow the allowanceTarget address to spend an the needed amount
@@ -131,8 +373,8 @@ contract Treasury is VersionedInitializable   {
             uint new_bought_token_amount = bought_token.balanceOf(address(this));       // New Bought Tokens Balance
             uint new_sold_token_amount = sold_token.balanceOf(address(this));           // New Tokens to be Sold Balance
             
-            InstrumentBalances[token_bought] = new_bought_token_amount;
-            InstrumentBalances[token_sold] = new_sold_token_amount;
+            instrumentStates[token_bought].balance = new_bought_token_amount;   // STATE UPDATE : Balance Updated for instruments bought
+            instrumentStates[token_sold].balance = new_sold_token_amount;       // STATE UPDATE : Balance Updated for instruments sold
 
             uint tokenBoughtAmount = sub(new_bought_token_amount,prev_bought_token_amount,"New Token Balance for tokens that are being Bought is lower than its initial balance");
             uint tokenSoldAmount = sub(prev_sold_token_amount,new_sold_token_amount,"New Token Balance for tokens that are being Sold is higher than its initial balance");
@@ -146,253 +388,80 @@ contract Treasury is VersionedInitializable   {
         return false;
     }
 
-// ################################################################################################################ 
-// ###########   BURN SIGH TOKENS  ################################################################################
-// ###########   1. changeSIGHBurnAllowed() : Activates / Deactivates SIGH Burn (onlySighFinanceConfigurator) #####
-// ###########   2. updateSIGHBurnSpeed() : Updates the SIGH Burn Speed (onlySighFinanceConfigurator) #############
-// ###########   3. burnSIGHTokens() : Public Function. Allows anyone to burn SIGH Tokens. ########################
-// ################################################################################################################
-
-
-    function changeSIGHBurnAllowed(uint isAllowed) external onlySighFinanceConfigurator returns (bool) {
-        bool prevStatus = is_SIGH_BurnAllowed;
-        if (isAllowed == 0) {
-            is_SIGH_BurnAllowed = false;
-            updateSIGHBurnSpeedInternal(0);
-        }
-        else {
-            is_SIGH_BurnAllowed = true;
-        }
-        emit SIGHBurnAllowedChanged(prevStatus, is_SIGH_BurnAllowed, block.number);
-        return is_SIGH_BurnAllowed;
-    }
-        
-    function updateSIGHBurnSpeed(uint newBurnSpeed) external onlySighFinanceConfigurator {
-        require(updateSIGHBurnSpeedInternal(newBurnSpeed),"Sigh Burn speed was not updated properly");
-    }
-
-    function updateSIGHBurnSpeedInternal(uint newBurnSpeed) internal returns (bool) {
-        if ( SIGHBurnSpeed > 0 ) {
-            burnSIGHTokens();
-        } 
-        uint prevBurnSpeed = SIGHBurnSpeed;
-        SIGHBurnSpeed = newBurnSpeed;
-        lastBurnBlockNumber = block.number;
-        
-        require (SIGHBurnSpeed == newBurnSpeed, 'New SIGH Burn Speed not initialized properly');
-        emit SIGHBurnSpeedChanged(prevBurnSpeed, SIGHBurnSpeed, block.number);
-        return true;
-    }
-
-    function burnSIGHTokens() public returns (uint) {
-        if (!is_SIGH_BurnAllowed ||SIGHBurnSpeed ==0)  {
-            return uint(0);
-        }
-        
-        address sighTokenAddress = address(sigh_Instrument);
-        EIP20InterfaceSIGH token_ = EIP20InterfaceSIGH(sighTokenAddress);
-
-        uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance of SIGH
-        uint blockNumber_ = block.number;
-        uint deltaBlocks = sub(blockNumber_,lastBurnBlockNumber,"Block Numbers Substraction gave error");
-        uint deltaBurn_ = mul(SIGHBurnSpeed, deltaBlocks, "BurnTotal overflow");
-        uint toBurn_ = min(treasuryBalance_, deltaBurn_);
-        
-        require(treasuryBalance_ != 0, 'The treasury currently does not have any SIGH tokens.');
-        require(token_.burn(toBurn_), 'The SIGH burn was not successful' );
-        
-        lastBurnBlockNumber = blockNumber_;                         // setting the block number when the Burn is made
-        uint prevTotalBurntAmount = totalBurntSIGH ;
-        totalBurntSIGH = add(prevTotalBurntAmount,toBurn_,"Total Sigh Burnt Overflow");
-        treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
-
-        InstrumentBalances[address(sigh_Instrument)] = treasuryBalance_;
-
-        emit SIGH_Burned( address(sigh_Instrument), toBurn_, totalBurntSIGH,  treasuryBalance_, lastBurnBlockNumber ); 
-
-        return toBurn_;
-    }
-
-
-// #########################################################################################################################################################
-// ###########   _______TREASURY CAN DISTRIBUTE ANY TOKEN TO ANY ADDRESS AT A PER BLOCK BASIS_______ #######################################################
-// ###########   1. initializeInstrumentDistribution() --> To initiate an Instrument distribution Session. (onlySighFinanceConfigurator)   #################
-// ###########   2. changeInstrumentBeingDripped() --> Change the instrument being distributed (onlySighFinanceConfigurator)  ##############################
-// ###########   3. updateDripSpeed() --> To update the current Dripping Speed (onlySighFinanceConfigurator) ###############################################
-// ###########   4. resetInstrumentDistribution() --> Reset instrument distribution to start a new session (onlySighFinanceConfigurator)  ##################
-// #########################################################################################################################################################
-
-    function initializeInstrumentDistribution (address targetAddress, address instrumentToBeDistributed, uint distributionSpeed) external onlySighFinanceConfigurator returns (bool) {
-        require(!isDripAllowed,"Instrument distribution needs to be reset before it can be initialized Again");
-
-        targetAddressForDripping = targetAddress;                           // Sets the address to which these instruments will be distributed
-        require(changeInstrumentBeingDrippedInternal(instrumentToBeDistributed),"Instrument to be distributed not assigned properly");    // Sets the instrument which will be distributed
-        require(updateDripSpeedInternal(distributionSpeed),"Distribution Speed not initialized properly.");                         // Sets the distribution Speed
-
-        isDripAllowed = true;                                               // INITIATES DISTRIBUTION
-        lastDripBlockNumber = block.number;                                 // Distribution commences from current block
-        return true;
-    }
-
-    /**
-      * @notice Change the token being dripped to the Target Address
-      * @param instrumentToDrip Address of the token to be dripped
-      * @return returns the address of the token that will be Dripped
-    */    
-    function changeInstrumentBeingDripped(address instrumentToDrip ) external onlySighFinanceConfigurator returns (bool) {
-        if ( isDripAllowed ) {  // First Distribute the remaining amount
-            drip();
-        }
-        require(changeInstrumentBeingDrippedInternal(instrumentToDrip),"Instrument to be distributed not assigned properly");
-
-    }
-
-    function changeInstrumentBeingDrippedInternal(address instrumentToDrip) internal returns (bool) {
-        IERC20 newToken = IERC20(instrumentToDrip);
-        uint currentBalance = newToken.balanceOf(address(this)); 
-        require(currentBalance > 0, 'The Treasury does not hold these new instruments');
-
-        address prevInstrument = instrumentBeingDripped;
-        instrumentBeingDripped = instrumentToDrip;
-        require(instrumentBeingDripped == instrumentToDrip, 'Address for the instrument to be Dripped not assigned properly');
-
-        emit instrumentBeingDistributedChanged(prevInstrument, instrumentBeingDripped, block.number);
-        return true;
-    }
-
-    /**
-      * @notice To change the Current Drip Speed
-      * @param DripSpeed_ New Drip Speed
-      * @return returns a Boolean True is Successful 
-    */    
-    function updateDripSpeed (uint DripSpeed_) external onlySighFinanceConfigurator returns (bool) {
-        if (isDripAllowed) {
-            drip();
-        }
-        require(updateDripSpeedInternal(DripSpeed_),"Distribution Speed not initialized properly.");
-        return true;
-  }
-
-   function updateDripSpeedInternal( uint DripSpeed_ ) internal returns (bool) {
-        uint prevDripSpeed = DripSpeed;
-        DripSpeed = DripSpeed_;
-        emit DripSpeedChanged(prevDripSpeed , DripSpeed, block.number);
-        return true;
-   }
-
-    /**
-      * @notice Switch to Reset (OFF) Dripping
-      * @return return is Dripping is allowed or not
-    */    
-    function resetInstrumentDistribution() external onlySighFinanceConfigurator returns (bool) {
-        if (!isDripAllowed) {
-            return true;
-        }
-        drip();
-        isDripAllowed = false;
-        DripSpeed = uint(0);
-        instrumentBeingDripped = address(0);
-        targetAddressForDripping = address(0);
-        emit DripAllowedChanged(true , isDripAllowed, block.number);
-        return true;
-    }
-
-// ################################################################################
-// ###########   THE FUNCTION TO DRIP THE TOKENS TO THE TARGET ADDRESS  ###########
-// ################################################################################
-
-    /**
-      * @notice Drips the Tokens to the SIGHDistributionHandler
-      * @return returns the Dripped Amount
-    */    
-    function drip() public returns (uint) {
-        require(isDripAllowed, 'Instrument distribution is currently not initialized.');
-        require(targetAddressForDripping != address(0),"The target address is not valid");
-        require(DripSpeed > 0,"The distribution speed is set to zero");
-
-        IERC20 token_ = IERC20(instrumentBeingDripped); 
-        uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance of the token Being Dripped
-        uint blockNumber_ = block.number;
-        uint deltaBlocks = sub(blockNumber_,lastDripBlockNumber,"Blocks Substraction overrflow");
-        uint deltaDrip_ = mul(DripSpeed, deltaBlocks, "dripTotal overflow");
-        uint toDrip_ = min(treasuryBalance_, deltaDrip_);
-        
-        require(treasuryBalance_ != 0, 'The treasury currently does not have any of tokens which are being Dripped');
-        require(token_.transfer(targetAddressForDripping, toDrip_), 'The Instrument transfer did not complete.' );
-        
-        lastDripBlockNumber = blockNumber_;                         // setting the block number when the Drip is made
-        uint prevTotalDrippedAmount = totalDrippedAmount[instrumentBeingDripped];
-        totalDrippedAmount[instrumentBeingDripped] = add(prevTotalDrippedAmount,toDrip_,"Overflow");   
-        treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
-
-        InstrumentBalances[instrumentBeingDripped] = treasuryBalance_;   // Update the instrument balance
-        emit AmountDripped( targetAddressForDripping, instrumentBeingDripped, toDrip_, treasuryBalance_, totalDrippedAmount[instrumentBeingDripped] ); 
-        return toDrip_;
-    }
-
-// ##########################################################
-// ###########   FUNCTION TO TRANSFER SIGH TOKENS  ##########
-// ##########################################################
-
     /**
       * @notice Transfers the SIGH Tokens to the Target Address
       * @param target_ Address to which the amount is to be transferred
       * @param amount The Amount to be transferred
       * @return returns the Dripped Amount
     */    
-    function transferSighTo(address target_, uint amount) external onlySighFinanceConfigurator returns (bool) {
-        updatemaxTransferAmount();
-        require (amount < maxTransferAmount, "The amount provided is greater than the amount allowed");
+    function transferSighTo(address target_, uint amount) external onlySighFinanceConfigurator returns (uint) {
+        require(instrumentStates[address(sigh_Instrument)].initialized,"SIGH Instrument has not been initialized yet.");
+        uint currentTradeSize = updatemaxTransferAmount(amount);
+        
+        require(sigh_Instrument.transfer(target_, currentTradeSize), 'The transfer did not complete.' );        // TRANSFERRING SIGH
+        
+        uint prevTransferAmount = instrumentStates[address(sigh_Instrument)].totalAmountTransferred;
+        instrumentStates[address(sigh_Instrument)].totalAmountTransferred = add(prevTransferAmount,currentTradeSize,"Error when updating total SIGH Transferred");   // STATE UPDATE : totalAmountTransferred
+        instrumentStates[address(sigh_Instrument)].balance = sigh_Instrument.balanceOf(address(this));                                                               // STATE UPDATE : SIGH balance updated
 
-        uint blockNumber = block.number;
-        uint dif = sub(blockNumber, prevTransferBlock, 'underflow');
-        require(dif > coolDownPeriod, 'The cool down period is not yet completed');
-
-        IERC20 token_ = sigh_Instrument;
-
-        uint treasuryBalance_ = token_.balanceOf(address(this)); // get current balance
-        require(treasuryBalance_ > amount , "The current treasury's SIGH balance is less than the amount to be transferred" );
-        require(token_.transfer(target_, amount), 'The transfer did not complete.' );
-
-        // uint prevTransferAmount = SIGH_Transferred[target_];
-        // uint totalTransferAmount = add(prevTransferAmount,amount,"Overflow");
-        // SIGH_Transferred[target_] = totalTransferAmount;
-        prevTransferBlock = block.number;
-        uint new_sigh_balance = token_.balanceOf(address(this));
-        InstrumentBalances[address(sigh_Instrument)] = new_sigh_balance;
-
-        emit SIGHTransferred( target_ , amount,  block.number );
-        return true;
+        emit SIGHTransferred( target_ , currentTradeSize,  block.number );
+        return currentTradeSize;
     }
     
-    // Maximum of 0.1% of total supply can be transferred from the treasury in a day
-    function updatemaxTransferAmount() internal returns (uint) {
-        IERC20 token_ = sigh_Instrument;
-        uint totalSupply = token_.totalSupply(); // get total Supply
-        require(totalSupply > 0, 'Total Supply of SIGH tokens returned not valid');
-        uint newtransferAmount = div(totalSupply,1000,'updatemaxTransferAmount: Division returned error');
+    // A CERTAIN NUMBER OF BLOCKS NEED TO PASS BETWEEN TRANSFER SIGH FUNCTION EXECUTION
+    function updatemaxTransferAmount(uint sigh_amount) internal returns (uint)  {
 
-        uint prevmaxTransferAmount = maxTransferAmount;
-        maxTransferAmount = newtransferAmount;
-        emit maxTransferAmountUpdated(prevmaxTransferAmount,maxTransferAmount);
-        return maxTransferAmount;
+        uint blockNumber = block.number;
+        uint dif = sub(blockNumber, periodInitializationBlock, 'underflow');
+        
+        if ( dif > periodLength )   {
+            uint currentBalance = sigh_Instrument.balanceOf(address(this)); // get total Supply
+            uint prevmaxTransferAmount = maxSIGHTransferLimit;
+            maxSIGHTransferLimit = div(currentBalance,25,'updatemaxTransferAmount: Division returned error');  // STATE UPDATE : MAXIMUM SIGH THAT CAN BE TRANSFERRED UPDATED (4% in a day is the max)
+            periodInitializationBlock = block.number;                                                                  // STATE UPDATE: Block number when this period begins is stored
+            emit maxTransferAmountUpdated(prevmaxTransferAmount,maxSIGHTransferLimit);
+
+            totalSighTradedAndTransferred = min(sigh_amount,maxSIGHTransferLimit );
+            return totalSighTradedAndTransferred;
+        }     
+        else {
+            uint maxTradeSize = sub(maxSIGHTransferLimit,totalSighTradedAndTransferred,"Error when subtracting current amount of sigh trade/transferred from max sigh transfer limit " );
+            uint currentTradeSize = min( maxTradeSize, sigh_amount);
+            uint prevtotalSighTradedAndTransferred = totalSighTradedAndTransferred;
+            totalSighTradedAndTransferred = add(prevtotalSighTradedAndTransferred,currentTradeSize,"Error when updating total Sigh amount traded / transferred during the current period " );
+            return currentTradeSize;
+        }
     }
-
 
 
 // ########################################
 // ###########   VIEW FUNCTIONS  ##########
 // ########################################
 
-    // rechecks the balance and updates the stored balances array
-    function updateInstrumentBalance(address instrument_address) external returns (uint) {
-        IERC20 token_ = IERC20(instrument_address);
-        uint balance = token_.balanceOf(address(this));
-        if (balance == 0) {
-            return 0;
-        }
-        InstrumentBalances[instrument_address] = balance;
-        return InstrumentBalances[instrument_address];
+    // INSTRUMENT STATE RELATED VIEW FUNCTIONS
+    
+    function getInstrumentState(address instrument) external view returns ( bool initialized, string memory name, uint balance, uint totalAmountDripped, uint totalAmountTransferred) {
+        return (instrumentStates[instrument].initialized , instrumentStates[instrument].name , instrumentStates[instrument].balance , instrumentStates[instrument].totalAmountDripped , instrumentStates[instrument].totalAmountTransferred  );
+    }
+
+    function getAllInstruments() external view returns (address[] memory) {
+        return allInstruments;        
+    }
+
+    function totalInstruments() external view returns (uint) {
+        return allInstruments.length;
+    }
+
+    function getInstrumentBalance(address instrument_address) external view returns (uint) {
+        return instrumentStates[instrument_address].balance;
+    }
+    
+    function getTotalDrippedAmount(address instrument_address) external view returns (uint) {
+        return instrumentStates[instrument_address].totalAmountDripped;
+    }
+
+    function getTotalTransferredAmount(address instrument_address) external view returns (uint) {
+        return instrumentStates[instrument_address].totalAmountTransferred;
     }
 
     function getSIGHBalance() external view returns (uint) {
@@ -401,51 +470,65 @@ contract Treasury is VersionedInitializable   {
         return treasuryBalance_;
     }
 
-    function getInstrumentBalance(address instrument_address) external view returns (uint) {
-        return InstrumentBalances[instrument_address];
+
+    // INSTRUMENT DISTRIBUTION (PER BLOCK DRIPPING) RELATED VIEW FUNCTIONS
+
+    function getDistributionState() external view returns( bool isAllowed, address targetAddress, address instrumentBeingDistributed, uint speed ) {
+        return (treasuryDripState.isDripAllowed , treasuryDripState.targetAddressForDripping , treasuryDripState.instrumentBeingDripped , treasuryDripState.DripSpeed  );
     }
 
     function isDistributionAllowed() external view returns (bool) {
-        return isDripAllowed;
+        return treasuryDripState.isDripAllowed;
     }
 
     function getTargetAddressForDistribution() external view returns (address) {
-        return targetAddressForDripping;
+        return treasuryDripState.targetAddressForDripping;
     }
 
     function getinstrumentBeingDripped() external view returns (address) {
-        if (isDripAllowed) {
-            return instrumentBeingDripped;
+        if (treasuryDripState.isDripAllowed) {
+            return treasuryDripState.instrumentBeingDripped;
         }
         return address(0);
     }
-    
-    function getTotalDrippedAmount(address token) external view returns (uint) {
-        return totalDrippedAmount[token];
-    }
 
     function getDistributionSpeed() external view returns (uint) {
-        if (isDripAllowed) {
-            return DripSpeed;
+        if (treasuryDripState.isDripAllowed) {
+            return treasuryDripState.DripSpeed;
         }
         return 0;
     }
 
+    // SIGH BURN RELATED VIEW FUNCTIONS
 
-    // function getAmountTransferred(address target) external view returns (uint) {
-    //     return SIGH_Transferred[target];
-    // }
-
+    function getBurnState() external view returns ( bool isAllowed, uint burnSpeed, uint totalSighBurnt, uint sighBalance) {
+        return (sighBurnState.is_SIGH_BurnAllowed ,sighBurnState.SIGHBurnSpeed ,sighBurnState.totalBurntSIGH, sigh_Instrument.balanceOf(address(this)) );
+    }
 
     function getBurnSpeed() external view returns (uint) {
-        if (is_SIGH_BurnAllowed) {
-            return SIGHBurnSpeed;
+        if (sighBurnState.is_SIGH_BurnAllowed) {
+            return sighBurnState.SIGHBurnSpeed;
         }
         return 0;
     }
 
     function getTotalBurntSigh() external view returns (uint) {
-        return totalBurntSIGH;
+        return sighBurnState.totalBurntSIGH;
+    }
+    
+    // SIGH TRANSFER LIMIT RELATED functions
+    
+    function getCurrentSIGHTransferState() external view returns (uint maxSIGHSpentLimit, uint totalSighTransferredAndTraded ) {
+        return (maxSIGHTransferLimit, totalSighTradedAndTransferred);
+    }
+    
+    function blocksRemainingForNextPeriod() external view returns (uint) {
+        uint dif = sub(block.number, periodInitializationBlock,"Error during subtraction" );
+        if (dif >= periodLength ) {
+            return uint(0);
+        }
+        uint deltaAns = sub(periodLength, dif,"Error during final Subtraction" );
+        return deltaAns;
     }
     
 

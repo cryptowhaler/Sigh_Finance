@@ -1,0 +1,535 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"görli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"deployedBytecode": {
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"gasEstimates": null,
+		"methodIdentifiers": {
+			"claimAccumulatedInstrument(address)": "3896eb8c",
+			"claimAllAccumulatedInstruments()": "3eb9bab7",
+			"claimAllAccumulatedInstrumentsForUsers(address[])": "2a0eb451",
+			"getDistributionSpeed(address)": "0a6e4916",
+			"getInstrumentBalance(address)": "c699308e",
+			"getInstrumentState(address)": "1f6c0873",
+			"getInstrumentsSupported()": "f6270ba4",
+			"getStakedBalanceForStaker(address)": "dd9125ec",
+			"getStakersAccumulatedInstrumentAmount(address,address)": "9e0c20d8",
+			"getTotalStakedSIGH()": "0cd68968",
+			"getTotalStakers()": "31ed0db4",
+			"getmaxSighThatCanBeStaked()": "c4f39941",
+			"isInstrumentSupported(address)": "c3d1b72d",
+			"setDistributionSpeed(address,uint256)": "6a5d6bee",
+			"stake_SIGH(uint256)": "3e88048c",
+			"supportNewInstrumentForDistribution(address,uint256)": "a84d7898",
+			"swapTokensUsingOxAPI(address,address,bytes,address,address,uint256)": "df28b7f1",
+			"unstake_SIGH(uint256)": "7e54c794",
+			"updateBalance(address)": "40b8405a",
+			"updateMaxSighThatCanBeStaked(uint256)": "59a8f018",
+			"updateStakedBalanceForStreaming(address,uint256)": "660ecbc9"
+		}
+	},
+	"abi": [
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrumentToBeClaimed",
+					"type": "address"
+				}
+			],
+			"name": "claimAccumulatedInstrument",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [],
+			"name": "claimAllAccumulatedInstruments",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address[]",
+					"name": "",
+					"type": "address[]"
+				}
+			],
+			"name": "claimAllAccumulatedInstrumentsForUsers",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument",
+					"type": "address"
+				}
+			],
+			"name": "getDistributionSpeed",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument",
+					"type": "address"
+				}
+			],
+			"name": "getInstrumentBalance",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrumentAddress",
+					"type": "address"
+				}
+			],
+			"name": "getInstrumentState",
+			"outputs": [
+				{
+					"internalType": "string",
+					"name": "name",
+					"type": "string"
+				},
+				{
+					"internalType": "uint256",
+					"name": "index",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "rewardDistributionSpeed",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "totalAmountRewarded",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "balance",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "lastUpdatedBlock",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "getInstrumentsSupported",
+			"outputs": [
+				{
+					"internalType": "address[]",
+					"name": "",
+					"type": "address[]"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
+				}
+			],
+			"name": "getStakedBalanceForStaker",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "instrument",
+					"type": "address"
+				}
+			],
+			"name": "getStakersAccumulatedInstrumentAmount",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "getTotalStakedSIGH",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "getTotalStakers",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "getmaxSighThatCanBeStaked",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument",
+					"type": "address"
+				}
+			],
+			"name": "isInstrumentSupported",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrumentAddress",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "newSpeed",
+					"type": "uint256"
+				}
+			],
+			"name": "setDistributionSpeed",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "stake_SIGH",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "newInstrument",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "speed",
+					"type": "uint256"
+				}
+			],
+			"name": "supportNewInstrumentForDistribution",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "allowanceTarget",
+					"type": "address"
+				},
+				{
+					"internalType": "address payable",
+					"name": "to",
+					"type": "address"
+				},
+				{
+					"internalType": "bytes",
+					"name": "callDataHex",
+					"type": "bytes"
+				},
+				{
+					"internalType": "address",
+					"name": "token_bought",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "token_sold",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "sellAmount",
+					"type": "uint256"
+				}
+			],
+			"name": "swapTokensUsingOxAPI",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": true,
+			"stateMutability": "payable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "unstake_SIGH",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument",
+					"type": "address"
+				}
+			],
+			"name": "updateBalance",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "updateMaxSighThatCanBeStaked",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "staker",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "updateStakedBalanceForStreaming",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		}
+	]
+}

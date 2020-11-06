@@ -1,0 +1,674 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "blocksRemainingForNextPeriod",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "burnSIGHTokens",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrumentToDrip",
+						"type": "address"
+					}
+				],
+				"name": "changeInstrumentBeingDripped",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "isAllowed",
+						"type": "uint256"
+					}
+				],
+				"name": "changeSIGHBurnAllowed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "drip",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getAllInstruments",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "",
+						"type": "address[]"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getBurnSpeed",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getBurnState",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "isAllowed",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "burnSpeed",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalSighBurnt",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "sighBalance",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getCurrentSIGHTransferState",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "maxSIGHSpentLimit",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalSighTransferredAndTraded",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getDistributionSpeed",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getDistributionState",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "isAllowed",
+						"type": "bool"
+					},
+					{
+						"internalType": "address",
+						"name": "targetAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "instrumentBeingDistributed",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "speed",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrument_address",
+						"type": "address"
+					}
+				],
+				"name": "getInstrumentBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrument",
+						"type": "address"
+					}
+				],
+				"name": "getInstrumentState",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "initialized",
+						"type": "bool"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "balance",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalAmountDripped",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalAmountTransferred",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getSIGHBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getTargetAddressForDistribution",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getTotalBurntSigh",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					}
+				],
+				"name": "getTotalDrippedAmount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrument_address",
+						"type": "address"
+					}
+				],
+				"name": "getTotalTransferredAmount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getinstrumentBeingDripped",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "addressesProvider_",
+						"type": "address"
+					}
+				],
+				"name": "initialize",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "targetAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "instrumentToBeDistributed",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "distributionSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "initializeInstrumentDistribution",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrument",
+						"type": "address"
+					}
+				],
+				"name": "initializeInstrumentState",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "isDistributionAllowed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "refreshConfig",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "resetInstrumentDistribution",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "allowanceTarget",
+						"type": "address"
+					},
+					{
+						"internalType": "address payable",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes",
+						"name": "callDataHex",
+						"type": "bytes"
+					},
+					{
+						"internalType": "address",
+						"name": "token_bought",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "token_sold",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "sellAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "swapTokensUsingOxAPI",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": true,
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "totalInstruments",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "target_",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "transferSighTo",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "DripSpeed_",
+						"type": "uint256"
+					}
+				],
+				"name": "updateDripSpeed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrument_address",
+						"type": "address"
+					}
+				],
+				"name": "updateInstrumentBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newBurnSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "updateSIGHBurnSpeed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "SIGH Finance",
+			"details": "Used to Swap Tokens, burns SIGH Tokens, and can ERC20 token can be distributed to a target address on a per block basis",
+			"methods": {},
+			"title": "Sigh Treasury Contract Interface"
+		},
+		"userdoc": {
+			"methods": {},
+			"notice": "The Treasury Contract for SIGH Finance"
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighTreasury.sol": "ISighTreasury"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighTreasury.sol": {
+			"keccak256": "0x55d4143cbda70ef258f97e3bd866ac2e38b19c554a9f194bfa93b8aa1e615bfc",
+			"urls": [
+				"bzz-raw://37ef17dd1b2312a6b6b2b48d216bc1ab1b2a6ce625b1be2956662476abeacb4f",
+				"dweb:/ipfs/QmNSD3ptksbRjtn2ws4MhJkWtoEoykcoiQWQyFPKQvShkw"
+			]
+		}
+	},
+	"version": 1
+}

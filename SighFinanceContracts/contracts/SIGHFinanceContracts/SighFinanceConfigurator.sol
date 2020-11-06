@@ -144,6 +144,12 @@ contract SighFinanceConfigurator is VersionedInitializable {
         ISighTreasury sigh_treasury = ISighTreasury( globalAddressesProvider.getSIGHTreasury() );
         sigh_treasury.refreshConfig();
     } 
+    
+    function initializeInstrumentState(address instrument) external onlySIGHFinanceManager {
+        ISighTreasury sigh_treasury = ISighTreasury( globalAddressesProvider.getSIGHTreasury() );
+        require(sigh_treasury.initializeInstrumentState(instrument),"Instrument initialization failed");
+        
+    }
 
     function changeSIGHBurnAllowed( uint val) external onlySIGHFinanceManager { 
         ISighTreasury sigh_treasury = ISighTreasury( globalAddressesProvider.getSIGHTreasury() );
@@ -160,7 +166,7 @@ contract SighFinanceConfigurator is VersionedInitializable {
         require(sigh_treasury.initializeInstrumentDistribution(targetAddress, instrumnetToBeDistributed, distributionSpeed),"Instrument Distribution function failed");
     } 
 
-    function changeInstrumentBeingDripped(address instrumentToBeDistributed, uint distributionSpeed) external onlySIGHFinanceManager { 
+    function changeInstrumentBeingDripped(address instrumentToBeDistributed ) external onlySIGHFinanceManager { 
         ISighTreasury sigh_treasury = ISighTreasury( globalAddressesProvider.getSIGHTreasury() );
         require(sigh_treasury.changeInstrumentBeingDripped(instrumentToBeDistributed),"Change Instrument being Distributed function failed");
     } 
@@ -175,9 +181,10 @@ contract SighFinanceConfigurator is VersionedInitializable {
         require(sigh_treasury.resetInstrumentDistribution(),"Reset Instrument distribution function failed");
     } 
 
-   function transferSighTo(address target, uint amount) external onlySIGHFinanceManager { 
+   function transferSighTo(address target, uint amount) external onlySIGHFinanceManager returns (uint){ 
         ISighTreasury sigh_treasury = ISighTreasury( globalAddressesProvider.getSIGHTreasury() );
-        require(sigh_treasury.transferSighTo(target, amount),"Transfer SIGH from the treasury function failed");
+        uint sighTransferred = sigh_treasury.transferSighTo(target, amount);
+        return sighTransferred;
     } 
 
 // #########################################
