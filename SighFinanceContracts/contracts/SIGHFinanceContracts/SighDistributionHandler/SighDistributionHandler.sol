@@ -549,7 +549,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
             instrumentState.supplylastupdatedblock = blockNumber;                                                                        // STATE UPDATE: Block number updated
         } 
         else {         // When no Sigh is accured. Block number updated
-            instrumentState.supplylastupdatedblock = blockNumber ;
+            instrumentState.supplylastupdatedblock = blockNumber ;                                                                           // STATE UPDATE: Block number updated
         }
 
         SIGHInstrument memory newInstrumentState = financial_instruments[currentInstrument];
@@ -579,10 +579,9 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
             return true;
         }
 
-        Exp memory marketBorrowIndex = Exp({mantissa: lendingPoolCore.getInstrumentVariableBorrowsCumulativeIndex( currentInstrument )});   // GETTING BORROW INDEX. TO BE VERIFIED
+        // Exp memory marketBorrowIndex = Exp({mantissa: lendingPoolCore.getInstrumentVariableBorrowsCumulativeIndex( currentInstrument )});   // GETTING BORROW INDEX. TO BE VERIFIED
         
         SIGHInstrument storage instrumentState = financial_instruments[currentInstrument];
-
         uint borrowSpeed = Instrument_Sigh_Speeds[currentInstrument].borrowers_Speed; 
         uint blockNumber = getBlockNumber();
         uint prevIndex = instrumentState.borrowindex;
@@ -593,16 +592,16 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
             uint sigh_Accrued = mul_(deltaBlocks, borrowSpeed);                             // SIGH ACCURED = DELTA BLOCKS x SIGH SPEED (BORROWERS)
             // TO BE VALIDATED
             uint totalBorrows =  lendingPoolCore.getInstrumentTotalBorrows(currentInstrument);
-            uint borrowAmount = div_(totalBorrows, marketBorrowIndex);      // TO BE VALIDATED
-            Double memory ratio = borrowAmount > 0 ? fraction(sigh_Accrued, borrowAmount) : Double({mantissa: 0});      // SIGH Accured per Borrowed Instrument Token
+            // uint borrowAmount = div_(totalBorrows, marketBorrowIndex);      // TO BE VALIDATED
+            Double memory ratio = totalBorrows > 0 ? fraction(sigh_Accrued, totalBorrows) : Double({mantissa: 0});      // SIGH Accured per Borrowed Instrument Token
             Double memory newIndex = add_(Double({mantissa: instrumentState.borrowindex}), ratio);                      // New Index
-            emit updateSIGHBorrowIndex_test2( currentInstrument, borrowAmount, sigh_Accrued, ratio.mantissa , newIndex.mantissa );
+            emit updateSIGHBorrowIndex_test2( currentInstrument, totalBorrows, sigh_Accrued, ratio.mantissa , newIndex.mantissa );
 
-            instrumentState.borrowindex = newIndex.mantissa ;
-            instrumentState.borrowlastupdatedblock = blockNumber;
+            instrumentState.borrowindex = newIndex.mantissa ;                                                                   // STATE UPDATE: New Index Committed to Storage 
+            instrumentState.borrowlastupdatedblock = blockNumber;                                                               // STATE UPDATE: Block number updated
         } 
-        else if (deltaBlocks > 0) {                 // When no SIGH is accured
-            instrumentState.borrowlastupdatedblock = blockNumber;
+        else {                 // When no SIGH is accured
+            instrumentState.borrowlastupdatedblock = blockNumber;                                                               // STATE UPDATE: Block number updated
         }
         
         SIGHInstrument memory newBorrowState = financial_instruments[currentInstrument];
@@ -628,7 +627,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
             require(Sigh_Address.transfer( sighAccuredTo, sigh_Amount ), "Failed to transfer accured SIGH to the user." );
             if (sighAccuredTo == addressesProvider.getSIGHStaking() ) {                          // When SIGH is directly being streamed to the Staking Contract
                 ISighStaking stakingContract = ISighStaking(addressesProvider.getSIGHStaking());
-                require(stakingContract.updateStakedBalanceForStreaming(user,sigh_Amount ),"Failed to update Staked balance. Maximum amount that can be staked may have been reached");              // UPDATES STAKED BALANCE (STREAMING SIGH FUNCTIONALITY) 
+                require(stakingContract.updateStakedBalanceForStreaming(user,sigh_Amount ),"Failed to update Staked balance");       // UPDATES STAKED BALANCE (STREAMING SIGH FUNCTIONALITY) 
             }
             emit AccuredSIGHTransferredToTheUser( instrument, user, sigh_Amount );
         }
@@ -665,9 +664,9 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
         return uint(0);
     }
 
-    function getInstrumentData (address instrument_) external view returns (address iTokenAddress, uint256 decimals,bool isSIGHMechanismActivated,uint256 supplyindex,uint256 supplylastupdatedblock,uint256 borrowindex,uint256 borrowlastupdatedblock  ) {
-        return ( financial_instruments[instrument_].iTokenAddress,    
-                 financial_instruments[instrument_].decimals,
+    function getInstrumentData (address instrument_) external view returns (string memory name, address iTokenAddress, bool isSIGHMechanismActivated,uint256 supplyindex,uint256 supplylastupdatedblock,uint256 borrowindex,uint256 borrowlastupdatedblock  ) {
+        return ( financial_instruments[instrument_].name,
+                 financial_instruments[instrument_].iTokenAddress,    
                  financial_instruments[instrument_].isSIGHMechanismActivated,
                  financial_instruments[instrument_].supplyindex,
                  financial_instruments[instrument_].supplylastupdatedblock,
@@ -683,6 +682,10 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {
     function totalInstrumentsSupported() external view returns (uint) {
         return uint(all_Instruments.length); 
     }    
+
+    function getAllPriceSnapshots(address instrument_ ) external view returns (uint256[24] memory) {
+        return instrumentPriceCycles[instrument_].recordedPriceSnapshot;
+    }
 
     function checkPriceSnapshots(address instrument_, uint clock) external view returns (uint256) {
         return instrumentPriceCycles[instrument_].recordedPriceSnapshot[clock];

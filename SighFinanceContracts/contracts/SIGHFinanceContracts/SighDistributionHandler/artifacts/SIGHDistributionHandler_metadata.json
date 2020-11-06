@@ -927,6 +927,27 @@
 			},
 			{
 				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrument_",
+						"type": "address"
+					}
+				],
+				"name": "getAllPriceSnapshots",
+				"outputs": [
+					{
+						"internalType": "uint256[24]",
+						"name": "",
+						"type": "uint256[24]"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
 				"inputs": [],
 				"name": "getBlockNumber",
 				"outputs": [
@@ -1024,14 +1045,14 @@
 				"name": "getInstrumentData",
 				"outputs": [
 					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
 						"internalType": "address",
 						"name": "iTokenAddress",
 						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "decimals",
-						"type": "uint256"
 					},
 					{
 						"internalType": "bool",
@@ -1616,10 +1637,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighDistributionHandler/SighDistributionHandler.sol": {
-			"keccak256": "0x073f0c14a3f9b261529e836fac456c27fa8ab0ebeb673774c2e8bb40cad63458",
+			"keccak256": "0x24ea9c5f67367dd9d2c2758e1e8a65dae576ddea73ccef8a0a27de2c8a045e34",
 			"urls": [
-				"bzz-raw://1debdff86a73c8089c6f1799edd846b4ad40311ebabe0bf1a740e7fef50a7c51",
-				"dweb:/ipfs/QmTPyEBuheRyYbw45Yw3LaeY5oziP9TGMFJaaf5hjgUGsS"
+				"bzz-raw://bb51ccaba206f220648017c02c2fdb658c72202fd9f9ce578403ecf1a225556f",
+				"dweb:/ipfs/Qmc7w7MG2fSBERN83WgTQJD4PAwqsFLRFXwdXR2zaM18LK"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {
