@@ -29,7 +29,7 @@ interface ISighDistributionHandler {
     function transferSighTotheUser(address instrument, address user, address sighAccuredTo, uint sigh_Amount) external  returns (uint);             // onlyITokenContract(instrument)
 
     // ###### VIEW FUNCTIONS ######
-    function getSIGHBalance() public view returns (uint);
+    function getSIGHBalance() external view returns (uint);
     function isInstrumentSupported (address instrument_) external view returns (bool);
     function totalInstrumentsSupported() external view returns (uint);
 

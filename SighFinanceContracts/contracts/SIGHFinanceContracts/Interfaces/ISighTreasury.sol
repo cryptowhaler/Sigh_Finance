@@ -9,7 +9,7 @@ pragma solidity ^0.5.16;
 
 interface ISighTreasury {
 
-    function refreshConfig() external;
+    function refreshConfig() external returns (bool);
 
 
 // ################################################################################################################ 
