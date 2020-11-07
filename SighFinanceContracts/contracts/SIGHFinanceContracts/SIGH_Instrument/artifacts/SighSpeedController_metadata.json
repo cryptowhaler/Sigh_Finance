@@ -55,6 +55,12 @@
 						"internalType": "uint256",
 						"name": "newSpeed",
 						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
 					}
 				],
 				"name": "DistributionSpeedChanged",
@@ -72,7 +78,13 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "currentBalance",
+						"name": "deltaBlocks",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "distributionSpeed",
 						"type": "uint256"
 					},
 					{
@@ -85,6 +97,12 @@
 						"indexed": false,
 						"internalType": "uint256",
 						"name": "totalAmountDripped",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
 						"type": "uint256"
 					}
 				],
@@ -111,6 +129,12 @@
 						"internalType": "uint256",
 						"name": "totalDrippedAmount",
 						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
 					}
 				],
 				"name": "NewProtocolSupported",
@@ -129,6 +153,12 @@
 						"indexed": false,
 						"internalType": "uint256",
 						"name": "totalDrippedToProtocol",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
 						"type": "uint256"
 					}
 				],
@@ -487,7 +517,7 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
@@ -501,10 +531,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SIGH_Instrument/SighSpeedController.sol": {
-			"keccak256": "0x1dbeb41dc034fb600a410266a138a301099f17fb85c30828d211f431938427e1",
+			"keccak256": "0x9f376fba9c645ced39be76dc5d476177aa8ccee3f385b753f9bee24cb825bb65",
 			"urls": [
-				"bzz-raw://254f5581d37215d22b829d359ea4a369438c139228e104fa118182153584de79",
-				"dweb:/ipfs/QmZd4gpGmk4wpkzDW4BR3Z8X65BkBmHF3HGNQCTGSpSqG3"
+				"bzz-raw://43fb6e57ae995ae1bf0d808817a5ef43de84cbcc74d8b0ab9710a2938bcddc77",
+				"dweb:/ipfs/QmRsaDPbsq72KrUSYSjSStbww4XEVaF1ZiiZ2C9d6nhgdi"
 			]
 		},
 		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {

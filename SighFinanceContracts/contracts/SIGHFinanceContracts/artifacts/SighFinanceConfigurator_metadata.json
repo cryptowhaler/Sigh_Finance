@@ -270,7 +270,7 @@
 			{
 				"constant": false,
 				"inputs": [],
-				"name": "refreshConfig",
+				"name": "refreshSIGHDistributionHandlerConfig",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -279,7 +279,7 @@
 			{
 				"constant": false,
 				"inputs": [],
-				"name": "refreshTreasuryConfig",
+				"name": "refreshSIGHTreasuryConfig",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -538,17 +538,17 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0xe53618698c3ef6d18b4e44bc794d827fac1ac0c59f1d6c446c5e1dd9bb7410f9",
+			"keccak256": "0x428f4a71a9dac1e6c80806288d8a63185ae81862f01ca77c87ad5f5eef8115aa",
 			"urls": [
-				"bzz-raw://0c7aa41d15e5902561add04a066d704c0faed3749bf4987c82eb3b9fe20116e1",
-				"dweb:/ipfs/QmSCcbbwoUbmKFigqMVtkEeMdnv5VSB7nUXSpixKVeUQsr"
+				"bzz-raw://195e0f95d97e9e496f374605582e6f828b0f543545990fe24a0414de383cfe60",
+				"dweb:/ipfs/QmWrSyznoEkrghc6XA23bptfqZDjMW5RigmA7jBThXQ6a7"
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighSpeedController.sol": {
@@ -566,17 +566,17 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighTreasury.sol": {
-			"keccak256": "0x55d4143cbda70ef258f97e3bd866ac2e38b19c554a9f194bfa93b8aa1e615bfc",
+			"keccak256": "0x0e70e1d4bf0c4e9997ef25ba0224ee2ac89ccf93f543b69e93e05a8da2d81a0d",
 			"urls": [
-				"bzz-raw://37ef17dd1b2312a6b6b2b48d216bc1ab1b2a6ce625b1be2956662476abeacb4f",
-				"dweb:/ipfs/QmNSD3ptksbRjtn2ws4MhJkWtoEoykcoiQWQyFPKQvShkw"
+				"bzz-raw://867f7ee035a525c0ec1b5a1995851ac2f59f25af2d0d7b3ec3f19b134468c1be",
+				"dweb:/ipfs/QmeyS8Yy1iaKU4QsPv31HkWFjE69Mdgps6rCYAhJ4THG5A"
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighFinanceConfigurator.sol": {
-			"keccak256": "0x19abfec4f3f811ad26aae1c0ea09302e03b456740f0372093bd5ac2789d6b815",
+			"keccak256": "0xfd56ac9a483715d32e7bb244ef28dd1922d5eda88aa4798f7c7b9a7353fab765",
 			"urls": [
-				"bzz-raw://08821edd22709a6c27b02b4dd78a801c8a1e3504d94ad252718b030e78dc5f20",
-				"dweb:/ipfs/QmdBPC7Az8Z6sg3s3Y6d8bMmn8NYPF7Tna5kQMgmqGKwX8"
+				"bzz-raw://2a1384785a723e031a23623cd18b99c9dc3068060cbe5ec6c11888ee4d72000d",
+				"dweb:/ipfs/Qmdaeo5UMKZMWTCKA18eaU2dRwh7jhjGFHbxvqDRCFad6t"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {

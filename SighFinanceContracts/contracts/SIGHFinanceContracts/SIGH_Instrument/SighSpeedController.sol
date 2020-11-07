@@ -30,13 +30,17 @@ contract SighSpeedController is ISighSpeedController {
   mapping (address => protocolState) private supportedProtocols;
   address[] private storedSupportedProtocols; 
 
+// ########################
+// ####### EVENTS #########
+// ########################
+
   event DistributionInitialized(uint blockNumber);
 
-  event NewProtocolSupported (address protocolAddress, uint sighSpeed, uint totalDrippedAmount);
-  event ProtocolRemoved(address protocolAddress, uint totalDrippedToProtocol);
+  event NewProtocolSupported (address protocolAddress, uint sighSpeed, uint totalDrippedAmount, uint blockNumber);
+  event ProtocolRemoved(address protocolAddress, uint totalDrippedToProtocol, uint blockNumber);
   
-  event DistributionSpeedChanged(address protocolAddress, uint prevSpeed , uint newSpeed );  
-  event Dripped(address protocolAddress, uint currentBalance, uint AmountDripped, uint totalAmountDripped ); 
+  event DistributionSpeedChanged(address protocolAddress, uint prevSpeed , uint newSpeed, uint blockNumber );  
+  event Dripped(address protocolAddress, uint deltaBlocks, uint distributionSpeed, uint AmountDripped, uint totalAmountDripped, uint blockNumber ); 
 
 // ########################
 // ####### MODIFIER #######
@@ -101,11 +105,11 @@ contract SighSpeedController is ISighSpeedController {
         supportedProtocols[newProtocolAddress] = protocolState({ isSupported: true, distributionSpeed: sighSpeed, totalDrippedAmount: uint(0), recentlyDrippedAmount: uint(0) });
     }
     
-    
+    lastDripBlockNumber = block.number; // EITHER THIS WAS ALREADY DONE IN DRIPINTERNAL() OR WE DO IT HERE IF DRIPPING IS NOT ALLOWED AND A PROTOCOL IS BEING ADDED
     require (supportedProtocols[newProtocolAddress].isSupported, 'Error occured when adding the new protocol');
     require (supportedProtocols[newProtocolAddress].distributionSpeed == sighSpeed, 'SIGH Speed for the new protocol was not initialized properly.');
     
-    emit NewProtocolSupported(newProtocolAddress, supportedProtocols[newProtocolAddress].distributionSpeed, supportedProtocols[newProtocolAddress].totalDrippedAmount);
+    emit NewProtocolSupported(newProtocolAddress, supportedProtocols[newProtocolAddress].distributionSpeed, supportedProtocols[newProtocolAddress].totalDrippedAmount, block.number);
     return true;
   }
   
@@ -137,7 +141,7 @@ contract SighSpeedController is ISighSpeedController {
     require (supportedProtocols[protocolAddress_].isSupported == false, 'Error occured when removing the protocol.');
     require (supportedProtocols[protocolAddress_].distributionSpeed == 0, 'SIGH Speed was not properly assigned to 0.');
 
-    emit ProtocolRemoved( protocolAddress_,  supportedProtocols[protocolAddress_].totalDrippedAmount );
+    emit ProtocolRemoved( protocolAddress_,  supportedProtocols[protocolAddress_].totalDrippedAmount,  block.number );
     return true;
   }
   
@@ -152,8 +156,9 @@ contract SighSpeedController is ISighSpeedController {
     }
     uint prevSpeed = supportedProtocols[targetAddress].distributionSpeed;
     supportedProtocols[targetAddress].distributionSpeed = newSpeed_;
+
     require(supportedProtocols[targetAddress].distributionSpeed == newSpeed_, " Protocol's SIGH speed was not properly updated");
-    emit DistributionSpeedChanged(targetAddress, prevSpeed , supportedProtocols[targetAddress].distributionSpeed );
+    emit DistributionSpeedChanged(targetAddress, prevSpeed , supportedProtocols[targetAddress].distributionSpeed, block.number );
     return true;
   }
 
@@ -181,16 +186,18 @@ contract SighSpeedController is ISighSpeedController {
     
     address[] memory protocols = storedSupportedProtocols;
     uint length = protocols.length;
+    uint reservoirBalance_ = sighInstrument_.balanceOf(address(this)); 
+    uint blockNumber_ = block.number;
+    uint deltaBlocks = sub(blockNumber_,lastDripBlockNumber,"Delta Blocks gave error");
     
     if (length > 0) {
+        
         for ( uint i=0; i < length; i++) {
             address current_protocol = protocols[i];
             
             if ( supportedProtocols[ current_protocol ].isSupported ) {
                 
-                uint reservoirBalance_ = sighInstrument_.balanceOf(address(this)); 
-                uint blockNumber_ = block.number;
-                uint deltaBlocks = sub(blockNumber_,lastDripBlockNumber,"Delta Blocks gave error");
+                reservoirBalance_ = sighInstrument_.balanceOf(address(this));
                 uint deltaDrip_ = mul(supportedProtocols[ current_protocol ].distributionSpeed, deltaBlocks , "dripTotal overflow");
                 uint toDrip_ = min(reservoirBalance_, deltaDrip_);
             
@@ -200,12 +207,12 @@ contract SighSpeedController is ISighSpeedController {
                 uint prevDrippedAmount = supportedProtocols[current_protocol].totalDrippedAmount;
                 supportedProtocols[current_protocol].totalDrippedAmount = add(prevDrippedAmount,toDrip_,"Overflow");
                 supportedProtocols[current_protocol].recentlyDrippedAmount = toDrip_;
-                reservoirBalance_ = sighInstrument_.balanceOf(address(this)); // TODO: Verify this is a static call
-            
-                emit Dripped( current_protocol, reservoirBalance_, toDrip_ , supportedProtocols[current_protocol].totalDrippedAmount ); 
+
+                emit Dripped( current_protocol, deltaBlocks, supportedProtocols[ current_protocol ].distributionSpeed, toDrip_ , supportedProtocols[current_protocol].totalDrippedAmount, blockNumber_ ); 
             }
         }
     }
+    
     lastDripBlockNumber = block.number;
   }
 

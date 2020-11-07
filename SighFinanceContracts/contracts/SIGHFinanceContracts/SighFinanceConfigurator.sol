@@ -66,6 +66,7 @@ contract SighFinanceConfigurator is VersionedInitializable {
 // ####### SIGH SPEED CONTROLLER FUNCTIONS #########
 // #################################################
 
+    // CALLED ONLY ONCE
     function beginDrippingFromSIGHSpeedController() external onlySIGHFinanceManager returns (bool) { 
         ISighSpeedController sigh_speed_Controller = ISighSpeedController( globalAddressesProvider.getSIGHSpeedController() );
         require(sigh_speed_Controller.beginDripping(), "SIGH Dripping initialization from SIGH Speed Controller failed." );
@@ -95,7 +96,7 @@ contract SighFinanceConfigurator is VersionedInitializable {
 // ####### SIGH DISTRIBUTION HANDLER FUNCTIONS #########
 // #####################################################
 
-    function refreshConfig() external onlySIGHFinanceManager  { 
+    function refreshSIGHDistributionHandlerConfig() external onlySIGHFinanceManager  { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
         sigh_distribution_mechanism.refreshConfig() ;
     }
@@ -141,7 +142,7 @@ contract SighFinanceConfigurator is VersionedInitializable {
 // ####### SIGH TREASURY FUNCTIONS #########
 // #########################################
 
-    function refreshTreasuryConfig() external onlySIGHFinanceManager { 
+    function refreshSIGHTreasuryConfig() external onlySIGHFinanceManager { 
         ISighTreasury sigh_treasury = ISighTreasury( globalAddressesProvider.getSIGHTreasury() );
         require(sigh_treasury.refreshConfig(),"Failed to refresh");
     } 

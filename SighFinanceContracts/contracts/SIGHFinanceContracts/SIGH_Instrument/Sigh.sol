@@ -132,7 +132,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
             uint prevCycle = Current_Cycle;      
             uint newCycle = add(Current_Cycle,uint256(1),'Overflow');
             Current_Cycle = newCycle;                                                    // CURRENT CYCLE IS UPDATED 
-            emit NewCycle(prevCycle, Current_Cycle, block.number, now);
+            // emit NewCycle(prevCycle, Current_Cycle, block.number, now);
             return true;
         }
         else {
@@ -177,7 +177,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
 
         previousMintBlock = block.number;        
 
-        emit SIGHMinted(currentMintSnapshot.minter, currentMintSnapshot.cycle, currentMintSnapshot.era, currentMintSnapshot.inflationRate, currentMintSnapshot.mintedAmount, currentMintSnapshot.newTotalSupply, currentMintSnapshot.blockNumber );
+        emit SIGHMinted(currentMintSnapshot.minter, currentMintSnapshot.cycle, currentMintSnapshot.era, currentMintSnapshot.inflationRate, currentMintSnapshot.mintedAmount, currentMintSnapshot.newTotalSupply,currentMintSnapshot.blockNumber );
         return true;        
     }
 

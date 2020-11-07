@@ -1637,10 +1637,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighDistributionHandler/SighDistributionHandler.sol": {
-			"keccak256": "0x24ea9c5f67367dd9d2c2758e1e8a65dae576ddea73ccef8a0a27de2c8a045e34",
+			"keccak256": "0x66052d1577341c79517e9fa30f741bfb54601ec9f7f4a76f4c6d682f2b48405f",
 			"urls": [
-				"bzz-raw://bb51ccaba206f220648017c02c2fdb658c72202fd9f9ce578403ecf1a225556f",
-				"dweb:/ipfs/Qmc7w7MG2fSBERN83WgTQJD4PAwqsFLRFXwdXR2zaM18LK"
+				"bzz-raw://14c2ad540cf8cad4fb1a7109457bc7b30d4b98f99387568cbc7f03b1aa31fa55",
+				"dweb:/ipfs/QmacCTFHgc1eX539Zc5hnwAEG9LZi5ZKbJKPZA6UKMvXv8"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

@@ -868,7 +868,13 @@
 				"constant": false,
 				"inputs": [],
 				"name": "refreshConfig",
-				"outputs": [],
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -1086,19 +1092,12 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
-		"localhost/contracts/LendingProtocolContracts/interfaces/IPriceOracleGetter.sol": {
-			"keccak256": "0x58175d019ae6f47b4941461ba27dfe6afcc20d146e9bdb7a949902c7330803f3",
-			"urls": [
-				"bzz-raw://e118d81569a54c84d66c259d46e481e32cba80f56e99300a6a083b554421be4f",
-				"dweb:/ipfs/QmVhbHRHdV8y2XgqznQg4CJGF8anFQctGDSsANGNi8TER9"
-			]
-		},
 		"localhost/contracts/SIGHFinanceContracts/Treasury/EIP20InterfaceSIGH.sol": {
 			"keccak256": "0x23d6b5c907cf140011678898a10dc22195f21ec6adc038a8fb1d9682000ccbd1",
 			"urls": [
@@ -1107,10 +1106,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Treasury/TreasuryV1Impl.sol": {
-			"keccak256": "0xf513f1cca9b91192d56bd55832557c222a53ea776c84269e4ed7c1065ff761d4",
+			"keccak256": "0xb798d198228ac46b43d1d87c9edd47b3831851f7d4ffae7b85def1badecf3437",
 			"urls": [
-				"bzz-raw://7591bc1649bb02992788a11c22b94ec3e5d40e29f2d1b59306adbde797219a47",
-				"dweb:/ipfs/QmVJEEJ8JMGJLnPh74RtaSnVWRzmVfLmvyHxatMs8yDLD9"
+				"bzz-raw://0725e21df915600a67392a31f34d9a8b59219839b4d1519ada3b0b9271c95736",
+				"dweb:/ipfs/QmXxxzyZx7219CJLT9EtPnFN4PPJzaSFbddLjKWXN9QUyo"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {
