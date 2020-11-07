@@ -20,7 +20,7 @@ interface ISighTreasury {
 // ################################################################################################################
 
 
-    function changeSIGHBurnAllowed(uint isAllowed) external returns (bool);
+    function switchSIGHBurnAllowed() external returns (bool);
     function updateSIGHBurnSpeed(uint newBurnSpeed) external returns (bool);
     function burnSIGHTokens() external returns (uint);
 
@@ -74,8 +74,8 @@ interface ISighTreasury {
     function getinstrumentBeingDripped() external view returns (address) ;
     function getDistributionSpeed() external view returns (uint);
 
-    function getBurnState() external view returns ( bool isAllowed, uint burnSpeed, uint totalSighBurnt, uint sighBalance);
-    function getBurnSpeed() external view returns (uint) ;
+    function getSIGHBurnState() external view returns ( bool isAllowed, uint burnSpeed, uint totalSighBurnt, uint sighBalance);
+    function getSIGHBurnSpeed() external view returns (uint) ;
     function getTotalBurntSigh() external view returns (uint);
 
     function getCurrentSIGHTransferState() external view returns (uint maxSIGHSpentLimit, uint totalSighTransferredAndTraded );

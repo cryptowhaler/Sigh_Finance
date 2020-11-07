@@ -150,7 +150,7 @@
 						"type": "address"
 					}
 				],
-				"name": "changeInstrumentBeingDripped",
+				"name": "changeInstrumentBeingDrippedInSIGHTreasury",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -178,21 +178,6 @@
 						"type": "bool"
 					}
 				],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "val",
-						"type": "uint256"
-					}
-				],
-				"name": "changeSIGHBurnAllowed",
-				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -246,7 +231,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "initializeInstrumentDistribution",
+				"name": "initializeInstrumentDistributionInSIGHTreasury",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -261,7 +246,16 @@
 						"type": "address"
 					}
 				],
-				"name": "initializeInstrumentState",
+				"name": "initializeInstrumentStateInSIGHTreasury",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "refreshConfigInSIGHTreasury",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -271,15 +265,6 @@
 				"constant": false,
 				"inputs": [],
 				"name": "refreshSIGHDistributionHandlerConfig",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [],
-				"name": "refreshSIGHTreasuryConfig",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -309,7 +294,7 @@
 			{
 				"constant": false,
 				"inputs": [],
-				"name": "resetInstrumentDistribution",
+				"name": "resetInstrumentDistributionInSIGHTreasury",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -383,6 +368,15 @@
 			},
 			{
 				"constant": false,
+				"inputs": [],
+				"name": "switchSIGHBurnAllowedInSIGHTreasury",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
 				"inputs": [
 					{
 						"internalType": "address",
@@ -395,7 +389,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "transferSighTo",
+				"name": "transferSighFromSIGHTreasury",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -437,7 +431,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "updateDripSpeed",
+				"name": "updateDripSpeedInSIGHTreasury",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -467,7 +461,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "updateSIGHBurnSpeed",
+				"name": "updateSIGHBurnSpeedInSIGHTreasury",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -566,17 +560,17 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighTreasury.sol": {
-			"keccak256": "0x0e70e1d4bf0c4e9997ef25ba0224ee2ac89ccf93f543b69e93e05a8da2d81a0d",
+			"keccak256": "0xf371e1f38539db6818b60b94c1cf90ad15ca9aaf01b95cb5359654d8656c5e9f",
 			"urls": [
-				"bzz-raw://867f7ee035a525c0ec1b5a1995851ac2f59f25af2d0d7b3ec3f19b134468c1be",
-				"dweb:/ipfs/QmeyS8Yy1iaKU4QsPv31HkWFjE69Mdgps6rCYAhJ4THG5A"
+				"bzz-raw://4dbc37adc83f8a8c4261535b502cb4214c3f8f285f65f9f47a327f681882ac15",
+				"dweb:/ipfs/QmV1AEbCzQo5oSrcDHebXgGqgn1iwR8ub7oDSnMhwbNp3C"
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighFinanceConfigurator.sol": {
-			"keccak256": "0xfd56ac9a483715d32e7bb244ef28dd1922d5eda88aa4798f7c7b9a7353fab765",
+			"keccak256": "0xdbedbc4cb12ac1d8de25b58aceba3d0f64e2054100983b55a40ef7a6c7554995",
 			"urls": [
-				"bzz-raw://2a1384785a723e031a23623cd18b99c9dc3068060cbe5ec6c11888ee4d72000d",
-				"dweb:/ipfs/Qmdaeo5UMKZMWTCKA18eaU2dRwh7jhjGFHbxvqDRCFad6t"
+				"bzz-raw://8a63cded45fef88f22250e5fde8d535f9ac461e0602a22c6cb11800d2eac6bc1",
+				"dweb:/ipfs/Qmd897bbK5Rv4bG8iUAZHK6FE8SyYPyskgJeRGkSKDE1vy"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {

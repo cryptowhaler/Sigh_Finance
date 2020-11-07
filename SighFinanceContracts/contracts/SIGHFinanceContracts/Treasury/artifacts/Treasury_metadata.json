@@ -135,12 +135,6 @@
 					{
 						"indexed": false,
 						"internalType": "bool",
-						"name": "prevBurnAllowed",
-						"type": "bool"
-					},
-					{
-						"indexed": false,
-						"internalType": "bool",
 						"name": "newBurnAllowed",
 						"type": "bool"
 					},
@@ -151,7 +145,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "SIGHBurnAllowedChanged",
+				"name": "SIGHBurnAllowedSwitched",
 				"type": "event"
 			},
 			{
@@ -444,27 +438,6 @@
 			},
 			{
 				"constant": false,
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "isAllowed",
-						"type": "uint256"
-					}
-				],
-				"name": "changeSIGHBurnAllowed",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
 				"inputs": [],
 				"name": "drip",
 				"outputs": [
@@ -487,51 +460,6 @@
 						"internalType": "address[]",
 						"name": "",
 						"type": "address[]"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getBurnSpeed",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getBurnState",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "isAllowed",
-						"type": "bool"
-					},
-					{
-						"internalType": "uint256",
-						"name": "burnSpeed",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "totalSighBurnt",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "sighBalance",
-						"type": "uint256"
 					}
 				],
 				"payable": false,
@@ -673,6 +601,51 @@
 					{
 						"internalType": "uint256",
 						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getSIGHBurnSpeed",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getSIGHBurnState",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "isAllowed",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "burnSpeed",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalSighBurnt",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "sighBalance",
 						"type": "uint256"
 					}
 				],
@@ -941,6 +914,21 @@
 				"type": "function"
 			},
 			{
+				"constant": false,
+				"inputs": [],
+				"name": "switchSIGHBurnAllowed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"constant": true,
 				"inputs": [],
 				"name": "totalInstruments",
@@ -1106,10 +1094,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Treasury/TreasuryV1Impl.sol": {
-			"keccak256": "0xb798d198228ac46b43d1d87c9edd47b3831851f7d4ffae7b85def1badecf3437",
+			"keccak256": "0xb30dc30da40880bf15d3cb5ec2aa418f4b8c53c5e9c3938fc70de2ff649c9b01",
 			"urls": [
-				"bzz-raw://0725e21df915600a67392a31f34d9a8b59219839b4d1519ada3b0b9271c95736",
-				"dweb:/ipfs/QmXxxzyZx7219CJLT9EtPnFN4PPJzaSFbddLjKWXN9QUyo"
+				"bzz-raw://4fdc33f3746468a808c9c838cb4b62edf4e6b75135252507871495bc9978f10e",
+				"dweb:/ipfs/QmTNYqxJEE88TQ9J3Q8bVKfPXJuFa2jawxanmggvi6TfdY"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {

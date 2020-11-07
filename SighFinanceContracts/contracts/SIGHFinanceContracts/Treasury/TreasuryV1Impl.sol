@@ -79,7 +79,7 @@ contract Treasury is VersionedInitializable   {
     event TokensSold( address indexed instrument_address, uint prev_balance, uint amount, uint new_balance );
     event TokenSwapTransactionData( bytes data );
 
-    event SIGHBurnAllowedChanged(bool prevBurnAllowed , bool newBurnAllowed, uint blockNumber); 
+    event SIGHBurnAllowedSwitched(bool newBurnAllowed, uint blockNumber); 
     event SIGH_Burned(address sigh_Address, uint amount, uint totalSIGHBurned, uint remaining_balance, uint blockNumber);
     event SIGHBurnSpeedChanged(uint prevSpeed, uint newSpeed, uint blockNumber);
 
@@ -137,18 +137,18 @@ contract Treasury is VersionedInitializable   {
 // ###########   3. burnSIGHTokens() : Public Function. Allows anyone to burn SIGH Tokens. ########################
 // ################################################################################################################
 
-    function changeSIGHBurnAllowed(uint isAllowed) external onlySighFinanceConfigurator returns (bool) {
-        bool prevStatus = sighBurnState.is_SIGH_BurnAllowed;
-        if (isAllowed == 0) {
+    function switchSIGHBurnAllowed() external onlySighFinanceConfigurator returns (bool) {
+        if (sighBurnState.is_SIGH_BurnAllowed) {
             burnSIGHTokens();
             sighBurnState.is_SIGH_BurnAllowed = false;          // STATE UPDATE : is_SIGH_BurnAllowed switched
             updateSIGHBurnSpeedInternal(0);
         }
         else {
             sighBurnState.is_SIGH_BurnAllowed = true;           // STATE UPDATE : is_SIGH_BurnAllowed switched
+            sighBurnState.lastBurnBlockNumber = block.number;              
         }
-        emit SIGHBurnAllowedChanged(prevStatus, sighBurnState.is_SIGH_BurnAllowed, block.number);
-        return sighBurnState.is_SIGH_BurnAllowed;
+        emit SIGHBurnAllowedSwitched(sighBurnState.is_SIGH_BurnAllowed, block.number);
+        return true;
     }
         
     function updateSIGHBurnSpeed(uint newBurnSpeed) external onlySighFinanceConfigurator returns (bool) {
@@ -500,11 +500,11 @@ contract Treasury is VersionedInitializable   {
 
     // SIGH BURN RELATED VIEW FUNCTIONS
 
-    function getBurnState() external view returns ( bool isAllowed, uint burnSpeed, uint totalSighBurnt, uint sighBalance) {
+    function getSIGHBurnState() external view returns ( bool isAllowed, uint burnSpeed, uint totalSighBurnt, uint sighBalance) {
         return (sighBurnState.is_SIGH_BurnAllowed ,sighBurnState.SIGHBurnSpeed ,sighBurnState.totalBurntSIGH, sigh_Instrument.balanceOf(address(this)) );
     }
 
-    function getBurnSpeed() external view returns (uint) {
+    function getSIGHBurnSpeed() external view returns (uint) {
         if (sighBurnState.is_SIGH_BurnAllowed) {
             return sighBurnState.SIGHBurnSpeed;
         }

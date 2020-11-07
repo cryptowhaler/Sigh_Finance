@@ -47,29 +47,28 @@
 			"blocksRemainingForNextPeriod()": "24e7e0f4",
 			"burnSIGHTokens()": "325eb3ee",
 			"changeInstrumentBeingDripped(address)": "fc5e11c3",
-			"changeSIGHBurnAllowed(uint256)": "6089fee9",
 			"drip()": "9f678cca",
 			"getAllInstruments()": "02f53219",
-			"getBurnSpeed()": "3138a4aa",
-			"getBurnState()": "998e80e6",
 			"getCurrentSIGHTransferState()": "f9309e53",
 			"getDistributionSpeed()": "77fd1aac",
 			"getDistributionState()": "ee56977e",
 			"getInstrumentBalance(address)": "c699308e",
 			"getInstrumentState(address)": "1f6c0873",
 			"getSIGHBalance()": "c6a6bfb1",
+			"getSIGHBurnSpeed()": "3b9c9c53",
+			"getSIGHBurnState()": "6754b930",
 			"getTargetAddressForDistribution()": "61bbea8a",
 			"getTotalBurntSigh()": "2ff76e4c",
 			"getTotalDrippedAmount(address)": "e0db0714",
 			"getTotalTransferredAmount(address)": "0a206f04",
 			"getinstrumentBeingDripped()": "04de9fac",
-			"initialize(address)": "c4d66de8",
 			"initializeInstrumentDistribution(address,address,uint256)": "60c65900",
 			"initializeInstrumentState(address)": "c11b2576",
 			"isDistributionAllowed()": "68fcccde",
 			"refreshConfig()": "7c55ccb3",
 			"resetInstrumentDistribution()": "e0ae645f",
 			"swapTokensUsingOxAPI(address,address,bytes,address,address,uint256)": "df28b7f1",
+			"switchSIGHBurnAllowed()": "eb2661f9",
 			"totalInstruments()": "01d04224",
 			"transferSighTo(address,uint256)": "d3ec44a3",
 			"updateDripSpeed(uint256)": "1c252db1",
@@ -131,27 +130,6 @@
 		},
 		{
 			"constant": false,
-			"inputs": [
-				{
-					"internalType": "uint256",
-					"name": "isAllowed",
-					"type": "uint256"
-				}
-			],
-			"name": "changeSIGHBurnAllowed",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"payable": false,
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"constant": false,
 			"inputs": [],
 			"name": "drip",
 			"outputs": [
@@ -174,51 +152,6 @@
 					"internalType": "address[]",
 					"name": "",
 					"type": "address[]"
-				}
-			],
-			"payable": false,
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"constant": true,
-			"inputs": [],
-			"name": "getBurnSpeed",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"payable": false,
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"constant": true,
-			"inputs": [],
-			"name": "getBurnState",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "isAllowed",
-					"type": "bool"
-				},
-				{
-					"internalType": "uint256",
-					"name": "burnSpeed",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "totalSighBurnt",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "sighBalance",
-					"type": "uint256"
 				}
 			],
 			"payable": false,
@@ -370,6 +303,51 @@
 		{
 			"constant": true,
 			"inputs": [],
+			"name": "getSIGHBurnSpeed",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "getSIGHBurnState",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "isAllowed",
+					"type": "bool"
+				},
+				{
+					"internalType": "uint256",
+					"name": "burnSpeed",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "totalSighBurnt",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "sighBalance",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
 			"name": "getTargetAddressForDistribution",
 			"outputs": [
 				{
@@ -459,21 +437,6 @@
 			"inputs": [
 				{
 					"internalType": "address",
-					"name": "addressesProvider_",
-					"type": "address"
-				}
-			],
-			"name": "initialize",
-			"outputs": [],
-			"payable": false,
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"constant": false,
-			"inputs": [
-				{
-					"internalType": "address",
 					"name": "targetAddress",
 					"type": "address"
 				},
@@ -540,7 +503,13 @@
 			"constant": false,
 			"inputs": [],
 			"name": "refreshConfig",
-			"outputs": [],
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
 			"payable": false,
 			"stateMutability": "nonpayable",
 			"type": "function"
@@ -604,6 +573,21 @@
 			],
 			"payable": true,
 			"stateMutability": "payable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [],
+			"name": "switchSIGHBurnAllowed",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
