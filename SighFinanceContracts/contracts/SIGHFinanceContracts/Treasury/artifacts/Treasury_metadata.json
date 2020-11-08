@@ -47,31 +47,6 @@
 				"inputs": [
 					{
 						"indexed": false,
-						"internalType": "bool",
-						"name": "prevDripAllowed",
-						"type": "bool"
-					},
-					{
-						"indexed": false,
-						"internalType": "bool",
-						"name": "newDripAllowed",
-						"type": "bool"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "blockNumber",
-						"type": "uint256"
-					}
-				],
-				"name": "DripAllowedChanged",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
 						"internalType": "uint256",
 						"name": "prevDripSpeed",
 						"type": "uint256"
@@ -90,6 +65,80 @@
 					}
 				],
 				"name": "DripSpeedChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "isDripAllowed",
+						"type": "bool"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "targetAddressForDripping",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "instrumentBeingDripped",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "dripSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "initializationBlockNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "InstrumentDistributionInitialized",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "isDripAllowed",
+						"type": "bool"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "targetAddressForDripping",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "instrumentBeingDripped",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "dripSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "InstrumentDistributionReset",
 				"type": "event"
 			},
 			{
@@ -283,7 +332,7 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": true,
+						"indexed": false,
 						"internalType": "address",
 						"name": "instrument_address",
 						"type": "address"
@@ -291,13 +340,7 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "prev_balance",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "amount",
+						"name": "amountBought",
 						"type": "uint256"
 					},
 					{
@@ -314,7 +357,7 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": true,
+						"indexed": false,
 						"internalType": "address",
 						"name": "instrument_address",
 						"type": "address"
@@ -322,13 +365,7 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "prev_balance",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "amount",
+						"name": "amountSold",
 						"type": "uint256"
 					},
 					{
@@ -347,13 +384,7 @@
 					{
 						"indexed": false,
 						"internalType": "address",
-						"name": "prevInstrument",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "newToken",
+						"name": "newInstrumentToBeDripped",
 						"type": "address"
 					},
 					{
@@ -372,13 +403,19 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "prevmaxTransferAmount",
+						"name": "prevmaxTransferLimit",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "newmaxTransferAmount",
+						"name": "newmaxTransferLimit",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "sighBalance",
 						"type": "uint256"
 					}
 				],
@@ -1094,10 +1131,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Treasury/TreasuryV1Impl.sol": {
-			"keccak256": "0x1c610573fb5002e241a8932cd8826ca2d9486f41a238be5c623c755a88a64694",
+			"keccak256": "0xd00eea1bfbef326a6fae44bf4e2349771c6eac9d3cdf445e3d87ce4b4fe98eb1",
 			"urls": [
-				"bzz-raw://6380a8ccbe2a1060a7d966382c7a901532d32a97e84144f11d43c4768f5360b1",
-				"dweb:/ipfs/QmPZsXisRyb9aFn5rRVviZs7q9tf23vVmePk3EZbhSbTeB"
+				"bzz-raw://9bde9cd7555012ef29036f2c0d6265014930babbe0d5fa267684b94f6a9da990",
+				"dweb:/ipfs/QmRAnPxG4e3k46eLK2EDjUnzm8Q989BKtHxo3VuLyD3HeY"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {

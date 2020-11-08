@@ -67,16 +67,17 @@ contract Treasury is VersionedInitializable   {
 
     event InstrumentInitialized( address instrument, string name, uint balance, uint totalAmountDripped, uint totalAmountTransferred  );
 
-    event instrumentBeingDistributedChanged(address prevInstrument, address newToken, uint blockNumber);
-    event DripAllowedChanged(bool prevDripAllowed , bool newDripAllowed, uint blockNumber); 
+    event InstrumentDistributionInitialized(bool isDripAllowed, address targetAddressForDripping, address instrumentBeingDripped,  uint dripSpeed, uint initializationBlockNumber);
+    event InstrumentDistributionReset(bool isDripAllowed, address targetAddressForDripping, address instrumentBeingDripped,  uint dripSpeed, uint blockNumber); 
+    event instrumentBeingDistributedChanged(address newInstrumentToBeDripped, uint blockNumber);
     event DripSpeedChanged(uint prevDripSpeed , uint curDripSpeed,  uint blockNumber ); 
     event AmountDripped(address targetAddress, address instrumentBeingDripped, uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
 
-    event maxTransferAmountUpdated(uint prevmaxTransferAmount, uint newmaxTransferAmount);
+    event maxTransferAmountUpdated(uint prevmaxTransferLimit, uint newmaxTransferLimit, uint sighBalance);
     event SIGHTransferred(address indexed TargetAddress, uint amountTransferred, uint blockNumber);
 
-    event TokensBought( address indexed instrument_address, uint prev_balance, uint amount, uint new_balance );
-    event TokensSold( address indexed instrument_address, uint prev_balance, uint amount, uint new_balance );
+    event TokensBought( address instrument_address,   uint amountBought, uint new_balance );
+    event TokensSold( address instrument_address,  uint amountSold, uint new_balance );
     event TokenSwapTransactionData( bytes data );
 
     event SIGHBurnAllowedSwitched(bool newBurnAllowed, uint blockNumber); 
@@ -218,6 +219,8 @@ contract Treasury is VersionedInitializable   {
 
         treasuryDripState.isDripAllowed = true;                                               // STATE UPDATE : INITIATES DISTRIBUTION
         treasuryDripState.lastDripBlockNumber = block.number;                                 // STATE UPDATE : Distribution commences from current block
+        
+        emit InstrumentDistributionInitialized(treasuryDripState.isDripAllowed, treasuryDripState.targetAddressForDripping, treasuryDripState.instrumentBeingDripped, treasuryDripState.DripSpeed, treasuryDripState.lastDripBlockNumber);
         return true;
     }
 
@@ -254,15 +257,14 @@ contract Treasury is VersionedInitializable   {
         drip();
         
         treasuryDripState.isDripAllowed = false;                                // STATE UPDATE : DRIPPING FUNCTIONALITY BEING RESET
-        treasuryDripState.DripSpeed = uint(0);                                  // STATE UPDATE : DRIPPING FUNCTIONALITY BEING RESET
+        treasuryDripState.targetAddressForDripping = address(0);                // STATE UPDATE : DRIPPING FUNCTIONALITY BEING RESET
         treasuryDripState.instrumentBeingDripped = address(0);                  // STATE UPDATE : DRIPPING FUNCTIONALITY BEING RESET
-        treasuryDripState.targetAddressForDripping = address(0);                // STATE UPDATE : DRIPPING FUNCTIONALITY BEING RESET
-        treasuryDripState.targetAddressForDripping = address(0);                // STATE UPDATE : DRIPPING FUNCTIONALITY BEING RESET
-        
-        emit DripAllowedChanged(true , treasuryDripState.isDripAllowed, block.number);
+        treasuryDripState.DripSpeed = uint(0);                                  // STATE UPDATE : DRIPPING FUNCTIONALITY BEING RESET
+
+        emit InstrumentDistributionReset(treasuryDripState.isDripAllowed , treasuryDripState.targetAddressForDripping, treasuryDripState.instrumentBeingDripped,  treasuryDripState.DripSpeed, block.number);
         return true;
     }
-    
+
    function updateDripSpeedInternal( uint dripSpeed_ ) internal returns (bool) {
         uint prevDripSpeed = treasuryDripState.DripSpeed;
         treasuryDripState.DripSpeed = dripSpeed_;                                           // STATE UPDATE : DRIPPING SPEED UPDATED
@@ -275,11 +277,10 @@ contract Treasury is VersionedInitializable   {
         uint currentBalance = newToken.balanceOf(address(this)); 
         require(currentBalance > 0, 'The Treasury does not hold these new instruments');
 
-        address prevInstrument = treasuryDripState.instrumentBeingDripped;
         treasuryDripState.instrumentBeingDripped = instrumentToDrip;                    // STATE UPDATE : INSTRUMENT BEING DRIPPED UPDATED
         require(treasuryDripState.instrumentBeingDripped == instrumentToDrip, 'Address for the instrument to be Dripped not assigned properly');
 
-        emit instrumentBeingDistributedChanged(prevInstrument, treasuryDripState.instrumentBeingDripped, block.number);
+        emit instrumentBeingDistributedChanged(treasuryDripState.instrumentBeingDripped, block.number);
         return true;
     }  
 
@@ -315,6 +316,8 @@ contract Treasury is VersionedInitializable   {
         emit AmountDripped( treasuryDripState.targetAddressForDripping, treasuryDripState.instrumentBeingDripped, toDrip_, treasuryBalance_, instrumentStates[treasuryDripState.instrumentBeingDripped].totalAmountDripped ); 
         return toDrip_;
     }
+
+
 
 
 // ##################################################################################################
@@ -353,10 +356,10 @@ contract Treasury is VersionedInitializable   {
         require(instrumentStates[token_sold].initialized,"Instrument to be sold has not been initialized yet.");
 
         IERC20 bought_token = IERC20(token_bought);
-        uint prev_bought_token_amount = bought_token.balanceOf(address(this));  // Current Bought Tokens Balance
+        uint bought_token_prev_balance = bought_token.balanceOf(address(this));  // Current Bought Tokens Balance
 
         IERC20 sold_token = IERC20(token_sold);
-        uint prev_sold_token_amount = sold_token.balanceOf(address(this));      // Current Tokens to be Sold Balance
+        uint sold_token_prev_balance = sold_token.balanceOf(address(this));      // Current Tokens to be Sold Balance
 
         require(sold_token.approve(allowanceTarget, uint256(sellAmount)));                   // Allow the allowanceTarget address to spend an the needed amount
         (bool success, bytes memory _data) = to.call.value(msg.value)(callDataHex);          // Calling the encoded swap() function. ETH passed to cover for fee
@@ -364,17 +367,17 @@ contract Treasury is VersionedInitializable   {
         require(success, 'TOKEN SWAP FAILED');
         
         if (success) {
-            uint new_bought_token_amount = bought_token.balanceOf(address(this));       // New Bought Tokens Balance
-            uint new_sold_token_amount = sold_token.balanceOf(address(this));           // New Tokens to be Sold Balance
+            uint new_bought_token_balance = bought_token.balanceOf(address(this));       // New Bought Tokens Balance
+            uint new_sold_token_balance = sold_token.balanceOf(address(this));           // New Tokens to be Sold Balance
             
-            instrumentStates[token_bought].balance = new_bought_token_amount;   // STATE UPDATE : Balance Updated for instruments bought
-            instrumentStates[token_sold].balance = new_sold_token_amount;       // STATE UPDATE : Balance Updated for instruments sold
+            instrumentStates[token_bought].balance = new_bought_token_balance;   // STATE UPDATE : Balance Updated for instruments bought
+            instrumentStates[token_sold].balance = new_sold_token_balance;       // STATE UPDATE : Balance Updated for instruments sold
 
-            uint tokenBoughtAmount = sub(new_bought_token_amount,prev_bought_token_amount,"New Token Balance for tokens that are being Bought is lower than its initial balance");
-            uint tokenSoldAmount = sub(prev_sold_token_amount,new_sold_token_amount,"New Token Balance for tokens that are being Sold is higher than its initial balance");
-
-            emit TokensBought( token_bought, prev_bought_token_amount, tokenBoughtAmount,  new_bought_token_amount);
-            emit TokensSold( token_sold, prev_sold_token_amount, tokenSoldAmount, new_sold_token_amount );   
+            uint deltaTokensBought = sub(new_bought_token_balance,bought_token_prev_balance,"New Token Balance for tokens that are being Bought is lower than its initial balance");
+            uint deltaTokensSold = sub(sold_token_prev_balance,new_sold_token_balance,"New Token Balance for tokens that are being Sold is higher than its initial balance");
+            
+            emit TokensBought( token_bought ,  deltaTokensBought,  new_bought_token_balance);
+            emit TokensSold( token_sold, deltaTokensSold, new_sold_token_balance );   
             emit TokenSwapTransactionData( _data );
             return true;         
         }
@@ -410,10 +413,10 @@ contract Treasury is VersionedInitializable   {
         
         if ( dif > periodLength )   {
             uint currentBalance = sigh_Instrument.balanceOf(address(this)); // get total Supply
-            uint prevmaxTransferAmount = maxSIGHTransferLimit;
+            uint prevmaxTransferLimit = maxSIGHTransferLimit;
             maxSIGHTransferLimit = div(currentBalance,25,'updatemaxTransferAmount: Division returned error');  // STATE UPDATE : MAXIMUM SIGH THAT CAN BE TRANSFERRED UPDATED (4% in a day is the max)
             periodInitializationBlock = block.number;                                                                  // STATE UPDATE: Block number when this period begins is stored
-            emit maxTransferAmountUpdated(prevmaxTransferAmount,maxSIGHTransferLimit, currentBalance);
+            emit maxTransferAmountUpdated(prevmaxTransferLimit, maxSIGHTransferLimit, currentBalance);
 
             totalSighTradedAndTransferred = min(sigh_amount,maxSIGHTransferLimit );
             return totalSighTradedAndTransferred;

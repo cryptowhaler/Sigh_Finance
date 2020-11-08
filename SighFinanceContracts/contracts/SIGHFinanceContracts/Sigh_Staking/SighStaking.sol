@@ -51,7 +51,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
     uint private numberOfStakers;
     uint private maxSighThatCanBeStaked = uint(-1);
 
-    uint256 private constant IMPLEMENTATION_REVISION = 0x1;
+    uint256 private constant IMPLEMENTATION_REVISION = 0x4;
 
     event SighStaked( address staker,uint amount, uint prevStakedBalance, uint staker_stakedBalance ,uint prevTotalStakedBalance, uint totalStakedSigh, uint numberOfStakers, uint blocknumber   );
     event SighUnstaked( address staker, uint amount, uint prevStakedBalance, uint staker_stakedBalance, uint prevTotalStakedBalance, uint totalStakedSigh, uint numberOfStakers, uint blocknumber   );
@@ -123,12 +123,12 @@ contract SighStaking is VersionedInitializable, Exponential  {
         }
         
 
-        uint prevBalance = sigh_Instrument.balanceOf(address(this));
+        // uint prevBalance = sigh_Instrument.balanceOf(address(this));
         require(sigh_Instrument.transferFrom( msg.sender, address(this), amount ),"SIGH could not be transferred to the Staking Contract" );
-        uint newBalance = sigh_Instrument.balanceOf(address(this));
+        // uint newBalance = sigh_Instrument.balanceOf(address(this));
 
-        uint diff = sub_( newBalance, prevBalance, "New Sigh balance is less than the previous balance." );
-        require(diff == amount,"Amount to be staked and the amount transferred do not match");
+        // uint diff = sub_( newBalance, prevBalance, "New Sigh balance is less than the previous balance." );
+        // require(diff == amount,"Amount to be staked and the amount transferred do not match");
 
         uint prevStakedBalance = stakingBalances[msg.sender].stakedBalance ;                  
         stakingBalances[msg.sender].stakedBalance = add_(prevStakedBalance, amount, "New Staking balance overflow");    // "STAKED BALANCE" UPDATED [ADDITION] (STATE UPDATE)
@@ -136,7 +136,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
         uint prevTotalStakedBalance = totalStakedSigh ;                  
         totalStakedSigh = add_(prevTotalStakedBalance, amount);                                                         // "TOTAL STAKED SIGH" [ADDITION] (STATE UPDATE)
         
-        require(totalStakedSigh > maxSighThatCanBeStaked,"Maximum SIGH that can be staked limit reached" );
+        require(totalStakedSigh < maxSighThatCanBeStaked,"Maximum SIGH that can be staked limit reached" );
 
         emit SighStaked( msg.sender, amount, prevStakedBalance, stakingBalances[msg.sender].stakedBalance , prevTotalStakedBalance,  totalStakedSigh, numberOfStakers,  block.number   );
         return true;
@@ -177,18 +177,18 @@ contract SighStaking is VersionedInitializable, Exponential  {
             amount = stakingBalances[msg.sender].stakedBalance;
         }
 
-        uint prevBalance = sigh_Instrument.balanceOf(address(this));
+//         uint prevBalance = sigh_Instrument.balanceOf(address(this));
         require(sigh_Instrument.transfer( msg.sender, amount ),"SIGH could not be transferred to the User" );
-        uint newBalance = sigh_Instrument.balanceOf(address(this));
+//         uint newBalance = sigh_Instrument.balanceOf(address(this));
 
-        uint diff = sub_( prevBalance, newBalance, "New Sigh balance is greater than the previous balance." );
-        require(diff == amount,"Amount to be un-staked and the amount transferred do not match");
+        // uint diff = sub_( prevBalance, newBalance, "New Sigh balance is greater than the previous balance." );
+        // require(diff == amount,"Amount to be un-staked and the amount transferred do not match");
 
         uint prevStakedBalance = stakingBalances[msg.sender].stakedBalance;                  
         stakingBalances[msg.sender].stakedBalance = sub_(prevStakedBalance, amount, "New Staking balance underflow");    // "STAKED BALANCE" UPDATED [SUBTRACTION] (STATE UPDATE)
 
         uint prevTotalStakedBalance = totalStakedSigh ;                  
-        totalStakedSigh = sub_(prevTotalStakedBalance, amount);                                                         // "TOTAL STAKED SIGH" [ADDITION] (STATE UPDATE)
+        totalStakedSigh = sub_(prevTotalStakedBalance, amount,"Total Staked Sigh Subtraction underflow");                // "TOTAL STAKED SIGH" [ADDITION] (STATE UPDATE)
 
 
         if (stakingBalances[msg.sender].stakedBalance == 0) {
@@ -257,6 +257,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
             stakingBalances[staker].instrumentIndex[ instrumentsRewarded[i] ] = instrumentStates[ instrumentsRewarded[i] ].index;
         }
         stakingBalances[staker].alreadyAStaker = true;
+        numberOfStakers = add_(numberOfStakers, uint(1));
     }
 
 // ################################################################################
@@ -300,6 +301,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
 
     function swapTokensUsingOxAPI( address allowanceTarget, address payable to, bytes calldata callDataHex, address token_bought, address token_sold, uint sellAmount ) external payable onlySIGHFinanceManager returns (bool) {
         require( token_sold != address(sigh_Instrument),"Staked SIGH Instrument cannot be sold by the staking contract");
+        require( token_bought != address(sigh_Instrument),"Staked SIGH Instrument cannot be bought by the staking contract");
 
         IERC20 bought_token;
         bought_token = IERC20(token_bought);
@@ -377,6 +379,7 @@ contract SighStaking is VersionedInitializable, Exponential  {
         maxSighThatCanBeStaked = amount;
         require(maxSighThatCanBeStaked == amount, "New value not assigned properly");
         emit maxSighThatCanBeStakedUpdated(prevLimit, maxSighThatCanBeStaked, block.number);
+        return true;
     }
 
 // ################################################## 
@@ -384,6 +387,8 @@ contract SighStaking is VersionedInitializable, Exponential  {
 // ################################################## 
 
     function updateBalance(address instrument) public returns (uint) {
+        require( instrument != address(sigh_Instrument),"Staked SIGH Instrument's balance cannot be updated as it may lead to ambiguities in calculations");
+        
         IERC20 instrumentContract = IERC20(instrument);
         uint current_balance = instrumentContract.balanceOf(address(this));
 

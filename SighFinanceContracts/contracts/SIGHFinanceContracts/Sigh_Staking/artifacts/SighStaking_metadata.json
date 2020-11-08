@@ -1027,10 +1027,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Sigh_Staking/SighStaking.sol": {
-			"keccak256": "0xc7de325c3b5027ce7b7a5fefd561c89625393ed28c2d51fd0ff9686bf76ee42b",
+			"keccak256": "0xb0daf85426635527ff210323b009d155aafd2a501941b2e16c53442f312c0396",
 			"urls": [
-				"bzz-raw://6ec264eefe64059cb081923a7f60ccc83fa47c112262127143de09f7ec42d1b8",
-				"dweb:/ipfs/QmRSqfHzYkfWAmYRMBbZfCU7PPaXZ83kcvnsVt252joMSm"
+				"bzz-raw://bb39f2576949e8da3286cf709ad12978b5dddb23c4e523b477b1a5532321cd46",
+				"dweb:/ipfs/QmVUrjD2n7hcGcY5vBTK2Wb38eX3zSgM9euyZLjFDSd85k"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {
