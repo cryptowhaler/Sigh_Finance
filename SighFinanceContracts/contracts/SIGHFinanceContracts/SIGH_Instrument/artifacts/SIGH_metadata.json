@@ -67,43 +67,6 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "prevCycle",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "newCycle",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "blockNumber",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "timeStamp",
-						"type": "uint256"
-					}
-				],
-				"name": "NewCycle",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "prevEra",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
 						"name": "newEra",
 						"type": "uint256"
 					},
@@ -128,14 +91,8 @@
 				"inputs": [
 					{
 						"indexed": false,
-						"internalType": "address",
-						"name": "userAddress",
-						"type": "address"
-					},
-					{
-						"indexed": false,
 						"internalType": "uint256",
-						"name": "amount",
+						"name": "burntAmount",
 						"type": "uint256"
 					},
 					{
@@ -148,6 +105,12 @@
 						"indexed": false,
 						"internalType": "uint256",
 						"name": "currentSupply",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber",
 						"type": "uint256"
 					}
 				],
@@ -190,6 +153,12 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
+						"name": "mintSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
 						"name": "current_supply",
 						"type": "uint256"
 					},
@@ -226,25 +195,6 @@
 					}
 				],
 				"name": "Transfer",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "C_Era_sub",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "_newEra",
-						"type": "uint256"
-					}
-				],
-				"name": "eraCalc",
 				"type": "event"
 			},
 			{
@@ -474,20 +424,30 @@
 			},
 			{
 				"constant": true,
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "snapshotNumber",
-						"type": "uint256"
-					}
-				],
-				"name": "getMintSnapshot",
+				"inputs": [],
+				"name": "getCurrentMintSpeed",
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "cycle",
+						"name": "",
 						"type": "uint256"
-					},
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "cycleNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "getMintSnapshotForCycle",
+				"outputs": [
 					{
 						"internalType": "uint256",
 						"name": "era",
@@ -501,6 +461,11 @@
 					{
 						"internalType": "uint256",
 						"name": "mintedAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "mintSpeed",
 						"type": "uint256"
 					},
 					{
@@ -808,10 +773,10 @@
 	},
 	"sources": {
 		"localhost/contracts/SIGHFinanceContracts/SIGH_Instrument/Sigh.sol": {
-			"keccak256": "0x0ee201e2e54ab4c352a5bfd396a7fc3340a2eca2156d81b3e7aa49078ec2a0d0",
+			"keccak256": "0x354fd715fa2f1b76d39275d2f0f3ee9582f4d8629600aeeb0d3dbd1ebbcb7f80",
 			"urls": [
-				"bzz-raw://ed79af52505e95e5863321c6dfa04226a1a9f9a48c9b80202a6644a96818a72b",
-				"dweb:/ipfs/QmYFz9eN3Z1uLL39kMhEEk7qXmaUDw1F8rJecdtaGGSiqm"
+				"bzz-raw://a1de3ca2bcdf02cc0abbb9e665b1be334aaa826e065740aaa350da4ae4f7b7cd",
+				"dweb:/ipfs/QmfVHR8Q2Si38FXFLHs62VhrzJakmEarosuomU7oENH8UN"
 			]
 		},
 		"openzeppelin-solidity/contracts/GSN/Context.sol": {

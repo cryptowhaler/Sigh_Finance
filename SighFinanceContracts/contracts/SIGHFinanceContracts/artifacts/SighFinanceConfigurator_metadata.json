@@ -67,7 +67,7 @@
 						"type": "address"
 					}
 				],
-				"name": "SIGH_the_instrument",
+				"name": "SIGH_the_instrument_In_SIGH_Distribution_Handler",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -93,7 +93,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "SpeedUpperCheckSwitch",
+				"name": "SpeedUpperCheckSwitch_In_SIGH_Distribution_Handler",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -114,7 +114,7 @@
 						"type": "address"
 					}
 				],
-				"name": "UNsigh_instrument",
+				"name": "UNsigh_instrument_In_SIGH_Distribution_Handler",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -314,7 +314,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "setDistributionSpeedForStakingReward",
+				"name": "setDistributionSpeedForStakingRewardInSIGH_Staking",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -334,7 +334,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "supportNewInstrumentForDistribution",
+				"name": "supportNewInstrumentForDistributionInSIGH_Staking",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -410,7 +410,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "updateDeltaBlocksForSpeedRefresh",
+				"name": "updateDeltaBlocksForSpeedRefresh_In_SIGH_Distribution_Handler",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -446,7 +446,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "updateMaxSighThatCanBeStaked",
+				"name": "updateMaxSighThatCanBeStakedInSIGH_Staking",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -476,7 +476,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "updateSIGHSpeed",
+				"name": "updateSIGHSpeed_In_SIGH_Distribution_Handler",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -502,7 +502,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "updateStakingSpeedForAnInstrument",
+				"name": "updateStakingSpeedForAnInstrument_In_SIGH_Distribution_Handler",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -560,17 +560,17 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighTreasury.sol": {
-			"keccak256": "0xf371e1f38539db6818b60b94c1cf90ad15ca9aaf01b95cb5359654d8656c5e9f",
+			"keccak256": "0xa1156fd3f8055082a846fa38bed54320ce0c791d0e18329498327d9ff26a4032",
 			"urls": [
-				"bzz-raw://4dbc37adc83f8a8c4261535b502cb4214c3f8f285f65f9f47a327f681882ac15",
-				"dweb:/ipfs/QmV1AEbCzQo5oSrcDHebXgGqgn1iwR8ub7oDSnMhwbNp3C"
+				"bzz-raw://99eef20ff7f059d98d0ba1999ec3c90f63962f17c1538e4ce3aeb40a62feb143",
+				"dweb:/ipfs/QmXjP2aT7dzdskvgXYh5ssAATkPmk9wPXF2JTH2SD6Nmsa"
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighFinanceConfigurator.sol": {
-			"keccak256": "0xdbedbc4cb12ac1d8de25b58aceba3d0f64e2054100983b55a40ef7a6c7554995",
+			"keccak256": "0xcd8735852c5739854acf1285bb43c160a769602d0a3f959dac3c324fd92ced10",
 			"urls": [
-				"bzz-raw://8a63cded45fef88f22250e5fde8d535f9ac461e0602a22c6cb11800d2eac6bc1",
-				"dweb:/ipfs/Qmd897bbK5Rv4bG8iUAZHK6FE8SyYPyskgJeRGkSKDE1vy"
+				"bzz-raw://6ecc59568b227a6a32ac205dcf73953970b52e1080ddb54e5f39442e9bfdf3fa",
+				"dweb:/ipfs/QmZfxYSHoV2yQtH6HrE45ceTYsqwC3MiHUzZ3xnBhez7Eo"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {

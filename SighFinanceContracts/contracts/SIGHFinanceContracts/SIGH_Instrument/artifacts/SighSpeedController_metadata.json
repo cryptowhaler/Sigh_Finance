@@ -531,10 +531,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SIGH_Instrument/SighSpeedController.sol": {
-			"keccak256": "0x9f376fba9c645ced39be76dc5d476177aa8ccee3f385b753f9bee24cb825bb65",
+			"keccak256": "0x31b7e8e4beaf92eccb8248eb06122778b7f2b08c923258b02950386c6e3cda4f",
 			"urls": [
-				"bzz-raw://43fb6e57ae995ae1bf0d808817a5ef43de84cbcc74d8b0ab9710a2938bcddc77",
-				"dweb:/ipfs/QmRsaDPbsq72KrUSYSjSStbww4XEVaF1ZiiZ2C9d6nhgdi"
+				"bzz-raw://823ce6b899c0c2e3c33beeca664bfc3e8ba6580c8edb5c82683726774e70a0b4",
+				"dweb:/ipfs/QmdohVcJT8BRf4SWqDX8oSsnNvBe5KmYdL2cPWK3BcuUye"
 			]
 		},
 		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {

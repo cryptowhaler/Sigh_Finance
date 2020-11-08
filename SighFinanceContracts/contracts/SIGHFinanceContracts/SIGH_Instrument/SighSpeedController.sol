@@ -186,7 +186,7 @@ contract SighSpeedController is ISighSpeedController {
     
     address[] memory protocols = storedSupportedProtocols;
     uint length = protocols.length;
-    uint reservoirBalance_ = sighInstrument_.balanceOf(address(this)); 
+    uint reservoirBalance_; 
     uint blockNumber_ = block.number;
     uint deltaBlocks = sub(blockNumber_,lastDripBlockNumber,"Delta Blocks gave error");
     

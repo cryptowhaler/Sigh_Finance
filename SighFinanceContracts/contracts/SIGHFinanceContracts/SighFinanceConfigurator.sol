@@ -101,38 +101,38 @@ contract SighFinanceConfigurator is VersionedInitializable {
         sigh_distribution_mechanism.refreshConfig() ;
     }
 
-    function SIGH_the_instrument(address instrument_) external onlySIGHFinanceManager returns (bool) { 
+    function SIGH_the_instrument_In_SIGH_Distribution_Handler(address instrument_) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
         require(sigh_distribution_mechanism.Instrument_SIGHed( instrument_ ), "Instrument_SIGHed() execution failed." );
         return true;
     }
 
-    function UNsigh_instrument(address instrument_) external onlySIGHFinanceManager returns (bool) { 
+    function UNsigh_instrument_In_SIGH_Distribution_Handler(address instrument_) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
         require(sigh_distribution_mechanism.Instrument_UNSIGHed( instrument_ ), "Instrument_UNSIGHed() execution failed." );
         return true;
     }
 
-    function updateSIGHSpeed(uint newSighSpeed) external onlySIGHFinanceManager returns (bool) { 
+    function updateSIGHSpeed_In_SIGH_Distribution_Handler(uint newSighSpeed) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
         require(sigh_distribution_mechanism.updateSIGHSpeed( newSighSpeed ), "updateSIGHSpeed() execution failed." );
         return true;
     }
 
 
-    function updateStakingSpeedForAnInstrument(address instrument_, uint newStakingSpeed) external onlySIGHFinanceManager returns (bool) { 
+    function updateStakingSpeedForAnInstrument_In_SIGH_Distribution_Handler(address instrument_, uint newStakingSpeed) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
         require(sigh_distribution_mechanism.updateStakingSpeedForAnInstrument( instrument_, newStakingSpeed ), "updateStakingSpeedForAnInstrument() execution failed." );
         return true;
     }        
 
-    function SpeedUpperCheckSwitch(bool isActivated, uint profitPercentage) external onlySIGHFinanceManager returns (bool) { 
+    function SpeedUpperCheckSwitch_In_SIGH_Distribution_Handler(bool isActivated, uint profitPercentage) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
         require(sigh_distribution_mechanism.SpeedUpperCheckSwitch( isActivated, profitPercentage ), "SpeedUpperCheckSwitch() execution failed." );
         return true;
     }        
 
-    function updateDeltaBlocksForSpeedRefresh(uint deltaBlocksLimit) external onlySIGHFinanceManager returns (bool) { 
+    function updateDeltaBlocksForSpeedRefresh_In_SIGH_Distribution_Handler(uint deltaBlocksLimit) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
         require(sigh_distribution_mechanism.updateDeltaBlocksForSpeedRefresh( deltaBlocksLimit ), "updateDeltaBlocksForSpeedRefresh() execution failed." );
         return true;
@@ -193,17 +193,17 @@ contract SighFinanceConfigurator is VersionedInitializable {
 // ####### SIGH STAKING FUNCTIONS ##########
 // #########################################
 
-   function supportNewInstrumentForDistribution(address instrument, uint speed) external onlySIGHFinanceManager { 
+   function supportNewInstrumentForDistributionInSIGH_Staking(address instrument, uint speed) external onlySIGHFinanceManager { 
         ISighStaking sigh_staking = ISighStaking( globalAddressesProvider.getSIGHStaking() );
         require(sigh_staking.supportNewInstrumentForDistribution(instrument, speed),"Addition of new instrument as SIGH Staking reward failed");
     } 
 
-   function setDistributionSpeedForStakingReward(address instrument, uint speed) external onlySIGHFinanceManager { 
+   function setDistributionSpeedForStakingRewardInSIGH_Staking(address instrument, uint speed) external onlySIGHFinanceManager { 
         ISighStaking sigh_staking = ISighStaking( globalAddressesProvider.getSIGHStaking() );
         require(sigh_staking.setDistributionSpeed(instrument, speed),"Updating distribution speed for SIGH Staking reward failed");
     } 
 
-   function updateMaxSighThatCanBeStaked( uint amount) external onlySIGHFinanceManager { 
+   function updateMaxSighThatCanBeStakedInSIGH_Staking( uint amount) external onlySIGHFinanceManager { 
         ISighStaking sigh_staking = ISighStaking( globalAddressesProvider.getSIGHStaking() );
         require(sigh_staking.updateMaxSighThatCanBeStaked(amount),"Updating Maximum SIGH Staking limit failed");
     } 

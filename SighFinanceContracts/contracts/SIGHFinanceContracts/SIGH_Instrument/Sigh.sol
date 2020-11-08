@@ -25,6 +25,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
         uint era;
         uint inflationRate;
         uint mintedAmount;
+        uint mintSpeed;
         uint newTotalSupply;
         address minter;
         uint blockNumber;
@@ -50,18 +51,18 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
 
     Era[11] private _eras;
 
-    event NewCycle( uint prevCycle, uint newCycle, uint blockNumber, uint timeStamp );
-    event NewEra( uint prevEra, uint newEra, uint blockNumber, uint timeStamp );
+    event NewEra(uint newEra, uint blockNumber, uint timeStamp );
 
     event MintingInitialized(address speedController, address treasury, uint256 blockNumber);
-
-    event SIGHMinted( address minter, uint256 cycle, uint256 Era, uint inflationRate, uint256 amountMinted, uint256 current_supply, uint256 block_number);
-    event SIGHBurned(address userAddress, uint256 amount, uint256 totalBurnedAmount, uint256 currentSupply);
+    event SIGHMinted( address minter, uint256 cycle, uint256 Era, uint inflationRate, uint256 amountMinted, uint mintSpeed, uint256 current_supply, uint256 block_number);
+    event SIGHBurned( uint256 burntAmount, uint256 totalBurnedAmount, uint256 currentSupply, uint blockNumber);
 
     // constructing  
     constructor () public {
         _owner = _msgSender();
         _mint(_owner,INITIAL_SUPPLY);
+        mintSnapshot  memory currentMintSnapshot = mintSnapshot({ cycle:Current_Cycle, era:Current_Era, inflationRate: uint(0), mintedAmount:INITIAL_SUPPLY, mintSpeed:uint(0), newTotalSupply:totalSupply(), minter: msg.sender, blockNumber: block.number });
+        mintSnapshots.push(currentMintSnapshot);                                                    // MINT SNAPSHOT ADDED TO THE ARRAY
     }
 
     // ################################################
@@ -129,7 +130,6 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
 
     function isMintingPossible() internal returns (bool) {
         if ( mintingActivated && Current_Cycle <= 77 && _getElapsedBlocks(block.number, previousMintBlock) > CYCLE_BLOCKS ) {
-            uint prevCycle = Current_Cycle;      
             uint newCycle = add(Current_Cycle,uint256(1),'Overflow');
             Current_Cycle = newCycle;                                                    // CURRENT CYCLE IS UPDATED 
             // emit NewCycle(prevCycle, Current_Cycle, block.number, now);
@@ -151,16 +151,15 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
     function mintNewCoins() internal returns (bool) {
 
         if ( Current_Era < _CalculateCurrentEra() ) {
-            uint prevEra = Current_Era;
-            uint newEra = add(Current_Era,uint256(1),"NEW ERA : Addition gave error");
-            Current_Era = newEra;
+            Current_Era = add(Current_Era,uint256(1),"NEW ERA : Addition gave error");
             currentDivisibilityFactor = _eras[Current_Era].divisibilityFactor;
-            emit NewEra(prevEra, Current_Era, block.number, now);
+            emit NewEra(Current_Era, block.number, now);
         }
 
         uint currentSupply = totalSupply();
         uint256 newCoins = currentSupply.div(currentDivisibilityFactor);                // Calculate the number of new tokens to be minted.
-        mintSnapshot  memory currentMintSnapshot = mintSnapshot({ cycle:Current_Cycle, era:Current_Era, inflationRate: currentDivisibilityFactor, mintedAmount:newCoins, newTotalSupply:totalSupply(), minter: msg.sender, blockNumber: block.number });
+        uint newmintSpeed = newCoins.div(CYCLE_BLOCKS);                                         // mint speed, i.e tokens minted per block rate for this cycle
+        mintSnapshot  memory currentMintSnapshot = mintSnapshot({ cycle:Current_Cycle, era:Current_Era, inflationRate: currentDivisibilityFactor, mintedAmount:newCoins, mintSpeed:newmintSpeed, newTotalSupply:totalSupply(), minter: msg.sender, blockNumber: block.number });
 
         if (newCoins > prize_amount) {
             newCoins = newCoins.sub(prize_amount);
@@ -177,7 +176,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
 
         previousMintBlock = block.number;        
 
-        emit SIGHMinted(currentMintSnapshot.minter, currentMintSnapshot.cycle, currentMintSnapshot.era, currentMintSnapshot.inflationRate, currentMintSnapshot.mintedAmount, currentMintSnapshot.newTotalSupply,currentMintSnapshot.blockNumber );
+        emit SIGHMinted(currentMintSnapshot.minter, currentMintSnapshot.cycle, currentMintSnapshot.era, currentMintSnapshot.inflationRate, currentMintSnapshot.mintedAmount, currentMintSnapshot.mintSpeed, currentMintSnapshot.newTotalSupply,currentMintSnapshot.blockNumber );
         return true;        
     }
 
@@ -186,8 +185,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
         return deltaBlocks;
     }
 
-    event eraCalc(uint C_Era_sub, uint _newEra );
-    function _CalculateCurrentEra() internal returns (uint256) {
+    function _CalculateCurrentEra() internal view returns (uint256) {
 
         if (Current_Cycle <= 7 && Current_Cycle >= 0 ) {
             return uint256(0);
@@ -195,8 +193,6 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
 
         uint256 C_Era_sub = sub(Current_Cycle,uint256(7),'ERA: Subtraction gave error');
         uint256 _newEra = div(C_Era_sub,uint256(7),"ERA : Division gave error");
-
-        emit eraCalc(C_Era_sub, _newEra );
 
         if (_newEra <= 9 ) {
             return uint256(_newEra.add(1) );
@@ -214,7 +210,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
         _burn(treasury,amount) ;
         uint total_amount_burnt = add(totalAmountBurnt , amount, 'burn : Total Number of tokens burnt gave addition overflow');
         totalAmountBurnt = total_amount_burnt;
-        emit SIGHBurned(msg.sender, amount, totalAmountBurnt, totalSupply() );
+        emit SIGHBurned( amount, totalAmountBurnt, totalSupply(), block.number );
         return true;
     }    
 
@@ -259,14 +255,25 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
     }
 
 
-    function getMintSnapshot(uint snapshotNumber) public view returns (uint cycle,uint era,uint inflationRate, uint mintedAmount,uint newTotalSupply,address minter,uint blockNumber ) {
-        return (mintSnapshots[snapshotNumber].cycle,
-                mintSnapshots[snapshotNumber].era,
-                mintSnapshots[snapshotNumber].inflationRate,
-                mintSnapshots[snapshotNumber].mintedAmount,
-                mintSnapshots[snapshotNumber].newTotalSupply,
-                mintSnapshots[snapshotNumber].minter,
-                mintSnapshots[snapshotNumber].blockNumber);
+    function getMintSnapshotForCycle(uint cycleNumber) public view returns (uint era,uint inflationRate, uint mintedAmount,uint mintSpeed, uint newTotalSupply,address minter, uint blockNumber ) {
+        return ( mintSnapshots[cycleNumber].era,
+                 mintSnapshots[cycleNumber].inflationRate,
+                 mintSnapshots[cycleNumber].mintedAmount,
+                 mintSnapshots[cycleNumber].mintSpeed,
+                 mintSnapshots[cycleNumber].newTotalSupply,
+                 mintSnapshots[cycleNumber].minter,
+                 mintSnapshots[cycleNumber].blockNumber
+                 );
+    }
+    
+    function getCurrentMintSpeed() external view returns (uint) {
+        if (Current_Cycle > 77 || !mintingActivated) {
+            return uint(0);
+        }
+        uint currentSupply = totalSupply();
+        uint256 newCoins = currentSupply.div(currentDivisibilityFactor);                        // Calculate the number of new tokens to be minted.
+        uint newmintSpeed = newCoins.div(CYCLE_BLOCKS);                                         // mint speed, i.e tokens minted per block rate for this cycle
+        return newmintSpeed;
     }
 
     function getTotalSighBurnt() external view returns (uint) {
