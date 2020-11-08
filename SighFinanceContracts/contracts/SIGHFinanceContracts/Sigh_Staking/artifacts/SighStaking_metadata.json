@@ -48,6 +48,31 @@
 					{
 						"indexed": false,
 						"internalType": "address",
+						"name": "instrument",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "instrument_name",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "instrument_totalAmountRewarded",
+						"type": "uint256"
+					}
+				],
+				"name": "InstrumentRemoved",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
 						"name": "newInstrument",
 						"type": "address"
 					},
@@ -769,6 +794,27 @@
 				"inputs": [
 					{
 						"internalType": "address",
+						"name": "instrument",
+						"type": "address"
+					}
+				],
+				"name": "removeInstrumentFromDistribution",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
 						"name": "instrumentAddress",
 						"type": "address"
 					},
@@ -1027,10 +1073,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Sigh_Staking/SighStaking.sol": {
-			"keccak256": "0xb0daf85426635527ff210323b009d155aafd2a501941b2e16c53442f312c0396",
+			"keccak256": "0xd60d7a92d91a91fb07ffb8f761c645e414ffc08b0624be2c95132610812fb75d",
 			"urls": [
-				"bzz-raw://bb39f2576949e8da3286cf709ad12978b5dddb23c4e523b477b1a5532321cd46",
-				"dweb:/ipfs/QmVUrjD2n7hcGcY5vBTK2Wb38eX3zSgM9euyZLjFDSd85k"
+				"bzz-raw://f3a4d4e833557d494d79ce636fd57d61b9d421744e99b6121ee559c0b6c1b14b",
+				"dweb:/ipfs/QmaB6y6uCNA43F73AUn7iFvniGRTSbfTcM6gTYH3pHrx36"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {
