@@ -43,6 +43,7 @@ interface ISighStaking {
 // ##########################################################################################
 
     function supportNewInstrumentForDistribution(address newInstrument, uint speed) external  returns (bool) ;
+    function removeInstrumentFromDistribution(address instrument) external returns (bool);    
     function setDistributionSpeed(address instrumentAddress , uint newSpeed) external returns (bool) ;
     function updateMaxSighThatCanBeStaked(uint amount) external  returns (bool) ;
 

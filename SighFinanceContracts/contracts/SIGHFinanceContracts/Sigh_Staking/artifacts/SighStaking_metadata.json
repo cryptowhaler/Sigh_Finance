@@ -134,31 +134,13 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "prevStakedBalance",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
 						"name": "staker_stakedBalance",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "prevTotalStakedBalance",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
 						"name": "totalStakedSigh",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "numberOfStakers",
 						"type": "uint256"
 					},
 					{
@@ -189,31 +171,13 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "prevStakedBalance",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
 						"name": "staker_stakedBalance",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "prevTotalStakedBalance",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
 						"name": "totalStakedSigh",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "numberOfStakers",
 						"type": "uint256"
 					},
 					{
@@ -239,12 +203,6 @@
 						"indexed": false,
 						"internalType": "uint256",
 						"name": "amount",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "prevBalance",
 						"type": "uint256"
 					},
 					{
@@ -350,6 +308,55 @@
 					{
 						"indexed": false,
 						"internalType": "address",
+						"name": "instrumentsRewarded",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "deltaBlocks",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "rewardDistributionSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "reward_Accrued",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "ratio_mantissa",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "currentRewardInstrumentIndex",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newIndex_mantissa",
+						"type": "uint256"
+					}
+				],
+				"name": "calculations",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
 						"name": "staker",
 						"type": "address"
 					},
@@ -442,12 +449,6 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "staker_instrumentIndex_instrumentRewarded",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
 						"name": "staker_instrumentAccumulated_instrumentBeingRewarded",
 						"type": "uint256"
 					},
@@ -501,7 +502,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "updatedInstrumnetBeingDistributedIndex",
+				"name": "updatedInstrumentBeingDistributedIndex",
 				"type": "event"
 			},
 			{
@@ -751,21 +752,6 @@
 				],
 				"payable": false,
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "contract GlobalAddressesProvider",
-						"name": "addressesProvider_",
-						"type": "address"
-					}
-				],
-				"name": "initialize",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -1038,11 +1024,7 @@
 			"methods": {}
 		},
 		"userdoc": {
-			"methods": {
-				"initialize(address)": {
-					"notice": "Called by the proxy when setting this contract as implementation"
-				}
-			}
+			"methods": {}
 		}
 	},
 	"settings": {
@@ -1073,10 +1055,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Sigh_Staking/SighStaking.sol": {
-			"keccak256": "0xd60d7a92d91a91fb07ffb8f761c645e414ffc08b0624be2c95132610812fb75d",
+			"keccak256": "0xd7e9fd8792f29ac10e7bcfbacaed182ca03e4e18393a94bac0c3a2b67c216fd9",
 			"urls": [
-				"bzz-raw://f3a4d4e833557d494d79ce636fd57d61b9d421744e99b6121ee559c0b6c1b14b",
-				"dweb:/ipfs/QmaB6y6uCNA43F73AUn7iFvniGRTSbfTcM6gTYH3pHrx36"
+				"bzz-raw://f6838f7eb1a3e3fdc7ea465050c03170ed32881a4d320efba2399cfde399225a",
+				"dweb:/ipfs/QmY774hFQaU5PqWohjaMCiHVhpYHiatzL3aD65beUa7GT8"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {

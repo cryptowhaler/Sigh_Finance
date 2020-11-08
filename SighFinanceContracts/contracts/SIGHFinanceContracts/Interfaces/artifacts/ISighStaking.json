@@ -57,6 +57,7 @@
 			"getTotalStakers()": "31ed0db4",
 			"getmaxSighThatCanBeStaked()": "c4f39941",
 			"isInstrumentSupported(address)": "c3d1b72d",
+			"removeInstrumentFromDistribution(address)": "f1c6e555",
 			"setDistributionSpeed(address,uint256)": "6a5d6bee",
 			"stake_SIGH(uint256)": "3e88048c",
 			"supportNewInstrumentForDistribution(address,uint256)": "a84d7898",
@@ -321,6 +322,27 @@
 			],
 			"payable": false,
 			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument",
+					"type": "address"
+				}
+			],
+			"name": "removeInstrumentFromDistribution",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{

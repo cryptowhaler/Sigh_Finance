@@ -40,7 +40,7 @@ contract SighFinanceConfigurator is VersionedInitializable {
 // ####### PROXY RELATED #######
 // #############################
 
-    uint256 public constant CONFIGURATOR_REVISION = 0x1;
+    uint256 public constant CONFIGURATOR_REVISION = 0x2;
 
     function getRevision() internal pure returns (uint256) {
         return CONFIGURATOR_REVISION;
@@ -196,6 +196,11 @@ contract SighFinanceConfigurator is VersionedInitializable {
    function supportNewInstrumentForDistributionInSIGH_Staking(address instrument, uint speed) external onlySIGHFinanceManager { 
         ISighStaking sigh_staking = ISighStaking( globalAddressesProvider.getSIGHStaking() );
         require(sigh_staking.supportNewInstrumentForDistribution(instrument, speed),"Addition of new instrument as SIGH Staking reward failed");
+    } 
+
+   function removeInstrumentFromDistributionInSIGH_Staking(address instrument ) external onlySIGHFinanceManager { 
+        ISighStaking sigh_staking = ISighStaking( globalAddressesProvider.getSIGHStaking() );
+        require(sigh_staking.removeInstrumentFromDistribution(instrument ),"Removing the instrument as a SIGH Staking reward failed");
     } 
 
    function setDistributionSpeedForStakingRewardInSIGH_Staking(address instrument, uint speed) external onlySIGHFinanceManager { 
