@@ -2,7 +2,7 @@ pragma solidity ^0.5.0;
 
 import "../../configuration/IGlobalAddressesProvider.sol";
 import "../interfaces/IPriceOracleGetter.sol";
-import "../interfaces/IChainlinkAggregator.sol";
+import "../interfaces/IAggregatorV2V3Interface.sol";
 import "../libraries/EthAddressLib.sol";
 
 /// @title ChainlinkProxyPriceProvider
@@ -14,7 +14,7 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
 
     IGlobalAddressesProvider public globalAddressesProvider;
 
-    mapping(address => IChainlinkAggregator) private assetsSources;
+    mapping(address => IAggregatorV2V3Interface) private assetsSources;
     IPriceOracleGetter private fallbackOracle;
 
     event AssetSourceUpdated(address indexed asset, address indexed source);
@@ -37,7 +37,7 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
 // ##### SET THE PRICEFEED SOURCE #####
 // ####################################
     
-    function supportNewAsset(address asset_, address source_) public onlyLendingPoolConfigurator {
+    function supportNewAsset(address asset_, address source_) public  {  // onlyLendingPoolConfigurator
         address[] memory assets = new address[](1);
         address[] memory sources = new address[](1) ;
         assets[0] = asset_;
@@ -55,7 +55,7 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
     /// @notice Sets the fallbackOracle
     /// - Callable only by the Aave governance
     /// @param _fallbackOracle The address of the fallbackOracle
-    function setFallbackOracle(address _fallbackOracle) external onlyLendingPoolConfigurator {
+    function setFallbackOracle(address _fallbackOracle) external  {  // onlyLendingPoolConfigurator
         internalSetFallbackOracle(_fallbackOracle);
     }
 
@@ -69,7 +69,7 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
     function internalSetAssetsSources(address[] memory _assets, address[] memory _sources) internal {
         require(_assets.length == _sources.length, "INCONSISTENT_PARAMS_LENGTH");
         for (uint256 i = 0; i < _assets.length; i++) {
-            assetsSources[_assets[i]] = IChainlinkAggregator(_sources[i]);
+            assetsSources[_assets[i]] = IAggregatorV2V3Interface(_sources[i]);
             emit AssetSourceUpdated(_assets[i], _sources[i]);
         }
     }
@@ -88,7 +88,7 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
     /// @notice Gets an asset price by address
     /// @param _asset The asset address
     function getAssetPrice(address _asset) public view returns(uint256) {
-        IChainlinkAggregator source = assetsSources[_asset];
+        IAggregatorV2V3Interface source = assetsSources[_asset];
         if (_asset == EthAddressLib.ethAddress()) {
             return 1 ether;
         } 
@@ -97,7 +97,7 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
                 return IPriceOracleGetter(fallbackOracle).getAssetPrice(_asset);
             } 
             else {
-                int256 _price = IChainlinkAggregator(source).latestAnswer();
+                int256 _price = IAggregatorV2V3Interface(source).latestAnswer();
                 if (_price > 0) {
                     return uint256(_price);
                 } 
@@ -106,6 +106,12 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
                 }
             }
         }
+    }
+    
+    function getAssetPriceDecimals (address _asset) public view returns(uint8) {
+        IAggregatorV2V3Interface source = assetsSources[_asset];
+        uint8 decimals = IAggregatorV2V3Interface(source).decimals();
+        return decimals;
     }
 
     /// @notice Gets a list of prices from a list of assets addresses

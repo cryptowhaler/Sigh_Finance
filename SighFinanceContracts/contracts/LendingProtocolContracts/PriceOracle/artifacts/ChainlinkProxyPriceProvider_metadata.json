@@ -1,0 +1,332 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "globalAddressesProvider_",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "asset",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "source",
+						"type": "address"
+					}
+				],
+				"name": "AssetSourceUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "fallbackOracle",
+						"type": "address"
+					}
+				],
+				"name": "FallbackOracleUpdated",
+				"type": "event"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_asset",
+						"type": "address"
+					}
+				],
+				"name": "getAssetPrice",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_asset",
+						"type": "address"
+					}
+				],
+				"name": "getAssetPriceDecimals",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_assets",
+						"type": "address[]"
+					}
+				],
+				"name": "getAssetsPrices",
+				"outputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "",
+						"type": "uint256[]"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getFallbackOracle",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_asset",
+						"type": "address"
+					}
+				],
+				"name": "getSourceOfAsset",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "globalAddressesProvider",
+				"outputs": [
+					{
+						"internalType": "contract IGlobalAddressesProvider",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_assets",
+						"type": "address[]"
+					},
+					{
+						"internalType": "address[]",
+						"name": "_sources",
+						"type": "address[]"
+					}
+				],
+				"name": "setAssetSources",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_fallbackOracle",
+						"type": "address"
+					}
+				],
+				"name": "setFallbackOracle",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "asset_",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "source_",
+						"type": "address"
+					}
+				],
+				"name": "supportNewAsset",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "Aave, SIGH Finance",
+			"methods": {
+				"getAssetPrice(address)": {
+					"params": {
+						"_asset": "The asset address"
+					}
+				},
+				"getAssetsPrices(address[])": {
+					"params": {
+						"_assets": "The list of assets addresses"
+					}
+				},
+				"getFallbackOracle()": {
+					"return": "address The addres of the fallback oracle"
+				},
+				"getSourceOfAsset(address)": {
+					"params": {
+						"_asset": "The address of the asset"
+					},
+					"return": "address The address of the source"
+				},
+				"setAssetSources(address[],address[])": {
+					"params": {
+						"_assets": "The addresses of the assets",
+						"_sources": "The address of the source of each asset"
+					}
+				},
+				"setFallbackOracle(address)": {
+					"params": {
+						"_fallbackOracle": "The address of the fallbackOracle"
+					}
+				}
+			},
+			"title": "ChainlinkProxyPriceProvider"
+		},
+		"userdoc": {
+			"methods": {
+				"getAssetPrice(address)": {
+					"notice": "Gets an asset price by address"
+				},
+				"getAssetsPrices(address[])": {
+					"notice": "Gets a list of prices from a list of assets addresses"
+				},
+				"getFallbackOracle()": {
+					"notice": "Gets the address of the fallback oracle"
+				},
+				"getSourceOfAsset(address)": {
+					"notice": "Gets the address of the source for an asset address"
+				},
+				"setAssetSources(address[],address[])": {
+					"notice": "External function called by the Aave governance to set or replace sources of assets"
+				},
+				"setFallbackOracle(address)": {
+					"notice": "Sets the fallbackOracle - Callable only by the Aave governance"
+				}
+			},
+			"notice": "Proxy smart contract to get the price of an asset from a price source, with Chainlink Aggregator smart contracts as primary option - If the returned price by a Chainlink aggregator is <= 0, the call is forwarded to a fallbackOracle"
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/LendingProtocolContracts/PriceOracle/ChainlinkProxyPriceProvider.sol": "ChainlinkProxyPriceProvider"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/LendingProtocolContracts/PriceOracle/ChainlinkProxyPriceProvider.sol": {
+			"keccak256": "0x0361a355e3d813c4bb487afa93fd71f1f6fa2b245b9f989ee5a5973a23e98f9b",
+			"urls": [
+				"bzz-raw://0a92c3c30c3cacd6dac4b660bd0043e12830b9e32eb29633f75659e700100d7e",
+				"dweb:/ipfs/QmR9JafPNACTkJzNJ6CZnXF6YvjxYGbkJkrXzUe4twiE4h"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/interfaces/IAggregatorV2V3Interface.sol": {
+			"keccak256": "0x763e714af8e2aee412169434010b61539c4fd8cefcda90b267fd8adb3da7ffcd",
+			"urls": [
+				"bzz-raw://592b08657e7e527ca58f2f89fa0769af2e331e0c1a1a04f6c01513cb69fa3bba",
+				"dweb:/ipfs/QmbnLW83WyxB3g8B76xCbhSRJkHT1gb2t2YGm5A7kHRdoS"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/interfaces/IPriceOracleGetter.sol": {
+			"keccak256": "0x58175d019ae6f47b4941461ba27dfe6afcc20d146e9bdb7a949902c7330803f3",
+			"urls": [
+				"bzz-raw://e118d81569a54c84d66c259d46e481e32cba80f56e99300a6a083b554421be4f",
+				"dweb:/ipfs/QmVhbHRHdV8y2XgqznQg4CJGF8anFQctGDSsANGNi8TER9"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/libraries/EthAddressLib.sol": {
+			"keccak256": "0x6d13f10408208ebff44123254f6db03121a8fb5a73d84c2d94f4e9651932b70d",
+			"urls": [
+				"bzz-raw://50b64d66e1544fcef496cc68e98cee61cfbab58685dfc4d57f73a1308e3aec2a",
+				"dweb:/ipfs/QmQwJ5ZpaNjrfREruW7RzppzbEv8Mxxj5Ln87DX1i1iXW5"
+			]
+		},
+		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {
+			"keccak256": "0x3cac9f73a1e6cbd9bdd703519a1a43bd8215f284910dda0807440d01193178b3",
+			"urls": [
+				"bzz-raw://e33089eb2c49cbc820f1aeb05e48d041a22838681769dfca9fdae797ee37f26f",
+				"dweb:/ipfs/QmNRwngcxxRd5LkNKTDm68kgrQ3K2aYvxFVVDF3Sm8RcYH"
+			]
+		}
+	},
+	"version": 1
+}
