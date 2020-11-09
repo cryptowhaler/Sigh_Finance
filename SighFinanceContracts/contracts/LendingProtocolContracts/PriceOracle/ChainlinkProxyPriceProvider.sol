@@ -108,7 +108,7 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
         }
     }
     
-    function getAssetPriceDecimals (address _asset) public view returns(uint8) {
+    function getAssetPriceDecimals (address _asset) external view returns(uint8) {
         IAggregatorV2V3Interface source = assetsSources[_asset];
         uint8 decimals = IAggregatorV2V3Interface(source).decimals();
         return decimals;

@@ -1,16 +1,11 @@
 <template>
   <div id="app">
-    <header-section @show-deposit-modal="toggleDepositModal" @show-withdrawl-modal="toggleWithdrawlModal" @show-contact-modal="toggleContactModal" />
+    <header-section @show-contact-modal="toggleContactModal" />
 
      <div class="uk-hidden@m">
-    <side-menu @show-deposit-modal="toggleDepositModal" @show-withdrawl-modal="toggleWithdrawlModal"  @show-contact-modal="toggleContactModal"  />
-    </div>
+     <side-menu  @show-contact-modal="toggleContactModal"  />
+     </div>
 
-    <modal-box internalComponent="deposit" :show='depositModalShown' @modal-closed='toggleDepositModal' />
-    <modal-box internalComponent="withdrawal"  :show='withdrawlModalShown' @modal-closed='toggleWithdrawlModal' />
-    <!-- <modal-box internalComponent="vega-login"  :show='loginModalShown' @modal-closed='toggleLoginModal' />
-    <modal-box internalComponent="vega-logout" :show='logoutModalShown' @modal-closed='toggleLogoutModal' /> -->
-    <!-- <modal-box internalComponent="vega-logout" :show='logoutModalShown' @modal-closed='toggleLogoutModal' /> -->
     <modal-box internalComponent="contact" :show='contactModalShown' @modal-closed='toggleContactModal' />
 
     <notifications group="foo" />
@@ -28,15 +23,12 @@
 import Vue from 'vue';
 import Loading from 'vue-full-loading';
 import NotificationPlugin from '../plugins/notifications.js';
-import EventBus, {
-  EventNames,
-} from '../eventBuses/default';
+import EventBus, { EventNames,} from '../eventBuses/default';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 
 import HeaderSection from '@/components/HeaderSection/HeaderSection.vue';
 import SideMenu from '@/components/SideMenu/SideMenu.vue';
 import ModalBox from '@/components/ModalBox/ModalBox.vue';
-// import VegaProtocolService from '@/services/VegaProtocolService';
 import LocalStorage from '@/utils/localStorage.js';
 import Vuikit from 'vuikit';
 import Notifications from 'vue-notification';
@@ -65,10 +57,6 @@ export default {
   data() {
     return {
       loaderLabel: 'Loading...',
-      depositModalShown: false,
-      withdrawlModalShown: false,
-      loginModalShown:false,      //Added
-      logoutModalShown:true,     //Added
       contactModalShown: false,
       shouldOpen: false,
       firstTime: true,
@@ -93,31 +81,21 @@ export default {
     // this.getMarkets();
 
     this.handleWeb3();
-    // this.loadWeb3();
-    // this.getBlockchainData();
   },
 
   mounted() {
     this.walletConnected = body => this.fetchConfigsLogin(body.username);     //Login 
-
     this.WalletDisconnectedListener = body => this.fetchConfigsLogout();     //Logout
-    this.sessionExpiryListener = () => {
-      if (LocalStorage.isUserLoggedIn()) {
-        this.$showErrorMsg({message: 'Your session has expired. Please login again.',});
-      }
-      EventBus.$emit(EventNames.userWalletDisconnected);
-    };
+
   
     EventBus.$on(EventNames.userWalletConnected, this.walletConnected);           //AUTH
     EventBus.$on(EventNames.userWalletDisconnected, this.WalletDisconnectedListener);           //AUTH
-    EventBus.$on(EventNames.userSessionExpired, this.sessionExpiryListener);  //AUTH
   },
 
 
   destroyed() {       //SESSION DESTROYED 
     EventBus.$off(EventNames.userWalletConnected, this.walletConnected);
     EventBus.$off(EventNames.userWalletDisconnected, this.WalletDisconnectedListener);           //AUTH    
-    EventBus.$off(EventNames.userSessionExpired, this.sessionExpiryListener);
   },
 
 
@@ -155,22 +133,6 @@ export default {
       // console.log(this.toggleLogoutModal);
     },
 
-    toggleDepositModal() {
-      this.depositModalShown = !this.depositModalShown;
-    },
-    toggleWithdrawlModal() {
-      this.withdrawlModalShown = !this.withdrawlModalShown;
-    },
-    toggleLoginModal() {      //ADDED
-      // console.log(this.loginModalShown);
-      this.loginModalShown = !this.loginModalShown;
-      // console.log(this.loginModalShown);      
-    },
-    toggleLogoutModal() {   //ADDED
-      // console.log(this.logoutModalShown);    
-      this.logoutModalShown = !this.logoutModalShown;
-      // console.log(this.logoutModalShown);        
-    },
     toggleContactModal() {   //ADDED
       // console.log(this.contactModalShown);    
       this.contactModalShown = !this.contactModalShown;

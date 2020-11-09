@@ -104,16 +104,16 @@ contract LendingPoolConfigurator is VersionedInitializable {
     /**
     * @dev initializes an instrument
     * @param _instrument the address of the instrument to be initialized
-    * @param _underlyingAssetDecimals the decimals of the instrument underlying asset
     * @param _interestRateStrategyAddress the address of the interest rate strategy contract for this instrument
     **/
-    function initInstrument( address _instrument, uint8 _underlyingAssetDecimals, address _interestRateStrategyAddress ) external onlyLendingPoolManager {
+    function initInstrument( address _instrument, address _interestRateStrategyAddress ) external onlyLendingPoolManager {
         ERC20Detailed asset = ERC20Detailed(_instrument);
 
         string memory iTokenName = string(abi.encodePacked("SIGH's supported Instrument - ", asset.name()));
         string memory iTokenSymbol = string(abi.encodePacked("i", asset.symbol()));
+        uint8 decimals = uint8(asset.decimals());
 
-        initInstrumentWithData(  _instrument,  iTokenName,  iTokenSymbol,  _underlyingAssetDecimals,  _interestRateStrategyAddress );
+        initInstrumentWithData(  _instrument,  iTokenName,  iTokenSymbol,  decimals,  _interestRateStrategyAddress );
     }
 
     /**

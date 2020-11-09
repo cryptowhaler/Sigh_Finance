@@ -489,6 +489,49 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
+						"name": "lossAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "instrumentDecimals",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "priceDecimals",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalDecimals",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "correctionNumber",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "correctedLossAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "decimalsAdjustment",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
 						"name": "SIGH",
 						"type": "uint256"
 					}
@@ -564,19 +607,25 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "newSpeed",
+						"name": "maxSpeed",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "stakingSpeed",
+						"name": "lossRatio",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "newSpeedFinal",
+						"name": "supplierSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "borrowerSpeed",
 						"type": "uint256"
 					}
 				],
@@ -1108,6 +1157,11 @@
 						"type": "address"
 					},
 					{
+						"internalType": "uint256",
+						"name": "decimals",
+						"type": "uint256"
+					},
+					{
 						"internalType": "bool",
 						"name": "isSIGHMechanismActivated",
 						"type": "bool"
@@ -1119,17 +1173,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "supplylastupdatedblock",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
 						"name": "borrowindex",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "borrowlastupdatedblock",
 						"type": "uint256"
 					}
 				],
@@ -1685,10 +1729,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/IPriceOracleGetter.sol": {
-			"keccak256": "0x58175d019ae6f47b4941461ba27dfe6afcc20d146e9bdb7a949902c7330803f3",
+			"keccak256": "0xaf5b0d8b1553c9b0156137e52056fcc361833ee8787bf9ea9c1a3084af85c736",
 			"urls": [
-				"bzz-raw://e118d81569a54c84d66c259d46e481e32cba80f56e99300a6a083b554421be4f",
-				"dweb:/ipfs/QmVhbHRHdV8y2XgqznQg4CJGF8anFQctGDSsANGNi8TER9"
+				"bzz-raw://ad0a65a23599a537335b5b8a78f7a27d1df654f74479b2b299bdf789e4fd0ba9",
+				"dweb:/ipfs/QmUf7RmuJDPSidxTAv4upEFCCzHNTCemhZZk73rNB6subg"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
@@ -1727,10 +1771,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighDistributionHandler/SighDistributionHandler.sol": {
-			"keccak256": "0xdb1f8e1930ada30143eee58bf8c1f699a2e2356b65a59e4812d5fee84dfc9a2a",
+			"keccak256": "0x0f32f34f5578b63aabe6534b31b456e2d029ab1833ca47cafec6683f4c035fb1",
 			"urls": [
-				"bzz-raw://fdab874c97c6be33dbb2797f65e0b71c4226d8cafc77f4c9f21328f42715a02b",
-				"dweb:/ipfs/Qmc5YuY8xKZKpbRXwFLigfKwtzsGBYBeyebZj2P4kouGWo"
+				"bzz-raw://592bbcf1cf29377d25aae5e0cd63adb3779e43bc10fb7c5a42db7f213747ceb7",
+				"dweb:/ipfs/QmY2Hp1RPGtQkGrooH97P1YUAKvqYsyccc4jqBNnYJuVdf"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

@@ -1,0 +1,103 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"görli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"linkReferences": {},
+			"object": "6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea265627a7a72315820437110eb67e433ba3e1f710a7f682baf0c2402cfa353d52eb82689d5a4509c5164736f6c63430005110032",
+			"opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH1 0xF JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0x3E DUP1 PUSH1 0x1D PUSH1 0x0 CODECOPY PUSH1 0x0 RETURN INVALID PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG2 PUSH6 0x627A7A723158 KECCAK256 NUMBER PUSH18 0x10EB67E433BA3E1F710A7F682BAF0C2402CF LOG3 MSTORE8 0xD5 0x2E 0xB8 0x26 DUP10 0xD5 LOG4 POP SWAP13 MLOAD PUSH5 0x736F6C6343 STOP SDIV GT STOP ORIGIN ",
+			"sourceMap": "380:12514:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;380:12514:1;;;;;;;"
+		},
+		"deployedBytecode": {
+			"linkReferences": {},
+			"object": "6080604052600080fdfea265627a7a72315820437110eb67e433ba3e1f710a7f682baf0c2402cfa353d52eb82689d5a4509c5164736f6c63430005110032",
+			"opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG2 PUSH6 0x627A7A723158 KECCAK256 NUMBER PUSH18 0x10EB67E433BA3E1F710A7F682BAF0C2402CF LOG3 MSTORE8 0xD5 0x2E 0xB8 0x26 DUP10 0xD5 LOG4 POP SWAP13 MLOAD PUSH5 0x736F6C6343 STOP SDIV GT STOP ORIGIN ",
+			"sourceMap": "380:12514:1:-;;;;;"
+		},
+		"gasEstimates": {
+			"creation": {
+				"codeDepositCost": "12400",
+				"executionCost": "66",
+				"totalCost": "12466"
+			},
+			"internal": {
+				"addExp(struct Exponential.Exp memory,struct Exponential.Exp memory)": "infinite",
+				"add_(struct Exponential.Double memory,struct Exponential.Double memory)": "infinite",
+				"add_(struct Exponential.Exp memory,struct Exponential.Exp memory)": "infinite",
+				"add_(uint256,uint256)": "infinite",
+				"add_(uint256,uint256,string memory)": "infinite",
+				"divExp(struct Exponential.Exp memory,struct Exponential.Exp memory)": "infinite",
+				"divScalar(struct Exponential.Exp memory,uint256)": "infinite",
+				"divScalarByExp(uint256,struct Exponential.Exp memory)": "infinite",
+				"divScalarByExpTruncate(uint256,struct Exponential.Exp memory)": "infinite",
+				"div_(struct Exponential.Double memory,struct Exponential.Double memory)": "infinite",
+				"div_(struct Exponential.Double memory,uint256)": "infinite",
+				"div_(struct Exponential.Exp memory,struct Exponential.Exp memory)": "infinite",
+				"div_(struct Exponential.Exp memory,uint256)": "infinite",
+				"div_(uint256,struct Exponential.Double memory)": "infinite",
+				"div_(uint256,struct Exponential.Exp memory)": "infinite",
+				"div_(uint256,uint256)": "infinite",
+				"div_(uint256,uint256,string memory)": "infinite",
+				"fraction(uint256,uint256)": "infinite",
+				"getExp(uint256,uint256)": "infinite",
+				"greaterThanExp(struct Exponential.Exp memory,struct Exponential.Exp memory)": "infinite",
+				"isZeroExp(struct Exponential.Exp memory)": "infinite",
+				"lessThanExp(struct Exponential.Exp memory,struct Exponential.Exp memory)": "infinite",
+				"lessThanOrEqualExp(struct Exponential.Exp memory,struct Exponential.Exp memory)": "infinite",
+				"mulExp(struct Exponential.Exp memory,struct Exponential.Exp memory)": "infinite",
+				"mulExp(uint256,uint256)": "infinite",
+				"mulExp3(struct Exponential.Exp memory,struct Exponential.Exp memory,struct Exponential.Exp memory)": "infinite",
+				"mulScalar(struct Exponential.Exp memory,uint256)": "infinite",
+				"mulScalarTruncate(struct Exponential.Exp memory,uint256)": "infinite",
+				"mulScalarTruncateAddUInt(struct Exponential.Exp memory,uint256,uint256)": "infinite",
+				"mul_(struct Exponential.Double memory,struct Exponential.Double memory)": "infinite",
+				"mul_(struct Exponential.Double memory,uint256)": "infinite",
+				"mul_(struct Exponential.Exp memory,struct Exponential.Exp memory)": "infinite",
+				"mul_(struct Exponential.Exp memory,uint256)": "infinite",
+				"mul_(uint256,struct Exponential.Double memory)": "infinite",
+				"mul_(uint256,struct Exponential.Exp memory)": "infinite",
+				"mul_(uint256,uint256)": "infinite",
+				"mul_(uint256,uint256,string memory)": "infinite",
+				"safe224(uint256,string memory)": "infinite",
+				"safe224(uint256[24] memory,string memory)": "infinite",
+				"safe32(uint256,string memory)": "infinite",
+				"subExp(struct Exponential.Exp memory,struct Exponential.Exp memory)": "infinite",
+				"sub_(struct Exponential.Double memory,struct Exponential.Double memory)": "infinite",
+				"sub_(struct Exponential.Exp memory,struct Exponential.Exp memory)": "infinite",
+				"sub_(uint256,uint256)": "infinite",
+				"sub_(uint256,uint256,string memory)": "infinite",
+				"truncate(struct Exponential.Exp memory)": "infinite"
+			}
+		},
+		"methodIdentifiers": {}
+	},
+	"abi": []
+}

@@ -8,4 +8,6 @@ interface IPriceOracleGetter {
     @dev returns the asset price in ETH
      */
     function getAssetPrice(address _asset) external view returns (uint256);
+    
+    function getAssetPriceDecimals (address _asset) external view returns(uint8);
 }

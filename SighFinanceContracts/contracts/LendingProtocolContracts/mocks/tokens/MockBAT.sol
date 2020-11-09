@@ -7,7 +7,7 @@ import "./MintableERC20.sol";
 
 contract MockBAT is MintableERC20 {
 
-    uint256 public decimals = 18;
+    uint256 public decimals = 21;
     string public symbol = "BAT";
     string public name = "Basic Attention Token";
 }

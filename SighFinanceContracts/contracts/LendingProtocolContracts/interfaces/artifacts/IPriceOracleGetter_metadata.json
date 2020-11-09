@@ -25,6 +25,27 @@
 				"payable": false,
 				"stateMutability": "view",
 				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_asset",
+						"type": "address"
+					}
+				],
+				"name": "getAssetPriceDecimals",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -58,10 +79,10 @@
 	},
 	"sources": {
 		"localhost/contracts/LendingProtocolContracts/interfaces/IPriceOracleGetter.sol": {
-			"keccak256": "0x58175d019ae6f47b4941461ba27dfe6afcc20d146e9bdb7a949902c7330803f3",
+			"keccak256": "0xaf5b0d8b1553c9b0156137e52056fcc361833ee8787bf9ea9c1a3084af85c736",
 			"urls": [
-				"bzz-raw://e118d81569a54c84d66c259d46e481e32cba80f56e99300a6a083b554421be4f",
-				"dweb:/ipfs/QmVhbHRHdV8y2XgqznQg4CJGF8anFQctGDSsANGNi8TER9"
+				"bzz-raw://ad0a65a23599a537335b5b8a78f7a27d1df654f74479b2b299bdf789e4fd0ba9",
+				"dweb:/ipfs/QmUf7RmuJDPSidxTAv4upEFCCzHNTCemhZZk73rNB6subg"
 			]
 		}
 	},
