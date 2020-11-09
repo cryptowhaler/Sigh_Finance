@@ -755,6 +755,21 @@
 				"type": "function"
 			},
 			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "contract GlobalAddressesProvider",
+						"name": "addressesProvider_",
+						"type": "address"
+					}
+				],
+				"name": "initialize",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"constant": true,
 				"inputs": [
 					{
@@ -1024,7 +1039,11 @@
 			"methods": {}
 		},
 		"userdoc": {
-			"methods": {}
+			"methods": {
+				"initialize(address)": {
+					"notice": "Called by the proxy when setting this contract as implementation"
+				}
+			}
 		}
 	},
 	"settings": {
@@ -1055,10 +1074,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Sigh_Staking/SighStaking.sol": {
-			"keccak256": "0xd7e9fd8792f29ac10e7bcfbacaed182ca03e4e18393a94bac0c3a2b67c216fd9",
+			"keccak256": "0x24be5b8f7088dcf697c0ff635635707f6dd8dea2638368d3d1c487e2b87ababf",
 			"urls": [
-				"bzz-raw://f6838f7eb1a3e3fdc7ea465050c03170ed32881a4d320efba2399cfde399225a",
-				"dweb:/ipfs/QmY774hFQaU5PqWohjaMCiHVhpYHiatzL3aD65beUa7GT8"
+				"bzz-raw://cb83a425ddc212a418321a8e25e564421214247ae3eae6d79b4f8a9a9e366c4f",
+				"dweb:/ipfs/QmY4Ki4WH9vGJELKe29JuGWf7oW4pHE3jbkUsUimTHpNmf"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {

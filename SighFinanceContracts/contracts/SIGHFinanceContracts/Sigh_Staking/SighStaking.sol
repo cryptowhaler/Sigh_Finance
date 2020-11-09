@@ -18,7 +18,7 @@ import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 import "../../configuration/GlobalAddressesProvider.sol";
 
 
-contract SighStaking is  Exponential  {  // VersionedInitializable,
+contract SighStaking is  VersionedInitializable, Exponential  { 
 
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
@@ -52,7 +52,7 @@ contract SighStaking is  Exponential  {  // VersionedInitializable,
     uint private numberOfStakers;
     uint maxSighThatCanBeStaked = uint(-1);
 
-    uint256 private constant IMPLEMENTATION_REVISION = 0x8;
+    uint256 private constant IMPLEMENTATION_REVISION = 0x1;
 
     event SighStaked( address staker,uint amount, uint staker_stakedBalance, uint totalStakedSigh, uint blocknumber   );
     event SighUnstaked( address staker, uint amount, uint staker_stakedBalance, uint totalStakedSigh, uint blocknumber   );
@@ -96,18 +96,18 @@ contract SighStaking is  Exponential  {  // VersionedInitializable,
 // ##############  INITIALIZING THE STATE   ###############
 // ########################################################
 
-    // /// @notice Gets the revision number of the contract
-    // /// @return The revision numeric reference
-    // function getRevision() internal pure returns (uint256) {
-    //     return IMPLEMENTATION_REVISION;
-    // }
+    /// @notice Gets the revision number of the contract
+    /// @return The revision numeric reference
+    function getRevision() internal pure returns (uint256) {
+        return IMPLEMENTATION_REVISION;
+    }
 
 
-    // /// @notice Called by the proxy when setting this contract as implementation
-    // function initialize(  GlobalAddressesProvider addressesProvider_ ) public initializer {
-    //     addressesProvider = addressesProvider_;
-    //     sigh_Instrument = IERC20( addressesProvider.getSIGHAddress() );
-    // }
+    /// @notice Called by the proxy when setting this contract as implementation
+    function initialize(  GlobalAddressesProvider addressesProvider_ ) public initializer {
+        addressesProvider = addressesProvider_;
+        sigh_Instrument = IERC20( addressesProvider.getSIGHAddress() );
+    }
 
 
 // ############################################
