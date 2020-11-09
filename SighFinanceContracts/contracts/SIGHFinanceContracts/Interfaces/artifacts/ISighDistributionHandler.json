@@ -1,0 +1,742 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"görli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"deployedBytecode": {
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"gasEstimates": null,
+		"methodIdentifiers": {
+			"Instrument_SIGHed(address)": "ffffd7fb",
+			"Instrument_UNSIGHed(address)": "4f78deef",
+			"SpeedUpperCheckSwitch(bool,uint256)": "832c6c90",
+			"addInstrument(address,address,uint256)": "52bbe658",
+			"checkPriceSnapshots(address,uint256)": "4df859fd",
+			"checkinitializationCounter(address)": "8d9cf864",
+			"getAllInstrumentsSupported()": "831449de",
+			"getAllPriceSnapshots(address)": "d6357063",
+			"getBlocksRemainingToNextSpeedRefresh()": "6f610c50",
+			"getDeltaBlocksForSpeed()": "be36810a",
+			"getInstrumentBorrowIndex(address)": "10fa61e6",
+			"getInstrumentBorrowerSIGHSpeed(address)": "7cbe301e",
+			"getInstrumentData(address)": "4dc54a38",
+			"getInstrumentStakingSIGHSpeed(address)": "a315a03b",
+			"getInstrumentSupplierSIGHSpeed(address)": "a5cd146c",
+			"getInstrumentSupplyIndex(address)": "9a717b24",
+			"getPrevSpeedRefreshBlock()": "3e955265",
+			"getSIGHBalance()": "c6a6bfb1",
+			"getSIGHSpeed()": "570b39d0",
+			"getupperCheckProfitPercentage()": "0ef9e9d7",
+			"isInstrumentSupported(address)": "c3d1b72d",
+			"refreshConfig()": "7c55ccb3",
+			"refreshSIGHSpeeds()": "bf1678f6",
+			"totalInstrumentsSupported()": "eeabe79f",
+			"transferSighTotheUser(address,address,address,uint256)": "8e26fc38",
+			"updateDeltaBlocksForSpeedRefresh(uint256)": "1e7faed9",
+			"updateSIGHBorrowIndex(address)": "7c52b668",
+			"updateSIGHSpeed(uint256)": "2df0f9a9",
+			"updateSIGHSpeedRatioForAnInstrument(address,uint256)": "f6e7fa48",
+			"updateSIGHSupplyIndex(address)": "4f425fbb",
+			"updateStakingSpeedForAnInstrument(address,uint256)": "04c66321"
+		}
+	},
+	"abi": [
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument_",
+					"type": "address"
+				}
+			],
+			"name": "Instrument_SIGHed",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument_",
+					"type": "address"
+				}
+			],
+			"name": "Instrument_UNSIGHed",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "bool",
+					"name": "isActivated",
+					"type": "bool"
+				},
+				{
+					"internalType": "uint256",
+					"name": "profitPercentage",
+					"type": "uint256"
+				}
+			],
+			"name": "SpeedUpperCheckSwitch",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_instrument",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_iTokenAddress",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_decimals",
+					"type": "uint256"
+				}
+			],
+			"name": "addInstrument",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument_",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "clock",
+					"type": "uint256"
+				}
+			],
+			"name": "checkPriceSnapshots",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument_",
+					"type": "address"
+				}
+			],
+			"name": "checkinitializationCounter",
+			"outputs": [
+				{
+					"internalType": "uint32",
+					"name": "",
+					"type": "uint32"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "getAllInstrumentsSupported",
+			"outputs": [
+				{
+					"internalType": "address[]",
+					"name": "",
+					"type": "address[]"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument_",
+					"type": "address"
+				}
+			],
+			"name": "getAllPriceSnapshots",
+			"outputs": [
+				{
+					"internalType": "uint256[24]",
+					"name": "",
+					"type": "uint256[24]"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "getBlocksRemainingToNextSpeedRefresh",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "getDeltaBlocksForSpeed",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument_",
+					"type": "address"
+				}
+			],
+			"name": "getInstrumentBorrowIndex",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument_",
+					"type": "address"
+				}
+			],
+			"name": "getInstrumentBorrowerSIGHSpeed",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument_",
+					"type": "address"
+				}
+			],
+			"name": "getInstrumentData",
+			"outputs": [
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument_",
+					"type": "address"
+				}
+			],
+			"name": "getInstrumentStakingSIGHSpeed",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument_",
+					"type": "address"
+				}
+			],
+			"name": "getInstrumentSupplierSIGHSpeed",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument_",
+					"type": "address"
+				}
+			],
+			"name": "getInstrumentSupplyIndex",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "getPrevSpeedRefreshBlock",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "getSIGHBalance",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "getSIGHSpeed",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "getupperCheckProfitPercentage",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument_",
+					"type": "address"
+				}
+			],
+			"name": "isInstrumentSupported",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [],
+			"name": "refreshConfig",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [],
+			"name": "refreshSIGHSpeeds",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "totalInstrumentsSupported",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "user",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "sighAccuredTo",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "sigh_Amount",
+					"type": "uint256"
+				}
+			],
+			"name": "transferSighTotheUser",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "deltaBlocksLimit",
+					"type": "uint256"
+				}
+			],
+			"name": "updateDeltaBlocksForSpeedRefresh",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "currentInstrument",
+					"type": "address"
+				}
+			],
+			"name": "updateSIGHBorrowIndex",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "SIGHSpeed_",
+					"type": "uint256"
+				}
+			],
+			"name": "updateSIGHSpeed",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument_",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "supplierRatio",
+					"type": "uint256"
+				}
+			],
+			"name": "updateSIGHSpeedRatioForAnInstrument",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "currentInstrument",
+					"type": "address"
+				}
+			],
+			"name": "updateSIGHSupplyIndex",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument_",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "newStakingSpeed",
+					"type": "uint256"
+				}
+			],
+			"name": "updateStakingSpeedForAnInstrument",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		}
+	]
+}

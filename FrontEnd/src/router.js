@@ -4,7 +4,6 @@ import LocalStorage from '@/utils/localStorage.js';
 import EventBus, {  EventNames,} from '@/eventBuses/default';
 import Landing from '@/components/Trade/Landing.vue';
 import mainPage from '@/components/Landing/mainPage.vue'; //CHARTING LIBRARY
-
 import newPage from '@/components/new/newPage.vue';
 
 
@@ -38,14 +37,14 @@ const vueRouter = new Router({
       pageTitle: 'SIGH Finance | A money-market protocol with an Engineered Liquidity mining Pipeline addressing the volatility problem pertaining to crypto assets.',
       },
   },
-  {   //MOBILE - ACTIVE ORDERS SIDE BAR
-    path: '/trade-modal',
-    name: 'trade-modal-mobile',
-    component: TradeModalMobile,
-    meta: {
-      pageTitle: 'Trade',
-    },
-  }
+  // {   //MOBILE - ACTIVE ORDERS SIDE BAR
+  //   path: '/trade-modal',
+  //   name: 'trade-modal-mobile',
+  //   component: TradeModalMobile,
+  //   meta: {
+  //     pageTitle: 'Trade',
+  //   },
+  // }
 ]});
 
 vueRouter.beforeEach((to, from, next) => {

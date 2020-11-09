@@ -30,19 +30,23 @@ interface ISighDistributionHandler {
 
     // ###### VIEW FUNCTIONS ######
     function getSIGHBalance() external view returns (uint);
+    function getAllInstrumentsSupported() external view returns (address[] memory );
+    function getInstrumentData (address instrument_) external view returns (string memory name, address iTokenAddress, uint decimals, bool isSIGHMechanismActivated,uint256 supplyindex, uint256 borrowindex  );
+    function getInstrumentSpeeds(address instrument) external view returns (uint suppliers_speed, uint borroweers_speed, uint staking_speed);    
+    function getAllPriceSnapshots(address instrument_ ) external view returns (uint256[24] memory);    
+    function getBlockNumbersForPriceSnapshots() external view returns (uint256[24] memory);    
+    
+    function getSIGHSpeed() external view returns (uint);
     function isInstrumentSupported (address instrument_) external view returns (bool);
     function totalInstrumentsSupported() external view returns (uint);
 
     function getInstrumentSupplyIndex(address instrument_) external view returns (uint);
     function getInstrumentBorrowIndex(address instrument_) external view returns (uint);
-    function getInstrumentData (address instrument_) external view returns (address, uint256,bool,uint256,uint256,uint256,uint256  );
 
     function getupperCheckProfitPercentage () external view returns (uint);
-    function getAllPriceSnapshots(address instrument_ ) external view returns (uint256[24] memory);    
     function checkPriceSnapshots(address instrument_, uint clock) external view returns (uint256);
     function checkinitializationCounter(address instrument_) external view returns (uint32);
 
-    function getSIGHSpeed() external view returns (uint);
     function getInstrumentSupplierSIGHSpeed(address instrument_) external view returns (uint);
     function getInstrumentBorrowerSIGHSpeed(address instrument_) external view returns (uint);
     function getInstrumentStakingSIGHSpeed(address instrument_) external view returns (uint);

@@ -19,7 +19,7 @@ import "../../LendingProtocolContracts/interfaces/ILendingPoolCore.sol";
 import "../Interfaces/ISighStaking.sol";       
 
 
-contract SIGHDistributionHandler is Exponential {       // , VersionedInitializable
+contract SIGHDistributionHandler is Exponential, VersionedInitializable {       // 
     
 // ######## CONTRACT ADDRESSES ########
     GlobalAddressesProvider public addressesProvider;
@@ -137,13 +137,13 @@ contract SIGHDistributionHandler is Exponential {       // , VersionedInitializa
         return SIGH_DISTRIBUTION_REVISION;
     }
     
-    function initialize( GlobalAddressesProvider addressesProvider_) public {   // initializer
+    function initialize( GlobalAddressesProvider addressesProvider_) public initializer {   // 
         addressesProvider = addressesProvider_;
         refreshConfigInternal(); 
         emit SIGHDistributionHandlerInitialized( address(addressesProvider), address(Sigh_Address), address(oracle), address(lendingPoolCore) );
     }
 
-    function refreshConfig() external  {        // onlySighFinanceConfigurator()
+    function refreshConfig() external onlySighFinanceConfigurator {        // ()
         refreshConfigInternal(); 
     }
 
@@ -153,9 +153,9 @@ contract SIGHDistributionHandler is Exponential {       // , VersionedInitializa
         lendingPoolCore = ILendingPoolCore(addressesProvider.getLendingPoolCore());
     }
     
-    function setPriceOracle(address oracle_) public {   // TO BE REMOVED (FOR TESTING)
-        oracle = IPriceOracleGetter( oracle_ );
-    }
+    // function setPriceOracle(address oracle_) public {   // TO BE REMOVED (FOR TESTING)
+    //     oracle = IPriceOracleGetter( oracle_ );
+    // }
 
     
 // #####################################################################################################################################################
@@ -171,7 +171,7 @@ contract SIGHDistributionHandler is Exponential {       // , VersionedInitializa
     * @param _iTokenAddress the address of the overlying iToken contract
     * @param _decimals the number of decimals of the underlying asset
     **/
-    function addInstrument( address _instrument, address _iTokenAddress, uint256 _decimals ) external returns (bool) { // onlyLendingPoolCore
+    function addInstrument( address _instrument, address _iTokenAddress, uint256 _decimals ) external onlyLendingPoolCore returns (bool) { // 
         require(!financial_instruments[_instrument].isListed ,"Instrument already supported.");
 
         all_Instruments.push(_instrument); // ADD THE MARKET TO THE LIST OF SUPPORTED MARKETS
@@ -209,7 +209,7 @@ contract SIGHDistributionHandler is Exponential {       // , VersionedInitializa
     * @param _instrument the instrument object
     * @param _iTokenAddress the address of the overlying iToken contract
     **/
-    function removeInstrument( address _instrument, address _iTokenAddress ) external returns (bool) {   // onlyLendingPoolCore
+    function removeInstrument( address _instrument, address _iTokenAddress ) external onlyLendingPoolCore returns (bool) {   // 
         require(financial_instruments[_instrument].isListed ,"Instrument already supported.");
 
         uint index = 0;
@@ -241,7 +241,7 @@ contract SIGHDistributionHandler is Exponential {       // , VersionedInitializa
     * can call this function through the Sigh Finance Configurator
     * @param instrument_ the instrument object
     **/
-    function Instrument_SIGHed(address instrument_) external returns (bool) {                   // onlySighFinanceConfigurator
+    function Instrument_SIGHed(address instrument_) external onlySighFinanceConfigurator returns (bool) {                   // 
         require(financial_instruments[instrument_].isListed ,"Instrument not supported.");
         require(!financial_instruments[instrument_].isSIGHMechanismActivated, "Instrument already covered under SIGH Distribution Mechanism");
         refreshSIGHSpeeds(); 
@@ -256,7 +256,7 @@ contract SIGHDistributionHandler is Exponential {       // , VersionedInitializa
     * can call this function through the Sigh Finance Configurator
     * @param instrument_ the instrument object
     **/
-    function Instrument_UNSIGHed(address instrument_) external returns (bool) {         // onlySighFinanceConfigurator
+    function Instrument_UNSIGHed(address instrument_) external onlySighFinanceConfigurator returns (bool) {         // 
         require(financial_instruments[instrument_].isListed ,"Instrument not supported.");
         require(financial_instruments[instrument_].isSIGHMechanismActivated, "Instrument already not supported by the SIGH Distribution Mechanism");
         refreshSIGHSpeeds();
@@ -286,7 +286,7 @@ contract SIGHDistributionHandler is Exponential {       // , VersionedInitializa
      * can call this function through the Sigh Finance Configurator
      * @param SIGHSpeed_ The amount of SIGH wei per block to distribute
      */
-    function updateSIGHSpeed(uint SIGHSpeed_) external returns (bool) {             // onlySighFinanceConfigurator
+    function updateSIGHSpeed(uint SIGHSpeed_) external onlySighFinanceConfigurator returns (bool) {             //
         refreshSIGHSpeeds();
         uint oldSpeed = SIGHSpeed;
         SIGHSpeed = SIGHSpeed_;                                 // STATE UPDATED
@@ -300,7 +300,7 @@ contract SIGHDistributionHandler is Exponential {       // , VersionedInitializa
      * @param instrument_ The instrument
      * @param newStakingSpeed The additional SIGH staking speed assigned to the Instrument
      */
-    function updateStakingSpeedForAnInstrument(address instrument_, uint newStakingSpeed) external returns (bool) {     // onlySighFinanceConfigurator
+    function updateStakingSpeedForAnInstrument(address instrument_, uint newStakingSpeed) external onlySighFinanceConfigurator returns (bool) {     // 
         require(financial_instruments[instrument_].isListed ,"Instrument not supported.");
         
         uint prevStakingSpeed = Instrument_Sigh_Speeds[instrument_].staking_Speed;
@@ -317,7 +317,7 @@ contract SIGHDistributionHandler is Exponential {       // , VersionedInitializa
      * @param isActivated Boolean deciding if the upper check on SIGH speed (loss driven) activated or not
      * @param profitPercentage The additional profit based SIGH distribution over and above the covered losses
      */    
-    function SpeedUpperCheckSwitch( bool isActivated, uint profitPercentage ) external returns (bool) {     // onlySighFinanceConfigurator
+    function SpeedUpperCheckSwitch( bool isActivated, uint profitPercentage ) external onlySighFinanceConfigurator returns (bool) {     // 
         require( profitPercentage > 0.01e18, 'The new Profit Percentage must be greater than 0.01e18 (1%) ');
         require( profitPercentage <= 1e18, 'The new Supplier Ratio must be less than 1e18 (100%)');
         refreshSIGHSpeeds();
@@ -337,7 +337,7 @@ contract SIGHDistributionHandler is Exponential {       // , VersionedInitializa
      * can call this function through the Sigh Finance Configurator
      * @param deltaBlocksLimit The new Minimum blocks limit
      */   
-    function updateDeltaBlocksForSpeedRefresh(uint deltaBlocksLimit) external returns (bool) {      // onlySighFinanceConfigurator
+    function updateDeltaBlocksForSpeedRefresh(uint deltaBlocksLimit) external onlySighFinanceConfigurator returns (bool) {      // 
         refreshSIGHSpeeds();
         uint prevdeltaBlocksForSpeed = deltaBlocksForSpeed;
         deltaBlocksForSpeed = deltaBlocksLimit;                                         // STATE UPDATED
@@ -425,8 +425,8 @@ contract SIGHDistributionHandler is Exponential {       // , VersionedInitializa
             }
             else {
                 if ( greaterThanExp(previousPrice , currentPrice) ) {  // i.e the price has decreased so we calculate Losses accured by Suppliers of the Instrument
-                    uint totalUnderlyingLiquidity = IERC20( financial_instruments[_currentInstrument].iTokenAddress ).totalSupply(); // FOR TESTING
-                    // uint totalUnderlyingLiquidity = lendingPoolCore.getInstrumentTotalLiquidity( _currentInstrument ); // Total amount supplied 
+                    // uint totalUnderlyingLiquidity = IERC20( financial_instruments[_currentInstrument].iTokenAddress ).totalSupply(); // FOR TESTING
+                    uint totalUnderlyingLiquidity = lendingPoolCore.getInstrumentTotalLiquidity( _currentInstrument ); // Total amount supplied 
                     (MathError error, Exp memory lossPerInstrument) = subExp( previousPrice , currentPrice );       
                     ( MathError error2, Exp memory supplierLoss ) = mulScalar( lossPerInstrument, totalUnderlyingLiquidity );
                     supplierLosses[i].mantissa = adjustForDecimalsInternal( supplierLoss.mantissa, financial_instruments[_currentInstrument].decimals, oracle.getAssetPriceDecimals(_currentInstrument) );
@@ -434,8 +434,8 @@ contract SIGHDistributionHandler is Exponential {       // , VersionedInitializa
                     ( error, totalLosses) = addExp(totalLosses, supplierLosses[i]);            //  Total loss  += supplier loss
                 }
                 else {                                              // i.e the price has increased so we calculate Losses accured by Borrowers of the Instrument
-                    uint totalBorrows = IERC20( financial_instruments[_currentInstrument].iTokenAddress ).totalSupply(); // FOR TESTING
-                    // uint totalBorrows = lendingPoolCore.getInstrumentTotalBorrows( _currentInstrument ); // Total amount supplied 
+                    // uint totalBorrows = IERC20( financial_instruments[_currentInstrument].iTokenAddress ).totalSupply(); // FOR TESTING
+                    uint totalBorrows = lendingPoolCore.getInstrumentTotalBorrows( _currentInstrument ); // Total amount supplied 
                     (MathError error, Exp memory lossPerInstrument) = subExp( currentPrice, previousPrice );       
                     ( MathError error2, Exp memory borrowerLoss ) = mulScalar( lossPerInstrument, totalBorrows );
                     borrowerLosses[i].mantissa = adjustForDecimalsInternal( borrowerLoss.mantissa, financial_instruments[_currentInstrument].decimals, oracle.getAssetPriceDecimals(_currentInstrument) );
@@ -569,7 +569,7 @@ contract SIGHDistributionHandler is Exponential {       // , VersionedInitializa
      * @notice Accrue SIGH to the Instrument by updating the supply index
      * @param currentInstrument The Instrument whose supply index to update
      */
-    function updateSIGHSupplyIndex(address currentInstrument) external  returns (bool) { // onlyLendingPoolCore    // Called on each Deposit, Redeem and Liquidation (collateral)
+    function updateSIGHSupplyIndex(address currentInstrument) external onlyLendingPoolCore returns (bool) { //     // Called on each Deposit, Redeem and Liquidation (collateral)
         require(financial_instruments[currentInstrument].isListed ,"Instrument not supported.");
         require(updateSIGHSupplyIndexInternal( currentInstrument ), "Updating Sigh Supply Indexes operation failed" );
         return true;
@@ -590,8 +590,8 @@ contract SIGHDistributionHandler is Exponential {       // , VersionedInitializa
         
         if (deltaBlocks > 0 && supplySpeed > 0) {       // In case SIGH would have accured
             uint sigh_Accrued = mul_(deltaBlocks, supplySpeed);                                                                         // SIGH Accured
-            uint totalUnderlyingLiquidity = IERC20( financial_instruments[currentInstrument].iTokenAddress ).totalSupply(); // FOR TESTING
-            // uint totalUnderlyingLiquidity = lendingPoolCore.getInstrumentTotalLiquidity( currentInstrument );                           // Total amount supplied 
+            // uint totalUnderlyingLiquidity = IERC20( financial_instruments[currentInstrument].iTokenAddress ).totalSupply(); // FOR TESTING
+            uint totalUnderlyingLiquidity = lendingPoolCore.getInstrumentTotalLiquidity( currentInstrument );                           // Total amount supplied 
             Double memory ratio = totalUnderlyingLiquidity > 0 ? fraction(sigh_Accrued, totalUnderlyingLiquidity) : Double({mantissa: 0});                      // SIGH Accured per Supplied Instrument Token
             Double memory newIndex = add_(Double({mantissa: instrumentState.supplyindex}), ratio);                                      // Updated Index
             emit updateSIGHSupplyIndex_test2( currentInstrument, totalUnderlyingLiquidity, sigh_Accrued, ratio.mantissa , newIndex.mantissa );  
@@ -617,7 +617,7 @@ contract SIGHDistributionHandler is Exponential {       // , VersionedInitializa
      * @notice Accrue SIGH to the market by updating the borrow index
      * @param currentInstrument The market whose borrow index to update
      */
-    function updateSIGHBorrowIndex(address currentInstrument) external returns (bool) {  // onlyLendingPoolCore    // Called during Borrow, repay, SwapRate, Rebalance, Liquidation
+    function updateSIGHBorrowIndex(address currentInstrument) external onlyLendingPoolCore returns (bool) {  //     // Called during Borrow, repay, SwapRate, Rebalance, Liquidation
         require(financial_instruments[currentInstrument].isListed ,"Instrument not supported.");
         require( updateSIGHBorrowIndexInternal(currentInstrument), "Updating Sigh Borrow Indexes operation failed" ) ;
         return true;
@@ -642,8 +642,8 @@ contract SIGHDistributionHandler is Exponential {       // , VersionedInitializa
         if (deltaBlocks > 0 && borrowSpeed > 0) {        // In case SIGH would have accured
             uint sigh_Accrued = mul_(deltaBlocks, borrowSpeed);                             // SIGH ACCURED = DELTA BLOCKS x SIGH SPEED (BORROWERS)
             // TO BE VALIDATED
-            uint totalBorrows = IERC20( financial_instruments[currentInstrument].iTokenAddress ).totalSupply(); // FOR TESTING
-            // uint totalBorrows =  lendingPoolCore.getInstrumentTotalBorrows(currentInstrument);
+            // uint totalBorrows = IERC20( financial_instruments[currentInstrument].iTokenAddress ).totalSupply(); // FOR TESTING
+            uint totalBorrows =  lendingPoolCore.getInstrumentTotalBorrows(currentInstrument);
             // uint borrowAmount = div_(totalBorrows, marketBorrowIndex);      // TO BE VALIDATED
             Double memory ratio = totalBorrows > 0 ? fraction(sigh_Accrued, totalBorrows) : Double({mantissa: 0});      // SIGH Accured per Borrowed Instrument Token
             Double memory newIndex = add_(Double({mantissa: instrumentState.borrowindex}), ratio);                      // New Index
@@ -673,7 +673,7 @@ contract SIGHDistributionHandler is Exponential {       // , VersionedInitializa
      * @param sigh_Amount The amount of SIGH to (possibly) transfer
      * @return The amount of SIGH which was NOT transferred to the user
      */
-    function transferSighTotheUser(address instrument, address user, address sighAccuredTo, uint sigh_Amount) external  returns (uint) {   // onlyITokenContract(instrument)
+    function transferSighTotheUser(address instrument, address user, address sighAccuredTo, uint sigh_Amount) external onlyITokenContract(instrument) returns (uint) {   // 
         uint sigh_not_transferred = 0;
         if ( Sigh_Address.balanceOf(address(this)) > sigh_Amount ) {   // NO SIGH TRANSFERRED IF CONTRACT LACKS REQUIRED SIGH AMOUNT
             require(Sigh_Address.transfer( sighAccuredTo, sigh_Amount ), "Failed to transfer accured SIGH to the user." );

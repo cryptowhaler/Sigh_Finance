@@ -1410,21 +1410,6 @@
 				"type": "function"
 			},
 			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "oracle_",
-						"type": "address"
-					}
-				],
-				"name": "setPriceOracle",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"constant": true,
 				"inputs": [],
 				"name": "totalInstrumentsSupported",
@@ -1771,10 +1756,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighDistributionHandler/SighDistributionHandler.sol": {
-			"keccak256": "0x0f32f34f5578b63aabe6534b31b456e2d029ab1833ca47cafec6683f4c035fb1",
+			"keccak256": "0x1f6258555ebd27902fdf3b9c605230fcadff26edd25ea3dfc0c20b306c4121da",
 			"urls": [
-				"bzz-raw://592bbcf1cf29377d25aae5e0cd63adb3779e43bc10fb7c5a42db7f213747ceb7",
-				"dweb:/ipfs/QmY2Hp1RPGtQkGrooH97P1YUAKvqYsyccc4jqBNnYJuVdf"
+				"bzz-raw://af41c209e05559d1a94be95a49565cd5ddeb1e36ff93f61dfd23e74dffd5e325",
+				"dweb:/ipfs/Qmb9CY7C1TQRx8736FPqzwRi5rbrwQFt2XJf1CbSeEZQ3X"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {
