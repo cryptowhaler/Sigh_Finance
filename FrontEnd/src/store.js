@@ -9,27 +9,15 @@ const qs = require('qs');
 const EthereumTx = require("ethereumjs-tx").Transaction;
 
 import GlobalAddressesProviderInterface from '@/contracts/IGlobalAddressesProvider.json'; // GlobalAddressesProviderContract Interface
+
+import SIGHInstrument from '@/contracts/SIGH.json'; // SIGH Contract
+import SighSpeedController from '@/contracts/ISighSpeedController.json'; // SighSpeedController Interface
+import SighStakingInterface from '@/contracts/ISighStaking.json'; // SighStaking Interface
+import SighTreasuryInterface from '@/contracts/ISighTreasury.json'; // SighTreasury Interface
+import SighDistributionHandlerInterface from '@/contracts/ISighDistributionHandler.json'; // SighDistributionHandler Interface
+
 import LendingPool from '@/contracts/LendingPool.json'; // GlobalAddressesProviderContract Interface
 import LendingPoolCore from '@/contracts/LendingPoolCore.json'; // GlobalAddressesProviderContract Interface
-
-// import whitePaperInterestRateModel from '@/contracts/WhitePaperInterestRateModel.json';
-// import jumpRateModelV2 from '@/contracts/JumpRateModelV2.json';
-// import sighReservoir_ from '@/contracts/SighReservoir.json';
-// import SIGH from '@/contracts/SIGH.json';
-// import Sightroller from '@/contracts/Sightroller.json';
-// import Unitroller from '@/contracts/Unitroller.json';
-// import GSigh from '@/contracts/GSigh.json';
-// import GovernorAlpha from '@/contracts/GovernorAlpha.json';
-// import Timelock from '@/contracts/Timelock.json';
-// import GSighReservoir from '@/contracts/GSighReservoir.json';
-// import SighLens from '@/contracts/SighLens.json';
-// import Treasury from '@/contracts/Treasury.json';
-
-// import CErc20 from '@/contracts/CErc20Delegator.json';   // INTERACTING WITH STORAGE CONTRACT
-
-// import SimplePriceOracle from '@/contracts/SimplePriceOracle.json';   // INTERACTING WITH STORAGE CONTRACT
-// import EIP20NonStandardInterface from '@/contracts/EIP20NonStandardInterface.json'; 
-
 
 const getRevertReason = require('eth-revert-reason');
 
@@ -86,11 +74,11 @@ const store = new Vuex.Store({
     GlobalAddressesProviderContractBSCTestnet: null,
     GlobalAddressesProviderContractBSC: null,
 
-    SIGHContract: null,                                 // Approve, Transfer, TransferFrom, Allowance,      totalSupply, BalanceOf
-    SIGHSpeedControllerContract: null,                  // Drip
+    SIGHContractAddress: null,                                 // Approve, Transfer, TransferFrom, Allowance,      totalSupply, BalanceOf
+    SIGHSpeedControllerAddress: null,                  // Drip
     SIGHStakingContract: null,                          // Stake, Unstake, ClaimAllAccumulatedInstruments
     SIGHTreasuryContract: null,                         // Mainly queries
-    SIGHDistributionHandlerContract: null,              // RefreshSpeeds
+    SIGHDistributionHandlerAddress: null,              // RefreshSpeeds
     // SIGHFinanceConfiguratorContract: null,
     // SIGHFinanceManager: null,    
 
@@ -172,11 +160,11 @@ const store = new Vuex.Store({
     GlobalAddressesProviderContractMainNet(state) {         
       return state.GlobalAddressesProviderContractMainNet;    
     },    
-    SIGHContract(state) {         
-      return state.SIGHContract;    
+    SIGHContractAddress(state) {         
+      return state.SIGHContractAddress;    
     },    
-    SIGHSpeedControllerContract(state) {         
-      return state.SIGHSpeedControllerContract;    
+    SIGHSpeedControllerAddress(state) {         
+      return state.SIGHSpeedControllerAddress;    
     },    
     SIGHStakingContract(state) {         
       return state.SIGHStakingContract;    
@@ -185,7 +173,7 @@ const store = new Vuex.Store({
       return state.SIGHTreasuryContract;    
     },    
     SIGHDistributionHandler(state) {         
-      return state.SIGHDistributionHandlerContract;    
+      return state.SIGHDistributionHandlerAddress;    
     },    
     ITokenContracts(state) {         
       return state.ITokenContracts;    
@@ -275,13 +263,13 @@ const store = new Vuex.Store({
       console.log("In GlobalAddressesProviderContractBSC - " + state.GlobalAddressesProviderContractBSC);
     },    
     // SIGH RELATED CONTRACTS
-    updateSIGHContract(state,newContractAddress) {         
-      state.SIGHContract = newContractAddress;
-      console.log("In updateSIGHContract - " + state.SIGHContract);
+    updateSIGHContractAddress(state,newContractAddress) {         
+      state.SIGHContractAddress = newContractAddress;
+      console.log("In updateSIGHContractAddress - " + state.SIGHContractAddress);
     },    
-    updateSIGHSpeedControllerContract(state,newContractAddress) {         
-      state.SIGHSpeedControllerContract = newContractAddress;
-      console.log("In updateSIGHSpeedControllerContract - " + state.SIGHSpeedControllerContract);
+    updateSIGHSpeedControllerAddress(state,newContractAddress) {         
+      state.SIGHSpeedControllerAddress = newContractAddress;
+      console.log("In updateSIGHSpeedControllerAddress - " + state.SIGHSpeedControllerAddress);
     },    
     updateSIGHStakingContract(state,newContractAddress) {         
       state.SIGHStakingContract = newContractAddress;
@@ -291,9 +279,9 @@ const store = new Vuex.Store({
       state.SIGHTreasuryContract = newContractAddress;
       console.log("In updateSIGHTreasuryContract - " + state.SIGHTreasuryContract);
     },    
-    updateSIGHDistributionHandlerContract(state,newContractAddress) {         
-      state.SIGHDistributionHandlerContract = newContractAddress;
-      console.log("In updateSIGHDistributionHandlerContract - " + state.SIGHDistributionHandlerContract);
+    updateSIGHDistributionHandlerAddress(state,newContractAddress) {         
+      state.SIGHDistributionHandlerAddress = newContractAddress;
+      console.log("In updateSIGHDistributionHandlerAddress - " + state.SIGHDistributionHandlerAddress);
     },    
     // LENDING POOL CONTRACTS
     addToSupportedInstrumentStates(state,newITokenAddress,newInstrumentAddress) {         
@@ -510,11 +498,11 @@ const store = new Vuex.Store({
     if (currentGlobalAddressesProviderContract) {
       const sighAddress = await currentGlobalAddressesProviderContract.methods.getSIGHAddress().call();        
       // console.log( 'sigh - ' + sighAddress); 
-      commit('updateSIGHContract',sighAddress);
+      commit('updateSIGHContractAddress',sighAddress);
 
       const sighSpeedControllerAddress = await currentGlobalAddressesProviderContract.methods.getSIGHSpeedController().call();        
       // console.log( 'sighSpeedControllerAddress - ' + sighSpeedControllerAddress); 
-      commit('updateSIGHSpeedControllerContract',sighSpeedControllerAddress);
+      commit('updateSIGHSpeedControllerAddress',sighSpeedControllerAddress);
 
       const sighStakingContract = await currentGlobalAddressesProviderContract.methods.getSIGHStaking().call();        
       // console.log( 'sighStakingContract - ' + sighStakingContract); 
@@ -526,7 +514,7 @@ const store = new Vuex.Store({
 
       const sighDistributionHandlerAddress = await currentGlobalAddressesProviderContract.methods.getSIGHMechanismHandler().call();        
       // console.log( 'sighDistributionHandlerAddress - ' + sighDistributionHandlerAddress); 
-      commit('updateSIGHDistributionHandlerContract',sighDistributionHandlerAddress);
+      commit('updateSIGHDistributionHandlerAddress',sighDistributionHandlerAddress);
 
       const lendingPoolAddress = await currentGlobalAddressesProviderContract.methods.getLendingPool().call();        
       // console.log( 'lendingPoolAddress - ' + lendingPoolAddress); 
@@ -578,54 +566,86 @@ const store = new Vuex.Store({
 
 
 // ######################################################
-// ############ SIGH ---  MINTNEWCOINS() FUNCTION 
+// ############ SIGH ---  SIGH_mintCoins() FUNCTION : mint new Coins when cycle gets completed
 // ############ SIGHSPEEDCONTROLLER --- DRIP() FUNCTION 
-// ############ SIGHDISTRIBUTIONHANDLER --- REFRESHSIGHSPEEDS() FUNCTION 
-// ############ SIGHTREASURY --- BURN() FUNCTION ############
 // ######################################################
 
-
-
-
-    // working
-    whitePaperModelChangeBaseParamters: async ({commit,state},{baseRatePerYear, multiplierPerYear}) => {
-      const web3 = state.web3;
-      console.log(web3);
-      const whitePaperModel = whitePaperInterestRateModel.networks[state.networkId];
-      console.log(whitePaperModel);
-      if (whitePaperModel) {
-        const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi, whitePaperModel.address );
-        console.log(interestRateModel);
-        interestRateModel.methods.setBaseParameters(baseRatePerYear,multiplierPerYear).send({from: state.connectedWallet})
+    SIGH_mintCoins: async ({commit,state}) => {
+      if (state.web3 && SIGHContractAddress && SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const sighContract = new state.web3.eth.Contract(SIGHInstrument.abi, SIGHContractAddress );
+        console.log(sighContract);
+        sighContract.methods.mintCoins().send({from: state.connectedWallet})
         .then(receipt => { 
           console.log(receipt);
+          return receipt;
           })
         .catch(error => {
           console.log(error);
+          return error;
         })
       }
       else {
         console.log('Contract not deployed');
+        return 'Contract not deployed';
       }
     },
-        // working
-    whitePaperModelUtilRate: async ({commit,state},{cash, borrows, reserves}) => {
-      const web3 = state.web3;
-      console.log(web3);
-      const whitePaperModel = whitePaperInterestRateModel.networks[state.networkId];
-      console.log(whitePaperModel);
-      if (whitePaperModel) {
-        const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi, whitePaperModel.address );
-        console.log(interestRateModel);
-        const utilRate = await interestRateModel.methods.utilizationRate(cash,borrows,reserves).call();        
-        console.log( 'UTIL RATE - ' + utilRate);
+
+    SIGHSpeedController_drip: async ({commit,state}) => {
+      if (state.web3 && SIGHSpeedControllerAddress && SIGHSpeedControllerAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const sighSpeedControllerContract = new state.web3.eth.Contract(SighSpeedController.abi, SIGHSpeedControllerAddress );
+        console.log(sighSpeedControllerContract);
+        sighSpeedControllerContract.methods.drip().send({from: state.connectedWallet})
+        .then(receipt => { 
+          console.log(receipt);
+          return receipt;
+          })
+        .catch(error => {
+          console.log(error);
+          return error;
+        })
       }
       else {
         console.log('Contract not deployed');
+        return 'Contract not deployed';
       }
     },
- 
-     whitePaperModelBorrowRate: async ({commit,state},{cash, borrows, reserves}) => {
+
+// ######################################################
+// ############ SIGHDISTRIBUTIONHANDLER --- REFRESHSIGHSPEEDS() FUNCTION 
+// ############ SIGHTREASURY --- BURN() FUNCTION ############
+// ######################################################
+
+    SIGHDistributionHandler_refreshSighSpeeds: async ({commit,state}) => {
+      if (state.web3 && SIGHDistributionHandlerAddress && SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, SIGHDistributionHandlerAddress );
+        console.log(sighDistributionHandlerContract);
+        sighDistributionHandlerContract.methods.refreshSIGHSpeeds().send({from: state.connectedWallet})
+        .then(receipt => { 
+          console.log(receipt);
+          return receipt;
+          })
+        .catch(error => {
+          console.log(error);
+          return error;
+        })
+      }
+      else {
+        console.log('Contract not deployed');
+        return 'Contract not deployed';
+      }
+    },
+
+
+
+
+
+
+
+
+
+
+
+    whitePaperModelBorrowRate: async ({commit,state},{cash, borrows, reserves}) => {
       const web3 = state.web3;
       console.log(web3);
       const whitePaperModel = whitePaperInterestRateModel.networks[state.networkId];
