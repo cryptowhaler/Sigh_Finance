@@ -439,6 +439,56 @@
 			},
 			{
 				"constant": true,
+				"inputs": [],
+				"name": "getLatestMintSnapshotForCycle",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "cycle",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "era",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "inflationRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "mintedAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "mintSpeed",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "newTotalSupply",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "minter",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -773,10 +823,10 @@
 	},
 	"sources": {
 		"localhost/contracts/SIGHFinanceContracts/SIGH_Instrument/Sigh.sol": {
-			"keccak256": "0x354fd715fa2f1b76d39275d2f0f3ee9582f4d8629600aeeb0d3dbd1ebbcb7f80",
+			"keccak256": "0x6184cdb699886cf23d07f05663318d40b0b1f3f7e72673dc9e5c37d04cb93913",
 			"urls": [
-				"bzz-raw://a1de3ca2bcdf02cc0abbb9e665b1be334aaa826e065740aaa350da4ae4f7b7cd",
-				"dweb:/ipfs/QmfVHR8Q2Si38FXFLHs62VhrzJakmEarosuomU7oENH8UN"
+				"bzz-raw://efdbd7daa180e521c853edf49eaebf170c8898b36f45be2cc9b78dd24168377d",
+				"dweb:/ipfs/QmUwmruMaYPHvoLFTM8Xd32JsZJ2DPxGtvhRadczNZGZn3"
 			]
 		},
 		"openzeppelin-solidity/contracts/GSN/Context.sol": {

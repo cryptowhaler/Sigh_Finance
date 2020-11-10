@@ -6,30 +6,29 @@ import Web3 from 'web3';
 const qs = require('qs');
 const EthereumTx = require("ethereumjs-tx").Transaction;
 
-import SetProtocol from 'setprotocol.js'; // SET PROTOCOL SDK
+import GlobalAddressesProviderInterface from '@/contracts/IGlobalAddressesProviderContract.json'; // GlobalAddressesProviderContract Interface
+import LendingPool from '@/contracts/LendingPool.json'; // GlobalAddressesProviderContract Interface
 
-import whitePaperInterestRateModel from '@/contracts/WhitePaperInterestRateModel.json';
-import jumpRateModelV2 from '@/contracts/JumpRateModelV2.json';
-import sighReservoir_ from '@/contracts/SighReservoir.json';
-import SIGH from '@/contracts/SIGH.json';
-import Sightroller from '@/contracts/Sightroller.json';
-import Unitroller from '@/contracts/Unitroller.json';
-import GSigh from '@/contracts/GSigh.json';
-import GovernorAlpha from '@/contracts/GovernorAlpha.json';
-import Timelock from '@/contracts/Timelock.json';
-import GSighReservoir from '@/contracts/GSighReservoir.json';
-import SighLens from '@/contracts/SighLens.json';
-import Treasury from '@/contracts/Treasury.json';
+// import whitePaperInterestRateModel from '@/contracts/WhitePaperInterestRateModel.json';
+// import jumpRateModelV2 from '@/contracts/JumpRateModelV2.json';
+// import sighReservoir_ from '@/contracts/SighReservoir.json';
+// import SIGH from '@/contracts/SIGH.json';
+// import Sightroller from '@/contracts/Sightroller.json';
+// import Unitroller from '@/contracts/Unitroller.json';
+// import GSigh from '@/contracts/GSigh.json';
+// import GovernorAlpha from '@/contracts/GovernorAlpha.json';
+// import Timelock from '@/contracts/Timelock.json';
+// import GSighReservoir from '@/contracts/GSighReservoir.json';
+// import SighLens from '@/contracts/SighLens.json';
+// import Treasury from '@/contracts/Treasury.json';
 
-import CErc20Impl from '@/contracts/CErc20Delegate.json';      // IMPLEMENTATION CONTRACT (CAN BE UPDATED)
 import CErc20 from '@/contracts/CErc20Delegator.json';   // INTERACTING WITH STORAGE CONTRACT
 
 import SimplePriceOracle from '@/contracts/SimplePriceOracle.json';   // INTERACTING WITH STORAGE CONTRACT
 import EIP20NonStandardInterface from '@/contracts/EIP20NonStandardInterface.json'; 
 
-const getRevertReason = require('eth-revert-reason');
 
-// import SetProtocol from 'setprotocol.js';
+const getRevertReason = require('eth-revert-reason');
 
 // import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from "constants";
 
@@ -68,18 +67,19 @@ const store = new Vuex.Store({
 // ############ WEB3 CONFIG AND CONNECTED WALLET ADDRESS  ############
 // ###################################################################
 
-    web3: {} ,                                          //WEB3 INSTANCE
+    web3: null ,                                          //WEB3 INSTANCE
     isWalletConnected: false,
-    connectedWallet: '',
-    networkId: '',
-
+    connectedWallet: null,
+    networkId: null,
+    
 // ######################################################
 // ############ PROTOCOL CONTRACT ADDRESSES  ############
 // ######################################################
     
-    GlobalAddressesProviderContractKovan: '',
-    GlobalAddressesProviderContractMainNet: '',
-    GlobalAddressesProviderContractBSC: '',
+    GlobalAddressesProviderContractKovan: null,
+    GlobalAddressesProviderContractMainNet: null,
+    GlobalAddressesProviderContractBSCTestnet: null,
+    GlobalAddressesProviderContractBSC: null,
 
     SIGHContract: null,                                 // Approve, Transfer, TransferFrom, Allowance, Drip,      totalSupply, BalanceOf
     SIGHSpeedControllerContract: null,                  // Drip
@@ -89,6 +89,8 @@ const store = new Vuex.Store({
     // SIGHFinanceConfiguratorContract: null,
     // SIGHFinanceManager: null,    
 
+    SupportedInstrumentStates: {},                      // CONFIG DATE FOR THE SUPPORTED INSTRUMENTS
+    InstrumentContracts: {},                            // ERC20 INSTRUMENTS
     ITokenContracts: {},                                // Redeem, redirectInterestStream, allowInterestRedirectionTo, redirectInterestStreamOf, Approve, 
                                                         // Transfer, TransferFrom, Allowance, claimMySIGH
                                                         // redirectSighStream, allowSighRedirectionTo, redirectSighStreamOf
@@ -104,7 +106,9 @@ const store = new Vuex.Store({
     // ######################################################
     // ############ TO BE WORKED UPON ############
     // ######################################################
-
+    NETWORKS : { '1': 'Main Net', '2': 'Deprecated Morden test network','3': 'Ropsten test network',
+      '4': 'Rinkeby test network','42': 'Kovan test network', '1337': 'Tokamak network', '4447': 'Truffle Develop Network','5777': 'Ganache Blockchain',
+      '56':'Binance Smart Chain Main Network','97':'Binance Smart Chain Test Network'},
     username: null, //Added
     websocketStatus: 'Closed',
     loaderCounter: 0,
@@ -147,7 +151,10 @@ const store = new Vuex.Store({
     },    
     networkId(state) {         // networkId
       return state.networkId;    
-    },    
+    },   
+    networkName(state) {
+      return state.NETWORKS[state.networkId];
+    },
 // ####################################################
 // ############  PROTOCOL CONTRACT GETTERS ############
 // ####################################################
@@ -212,23 +219,104 @@ const store = new Vuex.Store({
 // #####################################################################
 // ############ WEB3 CONFIG AND CONNECTED WALLET MUTATIONS  ############
 // #####################################################################
-    getWeb3(state) {
-      return state.web3;
-    },
-    isWalletConnected(state) {      // FOR SIGH FINANCE (WALLET CONNECTED ?? )
-      return state.isWalletConnected;
-    },
-    connectedWallet(state) {         // Account Address
-      return state.connectedWallet;    
-    },    
-    networkId(state) {         // networkId
-      return state.networkId;    
-    },    
+    web3(state,payload) {         
+      state.web3 = payload;
+      console.log(payload);
+      console.log(state.web3);
 
-
-    updateusername(state,name) {  //Added
-      state.username = name;
+    },    
+    isWalletConnected(state,isWalletConnected) {         
+      state.isWalletConnected = isWalletConnected;
+    },    
+    connectedWallet(state,connectedWallet) {         
+      state.connectedWallet = connectedWallet;
+    },    
+    networkId(state,networkId) {         
+      state.networkId = networkId;
+    },   
+    updateWallet(state,newWallet,newBalance) {
+      console.log("UPDATEWALLET MUTATION CALLED IN STORE");
+      state.connectedWallet = newWallet;
+      state.ethBalance = newBalance;
     },
+    updateBalance(state,newBalance) {
+      console.log("updateBalance MUTATION CALLED IN STORE");
+      state.ethBalance = newBalance;
+    },
+
+// ######################################################
+// ############ PROTOCOL CONTRACT ADDRESSES  ############
+// ######################################################
+    GlobalAddressesProviderContractKovan(state,newContractAddress) {         
+      state.GlobalAddressesProviderContractKovan = newContractAddress;
+      console.log("In GlobalAddressesProviderContractKovan - " + state.GlobalAddressesProviderContractKovan);
+    },    
+    GlobalAddressesProviderContractMainNet(state,newContractAddress) {         
+      state.GlobalAddressesProviderContractMainNet = newContractAddress;
+      console.log("In GlobalAddressesProviderContractMainNet - " + state.GlobalAddressesProviderContractMainNet);
+    },    
+    GlobalAddressesProviderContractBSCTestnet(state,newContractAddress) {         
+      state.GlobalAddressesProviderContractBSCTestnet = newContractAddress;
+      console.log("In GlobalAddressesProviderContractBSCTestnet - " + state.GlobalAddressesProviderContractBSCTestnet);
+    },    
+    GlobalAddressesProviderContractBSC(state,newContractAddress) {         
+      state.GlobalAddressesProviderContractBSC = newContractAddress;
+      console.log("In GlobalAddressesProviderContractBSC - " + state.GlobalAddressesProviderContractBSC);
+    },    
+    // SIGH RELATED CONTRACTS
+    updateSIGHContract(state,newContractAddress) {         
+      state.SIGHContract = newContractAddress;
+      console.log("In updateSIGHContract - " + state.SIGHContract);
+    },    
+    updateSIGHSpeedControllerContract(state,newContractAddress) {         
+      state.SIGHSpeedControllerContract = newContractAddress;
+      console.log("In updateSIGHSpeedControllerContract - " + state.SIGHSpeedControllerContract);
+    },    
+    updateSIGHStakingContract(state,newContractAddress) {         
+      state.SIGHStakingContract = newContractAddress;
+      console.log("In updateSIGHStakingContract - " + state.SIGHStakingContract);
+    },    
+    updateSIGHTreasuryContract(state,newContractAddress) {         
+      state.SIGHTreasuryContract = newContractAddress;
+      console.log("In updateSIGHTreasuryContract - " + state.SIGHTreasuryContract);
+    },    
+    updateSIGHDistributionHandlerContract(state,newContractAddress) {         
+      state.SIGHDistributionHandlerContract = newContractAddress;
+      console.log("In updateSIGHDistributionHandlerContract - " + state.SIGHDistributionHandlerContract);
+    },    
+    // LENDING POOL CONTRACTS
+    addToSupportedInstrumentStates(state,newITokenAddress,newInstrumentAddress) {         
+      let obj = {};
+      obj.iTokenAddress = newITokenAddress;
+      obj.instrumentAddress = newInstrumentAddress;
+      state.SupportedInstrumentStates.push(obj);
+      console.log(obj);
+      console.log(state.SupportedInstrumentStates);
+      console.log("In addToSupportedInstrumentStates ");
+    },    
+    addToITokenContracts(state,newContractAddress) {         
+      state.ITokenContracts.push(newContractAddress);
+      console.log("In addToITokenContracts - " + state.ITokenContracts);
+    },    
+    addToInstrumentContracts(state,newContractAddress) {         
+      state.InstrumentContracts.push(newContractAddress);
+      console.log("In addToInstrumentContracts - " + state.InstrumentContracts);
+    },    
+    updateLendingPoolContract(state,newContractAddress) {         
+      state.LendingPoolContract = newContractAddress;
+      console.log("In updateLendingPoolContract - " + state.LendingPoolContract);
+    },    
+    updateLendingPoolCoreContract(state,newContractAddress) {         
+      state.LendingPoolCoreContract = newContractAddress;
+      console.log("In updateLendingPoolCoreContract - " + state.LendingPoolCoreContract);
+    },    
+    updateLendingPoolDataProviderContract(state,newContractAddress) {         
+      state.LendingPoolDataProviderContract = newContractAddress;
+      console.log("In updateLendingPoolDataProviderContract - " + state.LendingPoolDataProviderContract);
+    },    
+    // ######################################################
+    // ############ TO BE WORKED UPON ############
+    // ######################################################
     changeWebsocketStatus(state, websocketStatus) {
       state.websocketStatus = websocketStatus;
     },
@@ -247,18 +335,6 @@ const store = new Vuex.Store({
     changeInvestTab(state) {    //Added
       state.limitTab = false;
     },
-    totalUnrealizedPNL_VUSD(state,val) {  //Added
-      state.totalUnrealizedPNL_VUSD = val;
-    },
-    totalRealizedPNL_VUSD(state,val) {      //Added
-      state.totalRealizedPNL_VUSD = val;
-    },    
-    totalUnrealizedPNL_BTC(state,val) {  //Added
-      state.totalUnrealizedPNL_BTC = val;
-    },
-    totalRealizedPNL_BTC(state,val) {      //Added
-      state.totalRealizedPNL_BTC = val;
-    },    
     changeInvest_Invest_Tab(state) {
       state.marketIOCTab = false;
     },
@@ -266,59 +342,6 @@ const store = new Vuex.Store({
       state.marketIOCTab = true;
     },
 
-    isLoggedIn(state, isLoggedIn) {
-      state.isLoggedIn = isLoggedIn;
-    },
-
-    ledger(state, newLedger) {
-      state.ledger = newLedger;
-      store.commit('totalPortfolioValue');
-    },
-    activeOrders(state, newValue) {   //Replace all orders
-      state.activeOrders = newValue;
-    },
-    addToActiveOrders(state,newOrder) {   //Add new order 
-      state.activeOrders.unshift(newOrder);
-      // console.log(state.activeOrders);
-      if (state.activeOrders.length > 50) {
-        state.activeOrders.pop();
-      }
-    },
-    removeFromActiveOrders(state,orderID) {
-      for (let i=0; i<state.activeOrders.length; i++) {
-        if (state.activeOrders[i].id == orderID) {
-          let cur = state.activeOrders[i];
-          let index = state.activeOrders.indexOf(cur);
-          // console.log('DELETING ORDER - ' + cur + ' ' + index); 
-          state.activeOrders.splice(index,1);
-          // console.log(state.activeOrders);
-        }
-      }
-    },
-    markets(state, newMarkets) {  //Added for markets. Should function properly
-      // console.log(newMarkets);
-      state.markets = newMarkets;
-      // console.log(state.markets);
-    },
-    mappedMarkets(state,newMarket) {  //Added for markets. Should function properly
-      // console.log(newMarket);
-      state.mappedMarkets.set(newMarket.id,newMarket.data);
-      // console.log(state.mappedMarkets);
-    },
-    mappedMarketsbyName(state,newMarket) {  //Added for markets. Should function properly
-      // console.log(newMarket);
-      state.mappedMarketsbyName.set(newMarket.data.name,newMarket); 
-      // console.log('MAPPED MARKETS BY NAME -' - state.mappedMarketsbyName);
-    },    
-    recentTrades(state, newValue) {     //sets the recent trades
-      state.recentTrades = newValue;
-    },
-    addToRecentTrades(state,trade) {    //Adds new trade to recent Trades
-      state.recentTrades.unshift(trade);
-      if (state.recentTrades.length > 50) {
-        state.recentTrades.pop();
-      }
-    },
     addLoaderTask(state, count, cancellable = false) {
       // // console.log(count);
       state.loaderCounter += count;
@@ -353,144 +376,6 @@ const store = new Vuex.Store({
       }
       this.commit('toggleSidebar');
     },
-    liveTradePrice(state, ltp) {
-      state.liveTradePrice = ltp;
-    },
-    tickerCache(state, ticker) {
-      state.tickerCache = ticker;
-    },
-    priceAnalysisSnapShot(state, snapshot) {
-      state.priceAnalysisSnapShot = snapshot;
-    },
-    selectedExchange(state, exchange) {
-      state.selectedExchange = exchange;
-    },
-    selectedPair(state, exchange) {
-      state.selectedPair = exchange;
-    },
-    addSupportedPair() {
-      // state.supportedPairs.push(pair);
-    },
-    totalPortfolioValue(state) {
-      state.totalPortfolioValue = state.ledger
-                .reduce((tpv, {
-                  currency,
-                  total,
-                }) => {
-                  currency = currency.toUpperCase();
-                  let sellPrice = 1;
-                  if (currency !== state.tpvCurrency) {
-                    sellPrice =
-                            ((((
-                              (state.tickerData[currency] || {})[
-                                    `${currency}/${state.tpvCurrency}`
-                              ] || {}
-                            ).best || {}).bids || {})[0] || {}).price || 0;
-                  }
-                  tpv += sellPrice * total;
-                  return tpv;
-                }, 0)
-                .toFixed(3);
-    },
-    changeTickerData(state, data) {
-      // alert("change");
-      state.tickerData = data;
-    },
-    changePairData(state, data) {
-      state.availablePairs = data;
-    },
-    buyPrice(state, price) {
-      state.buyPrice = price;
-    },
-    sellPrice(state, price) {
-      state.sellPrice = price;
-    },
-    precisionMap(state, map) {
-      state.precision = map;
-    },
-    // SIGH FINANCE DEVELOPMENTS
-    SET_WEB3(state, payload) {
-      state.web3 = payload;
-      console.log(payload);
-      console.log(state.web3);
-    },
-    SET_ACCOUNT(state, payload) {
-      state.connectedWallet = payload;
-      console.log(payload);
-      console.log(state.connectedWallet);
-    },
-    SET_NETWORK_ID(state, payload) {
-      state.networkId = payload;
-      console.log(payload);
-      console.log(state.networkId);
-    },
-    isWalletConnected(state, isWalletConnected) {   //WHEN WALLET GETS CONNECTED
-      state.isWalletConnected = isWalletConnected;
-    },
-    sighSnapshot(state, payload) {
-      state.sighSnapshot = payload;
-      console.log(state.sighSnapshot);
-    },
-    countLiquidated(state, payload) {
-      state.countLiquidated = payload;
-      console.log(state.countLiquidated);
-    },
-    countLiquidator(state, payload) {
-      state.countLiquidator = payload;
-      console.log(state.countLiquidator);
-    },
-    hasBorrowed(state, payload) {
-      state.hasBorrowed = payload;
-      console.log(state.hasBorrowed);
-    },
-    LiveMarkets(state,markets) {        // Markets supported by the protocol
-      state.LiveMarkets = [];
-      for ( let i =0 ; i < markets.length ; i++ ) {
-        let obj = [];
-        obj.id = markets[i].id;
-        obj.symbol = markets[i].symbol;
-        obj.underlyingSymbol = markets[i].underlyingSymbol;
-        obj.gsighSpeed = markets[i].gsighSpeed;
-        obj.sighSpeed = markets[i].sighSpeed;
-        obj.underlyingPriceUSD = markets[i].underlyingPriceUSD;
-        obj.exchangeRate = markets[i].exchangeRate;
-        obj.underlyingAddress = markets[i].underlyingAddress;
-        state.LiveMarkets.push(obj);
-        console.log(state.LiveMarkets);
-      }
-      console.log(state.LiveMarkets);
-    },
-    selectedMarketId(state, payload) {
-      state.selectedMarketId = payload;
-      console.log(state.selectedMarketId);
-    },
-    selectedMarketSymbol(state, payload) {
-      state.selectedMarketSymbol = payload;
-      console.log(state.selectedMarketSymbol);
-    },
-    selectedMarketUnderlyingSymbol(state, payload) {
-      state.selectedMarketUnderlyingSymbol = payload;
-      console.log(state.selectedMarketUnderlyingSymbol);
-    },
-    selectedMarketUnderlyingPriceUSD(state, payload) {
-      state.selectedMarketUnderlyingPriceUSD = payload;
-      console.log(state.selectedMarketUnderlyingPriceUSD);
-    },
-    selectedMarketExchangeRate(state, payload) {
-      state.selectedMarketExchangeRate = payload;
-      console.log(state.selectedMarketExchangeRate);
-    },
-    selectedMarketUnderlyingAddress(state, payload) {
-      state.selectedMarketUnderlyingAddress = payload;
-      console.log(state.selectedMarketUnderlyingAddress);
-    },
-    SET_SUPPORTED_MARKETS(state, payload) {          
-      state.supportedMarkets = new Map();
-      for (let i=0; i < payload.length(); i++ ) {
-        state.supportedMarkets.set(payload[i] , true);
-      }
-      console.log(state.supportedMarkets);
-    }
   },
 
 
@@ -498,57 +383,193 @@ const store = new Vuex.Store({
 
   actions: {
 
-    // CONNECTS TO WEB3 NETWORK (GANACHE/KOVAN/ETHEREUM/BSC ETC)
-    loadWeb3: async ({ commit , state}) => {
-        // const provider = new Web3.providers.HttpProvider('http://127.0.0.1:7545');  //CONNECTING TO GANACHE
-        // const web3 = new Web3(provider);
-        // commit('SET_WEB3',web3);
-      if (window.ethereum) {
+// ######################################################
+// ############ loadWeb3 : CONNECTS TO WEB3 NETWORK (ETHEREUM/BSC ETC) ############
+// ############ getWalletConfig : SETS USER ACCOUNT FROM THE WEB3 OBJECT OF THE STORE ############
+// ############ polling : UPDATES ACCOUNT AND WALLET WHENEVER THEY CHANGE ############
+// ######################################################
+
+    // CONNECTS TO WEB3 NETWORK (ETHEREUM/BSC ETC)
+    loadWeb3: async ({ commit , state, store}) => {
+      if (window.ethereum) {  
         state.web3 = new Web3(window.ethereum);
-        try {        // Request account access if needed
+        const networkId = await web3.eth.net.getId(); 
+        console.log(networkId);
+        commit('networkId',networkId);        
+        try {                                  // Request account access if needed
           await window.ethereum.enable();
+          console.log('Enabled');  
+          this.$showSuccessMsg({message:"Successfully connected to the Ethereum Network's '" + state.NETWORKS[networkId] + "' ! Welcome to the future of Finance."});
+          // store.dispatch('getWalletConfig'); 
           return true;
         } 
         catch (error) {
-          console.log('NOT enabled');        
+          console.log('NOT enabled');  
+          this.$showErrorMsg({message:'Permission to connect your wallet denied. In case you have security concerns or are facing any issues, reach out to our support team at support@sigh.finance. '});
           console.error(error);
           return false;
         }
       }
-      // // For older version dapp browsers ...
-      else if (window.web3) {      //   // Use Mist / MetaMask's provider.
-        state.web3 = window.web3;
-        console.log('Injected web3 detected.', window.web3);
+      else if (window.BinanceChain) {
+        state.web3 = new Web3(window.BinanceChain);
+        const networkId = await web3.BinanceChain.chainId;
+        console.log(networkId);
+        commit('networkId',networkId);        
+        this.$showSuccessMsg({message:"Successfully connected to the Binance Smart Chain's '" + state.NETWORKS[networkId] + "'! Welcome to the future of Finance."});
+        // store.dispatch('getWalletConfig'); 
+      } 
+      else if (window.web3) {      //   // // // For older version dapp browsers ... Use Mist / MetaMask's provider.
+        state.web3 = new Web3(window.web3.currentProvider);
+        const networkId = await web3.eth.net.getId(); 
+        console.log(networkId);
+        commit('networkId',networkId);        
+        this.$showSuccessMsg({message:"Successfully connected to the Ethereum Network's '" + state.NETWORKS[networkId] + "' (not a Metamask wallet) ! Welcome to the future of Finance."});
+        // store.dispatch('getWalletConfig'); 
         return true;
       }
-      // If the provider is not found, it will default to the local network ...
-      else {
-        const provider = new Web3.providers.HttpProvider('http://127.0.0.1:7545');  //CONNECTING TO GANACHE
-        state.web3 = new Web3(provider);        
-        console.log('No web3 instance injected, using Local web3.');
-        return true;
+      else {    // If the provider is not found, it will default to the local network ...
+        console.log("No Ethereum interface injected into browser. Read-only access");
+        this.$showErrorMsg({message:'No Ethereum interface injected into browser. Read-only access. Please install MetaMask wallet browser extension or connect our support team at support@sigh.finance. '});
+        return false;
       }
     },
 
-    // SETS ACCOUNT AND NETWORK ID
-    getBlockchainData: async ({commit,state}) => {
-      const web3 = state.web3;
-      if (web3) {
-        const accounts = await web3.eth.getAccounts();
-        console.log(accounts);
-        if (accounts) {
-          commit('SET_ACCOUNT',accounts[0]);
-          commit('isWalletConnected',true);  
-          const networkId = await web3.eth.net.getId(); 
-          commit('SET_NETWORK_ID',networkId);  
-          let lowercase = accounts[0].toLowerCase();
-          console.log( 'LOWER CASE - ' + lowercase );
-          return accounts[0];
-        }
-        return '';
+    // SETS USER ACCOUNT FROM THE WEB3 OBJECT OF THE STORE
+    getWalletConfig: async ({commit,state}) => {
+      console.log("getWalletConfig ACTION FUNCTION CALLED IN STORE");
+      const accounts = await web3.eth.getAccounts();
+      console.log(accounts);
+      if (accounts) {
+        commit('connectedWallet',accounts[0]);
+        commit('isWalletConnected',true);  
+        let lowercase = accounts[0].toLowerCase();
+        console.log( 'LOWER CASE - ' + lowercase );
+        this.$showSuccessMsg({message: accounts[0] + " is now connected to SIGH Finance!"});
+        store.dispatch('polling'); 
+        return accounts[0];
       }
-      return '';
-     },
+   },
+
+  // UPDATES ACCOUNT AND WALLET WHENEVER THEY CHANGE
+   polling: async ({commit,store,state}) => {
+    console.log("polling ACTION FUNCTION CALLED IN STORE");
+      setInterval(async () => {
+        const account = (await window.web3.eth.getAccounts())[0];
+        if (account !== store.state.web3.coinbase) {  // ACCOUNT CONNECTED CHANGED. BOTH ACCOUNT AND BALANCE UPDATED 
+          const newBalance_ = await window.web3.eth.getBalance(account);
+          store.commit('updateWallet',account, newBalance_);
+          EventBus.$emit(EventNames.userWalletConnected, { username: walletConnected,}); //User has logged in (event)          
+          this.$showSuccessMsg({message: accounts[0] + " connected, having balance, ETH: " + newBalance_});
+        } 
+        else {    // ONLY BALANCE UPDATED WHEN IT IS CHANGED
+          const newBalance_ = await window.web3.eth.getBalance(store.state.web3.coinbase);
+          if (balance !== store.state.web3.balance) {
+            store.dispatch('updateBalance',newBalance_);
+            this.$showSuccessMsg({message: "Balance updated, ETH: " + newBalance_});
+          }
+        }
+      }, 500);
+    },
+
+
+// ######################################################
+// ############ getContractAddresses : calls getAddresses() to fetch and store all the contract addresses based on the network we are connected to (ETHEREUM/BSC) ############
+// ############ getAddresses : // fetches and updates all the contract addresses ############
+// ############ getSupportedInstrumentConfigAddresses : Gets the addresses of the ITokens and the corresponding Insturments ############
+// ######################################################
+
+  // calls getAddresses() to fetch and store all the contract addresses based on the network we are connected to
+  getContractAddresses: async({}) = (state,commit,store) => {
+    console.log("getContractAddresses ACTION FUNCTION CALLED IN STORE");
+    if ( state.networkId == '42')  {
+      store.dispatch('getAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractKovan });
+    }  
+    else if (state.networkId == '97') {
+      store.dispatch('getAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractBSCTestnet });
+    }
+    else if (state.networkId == '1') {
+      store.dispatch('getAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractMainNet });
+    }
+    else if (state.networkId == '56') {
+      store.dispatch('getAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractBSC });
+    }
+    else {
+      this.$showErrorMsg({message: "SIGH Finance is currently not available of the connected blockchain network"});
+      console.log(state.networkId);      
+    }
+  },
+
+  // fetches and updates all the contract addresses
+  getAddresses: async ({commit,state,store},{globalAddressesProviderAddress}) => {
+
+    const currentGlobalAddressesProviderContract = new web3.eth.Contract(GlobalAddressesProviderInterface.abi, globalAddressesProviderAddress );
+    console.log(currentGlobalAddressesProviderContract);
+
+    if (currentGlobalAddressesProviderContract) {
+      const sighAddress = await currentGlobalAddressesProviderContract.methods.getSIGHAddress().call();        
+      console.log( 'sigh - ' + sighAddress); 
+      store.commit('updateSIGHContract',sighAddress);
+
+      const sighSpeedControllerAddress = await currentGlobalAddressesProviderContract.methods.getSIGHSpeedController().call();        
+      console.log( 'sighSpeedControllerAddress - ' + sighSpeedControllerAddress); 
+      store.commit('updateSIGHSpeedControllerContract',sighSpeedControllerAddress);
+
+      const sighStakingContract = await currentGlobalAddressesProviderContract.methods.getSIGHStaking().call();        
+      console.log( 'sighStakingContract - ' + sighStakingContract); 
+      store.commit('updateSIGHStakingContract',sighStakingContract);
+      
+      const sighTreasuryAddress = await currentGlobalAddressesProviderContract.methods.getSIGHTreasury().call();        
+      console.log( 'sighTreasuryAddress - ' + sighTreasuryAddress); 
+      store.commit('updateSIGHTreasuryContract',sighTreasuryAddress);
+
+      const sighDistributionHandlerAddress = await currentGlobalAddressesProviderContract.methods.getSIGHMechanismHandler().call();        
+      console.log( 'sighDistributionHandlerAddress - ' + sighDistributionHandlerAddress); 
+      store.commit('updateSIGHDistributionHandlerContract',sighDistributionHandlerAddress);
+
+      const lendingPoolAddress = await currentGlobalAddressesProviderContract.methods.getLendingPool().call();        
+      console.log( 'lendingPoolAddress - ' + lendingPoolAddress); 
+      store.commit('updateLendingPoolContract',lendingPoolAddress);
+  
+      const lendingPoolCoreAddress = await currentGlobalAddressesProviderContract.methods.getLendingPoolCore().call();        
+      console.log( 'lendingPoolCoreAddress - ' + lendingPoolCoreAddress); 
+      store.commit('updateLendingPoolCoreContract',lendingPoolCoreAddress);
+
+      const lendingPoolDataProviderAddress = await currentGlobalAddressesProviderContract.methods.getLendingPoolDataProvider().call();        
+      console.log( 'lendingPoolDataProviderAddress - ' + lendingPoolDataProviderAddress); 
+      store.commit('updateLendingPoolDataProviderContract',lendingPoolDataProviderAddress);
+
+      store.dispatch('getSupportedInstrumentConfigAddresses');
+
+      return true;
+    }
+    else {
+      return false;
+    }
+  },
+
+  // Gets the addresses of the ITokens and the corresponding Insturments
+  getSupportedInstrumentConfigAddresses: async ({commit,state}) => { 
+    const lendingPoolCoreContract = new web3.eth.Contract(LendingPoolCore.abi, state.LendingPoolCoreContract );
+    console.log(lendingPoolCoreContract);
+
+    const instruments = await lendingPoolCoreContract.methods.getInstruments().call();        
+    console.log("getITokenAddresses ACTION");
+    console.log(instruments);
+
+    if (instruments) {
+      for (let i=0; i<instruments.length; i++) {
+        let iTokenAddress = await lendingPoolCoreContract.methods.getInstrumentITokenAddress(instruments[i]).call();
+        store.commit('addToSupportedInstrumentStates',iTokenAddress,instruments[i]);
+        store.commit('addToITokenContracts',iTokenAddress);
+        store.commit('addToInstrumentContracts',instruments[i]);
+      }
+    }
+    else {
+      console.log("Instruments returned not valid");
+    }
+  }
+
+
 
     //********************** 
     //********************** 

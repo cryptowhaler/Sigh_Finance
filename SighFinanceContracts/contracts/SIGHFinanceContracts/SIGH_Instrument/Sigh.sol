@@ -266,6 +266,20 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
                  );
     }
     
+    function getLatestMintSnapshotForCycle() public view returns (uint cycle, uint era,uint inflationRate, uint mintedAmount,uint mintSpeed, uint newTotalSupply,address minter, uint blockNumber ) {
+        uint len = mintSnapshots.length;
+        return ( len, 
+                 mintSnapshots[len].era,
+                 mintSnapshots[len].inflationRate,
+                 mintSnapshots[len].mintedAmount,
+                 mintSnapshots[len].mintSpeed,
+                 mintSnapshots[len].newTotalSupply,
+                 mintSnapshots[len].minter,
+                 mintSnapshots[len].blockNumber
+                 );
+    }
+    
+    
     function getCurrentMintSpeed() external view returns (uint) {
         if (Current_Cycle > 77 || !mintingActivated) {
             return uint(0);

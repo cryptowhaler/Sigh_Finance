@@ -75,12 +75,10 @@ export default {
   },
 
 
-  async created() {         //STARTS GETTING TICKER DATA WHEN WEBSITE IS LOADED
+  async created() {         //GETS WEB3
     localStorage.shouldOpen = true;
-    ExchangeDataEventBus.$emit('ticker-connect');
-    // this.getMarkets();
-
-    this.handleWeb3();
+    this.handleWeb3();    
+    this.loadContractAddresses();
   },
 
   mounted() {
@@ -101,17 +99,30 @@ export default {
 
   methods: {
 
-    ...mapActions(['loadWeb3','getBlockchainData']),
+    ...mapActions(['loadWeb3','getWalletConfig','getContractAddresses']),
 
+    // Connects to WEB3, Wallet, and initiates balance polling
     async handleWeb3() {
-      let web3loaded = this.loadWeb3();
-      console.log(web3loaded);
-      if (web3loaded) {
-       let walletConnected = this.getBlockchainData();
-       console.log(walletConnected);
-       if (walletConnected != '') {
-          EventBus.$emit(EventNames.userWalletConnected, { username: walletConnected,}); //User has logged in (event)
-       }
+      let isWeb3loaded = await this.loadWeb3();
+      if (isWeb3loaded) {
+        let walletConnected = await this.getWalletConfig();
+        EventBus.$emit(EventNames.userWalletConnected, { username: walletConnected,}); //User has logged in (event)
+      }
+    },
+
+    // Loads addresses of the contracts from the network
+    async loadContractAddresses() {
+      let id = this.$store.getters.networkId;
+      console.log('loadContractAddresses() in APP' + id);
+      if ( this.$store.getters.web3 && (id == '42' || id == '97' ) ) {
+        let checkIfInteractionAllowed = await this.getContractAddresses();
+        console.log('loadContractAddresses() in APP' + checkIfInteractionAllowed);
+        if (checkIfInteractionAllowed) {
+          this.$showSuccessMsg({message: " Contract Addresses fetched successfully for network " + id + " - " + this.$store.getters.networkName });
+        }
+        else {
+          this.$showErrorMsg({message: " Something went wrong when fetching Contract Addresses " });
+        }
       }
     },
 
