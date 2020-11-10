@@ -49,8 +49,8 @@ import '@/assets/css/colors.css';
   const graphQL_subscription = new WebSocketLink({     uri: 'wss://api.thegraph.com/subgraphs/name/cryptowhaler/sigh-finance-kovan', options: { reconnect: true, timeout:300000, }, });
   const subscriptionClient = new ApolloClient({ link: graphQL_subscription, cache: new InMemoryCache({ addTypename: true, }),});
 
-  const marlinCache = new HttpLink ({uri: 'http://graph.marlin.pro/subgraphs/name/cryptowhaler/sigh-finance-kovan'});
-  const marlinClient = new ApolloClient({ link: marlinCache, cache: new InMemoryCache(), connectToDevTools: true });
+  // const marlinCache = new HttpLink ({uri: 'http://graph.marlin.pro/subgraphs/name/cryptowhaler/sigh-finance-kovan'});
+  // const marlinClient = new ApolloClient({ link: marlinCache, cache: new InMemoryCache(), connectToDevTools: true });
 
 Vue.use(VueApollo);
 
@@ -59,7 +59,7 @@ Vue.use(BootstrapVue);
 
 
 const apolloProvider = new VueApollo({  //holds the Apollo client instances that can then be used by all the child components
-  clients: { subscriptionClient,  marlinClient},  
+  // clients: { subscriptionClient,  marlinClient},  
   defaultClient: subscriptionClient,
 });
 
@@ -75,30 +75,3 @@ new Vue({
   apolloProvider,
   render: h => h(App),
 }).$mount('#app');
-
-
-
-// {
-//   sightrollers(first: 5) {
-//     id
-//     priceOracle
-//     closeFactor
-//     liquidationIncentive
-//   }
-//   markets(first: 5) {
-//     id
-//     symbol
-//     name
-//     cash
-//   }
-//   sighs {
-//     id
-// 		currentCycle 
-// 		currentEra 
-// 		Recentminter 
-// 		RecentCoinsMinted 
-// 		totalSupply 
-// 		blockNumberWhenCoinsMinted 
-// 		Reservoir 
-//   }
-// }

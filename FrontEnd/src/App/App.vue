@@ -78,7 +78,6 @@ export default {
   async created() {         //GETS WEB3
     localStorage.shouldOpen = true;
     this.handleWeb3();    
-    this.loadContractAddresses();
   },
 
   mounted() {
@@ -103,26 +102,49 @@ export default {
 
     // Connects to WEB3, Wallet, and initiates balance polling
     async handleWeb3() {
+      console.log('handleWeb3() in APP');
       let isWeb3loaded = await this.loadWeb3();
-      if (isWeb3loaded) {
+
+      if (isWeb3loaded == 'EthereumEnabled') {
+          this.$showSuccessMsg({message:"Successfully connected to the Ethereum Network's '" + this.$store.getters.networkName + "' ! Welcome to SIGH Finance!"});
+      }
+      if (isWeb3loaded == 'EthereumNotEnabled') {
+          this.$showErrorMsg({message:'Permission to connect your wallet denied. In case you have security concerns or are facing any issues, reach out to our support team at support@sigh.finance. '});
+      }
+      if (isWeb3loaded == 'BSCConnected') {
+        this.$showSuccessMsg({message:"Successfully connected to the Binance Smart Chain's '" + this.$store.getters.networkName + "'! Welcome to SIGH Finance!"});
+      }
+      if (isWeb3loaded == 'Web3Connected') {
+        this.$showSuccessMsg({message:"Successfully connected to the Ethereum Network's '" + this.$store.getters.networkName  + "' (not a Metamask wallet) ! Welcome to SIGH Finance!"});
+      }
+      if (isWeb3loaded == 'false') {
+        this.$showErrorMsg({message:'No Ethereum interface injected into browser. Read-only access. Please install MetaMask wallet browser extension or connect our support team at support@sigh.finance. '});
+      }
+
+      // If wallet is allowed to connect, then fetch the details
+      if (isWeb3loaded == 'EthereumEnabled' ) {   
         let walletConnected = await this.getWalletConfig();
-        EventBus.$emit(EventNames.userWalletConnected, { username: walletConnected,}); //User has logged in (event)
+        this.$showInfoMsg({message: "You are currently connected with the wallet - " + this.$store.getters.connectedWallet });        
+        this.loadContractAddresses();
+        // EventBus.$emit(EventNames.userWalletConnected, { username: walletConnected,}); //User has logged in (event)
       }
     },
 
     // Loads addresses of the contracts from the network
     async loadContractAddresses() {
       let id = this.$store.getters.networkId;
-      console.log('loadContractAddresses() in APP' + id);
-      if ( this.$store.getters.web3 && (id == '42' || id == '97' ) ) {
-        let checkIfInteractionAllowed = await this.getContractAddresses();
-        console.log('loadContractAddresses() in APP' + checkIfInteractionAllowed);
-        if (checkIfInteractionAllowed) {
-          this.$showSuccessMsg({message: " Contract Addresses fetched successfully for network " + id + " - " + this.$store.getters.networkName });
+      console.log('loadContractAddresses() in APP - ' + id);
+      if ( this.$store.getters.getWeb3 && (id == '42' || id == '97' ) ) {
+        let contractAddressesInitialized = await this.getContractAddresses();
+        if (contractAddressesInitialized) {
+          this.$showInfoMsg({message: " Contract Addresses fetched successfully for network " + id + " - " + this.$store.getters.networkName });
         }
         else {
-          this.$showErrorMsg({message: " Something went wrong when fetching Contract Addresses " });
+          this.$showErrorMsg({message: " Something went wrong when fetching contract addresses for teh network - " + this.$store.getters.networkName + ". Please connect to either Kovan Testnet or Ethereum Main-net." });
         }
+      }
+      else {
+          this.$showErrorMsg({message: " SIGH Finance is currently not available of the connected blockchain network " });
       }
     },
 

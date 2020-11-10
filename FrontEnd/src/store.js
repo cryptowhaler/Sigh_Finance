@@ -2,12 +2,15 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import {dateToDisplayTime,} from '@/utils/utility';
 import Web3 from 'web3';
+import NotificationPlugin from './plugins/notifications.js';
+import Notifications from 'vue-notification';
 
 const qs = require('qs');
 const EthereumTx = require("ethereumjs-tx").Transaction;
 
-import GlobalAddressesProviderInterface from '@/contracts/IGlobalAddressesProviderContract.json'; // GlobalAddressesProviderContract Interface
+import GlobalAddressesProviderInterface from '@/contracts/IGlobalAddressesProvider.json'; // GlobalAddressesProviderContract Interface
 import LendingPool from '@/contracts/LendingPool.json'; // GlobalAddressesProviderContract Interface
+import LendingPoolCore from '@/contracts/LendingPoolCore.json'; // GlobalAddressesProviderContract Interface
 
 // import whitePaperInterestRateModel from '@/contracts/WhitePaperInterestRateModel.json';
 // import jumpRateModelV2 from '@/contracts/JumpRateModelV2.json';
@@ -22,10 +25,10 @@ import LendingPool from '@/contracts/LendingPool.json'; // GlobalAddressesProvid
 // import SighLens from '@/contracts/SighLens.json';
 // import Treasury from '@/contracts/Treasury.json';
 
-import CErc20 from '@/contracts/CErc20Delegator.json';   // INTERACTING WITH STORAGE CONTRACT
+// import CErc20 from '@/contracts/CErc20Delegator.json';   // INTERACTING WITH STORAGE CONTRACT
 
-import SimplePriceOracle from '@/contracts/SimplePriceOracle.json';   // INTERACTING WITH STORAGE CONTRACT
-import EIP20NonStandardInterface from '@/contracts/EIP20NonStandardInterface.json'; 
+// import SimplePriceOracle from '@/contracts/SimplePriceOracle.json';   // INTERACTING WITH STORAGE CONTRACT
+// import EIP20NonStandardInterface from '@/contracts/EIP20NonStandardInterface.json'; 
 
 
 const getRevertReason = require('eth-revert-reason');
@@ -35,6 +38,8 @@ const getRevertReason = require('eth-revert-reason');
 // import * as qs from 'qs';
 
 Vue.use(Vuex);
+Vue.use(NotificationPlugin);
+Vue.use(Notifications);
 
 const store = new Vuex.Store({
   state: {
@@ -71,21 +76,21 @@ const store = new Vuex.Store({
     isWalletConnected: false,
     connectedWallet: null,
     networkId: null,
-    
+    ethBalance: null,
 // ######################################################
 // ############ PROTOCOL CONTRACT ADDRESSES  ############
 // ######################################################
     
-    GlobalAddressesProviderContractKovan: null,
+    GlobalAddressesProviderContractKovan: "0x73CF074FE89E6f942Be3a505B1cD2fe3A4fdb4D7",
     GlobalAddressesProviderContractMainNet: null,
     GlobalAddressesProviderContractBSCTestnet: null,
     GlobalAddressesProviderContractBSC: null,
 
-    SIGHContract: null,                                 // Approve, Transfer, TransferFrom, Allowance, Drip,      totalSupply, BalanceOf
+    SIGHContract: null,                                 // Approve, Transfer, TransferFrom, Allowance,      totalSupply, BalanceOf
     SIGHSpeedControllerContract: null,                  // Drip
-    SIGHStakingContract,                                // Stake, Unstake, ClaimAllAccumulatedInstruments
+    SIGHStakingContract: null,                          // Stake, Unstake, ClaimAllAccumulatedInstruments
     SIGHTreasuryContract: null,                         // Mainly queries
-    SIGHDistributionHandlerContract: null,                      // RefreshSpeeds
+    SIGHDistributionHandlerContract: null,              // RefreshSpeeds
     // SIGHFinanceConfiguratorContract: null,
     // SIGHFinanceManager: null,    
 
@@ -154,6 +159,9 @@ const store = new Vuex.Store({
     },   
     networkName(state) {
       return state.NETWORKS[state.networkId];
+    },
+    ethBalance(state) {
+      return state.ethBalance;
     },
 // ####################################################
 // ############  PROTOCOL CONTRACT GETTERS ############
@@ -227,12 +235,15 @@ const store = new Vuex.Store({
     },    
     isWalletConnected(state,isWalletConnected) {         
       state.isWalletConnected = isWalletConnected;
+      console.log("isWalletConnected MUTATION CALLED IN STORE - " + state.isWalletConnected);
     },    
     connectedWallet(state,connectedWallet) {         
       state.connectedWallet = connectedWallet;
+      console.log("connectedWallet MUTATION CALLED IN STORE - " + state.connectedWallet);
     },    
     networkId(state,networkId) {         
       state.networkId = networkId;
+      console.log("networkId MUTATION CALLED IN STORE - " + state.networkId);
     },   
     updateWallet(state,newWallet,newBalance) {
       console.log("UPDATEWALLET MUTATION CALLED IN STORE");
@@ -391,60 +402,57 @@ const store = new Vuex.Store({
 
     // CONNECTS TO WEB3 NETWORK (ETHEREUM/BSC ETC)
     loadWeb3: async ({ commit , state, store}) => {
+      // IN CASE ETHEREUM HAS BEEN INJECTED IN THE WINDOW
       if (window.ethereum) {  
         state.web3 = new Web3(window.ethereum);
-        const networkId = await web3.eth.net.getId(); 
+        console.log(state.web3);
+        const networkId = await state.web3.eth.net.getId(); 
         console.log(networkId);
         commit('networkId',networkId);        
         try {                                  // Request account access if needed
           await window.ethereum.enable();
-          console.log('Enabled');  
-          this.$showSuccessMsg({message:"Successfully connected to the Ethereum Network's '" + state.NETWORKS[networkId] + "' ! Welcome to the future of Finance."});
-          // store.dispatch('getWalletConfig'); 
-          return true;
+          console.log('Ethereum Enabled');  
+          return 'EthereumEnabled';
         } 
         catch (error) {
-          console.log('NOT enabled');  
-          this.$showErrorMsg({message:'Permission to connect your wallet denied. In case you have security concerns or are facing any issues, reach out to our support team at support@sigh.finance. '});
+          console.log('Ethereum NOT enabled');  
           console.error(error);
-          return false;
+          return 'EthereumNotEnabled';
         }
       }
+      // IN CASE BINANCE-CHAIN HAS BEEN INJECTED IN THE WINDOW
       else if (window.BinanceChain) {
         state.web3 = new Web3(window.BinanceChain);
-        const networkId = await web3.BinanceChain.chainId;
+        const networkId = await state.web3.BinanceChain.chainId;
         console.log(networkId);
         commit('networkId',networkId);        
-        this.$showSuccessMsg({message:"Successfully connected to the Binance Smart Chain's '" + state.NETWORKS[networkId] + "'! Welcome to the future of Finance."});
-        // store.dispatch('getWalletConfig'); 
+        return 'BSCConnected';
       } 
+      // OLDER BROWSERS etc
       else if (window.web3) {      //   // // // For older version dapp browsers ... Use Mist / MetaMask's provider.
         state.web3 = new Web3(window.web3.currentProvider);
-        const networkId = await web3.eth.net.getId(); 
+        const networkId = await state.web3.eth.net.getId(); 
         console.log(networkId);
         commit('networkId',networkId);        
-        this.$showSuccessMsg({message:"Successfully connected to the Ethereum Network's '" + state.NETWORKS[networkId] + "' (not a Metamask wallet) ! Welcome to the future of Finance."});
-        // store.dispatch('getWalletConfig'); 
-        return true;
+        return 'Web3Connected';
       }
       else {    // If the provider is not found, it will default to the local network ...
         console.log("No Ethereum interface injected into browser. Read-only access");
-        this.$showErrorMsg({message:'No Ethereum interface injected into browser. Read-only access. Please install MetaMask wallet browser extension or connect our support team at support@sigh.finance. '});
-        return false;
+        return 'false';
       }
     },
+
 
     // SETS USER ACCOUNT FROM THE WEB3 OBJECT OF THE STORE
     getWalletConfig: async ({commit,state}) => {
       console.log("getWalletConfig ACTION FUNCTION CALLED IN STORE");
-      const accounts = await web3.eth.getAccounts();
+      const accounts = await state.web3.eth.getAccounts();
       console.log(accounts);
       if (accounts) {
         commit('connectedWallet',accounts[0]);
         commit('isWalletConnected',true);  
         let lowercase = accounts[0].toLowerCase();
         console.log( 'LOWER CASE - ' + lowercase );
-        this.$showSuccessMsg({message: accounts[0] + " is now connected to SIGH Finance!"});
         store.dispatch('polling'); 
         return accounts[0];
       }
@@ -454,19 +462,17 @@ const store = new Vuex.Store({
    polling: async ({commit,store,state}) => {
     console.log("polling ACTION FUNCTION CALLED IN STORE");
       setInterval(async () => {
-        const account = (await window.web3.eth.getAccounts())[0];
-        if (account !== store.state.web3.coinbase) {  // ACCOUNT CONNECTED CHANGED. BOTH ACCOUNT AND BALANCE UPDATED 
-          const newBalance_ = await window.web3.eth.getBalance(account);
-          store.commit('updateWallet',account, newBalance_);
-          EventBus.$emit(EventNames.userWalletConnected, { username: walletConnected,}); //User has logged in (event)          
-          this.$showSuccessMsg({message: accounts[0] + " connected, having balance, ETH: " + newBalance_});
+        const accounts = await state.web3.eth.getAccounts();
+        const account = accounts[0];
+        // console.log(account);
+        const newBalance_ = await state.web3.eth.getBalance(account);
+        // console.log(newBalance_);
+        if (account !== state.connectedWallet) {  // ACCOUNT CONNECTED CHANGED. BOTH ACCOUNT AND BALANCE UPDATED 
+          commit('updateWallet',account, newBalance_);
+          // EventBus.$emit(EventNames.userWalletConnected, { username: walletConnected,}); //User has logged in (event)          
         } 
-        else {    // ONLY BALANCE UPDATED WHEN IT IS CHANGED
-          const newBalance_ = await window.web3.eth.getBalance(store.state.web3.coinbase);
-          if (balance !== store.state.web3.balance) {
-            store.dispatch('updateBalance',newBalance_);
-            this.$showSuccessMsg({message: "Balance updated, ETH: " + newBalance_});
-          }
+        else if (newBalance_ !== state.ethBalance) {    // ONLY BALANCE UPDATED WHEN IT IS CHANGED
+          commit('updateBalance',newBalance_);
         }
       }, 500);
     },
@@ -479,64 +485,60 @@ const store = new Vuex.Store({
 // ######################################################
 
   // calls getAddresses() to fetch and store all the contract addresses based on the network we are connected to
-  getContractAddresses: async({}) = (state,commit,store) => {
+  getContractAddresses: async ({commit, state}) => {
     console.log("getContractAddresses ACTION FUNCTION CALLED IN STORE");
-    if ( state.networkId == '42')  {
-      store.dispatch('getAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractKovan });
+    if ( state.networkId == '42')  {    // KOVAN 
+      return store.dispatch('getAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractKovan });
     }  
-    else if (state.networkId == '97') {
-      store.dispatch('getAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractBSCTestnet });
+    else if (state.networkId == '97') {   // BSC TESTNET
+      return store.dispatch('getAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractBSCTestnet });
     }
-    else if (state.networkId == '1') {
-      store.dispatch('getAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractMainNet });
+    else if (state.networkId == '1') {    // ETHEREUM MAINNET
+      return store.dispatch('getAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractMainNet });
     }
-    else if (state.networkId == '56') {
-      store.dispatch('getAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractBSC });
-    }
-    else {
-      this.$showErrorMsg({message: "SIGH Finance is currently not available of the connected blockchain network"});
-      console.log(state.networkId);      
+    else if (state.networkId == '56') {   // BSC MAINNET
+      return store.dispatch('getAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractBSC });
     }
   },
 
   // fetches and updates all the contract addresses
-  getAddresses: async ({commit,state,store},{globalAddressesProviderAddress}) => {
+  getAddresses: async ({commit,state},{globalAddressesProviderAddress}) => {
 
-    const currentGlobalAddressesProviderContract = new web3.eth.Contract(GlobalAddressesProviderInterface.abi, globalAddressesProviderAddress );
+    const currentGlobalAddressesProviderContract = new state.web3.eth.Contract(GlobalAddressesProviderInterface.abi, globalAddressesProviderAddress );
     console.log(currentGlobalAddressesProviderContract);
 
     if (currentGlobalAddressesProviderContract) {
       const sighAddress = await currentGlobalAddressesProviderContract.methods.getSIGHAddress().call();        
-      console.log( 'sigh - ' + sighAddress); 
-      store.commit('updateSIGHContract',sighAddress);
+      // console.log( 'sigh - ' + sighAddress); 
+      commit('updateSIGHContract',sighAddress);
 
       const sighSpeedControllerAddress = await currentGlobalAddressesProviderContract.methods.getSIGHSpeedController().call();        
-      console.log( 'sighSpeedControllerAddress - ' + sighSpeedControllerAddress); 
-      store.commit('updateSIGHSpeedControllerContract',sighSpeedControllerAddress);
+      // console.log( 'sighSpeedControllerAddress - ' + sighSpeedControllerAddress); 
+      commit('updateSIGHSpeedControllerContract',sighSpeedControllerAddress);
 
       const sighStakingContract = await currentGlobalAddressesProviderContract.methods.getSIGHStaking().call();        
-      console.log( 'sighStakingContract - ' + sighStakingContract); 
-      store.commit('updateSIGHStakingContract',sighStakingContract);
+      // console.log( 'sighStakingContract - ' + sighStakingContract); 
+      commit('updateSIGHStakingContract',sighStakingContract);
       
       const sighTreasuryAddress = await currentGlobalAddressesProviderContract.methods.getSIGHTreasury().call();        
-      console.log( 'sighTreasuryAddress - ' + sighTreasuryAddress); 
-      store.commit('updateSIGHTreasuryContract',sighTreasuryAddress);
+      // console.log( 'sighTreasuryAddress - ' + sighTreasuryAddress); 
+      commit('updateSIGHTreasuryContract',sighTreasuryAddress);
 
       const sighDistributionHandlerAddress = await currentGlobalAddressesProviderContract.methods.getSIGHMechanismHandler().call();        
-      console.log( 'sighDistributionHandlerAddress - ' + sighDistributionHandlerAddress); 
-      store.commit('updateSIGHDistributionHandlerContract',sighDistributionHandlerAddress);
+      // console.log( 'sighDistributionHandlerAddress - ' + sighDistributionHandlerAddress); 
+      commit('updateSIGHDistributionHandlerContract',sighDistributionHandlerAddress);
 
       const lendingPoolAddress = await currentGlobalAddressesProviderContract.methods.getLendingPool().call();        
-      console.log( 'lendingPoolAddress - ' + lendingPoolAddress); 
-      store.commit('updateLendingPoolContract',lendingPoolAddress);
+      // console.log( 'lendingPoolAddress - ' + lendingPoolAddress); 
+      commit('updateLendingPoolContract',lendingPoolAddress);
   
       const lendingPoolCoreAddress = await currentGlobalAddressesProviderContract.methods.getLendingPoolCore().call();        
-      console.log( 'lendingPoolCoreAddress - ' + lendingPoolCoreAddress); 
-      store.commit('updateLendingPoolCoreContract',lendingPoolCoreAddress);
+      // console.log( 'lendingPoolCoreAddress - ' + lendingPoolCoreAddress); 
+      commit('updateLendingPoolCoreContract',lendingPoolCoreAddress);
 
       const lendingPoolDataProviderAddress = await currentGlobalAddressesProviderContract.methods.getLendingPoolDataProvider().call();        
-      console.log( 'lendingPoolDataProviderAddress - ' + lendingPoolDataProviderAddress); 
-      store.commit('updateLendingPoolDataProviderContract',lendingPoolDataProviderAddress);
+      // console.log( 'lendingPoolDataProviderAddress - ' + lendingPoolDataProviderAddress); 
+      commit('updateLendingPoolDataProviderContract',lendingPoolDataProviderAddress);
 
       store.dispatch('getSupportedInstrumentConfigAddresses');
 
@@ -549,84 +551,41 @@ const store = new Vuex.Store({
 
   // Gets the addresses of the ITokens and the corresponding Insturments
   getSupportedInstrumentConfigAddresses: async ({commit,state}) => { 
-    const lendingPoolCoreContract = new web3.eth.Contract(LendingPoolCore.abi, state.LendingPoolCoreContract );
-    console.log(lendingPoolCoreContract);
+    if (state.web3 && state.LendingPoolCoreContract && state.LendingPoolCoreContract != "0x0000000000000000000000000000000000000000") {
+      const lendingPoolCoreContract = new state.web3.eth.Contract(LendingPoolCore.abi, state.LendingPoolCoreContract );
+      console.log(lendingPoolCoreContract);
 
-    const instruments = await lendingPoolCoreContract.methods.getInstruments().call();        
-    console.log("getITokenAddresses ACTION");
-    console.log(instruments);
+      const instruments = await lendingPoolCoreContract.methods.getInstruments().call();        
+      console.log("getITokenAddresses ACTION");
+      console.log(instruments);
 
-    if (instruments) {
-      for (let i=0; i<instruments.length; i++) {
-        let iTokenAddress = await lendingPoolCoreContract.methods.getInstrumentITokenAddress(instruments[i]).call();
-        store.commit('addToSupportedInstrumentStates',iTokenAddress,instruments[i]);
-        store.commit('addToITokenContracts',iTokenAddress);
-        store.commit('addToInstrumentContracts',instruments[i]);
+      if (instruments) {
+        for (let i=0; i<instruments.length; i++) {
+          let iTokenAddress = await lendingPoolCoreContract.methods.getInstrumentITokenAddress(instruments[i]).call();
+          commit('addToSupportedInstrumentStates',iTokenAddress,instruments[i]);
+          commit('addToITokenContracts',iTokenAddress);
+          commit('addToInstrumentContracts',instruments[i]);
+        }
       }
+      return true;
     }
     else {
-      console.log("Instruments returned not valid");
+      console.log("Contracts have not been currently deployed on this network");
+      return false;
     }
-  }
+  },
 
 
 
-    //********************** 
-    //********************** 
-    //********************** 
-    //  SEND ETHEREUM TO AN ADDRESS
-    //********************** 
-    //********************** 
-    //********************** 
-
-    // working
-    sendEthereumFunction: async ({commit,state},{recepient, amount}) => {
-      const web3 = state.web3;
-      console.log(web3);
-      var send = web3.eth.sendTransaction({from:state.connectedWallet, to:recepient, value:amount});
-
-      // let details = {"to": recepient, "value": web3.utils.toHex(web3.utils.toWei(amount.toString(), 'ether'))};
-      // const transaction = new EthereumTx(details);
-      // let privateKey = '8259f0f96d82c3a696c0fb4310f22df498674782834c4068d6d2c5b49acd7cc2';
-      // let privKey = Buffer('8259f0f96d82c3a696c0fb4310f22df498674782834c4068d6d2c5b49acd7cc2', 'hex')
-      // transaction.sign(privKey);
-      // const serializedTx = transaction.serialize();
-      // web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex')).on('receipt', console.log);
-    },
-
-    getETHBalance: async ({commit,state},{account}) => {
-      const web3 = state.web3;
-      console.log(web3);
-      // let weiBalance = web3.eth.getBalance(account).toNumber();
-      let weiBalance = web3.eth.getBalance(account)
-      .then(balance => {
-        console.log(balance);
-        alert("Balance is : "+balance+" ETH")
-      })
-      .catch(er => {
-        console.log(er);
-      });
-
-      // console.log('ETH Balance IN WEI ' + weiBalance);
-      // let EthBalance = web3.fromWei(weiBalance, 'ether');
-      // console.log('ETH Balance IN ETH ' + EthBalance);
-    },
+// ######################################################
+// ############ SIGH ---  MINTNEWCOINS() FUNCTION 
+// ############ SIGHSPEEDCONTROLLER --- DRIP() FUNCTION 
+// ############ SIGHDISTRIBUTIONHANDLER --- REFRESHSIGHSPEEDS() FUNCTION 
+// ############ SIGHTREASURY --- BURN() FUNCTION ############
+// ######################################################
 
 
 
-
-
-
-
-
-    //  WHITEPAPER_INTEREST_RATE_MODEL CONTRACT CALLS (START)
-    //********************** 
-    //********************** 
-    //********************** 
-    //********************** 
-    //********************** 
-    //********************** 
-    //********************** 
 
     // working
     whitePaperModelChangeBaseParamters: async ({commit,state},{baseRatePerYear, multiplierPerYear}) => {
