@@ -63,142 +63,130 @@ const store = new Vuex.Store({
         'container-bg-color': '#121E22',
       },
     },
+
+// ###################################################################
+// ############ WEB3 CONFIG AND CONNECTED WALLET ADDRESS  ############
+// ###################################################################
+
+    web3: {} ,                                          //WEB3 INSTANCE
+    isWalletConnected: false,
+    connectedWallet: '',
+    networkId: '',
+
+// ######################################################
+// ############ PROTOCOL CONTRACT ADDRESSES  ############
+// ######################################################
+    
+    GlobalAddressesProviderContractKovan: '',
+    GlobalAddressesProviderContractMainNet: '',
+    GlobalAddressesProviderContractBSC: '',
+
+    SIGHContract: null,                                 // Approve, Transfer, TransferFrom, Allowance, Drip,      totalSupply, BalanceOf
+    SIGHSpeedControllerContract: null,                  // Drip
+    SIGHStakingContract,                                // Stake, Unstake, ClaimAllAccumulatedInstruments
+    SIGHTreasuryContract: null,                         // Mainly queries
+    SIGHDistributionHandlerContract: null,                      // RefreshSpeeds
+    // SIGHFinanceConfiguratorContract: null,
+    // SIGHFinanceManager: null,    
+
+    ITokenContracts: {},                                // Redeem, redirectInterestStream, allowInterestRedirectionTo, redirectInterestStreamOf, Approve, 
+                                                        // Transfer, TransferFrom, Allowance, claimMySIGH
+                                                        // redirectSighStream, allowSighRedirectionTo, redirectSighStreamOf
+                                                        // principalBalanceOf, totalSupply, BalanceOf, getRedirectedBalance, getInterestRedirectionAddress, getUserIndex
+                                                        // getSighAccured, getSighStreamRedirectedTo, getSupplierIndexes, getBorrowerIndexes
+    LendingPoolContract: null,                          // deposit, borrow, repay, swapBorrowRateMode, rebalanceStableBorrowRate, setUserUseInstrumentAsCollateral, liquidationCall
+                                                        // getInstruments, getInstrumentData, getUserAccountData, getUserInstrumentData
+    LendingPoolCoreContract: null,
+    LendingPoolDataProviderContract: null,                      // calculateUserGlobalData, balanceDecreaseAllowed, calculateCollateralNeededInETH, getInstrumentConfigurationData, getUserInstrumentData, getUserAccountData
+    // LendingPoolConfiguratorContract: null,
+    // LendingPoolMananger: null,
+
+    // ######################################################
+    // ############ TO BE WORKED UPON ############
+    // ######################################################
+
     username: null, //Added
-    ledger: [],
     websocketStatus: 'Closed',
-    activeOrders: [],       //handles orders
-    recentTrades: [],       //handles recent trades
     loaderCounter: 0,
-    markets: [],  //added
-    mappedMarkets: new Map(),   //Added (mapped by ID)
-    mappedMarketsbyName: new Map(),   //Added (mapped by name)
     loaderCancellable: false,
     isLoggedIn: true,
     sidebarOpen: false,
     tradePaneClosed: false,
     bookPaneClosed: false,
     liveTradePrice: 1,
-    tickerCache: {},
-    priceAnalysisSnapShot: {},
-    selectedPair: 'BTC/USD',
-    pubkeysArray: [],
-
-    totalRealizedPNL_VUSD: 0,          //Realized PNL
-    totalUnrealizedPNL_VUSD: 0,        //Unrealized PNL
-    totalRealizedPNL_BTC: 0,          //Realized PNL
-    totalUnrealizedPNL_BTC: 0,        //Unrealized PNL
-
-    // totalRealizedPNL: 0,
-    selectedExchange: 'bitfinex',
-    supportedPairs: [],
-    totalPortfolioValue: 0,
-    tpvCurrency: 'USD',
-    limitTab: false,
-    marketIOCTab: true, //Added
-    limitGTCTab: false, //Added
-    limitFOKTab:false,  //Added
     limitIOCTab: false, //Added
-    tickerData: {},
-    availablePairs: [],
-    buyPrice: 0,
-    sellPrice: 0,
-    precision: 0.0001,
-
-
-    web3: {} ,  //WEB3 INSTANCE
-    web3Account: '',
-    networkId: '',
-    isWalletConnected: false,
-    sighSnapshot : {},
-    countLiquidated : 0,
-    countLiquidator : 0,
-    hasBorrowed : 0,
-    LiveMarkets : [],
-    selectedMarketId : '0x754A614b8a5a63CbeEb38193F6D12861C876148B',
-    selectedMarketSymbol : 'link',
-    selectedMarketUnderlyingSymbol : 'LINK',
-    selectedMarketUnderlyingPriceUSD : 87,
-    selectedMarketExchangeRate : 0,
-    selectedMarketUnderlyingAddress : undefined,
-
-    supportedMarkets: [],
-
   },
 
 
+
+
+
+
+
+
+
+
+
+
+
   getters: {
-    username(state) {     //Added
-      return state.username;
-    },
-    websocketStatus(state) {
-      return state.websocketStatus;
-    },
     themeMode(state) {
       return state.themeMode;
     },
-    limitTab(state) {
-      return state.limitTab;
-    },
-    marketIOCTab(state) {     //Added
-      return state.marketIOCTab;
-    },
-    limitGTCTab(state) {      //Added
-      return state.limitGTCTab;
-    },
-    limitFOKTab(state) {      //Added
-      return state.limitFOKTab;
-    },
-    limitIOCTab(state) {      //Added
-      return state.limitIOCTab;
-    },
-    supportedPairs(state) {
-      return [...new Set(state.supportedPairs), ];
-    },
-    selectedPair(state) {
-      return state.selectedPair;
-    },
-    pubkeysArray(state) {           //returns array having pubkeys
-      return state.pubkeysArray;
-    },    
-    isLoggedIn(state) {
-      return state.isLoggedIn;
+// ###################################################################
+// ############ WEB3 CONFIG AND CONNECTED WALLET GETTERS  ############
+// ###################################################################
+    getWeb3(state) {
+      return state.web3;
     },
     isWalletConnected(state) {      // FOR SIGH FINANCE (WALLET CONNECTED ?? )
       return state.isWalletConnected;
     },
-    currentTime() {
-      return dateToDisplayTime();
-    },
-    ledger(state) {
-      return state.ledger;
-    },
-    activeOrders(state) {     //returns activeOrders
-      return state.activeOrders;
-    },
-    markets(state) {      //Added. Should store markets data
-      return state.markets;
+    connectedWallet(state) {         // Account Address
+      return state.connectedWallet;    
     },    
-    mappedMarkets(state) {  //Added. Should store markets data
-      return state.mappedMarkets;
-    },
-    mappedMarketsbyName(state) {  //Added. Should store markets data
-      return state.mappedMarketsbyName;
+    networkId(state) {         // networkId
+      return state.networkId;    
     },    
-    recentTrades(state) {       //gets recent trades
-      return state.recentTrades;
-    },
-    totalUnrealizedPNL_VUSD(state) {   //totalUnrealizedPNL 
-      return state.totalUnrealizedPNL_VUSD;
-    },
-    totalRealizedPNL_VUSD(state) {     //totalRealizedPNL
-      return state.totalRealizedPNL_VUSD;
-    },
-    totalUnrealizedPNL_BTC(state) {   //totalUnrealizedPNL 
-      return state.totalUnrealizedPNL_BTC;
-    },
-    totalRealizedPNL_BTC(state) {     //totalRealizedPNL
-      return state.totalRealizedPNL_BTC;
-    },
+// ####################################################
+// ############  PROTOCOL CONTRACT GETTERS ############
+// ####################################################
+    GlobalAddressesProviderContractKovan(state) {         
+      return state.GlobalAddressesProviderContractKovan;    
+    },    
+    GlobalAddressesProviderContractMainNet(state) {         
+      return state.GlobalAddressesProviderContractMainNet;    
+    },    
+    SIGHContract(state) {         
+      return state.SIGHContract;    
+    },    
+    SIGHSpeedControllerContract(state) {         
+      return state.SIGHSpeedControllerContract;    
+    },    
+    SIGHStakingContract(state) {         
+      return state.SIGHStakingContract;    
+    },    
+    SIGHTreasuryContract(state) {         
+      return state.SIGHTreasuryContract;    
+    },    
+    SIGHDistributionHandler(state) {         
+      return state.SIGHDistributionHandlerContract;    
+    },    
+    ITokenContracts(state) {         
+      return state.ITokenContracts;    
+    },    
+    LendingPoolContract(state) {         
+      return state.LendingPoolContract;    
+    },    
+    LendingPoolCoreContract(state) {         
+      return state.LendingPoolCoreContract;    
+    },    
+    LendingPoolDataProviderContract(state) {         
+      return state.LendingPoolDataProviderContract;    
+    },    
+    // ######################################################
+    // ############ TO BE WORKED UPON ############
+    // ######################################################
 
     showLoader(state) {
       return state > 0;
@@ -209,90 +197,35 @@ const store = new Vuex.Store({
     sidebarOpen(state) {
       return state.sidebarOpen;
     },
-    liveTradePrice(state) {
-      return state.liveTradePrice;
-    },
-    tickerCache(state) {
-      return state.tickerCache;
-    },
-    priceAnalysisSnapShot(state) {
-      return state.priceAnalysisSnapShot;
-    },
-    selectedExchange(state) {
-      return state.selectedExchange;
-    },
-    formattedSelectedExchange(state) {
-      switch (state.selectedExchange) {
-        case 'vegaProtocol':
-          return 'vegaProtocol';
-        default:
-          return (
-            state.selectedExchange.charAt(0).toUpperCase() +
-                        state.selectedExchange.slice(1)
-          );
-      }
-    },
-    getTickerData(state) {
-      return state.tickerData;
-    },
-    getccTickerData(state) {
-      return state.tickerData[state.selectedPair.split('/')[0]][state.selectedPair].exchanges;
-    },
-    getAvailablePairs(state) {
-      return state.availablePairs;
-    },
-    buyPrice(state) {
-      return state.buyPrice;
-    },
-    sellPrice(state) {
-      return state.sellPrice;
-    },
-    precisionSelectedpair(state) {
-      return state.precision;
-    },
-    sighSnapshot(state) {         // sigh Snapshot
-      return state.sighSnapshot;    
-    },
-    web3Account(state) {         // Account Address
-      return state.web3Account;    
-    },    
-    countLiquidated(state) {         // countLiquidated (from market holdings (account subscription) )
-      return state.countLiquidated;    
-    },    
-    countLiquidator(state) {         // countLiquidator  (from market holdings (account subscription) )
-      return state.countLiquidator;    
-    },    
-    hasBorrowed(state) {         // hasBorrowed  (from market holdings (account subscription) )
-      return state.hasBorrowed;    
-    },    
-    LiveMarkets(state) {        // Markets supported by the protocol
-      return state.LiveMarkets;
-    },
-    selectedMarketId(state) {        // Selected Market
-      return state.selectedMarketId;
-    },
-    selectedMarketSymbol(state) {        // Selected Market
-      return state.selectedMarketSymbol;
-    },
-    selectedMarketUnderlyingSymbol(state) {        // Selected Market
-      return state.selectedMarketUnderlyingSymbol;
-    },
-    selectedMarketUnderlyingPriceUSD(state) {        // Selected Market
-      return state.selectedMarketUnderlyingPriceUSD;
-    },
-    selectedMarketExchangeRate(state) {        // Selected Market
-      return state.selectedMarketExchangeRate;
-    },    
-    selectedMarketUnderlyingAddress(state) {        // Selected Market
-      return state.selectedMarketUnderlyingAddress;
-    },
-    supportedMarkets(state) {             // SUPPORTED MARKETS
-      return state.supportedMarkets;
-    }        
   },
 
 
+
+
+
+
+
+
+
+
   mutations: {
+// #####################################################################
+// ############ WEB3 CONFIG AND CONNECTED WALLET MUTATIONS  ############
+// #####################################################################
+    getWeb3(state) {
+      return state.web3;
+    },
+    isWalletConnected(state) {      // FOR SIGH FINANCE (WALLET CONNECTED ?? )
+      return state.isWalletConnected;
+    },
+    connectedWallet(state) {         // Account Address
+      return state.connectedWallet;    
+    },    
+    networkId(state) {         // networkId
+      return state.networkId;    
+    },    
+
+
     updateusername(state,name) {  //Added
       state.username = name;
     },
@@ -482,9 +415,9 @@ const store = new Vuex.Store({
       console.log(state.web3);
     },
     SET_ACCOUNT(state, payload) {
-      state.web3Account = payload;
+      state.connectedWallet = payload;
       console.log(payload);
-      console.log(state.web3Account);
+      console.log(state.connectedWallet);
     },
     SET_NETWORK_ID(state, payload) {
       state.networkId = payload;
@@ -629,7 +562,7 @@ const store = new Vuex.Store({
     sendEthereumFunction: async ({commit,state},{recepient, amount}) => {
       const web3 = state.web3;
       console.log(web3);
-      var send = web3.eth.sendTransaction({from:state.web3Account, to:recepient, value:amount});
+      var send = web3.eth.sendTransaction({from:state.connectedWallet, to:recepient, value:amount});
 
       // let details = {"to": recepient, "value": web3.utils.toHex(web3.utils.toWei(amount.toString(), 'ether'))};
       // const transaction = new EthereumTx(details);
@@ -683,7 +616,7 @@ const store = new Vuex.Store({
       if (whitePaperModel) {
         const interestRateModel = new web3.eth.Contract(whitePaperInterestRateModel.abi, whitePaperModel.address );
         console.log(interestRateModel);
-        interestRateModel.methods.setBaseParameters(baseRatePerYear,multiplierPerYear).send({from: state.web3Account})
+        interestRateModel.methods.setBaseParameters(baseRatePerYear,multiplierPerYear).send({from: state.connectedWallet})
         .then(receipt => { 
           console.log(receipt);
           })
@@ -784,7 +717,7 @@ const store = new Vuex.Store({
       if (jumpModelV2) {
         const interestRateModel = new web3.eth.Contract(jumpRateModelV2.abi, jumpModelV2.address );
         console.log(interestRateModel);
-        interestRateModel.methods.updateJumpRateModel(baseRatePerYear,multiplierPerYear,jumpMultiplierPerYear,kink_).send({from: state.web3Account})
+        interestRateModel.methods.updateJumpRateModel(baseRatePerYear,multiplierPerYear,jumpMultiplierPerYear,kink_).send({from: state.connectedWallet})
         .then(receipt => { 
           console.log(receipt);
           })
@@ -910,7 +843,7 @@ const store = new Vuex.Store({
         if (sighReservoir) {
           let sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
           console.log(sighReservoirContract);
-          sighReservoirContract.methods.beginDripping(dripRate,targetAddress).send({from: state.web3Account, gas:3000000})
+          sighReservoirContract.methods.beginDripping(dripRate,targetAddress).send({from: state.connectedWallet, gas:3000000})
           .then(receipt => {
             console.log(receipt);
           })
@@ -927,7 +860,7 @@ const store = new Vuex.Store({
       if (sighReservoir) {
         let sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
         console.log(sighReservoirContract);
-        sighReservoirContract.methods.changeDripRate(dripRate).send({from: state.web3Account, gas:3000000})
+        sighReservoirContract.methods.changeDripRate(dripRate).send({from: state.connectedWallet, gas:3000000})
         .then(receipt => {
           console.log(receipt);
         })
@@ -944,8 +877,8 @@ const store = new Vuex.Store({
     if (sighReservoir) {
       let sighReservoirContract = new web3.eth.Contract(sighReservoir_.abi, sighReservoir.address);
       console.log(sighReservoirContract);
-      console.log(state.web3Account);
-      sighReservoirContract.methods.drip().send({from: state.web3Account, gas:3000000})
+      console.log(state.connectedWallet);
+      sighReservoirContract.methods.drip().send({from: state.connectedWallet, gas:3000000})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1066,7 +999,7 @@ const store = new Vuex.Store({
     if (SIGH_) {
       let SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
       console.log(SIGH_Contract);
-      SIGH_Contract.methods.initMinting().send({from: state.web3Account, gas:3000000})
+      SIGH_Contract.methods.initMinting().send({from: state.connectedWallet, gas:3000000})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1083,7 +1016,7 @@ const store = new Vuex.Store({
     if (SIGH_) {
       let SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
       console.log(SIGH_Contract);
-      SIGH_Contract.methods.transfer(recepient,amount).send({from: state.web3Account})
+      SIGH_Contract.methods.transfer(recepient,amount).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1100,7 +1033,7 @@ const store = new Vuex.Store({
     if (SIGH_) {
       let SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
       console.log(SIGH_Contract);
-      SIGH_Contract.methods.approve(spender,amount).send({from: state.web3Account})
+      SIGH_Contract.methods.approve(spender,amount).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1117,7 +1050,7 @@ const store = new Vuex.Store({
     if (SIGH_) {
       let SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
       console.log(SIGH_Contract);
-      SIGH_Contract.methods.transferFrom(sender,recepient,amount).send({from: state.web3Account})
+      SIGH_Contract.methods.transferFrom(sender,recepient,amount).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1134,7 +1067,7 @@ const store = new Vuex.Store({
     if (SIGH_) {
       let SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
       console.log(SIGH_Contract);
-      SIGH_Contract.methods.increaseAllowance(spender,addedValue).send({from: state.web3Account})
+      SIGH_Contract.methods.increaseAllowance(spender,addedValue).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1151,7 +1084,7 @@ const store = new Vuex.Store({
     if (SIGH_) {
       let SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
       console.log(SIGH_Contract);
-      SIGH_Contract.methods.decreaseAllowance(spender,subtractedValue).send({from: state.web3Account})
+      SIGH_Contract.methods.decreaseAllowance(spender,subtractedValue).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1168,7 +1101,7 @@ const store = new Vuex.Store({
     if (SIGH_) {
       let SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
       console.log(SIGH_Contract);
-      SIGH_Contract.methods.mintCoins().send({from: state.web3Account, gas:3000000})
+      SIGH_Contract.methods.mintCoins().send({from: state.connectedWallet, gas:3000000})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1185,7 +1118,7 @@ const store = new Vuex.Store({
     if (SIGH_) {
       let SIGH_Contract = new web3.eth.Contract(SIGH.abi, SIGH_.address);
       console.log(SIGH_Contract);
-      SIGH_Contract.methods.changeReservoir(newReservoir).send({from: state.web3Account})
+      SIGH_Contract.methods.changeReservoir(newReservoir).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1387,7 +1320,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.enterMarkets(markets).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.enterMarkets(markets).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1405,7 +1338,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.exitMarket(market).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.exitMarket(market).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1423,7 +1356,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.mintAllowed(market,minter,mintAmount).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.mintAllowed(market,minter,mintAmount).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1443,7 +1376,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.mintVerify(market,minter,actualMintAmount,mintTokens).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.mintVerify(market,minter,actualMintAmount,mintTokens).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1462,7 +1395,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.redeemAllowed(market,redeemer,redeemTokens).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.redeemAllowed(market,redeemer,redeemTokens).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1482,7 +1415,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.redeemVerify(market,redeemer,actualRedeemAmount,redeemTokens).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.redeemVerify(market,redeemer,actualRedeemAmount,redeemTokens).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1501,7 +1434,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.borrowAllowed(market,borrower,borrowAmount).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.borrowAllowed(market,borrower,borrowAmount).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1520,7 +1453,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.borrowVerify(market,borrower,borrowAmount).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.borrowVerify(market,borrower,borrowAmount).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1539,7 +1472,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.repayBorrowAllowed(market,payer,borrower,repayAmount).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.repayBorrowAllowed(market,payer,borrower,repayAmount).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1558,7 +1491,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.repayBorrowVerify(market,payer,borrower,actualRepayAmount,borrowerIndex).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.repayBorrowVerify(market,payer,borrower,actualRepayAmount,borrowerIndex).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1577,7 +1510,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.liquidateBorrowAllowed(marketBorrowed,marketCollateral,liquidator,borrower,repayAmount).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.liquidateBorrowAllowed(marketBorrowed,marketCollateral,liquidator,borrower,repayAmount).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1597,7 +1530,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.liquidateBorrowVerify(marketBorrowed,marketCollateral,liquidator,borrower,repayAmount,seizeTokens).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.liquidateBorrowVerify(marketBorrowed,marketCollateral,liquidator,borrower,repayAmount,seizeTokens).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1616,7 +1549,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.seizeAllowed(marketCollateral,marketBorrowed,liquidator,borrower,seizeTokens ).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.seizeAllowed(marketCollateral,marketBorrowed,liquidator,borrower,seizeTokens ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1635,7 +1568,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.seizeVerify(marketCollateral,marketBorrowed,liquidator,borrower,seizeTokens ).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.seizeVerify(marketCollateral,marketBorrowed,liquidator,borrower,seizeTokens ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1654,7 +1587,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.transferAllowed(market,src,dst,transferTokens).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.transferAllowed(market,src,dst,transferTokens).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1673,7 +1606,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.transferVerify(market,src,dst,transferTokens).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.transferVerify(market,src,dst,transferTokens).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1732,7 +1665,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods._setPriceOracle(newPriceOracle).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._setPriceOracle(newPriceOracle).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1750,7 +1683,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods._setCloseFactor(newCloseFactorMantissa).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._setCloseFactor(newCloseFactorMantissa).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1768,7 +1701,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods._setCollateralFactor(market,  newCollateralFactorMantissa).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._setCollateralFactor(market,  newCollateralFactorMantissa).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1786,7 +1719,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods._setMaxAssets(newMaxAssets).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._setMaxAssets(newMaxAssets).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1804,7 +1737,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods._setLiquidationIncentive(newLiquidationIncentiveMantissa).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._setLiquidationIncentive(newLiquidationIncentiveMantissa).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1822,7 +1755,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods._supportMarket(supportMarket).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._supportMarket(supportMarket).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1840,7 +1773,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods._setPauseGuardian(newPauseGuardian).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._setPauseGuardian(newPauseGuardian).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1858,7 +1791,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods._setMintPaused( market, boolstate).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._setMintPaused( market, boolstate).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1877,7 +1810,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods._setBorrowPaused(market, boolstate).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._setBorrowPaused(market, boolstate).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1895,7 +1828,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods._setTransferPaused(boolstate).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._setTransferPaused(boolstate).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1913,7 +1846,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods._setSeizePaused(boolstate).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._setSeizePaused(boolstate).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1933,7 +1866,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, '0x0950A0d41A9B30f490BC6Cc9F30232202Ff60032');
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods._become(unitroller).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._become(unitroller).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1951,7 +1884,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.refreshGsighSpeeds().send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.refreshGsighSpeeds().send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1969,7 +1902,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.claimGSigh(holder, markets).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.claimGSigh(holder, markets).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -1987,7 +1920,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods.claimGSigh(holders,markets,borrowers,suppliers).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods.claimGSigh(holders,markets,borrowers,suppliers).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2010,7 +1943,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods._setGsighRate(gsighRate_).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._setGsighRate(gsighRate_).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2029,7 +1962,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods._addGsighMarkets(markets).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._addGsighMarkets(markets).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2047,7 +1980,7 @@ const store = new Vuex.Store({
     if (Sightroller_) {
       let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
       console.log(SIGHTROLLER_Contract);
-      SIGHTROLLER_Contract.methods._dropGsighMarket(market).send({from: state.web3Account})
+      SIGHTROLLER_Contract.methods._dropGsighMarket(market).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2114,7 +2047,7 @@ const store = new Vuex.Store({
     if (Unitroller_) {
       let UNITROLLER_Contract = new web3.eth.Contract(Unitroller.abi, Unitroller_.address);
       console.log(UNITROLLER_Contract);
-      UNITROLLER_Contract.methods._setPendingImplementation(newPendingImplementation).send({from: state.web3Account})
+      UNITROLLER_Contract.methods._setPendingImplementation(newPendingImplementation).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2132,7 +2065,7 @@ const store = new Vuex.Store({
     if (Unitroller_) {
       let UNITROLLER_Contract = new web3.eth.Contract(Unitroller.abi, Unitroller_.address);
       console.log(UNITROLLER_Contract);
-      UNITROLLER_Contract.methods._acceptImplementation().send({from: state.web3Account})
+      UNITROLLER_Contract.methods._acceptImplementation().send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2150,7 +2083,7 @@ const store = new Vuex.Store({
     if (Unitroller_) {
       let UNITROLLER_Contract = new web3.eth.Contract(Unitroller.abi, Unitroller_.address);
       console.log(UNITROLLER_Contract);
-      UNITROLLER_Contract.methods._setPendingAdmin(newPendingAdmin).send({from: state.web3Account})
+      UNITROLLER_Contract.methods._setPendingAdmin(newPendingAdmin).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2168,7 +2101,7 @@ const store = new Vuex.Store({
     if (Unitroller_) {
       let UNITROLLER_Contract = new web3.eth.Contract(Unitroller.abi, Unitroller_.address);
       console.log(UNITROLLER_Contract);
-      UNITROLLER_Contract.methods._acceptAdmin().send({from: state.web3Account})
+      UNITROLLER_Contract.methods._acceptAdmin().send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2311,7 +2244,7 @@ const store = new Vuex.Store({
       if (Sightroller_) {
         let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
         console.log(SIGHTROLLER_Contract);
-        SIGHTROLLER_Contract.methods._addSIGHMarket(market).send({from: state.web3Account})
+        SIGHTROLLER_Contract.methods._addSIGHMarket(market).send({from: state.connectedWallet})
         .then(receipt => {
           console.log(receipt);
         })
@@ -2328,7 +2261,7 @@ const store = new Vuex.Store({
       if (Sightroller_) {
         let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
         console.log(SIGHTROLLER_Contract);
-        SIGHTROLLER_Contract.methods._dropSIGHMarket(market).send({from: state.web3Account})
+        SIGHTROLLER_Contract.methods._dropSIGHMarket(market).send({from: state.connectedWallet})
         .then(receipt => {
           console.log(receipt);
         })
@@ -2345,7 +2278,7 @@ const store = new Vuex.Store({
       if (Sightroller_) {
         let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
         console.log(SIGHTROLLER_Contract);
-        SIGHTROLLER_Contract.methods.takeSIGHPriceSnapshot().send({from: state.web3Account})
+        SIGHTROLLER_Contract.methods.takeSIGHPriceSnapshot().send({from: state.connectedWallet})
         .then(receipt => {
           console.log(receipt);
         })
@@ -2362,7 +2295,7 @@ const store = new Vuex.Store({
       if (Sightroller_) {
         let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
         console.log(SIGHTROLLER_Contract);
-        SIGHTROLLER_Contract.methods.refreshSIGHSpeeds().send({from: state.web3Account})
+        SIGHTROLLER_Contract.methods.refreshSIGHSpeeds().send({from: state.connectedWallet})
         .then(receipt => {
           console.log(receipt);
         })
@@ -2379,7 +2312,7 @@ const store = new Vuex.Store({
       if (Sightroller_) {
         let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
         console.log(SIGHTROLLER_Contract);
-        SIGHTROLLER_Contract.methods.claimSIGH().send({from: state.web3Account})
+        SIGHTROLLER_Contract.methods.claimSIGH().send({from: state.connectedWallet})
         .then(receipt => {
           console.log(receipt);
         })
@@ -2396,7 +2329,7 @@ const store = new Vuex.Store({
       if (Sightroller_) {
         let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
         console.log(SIGHTROLLER_Contract);
-        SIGHTROLLER_Contract.methods.setGelatoAddress(gelato).send({from: state.web3Account})
+        SIGHTROLLER_Contract.methods.setGelatoAddress(gelato).send({from: state.connectedWallet})
         .then(receipt => {
           console.log(receipt);
         })
@@ -2425,7 +2358,7 @@ const store = new Vuex.Store({
       if (Sightroller_) {
         let SIGHTROLLER_Contract = new web3.eth.Contract(Sightroller.abi, Sightroller_.address);
         console.log(SIGHTROLLER_Contract);
-        let ret = SIGHTROLLER_Contract.methods.setSIGHRate(sighRate).send({from: state.web3Account})
+        let ret = SIGHTROLLER_Contract.methods.setSIGHRate(sighRate).send({from: state.connectedWallet})
         .then(receipt => {
           console.log(receipt);
         })
@@ -2478,7 +2411,7 @@ const store = new Vuex.Store({
     if (GSigh_) {
       let GSigh_Contract = new web3.eth.Contract(GSigh.abi, GSigh_.address);
       console.log(GSigh_Contract);
-      GSigh_Contract.methods.approve(gsigh_spender, gsigh_amount).send({from: state.web3Account})
+      GSigh_Contract.methods.approve(gsigh_spender, gsigh_amount).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2496,7 +2429,7 @@ const store = new Vuex.Store({
     if (GSigh_) {
       let GSigh_Contract = new web3.eth.Contract(GSigh.abi, GSigh_.address);
       console.log(GSigh_Contract);
-      GSigh_Contract.methods.transfer(gsigh_destination, gsigh_amount).send({from: state.web3Account})
+      GSigh_Contract.methods.transfer(gsigh_destination, gsigh_amount).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2514,7 +2447,7 @@ const store = new Vuex.Store({
     if (GSigh_) {
       let GSigh_Contract = new web3.eth.Contract(GSigh.abi, GSigh_.address);
       console.log(GSigh_Contract);
-      GSigh_Contract.methods.transferFrom(gsigh_source,gsigh_destination, gsigh_amount).send({from: state.web3Account})
+      GSigh_Contract.methods.transferFrom(gsigh_source,gsigh_destination, gsigh_amount).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2532,7 +2465,7 @@ const store = new Vuex.Store({
     if (GSigh_) {
       let GSigh_Contract = new web3.eth.Contract(GSigh.abi, GSigh_.address);
       console.log(GSigh_Contract);
-      GSigh_Contract.methods.delegate(delegatee).send({from: state.web3Account})
+      GSigh_Contract.methods.delegate(delegatee).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2576,7 +2509,7 @@ const store = new Vuex.Store({
   //   if (GSigh_) {
   //     GSigh_Contract = new web3.eth.Contract(GSigh.abi, GSigh_.address);
   //     console.log(GSigh_Contract);
-  //     GSigh_Contract.methods.delegateBySig(delegatee).send({from: state.web3Account})
+  //     GSigh_Contract.methods.delegateBySig(delegatee).send({from: state.connectedWallet})
   //     .then(receipt => {
   //       console.log(receipt);
   //     })
@@ -2675,7 +2608,7 @@ const store = new Vuex.Store({
     if (GovernorAlpha_) {
       let GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
       console.log(GovernorAlpha_Contract);
-      const ret = GovernorAlpha_Contract.methods.propose(p_targets,p_values,p_signatures,p_calldatas,p_description).send({from: state.web3Account})
+      const ret = GovernorAlpha_Contract.methods.propose(p_targets,p_values,p_signatures,p_calldatas,p_description).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2693,7 +2626,7 @@ const store = new Vuex.Store({
     if (GovernorAlpha_) {
       let GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
       console.log(GovernorAlpha_Contract);
-      const ret = GovernorAlpha_Contract.methods.queue(proposalId).send({from: state.web3Account})
+      const ret = GovernorAlpha_Contract.methods.queue(proposalId).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2711,7 +2644,7 @@ const store = new Vuex.Store({
     if (GovernorAlpha_) {
       let GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
       console.log(GovernorAlpha_Contract);
-      const ret = GovernorAlpha_Contract.methods.execute(proposalId).send({from: state.web3Account})
+      const ret = GovernorAlpha_Contract.methods.execute(proposalId).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2729,7 +2662,7 @@ const store = new Vuex.Store({
     if (GovernorAlpha_) {
       let GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
       console.log(GovernorAlpha_Contract);
-      const ret = GovernorAlpha_Contract.methods.cancel(proposalId).send({from: state.web3Account})
+      const ret = GovernorAlpha_Contract.methods.cancel(proposalId).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2747,7 +2680,7 @@ const store = new Vuex.Store({
     if (GovernorAlpha_) {
       let GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
       console.log(GovernorAlpha_Contract);
-      const ret = GovernorAlpha_Contract.methods.castVote(proposalId,bool_support).send({from: state.web3Account})
+      const ret = GovernorAlpha_Contract.methods.castVote(proposalId,bool_support).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2764,7 +2697,7 @@ const store = new Vuex.Store({
   //   if (GovernorAlpha_) {
   //     GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
   //     console.log(GovernorAlpha_Contract);
-  //     const ret = GovernorAlpha_Contract.methods.castVoteBySig(proposalId,bool_support).send({from: state.web3Account})
+  //     const ret = GovernorAlpha_Contract.methods.castVoteBySig(proposalId,bool_support).send({from: state.connectedWallet})
   //     .then(receipt => {
   //       console.log(receipt);
   //     })
@@ -2818,7 +2751,7 @@ const store = new Vuex.Store({
     if (GovernorAlpha_) {
       let GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
       console.log(GovernorAlpha_Contract);
-      const ret = GovernorAlpha_Contract.methods.__acceptAdmin().send({from: state.web3Account})
+      const ret = GovernorAlpha_Contract.methods.__acceptAdmin().send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2835,7 +2768,7 @@ const store = new Vuex.Store({
     if (GovernorAlpha_) {
       let GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
       console.log(GovernorAlpha_Contract);
-      const ret = GovernorAlpha_Contract.methods.__abdicate().send({from: state.web3Account})
+      const ret = GovernorAlpha_Contract.methods.__abdicate().send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2852,7 +2785,7 @@ const store = new Vuex.Store({
     if (GovernorAlpha_) {
       let GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
       console.log(GovernorAlpha_Contract);
-      const ret = GovernorAlpha_Contract.methods.__queueSetTimelockPendingAdmin({gov_newPendingAdmin,gov_eta}).send({from: state.web3Account})
+      const ret = GovernorAlpha_Contract.methods.__queueSetTimelockPendingAdmin({gov_newPendingAdmin,gov_eta}).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2869,7 +2802,7 @@ const store = new Vuex.Store({
     if (GovernorAlpha_) {
       let GovernorAlpha_Contract = new web3.eth.Contract(GovernorAlpha.abi, GovernorAlpha_.address);
       console.log(GovernorAlpha_Contract);
-      const ret = GovernorAlpha_Contract.methods.__executeSetTimelockPendingAdmin({gov_newPendingAdmin,gov_eta}).send({from: state.web3Account})
+      const ret = GovernorAlpha_Contract.methods.__executeSetTimelockPendingAdmin({gov_newPendingAdmin,gov_eta}).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2897,7 +2830,7 @@ const store = new Vuex.Store({
     if (Timelock_) {
       let Timelock_Contract = new web3.eth.Contract(Timelock.abi, Timelock_.address);
       console.log(Timelock_Contract);
-      const ret = Timelock_Contract.methods.setDelay({timelock_delay_}).send({from: state.web3Account})
+      const ret = Timelock_Contract.methods.setDelay({timelock_delay_}).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2915,7 +2848,7 @@ const store = new Vuex.Store({
       if (Timelock_) {
         let Timelock_Contract = new web3.eth.Contract(Timelock.abi, Timelock_.address);
         console.log(Timelock_Contract);
-        const ret = Timelock_Contract.methods.setPendingAdmin({timelock_pendingAdmin_}).send({from: state.web3Account})
+        const ret = Timelock_Contract.methods.setPendingAdmin({timelock_pendingAdmin_}).send({from: state.connectedWallet})
         .then(receipt => {
           console.log(receipt);
         })
@@ -2934,7 +2867,7 @@ const store = new Vuex.Store({
     if (Timelock_) {
       let Timelock_Contract = new web3.eth.Contract(Timelock.abi, Timelock_.address);
       console.log(Timelock_Contract);
-      const ret = Timelock_Contract.methods.acceptAdmin().send({from: state.web3Account})
+      const ret = Timelock_Contract.methods.acceptAdmin().send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2952,7 +2885,7 @@ const store = new Vuex.Store({
     if (Timelock_) {
       let Timelock_Contract = new web3.eth.Contract(Timelock.abi, Timelock_.address);
       console.log(Timelock_Contract);
-      const ret = Timelock_Contract.methods.queueTransaction({timelock_target,timelock_value,timelock_signature,timelock_data,timelock_eta}).send({from: state.web3Account})
+      const ret = Timelock_Contract.methods.queueTransaction({timelock_target,timelock_value,timelock_signature,timelock_data,timelock_eta}).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2970,7 +2903,7 @@ const store = new Vuex.Store({
     if (Timelock_) {
       let Timelock_Contract = new web3.eth.Contract(Timelock.abi, Timelock_.address);
       console.log(Timelock_Contract);
-      const ret = Timelock_Contract.methods.cancelTransaction({timelock_target,timelock_value,timelock_signature,timelock_data,timelock_eta}).send({from: state.web3Account})
+      const ret = Timelock_Contract.methods.cancelTransaction({timelock_target,timelock_value,timelock_signature,timelock_data,timelock_eta}).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -2988,7 +2921,7 @@ const store = new Vuex.Store({
     if (Timelock_) {
       let Timelock_Contract = new web3.eth.Contract(Timelock.abi, Timelock_.address);
       console.log(Timelock_Contract);
-      const ret = Timelock_Contract.methods.executeTransaction({timelock_target,timelock_value,timelock_signature,timelock_data,timelock_eta}).send({from: state.web3Account,value: EthValueInWei})
+      const ret = Timelock_Contract.methods.executeTransaction({timelock_target,timelock_value,timelock_signature,timelock_data,timelock_eta}).send({from: state.connectedWallet,value: EthValueInWei})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3016,7 +2949,7 @@ const store = new Vuex.Store({
       if (GSighReservoir_) {
         let GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
         console.log(GSighReservoir_Contract);
-        GSighReservoir_Contract.methods.beginDripping(gsigh_dripRate_, gsigh_target_).send({from: state.web3Account, gas:3000000})
+        GSighReservoir_Contract.methods.beginDripping(gsigh_dripRate_, gsigh_target_).send({from: state.connectedWallet, gas:3000000})
         .then(receipt => {
           console.log(receipt);
         })
@@ -3034,7 +2967,7 @@ const store = new Vuex.Store({
       if (GSighReservoir_) {
         let GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
         console.log(GSighReservoir_Contract);
-        GSighReservoir_Contract.methods.changeDripRate(gsigh_dripRate_).send({from: state.web3Account})
+        GSighReservoir_Contract.methods.changeDripRate(gsigh_dripRate_).send({from: state.connectedWallet})
         .then(receipt => {
           console.log(receipt);
         })
@@ -3052,7 +2985,7 @@ const store = new Vuex.Store({
       if (GSighReservoir_) {
         let GSighReservoir_Contract = new web3.eth.Contract(GSighReservoir.abi, GSighReservoir_.address);
         console.log(GSighReservoir_Contract);
-        GSighReservoir_Contract.methods.drip().send({from: state.web3Account, gas:3000000})
+        GSighReservoir_Contract.methods.drip().send({from: state.connectedWallet, gas:3000000})
         .then(receipt => {
           console.log(receipt);
         })
@@ -3184,7 +3117,7 @@ const store = new Vuex.Store({
     if (SighLens_) {
       let SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
       console.log(SighLens_Contract);
-      const ret = SighLens_Contract.methods.cTokenMetadata(cTokenAddress).send({from: state.web3Account})
+      const ret = SighLens_Contract.methods.cTokenMetadata(cTokenAddress).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3202,7 +3135,7 @@ const store = new Vuex.Store({
     if (SighLens_) {
       let SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
       console.log(SighLens_Contract);
-      const ret = SighLens_Contract.methods.cTokenMetadataAll(cTokenAddressArray).send({from: state.web3Account})
+      const ret = SighLens_Contract.methods.cTokenMetadataAll(cTokenAddressArray).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3220,7 +3153,7 @@ const store = new Vuex.Store({
     if (SighLens_) {
       let SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
       console.log(SighLens_Contract);
-      const ret = SighLens_Contract.methods.cTokenBalances(cTokenAddress, sighlens_amount).send({from: state.web3Account})
+      const ret = SighLens_Contract.methods.cTokenBalances(cTokenAddress, sighlens_amount).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3238,7 +3171,7 @@ const store = new Vuex.Store({
     if (SighLens_) {
       let SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
       console.log(SighLens_Contract);
-      const ret = SighLens_Contract.methods.cTokenBalancesAll(cTokenAddressArray, sighlens_amount).send({from: state.web3Account})
+      const ret = SighLens_Contract.methods.cTokenBalancesAll(cTokenAddressArray, sighlens_amount).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3256,7 +3189,7 @@ const store = new Vuex.Store({
     if (SighLens_) {
       let SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
       console.log(SighLens_Contract);
-      const ret = SighLens_Contract.methods.cTokenUnderlyingPrice(cTokenAddress).send({from: state.web3Account})
+      const ret = SighLens_Contract.methods.cTokenUnderlyingPrice(cTokenAddress).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3274,7 +3207,7 @@ const store = new Vuex.Store({
     if (SighLens_) {
       let SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
       console.log(SighLens_Contract);
-      const ret = SighLens_Contract.methods.cTokenUnderlyingPriceAll(cTokenAddressArray).send({from: state.web3Account})
+      const ret = SighLens_Contract.methods.cTokenUnderlyingPriceAll(cTokenAddressArray).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3292,7 +3225,7 @@ const store = new Vuex.Store({
     if (SighLens_) {
       let SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
       console.log(SighLens_Contract);
-      const ret = SighLens_Contract.methods.getAccountLimits(sighlens_sightroller,sighlens_account).send({from: state.web3Account})
+      const ret = SighLens_Contract.methods.getAccountLimits(sighlens_sightroller,sighlens_account).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3362,7 +3295,7 @@ const store = new Vuex.Store({
     if (SighLens_) {
       let SighLens_Contract = new web3.eth.Contract(SighLens.abi, SighLens_.address);
       console.log(SighLens_Contract);
-      const ret = SighLens_Contract.methods.getGSighBalanceMetadataExt( sighlens_gsigh_address, sighlens_sightroller, sighlens_account ).send({from: state.web3Account})
+      const ret = SighLens_Contract.methods.getGSighBalanceMetadataExt( sighlens_gsigh_address, sighlens_sightroller, sighlens_account ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3390,7 +3323,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.initialize( cer20_underlying, cer20_sightroller, cer20_interestRateModel_, cer20_initialExchangeRateMantissa,cer20_name, cer20_symbol, cer20_decimals ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.initialize( cer20_underlying, cer20_sightroller, cer20_interestRateModel_, cer20_initialExchangeRateMantissa,cer20_name, cer20_symbol, cer20_decimals ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3408,7 +3341,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.mint(  Web3.utils.toWei(cer20_mintAmount.toString(), 'ether')   ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.mint(  Web3.utils.toWei(cer20_mintAmount.toString(), 'ether')   ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3426,7 +3359,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.redeem( Web3.utils.toWei(cer20_redeemTokens.toString(), 'ether')  ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.redeem( Web3.utils.toWei(cer20_redeemTokens.toString(), 'ether')  ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3444,7 +3377,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.redeemUnderlying( cer20_redeemAmount ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.redeemUnderlying( cer20_redeemAmount ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3462,7 +3395,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.borrow( cer20_borrowAmount ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.borrow( cer20_borrowAmount ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3481,7 +3414,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.repayBorrow(  Web3.utils.toWei(cer20_repayAmount.toString(), 'ether') ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.repayBorrow(  Web3.utils.toWei(cer20_repayAmount.toString(), 'ether') ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3499,7 +3432,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.repayBorrowBehalf(  cer20_borrower, cer20_repayAmount ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.repayBorrowBehalf(  cer20_borrower, cer20_repayAmount ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3517,7 +3450,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.liquidateBorrow( cer20_borrower,  cer20_repayAmount, cer20_cTokenCollateral ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.liquidateBorrow( cer20_borrower,  cer20_repayAmount, cer20_cTokenCollateral ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3535,7 +3468,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods._addReserves( cer20_addAmount ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods._addReserves( cer20_addAmount ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3553,7 +3486,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.transfer( cer20_dst, cer20_amount ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.transfer( cer20_dst, cer20_amount ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3571,7 +3504,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.transferFrom( cer20_src, cer20_dst, cer20_amount ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.transferFrom( cer20_src, cer20_dst, cer20_amount ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3589,7 +3522,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.approve( cer20_spender, cer20_amount ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.approve( cer20_spender, cer20_amount ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3607,7 +3540,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.balanceOfUnderlying( cer20_owner ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.balanceOfUnderlying( cer20_owner ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3625,7 +3558,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.totalBorrowsCurrent().send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.totalBorrowsCurrent().send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3643,7 +3576,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.borrowBalanceCurrent(cer20_account).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.borrowBalanceCurrent(cer20_account).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3661,7 +3594,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.exchangeRateCurrent().send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.exchangeRateCurrent().send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3679,7 +3612,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.accrueInterest().send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.accrueInterest().send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3802,7 +3735,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.seize(cerc20_liquidator, cerc20_borrower, cerc20_seizeTokens ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.seize(cerc20_liquidator, cerc20_borrower, cerc20_seizeTokens ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3820,7 +3753,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods._setPendingAdmin( cerc20_newPendingAdmin ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods._setPendingAdmin( cerc20_newPendingAdmin ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3838,7 +3771,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods._acceptAdmin().send({from: state.web3Account})
+      const ret = CErc20_Contract.methods._acceptAdmin().send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3856,7 +3789,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods._setSightroller(cerc20_newSightroller).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods._setSightroller(cerc20_newSightroller).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3874,7 +3807,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods._setReserveFactor(cerc20_newReserveFactorMantissa).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods._setReserveFactor(cerc20_newReserveFactorMantissa).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3892,7 +3825,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods._reduceReserves(cerc20_reduceAmount).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods._reduceReserves(cerc20_reduceAmount).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -3910,7 +3843,7 @@ const store = new Vuex.Store({
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, MarketAddress);
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods._setInterestRateModel(cerc20_newInterestRateModel).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods._setInterestRateModel(cerc20_newInterestRateModel).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
       })
@@ -4002,7 +3935,7 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
     let erc20TokenAddress = '0x76Ff68033ef96ee0727f85eA1f979B1b0FD4C75b'; //SIGH
     let Erc20__Contract = new web3.eth.Contract(EIP20NonStandardInterface.abi, erc20TokenAddress );
     console.log(Erc20__Contract);
-    Erc20__Contract.methods.approve('0x2414607d3ef95f4730758e7316ad100B9A5084A1', Web3.utils.toWei('1000000000', 'ether') ).send({from: state.web3Account}) //SIGH-MARKET
+    Erc20__Contract.methods.approve('0x2414607d3ef95f4730758e7316ad100B9A5084A1', Web3.utils.toWei('1000000000', 'ether') ).send({from: state.connectedWallet}) //SIGH-MARKET
       .then(receipt => {
         console.log(receipt);
       })
@@ -4063,7 +3996,7 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, contractAddress );
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.approve( sender, Web3.utils.toWei(amount.toString(), 'ether') ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.approve( sender, Web3.utils.toWei(amount.toString(), 'ether') ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
         return receipt;        
@@ -4086,7 +4019,7 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
       console.log(mintAmount.toString(), 'ether');
       console.log(mintAmount.toString(), 'ether');
       console.log(mintAmount.toString(), 'ether');
-      const ret = CErc20_Contract.methods.mint( Web3.utils.toWei(mintAmount.toString(), 'ether') ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.mint( Web3.utils.toWei(mintAmount.toString(), 'ether') ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
         return receipt;        
@@ -4105,7 +4038,7 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract( CErc20.abi, marketId );
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.borrow( Web3.utils.toWei(BorrowAmount.toString(), 'ether') ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.borrow( Web3.utils.toWei(BorrowAmount.toString(), 'ether') ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
         return receipt;        
@@ -4124,7 +4057,7 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract( CErc20.abi, marketId );
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.repayBorrow( Web3.utils.toWei(RepayBorrowAmount.toString(), 'ether') ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.repayBorrow( Web3.utils.toWei(RepayBorrowAmount.toString(), 'ether') ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
         return receipt;        
@@ -4143,7 +4076,7 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract( CErc20.abi, marketId );
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.redeemUnderlying( Web3.utils.toWei(RedeemAmount.toString(), 'ether') ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.redeemUnderlying( Web3.utils.toWei(RedeemAmount.toString(), 'ether') ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
         return receipt;        
@@ -4162,7 +4095,7 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract( CErc20.abi, marketId );
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.redeem( Web3.utils.toWei(RedeemAmount.toString(), 'ether') ).send({from: state.web3Account})
+      const ret = CErc20_Contract.methods.redeem( Web3.utils.toWei(RedeemAmount.toString(), 'ether') ).send({from: state.connectedWallet})
       .then(receipt => {
         console.log(receipt);
         return receipt;        
@@ -4205,7 +4138,7 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
     if (CErc20_) {
       let CErc20_Contract = new web3.eth.Contract(CErc20.abi, underlyingAddress );
       console.log(CErc20_Contract);
-      const ret = CErc20_Contract.methods.allowance( state.web3Account, sender).call();
+      const ret = CErc20_Contract.methods.allowance( state.connectedWallet, sender).call();
       console.log(ret);
       if ( Number(ret) > 0 ) {     // if the market is supported
         return true;
@@ -4250,7 +4183,7 @@ Approve_the_transfer_by_Sightroller: async ({commit,state}) => {
         let Treasury__Contract = new web3.eth.Contract(Treasury.abi, Treasury_.address);
         console.log(Treasury__Contract);
         try {
-          let txHash = Treasury__Contract.methods.swapTokensUsingOxAPI(allowanceTarget,to,callDataHex,token_bought,token_sold,sellAmount).sendTransactionAsync({ from:  state.web3Account, value: quote.value, gasPrice: gasPrice_});
+          let txHash = Treasury__Contract.methods.swapTokensUsingOxAPI(allowanceTarget,to,callDataHex,token_bought,token_sold,sellAmount).sendTransactionAsync({ from:  state.connectedWallet, value: quote.value, gasPrice: gasPrice_});
           console.log(txHash);
         } 
         catch (e) {

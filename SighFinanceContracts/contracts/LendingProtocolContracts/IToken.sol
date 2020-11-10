@@ -596,8 +596,8 @@ contract IToken is ERC20, ERC20Detailed {
         uint supplyIndex = sighDistributionHandlerContract.getInstrumentSupplyIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHDistributionHandler Contract
         require(supplyIndex > 0, "SIGH Distribution Handler returned invalid supply Index for the instrument");
 
-        Double memory supplyIndex_ = Double({mantissa: supplyIndex});                        // Instrument Index
         Double memory supplierIndex = Double({mantissa: SupplierIndexes[supplier]}) ;      // Stored Supplier Index
+        Double memory supplyIndex_ = Double({mantissa: supplyIndex});                        // Instrument Index
         SupplierIndexes[supplier] = supplyIndex_.mantissa;                                   // Supplier Index is UPDATED
 
         if (supplierIndex.mantissa == 0 && supplyIndex_.mantissa > 0) {
