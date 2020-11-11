@@ -3,15 +3,13 @@
 
 <script>
 import TradePane from './TradePane/TradePane.vue';
-import BookPane from './BookPane/BookPane.vue';
-import SupportedMoneyMarkets from './BookPane/SupportedMoneyMarkets/SupportedMoneyMarkets.vue';
+import SupportedMoneyMarkets from './SupportedMoneyMarkets/SupportedMoneyMarkets.vue';
 
 export default   {
   name: 'supported-markets_utility-panel',
 
   components : {
     TradePane,
-    BookPane,
     SupportedMoneyMarkets,
   },
 
@@ -30,17 +28,8 @@ export default   {
   },
 
   methods :{
-    sidebarTrigger(id) {
-      switch(id) {
-        case '1':
-          this.$store.commit('toggleTradePaneClosed');
-          break;
-        case '2':
-          this.$store.commit('toggleBookPaneClosed');
-          break;
-        
-      }
-    },
+
+
   },
 };
 </script>
