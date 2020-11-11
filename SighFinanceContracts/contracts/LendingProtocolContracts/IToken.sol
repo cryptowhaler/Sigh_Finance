@@ -768,24 +768,12 @@ contract IToken is ERC20, ERC20Detailed {
 // ########################################################### 
 // ######  VIEW FUNCTIONS (SIGH RELATED)    ################## 
 
-    function getSighAccured() external view returns (uint) {
-        return AccuredSighBalances[msg.sender];
-    }
-
-    function getSighAccuredForAccount(address account) external view returns (uint) {
+    function getSighAccured(address account) external view returns (uint) {
         return AccuredSighBalances[account];
-    }
-
-    function getSighStreamRedirectedTo() external view returns (address) {
-        return sighRedirectionAddresses[msg.sender];
     }
 
     function getSighStreamRedirectedTo(address account) external view returns (address) {
         return sighRedirectionAddresses[account];
-    }
-
-    function getSighStreamAllowances() external view returns (address) {
-        return sighRedirectionAllowances[msg.sender];
     }
 
     function getSighStreamAllowances(address account) external view returns (address) {
