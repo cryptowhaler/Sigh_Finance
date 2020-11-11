@@ -4,63 +4,60 @@
 import { ModelSelect, } from 'vue-search-select';
 import EventBus, { EventNames, } from '@/eventBuses/default';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
-import { VegaKeys, } from '../../utils/localStorage';
+import { ConnectedWallet, } from '../../utils/localStorage';
+import {mapState,mapActions,} from 'vuex';
 
 
 export default {
   name: 'header-section',
+
+
   data() {
     return {
-      status: 'Major Outage',
-      serverStatusCode: 'major_outage',
+      isConnected : this.$store.getters.isWalletConnected,
+      statusCode: 'Connect Wallet',
     };
   },
+
+
   components: {
     ModelSelect,
   },
+
+
   methods: {
+    ...mapActions(['getWalletConfig']),
+
     onTriggerClick() {
       this.$store.commit('toggleSidebar');
     },
 
-    getServerStatus() {
-      let data = this.$store.getters.isWalletConnected;
-      // console.log(data);
-      if (data) {
-        this.serverStatusCode = 'Connected ';
-        return this.serverStatusCode;
+    async refreshWalletConnected() {
+      let responseMsg = await this.getWalletConfig();
+      if (this.$store.getters.connectedWallet) {
+        this.$showInfoMsg({message: responseMsg + this.$store.getters.connectedWallet });  
+        this.statusCode = 'Refresh Connection';
       }
-      else{
-        this.serverStatusCode = 'Not Connected';
-        return this.serverStatusCode;
-      }
+      else {
+        this.$showErrorMsg({message: responseMsg  });  
+        // EventBus.$emit(EventNames.userWalletDisconnected);
+        this.statusCode = 'Connect Wallet';
+      }      
     },
-    logout() {
-      EventBus.$emit(EventNames.userWalletDisconnected);
-      this.$showSuccessMsg({
-        message: 'Connected Successfully',
-      });
-    },
-    showDepositModal() {
-      this.$store.commit('closeSidebar');
-      this.$emit('show-deposit-modal');
-    },
-    showWithdrawlModal() {
-      this.$store.commit('closeSidebar');
-      this.$emit('show-withdrawl-modal');
-    },
-    showLoginModal() {        //Added
-      this.$store.commit('closeSidebar');
-      this.$emit('show-login-modal');
-    },
+    
     showContactModal() {        //Added
       this.$store.commit('closeSidebar');
       this.$emit('show-contact-modal');
     },
-    showLogoutModal() {     //Added
-      this.$store.commit('closeSidebar');
-      this.$emit('show-logout-modal');
-    },
+  },
+
+  computed: {
+    getServerStatus: function() {
+      if (this.$store.getters.isWalletConnected) {
+        return 'Refresh Connection';
+      }
+      return this.statusCode;
+    }
   },
 
 

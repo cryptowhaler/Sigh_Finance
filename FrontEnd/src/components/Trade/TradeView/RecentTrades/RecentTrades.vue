@@ -3,7 +3,7 @@
 <script>
 import { dateToDisplayDateTime, } from '@/utils/utility';
 import EventBus, { EventNames, } from '@/eventBuses/default';
-import {VegaKeys,} from '@/utils/localStorage.js';
+import {ConnectedWallet,} from '@/utils/localStorage.js';
 import gql from 'graphql-tag';
 
 export default {
@@ -19,7 +19,7 @@ export default {
     return {
       trades: this.$store.getters.recentTrades,
       // partiesId: '5946e79a6e21950ea276ea7792d34553347611ee845d57088177c1df99f50633',
-      partiesId: VegaKeys.currentActiveKey,
+      partiesId: ConnectedWallet.currentActiveKey,
     };
   },
 
@@ -75,7 +75,7 @@ export default {
       // this.partiesId = '5946e79a6e21950ea276ea7792d34553347611ee845d57088177c1df99f50633';
       this.$store.commit('recentTrades',[]);
       this.trades = [];
-      this.partiesId = VegaKeys.currentActiveKey;
+      this.partiesId = ConnectedWallet.currentActiveKey;
       // console.log(this.partiesId);
       // const response = await VegaProtocolService.get_trades_by_party(this.partiesId);
       // // console.log(response);

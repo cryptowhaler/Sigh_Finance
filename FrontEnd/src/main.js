@@ -3,7 +3,7 @@ import App from '@/App/App.vue';
 import router from './router';
 import store from './store';
 // import { connect, } from 'mqtt';
-import LocalStorage, { Keys,VegaKeys,} from '@/utils/localStorage.js';
+import LocalStorage, { Keys,ConnectedWallet,} from '@/utils/localStorage.js';
 import EventBus, { EventNames, } from '@/eventBuses/default';
 import { uuidv4, } from './utils/utility';
 
@@ -43,7 +43,7 @@ import '@/assets/css/colors.css';
 // we are adding ApolloProvider to the Vue app.
 
 // http://graph.marlin.pro
-// const header = { Authorization: 'Bearer ' + VegaKeys.token, };
+// const header = { Authorization: 'Bearer ' + ConnectedWallet.token, };
   // uri: 'wss://graph.marlin.pro/subgraphs/name/cryptowhaler/sigh-finance-kovan',
   //Link for Subscription and defining headers
   const graphQL_subscription = new WebSocketLink({     uri: 'wss://api.thegraph.com/subgraphs/name/cryptowhaler/sigh-finance-kovan', options: { reconnect: true, timeout:300000, }, });

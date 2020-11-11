@@ -28,21 +28,21 @@ class LocalStorage {
     this.remove(Keys.mqtt);
   }
 
-  clearVegaSession() {
-    VegaKeys.token = null;
-    VegaKeys.name = null;
-    VegaKeys.pubKeys = [];
-    VegaKeys.currentActiveKey =null;
-    this.remove(VegaKeys.name);
-    this.remove(VegaKeys.token);
-    this.remove(VegaKeys.pubKeys);
-    this.remove(VegaKeys.currentActiveKey);
+  clearCurrentWalletSession() {
+    ConnectedWallet.token = null;
+    ConnectedWallet.name = null;
+    ConnectedWallet.pubKeys = [];
+    ConnectedWallet.currentActiveKey =null;
+    this.remove(ConnectedWallet.name);
+    this.remove(ConnectedWallet.token);
+    this.remove(ConnectedWallet.pubKeys);
+    this.remove(ConnectedWallet.currentActiveKey);
   }
 }
 
 export default new LocalStorage();
 
-export const VegaKeys = {
+export const ConnectedWallet = {
   token: null,
   name: null,
   pubKeys: [],

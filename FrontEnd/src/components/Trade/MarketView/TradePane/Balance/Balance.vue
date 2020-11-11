@@ -1,7 +1,7 @@
 <template src="./template.html"></template>
 
 <script>
-import { VegaKeys } from '../../../../../utils/localStorage';
+import { ConnectedWallet } from '../../../../../utils/localStorage';
 // import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import EventBus, {EventNames,} from '@/eventBuses/default';
 export default {
@@ -15,7 +15,7 @@ export default {
       // totalUnrealizedPNL_: this.$store.getters.totalUnrealizedPNL,
       // totalRealizedPNL: this.$store.getters.totalRealizedPNL,
       selectedPubKey: '',
-      pubkeys : VegaKeys.pubKeys,
+      pubkeys : ConnectedWallet.pubKeys,
     };
   },
   
@@ -31,9 +31,9 @@ export default {
 
   methods: {
     setpubkeys() {
-      // console.log(VegaKeys.pubKeys);
+      // console.log(ConnectedWallet.pubKeys);
       // console.log(this.pubkeys);
-      this.pubkeys = VegaKeys.pubKeys;
+      this.pubkeys = ConnectedWallet.pubKeys;
       // console.log(this.pubkeys);
     },
     setpubkeysEmpty() {
@@ -42,9 +42,9 @@ export default {
 
     PubKeyChange () {
       // console.log('newly selected ' + this.selectedPubKey);
-      // console.log('currently active' + VegaKeys.currentActiveKey);
-      VegaKeys.currentActiveKey = this.selectedPubKey;
-      // console.log( 'newly active' + VegaKeys.currentActiveKey);
+      // console.log('currently active' + ConnectedWallet.currentActiveKey);
+      ConnectedWallet.currentActiveKey = this.selectedPubKey;
+      // console.log( 'newly active' + ConnectedWallet.currentActiveKey);
       EventBus.$emit(EventNames.pubKeyChanged);
     },
   },

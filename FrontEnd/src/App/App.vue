@@ -58,7 +58,6 @@ export default {
     return {
       loaderLabel: 'Loading...',
       contactModalShown: false,
-      shouldOpen: false,
       firstTime: true,
     };
   },
@@ -68,7 +67,6 @@ export default {
     showLoader() {
       return this.$store.getters.showLoader;
     },
-    
     isWalletConnected() {
       return this.$store.getters.isWalletConnected;
     }
@@ -76,16 +74,15 @@ export default {
 
 
   async created() {         //GETS WEB3
-    localStorage.shouldOpen = true;
     this.handleWeb3();    
   },
 
   mounted() {
-    this.walletConnected = body => this.fetchConfigsLogin(body.username);     //Login 
-    this.WalletDisconnectedListener = body => this.fetchConfigsLogout();     //Logout
+    this.walletConnected = body => this.fetchConfigsWalletConnected(body.username);     //Wallet connected 
+    this.WalletDisconnectedListener = body => this.fetchConfigsWalletDisconnected();     //Wallet Disconnected 
 
   
-    EventBus.$on(EventNames.userWalletConnected, this.walletConnected);           //AUTH
+    EventBus.$on(EventNames.userWalletConnected, this.walletConnected);           //WHENEVER A USER WALLET IS CONNECTED, WE 
     EventBus.$on(EventNames.userWalletDisconnected, this.WalletDisconnectedListener);           //AUTH
   },
 
@@ -118,7 +115,7 @@ export default {
         this.$showSuccessMsg({message:"Successfully connected to the Ethereum Network's '" + this.$store.getters.networkName  + "' (not a Metamask wallet) ! Welcome to SIGH Finance!"});
       }
       if (isWeb3loaded == 'false') {
-        this.$showErrorMsg({message:'No Ethereum interface injected into browser. Read-only access. Please install MetaMask wallet browser extension or connect our support team at support@sigh.finance. '});
+        this.$showErrorMsg({message:'No Web3 Object injected into browser. Read-only access. Please install MetaMask browser extension or connect our support team at support@sigh.finance. '});
       }
 
       // If wallet is allowed to connect, then fetch the details
@@ -148,21 +145,17 @@ export default {
       }
     },
 
-    async fetchConfigs() {
+    async fetchConfigsWalletConnected() {
+      console.log('IN fetchConfigsWalletConnected() in APP.vue');
       this.$store.commit('addLoaderTask', 1, false);
       this.$store.commit('removeLoaderTask', 1);
     },
-    async fetchConfigsLogin() {
-      this.$store.commit('addLoaderTask', 1, false);
-      this.$store.commit('removeLoaderTask', 1);
-      this.toggleLoginModal();
-    },
-    async fetchConfigsLogout() {
+    async fetchConfigsWalletDisconnected() {
+      console.log('IN fetchConfigsWalletDisconnected() in APP.vue');
       this.$store.commit('addLoaderTask', 1, false);
       this.$store.commit('removeLoaderTask', 1);
       // console.log('IN LOGOUT TOGGLING');
       // console.log(this.toggleLogoutModal);
-      this.toggleLogoutModal();
       // console.log(this.toggleLogoutModal);
     },
 
@@ -172,9 +165,6 @@ export default {
       // console.log(this.contactModalShown);        
     },
     
-    closeBtnClicked() {
-      sessionStorage.shouldOpen = true;
-    },
     // async getMarkets() {    //getting markets
     //   const markets = await VegaProtocolService.get_markets();
     //   // console.log(markets);

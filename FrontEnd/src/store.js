@@ -433,17 +433,34 @@ const store = new Vuex.Store({
 
     // SETS USER ACCOUNT FROM THE WEB3 OBJECT OF THE STORE
     getWalletConfig: async ({commit,state}) => {
-      console.log("getWalletConfig ACTION FUNCTION CALLED IN STORE");
-      const accounts = await state.web3.eth.getAccounts();
-      console.log(accounts);
-      if (accounts) {
-        commit('connectedWallet',accounts[0]);
-        commit('isWalletConnected',true);  
-        let lowercase = accounts[0].toLowerCase();
-        console.log( 'LOWER CASE - ' + lowercase );
-        store.dispatch('polling'); 
-        return accounts[0];
+      console.log("getWalletConfig ACTION FUNCTION CALLED IN STORE"); 
+      let accounts = null;     
+      if (!state.web3) {
+        console.log("getWalletConfig ACTION FUNCTION CALLED IN STORE = web3 not set yet");
+        await store.dispatch("loadWeb3");
+        if (state.web3) {
+          store.dispatch("getContractAddresses");
+        }
       }
+      if (state.web3) {
+        accounts = await state.web3.eth.getAccounts();
+        console.log(accounts);
+        if (accounts) {
+          commit('connectedWallet',accounts[0]);
+          commit('isWalletConnected',true);  
+          console.log( 'Account - ' + state.connectedWallet );
+          store.dispatch('polling'); 
+          return "You are now connected with wallet - ";
+        }
+        else {
+          commit('connectedWallet',null);
+          commit('isWalletConnected',false);  
+          return "No Wallet detected. Read-only access" ;
+        }
+      }
+      else {
+          return "No Web3 Object detected. Read-only access" ;
+        }
    },
 
   // UPDATES ACCOUNT AND WALLET WHENEVER THEY CHANGE

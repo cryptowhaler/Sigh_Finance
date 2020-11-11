@@ -3,7 +3,7 @@
 <script>
 import { dateToDisplayDateTime, } from '@/utils/utility';
 import EventBus, { EventNames, } from '@/eventBuses/default';
-import { VegaKeys, } from '../../../../utils/localStorage';
+import { ConnectedWallet, } from '../../../../utils/localStorage';
 import gql from 'graphql-tag';
 
 export default {
@@ -23,7 +23,7 @@ export default {
       orders: this.$store.getters.activeOrders,
       tableHeight: '',
       orders_array: [],
-      partiesId: VegaKeys.currentActiveKey,          
+      partiesId: ConnectedWallet.currentActiveKey,          
       // showLoader:false,
       // snapTaken: false,
     };
@@ -123,9 +123,9 @@ export default {
     async getActiveOrders() {     //will call vegaProtocolService 
       this.$store.commit('activeOrders',[]);
       this.orders = [];
-      this.partiesId = VegaKeys.currentActiveKey;
+      this.partiesId = ConnectedWallet.currentActiveKey;
       // console.log(this.partiesId);
-      // console.log(VegaKeys.currentActiveKey);
+      // console.log(ConnectedWallet.currentActiveKey);
       // const response = await VegaProtocolService.get_orders_by_party(this.partiesId);
       // // console.log(response);
       // if (response.status == 200) {

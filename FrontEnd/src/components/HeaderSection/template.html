@@ -49,67 +49,29 @@
                         <!-- <div class="header-market-link-group uk-clearfix"> -->
                         <div class="navbar">
                             
-                            <!-- LANDING PAGE -->
-                            <router-link to="/test" v-bind:class="{ active: $route.path === '/test' }">
-                                <span>Test</span>
-                            </router-link>
-
                             <router-link to="/Trade" v-bind:class="{ active: $route.path === '/Trade' }">
                                 <span>Trade</span>
                             </router-link>
 
-                            <!-- LANDING PAGE -->
-                            <!-- <router-link to="/mainPage" v-bind:class="{ active: $route.path === '/mainPage' }">
-                                <span>mainPage</span>
-                            </router-link> -->
+                            <div>
+                                <a href="javascript:undefined" @click="showContactModal"><span>Contact</span></a> 
+                            </div>
 
-                            <!-- MARKETS -->
-                            <!-- <router-link to="/markets" v-bind:class="{ active: $route.path === '/markets' }">
-                                <span>Markets</span>
-                            </router-link> -->
-
-                            <!-- FUNDS DropDown : Deposit || Withdrawl [IF ONLY LOGGEG IN] -->
+                            <!-- DROPDOWN TEMPLATE -->
                             <!-- <div class="dropdown" v-if="$store.getters.isLoggedIn && $store.getters.themeMode === 'default'">
                                 <button class="dropbtn"> Funds  <i class="fa fa-caret-down"></i></button>
                                 <div class="dropdown-content">
                                     <a href="javascript:undefined" @click="showDepositModal"><span>Deposit</span></a>
                                     <a href="javascript:undefined" @click="showWithdrawlModal"><span>Withdraw</span></a>                                    
                                 </div>
-                            </div>
-                            <router-link to="/balance" v-bind:class="{ active: $route.path.startsWith('/balance') }" v-if="$store.getters.isLoggedIn && $store.getters.themeMode === 'default'">
-                                <span>Wallet</span>
-                            </router-link>
-                            <router-link to="/history" v-bind:class="{ active: $route.path.startsWith('/history') }" v-if="$store.getters.isLoggedIn && $store.getters.themeMode === 'default'">
-                                <span>History</span>
-                            </router-link>                               -->
-                            <!-- LOGOUT [IF ONLY LOGGEG IN] -->                            
-                            <div>
-                                <a href="javascript:undefined" @click="showContactModal"><span>Contact</span></a> 
-                            </div>
-                            <!-- <div>
-                                <a href="javascript:undefined" v-if="$store.getters.isLoggedIn && $store.getters.themeMode === 'default'" @click="showLogoutModal"><span>Logout</span></a> 
-                            </div> -->
-
-                            <!-- LOGIN [IF ONLY LOGGED OUT]-->
-                            <div >
-                                <a href="javascript:undefined" v-if="!$store.getters.isLoggedIn && $store.getters.themeMode === 'default'" @click="showLoginModal"><span>Login</span></a>
-                            </div>
-                            <!-- PROFILE DropDown : Settings || History || Refresh Balances [IF ONLY LOGGED IN]
-                            <div class="dropdown" v-if="$store.getters.isLoggedIn && $store.getters.themeMode === 'default'">
-                                <button class="dropbtn"> Profile <i class="fa fa-caret-down"></i></button>
-                                <div class="dropdown-content">
-                                    <router-link to="/settings" v-bind:class="{active: $route.path.startsWith('/settings')}">Settings</router-link>
-                                    <router-link to="/history" v-bind:class="{ active: $route.path.startsWith('/history') }"><span>History</span></router-link>
-                                    <a href="javascript:undefined" @click="refreshBalances"> <span>Refresh Balances</span> </a>
-                                </div>
-                            </div>
-
-                             WALLETS [IF ONLY LOGGED IN] -->
+                            </div>  -->
+ 
 
                              <!-- <div id="statusDiv" style="color:var(--primary-text-color);">
                                 <span class="dot" :class='serverStatusCode'>
                                 </span>&nbsp;&nbsp;&nbsp;&nbsp;{{ getServerStatus() }}
                             </div> -->
+
                              <div class="col-auto pr-lg-0">
                                 <div class="header-social-icon d-none d-md-inline-block">
                                     <!-- <a href="https://www.facebook.com/block42.network/" title="Facebook" target="_blank">
@@ -121,12 +83,15 @@
                                     <a href="https://medium.com/sigh-finance" title="Medium" target="_blank">
                                         <i class="fab fa-medium">  </i>
                                     </a>                          
-                                    <!-- <a href="https://www.instagram.com/_block42/" title="Instagram" target="_blank">
-                                        <i class="fab fa-instagram"></i>
-                                    </a>                           -->
+                                    <a href="https://medium.com/sigh-finance" title="Discord" target="_blank">
+                                        <i class="fab fa-discord">  </i>
+                                    </a>                         
                                 </div>
                             </div>
         
+                            <div >
+                                <a href="javascript:undefined" style="color: chartreuse;" v-if=" $store.getters.themeMode === 'default' " @click="refreshWalletConnected()"><span>{{ getServerStatus }}</span></a>
+                            </div>
 
                         </div>
 
