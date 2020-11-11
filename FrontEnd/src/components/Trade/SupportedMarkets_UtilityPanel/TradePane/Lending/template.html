@@ -1,32 +1,32 @@
 <!-- The options under supply borrow begin here -->
-<div id="landing-trade-tab" style="padding-left: 30%;"> 
+<div id="landing-trade-tab" style="padding-left: 30%; padding-top: 3%; position: inherit;"> 
+
+<!-- SELECT INSTRUMENT DROPDOWN -->
     <div class="buy-sell-tab-dropdown uk-position-top-right">
-        <!-- Pair change (Dropdown), the new selected pair gets stored directly in store.state.seletedPair, and an event is emitted in Vue.JS -->
         <div class="form-elm select" style="width: 251px;">
-            <span style='color:cyan'>  Select Market  </span>
-            <select class="form-ctrl select2-single" @change=marketChange v-model=selectedMarket>
-                <!-- Options dropdown loaded with available pairs from DropDown -->
-                <option v-for="val in $store.getters.LiveMarkets" :key=val.id :value=val>
-                    {{ val.symbol }}
+            <span style='color:cyan'>  Select Instrument  </span>
+             <!-- Instrument selected is directly stored in 'this.selectedInstrument' -->
+            <select class="form-ctrl select2-single" @change=updateSelectedInstrument v-model=selectedInstrument>
+                <!-- Dropdown list of instruments supported by SIGH Finance -->
+                <option v-for="instrument in $store.getters.getSupportedInstruments" :key=instrument.instrumentAddress :value=instrument>
+                    {{ instrument.symbol }}
                 </option>
             </select>
         </div>
     </div>
-    <!-- Tabbing between Market/Limit -->
+
+    <!-- Tabbing between Deposit/Redeem/Borrow/Repay -->
     <div class="cs-tab-1 uk-position-relative ">
         <tab-bar :mobileDropdown=false marketDropdown="false" :tabs=tabs @tab-change="activeTabChange" />
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
+        
+        <br> <br> <br> <br>
 
         <keep-alive>
-        <supply v-if="activeTab === 'Supply '" />
-        <borrow-order v-else-if="activeTab === 'Borrow '" style="padding-right: 42px; padding-left: 42px;" />
-        <Redeem-Component v-else-if="activeTab === 'Redeem'" />
-        <!-- <Swap-Tokens-0xAPI v-else-if="activeTab === 'SwapTokens0xAPI'" /> -->
-        <!-- <stop-market-order v-else-if="activeTab === 'Stop Market'" /> -->
-    </keep-alive>
+            <Deposit v-if="activeTab === 'Deposit' " />
+            <Redeem v-if="activeTab === 'Redeem' " style="padding-right: 42px; padding-left: 42px;" />
+            <Borrow v-if="activeTab === 'Borrow' " />
+            <Repay v-if="activeTab === 'Repay' " />
+        </keep-alive>
+
     </div>
 </div>
