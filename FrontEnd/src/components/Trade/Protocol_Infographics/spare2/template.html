@@ -19,14 +19,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="trade in trades">
+                        <!-- <tr v-for="trade in trades">
                             <td class="bg-ebony-clay c-white">{{ trade.marketName }}</td>
                             <td class="c-green">{{ trade.size }}</td>
                             <td class="c-green">{{ (trade.price).toFixed(5) }}</td>
                             <td>{{ ((trade.price)*(trade.size)).toFixed(5) }}</td>
                             <td v-bind:class="{ 'c-green': trade.aggressor == 'Buy', 'c-red': trade.aggressor == 'Sell' }">{{ trade.aggressor }}</td>
                             <td>{{ trade.createdAt }}</td>
-                        </tr>
+                        </tr> -->
                     </tbody>
                 </table>
             </div>

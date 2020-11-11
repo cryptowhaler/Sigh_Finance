@@ -2,16 +2,14 @@
 
 
 <script>
-// import PricePane from './PricePane/PricePane.vue';
 import TradePane from './TradePane/TradePane.vue';
 import BookPane from './BookPane/BookPane.vue';
 import SupportedMoneyMarkets from './BookPane/SupportedMoneyMarkets/SupportedMoneyMarkets.vue';
 
 export default   {
-  name: 'market-view',
+  name: 'supported-markets_utility-panel',
 
   components : {
-    // PricePane,
     TradePane,
     BookPane,
     SupportedMoneyMarkets,

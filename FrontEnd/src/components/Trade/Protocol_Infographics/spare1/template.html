@@ -22,8 +22,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="order in orders">
-                            <!-- <td width="50">{{ order.id }}</td> -->
+                        <!-- <tr v-for="order in orders">
                             <td class="bg-ebony-clay c-white">{{ order.market }}</td>
                             <td class="c-green">{{ order.size }}</td>
                             <td class="c-red">{{ order.remaining }}</td>
@@ -35,17 +34,15 @@
                             <td>
                                 <a @click=cancelOrder(order) href="javascript:undefined" class="fs14 os-semibold c-white">
                                     <span class="mr5Close">Cancel</span>
-                                    <!-- <i class="icons8-delete"></i> -->
                                 </a>
                             </td>
-                        </tr>
+                        </tr> -->
                         <div v-if="orders.length!=0" >
-                        <tr>
+                        <!-- <tr>
                             <button class="btn" v-on:click="cancelAllOrders()">CANCEL ALL ORDERS</button>
                             <br> <br>
-                        </tr>
+                        </tr> -->
                         </div>
-
                     </tbody>
                 </table>
             </div>

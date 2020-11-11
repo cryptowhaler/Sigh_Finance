@@ -1,17 +1,15 @@
 <template src='./template.html'></template>
 
 <script>
-import MarketView from './MarketView/MarketView.vue';
-import TradeView from './TradeView/TradeView.vue';
+import SupportedMarkets_UtilityPanel from './SupportedMarkets_UtilityPanel/SupportedMarkets_UtilityPanel.vue';
+import Protocol_Infographics from './Protocol_Infographics/Protocol_Infographics.vue';
 // import ExchangeDataEventBus from '@/eventBuses/exchangeData';
-import Positions from './TradeView/Positions/Positions.vue';
 import FAQs from '@/components/FaqsContainer';
 
 export default {
   components: {
-    MarketView,
-    TradeView,
-    Positions,
+    SupportedMarkets_UtilityPanel,
+    Protocol_Infographics,
     faqs: FAQs,
   },
   created() {
