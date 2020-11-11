@@ -36,7 +36,7 @@ export default {
   // },
   
   created() {
-    this.changeSelectedMarket = (newMarket) => {       //Changing Selected Vega Market
+    this.changeSelectedInstrument = (newMarket) => {       //Changing Selected Instrument
       this.formData.SelectedMarketId = newMarket.Id;
       this.formData.SelectedMarketSymbol = newMarket.symbol;
       this.formData.SelectedMarketUnderlyingSymbol = newMarket.underlyingSymbol;
@@ -49,7 +49,7 @@ export default {
       this.showApproveButton = this.marketIsApproved( newMarket.underlyingAddress, newMarket.Id );
       console.log(this.showApproveButton);
     };
-    ExchangeDataEventBus.$on('change-selected-market', this.changeSelectedMarket);        
+    ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
   },
 
 
@@ -118,7 +118,7 @@ export default {
 
   destroyed() {
     // clearInterval(this.watcher);
-    // ExchangeDataEventBus.$off('change-selected-market', this.changeVegaMarket);    
+    // ExchangeDataEventBus.$off('change-selected-instrument', this.changeVegaMarket);    
   },
 };
 </script>

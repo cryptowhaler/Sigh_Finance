@@ -6,23 +6,13 @@ import { stringArrayToHtmlList, } from '@/utils/utility';
 import {mapState,mapActions,} from 'vuex';
 
 export default {
-  name: 'Supply',
+  name: 'Deposit',
   data() {
     return {
-      showConfirm: false,
-      formData: {
-        amount: undefined,
-        SupplyAmount : undefined,
-        SelectedMarketId : this.$store.state.selectedMarketId ,
-        SelectedMarketSymbol: this.$store.state.selectedMarketSymbol,
-        selectedMarketUnderlyingSymbol: this.$store.state.selectedMarketUnderlyingSymbol,
-        selectedMarketUnderlyingPriceUSD: this.$store.state.selectedMarketUnderlyingPriceUSD,
-        selectedMarketExchangeRate: this.$store.state.selectedMarketExchangeRate,
-        selectedMarketunderlyingAddress: this.$store.state.underlyingAddress,
-
-      },
+      selectedInstrument: this.$store.getters.currentlySelectedInstrument;
       showLoader: false,
       showApproveButton: true,
+      showConfirm: false,
     };
   },
 
@@ -36,20 +26,12 @@ export default {
   // },
   
   created() {
-    this.changeSelectedMarket = (newMarket) => {       //Changing Selected Vega Market
-      this.formData.SelectedMarketId = newMarket.Id;
-      this.formData.SelectedMarketSymbol = newMarket.symbol;
-      this.formData.SelectedMarketUnderlyingSymbol = newMarket.underlyingSymbol;
-      this.formData.selectedMarketUnderlyingPriceUSD = newMarket.underlyingPriceUSD;  
-      this.formData.selectedMarketExchangeRate = newMarket.exchangeRate;        
-      this.formData.selectedMarketunderlyingAddress = newMarket.underlyingAddress;        
-
-      console.log( 'NEW SELECTED MARKET - ' + newMarket.Id);
-
-      this.showApproveButton = this.marketIsApproved( newMarket.underlyingAddress, newMarket.Id );
-      console.log(this.showApproveButton);
+    this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
+      this.selectedInstrument = selectedInstrument_;        
+      console.log('DEPOSIT : changeSelectedInstrument - ');
+      console.log(this.selectedInstrument);
     };
-    ExchangeDataEventBus.$on('change-selected-market', this.changeSelectedMarket);        
+    ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
   },
 
 
@@ -118,7 +100,7 @@ export default {
 
   destroyed() {
     // clearInterval(this.watcher);
-    // ExchangeDataEventBus.$off('change-selected-market', this.changeVegaMarket);    
+    // ExchangeDataEventBus.$off('change-selected-instrument', this.changeVegaMarket);    
   },
 };
 </script>

@@ -37,7 +37,7 @@ export default {
   // },
 
   created() {
-    this.changeSelectedMarket = (newMarket) => {       //Changing Selected Vega Market
+    this.changeSelectedInstrument = (newMarket) => {       //Changing Selected Instrument
       this.formData.SelectedMarketId = newMarket.Id;
       this.formData.SelectedMarketSymbol = newMarket.symbol;
       this.formData.SelectedMarketUnderlyingSymbol = newMarket.underlyingSymbol;
@@ -47,7 +47,7 @@ export default {
 
       console.log( 'NEW SELECTED MARKET - ' + newMarket.Id);
     };
-    ExchangeDataEventBus.$on('change-selected-market', this.changeSelectedMarket);        
+    ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
   },
 
   // mounted() {

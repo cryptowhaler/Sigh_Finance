@@ -144,7 +144,7 @@ export default {
 
   destroyed() {
     // clearInterval(this.watcher);
-    // ExchangeDataEventBus.$off('change-selected-market', this.changeVegaMarket);    
+    // ExchangeDataEventBus.$off('change-selected-instrument', this.changeVegaMarket);    
   },
 };
 </script>

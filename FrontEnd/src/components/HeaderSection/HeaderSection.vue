@@ -62,7 +62,7 @@ export default {
 
 
   created() {
-    this.changeVegaHeader = (newMarket) => {       //Changing Selected Vega Market
+    this.changeVegaHeader = (newMarket) => {       //Changing Selected Instrument
       this.vegaSelectedMarketName = newMarket.Name;
       this.vegaMarketSummary = newMarket.Summary;
     };

@@ -81,9 +81,9 @@ const store = new Vuex.Store({
     // SIGHFinanceConfiguratorContract: null,
     // SIGHFinanceManager: null,    
 
-    SupportedInstrumentStates: {},                      // CONFIG DATE FOR THE SUPPORTED INSTRUMENTS
-    InstrumentContracts: {},                            // ERC20 INSTRUMENTS
-    ITokenContracts: {},                                // Redeem, redirectInterestStream, allowInterestRedirectionTo, redirectInterestStreamOf, Approve, 
+    // SupportedInstrumentStates: {},                      // CONFIG DATA FOR THE SUPPORTED INSTRUMENTS
+    // InstrumentContracts: {},                            // ERC20 INSTRUMENTS
+    // ITokenContracts: {},                                // Redeem, redirectInterestStream, allowInterestRedirectionTo, redirectInterestStreamOf, Approve, 
                                                         // Transfer, TransferFrom, Allowance, claimMySIGH
                                                         // redirectSighStream, allowSighRedirectionTo, redirectSighStreamOf
                                                         // principalBalanceOf, totalSupply, BalanceOf, getRedirectedBalance, getInterestRedirectionAddress, getUserIndex
@@ -101,6 +101,8 @@ const store = new Vuex.Store({
     NETWORKS : { '1': 'Main Net', '2': 'Deprecated Morden test network','3': 'Ropsten test network',
       '4': 'Rinkeby test network','42': 'Kovan test network', '1337': 'Tokamak network', '4447': 'Truffle Develop Network','5777': 'Ganache Blockchain',
       '56':'Binance Smart Chain Main Network','97':'Binance Smart Chain Test Network'},
+    supportedInstruments : [],      // INSTRUMENTS SUPPORTED BY THE PROTOCOL (FOR LENDING - ITOKEN & INSTRUMENT ADDRESSES + SYMBOL/NAME WILL BE STORED)
+    currentlySelectedInstrument : null, // Currently Selected Instrument
 
     username: null, //Added
     websocketStatus: 'Closed',
@@ -190,7 +192,12 @@ const store = new Vuex.Store({
     // ######################################################
     // ############ TO BE WORKED UPON ############
     // ######################################################
-
+    getSupportedInstruments(state) {
+      return state.supportedInstruments;
+    },
+    currentlySelectedInstrument(state) {
+      return state.currentlySelectedInstrument;
+    }
     showLoader(state) {
       return state > 0;
     },
@@ -283,24 +290,6 @@ const store = new Vuex.Store({
       state.SIGHDistributionHandlerAddress = newContractAddress;
       console.log("In updateSIGHDistributionHandlerAddress - " + state.SIGHDistributionHandlerAddress);
     },    
-    // LENDING POOL CONTRACTS
-    addToSupportedInstrumentStates(state,newITokenAddress,newInstrumentAddress) {         
-      let obj = {};
-      obj.iTokenAddress = newITokenAddress;
-      obj.instrumentAddress = newInstrumentAddress;
-      state.SupportedInstrumentStates.push(obj);
-      console.log(obj);
-      console.log(state.SupportedInstrumentStates);
-      console.log("In addToSupportedInstrumentStates ");
-    },    
-    addToITokenContracts(state,newContractAddress) {         
-      state.ITokenContracts.push(newContractAddress);
-      console.log("In addToITokenContracts - " + state.ITokenContracts);
-    },    
-    addToInstrumentContracts(state,newContractAddress) {         
-      state.InstrumentContracts.push(newContractAddress);
-      console.log("In addToInstrumentContracts - " + state.InstrumentContracts);
-    },    
     updateLendingPoolContractAddress(state,newContractAddress) {         
       state.LendingPoolContractAddress = newContractAddress;
       console.log("In updateLendingPoolContractAddress - " + state.LendingPoolContractAddress);
@@ -316,6 +305,19 @@ const store = new Vuex.Store({
     // ######################################################
     // ############ TO BE WORKED UPON ############
     // ######################################################
+    // INSTRUMENTS SUPPORTED BY SIGH FINANCE
+    addTosupportedInstruments(state,_supportedinstrument) {         
+      state.supportedInstruments.push(_supportedinstrument);
+      console.log(_supportedinstrument);
+      console.log(state.supportedInstruments);
+      console.log("In addTosupportedInstruments ");
+    },    
+    updateSelectedInstrument(state, selectedInstrument_) {
+      state.currentlySelectedInstrument = selectedInstrument_;
+      console.log(_supportedinstrument);
+      console.log(state.supportedInstruments);
+      console.log("In updateSelectedInstrument ");
+    }
     changeWebsocketStatus(state, websocketStatus) {
       state.websocketStatus = websocketStatus;
     },
@@ -560,16 +562,22 @@ const store = new Vuex.Store({
       const lendingPoolCoreContract = new state.web3.eth.Contract(LendingPoolCore.abi, state.LendingPoolCoreContract );
       console.log(lendingPoolCoreContract);
 
+      // Returns an array of supported instrument addresses
       const instruments = await lendingPoolCoreContract.methods.getInstruments().call();        
       console.log("getITokenAddresses ACTION");
       console.log(instruments);
 
+      // Loop over the instrument addresses to fetch iToken Address, name, symbol, decimals and add them to the supported instruments list
       if (instruments) {
         for (let i=0; i<instruments.length; i++) {
-          let iTokenAddress = await lendingPoolCoreContract.methods.getInstrumentITokenAddress(instruments[i]).call();
-          commit('addToSupportedInstrumentStates',iTokenAddress,instruments[i]);
-          commit('addToITokenContracts',iTokenAddress);
-          commit('addToInstrumentContracts',instruments[i]);
+          let erc20Contract = new state.web3.eth.Contract(ERC20.abi, instruments[i] );
+          let instrumentState = {};
+          instrumentState.instrumentAddress = instruments[i];
+          instrumentState.name = await erc20Contract.methods.name().call();
+          instrumentState.symbol = await erc20Contract.methods.symbol().call();
+          instrumentState.decimals = await erc20Contract.methods.decimals().call();
+          instrumentState.iTokenAddress = await lendingPoolCoreContract.methods.getInstrumentITokenAddress(instruments[i]).call();
+          commit('addTosupportedInstruments',instrumentState);
         }
       }
       return true;

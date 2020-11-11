@@ -1137,12 +1137,12 @@ export default {
 
 
   created() {
-    this.changeVegaMarket = (newMarket) => {       //Changing Selected Vega Market
+    this.changeVegaMarket = (newMarket) => {       //Changing Selected Instrument
       this.formData.vegaMarketName = newMarket.Name;
       this.formData.vegaMarketId = newMarket.Id;
       // console.log(this.formData.vegaMarketId + ' ' + this.formData.vegaMarketName);
     };
-    ExchangeDataEventBus.$on('change-selected-market', this.changeVegaMarket);        
+    ExchangeDataEventBus.$on('change-selected-instrument', this.changeVegaMarket);        
   },
 
   // mounted() {
@@ -1154,7 +1154,7 @@ export default {
 
   destroyed() {
     clearInterval(this.watcher);
-    ExchangeDataEventBus.$off('change-selected-market', this.changeVegaMarket);    
+    ExchangeDataEventBus.$off('change-selected-instrument', this.changeVegaMarket);    
   },
 
 };
