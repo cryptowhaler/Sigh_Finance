@@ -1,0 +1,15 @@
+<div class="Redeem-Component">
+    <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
+
+    <!-- IMPLEMENTING - IOC & FOK -->
+        <div class="cs-tab-2  uk-position-relative " style=" padding-left: 30px; padding-right: 50px; padding-top: 12px;">
+            <div id="subtab-market" :title-link-class="'tab-title-class'">
+                <tab-bar :mobileDropdown=false :tabs=tabs @tab-change="activeTabChange" />
+            </div>
+            <keep-alive>
+                <Redeem-Order v-if="activeTab === 'Redeem'" />
+                <Redeem-Underlying-Order v-if="activeTab === 'Redeem Underlying'" />
+            </keep-alive>
+        </div>
+    </div>
+</div>
