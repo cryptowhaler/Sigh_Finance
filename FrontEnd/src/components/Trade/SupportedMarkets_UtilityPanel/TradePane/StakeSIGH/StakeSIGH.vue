@@ -5,7 +5,7 @@ import { ConnectedWallet } from '../../../../../utils/localStorage';
 // import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import EventBus, {EventNames,} from '@/eventBuses/default';
 export default {
-  name: 'balance',
+  name: 'StakeSIGH',
   data() {
     return {
       balance: {},

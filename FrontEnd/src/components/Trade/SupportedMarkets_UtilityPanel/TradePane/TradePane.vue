@@ -30,8 +30,8 @@ export default {
     return {
       activeTab: 'Balance',
       tabs: {
-        walletNotConnectedTabs: ['Balance','Lending','Streaming','Adjust Your Interest Rate','Stake SIGH'],
-        walletConnectedTabs: ['Balance','Lending','Streaming','Adjust Your Interest Rate','Stake SIGH'],
+        walletNotConnectedTabs: ['Balance','Lending','Streaming','Interest Rates','Stake SIGH'],
+        walletConnectedTabs: ['Balance','Lending','Streaming','Interest Rates','Stake SIGH'],
       },
       height: 0,
       tabBarEventBus: new Vue(),
@@ -46,10 +46,6 @@ export default {
     // We emit an event for Tab Bar event Bus, to change the Tab
     EventBus.$on(EventNames.userWalletConnected, () => this.tabBarEventBus.$emit('change-active-tab', 'Balance'));
     EventBus.$on(EventNames.userWalletDisconnected, this.userWalletDisconnectedListener);
-    userWalletDisconnectedListener() {
-      this.activeTab = 'Balance';
-      this.tabBarEventBus.$emit('change-active-tab', 'Balance');
-    },
     this.height = this.$refs.tradePane.clientHeight;
   },
 
@@ -64,6 +60,10 @@ export default {
         el.style.height = 'calc(100%)';
       }
     },
+    userWalletDisconnectedListener() {
+      this.activeTab = 'Balance';
+      this.tabBarEventBus.$emit('change-active-tab', 'Balance');
+    },    
   },
 
 };

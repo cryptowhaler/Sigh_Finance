@@ -6,7 +6,7 @@ import { stringArrayToHtmlList, } from '@/utils/utility';
 import {mapState,mapActions,} from 'vuex';
 
 export default {
-  name: 'Swap-Tokens-0xAPI',
+  name: 'InterestRates',
   data() {
     return {
       showConfirm: false,

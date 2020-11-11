@@ -3,7 +3,7 @@
   border-bottom: 1px solid var(--header-border-color);
 
   @include breakpoint(medium) {
-    padding: 0 0 20px 0px !important;
+    padding: 0 0 0px 0px !important;
   }
   @media screen and (max-width: 1500px) and (min-width: 1300px) {
     .ui-tabs .ui-tabs-nav .ui-tabs-anchor {

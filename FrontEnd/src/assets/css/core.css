@@ -462,6 +462,7 @@
 }
 
 .uk-tab > * > a {
+  padding: 9px 3px;
   color: var(--primary-text-color) !important;
 }
 
@@ -573,6 +574,7 @@ nav {
   width: 32%;
   padding: 0 !important;
   text-align: center;
+  height: 33px;
   margin: 5px;
 }
 #subtab-market  ul li {

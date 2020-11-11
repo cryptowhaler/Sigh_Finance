@@ -7,20 +7,20 @@
         <div style="padding-left: 10px; padding-right: 10px">
 
             <!-- SUPPORTED TABS. tabBarEventBus [used as bus for 'tab change' events] is a vue object defined in data() -->
-            <div id="subtab">
-                <tab-bar :mobileDropdown=false :bus="tabBarEventBus" v-if="!$store.state.isWalletConnected" :tabs=tabs.walletNotConnectedTabs @tab-change="activeTabChange" />
-                <tab-bar :mobileDropdown=false :bus="tabBarEventBus" :tabs=tabs.walletConnectedTabs @tab-change="activeTabChange" v-else />
+            <div id="subtab" style="width: 59%;" >
+                <tab-bar  :mobileDropdown=false :bus="tabBarEventBus" v-if="!$store.state.isWalletConnected" :tabs=tabs.walletNotConnectedTabs @tab-change="activeTabChange" />
+                <tab-bar  :mobileDropdown=false :bus="tabBarEventBus" :tabs=tabs.walletConnectedTabs @tab-change="activeTabChange" v-else />
             </div>
             
             <keep-alive>
-                <Balance v-if="activeTab === 'Balance'" />
-                <Lending v-if="activeTab === 'Lending'" />
-                <Streaming v-if="activeTab === 'Streaming'" />
-                <InterestRates v-if="activeTab === 'Adjust Your Interest Rate'" />
-                <StakeSIGH v-if="activeTab === 'Stake SIGH'" />
+                <Balance v-if="activeTab === 'Balance'"  />
+                <Lending v-if="activeTab === 'Lending'"    />
+                <Streaming v-if="activeTab === 'Streaming'"   />
+                <InterestRates v-if="activeTab === 'Interest Rates'"  />
+                <StakeSIGH v-if="activeTab === 'Stake SIGH'"  />
             </keep-alive>
         </div>
-        
+
     </div>
     <!-- <Supported-Money-Markets :parentHeight="height" :height="height" /> -->
 </div>
