@@ -2,9 +2,9 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import LocalStorage from '@/utils/localStorage.js';
 import EventBus, {  EventNames,} from '@/eventBuses/default';
-import Landing from '@/components/Trade/Landing.vue';
+import TradePanel from '@/components/Trade/TradePanel.vue';
 import mainPage from '@/components/Landing/mainPage.vue'; //CHARTING LIBRARY
-import newPage from '@/components/new/newPage.vue';
+// import newPage from '@/components/new/newPage.vue';
 
 
 // import TradeModalMobile from '@/components/TradeModalMobile/TradeModalMobile';
@@ -18,23 +18,15 @@ const vueRouter = new Router({
     name: 'Landing Page',
     component: mainPage,
     meta: {
-      pageTitle: 'SIGH Finance | A money-market protocol with an Engineered Liquidity mining Pipeline addressing the volatility problem pertaining to crypto assets.',
-    },
-  },
-  {
-    path: '/test',
-    name: 'Testing',
-    component: newPage,
-    meta: {
-      pageTitle: 'SIGH Finance | A money-market protocol with an Engineered Liquidity mining Pipeline addressing the volatility problem pertaining to crypto assets.',
+      pageTitle: 'SIGH Finance | Engineered to be Profitable!',
     },
   },
   {
     path: '/Trade',        
     name: 'SIGH Finance | SIGH Finance',
-    component: Landing,
+    component: TradePanel,
     meta: {
-      pageTitle: 'SIGH Finance | A money-market protocol with an Engineered Liquidity mining Pipeline addressing the volatility problem pertaining to crypto assets.',
+      pageTitle: 'SIGH Finance | Engineered to be Profitable!',
       },
   },
   // {   //MOBILE - ACTIVE ORDERS SIDE BAR
