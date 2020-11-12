@@ -14,7 +14,7 @@ interface ILendingPoolConfigurator {
     // ################################################################################################
 
     function initInstrument( address _instrument, uint8 _underlyingAssetDecimals, address _interestRateStrategyAddress ) external;
-    function initInstrumentWithData(  address _instrument,  string calldata _iTokenName,  string calldata _iTokenSymbol,  uint8 _underlyingAssetDecimals,  address _interestRateStrategyAddress ) external ;
+    // function initInstrumentWithData(  address _instrument,  string calldata _iTokenName,  string calldata _iTokenSymbol,  uint8 _underlyingAssetDecimals,  address _interestRateStrategyAddress ) external ;
 
     // ###################################################################################################
     // ####### FUNCTIONS WHICH INTERACT WITH LENDINGPOOLCORE CONTRACT ####################################
@@ -40,26 +40,19 @@ interface ILendingPoolConfigurator {
 
     function removeLastAddedInstrument( address _instrumentToRemove) external ;
 
-    function enableBorrowingOnInstrument(address _instrument, bool _stableBorrowRateEnabled) external;
-    function disableBorrowingOnInstrument(address _instrument) external;
 
     function enableInstrumentAsCollateral( address _instrument, uint256 _baseLTVasCollateral, uint256 _liquidationThreshold, uint256 _liquidationBonus ) external;
     function disableInstrumentAsCollateral(address _instrument) external;
 
-    function enableInstrumentStableBorrowRate(address _instrument) external;
-    function disableInstrumentStableBorrowRate(address _instrument) external;
 
-    function activateInstrument(address _instrument) external;
-    function deactivateInstrument(address _instrument) external;
-
-    function freezeInstrument(address _instrument) external;
-    function unfreezeInstrument(address _instrument) external;
+    function switchInstrument(address _instrument, bool switch_) external;
+    function switchInstrumentStableBorrowRate(address _instrument, bool borrowRateSwitch) external;
+    function switchBorrowingOnInstrument(address _instrument, bool _stableBorrowRateEnabled) external;
+    function switchInstrumentFreeze(address _instrument, bool switch_) external;
 
     function setInstrumentBaseLTVasCollateral(address _instrument, uint256 _ltv) external;
     function setInstrumentLiquidationThreshold(address _instrument, uint256 _threshold) external;
     function setInstrumentLiquidationBonus(address _instrument, uint256 _bonus) external;
-
-    function setInstrumentDecimals(address _instrument, uint256 _decimals) external;
 
     function setInstrumentInterestRateStrategyAddress(address _instrument, address _rateStrategyAddress) external ;
 

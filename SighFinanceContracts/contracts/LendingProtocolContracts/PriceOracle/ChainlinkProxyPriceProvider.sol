@@ -20,8 +20,8 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
     event AssetSourceUpdated(address indexed asset, address indexed source);
     event FallbackOracleUpdated(address indexed fallbackOracle);
 
-    modifier onlyLendingPoolConfigurator {
-        require(msg.sender == globalAddressesProvider.getLendingPoolConfigurator(),"New Source / fallback oracle can only be set by the LendingPool Configurator.");
+    modifier onlyLendingPoolManager {
+        require(msg.sender == globalAddressesProvider.getLendingPoolManager(),"New Source / fallback oracle can only be set by the LendingPool Manager.");
         _;
     }
 
@@ -37,7 +37,7 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
 // ##### SET THE PRICEFEED SOURCE #####
 // ####################################
     
-    function supportNewAsset(address asset_, address source_) public  {  // onlyLendingPoolConfigurator
+    function supportNewAsset(address asset_, address source_) onlyLendingPoolManager public  {  // 
         address[] memory assets = new address[](1);
         address[] memory sources = new address[](1) ;
         assets[0] = asset_;
@@ -48,14 +48,14 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
     /// @notice External function called by the Aave governance to set or replace sources of assets
     /// @param _assets The addresses of the assets
     /// @param _sources The address of the source of each asset
-    function setAssetSources(address[] calldata _assets, address[] calldata _sources) external onlyLendingPoolConfigurator {
+    function setAssetSources(address[] calldata _assets, address[] calldata _sources) external onlyLendingPoolManager {
         internalSetAssetsSources(_assets, _sources);
     }
 
     /// @notice Sets the fallbackOracle
     /// - Callable only by the Aave governance
     /// @param _fallbackOracle The address of the fallbackOracle
-    function setFallbackOracle(address _fallbackOracle) external  {  // onlyLendingPoolConfigurator
+    function setFallbackOracle(address _fallbackOracle) onlyLendingPoolManager external  {  // 
         internalSetFallbackOracle(_fallbackOracle);
     }
 

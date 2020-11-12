@@ -1,0 +1,397 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"görli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"deployedBytecode": {
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"gasEstimates": null,
+		"methodIdentifiers": {
+			"disableInstrumentAsCollateral(address)": "ea84c1ba",
+			"enableInstrumentAsCollateral(address,uint256,uint256,uint256)": "e6df474e",
+			"initInstrument(address,uint8,address)": "409df552",
+			"refreshLendingPoolCoreConfiguration()": "e12dcc6c",
+			"removeLastAddedInstrument(address)": "2b169ae3",
+			"setAssetSources(address[],address[])": "abfd5310",
+			"setFallbackOracle(address)": "170aee73",
+			"setInstrumentBaseLTVasCollateral(address,uint256)": "004646f6",
+			"setInstrumentInterestRateStrategyAddress(address,address)": "5610992a",
+			"setInstrumentLiquidationBonus(address,uint256)": "66a3f18b",
+			"setInstrumentLiquidationThreshold(address,uint256)": "11a92bd7",
+			"supportNewAsset(address,address)": "c790f3fb",
+			"switchBorrowingOnInstrument(address,bool)": "9c7b009c",
+			"switchInstrument(address,bool)": "2635ba24",
+			"switchInstrumentFreeze(address,bool)": "fb9e062c",
+			"switchInstrumentStableBorrowRate(address,bool)": "dbdf4731",
+			"updateSIGHSpeedRatioForAnInstrument(address,uint256)": "f6e7fa48"
+		}
+	},
+	"abi": [
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_instrument",
+					"type": "address"
+				}
+			],
+			"name": "disableInstrumentAsCollateral",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_instrument",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_baseLTVasCollateral",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_liquidationThreshold",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_liquidationBonus",
+					"type": "uint256"
+				}
+			],
+			"name": "enableInstrumentAsCollateral",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_instrument",
+					"type": "address"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_underlyingAssetDecimals",
+					"type": "uint8"
+				},
+				{
+					"internalType": "address",
+					"name": "_interestRateStrategyAddress",
+					"type": "address"
+				}
+			],
+			"name": "initInstrument",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [],
+			"name": "refreshLendingPoolCoreConfiguration",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_instrumentToRemove",
+					"type": "address"
+				}
+			],
+			"name": "removeLastAddedInstrument",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address[]",
+					"name": "_assets",
+					"type": "address[]"
+				},
+				{
+					"internalType": "address[]",
+					"name": "_sources",
+					"type": "address[]"
+				}
+			],
+			"name": "setAssetSources",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_fallbackOracle",
+					"type": "address"
+				}
+			],
+			"name": "setFallbackOracle",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_instrument",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_ltv",
+					"type": "uint256"
+				}
+			],
+			"name": "setInstrumentBaseLTVasCollateral",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_instrument",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_rateStrategyAddress",
+					"type": "address"
+				}
+			],
+			"name": "setInstrumentInterestRateStrategyAddress",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_instrument",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_bonus",
+					"type": "uint256"
+				}
+			],
+			"name": "setInstrumentLiquidationBonus",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_instrument",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_threshold",
+					"type": "uint256"
+				}
+			],
+			"name": "setInstrumentLiquidationThreshold",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "asset_",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "source_",
+					"type": "address"
+				}
+			],
+			"name": "supportNewAsset",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_instrument",
+					"type": "address"
+				},
+				{
+					"internalType": "bool",
+					"name": "_stableBorrowRateEnabled",
+					"type": "bool"
+				}
+			],
+			"name": "switchBorrowingOnInstrument",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_instrument",
+					"type": "address"
+				},
+				{
+					"internalType": "bool",
+					"name": "switch_",
+					"type": "bool"
+				}
+			],
+			"name": "switchInstrument",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_instrument",
+					"type": "address"
+				},
+				{
+					"internalType": "bool",
+					"name": "switch_",
+					"type": "bool"
+				}
+			],
+			"name": "switchInstrumentFreeze",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_instrument",
+					"type": "address"
+				},
+				{
+					"internalType": "bool",
+					"name": "borrowRateSwitch",
+					"type": "bool"
+				}
+			],
+			"name": "switchInstrumentStableBorrowRate",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument_",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "supplierRatio",
+					"type": "uint256"
+				}
+			],
+			"name": "updateSIGHSpeedRatioForAnInstrument",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		}
+	]
+}

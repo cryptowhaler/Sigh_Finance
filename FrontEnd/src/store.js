@@ -69,7 +69,7 @@ const store = new Vuex.Store({
 // ############ PROTOCOL CONTRACT ADDRESSES  ############
 // ######################################################
     
-    GlobalAddressesProviderContractKovan: "0x73CF074FE89E6f942Be3a505B1cD2fe3A4fdb4D7",
+    GlobalAddressesProviderContractKovan: "0x029f2175B6256F441E89E8949dD267204BDffC44",
     GlobalAddressesProviderContractMainNet: null,
     GlobalAddressesProviderContractBSCTestnet: null,
     GlobalAddressesProviderContractBSC: null,
@@ -104,10 +104,10 @@ const store = new Vuex.Store({
     NETWORKS : { '1': 'Main Net', '2': 'Deprecated Morden test network','3': 'Ropsten test network',
       '4': 'Rinkeby test network','42': 'Kovan test network', '1337': 'Tokamak network', '4447': 'Truffle Develop Network','5777': 'Ganache Blockchain',
       '56':'Binance Smart Chain Main Network','97':'Binance Smart Chain Test Network'},
-    supportedInstrumentAddresses: null;
+    supportedInstrumentAddresses: null,
     supportedInstruments : [],      // INSTRUMENTS SUPPORTED BY THE PROTOCOL (FOR LENDING - ITOKEN & INSTRUMENT ADDRESSES + SYMBOL/NAME WILL BE STORED)
     supportedInstrumentConfigs: new Map(), // Instrument Address -> Instrument Config  MAPPING  
-    currentlySelectedInstrument : null, // Currently Selected Instrument
+    currentlySelectedInstrument :  {instrumentAddress: '0x00' , name: 'Wrapped Bitcoin', symbol: 'WBTC', decimals: 18, iTokenAddress: '0x00' , priceDecimals: 8, price: 0 },  // Currently Selected Instrument
 
     username: null, //Added
     websocketStatus: 'Closed',
@@ -217,7 +217,7 @@ const store = new Vuex.Store({
           return config.price;
         }
         return 0;
-      },
+      }
     }, 
     showLoader(state) {
       return state > 0;
@@ -323,9 +323,9 @@ const store = new Vuex.Store({
       state.LendingPoolDataProviderContract = newContractAddress;
       console.log("In updateLendingPoolDataProviderContract - " + state.LendingPoolDataProviderContract);
     },    
-    updatePriceOracleGetterAddress(state,newContractAddress) {         
+    updateIPriceOracleGetterAddress(state,newContractAddress) {         
       state.IPriceOracleGetterAddress = newContractAddress;
-      console.log("In updatePriceOracleGetterAddress - " + state.IPriceOracleGetterAddress);
+      console.log("In updateIPriceOracleGetterAddress - " + state.IPriceOracleGetterAddress);
     },    
     // ######################################################
     // ############ TO BE WORKED UPON ############
@@ -340,7 +340,7 @@ const store = new Vuex.Store({
       console.log(state.supportedInstruments);
       console.log("In addToSupportedInstrumentsArray ");
 
-    }
+    },
     addToSupportedInstrumentsConfigsMapping(state,instrumentAddress,instrumentDetails) {  // ADDS THE 'Instrument Address' => 'Instrument Details' MAPPING
       state.supportedInstrumentConfigs.set(instrumentAddress,instrumentDetails);  // creates a mapping from instrument address to instrument config data
       console.log(state.supportedInstrumentConfigs.get(instrumentAddress));
@@ -671,7 +671,7 @@ const store = new Vuex.Store({
     else {
       console.log('getInstrumentPrice() function in store.js. Protocol not supported on connected blockchain network');
     }
-  }
+  },
 
 // ######################################################
 // ############ SIGH ---  SIGH_mintCoins() FUNCTION : mint new Coins when cycle gets completed

@@ -293,10 +293,10 @@
 	},
 	"sources": {
 		"localhost/contracts/LendingProtocolContracts/PriceOracle/ChainlinkProxyPriceProvider.sol": {
-			"keccak256": "0x1a119195be9388b761735f0012d3b8cb84ffdf29c52cc811cfbe56bb18d35db5",
+			"keccak256": "0x150bd42de8b824a288f82b717570cc849a266c8c233470133f35e2d48f4095f6",
 			"urls": [
-				"bzz-raw://6f9ee9fa174f986eb8d6bfad56a6f7d38e2b5e2a3f384e8c0c8a4c7ae4127380",
-				"dweb:/ipfs/QmQa2DJc2Py2HqkwwhTTdKpE8yCTdTHMWn7znyVUa2TwHq"
+				"bzz-raw://dceef3c720cdbf17254c9656b28e5bf4ec35b3f476ad46e05c9f1e31b2f4dd45",
+				"dweb:/ipfs/Qmepisf3CBStzjSm2GhFPUjTgbjAoCSirSggMmSddazpXm"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/IAggregatorV2V3Interface.sol": {

@@ -1,0 +1,370 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					}
+				],
+				"name": "disableInstrumentAsCollateral",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_baseLTVasCollateral",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_liquidationThreshold",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_liquidationBonus",
+						"type": "uint256"
+					}
+				],
+				"name": "enableInstrumentAsCollateral",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_underlyingAssetDecimals",
+						"type": "uint8"
+					},
+					{
+						"internalType": "address",
+						"name": "_interestRateStrategyAddress",
+						"type": "address"
+					}
+				],
+				"name": "initInstrument",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "refreshLendingPoolCoreConfiguration",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrumentToRemove",
+						"type": "address"
+					}
+				],
+				"name": "removeLastAddedInstrument",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_assets",
+						"type": "address[]"
+					},
+					{
+						"internalType": "address[]",
+						"name": "_sources",
+						"type": "address[]"
+					}
+				],
+				"name": "setAssetSources",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_fallbackOracle",
+						"type": "address"
+					}
+				],
+				"name": "setFallbackOracle",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_ltv",
+						"type": "uint256"
+					}
+				],
+				"name": "setInstrumentBaseLTVasCollateral",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_rateStrategyAddress",
+						"type": "address"
+					}
+				],
+				"name": "setInstrumentInterestRateStrategyAddress",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_bonus",
+						"type": "uint256"
+					}
+				],
+				"name": "setInstrumentLiquidationBonus",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_threshold",
+						"type": "uint256"
+					}
+				],
+				"name": "setInstrumentLiquidationThreshold",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "asset_",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "source_",
+						"type": "address"
+					}
+				],
+				"name": "supportNewAsset",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "_stableBorrowRateEnabled",
+						"type": "bool"
+					}
+				],
+				"name": "switchBorrowingOnInstrument",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "switch_",
+						"type": "bool"
+					}
+				],
+				"name": "switchInstrument",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "switch_",
+						"type": "bool"
+					}
+				],
+				"name": "switchInstrumentFreeze",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "borrowRateSwitch",
+						"type": "bool"
+					}
+				],
+				"name": "switchInstrumentStableBorrowRate",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrument_",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "supplierRatio",
+						"type": "uint256"
+					}
+				],
+				"name": "updateSIGHSpeedRatioForAnInstrument",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "Aave, SIGH Finance (modified by SIGH FINANCE)",
+			"methods": {},
+			"title": "LendingPoolConfigurator contract"
+		},
+		"userdoc": {
+			"methods": {},
+			"notice": "Executes configuration methods on the LendingPoolCore contract. Allows to enable/disable instruments, and set different protocol parameters.*"
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolConfigurator.sol": "ILendingPoolConfigurator"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolConfigurator.sol": {
+			"keccak256": "0xece8c130d5202eb936c51c2bf2e09871c5e3c83b1c1b03214c755fdd3fd7f888",
+			"urls": [
+				"bzz-raw://7e8aaf54afd7274cbc526b5682882b1caf8cd871466c649fd4c0fda3f6c98189",
+				"dweb:/ipfs/QmRaLiqX1AT9cRMY5KvxtdvohJyUXMeJuA5jrTu9wsTF4d"
+			]
+		}
+	},
+	"version": 1
+}

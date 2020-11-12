@@ -1,0 +1,1376 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_borrowRateMode",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_borrowRate",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_originationFee",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_borrowBalanceIncrease",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint16",
+						"name": "_referral",
+						"type": "uint16"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "Borrow",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint16",
+						"name": "_referral",
+						"type": "uint16"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "Deposit",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_target",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_totalFee",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_protocolFee",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "FlashLoan",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "InstrumentUsedAsCollateralDisabled",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "InstrumentUsedAsCollateralEnabled",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_collateral",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_purchaseAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_liquidatedCollateralAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_accruedBorrowInterest",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "_liquidator",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "_receiveIToken",
+						"type": "bool"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "LiquidationCall",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_collateral",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_feeLiquidated",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_liquidatedCollateralForFee",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "OriginationFeeLiquidated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_newStableRate",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_borrowBalanceIncrease",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "RebalanceStableBorrowRate",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "RedeemUnderlying",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_repayer",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_amountMinusFees",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_fees",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_borrowBalanceIncrease",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "Repay",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_newRateMode",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_newRate",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_borrowBalanceIncrease",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "Swap",
+				"type": "event"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "LENDINGPOOL_REVISION",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "UINT_MAX_VALUE",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "addressesProvider",
+				"outputs": [
+					{
+						"internalType": "contract GlobalAddressesProvider",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_interestRateMode",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint16",
+						"name": "_referralCode",
+						"type": "uint16"
+					}
+				],
+				"name": "borrow",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "core",
+				"outputs": [
+					{
+						"internalType": "contract ILendingPoolCore",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "dataProvider",
+				"outputs": [
+					{
+						"internalType": "contract ILendingPoolDataProvider",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint16",
+						"name": "_referralCode",
+						"type": "uint16"
+					}
+				],
+				"name": "deposit",
+				"outputs": [],
+				"payable": true,
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "feeProvider",
+				"outputs": [
+					{
+						"internalType": "contract IFeeProvider",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_receiver",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "_params",
+						"type": "bytes"
+					}
+				],
+				"name": "flashLoan",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					}
+				],
+				"name": "getInstrumentConfigurationData",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "ltv",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "liquidationThreshold",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "liquidationBonus",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "interestRateStrategyAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "usageAsCollateralEnabled",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "borrowingEnabled",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "stableBorrowRateEnabled",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "isActive",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					}
+				],
+				"name": "getInstrumentData",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "totalLiquidity",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "availableLiquidity",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalBorrowsStable",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalBorrowsVariable",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "liquidityRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "variableBorrowRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "stableBorrowRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "averageStableBorrowRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "utilizationRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "liquidityIndex",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "variableBorrowIndex",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "iTokenAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint40",
+						"name": "lastUpdateTimestamp",
+						"type": "uint40"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getInstruments",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "",
+						"type": "address[]"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "getUserAccountData",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "totalLiquidityETH",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalCollateralETH",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalBorrowsETH",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalFeesETH",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "availableBorrowsETH",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "currentLiquidationThreshold",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "ltv",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "healthFactor",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "getUserInstrumentData",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "currentITokenBalance",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "currentBorrowBalance",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "principalBorrowBalance",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "borrowRateMode",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "borrowRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "liquidityRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "originationFee",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "variableBorrowIndex",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "lastUpdateTimestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "usageAsCollateralEnabled",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "contract GlobalAddressesProvider",
+						"name": "_addressesProvider",
+						"type": "address"
+					}
+				],
+				"name": "initialize",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_collateral",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_purchaseAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "_receiveIToken",
+						"type": "bool"
+					}
+				],
+				"name": "liquidationCall",
+				"outputs": [],
+				"payable": true,
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "parametersProvider",
+				"outputs": [
+					{
+						"internalType": "contract ILendingPoolParametersProvider",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "rebalanceStableBorrowRate",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "address payable",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_ITokenBalanceAfterRedeem",
+						"type": "uint256"
+					}
+				],
+				"name": "redeemUnderlying",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "refreshConfig",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address payable",
+						"name": "_onBehalfOf",
+						"type": "address"
+					}
+				],
+				"name": "repay",
+				"outputs": [],
+				"payable": true,
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "_useAsCollateral",
+						"type": "bool"
+					}
+				],
+				"name": "setUserUseInstrumentAsCollateral",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					}
+				],
+				"name": "swapBorrowRateMode",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "Aave, SIGH Finance*",
+			"methods": {
+				"borrow(address,uint256,uint256,uint16)": {
+					"details": "Allows users to borrow a specific amount of the instrument currency, provided that the borrower already deposited enough collateral.",
+					"params": {
+						"_amount": "the amount to be borrowed",
+						"_instrument": "the address of the instrument",
+						"_interestRateMode": "the interest rate mode at which the user wants to borrow. Can be 0 (STABLE) or 1 (VARIABLE)*"
+					}
+				},
+				"deposit(address,uint256,uint16)": {
+					"details": "deposits The underlying asset into the instrument. A corresponding amount of the overlying asset (ITokens) is minted.",
+					"params": {
+						"_amount": "the amount to be deposited",
+						"_instrument": "the address of the underlying instrument (to be deposited)",
+						"_referralCode": "integrators are assigned a referral code and can potentially receive rewards.*"
+					}
+				},
+				"flashLoan(address,address,uint256,bytes)": {
+					"details": "allows smartcontracts to access the liquidity of the pool within one transaction, as long as the amount taken plus a fee is returned. NOTE There are security concerns for developers of flashloan receiver contracts that must be kept into consideration. For further details please visit https://developers.aave.com",
+					"params": {
+						"_amount": "the amount requested for this flashloan*",
+						"_instrument": "the address of the principal instrument",
+						"_receiver": "The address of the contract receiving the funds. The receiver should implement the IFlashLoanReceiver interface."
+					}
+				},
+				"getInstrumentConfigurationData(address)": {
+					"details": "accessory functions to fetch data from the core contract*"
+				},
+				"initialize(address)": {
+					"details": "this function is invoked by the proxy contract when the LendingPool contract is added to the AddressesProvider.",
+					"params": {
+						"_addressesProvider": "the address of the GlobalAddressesProvider registry*"
+					}
+				},
+				"liquidationCall(address,address,address,uint256,bool)": {
+					"details": "users can invoke this function to liquidate an undercollateralized position.",
+					"params": {
+						"_collateral": "the address of the collateral to liquidated",
+						"_instrument": "the address of the principal instrument",
+						"_purchaseAmount": "the amount of principal that the liquidator wants to repay",
+						"_receiveIToken": "true if the liquidators wants to receive the ITokens, false if he wants to receive the underlying asset directly*",
+						"_user": "the address of the borrower"
+					}
+				},
+				"rebalanceStableBorrowRate(address,address)": {
+					"details": "rebalances the stable interest rate of a user if current liquidity rate > user stable rate. this is regulated by Aave to ensure that the protocol is not abused, and the user is paying a fair rate. Anyone can call this function though.",
+					"params": {
+						"_instrument": "the address of the instrument",
+						"_user": "the address of the user to be rebalanced*"
+					}
+				},
+				"redeemUnderlying(address,address,uint256,uint256)": {
+					"details": "Redeems the underlying amount of assets requested by _user. This function is executed by the overlying IToken contract in response to a redeem action.",
+					"params": {
+						"_amount": "the underlying amount to be redeemed*",
+						"_instrument": "the address of the instrument (underlying instrument address)",
+						"_user": "the address of the user performing the action"
+					}
+				},
+				"setUserUseInstrumentAsCollateral(address,bool)": {
+					"details": "allows depositors to enable or disable a specific deposit as collateral.",
+					"params": {
+						"_instrument": "the address of the instrument",
+						"_useAsCollateral": "true if the user wants to user the deposit as collateral, false otherwise.*"
+					}
+				},
+				"swapBorrowRateMode(address)": {
+					"details": "borrowers can user this function to swap between stable and variable borrow rate modes.",
+					"params": {
+						"_instrument": "the address of the instrument on which the user borrowed*"
+					}
+				}
+			},
+			"title": "LendingPool contract (Created by Aave, modified by SIGH Finance)"
+		},
+		"userdoc": {
+			"methods": {},
+			"notice": "Implements the actions of the LendingPool, and exposes accessory methods to fetch the users and financial instruments data"
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPool.sol": "LendingPool"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/LendingProtocolContracts/flashloan/interfaces/IFlashLoanReceiver.sol": {
+			"keccak256": "0x819cd5a0cf7c4677e6e9cf90e61f0579367697efabd124f7ee4947f36f0563f1",
+			"urls": [
+				"bzz-raw://2eba4ef2c23ad0a5ec600dbea85b4dcad17f538b6305d6817fd665152ead2e03",
+				"dweb:/ipfs/QmSi7U9jyTyU3pzm6cdKp2A9LXHwYxq9XksWev5GzUfZK9"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/interfaces/IFeeProvider.sol": {
+			"keccak256": "0x40a163478b768ca5639ccc04466e2667eec5e86582dc5b2a9b18496a5e9c2423",
+			"urls": [
+				"bzz-raw://a021b7e9c79fd6053a0213e72ef307e58e1bb89392e9b24a6cc4063e49e5461a",
+				"dweb:/ipfs/QmNb5Uh8bbudTma2hxnDc6JSR6MKS1U5PGggstGZhnwiQn"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPool.sol": {
+			"keccak256": "0x859ddbdf65b7d43d0ee3d6406650fc38b32124d0df2292e237584ad7be7d5a68",
+			"urls": [
+				"bzz-raw://a403ac06472ceeeddcc35e9e1f268616b9ab7ae300e3738472bdbceec3c49835",
+				"dweb:/ipfs/QmSTeihp9gb2MX8QpHN9DmnFBRPh4iwQXxLTEXXy5BxENK"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
+			"keccak256": "0x2533a4a88d2aaa0b0609a3eadefb5108a0140100720c0b0536510f79620868bc",
+			"urls": [
+				"bzz-raw://2bb5d3236bbd96e09eb7ac13104bfe7f861dc32c247a9693af77575ddaeaf444",
+				"dweb:/ipfs/QmfDHvaiYi3zfcpSeTqKe5AstuxMErgEGVkwsR2dFs6pne"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolDataProvider.sol": {
+			"keccak256": "0xef2d74cb5475d64cb8ab4ba9199af7182f001e3611b6fc602155179db5592ae2",
+			"urls": [
+				"bzz-raw://4d6a7d824dd105d8a4e3c0f8ab9e82ecac31f8d3e9b2e2ef5fd1da314b5c6a28",
+				"dweb:/ipfs/QmX117j9cyVA9BUmMV1AJTzp6CwL3L2PBYZyx2bMrNNrdk"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolParametersProvider.sol": {
+			"keccak256": "0x66134954110991c7c40c831d9e83c2b5108612817c057648b544d0fd9be1c08e",
+			"urls": [
+				"bzz-raw://e08ad6ff745897680b9e4ab3b154b1f66877ab70270c84c92ddc11e26d4dae98",
+				"dweb:/ipfs/QmVcajsEDKVgb5d21seZqGwV4fu3giEe2jq6N5KqQzw8Eb"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/interfaces/IPriceOracleGetter.sol": {
+			"keccak256": "0xaf5b0d8b1553c9b0156137e52056fcc361833ee8787bf9ea9c1a3084af85c736",
+			"urls": [
+				"bzz-raw://ad0a65a23599a537335b5b8a78f7a27d1df654f74479b2b299bdf789e4fd0ba9",
+				"dweb:/ipfs/QmUf7RmuJDPSidxTAv4upEFCCzHNTCemhZZk73rNB6subg"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/interfaces/ITokenInterface.sol": {
+			"keccak256": "0x282041c677e1b3d17bf2c2b43ce227e31b3a7d35e79f08d3bf9029930a53a1e6",
+			"urls": [
+				"bzz-raw://7b22795317812c9bd3e1eb4849b066c6efe768a16f8d259a9bbdf78594bf4a84",
+				"dweb:/ipfs/QmazSvZKQGTSWFFxHg2afMujEML1w3WP3fNano4KpvaJiL"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPool.sol": {
+			"keccak256": "0x886fa07635b874413b32fcc281545c0f97d754a8a578952cd21ef1fba49e1912",
+			"urls": [
+				"bzz-raw://3b2c831bcda4d422d1a793cf8517ecbf12385545965342b6458d1a414b525665",
+				"dweb:/ipfs/QmXDyhouvBtfjGWpf1fMqyu63GQ6qPxTrgjkTsjec2T1M9"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolLiquidationManager.sol": {
+			"keccak256": "0x8e22ee575808991bb2f418122578f760416c2c6b628444a09d97400a96f7b1bd",
+			"urls": [
+				"bzz-raw://8f06370839dc00ff94b191247ebdd1da7307f0cb3e3b2c132c225ff8ad855854",
+				"dweb:/ipfs/QmZj9xfFM6sjwt9BNNLqKCHSEu8zefSZG4zyxZYpFJxWen"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
+			"keccak256": "0x79342c1cf9c5ea998cfd0ea87130ced2493dc9085bd56633db76f8b751c572c6",
+			"urls": [
+				"bzz-raw://d5e0e4e209d5697f18227736610b5abc7c6f62b72f4994a6cf0ddb95b90e2740",
+				"dweb:/ipfs/QmbXhwYTcLQdamzw28MXnbo1vkgpnU45tuJraZMW3Nut5Q"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/libraries/EthAddressLib.sol": {
+			"keccak256": "0x6d13f10408208ebff44123254f6db03121a8fb5a73d84c2d94f4e9651932b70d",
+			"urls": [
+				"bzz-raw://50b64d66e1544fcef496cc68e98cee61cfbab58685dfc4d57f73a1308e3aec2a",
+				"dweb:/ipfs/QmQwJ5ZpaNjrfREruW7RzppzbEv8Mxxj5Ln87DX1i1iXW5"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/libraries/WadRayMath.sol": {
+			"keccak256": "0x126c58b068a25a9721da9933c377361f9194ab839dd6ad627d8f78a062fe0cc3",
+			"urls": [
+				"bzz-raw://810142a1a4ecd60c3f36ab696cdcb34bfb5a52d241591229659bb5c02c40c5cc",
+				"dweb:/ipfs/Qma8sCTftr1468EKegJuXnNXqTySUGtk683kAfyhMyHpiL"
+			]
+		},
+		"localhost/contracts/configuration/AddressStorage.sol": {
+			"keccak256": "0x0d0b40ccc403e45861faf71d042f5c419ff51930a45896633052c91b7ed6eae4",
+			"urls": [
+				"bzz-raw://ad8c170f6b3b87ec85076f3fdcd006fcef61ef47c978a9da8971df22682cf657",
+				"dweb:/ipfs/QmRWUQzdk7GHfcyrPzE6vw9ipfrW6Kiq1Jyp9xzbWqmv5p"
+			]
+		},
+		"localhost/contracts/configuration/GlobalAddressesProvider.sol": {
+			"keccak256": "0x5310631fce62fd0b130b3dd17ea42fdaf15e669ff38d3215883033ba3ab130c7",
+			"urls": [
+				"bzz-raw://cd78074a70018b3dd57649c93702cb85758151b7e153750903484eeb89d2587a",
+				"dweb:/ipfs/QmWFoi9YgJVuaBThwVMLE9hYjrZtZhsYN8fNj59sCsi4kr"
+			]
+		},
+		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {
+			"keccak256": "0x3cac9f73a1e6cbd9bdd703519a1a43bd8215f284910dda0807440d01193178b3",
+			"urls": [
+				"bzz-raw://e33089eb2c49cbc820f1aeb05e48d041a22838681769dfca9fdae797ee37f26f",
+				"dweb:/ipfs/QmNRwngcxxRd5LkNKTDm68kgrQ3K2aYvxFVVDF3Sm8RcYH"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {
+			"keccak256": "0x6bb623c8fe336eeba953283dbe3014ab18e882d3a3f27f38234672a5a69885d1",
+			"urls": [
+				"bzz-raw://2810308c8de3ef8291356ea30e866a0b20e2729223caffc43b0f6513f7b0aaeb",
+				"dweb:/ipfs/QmT6AD9CxgeeUndEj6F6z9zd8eJLDxUxJcHekcBRGop3ch"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/BaseUpgradeabilityProxy.sol": {
+			"keccak256": "0x99e393b97e79374c0dd133282f83ac48f15777d3894eafb9257768a1bf7acff5",
+			"urls": [
+				"bzz-raw://1c9d283b3442e71b7c611f8f79e792b248d97e1502a14d8507f131161b288f8b",
+				"dweb:/ipfs/QmWxuFrfdLHmhJrpoGwHRujeV6zpdFydVM1DY3N5RBwNs5"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/InitializableAdminUpgradeabilityProxy.sol": {
+			"keccak256": "0x7928dfc5736d1ec6a29672f41458b7de688ef2d0ec31b3e4a16e6bc554b87df1",
+			"urls": [
+				"bzz-raw://712ce2645eeb72c5c12e40ef1e04f7161ab9f8aaae3413b82f6a1b48956d6c38",
+				"dweb:/ipfs/QmcTNBeHbqBUj2UUgNob1s22oMjj4UpcLMNdXTBC2m1b6p"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/InitializableUpgradeabilityProxy.sol": {
+			"keccak256": "0x46052d95ea9b770116913041555f808f1b099c0a35e5c7ecbfc04ffef64a83bd",
+			"urls": [
+				"bzz-raw://67c2cacee01c1c8972a195be9f018abeae6917f45e45a4dc22b462fbb148150f",
+				"dweb:/ipfs/QmZhM5vvrvjFbTXjzYDB3ZTtNbTf3j54v76SZoDSbFTjdU"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/Proxy.sol": {
+			"keccak256": "0xd8dcdaaf2f03c606a569d91506958bf78df9adfb41df76727857e5dfe956e872",
+			"urls": [
+				"bzz-raw://1d780033022b07478621ce08cd4e668603fc899ae3212a883eea23347937e8d5",
+				"dweb:/ipfs/QmVZkBHpdDjko87qT4597e3UZ5uYdrEfPYbamEjBep52Se"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/UpgradeabilityProxy.sol": {
+			"keccak256": "0x5829b59012f64d1ce3ae6b98a61ddf5d6daa6e6f1a54e336ce910c8afd415c69",
+			"urls": [
+				"bzz-raw://28cba7d1f3d67aab91a4f88df4cb63762b443c31cb62a87e957add0b43dc8e1a",
+				"dweb:/ipfs/QmUXzpQDBXA2xGSNRqjn3VMJ3o8RXmpATieU9ovvk6QDAD"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/VersionedInitializable.sol": {
+			"keccak256": "0x3f7fa91853dcdf84684887deaa056f5b3803b46e7efb71704dcc625a63eeac55",
+			"urls": [
+				"bzz-raw://c7b50d4feda87e8875541afeb44f802ab539272bfb22f7c7da84c3d26e03a266",
+				"dweb:/ipfs/QmdSYn9D1Q3FRXRNDLYGGFoYb8rsN4U2MYdxciuZBTSg83"
+			]
+		},
+		"openzeppelin-solidity/contracts/math/SafeMath.sol": {
+			"keccak256": "0x7f293e2ee29a32416531a0bf3da9972358887c45ec1836642ec8e700cc152ba0",
+			"urls": [
+				"bzz-raw://e6ca40872864cb64a2dcc1b4f0be6a3cfc406f363e045fa7991f9f22f6257a63",
+				"dweb:/ipfs/QmdsPdEayCcUa1fg3YTbhTPn3GTcjfNYZqnwf9EDC3QGpp"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0xe92a180661a6e21051d45be08a572dbf8d61e04c142d4284e503f615aed587fd",
+			"urls": [
+				"bzz-raw://003c6da07a3cbc576a9a59f462ed67d9041ff89e106463817ce9f005e24d83c8",
+				"dweb:/ipfs/QmemQazcc1Cww2Umgc4UFYpwF8WRqajPB6z5TNdC13XJCR"
+			]
+		},
+		"openzeppelin-solidity/contracts/utils/Address.sol": {
+			"keccak256": "0x58543a8d0f0fc465618566ee6b3c04071965cd26ba20d1de3f9768014ed807e4",
+			"urls": [
+				"bzz-raw://f060c6ee3ca16eb001823e2c0f8b642ecf3ead486721bab6f6be5220158d4421",
+				"dweb:/ipfs/QmWv1ms6aLAfjZ49dNnffbg49XiKmuEWHeu4wi6EinkEek"
+			]
+		},
+		"openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol": {
+			"keccak256": "0xe8319a13d4d3a9a518dafb829afffd958264b2675114abe5c322178cc6c3519f",
+			"urls": [
+				"bzz-raw://25e5847db15af6119dfadd8929642c20d731b61d11c8187dbf8064d3458cb094",
+				"dweb:/ipfs/QmQhu9fnpHXp7wDKmqbaK7BAs8zWxLShRUUEdYiPiytBww"
+			]
+		}
+	},
+	"version": 1
+}

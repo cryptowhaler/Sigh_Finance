@@ -1,13 +1,7 @@
 pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
-
 import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
-// import "../../configuration/IGlobalAddressesProvider.sol";
-
-import "../interfaces/ILendingPoolCore.sol";
-import "../interfaces/IPriceOracle.sol";
 
 import "../IToken.sol";
 
@@ -54,20 +48,16 @@ contract LendingPoolConfigurator is VersionedInitializable {
     event InstrumentEnabledAsCollateral(  address indexed _instrument,  uint256 _ltv,  uint256 _liquidationThreshold,  uint256 _liquidationBonus );    
     event InstrumentDisabledAsCollateral(address indexed _instrument);         // emitted when a instrument is disabled as collateral
 
-    event StableRateEnabledOnInstrument(address indexed _instrument);          // emitted when stable rate borrowing is enabled on a instrument
-    event StableRateDisabledOnInstrument(address indexed _instrument);         // emitted when stable rate borrowing is disabled on a instrument
+    event StableRateOnInstrumentSwitched(address indexed _instrument, bool isEnabled);          // emitted when stable rate borrowing is switched on a instrument
 
     event InstrumentActivated(address indexed _instrument);                    // emitted when a instrument is activated
     event InstrumentDeactivated(address indexed _instrument);                  // emitted when a instrument is deactivated
 
-    event InstrumentFreezed(address indexed _instrument);                      // emitted when a instrument is freezed    
-    event InstrumentUnfreezed(address indexed _instrument);                    // emitted when a instrument is unfreezed
-
+    event InstrumentFreezeSwitched(address indexed _instrument, bool isFreezed);                      // emitted when a instrument is freezed    
 
     event InstrumentLiquidationThresholdChanged(address _instrument, uint256 _threshold);     // emitted when a _instrument liquidation threshold is updated
     event InstrumentLiquidationBonusChanged(address _instrument, uint256 _bonus);             // emitted when a _instrument liquidation bonus is updated
     
-    event InstrumentDecimalsChanged(address _instrument, uint256 _decimals);                  // emitted when the _instrument decimals are updated
     event InstrumentInterestRateStrategyChanged(address _instrument, address _strategy);      // emitted when a _instrument interest strategy contract is updated
     event InstrumentBaseLtvChanged(address _instrument, uint256 _ltv);            // emitted when a _instrument loan to value (ltv) is updated
 
@@ -82,8 +72,8 @@ contract LendingPoolConfigurator is VersionedInitializable {
         return CONFIGURATOR_REVISION;
     }
 
-    function initialize(address _globalAddressesProvider) public initializer {
-        globalAddressesProvider = IGlobalAddressesProvider(_globalAddressesProvider);
+    function initialize(IGlobalAddressesProvider _globalAddressesProvider) public initializer {
+        globalAddressesProvider = _globalAddressesProvider;
     }
 
 // ########################
@@ -113,23 +103,10 @@ contract LendingPoolConfigurator is VersionedInitializable {
         string memory iTokenSymbol = string(abi.encodePacked("i", asset.symbol()));
         uint8 decimals = uint8(asset.decimals());
 
-        initInstrumentWithData(  _instrument,  iTokenName,  iTokenSymbol,  decimals,  _interestRateStrategyAddress );
-    }
-
-    /**
-    * @dev initializes a instrument using iTokenData provided externally (useful if the underlying ERC20 contract doesn't expose name or decimals)
-    * @param _instrument the address of the instrument to be initialized
-    * @param _iTokenName the name of the iToken contract
-    * @param _iTokenSymbol the symbol of the iToken contract
-    * @param _underlyingAssetDecimals the decimals of the instrument underlying asset
-    * @param _interestRateStrategyAddress the address of the interest rate strategy contract for this instrument
-    **/
-    function initInstrumentWithData(  address _instrument,  string memory _iTokenName,  string memory _iTokenSymbol,  uint8 _underlyingAssetDecimals,  address _interestRateStrategyAddress ) public onlyLendingPoolManager {
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
 
-        IToken iTokenInstance = new IToken( address(globalAddressesProvider), _instrument, _underlyingAssetDecimals, _iTokenName, _iTokenSymbol ); // DEPLOYS A NEW ITOKEN CONTRACT
-        core.initInstrument( _instrument, address(iTokenInstance), _underlyingAssetDecimals, _interestRateStrategyAddress );
-
+        IToken iTokenInstance = new IToken( address(globalAddressesProvider), _instrument, decimals, iTokenName, iTokenSymbol ); // DEPLOYS A NEW ITOKEN CONTRACT
+        core.initInstrument( _instrument, address(iTokenInstance), decimals, _interestRateStrategyAddress );
         emit InstrumentInitialized( _instrument, address(iTokenInstance), _interestRateStrategyAddress );
     }
 
@@ -154,35 +131,64 @@ contract LendingPoolConfigurator is VersionedInitializable {
 // ####### --> refreshLendingPoolCoreConfiguration()   :   REFRESH THE ADDRESS OF CORE  ###############
 // ###################################################################################################
 
+    // /**
+    // * @dev removes the last added instrument in the list of the instruments
+    // * @param _instrumentToRemove the address of the instrument
+    // **/
+    // function removeLastAddedInstrument( address _instrumentToRemove) external onlyLendingPoolManager {
+    //     ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
+    //     core.removeLastAddedInstrument(_instrumentToRemove);
+    //     emit InstrumentRemoved(_instrumentToRemove);
+    // }
+
     /**
-    * @dev removes the last added instrument in the list of the instruments
-    * @param _instrumentToRemove the address of the instrument
+    * @dev activates/deactivates a _instrument
+    * @param _instrument the address of the _instrument
+    * @param switch_  true / false to activate / deactivate
     **/
-    function removeLastAddedInstrument( address _instrumentToRemove) external onlyLendingPoolManager {
+    function switchInstrument(address _instrument, bool switch_) external onlyLendingPoolManager {
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
-        core.removeLastAddedInstrument(_instrumentToRemove);
-        emit InstrumentRemoved(_instrumentToRemove);
+        if (switch_) {
+            core.activateInstrument(_instrument);
+            emit InstrumentActivated(_instrument);
+        }
+        else {
+            core.deactivateInstrument(_instrument);
+            emit InstrumentDeactivated(_instrument);
+        }
     }
 
     /**
     * @dev enables borrowing on a instrument
     * @param _instrument the address of the instrument
-    * @param _stableBorrowRateEnabled true if stable borrow rate needs to be enabled by default on this instrument
+    * @param borrowRateSwitch true if stable borrow rate needs to be enabled & false if it needs to be disabled
     **/
-    function enableBorrowingOnInstrument(address _instrument, bool _stableBorrowRateEnabled) external onlyLendingPoolManager {
+    function switchBorrowingOnInstrument(address _instrument, bool borrowRateSwitch) external onlyLendingPoolManager {
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
-        core.enableBorrowingOnInstrument(_instrument, _stableBorrowRateEnabled);
-        emit BorrowingEnabledOnInstrument(_instrument, _stableBorrowRateEnabled);
+        if (borrowRateSwitch) {
+            core.enableBorrowingOnInstrument(_instrument, borrowRateSwitch);
+            emit BorrowingEnabledOnInstrument(_instrument, borrowRateSwitch);
+        }
+        else {
+            core.disableBorrowingOnInstrument(_instrument);
+            emit BorrowingDisabledOnInstrument(_instrument);
+        }
     }
 
     /**
-    * @dev disables borrowing on a instrument
+    * @dev switch stable rate borrowing on a instrument
     * @param _instrument the address of the instrument
+    * @param switchStableBorrowRate true / false to enable / disable
     **/
-    function disableBorrowingOnInstrument(address _instrument) external onlyLendingPoolManager {
+    function switchInstrumentStableBorrowRate(address _instrument,bool switchStableBorrowRate) external onlyLendingPoolManager {
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
-        core.disableBorrowingOnInstrument(_instrument);
-        emit BorrowingDisabledOnInstrument(_instrument);
+        if (switchStableBorrowRate) {
+            core.enableInstrumentStableBorrowRate(_instrument);
+        }
+        else {
+            core.disableInstrumentStableBorrowRate(_instrument);
+        }
+        emit StableRateOnInstrumentSwitched(_instrument, switchStableBorrowRate);        
     }
 
     /**
@@ -209,65 +215,20 @@ contract LendingPoolConfigurator is VersionedInitializable {
     }
 
     /**
-    * @dev enable stable rate borrowing on a instrument
-    * @param _instrument the address of the instrument
-    **/
-    function enableInstrumentStableBorrowRate(address _instrument) external onlyLendingPoolManager {
-        ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
-        core.enableInstrumentStableBorrowRate(_instrument);
-        emit StableRateEnabledOnInstrument(_instrument);
-    }
-
-    /**
-    * @dev disable stable rate borrowing on a _instrument
-    * @param _instrument the address of the _instrument
-    **/
-    function disableInstrumentStableBorrowRate(address _instrument) external onlyLendingPoolManager {
-        ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
-        core.disableInstrumentStableBorrowRate(_instrument);
-        emit StableRateDisabledOnInstrument(_instrument);
-    }
-
-    /**
-    * @dev activates a _instrument
-    * @param _instrument the address of the _instrument
-    **/
-    function activateInstrument(address _instrument) external onlyLendingPoolManager {
-        ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
-        core.activateInstrument(_instrument);
-        emit InstrumentActivated(_instrument);
-    }
-
-    /**
-    * @dev deactivates a _instrument
-    * @param _instrument the address of the _instrument
-    **/
-    function deactivateInstrument(address _instrument) external onlyLendingPoolManager {
-        ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
-        require(core.getInstrumentTotalLiquidity(_instrument) == 0, "The liquidity of the Instrument needs to be 0");
-        core.deactivateInstrument(_instrument);
-        emit InstrumentDeactivated(_instrument);
-    }
-
-    /**
     * @dev freezes an _instrument. A freezed _instrument doesn't accept any new deposit, borrow or rate swap, but can accept repayments, liquidations, rate rebalances and redeems
     * @param _instrument the address of the _instrument
     **/
-    function freezeInstrument(address _instrument) external onlyLendingPoolManager {
+    function switchInstrumentFreeze(address _instrument, bool switch_) external onlyLendingPoolManager {
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
-        core.freezeInstrument(_instrument);
-        emit InstrumentFreezed(_instrument);
+        if (switch_) {
+            core.freezeInstrument(_instrument);
+        }
+        else {
+            core.unfreezeInstrument(_instrument);
+        }
+        emit InstrumentFreezeSwitched(_instrument,switch_);
     }
 
-    /**
-    * @dev unfreezes a _instrument
-    * @param _instrument the address of the _instrument
-    **/
-    function unfreezeInstrument(address _instrument) external onlyLendingPoolManager {
-        ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
-        core.unfreezeInstrument(_instrument);
-        emit InstrumentUnfreezed(_instrument);
-    }
 
     /**
     * @dev emitted when a _instrument loan to value is updated
@@ -303,17 +264,6 @@ contract LendingPoolConfigurator is VersionedInitializable {
     }
 
     /**
-    * @dev updates the _instrument decimals
-    * @param _instrument the address of the _instrument
-    * @param _decimals the new number of decimals
-    **/
-    function setInstrumentDecimals(address _instrument, uint256 _decimals) external onlyLendingPoolManager {
-        ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
-        core.setInstrumentDecimals(_instrument, _decimals);
-        emit InstrumentDecimalsChanged(_instrument, _decimals);
-    }
-
-    /**
     * @dev sets the interest rate strategy of a _instrument
     * @param _instrument the address of the _instrument
     * @param _rateStrategyAddress the new address of the interest strategy contract
@@ -330,39 +280,10 @@ contract LendingPoolConfigurator is VersionedInitializable {
         core.refreshConfiguration();
     }
 
-    // ##########################################################################################
-    // ###############  LENDING POOL CONFIGURATOR'S CONTROL OVER SIGH MECHANICS  ################
-    // ##########################################################################################
-
-    /**
-    * @dev refreshes the lending pool core configuration to update the cached address
-    **/
-    function updateSIGHSpeedRatioForAnInstrument(address instrument_, uint supplierRatio) external onlyLendingPoolManager {
-        ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );        
-        sigh_distribution_mechanism.updateSIGHSpeedRatioForAnInstrument( instrument_,  supplierRatio);
-    }
-
-    // ############################################################################
-    // ###############  ADDING NEW SOURCE ETC TO THE PRICE ORACLE  ################
-    // ############################################################################
-
-    function supportNewAsset(address asset_, address source_) external onlyLendingPoolManager {
-        IPriceOracle priceProvider = IPriceOracle(globalAddressesProvider.getPriceOracle());
-        priceProvider.supportNewAsset(asset_,source_);
-    }
-
-    function setAssetSources(address[] calldata _assets, address[] calldata _sources) external onlyLendingPoolManager {
-        IPriceOracle priceProvider = IPriceOracle(globalAddressesProvider.getPriceOracle());
-        priceProvider.setAssetSources(_assets,_sources);
-    }
-
-
-    function setFallbackOracle(address _fallbackOracle) external onlyLendingPoolManager {
-        IPriceOracle priceProvider = IPriceOracle(globalAddressesProvider.getPriceOracle());
-        priceProvider.setFallbackOracle(_fallbackOracle);
-    }
-
-
-
+//   // refreshes the lending pool configuration to update the cached address
+//     function refreshLendingPoolConfiguration() external onlyLendingPoolManager {
+//         ILendingPool lendingPool = ILendingPool(globalAddressesProvider.getLendingPool());
+//         core.refreshConfig();
+//     }
 
 }

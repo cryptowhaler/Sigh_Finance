@@ -9,19 +9,21 @@ export default {
 
   name: 'Deposit',
 
-data() {
+  data() {
     return {
-      selectedInstrument: this.$store.getters.currentlySelectedInstrument;
+      selectedInstrument: this.$store.getters.currentlySelectedInstrument,
       formData : {
         depositQuantity: null,
         depositValue: null,
+        enteredReferralCode: null,
       },
       showLoader: false,
-      showApproveButton: true,
-      showConfirm: false,
+      // showApproveButton: true,
+      // showConfirm: false,
     };
   },
   
+
   created() {
     this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
       this.selectedInstrument = selectedInstrument_;        
@@ -30,6 +32,7 @@ data() {
     };
     ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
   },
+
 
   computed: {
     // Updated instrument Price of the selected Instrument
@@ -42,21 +45,25 @@ data() {
     },
     computedDepositQuantity() {
       if (this.selectedInstrument && !this.formData.depositQuantity && this.formData.depositValue) {
-        this.formData.depositQuantity = this.formData.depositValue / this.selectedInstrumentPrice );
+        this.formData.depositQuantity = this.formData.depositValue / this.selectedInstrumentPrice;
         return this.formData.depositQuantity;
       }
       return this.formData.depositQuantity;
     },
     computedDepositValue() {
       if (this.selectedInstrument && !this.formData.depositValue && this.formData.depositQuantity) {
-        this.formData.depositValue = this.formData.depositQuantity * this.selectedInstrumentPrice );
+        this.formData.depositValue = this.formData.depositQuantity * this.selectedInstrumentPrice;
         return this.formData.depositValue;
       }
       return this.formData.depositValue;
-    },
-    isTheProvidedAmountApproved() {
+    }
+  },
+
+
+  asyncComputed: {
+    async isTheProvidedAmountApproved() {
       if (this.selectedInstrument && this.$store.getters.connectedWallet && this.$store.getters.LendingPoolCoreContractAddress ) {
-        let allowedAmount = await this.ERC20_getAllowance(tokenAddress:this.selectedInstrument.instrumentAddress, owner:this.$store.getters.connectedWallet, spender:this.$store.getters.LendingPoolCoreContractAddress );
+        let allowedAmount = await this.ERC20_getAllowance({ tokenAddress: this.selectedInstrument.instrumentAddress, owner: this.$store.getters.connectedWallet, spender: this.$store.getters.LendingPoolCoreContractAddress } );
         if (allowedAmount > this.formData.depositQuantity) {
           return true;
         }
@@ -76,7 +83,7 @@ data() {
       console.log('Deposit Quantity - ' + this.formData.depositQuantity);
       console.log('Deposit Value - ' + this.formData.depositValue);
       console.log('Instrument Price - ' + this.selectedInstrumentPrice);
-      let response =  await this.LendingPool_deposit( { _instrument: this.selectedInstrument.instrumentAddress , _amount: this.formData.depositQuantity, _referralCode: this.enteredReferralCode } );
+      let response =  await this.LendingPool_deposit( { _instrument: this.selectedInstrument.instrumentAddress , _amount: this.formData.depositQuantity, _referralCode: this.formData.enteredReferralCode } );
       console.log(result);
       this.showLoader = false;
     },

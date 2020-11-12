@@ -37,6 +37,8 @@ import '@/assets/css/core.css';
 import '@/assets/css/simplebar.css';
 import '@/assets/css/colors.css';
 
+import AsyncComputed from 'vue-async-computed';
+
 // We area Link to connect ApolloClient with the GraphQL server.  
 // Subsequently, we instantiate ApolloClient 
 // by passing in our Link and a new instance of InMemoryCache (recommended caching solution). Finally, 
@@ -56,7 +58,7 @@ Vue.use(VueApollo);
 
 /* Init Bootstrap */
 Vue.use(BootstrapVue);
-
+Vue.use(AsyncComputed);  // Plugin to make async calls in computed 
 
 const apolloProvider = new VueApollo({  //holds the Apollo client instances that can then be used by all the child components
   // clients: { subscriptionClient,  marlinClient},  

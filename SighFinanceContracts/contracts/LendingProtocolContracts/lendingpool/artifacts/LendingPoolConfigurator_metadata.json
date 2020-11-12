@@ -86,25 +86,6 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "_decimals",
-						"type": "uint256"
-					}
-				],
-				"name": "InstrumentDecimalsChanged",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
 						"indexed": true,
 						"internalType": "address",
 						"name": "_instrument",
@@ -153,9 +134,15 @@
 						"internalType": "address",
 						"name": "_instrument",
 						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "isFreezed",
+						"type": "bool"
 					}
 				],
-				"name": "InstrumentFreezed",
+				"name": "InstrumentFreezeSwitched",
 				"type": "event"
 			},
 			{
@@ -261,35 +248,15 @@
 						"internalType": "address",
 						"name": "_instrument",
 						"type": "address"
-					}
-				],
-				"name": "InstrumentUnfreezed",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
+					},
 					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
+						"indexed": false,
+						"internalType": "bool",
+						"name": "isEnabled",
+						"type": "bool"
 					}
 				],
-				"name": "StableRateDisabledOnInstrument",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					}
-				],
-				"name": "StableRateEnabledOnInstrument",
+				"name": "StableRateOnInstrumentSwitched",
 				"type": "event"
 			},
 			{
@@ -316,87 +283,7 @@
 						"type": "address"
 					}
 				],
-				"name": "activateInstrument",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					}
-				],
-				"name": "deactivateInstrument",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					}
-				],
-				"name": "disableBorrowingOnInstrument",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					}
-				],
 				"name": "disableInstrumentAsCollateral",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					}
-				],
-				"name": "disableInstrumentStableBorrowRate",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					},
-					{
-						"internalType": "bool",
-						"name": "_stableBorrowRateEnabled",
-						"type": "bool"
-					}
-				],
-				"name": "enableBorrowingOnInstrument",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -427,36 +314,6 @@
 					}
 				],
 				"name": "enableInstrumentAsCollateral",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					}
-				],
-				"name": "enableInstrumentStableBorrowRate",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					}
-				],
-				"name": "freezeInstrument",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -501,42 +358,7 @@
 				"constant": false,
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "_iTokenName",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "_iTokenSymbol",
-						"type": "string"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_underlyingAssetDecimals",
-						"type": "uint8"
-					},
-					{
-						"internalType": "address",
-						"name": "_interestRateStrategyAddress",
-						"type": "address"
-					}
-				],
-				"name": "initInstrumentWithData",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
+						"internalType": "contract IGlobalAddressesProvider",
 						"name": "_globalAddressesProvider",
 						"type": "address"
 					}
@@ -561,56 +383,6 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_instrumentToRemove",
-						"type": "address"
-					}
-				],
-				"name": "removeLastAddedInstrument",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address[]",
-						"name": "_assets",
-						"type": "address[]"
-					},
-					{
-						"internalType": "address[]",
-						"name": "_sources",
-						"type": "address[]"
-					}
-				],
-				"name": "setAssetSources",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_fallbackOracle",
-						"type": "address"
-					}
-				],
-				"name": "setFallbackOracle",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
 						"name": "_instrument",
 						"type": "address"
 					},
@@ -621,26 +393,6 @@
 					}
 				],
 				"name": "setInstrumentBaseLTVasCollateral",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_decimals",
-						"type": "uint256"
-					}
-				],
-				"name": "setInstrumentDecimals",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -711,16 +463,16 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "asset_",
+						"name": "_instrument",
 						"type": "address"
 					},
 					{
-						"internalType": "address",
-						"name": "source_",
-						"type": "address"
+						"internalType": "bool",
+						"name": "borrowRateSwitch",
+						"type": "bool"
 					}
 				],
-				"name": "supportNewAsset",
+				"name": "switchBorrowingOnInstrument",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -733,9 +485,14 @@
 						"internalType": "address",
 						"name": "_instrument",
 						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "switch_",
+						"type": "bool"
 					}
 				],
-				"name": "unfreezeInstrument",
+				"name": "switchInstrument",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -746,16 +503,36 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "instrument_",
+						"name": "_instrument",
 						"type": "address"
 					},
 					{
-						"internalType": "uint256",
-						"name": "supplierRatio",
-						"type": "uint256"
+						"internalType": "bool",
+						"name": "switch_",
+						"type": "bool"
 					}
 				],
-				"name": "updateSIGHSpeedRatioForAnInstrument",
+				"name": "switchInstrumentFreeze",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "switchStableBorrowRate",
+						"type": "bool"
+					}
+				],
+				"name": "switchInstrumentStableBorrowRate",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -765,41 +542,10 @@
 		"devdoc": {
 			"author": "Aave, SIGH Finance (modified by SIGH FINANCE)",
 			"methods": {
-				"activateInstrument(address)": {
-					"details": "activates a _instrument",
-					"params": {
-						"_instrument": "the address of the _instrument*"
-					}
-				},
-				"deactivateInstrument(address)": {
-					"details": "deactivates a _instrument",
-					"params": {
-						"_instrument": "the address of the _instrument*"
-					}
-				},
-				"disableBorrowingOnInstrument(address)": {
-					"details": "disables borrowing on a instrument",
-					"params": {
-						"_instrument": "the address of the instrument*"
-					}
-				},
 				"disableInstrumentAsCollateral(address)": {
 					"details": "disables a instrument as collateral",
 					"params": {
 						"_instrument": "the address of the instrument*"
-					}
-				},
-				"disableInstrumentStableBorrowRate(address)": {
-					"details": "disable stable rate borrowing on a _instrument",
-					"params": {
-						"_instrument": "the address of the _instrument*"
-					}
-				},
-				"enableBorrowingOnInstrument(address,bool)": {
-					"details": "enables borrowing on a instrument",
-					"params": {
-						"_instrument": "the address of the instrument",
-						"_stableBorrowRateEnabled": "true if stable borrow rate needs to be enabled by default on this instrument*"
 					}
 				},
 				"enableInstrumentAsCollateral(address,uint256,uint256,uint256)": {
@@ -811,18 +557,6 @@
 						"_liquidationThreshold": "the threshold at which loans using this asset as collateral will be considered undercollateralized"
 					}
 				},
-				"enableInstrumentStableBorrowRate(address)": {
-					"details": "enable stable rate borrowing on a instrument",
-					"params": {
-						"_instrument": "the address of the instrument*"
-					}
-				},
-				"freezeInstrument(address)": {
-					"details": "freezes an _instrument. A freezed _instrument doesn't accept any new deposit, borrow or rate swap, but can accept repayments, liquidations, rate rebalances and redeems",
-					"params": {
-						"_instrument": "the address of the _instrument*"
-					}
-				},
 				"initInstrument(address,address)": {
 					"details": "initializes an instrument",
 					"params": {
@@ -830,34 +564,11 @@
 						"_interestRateStrategyAddress": "the address of the interest rate strategy contract for this instrument*"
 					}
 				},
-				"initInstrumentWithData(address,string,string,uint8,address)": {
-					"details": "initializes a instrument using iTokenData provided externally (useful if the underlying ERC20 contract doesn't expose name or decimals)",
-					"params": {
-						"_iTokenName": "the name of the iToken contract",
-						"_iTokenSymbol": "the symbol of the iToken contract",
-						"_instrument": "the address of the instrument to be initialized",
-						"_interestRateStrategyAddress": "the address of the interest rate strategy contract for this instrument*",
-						"_underlyingAssetDecimals": "the decimals of the instrument underlying asset"
-					}
-				},
-				"removeLastAddedInstrument(address)": {
-					"details": "removes the last added instrument in the list of the instruments",
-					"params": {
-						"_instrumentToRemove": "the address of the instrument*"
-					}
-				},
 				"setInstrumentBaseLTVasCollateral(address,uint256)": {
 					"details": "emitted when a _instrument loan to value is updated",
 					"params": {
 						"_instrument": "the address of the _instrument",
 						"_ltv": "the new value for the loan to value*"
-					}
-				},
-				"setInstrumentDecimals(address,uint256)": {
-					"details": "updates the _instrument decimals",
-					"params": {
-						"_decimals": "the new number of decimals*",
-						"_instrument": "the address of the _instrument"
 					}
 				},
 				"setInstrumentInterestRateStrategyAddress(address,address)": {
@@ -881,14 +592,32 @@
 						"_threshold": "the new value for the liquidation threshold*"
 					}
 				},
-				"unfreezeInstrument(address)": {
-					"details": "unfreezes a _instrument",
+				"switchBorrowingOnInstrument(address,bool)": {
+					"details": "enables borrowing on a instrument",
+					"params": {
+						"_instrument": "the address of the instrument",
+						"borrowRateSwitch": "true if stable borrow rate needs to be enabled & false if it needs to be disabled*"
+					}
+				},
+				"switchInstrument(address,bool)": {
+					"details": "activates/deactivates a _instrument",
+					"params": {
+						"_instrument": "the address of the _instrument",
+						"switch_": "true / false to activate / deactivate*"
+					}
+				},
+				"switchInstrumentFreeze(address,bool)": {
+					"details": "freezes an _instrument. A freezed _instrument doesn't accept any new deposit, borrow or rate swap, but can accept repayments, liquidations, rate rebalances and redeems",
 					"params": {
 						"_instrument": "the address of the _instrument*"
 					}
 				},
-				"updateSIGHSpeedRatioForAnInstrument(address,uint256)": {
-					"details": "refreshes the lending pool core configuration to update the cached address*"
+				"switchInstrumentStableBorrowRate(address,bool)": {
+					"details": "switch stable rate borrowing on a instrument",
+					"params": {
+						"_instrument": "the address of the instrument",
+						"switchStableBorrowRate": "true / false to enable / disable*"
+					}
 				}
 			},
 			"title": "LendingPoolConfigurator contract"
@@ -919,10 +648,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/IToken.sol": {
-			"keccak256": "0x9f63f5ec72e21b69856bb432cf078f0081a1fead107f64d201fd0ef8179e3d4b",
+			"keccak256": "0xc534ece813803b05297f4654b6b795ec4dafb3aecc97ce2a56d7e589e78b0d90",
 			"urls": [
-				"bzz-raw://972e0cd9cf423674aaae2f75657aa2d945c55f8f022a00bdd8ac5257b669d06f",
-				"dweb:/ipfs/QmXm19JcBX878XRHS1dGQ9oF7ztKbtEebvNsgxtBpVFmSo"
+				"bzz-raw://b8c082bd806cfefa2ee23ceca6f4a6f81106922e54137f20aa4514f374385235",
+				"dweb:/ipfs/Qma8h8EVYCFgGK89HAVdYhUkUMwn8qFbcQRpfodkNXJ6kU"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPool.sol": {
@@ -946,18 +675,11 @@
 				"dweb:/ipfs/QmX117j9cyVA9BUmMV1AJTzp6CwL3L2PBYZyx2bMrNNrdk"
 			]
 		},
-		"localhost/contracts/LendingProtocolContracts/interfaces/IPriceOracle.sol": {
-			"keccak256": "0xbf67ed414afd7f71d11508e289dcf4f044daa86c4f4eabfa0c1d6601d27235ec",
-			"urls": [
-				"bzz-raw://4665c2d923598f5d5cbd1ec5a22f799d9cc2013402490dff543e6e017f57a75b",
-				"dweb:/ipfs/QmQSiWkQri5Tc12odv741bG93U7CL9LkC41ShRWMtn3Tg6"
-			]
-		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolConfigurator.sol": {
-			"keccak256": "0x060808e03069481e3406377311236ee0c18457f86015d9ebad9e5349ee7a7a1f",
+			"keccak256": "0x8121ac50bac244d34d2c364e8612a49bdc8a409ff10f9aa35d4128cb44828b49",
 			"urls": [
-				"bzz-raw://8c0edf14fdbca86558922f17d6e8f3614ed5cb34043097d622b5cdda5fe8395e",
-				"dweb:/ipfs/QmcoR8DA7NG7kRcfMrCtbQQC5p6hEHViNRmRQVw9DKyN6M"
+				"bzz-raw://ebf03eaa26eb44090684bc1c0b9598d74a416cc4ae0606bc7781cafd8c8029d7",
+				"dweb:/ipfs/QmWUnEWa73duJvrMs1BYiWhyFAtmgzdzaWZ6Y4dwZMCyuj"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
@@ -975,10 +697,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0x428f4a71a9dac1e6c80806288d8a63185ae81862f01ca77c87ad5f5eef8115aa",
+			"keccak256": "0x9d0aa9c01420096ea2fb48c683d5d993a89263e515cc42f1740240f76831307c",
 			"urls": [
-				"bzz-raw://195e0f95d97e9e496f374605582e6f828b0f543545990fe24a0414de383cfe60",
-				"dweb:/ipfs/QmWrSyznoEkrghc6XA23bptfqZDjMW5RigmA7jBThXQ6a7"
+				"bzz-raw://8c2543f98e68df1145f3e60d02976ec91576a391acf1608cfb8150713c208384",
+				"dweb:/ipfs/QmZY3f13oqGSK2MUZPJ4oQCxMpeGnHyEZTMUkC2ajWFars"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/VersionedInitializable.sol": {

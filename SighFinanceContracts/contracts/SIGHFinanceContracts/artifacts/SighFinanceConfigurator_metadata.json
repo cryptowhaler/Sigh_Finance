@@ -554,10 +554,10 @@
 	},
 	"sources": {
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0x428f4a71a9dac1e6c80806288d8a63185ae81862f01ca77c87ad5f5eef8115aa",
+			"keccak256": "0x9d0aa9c01420096ea2fb48c683d5d993a89263e515cc42f1740240f76831307c",
 			"urls": [
-				"bzz-raw://195e0f95d97e9e496f374605582e6f828b0f543545990fe24a0414de383cfe60",
-				"dweb:/ipfs/QmWrSyznoEkrghc6XA23bptfqZDjMW5RigmA7jBThXQ6a7"
+				"bzz-raw://8c2543f98e68df1145f3e60d02976ec91576a391acf1608cfb8150713c208384",
+				"dweb:/ipfs/QmZY3f13oqGSK2MUZPJ4oQCxMpeGnHyEZTMUkC2ajWFars"
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighSpeedController.sol": {

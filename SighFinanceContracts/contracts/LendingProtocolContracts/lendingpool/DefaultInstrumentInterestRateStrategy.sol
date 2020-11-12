@@ -1,13 +1,12 @@
 pragma solidity ^0.5.0;
 
-import "../../configuration/GlobalAddressesProvider.sol";
-import "./LendingPoolCore.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "../libraries/WadRayMath.sol";
 
+import "../../configuration/GlobalAddressesProvider.sol";
 import "../interfaces/I_InstrumentInterestRateStrategy.sol";
 import "../interfaces/ILendingRateOracle.sol";
 
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../libraries/WadRayMath.sol";
 
 
 /**

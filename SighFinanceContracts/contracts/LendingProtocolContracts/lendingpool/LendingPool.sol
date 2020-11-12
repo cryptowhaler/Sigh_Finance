@@ -209,13 +209,18 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
         _;
     }
 
+    modifier onlyLendingPoolConfigurator() {
+        require( msg.sender == addressesProvider.getLendingPoolConfigurator(), "Only Lending Pool Configurator can refresh the configuration" );
+        _;
+    }    
+
     uint256 public constant UINT_MAX_VALUE = uint256(-1);
 
 // ############################################################################################################
 // ######  initialize() function called by proxy contract when LendingPool is added to AddressesProvider ######
 // ############################################################################################################
 
-    uint256 public constant LENDINGPOOL_REVISION = 0x1;             // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
+    uint256 public constant LENDINGPOOL_REVISION = 0x2;             // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
 
     function getRevision() internal pure returns (uint256) {        // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
         return LENDINGPOOL_REVISION;
@@ -227,6 +232,10 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
     **/
     function initialize(GlobalAddressesProvider _addressesProvider) public initializer {
         addressesProvider = _addressesProvider;
+        refreshConfig();
+    }
+    
+    function refreshConfig() public  {    // onlyLendingPoolConfigurator
         core = ILendingPoolCore(addressesProvider.getLendingPoolCore());
         dataProvider = ILendingPoolDataProvider(addressesProvider.getLendingPoolDataProvider());
         parametersProvider = ILendingPoolParametersProvider(addressesProvider.getLendingPoolParametersProvider());

@@ -1,0 +1,134 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getFlashLoanFeesInBips",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getMaxStableRateBorrowSizePercent",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getRebalanceDownRateDelta",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_addressesProvider",
+						"type": "address"
+					}
+				],
+				"name": "initialize",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "Aave, SIGH Finance",
+			"methods": {
+				"initialize(address)": {
+					"details": "initializes the LendingPoolParametersProvider after it's added to the proxy",
+					"params": {
+						"_addressesProvider": "the address of the GlobalAddressesProvider"
+					}
+				}
+			},
+			"title": "LendingPoolParametersProvider (Taken from Aave, Modified by SIGH Finance)"
+		},
+		"userdoc": {
+			"methods": {},
+			"notice": "stores the configuration parameters of the Lending Pool contract*"
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/LendingProtocolContracts/configuration/LendingPoolParametersProvider.sol": "LendingPoolParametersProvider"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/LendingProtocolContracts/configuration/LendingPoolParametersProvider.sol": {
+			"keccak256": "0x5385533821caec88bfdef63db3e649ddf13081efd1059860964c5ac7f8067bb0",
+			"urls": [
+				"bzz-raw://893fca3dea05611d21f7a15fdee2fa3ec1082cfcb9154d70d43368567af3b5b7",
+				"dweb:/ipfs/QmXSwf1B42QFGLNQt3dV8ZwBHu2jdJKegsUh3nor2MsN2w"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/configuration/UintStorage.sol": {
+			"keccak256": "0x3f74e899243a66d556c0fa81875ab95ed1e3af1909b0281d03fe89590b95121f",
+			"urls": [
+				"bzz-raw://be1e401270af075398906fbcaaa7d9d9b3e1a9018ee54617d92b0822eb875b27",
+				"dweb:/ipfs/QmVC1qpZKqDb2cWegSpQYHzeraowgqfyryvguU19Qb8tgF"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolParametersProvider.sol": {
+			"keccak256": "0x66134954110991c7c40c831d9e83c2b5108612817c057648b544d0fd9be1c08e",
+			"urls": [
+				"bzz-raw://e08ad6ff745897680b9e4ab3b154b1f66877ab70270c84c92ddc11e26d4dae98",
+				"dweb:/ipfs/QmVcajsEDKVgb5d21seZqGwV4fu3giEe2jq6N5KqQzw8Eb"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/VersionedInitializable.sol": {
+			"keccak256": "0x3f7fa91853dcdf84684887deaa056f5b3803b46e7efb71704dcc625a63eeac55",
+			"urls": [
+				"bzz-raw://c7b50d4feda87e8875541afeb44f802ab539272bfb22f7c7da84c3d26e03a266",
+				"dweb:/ipfs/QmdSYn9D1Q3FRXRNDLYGGFoYb8rsN4U2MYdxciuZBTSg83"
+			]
+		}
+	},
+	"version": 1
+}

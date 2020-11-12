@@ -171,7 +171,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     * @param _iTokenAddress the address of the overlying iToken contract
     * @param _decimals the number of decimals of the underlying asset
     **/
-    function addInstrument( address _instrument, address _iTokenAddress, uint256 _decimals ) external onlyLendingPoolCore returns (bool) { // 
+    function addInstrument( address _instrument, address _iTokenAddress, uint256 _decimals ) external returns (bool) { // onlyLendingPoolCore
         require(!financial_instruments[_instrument].isListed ,"Instrument already supported.");
 
         all_Instruments.push(_instrument); // ADD THE MARKET TO THE LIST OF SUPPORTED MARKETS
@@ -209,7 +209,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     * @param _instrument the instrument object
     * @param _iTokenAddress the address of the overlying iToken contract
     **/
-    function removeInstrument( address _instrument, address _iTokenAddress ) external onlyLendingPoolCore returns (bool) {   // 
+    function removeInstrument( address _instrument, address _iTokenAddress ) external  returns (bool) {   // onlyLendingPoolCore
         require(financial_instruments[_instrument].isListed ,"Instrument already supported.");
 
         uint index = 0;
@@ -569,7 +569,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
      * @notice Accrue SIGH to the Instrument by updating the supply index
      * @param currentInstrument The Instrument whose supply index to update
      */
-    function updateSIGHSupplyIndex(address currentInstrument) external onlyLendingPoolCore returns (bool) { //     // Called on each Deposit, Redeem and Liquidation (collateral)
+    function updateSIGHSupplyIndex(address currentInstrument) external  returns (bool) { // onlyLendingPoolCore    // Called on each Deposit, Redeem and Liquidation (collateral)
         require(financial_instruments[currentInstrument].isListed ,"Instrument not supported.");
         require(updateSIGHSupplyIndexInternal( currentInstrument ), "Updating Sigh Supply Indexes operation failed" );
         return true;
@@ -617,7 +617,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
      * @notice Accrue SIGH to the market by updating the borrow index
      * @param currentInstrument The market whose borrow index to update
      */
-    function updateSIGHBorrowIndex(address currentInstrument) external onlyLendingPoolCore returns (bool) {  //     // Called during Borrow, repay, SwapRate, Rebalance, Liquidation
+    function updateSIGHBorrowIndex(address currentInstrument) external  returns (bool) {  // onlyLendingPoolCore    // Called during Borrow, repay, SwapRate, Rebalance, Liquidation
         require(financial_instruments[currentInstrument].isListed ,"Instrument not supported.");
         require( updateSIGHBorrowIndexInternal(currentInstrument), "Updating Sigh Borrow Indexes operation failed" ) ;
         return true;
@@ -673,7 +673,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
      * @param sigh_Amount The amount of SIGH to (possibly) transfer
      * @return The amount of SIGH which was NOT transferred to the user
      */
-    function transferSighTotheUser(address instrument, address user, address sighAccuredTo, uint sigh_Amount) external onlyITokenContract(instrument) returns (uint) {   // 
+    function transferSighTotheUser(address instrument, address user, address sighAccuredTo, uint sigh_Amount) external  returns (uint) {   // onlyITokenContract(instrument)
         uint sigh_not_transferred = 0;
         if ( Sigh_Address.balanceOf(address(this)) > sigh_Amount ) {   // NO SIGH TRANSFERRED IF CONTRACT LACKS REQUIRED SIGH AMOUNT
             require(Sigh_Address.transfer( sighAccuredTo, sigh_Amount ), "Failed to transfer accured SIGH to the user." );

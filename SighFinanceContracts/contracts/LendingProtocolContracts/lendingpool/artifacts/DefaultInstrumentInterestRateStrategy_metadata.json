@@ -1,0 +1,510 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "contract GlobalAddressesProvider",
+						"name": "_provider",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_baseVariableBorrowRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_variableRateSlope1",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_variableRateSlope2",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_stableRateSlope1",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_stableRateSlope2",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "EXCESS_UTILIZATION_RATE",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "OPTIMAL_UTILIZATION_RATE",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "addressesProvider",
+				"outputs": [
+					{
+						"internalType": "contract GlobalAddressesProvider",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "baseVariableBorrowRate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_availableLiquidity",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_totalBorrowsStable",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_totalBorrowsVariable",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_averageStableBorrowRate",
+						"type": "uint256"
+					}
+				],
+				"name": "calculateInterestRates",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "currentLiquidityRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "currentStableBorrowRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "currentVariableBorrowRate",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getBaseVariableBorrowRate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getStableRateSlope1",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getStableRateSlope2",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getVariableRateSlope1",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getVariableRateSlope2",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newBorrowRate",
+						"type": "uint256"
+					}
+				],
+				"name": "setBaseVariableBorrowRate",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newstableRateSlope1",
+						"type": "uint256"
+					}
+				],
+				"name": "setStableRateSlope1",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newstableRateSlope2",
+						"type": "uint256"
+					}
+				],
+				"name": "setStableRateSlope2",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newVariableRateSlope1",
+						"type": "uint256"
+					}
+				],
+				"name": "setVariableRateSlope1",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newVariableRateSlope2",
+						"type": "uint256"
+					}
+				],
+				"name": "setVariableRateSlope2",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "stableRateSlope1",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "stableRateSlope2",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "variableRateSlope1",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "variableRateSlope2",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "Aave, SIGH Finance*",
+			"details": "if there is need to update the calculation of the interest rates for a specific Instrument, a new version of this contract will be deployed.",
+			"methods": {
+				"calculateInterestRates(address,uint256,uint256,uint256,uint256)": {
+					"details": "calculates the interest rates depending on the available liquidity and the total borrowed.",
+					"params": {
+						"_availableLiquidity": "the liquidity available in the instrument",
+						"_averageStableBorrowRate": "the weighted average of all the stable rate borrows",
+						"_instrument": "the address of the instrument",
+						"_totalBorrowsStable": "the total borrowed from the instrument a stable rate",
+						"_totalBorrowsVariable": "the total borrowed from the instrument at a variable rate"
+					},
+					"return": "the liquidity rate, stable borrow rate and variable borrow rate calculated from the input parameters*"
+				}
+			},
+			"title": "DefaultInstrumentInterestRateStrategy contract"
+		},
+		"userdoc": {
+			"methods": {},
+			"notice": "implements the calculation of the interest rates depending on the Instrument parameters."
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/LendingProtocolContracts/lendingpool/DefaultInstrumentInterestRateStrategy.sol": "DefaultInstrumentInterestRateStrategy"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingRateOracle.sol": {
+			"keccak256": "0x6d15213822a26f5f75a70d45b652ad179c417f50d3f7f42952acd1b631170972",
+			"urls": [
+				"bzz-raw://35346d875f7b882f14e5f5b8d33340afe8e29df8132a384df63985628079d7c9",
+				"dweb:/ipfs/QmRQcrGHZTm1oDGnkmtYZwhHtn8SXqEiCYZfYvd7S2tFFY"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/interfaces/I_InstrumentInterestRateStrategy.sol": {
+			"keccak256": "0x8a36fc5c3cea6f913fcd6248447157311a6ec22752aff7710bd58114bfd2840a",
+			"urls": [
+				"bzz-raw://2e287714f3b6ffd0254d2832421faa1613c26e6192f301b28886466bb79e3471",
+				"dweb:/ipfs/QmfBhVBbzdnFyHuFdtndQDLfVC4TePLUEXhqDAWmbAgeJ6"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/lendingpool/DefaultInstrumentInterestRateStrategy.sol": {
+			"keccak256": "0xd31b7c1905482103722bfbbd470eb77acad6c910cdc2518ad8bd3f8313228d68",
+			"urls": [
+				"bzz-raw://e13a1cbae43d1a3ed0792c7bb1ea096eedf1ce8fb57ae68e3ac38196e3257241",
+				"dweb:/ipfs/QmdxzqYofvTN1bMg1ZwGkZGDqgvEwKcQPAs9udnp4arxmP"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/libraries/WadRayMath.sol": {
+			"keccak256": "0x126c58b068a25a9721da9933c377361f9194ab839dd6ad627d8f78a062fe0cc3",
+			"urls": [
+				"bzz-raw://810142a1a4ecd60c3f36ab696cdcb34bfb5a52d241591229659bb5c02c40c5cc",
+				"dweb:/ipfs/Qma8sCTftr1468EKegJuXnNXqTySUGtk683kAfyhMyHpiL"
+			]
+		},
+		"localhost/contracts/configuration/AddressStorage.sol": {
+			"keccak256": "0x0d0b40ccc403e45861faf71d042f5c419ff51930a45896633052c91b7ed6eae4",
+			"urls": [
+				"bzz-raw://ad8c170f6b3b87ec85076f3fdcd006fcef61ef47c978a9da8971df22682cf657",
+				"dweb:/ipfs/QmRWUQzdk7GHfcyrPzE6vw9ipfrW6Kiq1Jyp9xzbWqmv5p"
+			]
+		},
+		"localhost/contracts/configuration/GlobalAddressesProvider.sol": {
+			"keccak256": "0x5310631fce62fd0b130b3dd17ea42fdaf15e669ff38d3215883033ba3ab130c7",
+			"urls": [
+				"bzz-raw://cd78074a70018b3dd57649c93702cb85758151b7e153750903484eeb89d2587a",
+				"dweb:/ipfs/QmWFoi9YgJVuaBThwVMLE9hYjrZtZhsYN8fNj59sCsi4kr"
+			]
+		},
+		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {
+			"keccak256": "0x3cac9f73a1e6cbd9bdd703519a1a43bd8215f284910dda0807440d01193178b3",
+			"urls": [
+				"bzz-raw://e33089eb2c49cbc820f1aeb05e48d041a22838681769dfca9fdae797ee37f26f",
+				"dweb:/ipfs/QmNRwngcxxRd5LkNKTDm68kgrQ3K2aYvxFVVDF3Sm8RcYH"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {
+			"keccak256": "0x6bb623c8fe336eeba953283dbe3014ab18e882d3a3f27f38234672a5a69885d1",
+			"urls": [
+				"bzz-raw://2810308c8de3ef8291356ea30e866a0b20e2729223caffc43b0f6513f7b0aaeb",
+				"dweb:/ipfs/QmT6AD9CxgeeUndEj6F6z9zd8eJLDxUxJcHekcBRGop3ch"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/BaseUpgradeabilityProxy.sol": {
+			"keccak256": "0x99e393b97e79374c0dd133282f83ac48f15777d3894eafb9257768a1bf7acff5",
+			"urls": [
+				"bzz-raw://1c9d283b3442e71b7c611f8f79e792b248d97e1502a14d8507f131161b288f8b",
+				"dweb:/ipfs/QmWxuFrfdLHmhJrpoGwHRujeV6zpdFydVM1DY3N5RBwNs5"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/InitializableAdminUpgradeabilityProxy.sol": {
+			"keccak256": "0x7928dfc5736d1ec6a29672f41458b7de688ef2d0ec31b3e4a16e6bc554b87df1",
+			"urls": [
+				"bzz-raw://712ce2645eeb72c5c12e40ef1e04f7161ab9f8aaae3413b82f6a1b48956d6c38",
+				"dweb:/ipfs/QmcTNBeHbqBUj2UUgNob1s22oMjj4UpcLMNdXTBC2m1b6p"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/InitializableUpgradeabilityProxy.sol": {
+			"keccak256": "0x46052d95ea9b770116913041555f808f1b099c0a35e5c7ecbfc04ffef64a83bd",
+			"urls": [
+				"bzz-raw://67c2cacee01c1c8972a195be9f018abeae6917f45e45a4dc22b462fbb148150f",
+				"dweb:/ipfs/QmZhM5vvrvjFbTXjzYDB3ZTtNbTf3j54v76SZoDSbFTjdU"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/Proxy.sol": {
+			"keccak256": "0xd8dcdaaf2f03c606a569d91506958bf78df9adfb41df76727857e5dfe956e872",
+			"urls": [
+				"bzz-raw://1d780033022b07478621ce08cd4e668603fc899ae3212a883eea23347937e8d5",
+				"dweb:/ipfs/QmVZkBHpdDjko87qT4597e3UZ5uYdrEfPYbamEjBep52Se"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/UpgradeabilityProxy.sol": {
+			"keccak256": "0x5829b59012f64d1ce3ae6b98a61ddf5d6daa6e6f1a54e336ce910c8afd415c69",
+			"urls": [
+				"bzz-raw://28cba7d1f3d67aab91a4f88df4cb63762b443c31cb62a87e957add0b43dc8e1a",
+				"dweb:/ipfs/QmUXzpQDBXA2xGSNRqjn3VMJ3o8RXmpATieU9ovvk6QDAD"
+			]
+		},
+		"openzeppelin-solidity/contracts/math/SafeMath.sol": {
+			"keccak256": "0x7f293e2ee29a32416531a0bf3da9972358887c45ec1836642ec8e700cc152ba0",
+			"urls": [
+				"bzz-raw://e6ca40872864cb64a2dcc1b4f0be6a3cfc406f363e045fa7991f9f22f6257a63",
+				"dweb:/ipfs/QmdsPdEayCcUa1fg3YTbhTPn3GTcjfNYZqnwf9EDC3QGpp"
+			]
+		},
+		"openzeppelin-solidity/contracts/utils/Address.sol": {
+			"keccak256": "0x58543a8d0f0fc465618566ee6b3c04071965cd26ba20d1de3f9768014ed807e4",
+			"urls": [
+				"bzz-raw://f060c6ee3ca16eb001823e2c0f8b642ecf3ead486721bab6f6be5220158d4421",
+				"dweb:/ipfs/QmWv1ms6aLAfjZ49dNnffbg49XiKmuEWHeu4wi6EinkEek"
+			]
+		}
+	},
+	"version": 1
+}
