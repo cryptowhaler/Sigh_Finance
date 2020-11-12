@@ -7,7 +7,7 @@
         <div class="uk-width-1-1">
             <div class="form-grp">
                 <div class="form-elm">
-                    <input style="text-align: center;"  class="form-ctrl" type="text" placeholder=" Amount (USD)" v-model="formData.depositValue">
+                    <input style="text-align: center;"  class="form-ctrl" type="text" placeholder=" Amount (USD)" v-model="formData.redeemValue">
                     <span  style='color:antiquewhite'> USD </span>
                 </div>
             </div>
@@ -37,8 +37,8 @@
 
 <!-- Buttons (Approve/Deposit) -->
             <div class="left">
-                <button class="uk-button uk-button-green"  @click="approve()">Approve</button>
-                <button class="uk-button uk-button-green"  @click="deposit()">Deposit</button>
+                <!-- <button class="uk-button uk-button-green"  @click="approve()">Approve</button> -->
+                <button class="uk-button uk-button-green" style="padding: 0 81px;"  @click="redeem()">Redeem</button>
             </div>
         </div>
     </div>

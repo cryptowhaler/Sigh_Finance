@@ -1141,10 +1141,15 @@ IToken_redeem: async ({commit,state},{iTokenAddress,_amount}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    const response = await iTokenContract.methods.redeem(_amount).send({from: state.connectedWallet});
-    console.log(response);
-    return response;
-
+    try {
+      const response = await iTokenContract.methods.redeem(_amount).send({from: state.connectedWallet});
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;
+    }
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -1156,10 +1161,15 @@ IToken_redirectInterestStream: async ({commit,state},{iTokenAddress,_to}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    const response = await iTokenContract.methods.redirectInterestStream(_to).send({from: state.connectedWallet});
-    console.log(response);
-    return response;
-
+    try {
+      const response = await iTokenContract.methods.redirectInterestStream(_to).send({from: state.connectedWallet});
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;
+    }
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -1171,10 +1181,15 @@ IToken_allowInterestRedirectionTo: async ({commit,state},{iTokenAddress,_to}) =>
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    const response = await iTokenContract.methods.allowInterestRedirectionTo(_to).send({from: state.connectedWallet});
-    console.log(response);
-    return response;
-
+    try {
+      const response = await iTokenContract.methods.allowInterestRedirectionTo(_to).send({from: state.connectedWallet});
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;
+    }
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -1186,10 +1201,15 @@ IToken_redirectInterestStreamOf: async ({commit,state},{iTokenAddress,_from,_to}
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    const response = await iTokenContract.methods.redirectInterestStreamOf(_from,_to).send({from: state.connectedWallet});
-    console.log(response);
-    return response;
-
+    try {
+      const response = await iTokenContract.methods.redirectInterestStreamOf(_from,_to).send({from: state.connectedWallet});
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;
+    }
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -1201,10 +1221,15 @@ IToken_redirectSighStream: async ({commit,state},{iTokenAddress,_to}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    const response = await iTokenContract.methods.redirectSighStream(_to).send({from: state.connectedWallet});
-    console.log(response);
-    return response;
-
+    try {
+      const response = await iTokenContract.methods.redirectSighStream(_to).send({from: state.connectedWallet});
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;
+    }
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -1216,10 +1241,15 @@ IToken_redirectSighStreamOf: async ({commit,state},{iTokenAddress,_from,_to}) =>
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    const response = await iTokenContract.methods.redirectSighStreamOf(_from,_to).send({from: state.connectedWallet});
-    console.log(response);
-    return response;
-
+    try {
+      const response = await iTokenContract.methods.redirectSighStreamOf(_from,_to).send({from: state.connectedWallet});
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;
+    }
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -1231,10 +1261,15 @@ IToken_allowSighRedirectionTo: async ({commit,state},{iTokenAddress,_to}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    const response = await iTokenContract.methods.allowSighRedirectionTo(_to).send({from: state.connectedWallet});
-    console.log(response);
-    return response;
-
+    try {
+      const response = await iTokenContract.methods.allowSighRedirectionTo(_to).send({from: state.connectedWallet});
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;
+    }
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -1246,10 +1281,15 @@ IToken_claimMySIGH: async ({commit,state},{iTokenAddress}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    const response = await iTokenContract.methods.claimMySIGH().send({from: state.connectedWallet});
-    console.log(response);
-    return response;
-
+    try {
+      const response = await iTokenContract.methods.claimMySIGH().send({from: state.connectedWallet});
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;
+    }
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -1262,8 +1302,15 @@ IToken_isTransferAllowed: async ({commit,state},{iTokenAddress,_user,_amount}) =
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
     const response = await iTokenContract.methods.isTransferAllowed(_user,_amount).call();
-    console.log(response);
-    return response;
+    try {
+      const response = await iTokenContract.methods.redeem(_amount).send({from: state.connectedWallet});
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;
+    }
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -1276,8 +1323,15 @@ IToken_principalBalanceOf: async ({commit,state},{iTokenAddress,_user}) => {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
     const response = await iTokenContract.methods.principalBalanceOf(_user).call();
-    console.log(response);
-    return response;
+    try {
+      const response = await iTokenContract.methods.redeem(_amount).send({from: state.connectedWallet});
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;
+    }
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -1290,8 +1344,15 @@ IToken_getInterestRedirectionAddress: async ({commit,state},{iTokenAddress,_user
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
     const response = await iTokenContract.methods.getInterestRedirectionAddress(_user).call();
-    console.log(response);
-    return response;
+    try {
+      const response = await iTokenContract.methods.redeem(_amount).send({from: state.connectedWallet});
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;
+    }
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -1304,8 +1365,15 @@ IToken_getRedirectedBalance: async ({commit,state},{iTokenAddress,_user}) => {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
     const response = await iTokenContract.methods.getRedirectedBalance(_user).call();
-    console.log(response);
-    return response;
+    try {
+      const response = await iTokenContract.methods.redeem(_amount).send({from: state.connectedWallet});
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;
+    }
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);

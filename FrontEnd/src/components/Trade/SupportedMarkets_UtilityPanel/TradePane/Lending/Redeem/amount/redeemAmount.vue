@@ -6,32 +6,29 @@ import {mapState,mapActions,} from 'vuex';
 
 export default {
 
-  name: 'depositAmount',
+  name: 'redeemAmount',
 
   data() {
     return {
       selectedInstrument: this.$store.state.currentlySelectedInstrument,
       formData : {
-        depositQuantity: null,
-        depositValue: null,
-        enteredReferralCode: 0,
+        redeemQuantity: null,
+        redeemValue: null,
       },
-      availableAllowance: null,
+      remainingBalance: null,
       showLoader: false,
-      // showApproveButton: true,
-      // showConfirm: false,
     };
   },
   
 
   created() {
     this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
-    this.updateAvailableAllowance();
+    this.getRemainingBalance();
     this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
       this.selectedInstrument = selectedInstrument_.instrument;        
-      console.log('DEPOSIT : changeSelectedInstrument - ');
+      console.log('REDEEM : changeSelectedInstrument - ');
       console.log(this.selectedInstrument);
-      this.updateAvailableAllowance();
+      this.getRemainingBalance();
     };
     ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
   },
@@ -39,12 +36,10 @@ export default {
 
   computed: {
     calculatedQuantity() {
-        console.log('calculatedQuantity');
+        console.log('calculatedquantity');
         if (this.selectedInstrument) {
           console.log(this.selectedInstrument);
-          this.formData.depositQuantity = Number((this.formData.depositValue) / (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4) ; 
-          console.log('depositQuantity (computed) ' + this.formData.depositQuantity);          
-          return this.formData.depositQuantity;
+          return ((this.formData.redeemValue) / (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(9) ; 
           }
       return 0;
     }
@@ -52,74 +47,50 @@ export default {
 
   methods: {
 
-    ...mapActions(['LendingPool_deposit','ERC20_increaseAllowance','ERC20_getAllowance']),
+    ...mapActions(['IToken_redeem','ERC20_balanceOf']),
     
-    async deposit() {   //DEPOSIT (WORKS PROPERLY)
+    async redeem() {   //DEPOSIT (WORKS PROPERLY)
       this.showLoader = true;
       let price = (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals)).toFixed(4);
-      let value = price * this.formData.depositQuantity;
-      console.log('Selected Instrument - ' + this.selectedInstrument.symbol);
-      console.log('Available Allowance - ' + this.availableAllowance );      
-      console.log('Deposit Quantity - ' + this.formData.depositQuantity);
-      console.log('Deposit Value - ' + value);
-      console.log('Instrument Price - ' + price);     
-
-      // WHEN THE ALLOWANCE IS LESS THAN WHAT IS NEEDED
-      if ( Number(this.formData.depositQuantity) >  Number(this.availableAllowance)  ) {
-        let dif = this.formData.depositQuantity - this.availableAllowance;
-        this.$showInfoMsg({message: " You first need to 'APPROVE' an amount greater than " + dif + " " + this.selectedInstrument.symbol + " so that the deposit can be processed through the ERC20 Interface's transferFrom() Function."}); // this.formData.depositQuantity + "  " + this.selectedInstrument.symbol +  " worth " + value + " USD approval failed. Try increasing Gas or contact our team at contact@sigh.finance in case of any queries." });        
-        this.$showInfoMsg({message: "Available Allowance : " + this.availableAllowance + " " + this.selectedInstrument.symbol });        
-        this.showLoader = false;
-      }
-      // WHEN ALLOWANCE CONDITION IS MET SO THE TRANSACTION GOES THROUGH
-      else {
-        let response =  await this.LendingPool_deposit( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.depositQuantity, _referralCode: this.formData.enteredReferralCode } );
+      if (price > 0) {
+        let quantity = (this.formData.redeemValue / price);
+        console.log('Selected Instrument - ' + this.selectedInstrument.symbol);
+        console.log('Selected IToken - ' + this.selectedInstrument.iTokenAddress);
+        console.log('Redeem Quantity - ' + quantity);
+        console.log('Redeem Value - ' + this.formData.redeemValue);
+        console.log('Instrument Price - ' + price);     
+      // WHEN THE AMOUNT ENTERED FOR REDEEMING IS GREATER THAN THE AVAILABLE BALANCE
+        if ( Number(quantity) >  Number(this.remainingBalance)  ) {
+          quantity = this.remainingBalance;
+          this.$showInfoMsg({message: " The provided amount to be redeemed exceeds your depsited balance . So your entire " + this.selectedInstrument.symbol +  " balance will be redeemed."});
+        }
+        let response =  await this.IToken_redeem( { iTokenAddress: this.selectedInstrument.iTokenAddress , _amount:  quantity } );
         if (response.status) {      
-          this.$showSuccessMsg({message: "DEPOSIT SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully deposited to SIGH Finance. Gas used = " + response.gasUsed });
-          await this.updateAvailableAllowance();
-          // this.$showInfoMsg({message: "Available Allowance : " + this.availableAllowance + " " + this.selectedInstrument.symbol });        
-          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
+          this.$showSuccessMsg({message: "REDEEM SUCCESS : " + quantity + "  " +  this.selectedInstrument.symbol +  " worth " + this.formData.redeemValue + " USD was successfully redeemed from SIGH Finance. Gas used = " + response.gasUsed });
+          this.$showInfoMsg({message: " $SIGH Farms looks forward to serving you again!"});
+          await this.getRemainingBalance();
+          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Redeem',Service: 'LENDING'});
         }
         else {
-          this.$showErrorMsg({message: "DEPOSIT FAILED : " + response.message  }); // this.formData.depositQuantity + "  " + this.selectedInstrument.symbol +  " worth " + value + " USD approval failed. Try increasing Gas or contact our team at contact@sigh.finance in case of any queries." });        
-          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); // this.formData.depositQuantity + "  " + this.selectedInstrument.symbol +  " worth " + value + " USD approval failed. Try increasing Gas or contact our team at contact@sigh.finance in case of any queries." });        
+          this.$showErrorMsg({message: "REDEEM FAILED : " + response.message  }); 
+          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
           // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
         }
-        this.formData.depositQuantity = null;
+        this.formData.redeemQuantity = null;
         this.showLoader = false;
+      }
+      else {
+          this.$showErrorMsg({message: "Seems like the pricefeed is not functioning correctly. Please try again later! " }); 
       }
     },
       
 
-    async approve() {   //APPROVE (WORKS PROPERLY)
-      this.showLoader = true;
-      console.log('Selected Instrument - ')
-      console.log(this.selectedInstrument);
-      console.log('Quantity to be Approved - ' + this.formData.depositQuantity);
-      let price = (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals)).toFixed(4);
-      let value = price * this.formData.depositQuantity;
-      console.log('Instrument Price - ' + price);
-      let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  this.formData.depositQuantity } );
-      if (response.status) { 
-        this.$showSuccessMsg({message: "APPROVAL SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });
-        this.formData.depositQuantity = null;
-        await this.updateAvailableAllowance();
-        // this.$showInfoMsg({message: "Available Allowance : " + this.availableAllowance + " " + this.selectedInstrument.symbol });        
-        // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});      
-      }
-      else {
-        this.$showErrorMsg({message: "APPROVAL FAILED : " + response.message  }); 
-        this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-        // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});              
-      }
-      this.showLoader = false;
-    }, 
-
-    async updateAvailableAllowance() {
-      this.availableAllowance = await this.ERC20_getAllowance({tokenAddress: this.selectedInstrument.instrumentAddress, owner: this.$store.getters.connectedWallet, spender: this.$store.getters.LendingPoolCoreContractAddress });
-      console.log(this.availableAllowance);
-      this.$showInfoMsg({message: "Available Allowance : " + this.availableAllowance + " " + this.selectedInstrument.symbol });        
-      console.log( 'Current available allowance for ' + this.selectedInstrument.symbol + " is " + this.availableAllowance );
+    async getRemainingBalance() {
+      this.remainingBalance = await this.ERC20_balanceOf({tokenAddress: this.selectedInstrument.iTokenAddress, account: this.$store.getters.connectedWallet });
+      console.log(this.remainingBalance);
+      let remainingValue = (this.remainingBalance * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4); 
+      this.$showInfoMsg({message: this.remainingBalance + " " + this.selectedInstrument.symbol  + " worth $" + remainingValue + " USD are currently farming $SIGH for you at SIGH Finance! "});        
+      console.log( 'Current remaining deposited balance for ' + this.selectedInstrument.symbol + " is " + this.remainingBalance + " worth " +  remainingValue + " USD");
     }
   },
 
