@@ -4,18 +4,14 @@
 import { ConnectedWallet } from '../../../../../utils/localStorage';
 // import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import EventBus, {EventNames,} from '@/eventBuses/default';
+
 export default {
+
   name: 'balance',
+
   data() {
     return {
       balance: {},
-      marginInfo: {},
-      showMarginInfo: true,
-      marginBaseInfo:{},
-      // totalUnrealizedPNL_: this.$store.getters.totalUnrealizedPNL,
-      // totalRealizedPNL: this.$store.getters.totalRealizedPNL,
-      selectedPubKey: '',
-      pubkeys : ConnectedWallet.pubKeys,
     };
   },
   
@@ -31,21 +27,8 @@ export default {
 
   methods: {
     setpubkeys() {
-      // console.log(ConnectedWallet.pubKeys);
-      // console.log(this.pubkeys);
-      this.pubkeys = ConnectedWallet.pubKeys;
-      // console.log(this.pubkeys);
     },
     setpubkeysEmpty() {
-      this.pubkeys = [];
-    },
-
-    PubKeyChange () {
-      // console.log('newly selected ' + this.selectedPubKey);
-      // console.log('currently active' + ConnectedWallet.currentActiveKey);
-      ConnectedWallet.currentActiveKey = this.selectedPubKey;
-      // console.log( 'newly active' + ConnectedWallet.currentActiveKey);
-      EventBus.$emit(EventNames.pubKeyChanged);
     },
   },
 

@@ -1,6 +1,6 @@
 pragma solidity ^0.5.0;
 
-import "../../interfaces/ILendingRateOracle.sol";
+import "./interfaces/ILendingRateOracle.sol";
 
 
 contract LendingRateOracle is ILendingRateOracle {

@@ -27,7 +27,7 @@
                     </thead>
                     <tbody>
                         <!-- live markets content -->
-                        <tr v-for="market in markets">
+                        <!-- <tr v-for="market in markets">
                             <td class="uk-text-center c-white" style="line-height: 4;" >{{ market.symbol }}</td>
                             <td class="uk-text-center c-white" style="line-height: 4;" >{{ market.totalSupply }}</td>
                             <td class="uk-text-center c-white" style="line-height: 4;"  >{{ market.totalBorrows }} </td>
@@ -39,9 +39,7 @@
                             <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(Number(market.savePriceSnapshot)/10000000).toFixed(3) }} </td>
                             <td class="uk-text-center c-green" style="line-height: 4;" >{{ market.sighSpeed }} </td>
                             <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(Number(market.sighAccuredInCurrentCycle)/10000000).toFixed(2) }} </td>
-                            <!-- <td class="uk-text-center c-green" style="line-height: 4;" >{{ market.lossesRecovered }} </td> -->
-                            <!-- <td class="uk-text-right">{{(market.createdAt).slice(11,19)}}-{{(market.createdAt).slice(20,22)}}</td> -->
-                        </tr>
+                        </tr> -->
                     </tbody>
                 </table>
             </div>
@@ -51,18 +49,5 @@
     <template v-else>
         <spinner mTop="calc(100% - 30px)" />
     </template>
-    <!-- <div id="hello" v-if="showLoader" data-simplebar data-simplebar-auto-hide="false" :style="{ height: tableHeight }">
-        <table>
-            <thead class="uk-hidden">
-                <tr>
-                    <td class="uk-test-left">Price </td>
-                    <td class="uk-text-center">Volume</td>
-                    <td class="uk-text-right">Timestamp</td>
-                </tr>
-            </thead>
-            <tbody>
-                <spinner />
-            </tbody>
-        </table>
-    </div> -->
+
 </div>

@@ -20,6 +20,7 @@ import IToken from '@/contracts/IToken.json'; // IToken Contract ABI
 
 import IPriceOracleGetter from '@/contracts/IPriceOracleGetter.json'; // IToken Contract ABI
 import ERC20 from '@/contracts/ERC20.json'; // ERC20 Contract ABI
+import ERC20Detailed from '@/contracts/ERC20Detailed.json'; // ERC20 Contract ABI
 
 const getRevertReason = require('eth-revert-reason');
 
@@ -332,32 +333,29 @@ const store = new Vuex.Store({
     // ######################################################
     setSupportedInstrumentAddresses(state,_supportedinstruments) {      // LIST OF INSTRUMENTS SUPPORTED BY SIGH FINANCE      
       state.supportedInstrumentAddresses = _supportedinstruments;
-      console.log(state.supportedInstrumentAddresses);
-      console.log("In setSupportedInstrumentAddresses ");
+      // console.log(state.supportedInstrumentAddresses);
+      // console.log("In setSupportedInstrumentAddresses ");
     },    
-    addToSupportedInstrumentsArray(state,newInstrument) {
-      state.supportedInstruments.push(newInstrument);
-      console.log(state.supportedInstruments);
-      console.log("In addToSupportedInstrumentsArray ");
+    addToSupportedInstrumentsArray(state,instrumentState) {
+      state.supportedInstruments.push(instrumentState);
+      // console.log(state.supportedInstruments);
+      // console.log("In addToSupportedInstrumentsArray ");
 
     },
-    addToSupportedInstrumentsConfigsMapping(state,instrumentAddress,instrumentDetails) {  // ADDS THE 'Instrument Address' => 'Instrument Details' MAPPING
+    addToSupportedInstrumentsConfigsMapping(state,{instrumentAddress,instrumentDetails}) {  // ADDS THE 'Instrument Address' => 'Instrument Details' MAPPING
       state.supportedInstrumentConfigs.set(instrumentAddress,instrumentDetails);  // creates a mapping from instrument address to instrument config data
-      console.log(state.supportedInstrumentConfigs.get(instrumentAddress));
-      console.log("In addToSupportedInstrumentsConfigsMapping ");
+      // console.log(state.supportedInstrumentConfigs.get(instrumentAddress));
+      // console.log("In addToSupportedInstrumentsConfigsMapping ");
     },
-    updateInstrumentPrice(state,instrumentAddress,updatedPrice) {               // UPDATES THE CURRENT INSTRUMENT PRICE. CONSTANTLY CALLED BY THE PRICE POLLING FUNCTION
+    updateInstrumentPrice(state,{instrumentAddress,updatedPrice}) {               // UPDATES THE CURRENT INSTRUMENT PRICE. CONSTANTLY CALLED BY THE PRICE POLLING FUNCTION
       let instrumentConfig = state.supportedInstrumentConfigs.get(instrumentAddress); 
       instrumentConfig.price = updatedPrice;      
       state.supportedInstrumentConfigs.set(instrumentAddress,instrumentConfig);
-      console.log("In updateInstrumentPrice ");
-      console.log(instrumentConfig.price);
-      console.log(state.supportedInstrumentConfigs.get(instrumentAddress));
     },
     updateSelectedInstrument(state, selectedInstrument_) {
       state.currentlySelectedInstrument = selectedInstrument_;
-      console.log(_supportedinstrument);
-      console.log(state.supportedInstruments);
+      console.log(selectedInstrument_);
+      console.log(state.currentlySelectedInstrument);
       console.log("In updateSelectedInstrument ");
     },
     changeWebsocketStatus(state, websocketStatus) {
@@ -550,7 +548,7 @@ const store = new Vuex.Store({
     }
   },
 
-  // fetches and updates all the contract addresses
+  // [TESTED. WORKING AS EXPECTED] fetches and stores the protocol's contract addresses 
   getAddresses: async ({commit,state},{globalAddressesProviderAddress}) => {
 
     const currentGlobalAddressesProviderContract = new state.web3.eth.Contract(GlobalAddressesProviderInterface.abi, globalAddressesProviderAddress );
@@ -558,35 +556,27 @@ const store = new Vuex.Store({
 
     if (currentGlobalAddressesProviderContract) {
       const sighAddress = await currentGlobalAddressesProviderContract.methods.getSIGHAddress().call();        
-      // console.log( 'sigh - ' + sighAddress); 
       commit('updateSIGHContractAddress',sighAddress);
 
       const sighSpeedControllerAddress = await currentGlobalAddressesProviderContract.methods.getSIGHSpeedController().call();        
-      // console.log( 'sighSpeedControllerAddress - ' + sighSpeedControllerAddress); 
       commit('updateSIGHSpeedControllerAddress',sighSpeedControllerAddress);
 
       const sighStakingContractAddress = await currentGlobalAddressesProviderContract.methods.getSIGHStaking().call();        
-      // console.log( 'sighStakingContractAddress - ' + sighStakingContractAddress); 
       commit('updatesighStakingContractAddress',sighStakingContractAddress);
       
       const sighTreasuryAddress = await currentGlobalAddressesProviderContract.methods.getSIGHTreasury().call();        
-      // console.log( 'sighTreasuryAddress - ' + sighTreasuryAddress); 
       commit('updateSIGHTreasuryContractAddress',sighTreasuryAddress);
 
       const sighDistributionHandlerAddress = await currentGlobalAddressesProviderContract.methods.getSIGHMechanismHandler().call();        
-      // console.log( 'sighDistributionHandlerAddress - ' + sighDistributionHandlerAddress); 
       commit('updateSIGHDistributionHandlerAddress',sighDistributionHandlerAddress);
 
       const lendingPoolAddress = await currentGlobalAddressesProviderContract.methods.getLendingPool().call();        
-      // console.log( 'lendingPoolAddress - ' + lendingPoolAddress); 
       commit('updateLendingPoolContractAddress',lendingPoolAddress);
   
       const lendingPoolCoreAddress = await currentGlobalAddressesProviderContract.methods.getLendingPoolCore().call();        
-      // console.log( 'lendingPoolCoreAddress - ' + lendingPoolCoreAddress); 
       commit('updateLendingPoolCoreContractAddress',lendingPoolCoreAddress);
 
       const lendingPoolDataProviderAddress = await currentGlobalAddressesProviderContract.methods.getLendingPoolDataProvider().call();        
-      // console.log( 'lendingPoolDataProviderAddress - ' + lendingPoolDataProviderAddress); 
       commit('updateLendingPoolDataProviderContract',lendingPoolDataProviderAddress);
 
       const iPriceOracleGetterAddress = await currentGlobalAddressesProviderContract.methods.getPriceOracle().call();        
@@ -601,35 +591,34 @@ const store = new Vuex.Store({
     }
   },
 
-  // Gets the addresses of the ITokens and the corresponding Insturments
+  // [TESTED. WORKING AS EXPECTED] Gets the addresses of the ITokens and the corresponding Supported Instruments
   getSupportedInstrumentAddresses: async ({commit,state}) => { 
+    console.log("getSupportedInstrumentAddresses ACTION");
     if (state.web3 && state.LendingPoolCoreContractAddress && state.LendingPoolCoreContractAddress != "0x0000000000000000000000000000000000000000") {
-      const lendingPoolCoreContract = new state.web3.eth.Contract(LendingPoolCore.abi, state.LendingPoolCoreContract );
+      const lendingPoolCoreContract = new state.web3.eth.Contract(LendingPoolCore.abi, state.LendingPoolCoreContractAddress );
       console.log(lendingPoolCoreContract);
 
       // Returns an array of supported instrument addresses
       const instruments = await lendingPoolCoreContract.methods.getInstruments().call();        
-      console.log("getSupportedInstrumentAddresses ACTION");
-      console.log(instruments);
       commit('setSupportedInstrumentAddresses',instruments);
 
       const priceOracleContract = new state.web3.eth.Contract(IPriceOracleGetter.abi, state.IPriceOracleGetterAddress );
-      console.log(priceOracleContract);
 
       // Loop over the instrument addresses to fetch iToken Address, name, symbol, decimals and add them to the supported instruments list
       if (instruments) {
         for (let i=0; i<instruments.length; i++) {
-          let erc20Contract = new state.web3.eth.Contract(ERC20.abi, instruments[i] );
+          let erc20Contract = new state.web3.eth.Contract(ERC20Detailed.abi, instruments[i] );
           let instrumentState = {};
           instrumentState.instrumentAddress = instruments[i];
           instrumentState.name = await erc20Contract.methods.name().call();
           instrumentState.symbol = await erc20Contract.methods.symbol().call();
           instrumentState.decimals = await erc20Contract.methods.decimals().call();
           instrumentState.iTokenAddress = await lendingPoolCoreContract.methods.getInstrumentITokenAddress(instruments[i]).call();
-          instrumentState.priceDecimals = await priceOracleContract.methods.getAssetPriceDecimals(_instrumentAddress).call();;
-          commit('addToSupportedInstrumentsArray',instruments[i],instrumentState);
+          instrumentState.priceDecimals = await priceOracleContract.methods.getAssetPriceDecimals(instruments[i]).call();
+          console.log(instrumentState);
+          commit('addToSupportedInstrumentsArray',instrumentState);
           instrumentState.price = null;
-          commit('addToSupportedInstrumentsConfigsMapping',instruments[i],instrumentState);
+          commit('addToSupportedInstrumentsConfigsMapping',{instrumentAddress:instruments[i],instrumentDetails:instrumentState});
         }
         store.dispatch('initiatePollingInstrumentPrices');
       }
@@ -641,35 +630,41 @@ const store = new Vuex.Store({
     }
   },
 
-  // KEEP UPDATING PRICES OF THE SUPPORTED INSTRUMENTS
-  initiatePollingInstrumentPrices: async ({commit,store,state}) => {
+  // [TESTED. WORKING AS EXPECTED] KEEP UPDATING PRICES OF THE SUPPORTED INSTRUMENTS
+  initiatePollingInstrumentPrices: async ({commit,state}) => {
     console.log("initiatePollingInstrumentPrices : updating prices");
-    let instruments = state.supportedInstruments;
+    let instruments = state.supportedInstrumentAddresses;
     console.log(instruments);
     setInterval(async () => {
       if (instruments) {
         for (let i=0; i<instruments.length; i++ ) {
-          let updatedPrice = await store.dispatch('getInstrumentPrice',{instrumentAddress : instruments[i] });
-          console.log(state.supportedInstrumentConfigs.get(instruments[i]).name +  " - current price is " + updatedPrice);
-          commit('updateInstrumentPrice',_instrumentAddress,updatedPrice);
+          let updatedPrice_ = await store.dispatch('getInstrumentPrice', { _instrumentAddress : instruments[i] } );
+          if (updatedPrice_) {
+            console.log(state.supportedInstrumentConfigs.get(instruments[i]).name +  " - current price is " + updatedPrice_);
+            commit('updateInstrumentPrice',{instrumentAddress: instruments[i], updatedPrice: updatedPrice_});  
+          }
         }
       }
-    }, 1000);
+    }, 5000);
   },
 
 // ######################################################
 // ############ getInstrumentPrice --- VIEW Funtion to get instrument's price from the price oracle
 // ######################################################
 
+  // [TESTED. WORKING AS EXPECTED] Gets the current price of the instrument
   getInstrumentPrice: async ({commit,state},{_instrumentAddress}) => {
     if (state.web3 && state.IPriceOracleGetterAddress && state.IPriceOracleGetterAddress!= "0x0000000000000000000000000000000000000000" ) {
       const priceOracleContract = new state.web3.eth.Contract(IPriceOracleGetter.abi, state.IPriceOracleGetterAddress );
-      console.log(priceOracleContract);
-      response = await priceOracleContract.methods.getAssetPrice(_instrumentAddress).call();
-      commit('updateInstrumentPrice',_instrumentAddress,response);
+      // console.log(priceOracleContract);
+      // console.log(_instrumentAddress);
+      let response = await priceOracleContract.methods.getAssetPrice(_instrumentAddress).call();
+      // console.log(response);
+      return response;
     }
     else {
       console.log('getInstrumentPrice() function in store.js. Protocol not supported on connected blockchain network');
+      return null;
     }
   },
 
@@ -1478,8 +1473,8 @@ ERC20_decreaseAllowance: async ({commit,state},{tokenAddress,spender,subtractedV
 ERC20_getAllowance: async ({commit,state},{tokenAddress,owner,spender }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
-    console.log(erc20Contract);
-    const response = erc20Contract.methods.allowance(owner,spender).call();
+    // console.log(erc20Contract);
+    const response = await erc20Contract.methods.allowance(owner,spender).call();
     console.log(response);
     return response;
   }
@@ -1493,7 +1488,7 @@ ERC20_balanceOf: async ({commit,state},{tokenAddress,account }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     console.log(erc20Contract);
-    const response = erc20Contract.methods.balanceOf(account).call();
+    const response = await erc20Contract.methods.balanceOf(account).call();
     console.log(response);
     return response;
   }
@@ -1507,7 +1502,7 @@ ERC20_totalSupply: async ({commit,state},{tokenAddress}) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     console.log(erc20Contract);
-    const response = erc20Contract.methods.totalSupply().call();
+    const response = await erc20Contract.methods.totalSupply().call();
     console.log(response);
     return response;
   }

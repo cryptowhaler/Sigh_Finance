@@ -10,6 +10,7 @@ interface IPriceOracle {
 // ##################################
 
     function getAssetPrice(address _asset) external view returns (uint256);
+    function getAssetPriceDecimals (address _asset) external view returns(uint8);
     function getSourceOfAsset(address _asset) external view returns(address);
     function getFallbackOracle() external view returns(address);
 

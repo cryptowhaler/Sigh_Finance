@@ -91,22 +91,22 @@
   "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[],\"name\":\"FEE_PROVIDER_REVISION\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"calculateLoanOriginationFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLoanOriginationFeePercentage\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addressesProvider\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"originationFeePercentage\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Aave, SIGH Finance*\",\"methods\":{\"calculateLoanOriginationFee(address,uint256)\":{\"details\":\"calculates the origination fee for every loan executed on the platform.\",\"params\":{\"_amount\":\"the amount of the loan*\",\"_user\":\"can be used in the future to apply discount to the origination fee based on the _user account (eg. stake AAVE tokens in the lending pool, or deposit > 1M USD etc..)\"}},\"getLoanOriginationFeePercentage()\":{\"details\":\"returns the origination fee percentage*\"},\"initialize(address)\":{\"details\":\"initializes the FeeProvider after it's added to the proxy\",\"params\":{\"_addressesProvider\":\"the address of the GlobalAddressesProvider\"}}},\"title\":\"FeeProvider contract\"},\"userdoc\":{\"methods\":{},\"notice\":\"Implements calculation for the fees applied by the protocol\"}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/fees/FeeProvider.sol\":\"FeeProvider\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/fees/FeeProvider.sol\":{\"keccak256\":\"0xc5ef787523589c15f9bbca2fc1315bfd5cd28bf81d9c7d9b8b7469c3075675f1\",\"urls\":[\"bzz-raw://ef30d49cfeaf403952955a0ca678bfac85bfcc6028e84bca62bda787f672b474\",\"dweb:/ipfs/QmSEYUFrxGgu9ZgXmEWbpqhK2N16dZfWQ5sk5wZBCwvSza\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/IFeeProvider.sol\":{\"keccak256\":\"0x40a163478b768ca5639ccc04466e2667eec5e86582dc5b2a9b18496a5e9c2423\",\"urls\":[\"bzz-raw://a021b7e9c79fd6053a0213e72ef307e58e1bb89392e9b24a6cc4063e49e5461a\",\"dweb:/ipfs/QmNb5Uh8bbudTma2hxnDc6JSR6MKS1U5PGggstGZhnwiQn\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/libraries/WadRayMath.sol\":{\"keccak256\":\"0x126c58b068a25a9721da9933c377361f9194ab839dd6ad627d8f78a062fe0cc3\",\"urls\":[\"bzz-raw://810142a1a4ecd60c3f36ab696cdcb34bfb5a52d241591229659bb5c02c40c5cc\",\"dweb:/ipfs/Qma8sCTftr1468EKegJuXnNXqTySUGtk683kAfyhMyHpiL\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin-upgradeability/VersionedInitializable.sol\":{\"keccak256\":\"0x3f7fa91853dcdf84684887deaa056f5b3803b46e7efb71704dcc625a63eeac55\",\"urls\":[\"bzz-raw://c7b50d4feda87e8875541afeb44f802ab539272bfb22f7c7da84c3d26e03a266\",\"dweb:/ipfs/QmdSYn9D1Q3FRXRNDLYGGFoYb8rsN4U2MYdxciuZBTSg83\"]},\"openzeppelin-solidity/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x7f293e2ee29a32416531a0bf3da9972358887c45ec1836642ec8e700cc152ba0\",\"urls\":[\"bzz-raw://e6ca40872864cb64a2dcc1b4f0be6a3cfc406f363e045fa7991f9f22f6257a63\",\"dweb:/ipfs/QmdsPdEayCcUa1fg3YTbhTPn3GTcjfNYZqnwf9EDC3QGpp\"]}},\"version\":1}",
   "bytecode": "0x60806040526000805534801561001457600080fd5b50610410806100246000396000f3fe608060405234801561001057600080fd5b50600436106100575760003560e01c80639403ed3a1461005c578063b0d73d4e14610076578063c211f9a41461007e578063c4d66de814610086578063e563a7d0146100ae575b600080fd5b6100646100da565b60408051918252519081900360200190f35b6100646100e0565b6100646100e5565b6100ac6004803603602081101561009c57600080fd5b50356001600160a01b03166100eb565b005b610064600480360360408110156100c457600080fd5b506001600160a01b038135169060200135610193565b60345481565b600181565b60345490565b60006100f56101b3565b60015490915060ff168061010c575061010c6101b8565b80610118575060005481115b6101535760405162461bcd60e51b815260040180806020018281038252602e8152602001806103ae602e913960400191505060405180910390fd5b60015460ff16158015610172576001805460ff19168117905560008290555b6608e1bc9bf04000603455801561018e576001805460ff191690555b505050565b60006101aa603454836101be90919063ffffffff16565b90505b92915050565b600190565b303b1590565b60006101aa670de0b6b3a76400006101ee6101df868663ffffffff6101fa16565b6706f05b59d3b2000090610253565b9063ffffffff6102ad16565b600082610209575060006101ad565b8282028284828161021657fe5b04146101aa5760405162461bcd60e51b815260040180806020018281038252602181526020018061038d6021913960400191505060405180910390fd5b6000828201838110156101aa576040805162461bcd60e51b815260206004820152601b60248201527f536166654d6174683a206164646974696f6e206f766572666c6f770000000000604482015290519081900360640190fd5b60006101aa83836040518060400160405280601a81526020017f536166654d6174683a206469766973696f6e206279207a65726f000000000000815250600081836103765760405162461bcd60e51b81526004018080602001828103825283818151815260200191508051906020019080838360005b8381101561033b578181015183820152602001610323565b50505050905090810190601f1680156103685780820380516001836020036101000a031916815260200191505b509250505060405180910390fd5b50600083858161038257fe5b049594505050505056fe536166654d6174683a206d756c7469706c69636174696f6e206f766572666c6f77436f6e747261637420696e7374616e63652068617320616c7265616479206265656e20696e697469616c697a6564a265627a7a723158200e0be565e679953d772239e5eb4054e21b64a7e339b8583a4cb8844fb66aaa3964736f6c63430005100032",
   "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100575760003560e01c80639403ed3a1461005c578063b0d73d4e14610076578063c211f9a41461007e578063c4d66de814610086578063e563a7d0146100ae575b600080fd5b6100646100da565b60408051918252519081900360200190f35b6100646100e0565b6100646100e5565b6100ac6004803603602081101561009c57600080fd5b50356001600160a01b03166100eb565b005b610064600480360360408110156100c457600080fd5b506001600160a01b038135169060200135610193565b60345481565b600181565b60345490565b60006100f56101b3565b60015490915060ff168061010c575061010c6101b8565b80610118575060005481115b6101535760405162461bcd60e51b815260040180806020018281038252602e8152602001806103ae602e913960400191505060405180910390fd5b60015460ff16158015610172576001805460ff19168117905560008290555b6608e1bc9bf04000603455801561018e576001805460ff191690555b505050565b60006101aa603454836101be90919063ffffffff16565b90505b92915050565b600190565b303b1590565b60006101aa670de0b6b3a76400006101ee6101df868663ffffffff6101fa16565b6706f05b59d3b2000090610253565b9063ffffffff6102ad16565b600082610209575060006101ad565b8282028284828161021657fe5b04146101aa5760405162461bcd60e51b815260040180806020018281038252602181526020018061038d6021913960400191505060405180910390fd5b6000828201838110156101aa576040805162461bcd60e51b815260206004820152601b60248201527f536166654d6174683a206164646974696f6e206f766572666c6f770000000000604482015290519081900360640190fd5b60006101aa83836040518060400160405280601a81526020017f536166654d6174683a206469766973696f6e206279207a65726f000000000000815250600081836103765760405162461bcd60e51b81526004018080602001828103825283818151815260200191508051906020019080838360005b8381101561033b578181015183820152602001610323565b50505050905090810190601f1680156103685780820380516001836020036101000a031916815260200191505b509250505060405180910390fd5b50600083858161038257fe5b049594505050505056fe536166654d6174683a206d756c7469706c69636174696f6e206f766572666c6f77436f6e747261637420696e7374616e63652068617320616c7265616479206265656e20696e697469616c697a6564a265627a7a723158200e0be565e679953d772239e5eb4054e21b64a7e339b8583a4cb8844fb66aaa3964736f6c63430005100032",
-  "sourceMap": "314:2207:7:-;;;905:1:104;863:43;;314:2207:7;8:9:-1;5:2;;;30:1;27;20:12;5:2;314:2207:7;;;;;;;",
-  "deployedSourceMap": "314:2207:7:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;314:2207:7;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;417:39;;;:::i;:::-;;;;;;;;;;;;;;;;637:51;;;:::i;2395:123::-;;;:::i;958:220::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;958:220:7;-1:-1:-1;;;;;958:220:7;;:::i;:::-;;2158:165;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;;;;;;2158:165:7;;;;;;;;:::i;417:39::-;;;;:::o;637:51::-;685:3;637:51;:::o;2395:123::-;2487:24;;2395:123;:::o;958:220::-;1153:16:104;1172:13;:11;:13::i;:::-;1203:12;;1153:32;;-1:-1:-1;1203:12:104;;;:31;;;1219:15;:13;:15::i;:::-;1203:69;;;;1249:23;;1238:8;:34;1203:69;1195:128;;;;-1:-1:-1;;;1195:128:104;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1357:12;;;;1356:13;1379:112;;;;1428:4;1413:19;;-1:-1:-1;;1413:19:104;;;;;:12;1446:34;;;1379:112;1062:13:7;1035:24;:40;1513:65:104;;;;1547:12;:20;;-1:-1:-1;;1547:20:104;;;1513:65;958:220:7;;;:::o;2158:165::-;2250:7;2276:40;2291:24;;2276:7;:14;;:40;;;;:::i;:::-;2269:47;;2158:165;;;;;:::o;695:99::-;685:3;695:99;:::o;1859:556:104:-;2367:7;2355:20;2401:7;1859:556;:::o;916:158:30:-;977:7;1003:30;376:4;1003:21;1015:8;:1;1021;1015:8;:5;:8;:::i;:::-;422:7;;1003:11;:21::i;:::-;:25;:30;:25;:30;:::i;2180:459:106:-;2238:7;2479:6;2475:45;;-1:-1:-1;2508:1:106;2501:8;;2475:45;2542:5;;;2546:1;2542;:5;:1;2565:5;;;;;:10;2557:56;;;;-1:-1:-1;;;2557:56:106;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;874:176;932:7;963:5;;;986:6;;;;978:46;;;;;-1:-1:-1;;;978:46:106;;;;;;;;;;;;;;;;;;;;;;;;;;;3101:130;3159:7;3185:39;3189:1;3192;3185:39;;;;;;;;;;;;;;;;;3799:7;3833:12;3826:5;3818:28;;;;-1:-1:-1;;;3818:28:106;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;90:11;;;84:18;71:11;;;64:39;52:2;45:10;8:100;;;12:14;3818:28:106;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3856:9;3872:1;3868;:5;;;;;;;3713:272;-1:-1:-1;;;;;3713:272:106:o",
+  "sourceMap": "314:2207:8:-;;;905:1:104;863:43;;314:2207:8;8:9:-1;5:2;;;30:1;27;20:12;5:2;314:2207:8;;;;;;;",
+  "deployedSourceMap": "314:2207:8:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;314:2207:8;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;417:39;;;:::i;:::-;;;;;;;;;;;;;;;;637:51;;;:::i;2395:123::-;;;:::i;958:220::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;958:220:8;-1:-1:-1;;;;;958:220:8;;:::i;:::-;;2158:165;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;;;;;;2158:165:8;;;;;;;;:::i;417:39::-;;;;:::o;637:51::-;685:3;637:51;:::o;2395:123::-;2487:24;;2395:123;:::o;958:220::-;1153:16:104;1172:13;:11;:13::i;:::-;1203:12;;1153:32;;-1:-1:-1;1203:12:104;;;:31;;;1219:15;:13;:15::i;:::-;1203:69;;;;1249:23;;1238:8;:34;1203:69;1195:128;;;;-1:-1:-1;;;1195:128:104;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1357:12;;;;1356:13;1379:112;;;;1428:4;1413:19;;-1:-1:-1;;1413:19:104;;;;;:12;1446:34;;;1379:112;1062:13:8;1035:24;:40;1513:65:104;;;;1547:12;:20;;-1:-1:-1;;1547:20:104;;;1513:65;958:220:8;;;:::o;2158:165::-;2250:7;2276:40;2291:24;;2276:7;:14;;:40;;;;:::i;:::-;2269:47;;2158:165;;;;;:::o;695:99::-;685:3;695:99;:::o;1859:556:104:-;2367:7;2355:20;2401:7;1859:556;:::o;916:158:31:-;977:7;1003:30;376:4;1003:21;1015:8;:1;1021;1015:8;:5;:8;:::i;:::-;422:7;;1003:11;:21::i;:::-;:25;:30;:25;:30;:::i;2180:459:106:-;2238:7;2479:6;2475:45;;-1:-1:-1;2508:1:106;2501:8;;2475:45;2542:5;;;2546:1;2542;:5;:1;2565:5;;;;;:10;2557:56;;;;-1:-1:-1;;;2557:56:106;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;874:176;932:7;963:5;;;986:6;;;;978:46;;;;;-1:-1:-1;;;978:46:106;;;;;;;;;;;;;;;;;;;;;;;;;;;3101:130;3159:7;3185:39;3189:1;3192;3185:39;;;;;;;;;;;;;;;;;3799:7;3833:12;3826:5;3818:28;;;;-1:-1:-1;;;3818:28:106;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;90:11;;;84:18;71:11;;;64:39;52:2;45:10;8:100;;;12:14;3818:28:106;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3856:9;3872:1;3868;:5;;;;;;;3713:272;-1:-1:-1;;;;;3713:272:106:o",
   "source": "pragma solidity ^0.5.0;\n\nimport \"../../openzeppelin-upgradeability/VersionedInitializable.sol\";\nimport \"../interfaces/IFeeProvider.sol\";\nimport \"../libraries/WadRayMath.sol\";\n\n\n/**\n* @title FeeProvider contract\n* @notice Implements calculation for the fees applied by the protocol\n* @author Aave, SIGH Finance\n**/\ncontract FeeProvider is IFeeProvider, VersionedInitializable {\n\n    using WadRayMath for uint256;\n\n    uint256 public originationFeePercentage;        // percentage of the fee to be calculated on the loan amount\n\n// ###############################\n// ###### PROXY RELATED ##########\n// ###############################\n\n    uint256 constant public FEE_PROVIDER_REVISION = 0x1;\n\n    function getRevision() internal pure returns(uint256) {\n        return FEE_PROVIDER_REVISION;\n    }\n    /**\n    * @dev initializes the FeeProvider after it's added to the proxy\n    * @param _addressesProvider the address of the GlobalAddressesProvider\n    */\n    function initialize(address _addressesProvider) public initializer {\n        originationFeePercentage = 0.0025 * 1e18;           /// origination fee is set as default as 25 basis points of the loan amount (0.0025%)\n    }\n\n// ############################################################################################################################\n// ###### EXTERNAL VIEW FUNCTIONS #############################################################################################\n// ###### 1. calculateLoanOriginationFee() : calculates the origination fee for every loan executed on the platform. ##########\n// ###### 2. getLoanOriginationFeePercentage() : returns the origination fee percentage #######################################\n// ############################################################################################################################\n\n    /**\n    * @dev calculates the origination fee for every loan executed on the platform.\n    * @param _user can be used in the future to apply discount to the origination fee based on the\n    * _user account (eg. stake AAVE tokens in the lending pool, or deposit > 1M USD etc..)\n    * @param _amount the amount of the loan\n    **/\n    function calculateLoanOriginationFee(address _user, uint256 _amount) external view returns (uint256) {\n        return _amount.wadMul(originationFeePercentage);\n    }\n\n    /**\n    * @dev returns the origination fee percentage\n    **/\n    function getLoanOriginationFeePercentage() external view returns (uint256) {\n        return originationFeePercentage;\n    }\n\n}\n",
   "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/fees/FeeProvider.sol",
   "ast": {
     "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/fees/FeeProvider.sol",
     "exportedSymbols": {
       "FeeProvider": [
-        3642
+        3750
       ]
     },
-    "id": 3643,
+    "id": 3751,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3581,
+        "id": 3689,
         "literals": [
           "solidity",
           "^",
@@ -114,38 +114,38 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:7"
+        "src": "0:23:8"
       },
       {
         "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin-upgradeability/VersionedInitializable.sol",
         "file": "../../openzeppelin-upgradeability/VersionedInitializable.sol",
-        "id": 3582,
+        "id": 3690,
         "nodeType": "ImportDirective",
-        "scope": 3643,
-        "sourceUnit": 29286,
-        "src": "25:70:7",
+        "scope": 3751,
+        "sourceUnit": 30534,
+        "src": "25:70:8",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/IFeeProvider.sol",
         "file": "../interfaces/IFeeProvider.sol",
-        "id": 3583,
+        "id": 3691,
         "nodeType": "ImportDirective",
-        "scope": 3643,
-        "sourceUnit": 3836,
-        "src": "96:40:7",
+        "scope": 3751,
+        "sourceUnit": 3973,
+        "src": "96:40:8",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/libraries/WadRayMath.sol",
         "file": "../libraries/WadRayMath.sol",
-        "id": 3584,
+        "id": 3692,
         "nodeType": "ImportDirective",
-        "scope": 3643,
-        "sourceUnit": 14371,
-        "src": "137:37:7",
+        "scope": 3751,
+        "sourceUnit": 14237,
+        "src": "137:37:8",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -155,76 +155,76 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 3585,
+              "id": 3693,
               "name": "IFeeProvider",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 3835,
-              "src": "338:12:7",
+              "referencedDeclaration": 3972,
+              "src": "338:12:8",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IFeeProvider_$3835",
+                "typeIdentifier": "t_contract$_IFeeProvider_$3972",
                 "typeString": "contract IFeeProvider"
               }
             },
-            "id": 3586,
+            "id": 3694,
             "nodeType": "InheritanceSpecifier",
-            "src": "338:12:7"
+            "src": "338:12:8"
           },
           {
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 3587,
+              "id": 3695,
               "name": "VersionedInitializable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 29285,
-              "src": "352:22:7",
+              "referencedDeclaration": 30533,
+              "src": "352:22:8",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_VersionedInitializable_$29285",
+                "typeIdentifier": "t_contract$_VersionedInitializable_$30533",
                 "typeString": "contract VersionedInitializable"
               }
             },
-            "id": 3588,
+            "id": 3696,
             "nodeType": "InheritanceSpecifier",
-            "src": "352:22:7"
+            "src": "352:22:8"
           }
         ],
         "contractDependencies": [
-          3835,
-          29285
+          3972,
+          30533
         ],
         "contractKind": "contract",
         "documentation": "@title FeeProvider contract\n@notice Implements calculation for the fees applied by the protocol\n@author Aave, SIGH Finance*",
         "fullyImplemented": true,
-        "id": 3642,
+        "id": 3750,
         "linearizedBaseContracts": [
-          3642,
-          29285,
-          3835
+          3750,
+          30533,
+          3972
         ],
         "name": "FeeProvider",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "id": 3591,
+            "id": 3699,
             "libraryName": {
               "contractScope": null,
-              "id": 3589,
+              "id": 3697,
               "name": "WadRayMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 14370,
-              "src": "388:10:7",
+              "referencedDeclaration": 14236,
+              "src": "388:10:8",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_WadRayMath_$14370",
+                "typeIdentifier": "t_contract$_WadRayMath_$14236",
                 "typeString": "library WadRayMath"
               }
             },
             "nodeType": "UsingForDirective",
-            "src": "382:29:7",
+            "src": "382:29:8",
             "typeName": {
-              "id": 3590,
+              "id": 3698,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "403:7:7",
+              "src": "403:7:8",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -233,11 +233,11 @@
           },
           {
             "constant": false,
-            "id": 3593,
+            "id": 3701,
             "name": "originationFeePercentage",
             "nodeType": "VariableDeclaration",
-            "scope": 3642,
-            "src": "417:39:7",
+            "scope": 3750,
+            "src": "417:39:8",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -245,10 +245,10 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 3592,
+              "id": 3700,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "417:7:7",
+              "src": "417:7:8",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -259,11 +259,11 @@
           },
           {
             "constant": true,
-            "id": 3596,
+            "id": 3704,
             "name": "FEE_PROVIDER_REVISION",
             "nodeType": "VariableDeclaration",
-            "scope": 3642,
-            "src": "637:51:7",
+            "scope": 3750,
+            "src": "637:51:8",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -271,10 +271,10 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 3594,
+              "id": 3702,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "637:7:7",
+              "src": "637:7:8",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -283,14 +283,14 @@
             "value": {
               "argumentTypes": null,
               "hexValue": "307831",
-              "id": 3595,
+              "id": 3703,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
               "kind": "number",
               "lValueRequested": false,
               "nodeType": "Literal",
-              "src": "685:3:7",
+              "src": "685:3:8",
               "subdenomination": null,
               "typeDescriptions": {
                 "typeIdentifier": "t_rational_1_by_1",
@@ -302,55 +302,55 @@
           },
           {
             "body": {
-              "id": 3603,
+              "id": 3711,
               "nodeType": "Block",
-              "src": "749:45:7",
+              "src": "749:45:8",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 3601,
+                    "id": 3709,
                     "name": "FEE_PROVIDER_REVISION",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 3596,
-                    "src": "766:21:7",
+                    "referencedDeclaration": 3704,
+                    "src": "766:21:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 3600,
-                  "id": 3602,
+                  "functionReturnParameters": 3708,
+                  "id": 3710,
                   "nodeType": "Return",
-                  "src": "759:28:7"
+                  "src": "759:28:8"
                 }
               ]
             },
             "documentation": null,
-            "id": 3604,
+            "id": 3712,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "getRevision",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3597,
+              "id": 3705,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "715:2:7"
+              "src": "715:2:8"
             },
             "returnParameters": {
-              "id": 3600,
+              "id": 3708,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3599,
+                  "id": 3707,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3604,
-                  "src": "740:7:7",
+                  "scope": 3712,
+                  "src": "740:7:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -358,10 +358,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3598,
+                    "id": 3706,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "740:7:7",
+                    "src": "740:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -371,36 +371,36 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "739:9:7"
+              "src": "739:9:8"
             },
-            "scope": 3642,
-            "src": "695:99:7",
+            "scope": 3750,
+            "src": "695:99:8",
             "stateMutability": "pure",
-            "superFunction": 29266,
+            "superFunction": 30514,
             "visibility": "internal"
           },
           {
             "body": {
-              "id": 3617,
+              "id": 3725,
               "nodeType": "Block",
-              "src": "1025:153:7",
+              "src": "1025:153:8",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 3615,
+                    "id": 3723,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 3611,
+                      "id": 3719,
                       "name": "originationFeePercentage",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3593,
-                      "src": "1035:24:7",
+                      "referencedDeclaration": 3701,
+                      "src": "1035:24:8",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -414,7 +414,7 @@
                         "typeIdentifier": "t_rational_2500000000000000_by_1",
                         "typeString": "int_const 2500000000000000"
                       },
-                      "id": 3614,
+                      "id": 3722,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -422,14 +422,14 @@
                       "leftExpression": {
                         "argumentTypes": null,
                         "hexValue": "302e30303235",
-                        "id": 3612,
+                        "id": 3720,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "number",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "1062:6:7",
+                        "src": "1062:6:8",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_rational_1_by_400",
@@ -442,14 +442,14 @@
                       "rightExpression": {
                         "argumentTypes": null,
                         "hexValue": "31653138",
-                        "id": 3613,
+                        "id": 3721,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "number",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "1071:4:7",
+                        "src": "1071:4:8",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_rational_1000000000000000000_by_1",
@@ -457,62 +457,62 @@
                         },
                         "value": "1e18"
                       },
-                      "src": "1062:13:7",
+                      "src": "1062:13:8",
                       "typeDescriptions": {
                         "typeIdentifier": "t_rational_2500000000000000_by_1",
                         "typeString": "int_const 2500000000000000"
                       }
                     },
-                    "src": "1035:40:7",
+                    "src": "1035:40:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "id": 3616,
+                  "id": 3724,
                   "nodeType": "ExpressionStatement",
-                  "src": "1035:40:7"
+                  "src": "1035:40:8"
                 }
               ]
             },
             "documentation": "@dev initializes the FeeProvider after it's added to the proxy\n@param _addressesProvider the address of the GlobalAddressesProvider",
-            "id": 3618,
+            "id": 3726,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 3609,
+                "id": 3717,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 3608,
+                  "id": 3716,
                   "name": "initializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 29261,
-                  "src": "1013:11:7",
+                  "referencedDeclaration": 30509,
+                  "src": "1013:11:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
                     "typeString": "modifier ()"
                   }
                 },
                 "nodeType": "ModifierInvocation",
-                "src": "1013:11:7"
+                "src": "1013:11:8"
               }
             ],
             "name": "initialize",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3607,
+              "id": 3715,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3606,
+                  "id": 3714,
                   "name": "_addressesProvider",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3618,
-                  "src": "978:26:7",
+                  "scope": 3726,
+                  "src": "978:26:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -520,10 +520,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3605,
+                    "id": 3713,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "978:7:7",
+                    "src": "978:7:8",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -534,25 +534,25 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "977:28:7"
+              "src": "977:28:8"
             },
             "returnParameters": {
-              "id": 3610,
+              "id": 3718,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1025:0:7"
+              "src": "1025:0:8"
             },
-            "scope": 3642,
-            "src": "958:220:7",
+            "scope": 3750,
+            "src": "958:220:8",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 3632,
+              "id": 3740,
               "nodeType": "Block",
-              "src": "2259:64:7",
+              "src": "2259:64:8",
               "statements": [
                 {
                   "expression": {
@@ -560,12 +560,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 3629,
+                        "id": 3737,
                         "name": "originationFeePercentage",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3593,
-                        "src": "2291:24:7",
+                        "referencedDeclaration": 3701,
+                        "src": "2291:24:8",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -581,32 +581,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3627,
+                        "id": 3735,
                         "name": "_amount",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3622,
-                        "src": "2276:7:7",
+                        "referencedDeclaration": 3730,
+                        "src": "2276:7:8",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         }
                       },
-                      "id": 3628,
+                      "id": 3736,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "wadMul",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 14204,
-                      "src": "2276:14:7",
+                      "referencedDeclaration": 14070,
+                      "src": "2276:14:8",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
                         "typeString": "function (uint256,uint256) pure returns (uint256)"
                       }
                     },
-                    "id": 3630,
+                    "id": 3738,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -614,37 +614,37 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "2276:40:7",
+                    "src": "2276:40:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 3626,
-                  "id": 3631,
+                  "functionReturnParameters": 3734,
+                  "id": 3739,
                   "nodeType": "Return",
-                  "src": "2269:47:7"
+                  "src": "2269:47:8"
                 }
               ]
             },
             "documentation": "@dev calculates the origination fee for every loan executed on the platform.\n@param _user can be used in the future to apply discount to the origination fee based on the\n_user account (eg. stake AAVE tokens in the lending pool, or deposit > 1M USD etc..)\n@param _amount the amount of the loan*",
-            "id": 3633,
+            "id": 3741,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "calculateLoanOriginationFee",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3623,
+              "id": 3731,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3620,
+                  "id": 3728,
                   "name": "_user",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3633,
-                  "src": "2195:13:7",
+                  "scope": 3741,
+                  "src": "2195:13:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -652,10 +652,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3619,
+                    "id": 3727,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2195:7:7",
+                    "src": "2195:7:8",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -667,11 +667,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3622,
+                  "id": 3730,
                   "name": "_amount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3633,
-                  "src": "2210:15:7",
+                  "scope": 3741,
+                  "src": "2210:15:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -679,10 +679,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3621,
+                    "id": 3729,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2210:7:7",
+                    "src": "2210:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -692,19 +692,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2194:32:7"
+              "src": "2194:32:8"
             },
             "returnParameters": {
-              "id": 3626,
+              "id": 3734,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3625,
+                  "id": 3733,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3633,
-                  "src": "2250:7:7",
+                  "scope": 3741,
+                  "src": "2250:7:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -712,10 +712,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3624,
+                    "id": 3732,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2250:7:7",
+                    "src": "2250:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -725,65 +725,65 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2249:9:7"
+              "src": "2249:9:8"
             },
-            "scope": 3642,
-            "src": "2158:165:7",
+            "scope": 3750,
+            "src": "2158:165:8",
             "stateMutability": "view",
-            "superFunction": 3829,
+            "superFunction": 3966,
             "visibility": "external"
           },
           {
             "body": {
-              "id": 3640,
+              "id": 3748,
               "nodeType": "Block",
-              "src": "2470:48:7",
+              "src": "2470:48:8",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 3638,
+                    "id": 3746,
                     "name": "originationFeePercentage",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 3593,
-                    "src": "2487:24:7",
+                    "referencedDeclaration": 3701,
+                    "src": "2487:24:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 3637,
-                  "id": 3639,
+                  "functionReturnParameters": 3745,
+                  "id": 3747,
                   "nodeType": "Return",
-                  "src": "2480:31:7"
+                  "src": "2480:31:8"
                 }
               ]
             },
             "documentation": "@dev returns the origination fee percentage*",
-            "id": 3641,
+            "id": 3749,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "getLoanOriginationFeePercentage",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3634,
+              "id": 3742,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2435:2:7"
+              "src": "2435:2:8"
             },
             "returnParameters": {
-              "id": 3637,
+              "id": 3745,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3636,
+                  "id": 3744,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3641,
-                  "src": "2461:7:7",
+                  "scope": 3749,
+                  "src": "2461:7:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -791,10 +791,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3635,
+                    "id": 3743,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2461:7:7",
+                    "src": "2461:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -804,33 +804,33 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2460:9:7"
+              "src": "2460:9:8"
             },
-            "scope": 3642,
-            "src": "2395:123:7",
+            "scope": 3750,
+            "src": "2395:123:8",
             "stateMutability": "view",
-            "superFunction": 3834,
+            "superFunction": 3971,
             "visibility": "external"
           }
         ],
-        "scope": 3643,
-        "src": "314:2207:7"
+        "scope": 3751,
+        "src": "314:2207:8"
       }
     ],
-    "src": "0:2522:7"
+    "src": "0:2522:8"
   },
   "legacyAST": {
     "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/fees/FeeProvider.sol",
     "exportedSymbols": {
       "FeeProvider": [
-        3642
+        3750
       ]
     },
-    "id": 3643,
+    "id": 3751,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3581,
+        "id": 3689,
         "literals": [
           "solidity",
           "^",
@@ -838,38 +838,38 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:7"
+        "src": "0:23:8"
       },
       {
         "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin-upgradeability/VersionedInitializable.sol",
         "file": "../../openzeppelin-upgradeability/VersionedInitializable.sol",
-        "id": 3582,
+        "id": 3690,
         "nodeType": "ImportDirective",
-        "scope": 3643,
-        "sourceUnit": 29286,
-        "src": "25:70:7",
+        "scope": 3751,
+        "sourceUnit": 30534,
+        "src": "25:70:8",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/IFeeProvider.sol",
         "file": "../interfaces/IFeeProvider.sol",
-        "id": 3583,
+        "id": 3691,
         "nodeType": "ImportDirective",
-        "scope": 3643,
-        "sourceUnit": 3836,
-        "src": "96:40:7",
+        "scope": 3751,
+        "sourceUnit": 3973,
+        "src": "96:40:8",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/libraries/WadRayMath.sol",
         "file": "../libraries/WadRayMath.sol",
-        "id": 3584,
+        "id": 3692,
         "nodeType": "ImportDirective",
-        "scope": 3643,
-        "sourceUnit": 14371,
-        "src": "137:37:7",
+        "scope": 3751,
+        "sourceUnit": 14237,
+        "src": "137:37:8",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -879,76 +879,76 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 3585,
+              "id": 3693,
               "name": "IFeeProvider",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 3835,
-              "src": "338:12:7",
+              "referencedDeclaration": 3972,
+              "src": "338:12:8",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IFeeProvider_$3835",
+                "typeIdentifier": "t_contract$_IFeeProvider_$3972",
                 "typeString": "contract IFeeProvider"
               }
             },
-            "id": 3586,
+            "id": 3694,
             "nodeType": "InheritanceSpecifier",
-            "src": "338:12:7"
+            "src": "338:12:8"
           },
           {
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 3587,
+              "id": 3695,
               "name": "VersionedInitializable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 29285,
-              "src": "352:22:7",
+              "referencedDeclaration": 30533,
+              "src": "352:22:8",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_VersionedInitializable_$29285",
+                "typeIdentifier": "t_contract$_VersionedInitializable_$30533",
                 "typeString": "contract VersionedInitializable"
               }
             },
-            "id": 3588,
+            "id": 3696,
             "nodeType": "InheritanceSpecifier",
-            "src": "352:22:7"
+            "src": "352:22:8"
           }
         ],
         "contractDependencies": [
-          3835,
-          29285
+          3972,
+          30533
         ],
         "contractKind": "contract",
         "documentation": "@title FeeProvider contract\n@notice Implements calculation for the fees applied by the protocol\n@author Aave, SIGH Finance*",
         "fullyImplemented": true,
-        "id": 3642,
+        "id": 3750,
         "linearizedBaseContracts": [
-          3642,
-          29285,
-          3835
+          3750,
+          30533,
+          3972
         ],
         "name": "FeeProvider",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "id": 3591,
+            "id": 3699,
             "libraryName": {
               "contractScope": null,
-              "id": 3589,
+              "id": 3697,
               "name": "WadRayMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 14370,
-              "src": "388:10:7",
+              "referencedDeclaration": 14236,
+              "src": "388:10:8",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_WadRayMath_$14370",
+                "typeIdentifier": "t_contract$_WadRayMath_$14236",
                 "typeString": "library WadRayMath"
               }
             },
             "nodeType": "UsingForDirective",
-            "src": "382:29:7",
+            "src": "382:29:8",
             "typeName": {
-              "id": 3590,
+              "id": 3698,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "403:7:7",
+              "src": "403:7:8",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -957,11 +957,11 @@
           },
           {
             "constant": false,
-            "id": 3593,
+            "id": 3701,
             "name": "originationFeePercentage",
             "nodeType": "VariableDeclaration",
-            "scope": 3642,
-            "src": "417:39:7",
+            "scope": 3750,
+            "src": "417:39:8",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -969,10 +969,10 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 3592,
+              "id": 3700,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "417:7:7",
+              "src": "417:7:8",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -983,11 +983,11 @@
           },
           {
             "constant": true,
-            "id": 3596,
+            "id": 3704,
             "name": "FEE_PROVIDER_REVISION",
             "nodeType": "VariableDeclaration",
-            "scope": 3642,
-            "src": "637:51:7",
+            "scope": 3750,
+            "src": "637:51:8",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -995,10 +995,10 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 3594,
+              "id": 3702,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "637:7:7",
+              "src": "637:7:8",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -1007,14 +1007,14 @@
             "value": {
               "argumentTypes": null,
               "hexValue": "307831",
-              "id": 3595,
+              "id": 3703,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
               "kind": "number",
               "lValueRequested": false,
               "nodeType": "Literal",
-              "src": "685:3:7",
+              "src": "685:3:8",
               "subdenomination": null,
               "typeDescriptions": {
                 "typeIdentifier": "t_rational_1_by_1",
@@ -1026,55 +1026,55 @@
           },
           {
             "body": {
-              "id": 3603,
+              "id": 3711,
               "nodeType": "Block",
-              "src": "749:45:7",
+              "src": "749:45:8",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 3601,
+                    "id": 3709,
                     "name": "FEE_PROVIDER_REVISION",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 3596,
-                    "src": "766:21:7",
+                    "referencedDeclaration": 3704,
+                    "src": "766:21:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 3600,
-                  "id": 3602,
+                  "functionReturnParameters": 3708,
+                  "id": 3710,
                   "nodeType": "Return",
-                  "src": "759:28:7"
+                  "src": "759:28:8"
                 }
               ]
             },
             "documentation": null,
-            "id": 3604,
+            "id": 3712,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "getRevision",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3597,
+              "id": 3705,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "715:2:7"
+              "src": "715:2:8"
             },
             "returnParameters": {
-              "id": 3600,
+              "id": 3708,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3599,
+                  "id": 3707,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3604,
-                  "src": "740:7:7",
+                  "scope": 3712,
+                  "src": "740:7:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1082,10 +1082,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3598,
+                    "id": 3706,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "740:7:7",
+                    "src": "740:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1095,36 +1095,36 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "739:9:7"
+              "src": "739:9:8"
             },
-            "scope": 3642,
-            "src": "695:99:7",
+            "scope": 3750,
+            "src": "695:99:8",
             "stateMutability": "pure",
-            "superFunction": 29266,
+            "superFunction": 30514,
             "visibility": "internal"
           },
           {
             "body": {
-              "id": 3617,
+              "id": 3725,
               "nodeType": "Block",
-              "src": "1025:153:7",
+              "src": "1025:153:8",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 3615,
+                    "id": 3723,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 3611,
+                      "id": 3719,
                       "name": "originationFeePercentage",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3593,
-                      "src": "1035:24:7",
+                      "referencedDeclaration": 3701,
+                      "src": "1035:24:8",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -1138,7 +1138,7 @@
                         "typeIdentifier": "t_rational_2500000000000000_by_1",
                         "typeString": "int_const 2500000000000000"
                       },
-                      "id": 3614,
+                      "id": 3722,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -1146,14 +1146,14 @@
                       "leftExpression": {
                         "argumentTypes": null,
                         "hexValue": "302e30303235",
-                        "id": 3612,
+                        "id": 3720,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "number",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "1062:6:7",
+                        "src": "1062:6:8",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_rational_1_by_400",
@@ -1166,14 +1166,14 @@
                       "rightExpression": {
                         "argumentTypes": null,
                         "hexValue": "31653138",
-                        "id": 3613,
+                        "id": 3721,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "number",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "1071:4:7",
+                        "src": "1071:4:8",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_rational_1000000000000000000_by_1",
@@ -1181,62 +1181,62 @@
                         },
                         "value": "1e18"
                       },
-                      "src": "1062:13:7",
+                      "src": "1062:13:8",
                       "typeDescriptions": {
                         "typeIdentifier": "t_rational_2500000000000000_by_1",
                         "typeString": "int_const 2500000000000000"
                       }
                     },
-                    "src": "1035:40:7",
+                    "src": "1035:40:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "id": 3616,
+                  "id": 3724,
                   "nodeType": "ExpressionStatement",
-                  "src": "1035:40:7"
+                  "src": "1035:40:8"
                 }
               ]
             },
             "documentation": "@dev initializes the FeeProvider after it's added to the proxy\n@param _addressesProvider the address of the GlobalAddressesProvider",
-            "id": 3618,
+            "id": 3726,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 3609,
+                "id": 3717,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 3608,
+                  "id": 3716,
                   "name": "initializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 29261,
-                  "src": "1013:11:7",
+                  "referencedDeclaration": 30509,
+                  "src": "1013:11:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
                     "typeString": "modifier ()"
                   }
                 },
                 "nodeType": "ModifierInvocation",
-                "src": "1013:11:7"
+                "src": "1013:11:8"
               }
             ],
             "name": "initialize",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3607,
+              "id": 3715,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3606,
+                  "id": 3714,
                   "name": "_addressesProvider",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3618,
-                  "src": "978:26:7",
+                  "scope": 3726,
+                  "src": "978:26:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1244,10 +1244,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3605,
+                    "id": 3713,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "978:7:7",
+                    "src": "978:7:8",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1258,25 +1258,25 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "977:28:7"
+              "src": "977:28:8"
             },
             "returnParameters": {
-              "id": 3610,
+              "id": 3718,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1025:0:7"
+              "src": "1025:0:8"
             },
-            "scope": 3642,
-            "src": "958:220:7",
+            "scope": 3750,
+            "src": "958:220:8",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 3632,
+              "id": 3740,
               "nodeType": "Block",
-              "src": "2259:64:7",
+              "src": "2259:64:8",
               "statements": [
                 {
                   "expression": {
@@ -1284,12 +1284,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 3629,
+                        "id": 3737,
                         "name": "originationFeePercentage",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3593,
-                        "src": "2291:24:7",
+                        "referencedDeclaration": 3701,
+                        "src": "2291:24:8",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -1305,32 +1305,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3627,
+                        "id": 3735,
                         "name": "_amount",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3622,
-                        "src": "2276:7:7",
+                        "referencedDeclaration": 3730,
+                        "src": "2276:7:8",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         }
                       },
-                      "id": 3628,
+                      "id": 3736,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "wadMul",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 14204,
-                      "src": "2276:14:7",
+                      "referencedDeclaration": 14070,
+                      "src": "2276:14:8",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
                         "typeString": "function (uint256,uint256) pure returns (uint256)"
                       }
                     },
-                    "id": 3630,
+                    "id": 3738,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1338,37 +1338,37 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "2276:40:7",
+                    "src": "2276:40:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 3626,
-                  "id": 3631,
+                  "functionReturnParameters": 3734,
+                  "id": 3739,
                   "nodeType": "Return",
-                  "src": "2269:47:7"
+                  "src": "2269:47:8"
                 }
               ]
             },
             "documentation": "@dev calculates the origination fee for every loan executed on the platform.\n@param _user can be used in the future to apply discount to the origination fee based on the\n_user account (eg. stake AAVE tokens in the lending pool, or deposit > 1M USD etc..)\n@param _amount the amount of the loan*",
-            "id": 3633,
+            "id": 3741,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "calculateLoanOriginationFee",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3623,
+              "id": 3731,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3620,
+                  "id": 3728,
                   "name": "_user",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3633,
-                  "src": "2195:13:7",
+                  "scope": 3741,
+                  "src": "2195:13:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1376,10 +1376,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3619,
+                    "id": 3727,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2195:7:7",
+                    "src": "2195:7:8",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1391,11 +1391,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3622,
+                  "id": 3730,
                   "name": "_amount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3633,
-                  "src": "2210:15:7",
+                  "scope": 3741,
+                  "src": "2210:15:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1403,10 +1403,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3621,
+                    "id": 3729,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2210:7:7",
+                    "src": "2210:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1416,19 +1416,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2194:32:7"
+              "src": "2194:32:8"
             },
             "returnParameters": {
-              "id": 3626,
+              "id": 3734,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3625,
+                  "id": 3733,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3633,
-                  "src": "2250:7:7",
+                  "scope": 3741,
+                  "src": "2250:7:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1436,10 +1436,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3624,
+                    "id": 3732,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2250:7:7",
+                    "src": "2250:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1449,65 +1449,65 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2249:9:7"
+              "src": "2249:9:8"
             },
-            "scope": 3642,
-            "src": "2158:165:7",
+            "scope": 3750,
+            "src": "2158:165:8",
             "stateMutability": "view",
-            "superFunction": 3829,
+            "superFunction": 3966,
             "visibility": "external"
           },
           {
             "body": {
-              "id": 3640,
+              "id": 3748,
               "nodeType": "Block",
-              "src": "2470:48:7",
+              "src": "2470:48:8",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 3638,
+                    "id": 3746,
                     "name": "originationFeePercentage",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 3593,
-                    "src": "2487:24:7",
+                    "referencedDeclaration": 3701,
+                    "src": "2487:24:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 3637,
-                  "id": 3639,
+                  "functionReturnParameters": 3745,
+                  "id": 3747,
                   "nodeType": "Return",
-                  "src": "2480:31:7"
+                  "src": "2480:31:8"
                 }
               ]
             },
             "documentation": "@dev returns the origination fee percentage*",
-            "id": 3641,
+            "id": 3749,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "getLoanOriginationFeePercentage",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3634,
+              "id": 3742,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2435:2:7"
+              "src": "2435:2:8"
             },
             "returnParameters": {
-              "id": 3637,
+              "id": 3745,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3636,
+                  "id": 3744,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3641,
-                  "src": "2461:7:7",
+                  "scope": 3749,
+                  "src": "2461:7:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1515,10 +1515,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3635,
+                    "id": 3743,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2461:7:7",
+                    "src": "2461:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1528,20 +1528,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2460:9:7"
+              "src": "2460:9:8"
             },
-            "scope": 3642,
-            "src": "2395:123:7",
+            "scope": 3750,
+            "src": "2395:123:8",
             "stateMutability": "view",
-            "superFunction": 3834,
+            "superFunction": 3971,
             "visibility": "external"
           }
         ],
-        "scope": 3643,
-        "src": "314:2207:7"
+        "scope": 3751,
+        "src": "314:2207:8"
       }
     ],
-    "src": "0:2522:7"
+    "src": "0:2522:8"
   },
   "compiler": {
     "name": "solc",
@@ -1549,7 +1549,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-11-05T05:43:31.422Z",
+  "updatedAt": "2020-11-12T07:48:38.273Z",
   "devdoc": {
     "author": "Aave, SIGH Finance*",
     "methods": {

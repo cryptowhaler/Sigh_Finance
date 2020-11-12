@@ -35,7 +35,7 @@ export default {
 
     activeTabChange(activeTab) {
       this.activeTab = activeTab;
-      if (activeTab == 'Deposit ') {
+      if (activeTab == 'Deposit') {
         this.$store.commit('changeInvestTab');
       } 
       else {
@@ -46,7 +46,7 @@ export default {
         this.preActive = activeTab;
       }
     },
-
+     
     // Selecting an Instrument from dropdown
     updateSelectedInstrument() {
       console.log(this.selectedInstrument);

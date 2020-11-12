@@ -37,54 +37,54 @@ export default {
 
 
 
-  apollo: {
-    $subscribe: {
-      accounts: {
-        query: gql`subscription name($id: String!) {
-                    account (id: $id) {
-                      id
-                      tokens {
-                        market {
-                          name
-                        }
-                        symbol
-                        transactionHashes
-                        transactionTimes
-                        enteredMarket
-                        cTokenBalance
-                        totalUnderlyingSupplied
-                        totalUnderlyingBorrowed
-                        totalUnderlyingRedeemed
-                        totalUnderlyingRepaid
-                        accountBorrowIndex
-                        storedBorrowBalance
-                      }
-                      countLiquidated
-                      countLiquidator
-                      hasBorrowed
-                    }
-                  }`,
+  // apollo: {
+  //   $subscribe: {
+  //     accounts: {
+  //       query: gql`subscription name($id: String!) {
+  //                   account (id: $id) {
+  //                     id
+  //                     tokens {
+  //                       market {
+  //                         name
+  //                       }
+  //                       symbol
+  //                       transactionHashes
+  //                       transactionTimes
+  //                       enteredMarket
+  //                       cTokenBalance
+  //                       totalUnderlyingSupplied
+  //                       totalUnderlyingBorrowed
+  //                       totalUnderlyingRedeemed
+  //                       totalUnderlyingRepaid
+  //                       accountBorrowIndex
+  //                       storedBorrowBalance
+  //                     }
+  //                     countLiquidated
+  //                     countLiquidator
+  //                     hasBorrowed
+  //                   }
+  //                 }`,
 
-        variables() {  return {id: this.id.toLowerCase(),};  },
+  //       variables() {  return {id: this.id.toLowerCase(),};  },
 
-        result({data,loading,}) {
-          if (loading) {
-            console.log('loading');
-          }
-          else {
-          console.log(data);
-          this.id  = this.$store.getters.web3Account;
-          console.log(this.id);
-          console.log(this.$store.getters.web3Account);
-          let accountData = data.account;
-          if (accountData) {
-            this.subcribeToMarketPositions(accountData);
-          }
-          }
-        },
-      },
-    },
-  },
+  //       result({data,loading,}) {
+  //         if (loading) {
+  //           console.log('loading');
+  //         }
+  //         else {
+  //         console.log(data);
+  //         this.id  = this.$store.getters.web3Account;
+  //         console.log(this.id);
+  //         console.log(this.$store.getters.web3Account);
+  //         let accountData = data.account;
+  //         if (accountData) {
+  //           this.subcribeToMarketPositions(accountData);
+  //         }
+  //         }
+  //       },
+  //     },
+  //   },
+  // },
 
   mounted() {
     this.userwalletConnected = () => this.setWallet();
@@ -97,45 +97,37 @@ export default {
   methods: {
 
     setWallet() {
-      this.id = this.$store.getters.web3Account.toLowerCase();
-      consol.log('setWallet ' + this.id);
     },
-
-    setWalletID( wallet ) {
-      this.id = wallet.toLowerCase();
-      consol.log('setWallet ' + this.id);
-    },
-
 
     subcribeToMarketPositions(accountData) {     
 
-      this.MarketPositions = [];
+      // this.MarketPositions = [];
 
-      let countLiquidated = accountData.countLiquidated;
-      let countLiquidator = accountData.countLiquidator;
-      let hasBorrowed = accountData.hasBorrowed;
-      this.$store.commit('countLiquidated',countLiquidated);
-      this.$store.commit('countLiquidator',countLiquidator);
-      this.$store.commit('hasBorrowed',hasBorrowed);
+      // let countLiquidated = accountData.countLiquidated;
+      // let countLiquidator = accountData.countLiquidator;
+      // let hasBorrowed = accountData.hasBorrowed;
+      // this.$store.commit('countLiquidated',countLiquidated);
+      // this.$store.commit('countLiquidator',countLiquidator);
+      // this.$store.commit('hasBorrowed',hasBorrowed);
 
-      let marketsData = accountData.tokens;
-      console.log(marketsData);
+      // let marketsData = accountData.tokens;
+      // console.log(marketsData);
 
-      for (let i = 0 ; i < marketsData.length ; i++) {
-        let obj = [];
-        obj.marketName = marketsData[i].market.name;
-        obj.symbol = marketsData[i].symbol;
-        obj.enteredMarket = marketsData[i].enteredMarket;
-        obj.cTokenBalance = Number(Number(marketsData[i].cTokenBalance)/10000000000).toFixed(3) ;
-        obj.totalUnderlyingSupplied = Number(marketsData[i].totalUnderlyingSupplied).toFixed(3)  ;
-        obj.totalUnderlyingBorrowed = Number(marketsData[i].totalUnderlyingBorrowed).toFixed(3);
-        obj.totalUnderlyingRedeemed = Number(marketsData[i].totalUnderlyingRedeemed).toFixed(3);
-        obj.totalUnderlyingRepaid = Number(marketsData[i].totalUnderlyingRepaid).toFixed(3);
-        obj.accountBorrowIndex = Number(marketsData[i].accountBorrowIndex).toFixed(3);
-        obj.storedBorrowBalance = Number(marketsData[i].storedBorrowBalance).toFixed(3) ; 
-        console.log(obj);
-        this.MarketPositions.push(obj);
-      }   
+      // for (let i = 0 ; i < marketsData.length ; i++) {
+      //   let obj = [];
+      //   obj.marketName = marketsData[i].market.name;
+      //   obj.symbol = marketsData[i].symbol;
+      //   obj.enteredMarket = marketsData[i].enteredMarket;
+      //   obj.cTokenBalance = Number(Number(marketsData[i].cTokenBalance)/10000000000).toFixed(3) ;
+      //   obj.totalUnderlyingSupplied = Number(marketsData[i].totalUnderlyingSupplied).toFixed(3)  ;
+      //   obj.totalUnderlyingBorrowed = Number(marketsData[i].totalUnderlyingBorrowed).toFixed(3);
+      //   obj.totalUnderlyingRedeemed = Number(marketsData[i].totalUnderlyingRedeemed).toFixed(3);
+      //   obj.totalUnderlyingRepaid = Number(marketsData[i].totalUnderlyingRepaid).toFixed(3);
+      //   obj.accountBorrowIndex = Number(marketsData[i].accountBorrowIndex).toFixed(3);
+      //   obj.storedBorrowBalance = Number(marketsData[i].storedBorrowBalance).toFixed(3) ; 
+      //   console.log(obj);
+      //   this.MarketPositions.push(obj);
+      // }   
 
     },
 
@@ -144,11 +136,6 @@ export default {
     },
 
     userWalletDisconnectedListener() {
-      this.MarketPositions = [];
-      this.$store.commit('countLiquidated',0);
-      this.$store.commit('countLiquidator',0);
-      this.$store.commit('hasBorrowed',0);
-
     },
 
   },
