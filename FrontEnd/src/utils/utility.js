@@ -92,8 +92,8 @@ export function roundANumber(number, precision) {
   return (Math.round(number / precision) * precision);
 }
 
-function calculateTpv() {
-  store.commit('totalPortfolioValue');
-}
+// function calculateTpv() {
+//   store.commit('totalPortfolioValue');
+// }
 
-setInterval(calculateTpv, 30 * 1000);
+// setInterval(calculateTpv, 30 * 1000);

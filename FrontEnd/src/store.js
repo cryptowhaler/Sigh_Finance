@@ -2,9 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 // import {dateToDisplayTime,} from '@/utils/utility';
 import Web3 from 'web3';
-
-// const qs = require('qs');
-// const EthereumTx = require("ethereumjs-tx").Transaction;
+import BigNumber from "bignumber.js";
 
 import GlobalAddressesProviderInterface from '@/contracts/IGlobalAddressesProvider.json'; // GlobalAddressesProviderContract Interface
 
@@ -108,8 +106,8 @@ const store = new Vuex.Store({
     supportedInstrumentAddresses: null,
     supportedInstruments : [],      // INSTRUMENTS SUPPORTED BY THE PROTOCOL (FOR LENDING - ITOKEN & INSTRUMENT ADDRESSES + SYMBOL/NAME WILL BE STORED)
     supportedInstrumentConfigs: new Map(), // Instrument Address -> Instrument Config  MAPPING  
-    currentlySelectedInstrument :  {instrumentAddress: '0x00' , name: 'Wrapped Bitcoin', symbol: 'WBTC', decimals: 18, iTokenAddress: '0x00' , priceDecimals: 8, price: 0 },  // Currently Selected Instrument
-
+    currentlySelectedInstrument : null, //  {instrumentAddress: '0x00' , name: 'Wrapped Bitcoin', symbol: 'WBTC', decimals: 18, iTokenAddress: '0x00' , priceDecimals: 8, price: 0 },  // Currently Selected Instrument
+    sessionTransactions : [],
     username: null, //Added
     websocketStatus: 'Closed',
     loaderCounter: 0,
@@ -219,6 +217,13 @@ const store = new Vuex.Store({
         }
         return 0;
       }
+    },
+    getSelectedInstrumentPrice(state) {
+      let cur_instrument = state.supportedInstrumentConfigs.get(state.currentlySelectedInstrument);
+      if (cur_instrument) {
+        return cur_instrument.price;
+      }
+      return 0;
     }, 
     showLoader(state) {
       return state > 0;
@@ -357,6 +362,16 @@ const store = new Vuex.Store({
       console.log(selectedInstrument_);
       console.log(state.currentlySelectedInstrument);
       console.log("In updateSelectedInstrument ");
+    },
+    addTransactionDetails(state,{status,Hash,Utility,Service}) {
+      let obj = {};
+      obj.status = status;
+      obj.hash = Hash;
+      obj.utility = Utility;
+      obj.service = Service;
+      state.sessionTransactions.push(obj);
+      console.log(obj);
+      console.log('Transaction history stored');
     },
     changeWebsocketStatus(state, websocketStatus) {
       state.websocketStatus = websocketStatus;
@@ -620,6 +635,7 @@ const store = new Vuex.Store({
           instrumentState.price = null;
           commit('addToSupportedInstrumentsConfigsMapping',{instrumentAddress:instruments[i],instrumentDetails:instrumentState});
         }
+        commit('updateSelectedInstrument',state.supportedInstruments[0]); // THE FIRST INSTRUMENT IS BY DEFAULT THE SELECTED INSTRUMENT
         store.dispatch('initiatePollingInstrumentPrices');
       }
       return true;
@@ -688,7 +704,7 @@ const store = new Vuex.Store({
         })
       }
       else {
-        console.log("SIGH Finance (SIGH Instrument Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (SIGH Instrument Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (SIGH Instrument Contract) is currently not been deployed on ";
       }
     },
@@ -708,7 +724,7 @@ const store = new Vuex.Store({
         })
       }
       else {
-        console.log("SIGH Finance (SIGH Speed Controller Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (SIGH Speed Controller Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (SIGH Speed Controller Contract) is currently not been deployed on ";
       }
     },
@@ -735,7 +751,7 @@ const store = new Vuex.Store({
         })
       }
       else {
-        console.log("SIGH Finance (SIGH Distribution Handler Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (SIGH Distribution Handler Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (SIGH Distribution Handler Contract) is currently not been deployed on ";
       }
     },
@@ -755,7 +771,7 @@ const store = new Vuex.Store({
         })
       }
       else {
-        console.log("SIGH Finance (SIGH Treasury Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (SIGH Treasury Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (SIGH Treasury Contract) is currently not been deployed on ";
       }
     },
@@ -775,7 +791,7 @@ const store = new Vuex.Store({
         })
       }
       else {
-        console.log("SIGH Finance (SIGH Treasury Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (SIGH Treasury Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (SIGH Treasury Contract) is currently not been deployed on ";
       }
     },
@@ -796,7 +812,7 @@ const store = new Vuex.Store({
         })
       }
       else {
-        console.log("SIGH Finance (SIGH Treasury Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (SIGH Treasury Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (SIGH Treasury Contract) is currently not been deployed on ";
       }
     },
@@ -824,7 +840,7 @@ const store = new Vuex.Store({
         })
       }
       else {
-        console.log("SIGH Finance (SIGH Staking Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (SIGH Staking Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (SIGH Staking Contract) is currently not been deployed on ";
       }
     },
@@ -844,7 +860,7 @@ const store = new Vuex.Store({
         })
       }
       else {
-        console.log("SIGH Finance (SIGH Staking Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (SIGH Staking Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (SIGH Staking Contract) is currently not been deployed on ";
       }
     },
@@ -864,7 +880,7 @@ const store = new Vuex.Store({
         })
       }
       else {
-        console.log("SIGH Finance (SIGH Staking Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (SIGH Staking Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (SIGH Staking Contract) is currently not been deployed on ";
       }
     },
@@ -884,7 +900,7 @@ const store = new Vuex.Store({
         })
       }
       else {
-        console.log("SIGH Finance (SIGH Staking Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (SIGH Staking Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (SIGH Staking Contract) is currently not been deployed on ";
       }
     },
@@ -904,7 +920,7 @@ const store = new Vuex.Store({
         })
       }
       else {
-        console.log("SIGH Finance (SIGH Staking Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (SIGH Staking Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (SIGH Staking Contract) is currently not been deployed on ";
       }
     },
@@ -922,160 +938,180 @@ const store = new Vuex.Store({
 
     LendingPool_deposit: async ({commit,state},{_instrument,_amount,_referralCode}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
-        const sighStakingContract = new state.web3.eth.Contract(LendingPool.abi, state.sighStakingContractAddress );
-        console.log(sighStakingContract);
-        sighStakingContract.methods.deposit(_instrument,_amount,_referralCode).send({from: state.connectedWallet})
-        .then(receipt => { 
-          console.log(receipt);
-          return receipt;
-          })
-        .catch(error => {
-          console.log(error);
-          return error;
-        })
+        const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+        console.log(lendingPoolContract);
+        try {
+          // console.log('Making transaction (in store)');
+          // let quantityInBigNumber = new BigNumber(this._amount);
+          // quantityInBigNumber.shiftedBy(state.supportedInstrumentConfigs.get(_instrument).decimals);
+          // console.log('Quantity To Deposit (Big Number)' + quantityInBigNumber);
+          const response = await lendingPoolContract.methods.deposit(_instrument,_amount,_referralCode).send({from: state.connectedWallet});
+          console.log(response);
+          return response;
+          }
+          catch(error) {
+            // console.log('Making transaction (in store - catch)');
+            console.log(error);
+            return error;
+          }
       }
       else {
-        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (Lending Pool Contract) is currently not been deployed on ";
       }
     },
 
     LendingPool_borrow: async ({commit,state},{_instrument,_amount,_interestRateMode,_referralCode}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
-        const sighStakingContract = new state.web3.eth.Contract(LendingPool.abi, state.sighStakingContractAddress );
-        console.log(sighStakingContract);
-        sighStakingContract.methods.borrow(_instrument,_amount,_interestRateMode,_referralCode).send({from: state.connectedWallet})
-        .then(receipt => { 
-          console.log(receipt);
-          return receipt;
-          })
-        .catch(error => {
-          console.log(error);
-          return error;
-        })
+        const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+        console.log(lendingPoolContract);
+        try {
+          // console.log('Making transaction (in store)');
+          const response = await lendingPoolContract.methods.borrow(_instrument,_amount,_interestRateMode,_referralCode).send({from: state.connectedWallet});
+          console.log(response);
+          return response;
+          }
+          catch(error) {
+            // console.log('Making transaction (in store - catch)');
+            console.log(error);
+            return error;
+          }
       }
       else {
-        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (Lending Pool Contract) is currently not been deployed on ";
       }
     },
 
     LendingPool_repay: async ({commit,state},{_instrument,_amount,_onBehalfOf}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
-        const sighStakingContract = new state.web3.eth.Contract(LendingPool.abi, state.sighStakingContractAddress );
-        console.log(sighStakingContract);
-        sighStakingContract.methods.repay(_instrument,_amount,_onBehalfOf).send({from: state.connectedWallet})
-        .then(receipt => { 
-          console.log(receipt);
-          return receipt;
-          })
-        .catch(error => {
-          console.log(error);
-          return error;
-        })
+        const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+        console.log(lendingPoolContract);
+        const response = await lendingPoolContract.methods.repay(_instrument,_amount,_onBehalfOf).send({from: state.connectedWallet});
+        try {
+          // console.log('Making transaction (in store)');
+          const response = await lendingPoolContract.methods.repay(_instrument,_amount,_onBehalfOf).send({from: state.connectedWallet});
+          console.log(response);
+          return response;
+          }
+        catch(error) {
+            // console.log('Making transaction (in store - catch)');
+            console.log(error);
+            return error;
+        }
       }
       else {
-        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (Lending Pool Contract) is currently not been deployed on ";
       }
     },
 
     LendingPool_swapBorrowRateMode: async ({commit,state},{_instrument}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
-        const sighStakingContract = new state.web3.eth.Contract(LendingPool.abi, state.sighStakingContractAddress );
-        console.log(sighStakingContract);
-        sighStakingContract.methods.swapBorrowRateMode(_instrument).send({from: state.connectedWallet})
-        .then(receipt => { 
-          console.log(receipt);
-          return receipt;
-          })
-        .catch(error => {
-          console.log(error);
-          return error;
-        })
+        const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+        console.log(lendingPoolContract);
+        try {
+          // console.log('Making transaction (in store)');
+          const response = await lendingPoolContract.methods.swapBorrowRateMode(_instrument).send({from: state.connectedWallet});
+          console.log(response);
+          return response;
+          }
+          catch(error) {
+            // console.log('Making transaction (in store - catch)');
+            console.log(error);
+            return error;
+          }
       }
       else {
-        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (Lending Pool Contract) is currently not been deployed on ";
       }
     },
 
     LendingPool_rebalanceStableBorrowRate: async ({commit,state},{_instrument,_user}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
-        const sighStakingContract = new state.web3.eth.Contract(LendingPool.abi, state.sighStakingContractAddress );
-        console.log(sighStakingContract);
-        sighStakingContract.methods.rebalanceStableBorrowRate(_instrument,_user).send({from: state.connectedWallet})
-        .then(receipt => { 
-          console.log(receipt);
-          return receipt;
-          })
-        .catch(error => {
-          console.log(error);
-          return error;
-        })
+        const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+        console.log(lendingPoolContract);
+        try {
+          // console.log('Making transaction (in store)');
+          const response = await lendingPoolContract.methods.rebalanceStableBorrowRate(_instrument,_user).send({from: state.connectedWallet});
+          console.log(response);
+          return response;
+          }
+          catch(error) {
+            // console.log('Making transaction (in store - catch)');
+            console.log(error);
+            return error;
+          }
       }
       else {
-        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (Lending Pool Contract) is currently not been deployed on ";
       }
     },
 
     LendingPool_setUserUseInstrumentAsCollateral: async ({commit,state},{_instrument,_useAsCollateral}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
-        const sighStakingContract = new state.web3.eth.Contract(LendingPool.abi, state.sighStakingContractAddress );
-        console.log(sighStakingContract);
-        sighStakingContract.methods.setUserUseInstrumentAsCollateral(_instrument,_useAsCollateral).send({from: state.connectedWallet})
-        .then(receipt => { 
-          console.log(receipt);
-          return receipt;
-          })
-        .catch(error => {
-          console.log(error);
-          return error;
-        })
+        const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+        console.log(lendingPoolContract);
+        try {
+          // console.log('Making transaction (in store)');
+          const response = await lendingPoolContract.methods.setUserUseInstrumentAsCollateral(_instrument,_useAsCollateral).send({from: state.connectedWallet});
+          console.log(response);
+          return response;
+          }
+          catch(error) {
+            // console.log('Making transaction (in store - catch)');
+            console.log(error);
+            return error;
+          }
       }
       else {
-        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (Lending Pool Contract) is currently not been deployed on ";
       }
     },
 
     LendingPool_liquidationCall: async ({commit,state},{_collateral,_instrument,_user,_purchaseAmount,_receiveIToken}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
-        const sighStakingContract = new state.web3.eth.Contract(LendingPool.abi, state.sighStakingContractAddress );
-        console.log(sighStakingContract);
-        sighStakingContract.methods.liquidationCall(_collateral,_instrument,_user,_purchaseAmount,_receiveIToken).send({from: state.connectedWallet})
-        .then(receipt => { 
-          console.log(receipt);
-          return receipt;
-          })
-        .catch(error => {
-          console.log(error);
-          return error;
-        })
+        const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+        console.log(lendingPoolContract);
+        try {
+          // console.log('Making transaction (in store)');
+          const response = await lendingPoolContract.methods.liquidationCall(_collateral,_instrument,_user,_purchaseAmount,_receiveIToken).send({from: state.connectedWallet});
+          console.log(response);
+          return response;
+          }
+          catch(error) {
+            // console.log('Making transaction (in store - catch)');
+            console.log(error);
+            return error;
+          }
       }
       else {
-        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (Lending Pool Contract) is currently not been deployed on ";
       }
     },
 
     LendingPool_flashLoan: async ({commit,state},{_receiver,_instrument,_user,_amount,_params}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
-        const sighStakingContract = new state.web3.eth.Contract(LendingPool.abi, state.sighStakingContractAddress );
-        console.log(sighStakingContract);
-        sighStakingContract.methods.flashLoan(_instrument,_useAsCollateral).send({from: state.connectedWallet})
-        .then(receipt => { 
-          console.log(receipt);
-          return receipt;
-          })
-        .catch(error => {
-          console.log(error);
-          return error;
-        })
+        const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+        console.log(lendingPoolContract);
+        try {
+          // console.log('Making transaction (in store)');
+          const response = await lendingPoolContract.methods.flashLoan(_instrument,_useAsCollateral).send({from: state.connectedWallet});
+          console.log(response);
+          return response;
+          }
+          catch(error) {
+            // console.log('Making transaction (in store - catch)');
+            console.log(error);
+            return error;
+          }
       }
       else {
-        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + state.NETWORKS(state.networkId));
+        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (Lending Pool Contract) is currently not been deployed on ";
       }
     },
@@ -1105,18 +1141,13 @@ IToken_redeem: async ({commit,state},{iTokenAddress,_amount}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    iTokenContract.methods.redeem(_amount).send({from: state.connectedWallet})
-    .then(receipt => { 
-      console.log(receipt);
-      return receipt;
-      })
-    .catch(error => {
-      console.log(error);
-      return error;
-    })
+    const response = await iTokenContract.methods.redeem(_amount).send({from: state.connectedWallet});
+    console.log(response);
+    return response;
+
   }
   else {
-    console.log("This particular Instrument is currently not supported by SIGH Finance on " + state.NETWORKS(state.networkId));
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
     return "This particular Instrument is currently not supported by SIGH Finance on ";
   }
 },
@@ -1125,18 +1156,13 @@ IToken_redirectInterestStream: async ({commit,state},{iTokenAddress,_to}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    iTokenContract.methods.redirectInterestStream(_to).send({from: state.connectedWallet})
-    .then(receipt => { 
-      console.log(receipt);
-      return receipt;
-      })
-    .catch(error => {
-      console.log(error);
-      return error;
-    })
+    const response = await iTokenContract.methods.redirectInterestStream(_to).send({from: state.connectedWallet});
+    console.log(response);
+    return response;
+
   }
   else {
-    console.log("This particular Instrument is currently not supported by SIGH Finance on " + state.NETWORKS(state.networkId));
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
     return "This particular Instrument is currently not supported by SIGH Finance on ";
   }
 },
@@ -1145,18 +1171,13 @@ IToken_allowInterestRedirectionTo: async ({commit,state},{iTokenAddress,_to}) =>
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    iTokenContract.methods.allowInterestRedirectionTo(_to).send({from: state.connectedWallet})
-    .then(receipt => { 
-      console.log(receipt);
-      return receipt;
-      })
-    .catch(error => {
-      console.log(error);
-      return error;
-    })
+    const response = await iTokenContract.methods.allowInterestRedirectionTo(_to).send({from: state.connectedWallet});
+    console.log(response);
+    return response;
+
   }
   else {
-    console.log("This particular Instrument is currently not supported by SIGH Finance on " + state.NETWORKS(state.networkId));
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
     return "This particular Instrument is currently not supported by SIGH Finance on ";
   }
 },
@@ -1165,18 +1186,13 @@ IToken_redirectInterestStreamOf: async ({commit,state},{iTokenAddress,_from,_to}
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    iTokenContract.methods.redirectInterestStreamOf(_from,_to).send({from: state.connectedWallet})
-    .then(receipt => { 
-      console.log(receipt);
-      return receipt;
-      })
-    .catch(error => {
-      console.log(error);
-      return error;
-    })
+    const response = await iTokenContract.methods.redirectInterestStreamOf(_from,_to).send({from: state.connectedWallet});
+    console.log(response);
+    return response;
+
   }
   else {
-    console.log("This particular Instrument is currently not supported by SIGH Finance on " + state.NETWORKS(state.networkId));
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
     return "This particular Instrument is currently not supported by SIGH Finance on ";
   }
 },
@@ -1185,18 +1201,13 @@ IToken_redirectSighStream: async ({commit,state},{iTokenAddress,_to}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    iTokenContract.methods.redirectSighStream(_to).send({from: state.connectedWallet})
-    .then(receipt => { 
-      console.log(receipt);
-      return receipt;
-      })
-    .catch(error => {
-      console.log(error);
-      return error;
-    })
+    const response = await iTokenContract.methods.redirectSighStream(_to).send({from: state.connectedWallet});
+    console.log(response);
+    return response;
+
   }
   else {
-    console.log("This particular Instrument is currently not supported by SIGH Finance on " + state.NETWORKS(state.networkId));
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
     return "This particular Instrument is currently not supported by SIGH Finance on ";
   }
 },
@@ -1205,18 +1216,13 @@ IToken_redirectSighStreamOf: async ({commit,state},{iTokenAddress,_from,_to}) =>
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    iTokenContract.methods.redirectSighStreamOf(_from,_to).send({from: state.connectedWallet})
-    .then(receipt => { 
-      console.log(receipt);
-      return receipt;
-      })
-    .catch(error => {
-      console.log(error);
-      return error;
-    })
+    const response = await iTokenContract.methods.redirectSighStreamOf(_from,_to).send({from: state.connectedWallet});
+    console.log(response);
+    return response;
+
   }
   else {
-    console.log("This particular Instrument is currently not supported by SIGH Finance on " + state.NETWORKS(state.networkId));
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
     return "This particular Instrument is currently not supported by SIGH Finance on ";
   }
 },
@@ -1225,18 +1231,13 @@ IToken_allowSighRedirectionTo: async ({commit,state},{iTokenAddress,_to}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    iTokenContract.methods.allowSighRedirectionTo(_to).send({from: state.connectedWallet})
-    .then(receipt => { 
-      console.log(receipt);
-      return receipt;
-      })
-    .catch(error => {
-      console.log(error);
-      return error;
-    })
+    const response = await iTokenContract.methods.allowSighRedirectionTo(_to).send({from: state.connectedWallet});
+    console.log(response);
+    return response;
+
   }
   else {
-    console.log("This particular Instrument is currently not supported by SIGH Finance on " + state.NETWORKS(state.networkId));
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
     return "This particular Instrument is currently not supported by SIGH Finance on ";
   }
 },
@@ -1245,18 +1246,13 @@ IToken_claimMySIGH: async ({commit,state},{iTokenAddress}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    iTokenContract.methods.claimMySIGH().send({from: state.connectedWallet})
-    .then(receipt => { 
-      console.log(receipt);
-      return receipt;
-      })
-    .catch(error => {
-      console.log(error);
-      return error;
-    })
+    const response = await iTokenContract.methods.claimMySIGH().send({from: state.connectedWallet});
+    console.log(response);
+    return response;
+
   }
   else {
-    console.log("This particular Instrument is currently not supported by SIGH Finance on " + state.NETWORKS(state.networkId));
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
     return "This particular Instrument is currently not supported by SIGH Finance on ";
   }
 },
@@ -1265,12 +1261,12 @@ IToken_isTransferAllowed: async ({commit,state},{iTokenAddress,_user,_amount}) =
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    const response = iTokenContract.methods.isTransferAllowed(_user,_amount).call();
+    const response = await iTokenContract.methods.isTransferAllowed(_user,_amount).call();
     console.log(response);
     return response;
   }
   else {
-    console.log("This particular Instrument is currently not supported by SIGH Finance on " + state.NETWORKS(state.networkId));
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
     return "This particular Instrument is currently not supported by SIGH Finance on ";
   }
 },
@@ -1279,12 +1275,12 @@ IToken_principalBalanceOf: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    const response = iTokenContract.methods.principalBalanceOf(_user).call();
+    const response = await iTokenContract.methods.principalBalanceOf(_user).call();
     console.log(response);
     return response;
   }
   else {
-    console.log("This particular Instrument is currently not supported by SIGH Finance on " + state.NETWORKS(state.networkId));
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
     return "This particular Instrument is currently not supported by SIGH Finance on ";
   }
 },
@@ -1293,12 +1289,12 @@ IToken_getInterestRedirectionAddress: async ({commit,state},{iTokenAddress,_user
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    const response = iTokenContract.methods.getInterestRedirectionAddress(_user).call();
+    const response = await iTokenContract.methods.getInterestRedirectionAddress(_user).call();
     console.log(response);
     return response;
   }
   else {
-    console.log("This particular Instrument is currently not supported by SIGH Finance on " + state.NETWORKS(state.networkId));
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
     return "This particular Instrument is currently not supported by SIGH Finance on ";
   }
 },
@@ -1307,12 +1303,12 @@ IToken_getRedirectedBalance: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    const response = iTokenContract.methods.getRedirectedBalance(_user).call();
+    const response = await iTokenContract.methods.getRedirectedBalance(_user).call();
     console.log(response);
     return response;
   }
   else {
-    console.log("This particular Instrument is currently not supported by SIGH Finance on " + state.NETWORKS(state.networkId));
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
     return "This particular Instrument is currently not supported by SIGH Finance on ";
   }
 },
@@ -1321,12 +1317,12 @@ IToken_getSighAccured: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    const response = iTokenContract.methods.getRedirectedBalance(_user).call();
+    const response = await iTokenContract.methods.getRedirectedBalance(_user).call();
     console.log(response);
     return response;
   }
   else {
-    console.log("This particular Instrument is currently not supported by SIGH Finance on " + state.NETWORKS(state.networkId));
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
     return "This particular Instrument is currently not supported by SIGH Finance on ";
   }
 },
@@ -1335,12 +1331,12 @@ IToken_getSighStreamRedirectedTo: async ({commit,state},{iTokenAddress,_user}) =
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    const response = iTokenContract.methods.getSighStreamRedirectedTo(_user).call();
+    const response = await iTokenContract.methods.getSighStreamRedirectedTo(_user).call();
     console.log(response);
     return response;
   }
   else {
-    console.log("This particular Instrument is currently not supported by SIGH Finance on " + state.NETWORKS(state.networkId));
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
     return "This particular Instrument is currently not supported by SIGH Finance on ";
   }
 },
@@ -1349,12 +1345,12 @@ IToken_getSighStreamAllowances: async ({commit,state},{iTokenAddress,_user}) => 
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
-    const response = iTokenContract.methods.getSighStreamAllowances(_user).call();
+    const response = await iTokenContract.methods.getSighStreamAllowances(_user).call();
     console.log(response);
     return response;
   }
   else {
-    console.log("This particular Instrument is currently not supported by SIGH Finance on " + state.NETWORKS(state.networkId));
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
     return "This particular Instrument is currently not supported by SIGH Finance on ";
   }
 },
@@ -1374,18 +1370,23 @@ ERC20_approve: async ({commit,state},{tokenAddress,spender,amount }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     console.log(erc20Contract);
-    erc20Contract.methods.approve(spender,amount).send({from: state.connectedWallet})
-    .then(receipt => { 
-      console.log(receipt);
-      return receipt;
-      })
-    .catch(error => {
+    try {
+      // let quantityInBigNumber = new BigNumber(amount);
+      // console.log(quantityInBigNumber);
+      // console.log(state.supportedInstrumentConfigs.get(tokenAddress).decimals);
+      // quantityInBigNumber.shiftedBy(Number(state.supportedInstrumentConfigs.get(tokenAddress).decimals));
+      // console.log('Quantity To Deposit (Big Number)' + quantityInBigNumber);
+      const response = await erc20Contract.methods.approve(spender,amount).send({from: state.connectedWallet});
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
       console.log(error);
       return error;
-    })
+    }
   }
   else {
-    console.log("This ERC20 Contract has currently not been deployed on " + state.NETWORKS(state.networkId));
+    console.log("This ERC20 Contract has currently not been deployed on " + getters.networkName);
     return "This ERC20 Contract has currently not been deployed on ";
   }
 },
@@ -1394,18 +1395,18 @@ ERC20_transfer: async ({commit,state},{tokenAddress,recepient,amount }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     console.log(erc20Contract);
-    erc20Contract.methods.transfer(recepient,amount).send({from: state.connectedWallet})
-    .then(receipt => { 
-      console.log(receipt);
-      return receipt;
-      })
-    .catch(error => {
+    try {
+      const response = await erc20Contract.methods.transfer(recepient,amount).send({from: state.connectedWallet});
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
       console.log(error);
       return error;
-    })
+    }
   }
   else {
-    console.log("This ERC20 Contract has currently not been deployed on " + state.NETWORKS(state.networkId));
+    console.log("This ERC20 Contract has currently not been deployed on " + getters.networkName);
     return "This ERC20 Contract has currently not been deployed on ";
   }
 },
@@ -1414,18 +1415,18 @@ ERC20_transferFrom: async ({commit,state},{tokenAddress,sender,recepient,amount 
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     console.log(erc20Contract);
-    erc20Contract.methods.transferFrom(sender,recepient,amount).send({from: state.connectedWallet})
-    .then(receipt => { 
-      console.log(receipt);
-      return receipt;
-      })
-    .catch(error => {
+    try {
+      const response = await erc20Contract.methods.transferFrom(sender,recepient,amount).send({from: state.connectedWallet});
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
       console.log(error);
       return error;
-    })
+    }
   }
   else {
-    console.log("This ERC20 Contract has currently not been deployed on " + state.NETWORKS(state.networkId));
+    console.log("This ERC20 Contract has currently not been deployed on " + getters.networkName);
     return "This ERC20 Contract has currently not been deployed on ";
   }
 },
@@ -1434,18 +1435,18 @@ ERC20_increaseAllowance: async ({commit,state},{tokenAddress,spender,addedValue 
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     console.log(erc20Contract);
-    erc20Contract.methods.increaseAllowance(spender,addedValue).send({from: state.connectedWallet})
-    .then(receipt => { 
-      console.log(receipt);
-      return receipt;
-      })
-    .catch(error => {
+    try {
+      const response = await erc20Contract.methods.increaseAllowance(spender,addedValue).send({from: state.connectedWallet})
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
       console.log(error);
       return error;
-    })
+    }
   }
   else {
-    console.log("This ERC20 Contract has currently not been deployed on " + state.NETWORKS(state.networkId));
+    console.log("This ERC20 Contract has currently not been deployed on " + getters.networkName);
     return "This ERC20 Contract has currently not been deployed on ";
   }
 },
@@ -1454,38 +1455,42 @@ ERC20_decreaseAllowance: async ({commit,state},{tokenAddress,spender,subtractedV
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     console.log(erc20Contract);
-    erc20Contract.methods.decreaseAllowance(spender,subtractedValue).send({from: state.connectedWallet})
-    .then(receipt => { 
-      console.log(receipt);
-      return receipt;
-      })
-    .catch(error => {
+    try {
+      const response = await erc20Contract.methods.decreaseAllowance(spender,subtractedValue).send({from: state.connectedWallet})
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
       console.log(error);
       return error;
-    })
+    }
   }
   else {
-    console.log("This ERC20 Contract has currently not been deployed on " + state.NETWORKS(state.networkId));
+    console.log("This ERC20 Contract has currently not been deployed on " + getters.networkName);
     return "This ERC20 Contract has currently not been deployed on ";
   }
 },
 
-ERC20_getAllowance: async ({commit,state},{tokenAddress,owner,spender }) => {
-  if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
+ERC20_getAllowance: async ({commit,getters,state},{tokenAddress,owner,spender }) => {
+  console.log(tokenAddress);
+  if (state.web3 && owner && spender && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     // console.log(erc20Contract);
     const response = await erc20Contract.methods.allowance(owner,spender).call();
-    console.log(response);
+    // console.log(response);
+    // let quantityInBigNumber = new BigNumber(response);
+    // quantityInBigNumber.shiftedBy( -1 * Number(state.supportedInstrumentConfigs.get(tokenAddress).decimals));
+    console.log('Current allowance (value returned) - ' + response);
     return response;
   }
   else {
-    console.log("This ERC20 Contract has currently not been deployed on " + state.NETWORKS(state.networkId));
+    console.log("This ERC20 Contract has currently not been deployed on " + getters.networkName);
     return "This ERC20 Contract has currently not been deployed on ";
   }
 },
 
 ERC20_balanceOf: async ({commit,state},{tokenAddress,account }) => {
-  if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
+  if (state.web3 && account && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     console.log(erc20Contract);
     const response = await erc20Contract.methods.balanceOf(account).call();
@@ -1493,7 +1498,7 @@ ERC20_balanceOf: async ({commit,state},{tokenAddress,account }) => {
     return response;
   }
   else {
-    console.log("This ERC20 Contract has currently not been deployed on " + state.NETWORKS(state.networkId));
+    console.log("This ERC20 Contract has currently not been deployed on " + getters.networkName);
     return "This ERC20 Contract has currently not been deployed on ";
   }
 },
@@ -1507,7 +1512,7 @@ ERC20_totalSupply: async ({commit,state},{tokenAddress}) => {
     return response;
   }
   else {
-    console.log("This ERC20 Contract has currently not been deployed on " + state.NETWORKS(state.networkId));
+    console.log("This ERC20 Contract has currently not been deployed on " + getters.networkName);
     return "This ERC20 Contract has currently not been deployed on ";
   }
 },

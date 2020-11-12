@@ -2,48 +2,31 @@
 
 <script>
 import TabBar from '@/components/TabBar/TabBar.vue';
-import RedeemOrder from './Redeem/Redeem.vue';
-import RedeemUnderlyingOrder from './RedeemUnderlying/RedeemUnderlying.vue';
+import redeemQuantity from './quantity/redeemQuantity.vue';
+import redeemAmount from './amount/redeemAmount.vue';
 
 export default {
-  name: 'Redeem-Component',
+  name: 'Redeem',
   components: {
     TabBar,
-    RedeemOrder,
-    RedeemUnderlyingOrder,
+    redeemQuantity,
+    redeemAmount,
   },
 
   data() {
     return {
-      activeTab: 'Redeem',
-      tabs: [ 'Redeem','Redeem Underlying',],
+      activeTab: 'Quantity',
+      tabs: [ 'Quantity','Amount',],
       height: 0,
       statusCode: '',
-      preActive:'Redeem',
+      preActive:'Quantity',
     };
   },
   
   methods: {
     activeTabChange(activeTab) {
       this.activeTab = activeTab;
-      if (activeTab === 'Redeem') {
-        this.$store.commit('changeInvest_Invest_Tab');
-      } else {
-        this.$store.commit('changeInvest_Withdraw_Tab');
-      }
-      if (this.preActive !== activeTab) {
-        this.$root.$emit('MarketTabChange', activeTab);
-        this.preActive = activeTab;
-      }
     }, 
-
-    getStatus(exc) {
-      if (exc === 'auto') {
-        this.statusCode = this.$store.getters.getAutoStatus;
-      } else {
-        this.statusCode = this.$store.getters[`get${exc}OrderStatus`];
-      }
-    },
   },
 
 };
