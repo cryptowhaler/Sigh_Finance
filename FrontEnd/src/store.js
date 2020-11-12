@@ -18,6 +18,7 @@ import LendingPool from '@/contracts/LendingPool.json'; // LendingPool Contract 
 import LendingPoolCore from '@/contracts/LendingPoolCore.json'; // LendingPoolCore Contract ABI
 import IToken from '@/contracts/IToken.json'; // IToken Contract ABI
 
+import IPriceOracleGetter from '@/contracts/IPriceOracleGetter.json'; // IToken Contract ABI
 import ERC20 from '@/contracts/ERC20.json'; // ERC20 Contract ABI
 
 const getRevertReason = require('eth-revert-reason');
@@ -90,10 +91,12 @@ const store = new Vuex.Store({
                                                         // getSighAccured, getSighStreamRedirectedTo, getSupplierIndexes, getBorrowerIndexes
     LendingPoolContractAddress: null,                          // deposit, borrow, repay, swapBorrowRateMode, rebalanceStableBorrowRate, setUserUseInstrumentAsCollateral, liquidationCall
                                                         // getInstruments, getInstrumentData, getUserAccountData, getUserInstrumentData
-    LendingPoolCoreContract: null,
+    LendingPoolCoreContractAddress: null,
     LendingPoolDataProviderContract: null,                      // calculateUserGlobalData, balanceDecreaseAllowed, calculateCollateralNeededInETH, getInstrumentConfigurationData, getUserInstrumentData, getUserAccountData
     // LendingPoolConfiguratorContract: null,
     // LendingPoolMananger: null,
+
+    IPriceOracleGetterAddress: null,          // Keeps updating the price of the supported instruments 
 
     // ######################################################
     // ############ TO BE WORKED UPON ############
@@ -101,7 +104,9 @@ const store = new Vuex.Store({
     NETWORKS : { '1': 'Main Net', '2': 'Deprecated Morden test network','3': 'Ropsten test network',
       '4': 'Rinkeby test network','42': 'Kovan test network', '1337': 'Tokamak network', '4447': 'Truffle Develop Network','5777': 'Ganache Blockchain',
       '56':'Binance Smart Chain Main Network','97':'Binance Smart Chain Test Network'},
+    supportedInstrumentAddresses: null;
     supportedInstruments : [],      // INSTRUMENTS SUPPORTED BY THE PROTOCOL (FOR LENDING - ITOKEN & INSTRUMENT ADDRESSES + SYMBOL/NAME WILL BE STORED)
+    supportedInstrumentConfigs: new Map(), // Instrument Address -> Instrument Config  MAPPING  
     currentlySelectedInstrument : null, // Currently Selected Instrument
 
     username: null, //Added
@@ -183,12 +188,15 @@ const store = new Vuex.Store({
     LendingPoolContractAddress(state) {         
       return state.LendingPoolContractAddress;    
     },    
-    LendingPoolCoreContract(state) {         
-      return state.LendingPoolCoreContract;    
+    LendingPoolCoreContractAddress(state) {         
+      return state.LendingPoolCoreContractAddress;    
     },    
     LendingPoolDataProviderContract(state) {         
       return state.LendingPoolDataProviderContract;    
     },    
+    IPriceOracleGetterAddress(state) {         
+      return state.IPriceOracleGetterAddress;    
+    },        
     // ######################################################
     // ############ TO BE WORKED UPON ############
     // ######################################################
@@ -197,7 +205,20 @@ const store = new Vuex.Store({
     },
     currentlySelectedInstrument(state) {
       return state.currentlySelectedInstrument;
-    }
+    },
+    getInstrumentConfig(state,instrumentAddress) {
+      return state.supportedInstrumentConfigs.get(instrumentAddress);
+    },
+    getInstrumentPrice(state) {
+      return instrumentAddress => {
+        console.log('Getter getInstrumentPrice in store');
+        let config =  state.supportedInstrumentConfigs.get(instrumentAddress);
+        if (config.price) {
+          return config.price;
+        }
+        return 0;
+      },
+    }, 
     showLoader(state) {
       return state > 0;
     },
@@ -294,30 +315,51 @@ const store = new Vuex.Store({
       state.LendingPoolContractAddress = newContractAddress;
       console.log("In updateLendingPoolContractAddress - " + state.LendingPoolContractAddress);
     },    
-    updateLendingPoolCoreContract(state,newContractAddress) {         
-      state.LendingPoolCoreContract = newContractAddress;
-      console.log("In updateLendingPoolCoreContract - " + state.LendingPoolCoreContract);
+    updateLendingPoolCoreContractAddress(state,newContractAddress) {         
+      state.LendingPoolCoreContractAddress = newContractAddress;
+      console.log("In updateLendingPoolCoreContractAddress - " + state.LendingPoolCoreContractAddress);
     },    
     updateLendingPoolDataProviderContract(state,newContractAddress) {         
       state.LendingPoolDataProviderContract = newContractAddress;
       console.log("In updateLendingPoolDataProviderContract - " + state.LendingPoolDataProviderContract);
     },    
+    updatePriceOracleGetterAddress(state,newContractAddress) {         
+      state.IPriceOracleGetterAddress = newContractAddress;
+      console.log("In updatePriceOracleGetterAddress - " + state.IPriceOracleGetterAddress);
+    },    
     // ######################################################
     // ############ TO BE WORKED UPON ############
     // ######################################################
-    // INSTRUMENTS SUPPORTED BY SIGH FINANCE
-    addTosupportedInstruments(state,_supportedinstrument) {         
-      state.supportedInstruments.push(_supportedinstrument);
-      console.log(_supportedinstrument);
-      console.log(state.supportedInstruments);
-      console.log("In addTosupportedInstruments ");
+    setSupportedInstrumentAddresses(state,_supportedinstruments) {      // LIST OF INSTRUMENTS SUPPORTED BY SIGH FINANCE      
+      state.supportedInstrumentAddresses = _supportedinstruments;
+      console.log(state.supportedInstrumentAddresses);
+      console.log("In setSupportedInstrumentAddresses ");
     },    
+    addToSupportedInstrumentsArray(state,newInstrument) {
+      state.supportedInstruments.push(newInstrument);
+      console.log(state.supportedInstruments);
+      console.log("In addToSupportedInstrumentsArray ");
+
+    }
+    addToSupportedInstrumentsConfigsMapping(state,instrumentAddress,instrumentDetails) {  // ADDS THE 'Instrument Address' => 'Instrument Details' MAPPING
+      state.supportedInstrumentConfigs.set(instrumentAddress,instrumentDetails);  // creates a mapping from instrument address to instrument config data
+      console.log(state.supportedInstrumentConfigs.get(instrumentAddress));
+      console.log("In addToSupportedInstrumentsConfigsMapping ");
+    },
+    updateInstrumentPrice(state,instrumentAddress,updatedPrice) {               // UPDATES THE CURRENT INSTRUMENT PRICE. CONSTANTLY CALLED BY THE PRICE POLLING FUNCTION
+      let instrumentConfig = state.supportedInstrumentConfigs.get(instrumentAddress); 
+      instrumentConfig.price = updatedPrice;      
+      state.supportedInstrumentConfigs.set(instrumentAddress,instrumentConfig);
+      console.log("In updateInstrumentPrice ");
+      console.log(instrumentConfig.price);
+      console.log(state.supportedInstrumentConfigs.get(instrumentAddress));
+    },
     updateSelectedInstrument(state, selectedInstrument_) {
       state.currentlySelectedInstrument = selectedInstrument_;
       console.log(_supportedinstrument);
       console.log(state.supportedInstruments);
       console.log("In updateSelectedInstrument ");
-    }
+    },
     changeWebsocketStatus(state, websocketStatus) {
       state.websocketStatus = websocketStatus;
     },
@@ -488,7 +530,7 @@ const store = new Vuex.Store({
 // ######################################################
 // ############ getContractAddresses : calls getAddresses() to fetch and store all the contract addresses based on the network we are connected to (ETHEREUM/BSC) ############
 // ############ getAddresses : // fetches and updates all the contract addresses ############
-// ############ getSupportedInstrumentConfigAddresses : Gets the addresses of the ITokens and the corresponding Insturments ############
+// ############ getSupportedInstrumentAddresses : Gets the addresses of the ITokens and the corresponding Insturments ############
 // ######################################################
 
   // calls getAddresses() to fetch and store all the contract addresses based on the network we are connected to
@@ -541,13 +583,16 @@ const store = new Vuex.Store({
   
       const lendingPoolCoreAddress = await currentGlobalAddressesProviderContract.methods.getLendingPoolCore().call();        
       // console.log( 'lendingPoolCoreAddress - ' + lendingPoolCoreAddress); 
-      commit('updateLendingPoolCoreContract',lendingPoolCoreAddress);
+      commit('updateLendingPoolCoreContractAddress',lendingPoolCoreAddress);
 
       const lendingPoolDataProviderAddress = await currentGlobalAddressesProviderContract.methods.getLendingPoolDataProvider().call();        
       // console.log( 'lendingPoolDataProviderAddress - ' + lendingPoolDataProviderAddress); 
       commit('updateLendingPoolDataProviderContract',lendingPoolDataProviderAddress);
 
-      store.dispatch('getSupportedInstrumentConfigAddresses');
+      const iPriceOracleGetterAddress = await currentGlobalAddressesProviderContract.methods.getPriceOracle().call();        
+      commit('updateIPriceOracleGetterAddress',iPriceOracleGetterAddress);
+
+      await store.dispatch('getSupportedInstrumentAddresses');
 
       return true;
     }
@@ -557,15 +602,19 @@ const store = new Vuex.Store({
   },
 
   // Gets the addresses of the ITokens and the corresponding Insturments
-  getSupportedInstrumentConfigAddresses: async ({commit,state}) => { 
-    if (state.web3 && state.LendingPoolCoreContract && state.LendingPoolCoreContract != "0x0000000000000000000000000000000000000000") {
+  getSupportedInstrumentAddresses: async ({commit,state}) => { 
+    if (state.web3 && state.LendingPoolCoreContractAddress && state.LendingPoolCoreContractAddress != "0x0000000000000000000000000000000000000000") {
       const lendingPoolCoreContract = new state.web3.eth.Contract(LendingPoolCore.abi, state.LendingPoolCoreContract );
       console.log(lendingPoolCoreContract);
 
       // Returns an array of supported instrument addresses
       const instruments = await lendingPoolCoreContract.methods.getInstruments().call();        
-      console.log("getITokenAddresses ACTION");
+      console.log("getSupportedInstrumentAddresses ACTION");
       console.log(instruments);
+      commit('setSupportedInstrumentAddresses',instruments);
+
+      const priceOracleContract = new state.web3.eth.Contract(IPriceOracleGetter.abi, state.IPriceOracleGetterAddress );
+      console.log(priceOracleContract);
 
       // Loop over the instrument addresses to fetch iToken Address, name, symbol, decimals and add them to the supported instruments list
       if (instruments) {
@@ -577,8 +626,12 @@ const store = new Vuex.Store({
           instrumentState.symbol = await erc20Contract.methods.symbol().call();
           instrumentState.decimals = await erc20Contract.methods.decimals().call();
           instrumentState.iTokenAddress = await lendingPoolCoreContract.methods.getInstrumentITokenAddress(instruments[i]).call();
-          commit('addTosupportedInstruments',instrumentState);
+          instrumentState.priceDecimals = await priceOracleContract.methods.getAssetPriceDecimals(_instrumentAddress).call();;
+          commit('addToSupportedInstrumentsArray',instruments[i],instrumentState);
+          instrumentState.price = null;
+          commit('addToSupportedInstrumentsConfigsMapping',instruments[i],instrumentState);
         }
+        store.dispatch('initiatePollingInstrumentPrices');
       }
       return true;
     }
@@ -588,7 +641,37 @@ const store = new Vuex.Store({
     }
   },
 
+  // KEEP UPDATING PRICES OF THE SUPPORTED INSTRUMENTS
+  initiatePollingInstrumentPrices: async ({commit,store,state}) => {
+    console.log("initiatePollingInstrumentPrices : updating prices");
+    let instruments = state.supportedInstruments;
+    console.log(instruments);
+    setInterval(async () => {
+      if (instruments) {
+        for (let i=0; i<instruments.length; i++ ) {
+          let updatedPrice = await store.dispatch('getInstrumentPrice',{instrumentAddress : instruments[i] });
+          console.log(state.supportedInstrumentConfigs.get(instruments[i]).name +  " - current price is " + updatedPrice);
+          commit('updateInstrumentPrice',_instrumentAddress,updatedPrice);
+        }
+      }
+    }, 1000);
+  },
 
+// ######################################################
+// ############ getInstrumentPrice --- VIEW Funtion to get instrument's price from the price oracle
+// ######################################################
+
+  getInstrumentPrice: async ({commit,state},{_instrumentAddress}) => {
+    if (state.web3 && state.IPriceOracleGetterAddress && state.IPriceOracleGetterAddress!= "0x0000000000000000000000000000000000000000" ) {
+      const priceOracleContract = new state.web3.eth.Contract(IPriceOracleGetter.abi, state.IPriceOracleGetterAddress );
+      console.log(priceOracleContract);
+      response = await priceOracleContract.methods.getAssetPrice(_instrumentAddress).call();
+      commit('updateInstrumentPrice',_instrumentAddress,response);
+    }
+    else {
+      console.log('getInstrumentPrice() function in store.js. Protocol not supported on connected blockchain network');
+    }
+  }
 
 // ######################################################
 // ############ SIGH ---  SIGH_mintCoins() FUNCTION : mint new Coins when cycle gets completed

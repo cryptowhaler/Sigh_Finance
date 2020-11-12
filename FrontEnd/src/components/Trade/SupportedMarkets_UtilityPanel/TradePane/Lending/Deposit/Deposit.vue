@@ -6,24 +6,21 @@ import { stringArrayToHtmlList, } from '@/utils/utility';
 import {mapState,mapActions,} from 'vuex';
 
 export default {
+
   name: 'Deposit',
-  data() {
+
+data() {
     return {
       selectedInstrument: this.$store.getters.currentlySelectedInstrument;
+      formData : {
+        depositQuantity: null,
+        depositValue: null,
+      },
       showLoader: false,
       showApproveButton: true,
       showConfirm: false,
     };
   },
-
-  // watch: {
-  //   formData: {
-  //     handler: function() {
-  //       this.getStatus();   //getting status for exchange ()
-  //     },
-  //     deep: true,
-  //   },
-  // },
   
   created() {
     this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
@@ -34,73 +31,73 @@ export default {
     ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
   },
 
-
-
-
-  // computed: {
-  //   estimatedNoOfTokensMinted() {    //Used "width: (((Number(ask.totalVolume)/Number(maxVol))*308)) + '%'," to determine width of dynamic bars
-  //     if (!this.formData.SupplyAmount) {
-  //       return '';
-  //     }
-  //     else {      
-  //       return ((Number(this.formData.SupplyAmount))*Number(this.$store.state.selectedMarketExchangeRate)).toFixed(5);
-  //     }
-  //   },
-  //   estimatedMintValue() {   
-  //     if (!this.formData.SupplyAmount) {
-  //       return '';
-  //     }
-  //     else {      
-  //       return ((Number(this.formData.SupplyAmount))*Number(this.$store.state.selectedMarketUnderlyingPriceUSD)).toFixed(5);
-  //     }
-  //   },
-  // },
+  computed: {
+    // Updated instrument Price of the selected Instrument
+    selectedInstrumentPrice() {
+      let price = this.$store.getters.getInstrumentPrice(this.selectedInstrument.instrumentAddress);
+      if (price) {
+        return price / Math.pow(10,this.selectedInstrument.decimals); 
+      }
+      return 0;
+    },
+    computedDepositQuantity() {
+      if (this.selectedInstrument && !this.formData.depositQuantity && this.formData.depositValue) {
+        this.formData.depositQuantity = this.formData.depositValue / this.selectedInstrumentPrice );
+        return this.formData.depositQuantity;
+      }
+      return this.formData.depositQuantity;
+    },
+    computedDepositValue() {
+      if (this.selectedInstrument && !this.formData.depositValue && this.formData.depositQuantity) {
+        this.formData.depositValue = this.formData.depositQuantity * this.selectedInstrumentPrice );
+        return this.formData.depositValue;
+      }
+      return this.formData.depositValue;
+    },
+    isTheProvidedAmountApproved() {
+      if (this.selectedInstrument && this.$store.getters.connectedWallet && this.$store.getters.LendingPoolCoreContractAddress ) {
+        let allowedAmount = await this.ERC20_getAllowance(tokenAddress:this.selectedInstrument.instrumentAddress, owner:this.$store.getters.connectedWallet, spender:this.$store.getters.LendingPoolCoreContractAddress );
+        if (allowedAmount > this.formData.depositQuantity) {
+          return true;
+        }
+      }
+      return false;
+    }
+  },
 
 
   methods: {
 
-    ...mapActions(['market_mint','Market_approve','marketIsApproved']),
+    ...mapActions(['LendingPool_deposit','ERC20_approve','ERC20_getAllowance']),
     
-    async Supply() {   //When we press make Borrow. Shows Loader
-      console.log(this.formData.SelectedMarketId);
-      console.log(this.formData.SupplyAmount);
-      console.log(this.formData.SelectedMarketSymbol);
-      console.log(this.formData.SelectedMarketUnderlyingSymbol);
-      console.log(this.formData.selectedMarketUnderlyingPriceUSD);
-      console.log(this.formData.selectedMarketExchangeRate);
-
-      let result =  this.market_mint( { marketId: this.formData.SelectedMarketId , mintAmount: this.formData.SupplyAmount } );
-      console.log(result);
-
-      // if (response.status == 200) {     //If Successful
-      //   this.$showSuccessMsg({message: this.formData.SelectedMarketSymbol + ' - ' + response.message,});
-      // } 
-      // else {                          //If failed.
-      //   this.$showErrorMsg({message: response.message,});
-      // }
-      this.showLoader = false;
-    },
-
-    async Approve() {   //When we press make Borrow. Shows Loader
-      console.log(this.formData.SelectedMarketId);
-      console.log(this.formData.SupplyAmount);
-      console.log(this.formData.SelectedMarketSymbol);
-      console.log(this.formData.SelectedMarketUnderlyingSymbol);
-      console.log(this.formData.selectedMarketUnderlyingPriceUSD);
-      console.log(this.formData.selectedMarketExchangeRate);
-      console.log(this.formData.selectedMarketunderlyingAddress);
-
-      this.Market_approve( { contractAddress:this.formData.selectedMarketunderlyingAddress , sender: this.formData.SelectedMarketId , amount: 1000000000 } );
+    async deposit() {   //When we press make Borrow. Shows Loader
+      this.showLoader = true;
+      console.log('Selected Instrument - ' + this.selectedInstrument);
+      console.log('Deposit Quantity - ' + this.formData.depositQuantity);
+      console.log('Deposit Value - ' + this.formData.depositValue);
+      console.log('Instrument Price - ' + this.selectedInstrumentPrice);
+      let response =  await this.LendingPool_deposit( { _instrument: this.selectedInstrument.instrumentAddress , _amount: this.formData.depositQuantity, _referralCode: this.enteredReferralCode } );
       console.log(result);
       this.showLoader = false;
     },
+
+    async approve() {   //When we press make Borrow. Shows Loader
+      this.showLoader = true;
+      console.log('Selected Instrument - ' + this.selectedInstrument);
+      console.log('Value to be Approved - ' + this.formData.depositValue);
+      console.log('Instrument Price - ' + this.selectedInstrumentPrice);
+      let response = await this.ERC20_approve( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , amount: this.formData.depositValue } );
+      console.log(result);
+      this.showLoader = false;
+    },
+
+
 
 
   },
 
   destroyed() {
-    // clearInterval(this.watcher);
-    // ExchangeDataEventBus.$off('change-selected-instrument', this.changeVegaMarket);    
+    ExchangeDataEventBus.$off('change-selected-instrument', this.changeSelectedInstrument);    
   },
 };
 </script>
