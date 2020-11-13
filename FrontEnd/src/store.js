@@ -936,6 +936,7 @@ const store = new Vuex.Store({
 // ############ Lending Pool --- flashLoan() [FLASH LOAN (total fee = protocol fee + fee distributed among depositors)] FUNCTION 
 // ######################################################
 
+    // INTEGRATED. FUNCTIONING AS EXPECTED
     LendingPool_deposit: async ({commit,state},{_instrument,_amount,_referralCode}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
@@ -965,8 +966,7 @@ const store = new Vuex.Store({
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
         console.log(lendingPoolContract);
-        try {
-          // console.log('Making transaction (in store)');
+        try {  // console.log('Making transaction (in store)');
           const response = await lendingPoolContract.methods.borrow(_instrument,_amount,_interestRateMode,_referralCode).send({from: state.connectedWallet});
           console.log(response);
           return response;

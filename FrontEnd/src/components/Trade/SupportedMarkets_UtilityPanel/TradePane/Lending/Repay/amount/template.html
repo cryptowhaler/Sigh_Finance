@@ -1,0 +1,45 @@
+<div class= "repayAmount">
+    <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
+    </div> 
+
+    <!-- Amount to be entered -->    
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input style="text-align: center;"  class="form-ctrl" type="text" placeholder=" Amount (USD)" v-model="formData.repayValue">
+                    <span  style='color:antiquewhite'> USD </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Displays the symbol of the selected Instrument -->
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-width-1-1">
+            <div class="form-grp">
+                <div class="form-elm">
+                    <input style="text-align: center;" class="form-ctrl" type="text" placeholder="Number of tokens" readonly :value="calculatedQuantity">
+                    <span style='color:antiquewhite'>  {{ selectedInstrument.symbol  }}  </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Loading image -->
+    <div class="uk-grid uk-grid-small f1-form-grid">  
+        <div v-if="showLoader" class="uk-width-1-1 center">
+            <img src="https://image.ibb.co/dc02hd/30.gif" />
+        </div>
+
+        <div v-else class="uk-width-1-1">
+
+<!-- Buttons (Approve/Deposit) -->
+            <div class="left">
+                <!-- <button class="uk-button uk-button-green"  @click="approve()">Approve</button> -->
+                <button class="uk-button uk-button-green" style="padding: 0 81px;"  @click="repay()">Repay</button>
+            </div>
+        </div>
+    </div>
+</div>

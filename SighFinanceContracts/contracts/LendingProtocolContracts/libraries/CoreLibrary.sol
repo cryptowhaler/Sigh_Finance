@@ -21,35 +21,45 @@ library CoreLibrary {
 // ############################
 
     struct UserInstrumentData {
+        bool useAsCollateral;                         //defines if a specific deposit should or not be used as a collateral in borrows        
         uint256 principalBorrowBalance;                  //principal amount borrowed by the user.
+        uint256 stableBorrowRate;                       // stable borrow rate at which the user has borrowed. Expressed in ray                
         uint256 lastVariableBorrowCumulativeIndex;      //cumulated variable borrow index for the user. Expressed in ray
         uint256 originationFee;                         //origination fee cumulated by the user
-        uint256 stableBorrowRate;                       // stable borrow rate at which the user has borrowed. Expressed in ray
         uint40 lastUpdateTimestamp;
-        bool useAsCollateral;                         //defines if a specific deposit should or not be used as a collateral in borrows
     }   
 
     struct InstrumentData {
-        uint256 lastLiquidityCumulativeIndex;           //the liquidity index. Expressed in ray
-        uint256 currentLiquidityRate;                   //the current supply rate. Expressed in ray
-        uint256 totalBorrowsStable;                     //the total borrows of the instrument at a stable rate. Expressed in the currency decimals
-        uint256 totalBorrowsVariable;                   //the total borrows of the instrument at a variable rate. Expressed in the currency decimals
+        address iTokenAddress;                          // IToken Contract Address
+        address interestRateStrategyAddress;            // Interest Rate Strategy contract Address 
+
+        uint256 decimals;                               //the decimals of the instrument asset
+
+        bool isActive;                                  // isActive = true if Activated and Properly Configured
+        bool isFreezed;                                 // isFreezed = true = Repays / Redeems Allowed. Deposits / Borrowings / Rate Swap Disabled
+
+        bool borrowingEnabled;                          // borrowingEnabled = True = users can borrow from this instrument
+        bool usageAsCollateralEnabled;                  // usageAsCollateralEnabled = true = users can use this instrument as collateral
+        bool isStableBorrowRateEnabled;                 // isStableBorrowRateEnabled = true = users can borrow at Stable Rate
+
         uint256 currentVariableBorrowRate;              //the current variable borrow rate. Expressed in ray
         uint256 currentStableBorrowRate;                //the current stable borrow rate. Expressed in ray
-        uint256 currentAverageStableBorrowRate;         //the current average stable borrow rate (weighted average of all the different stable rate loans). Expressed in ray
-        uint256 lastVariableBorrowCumulativeIndex;      //variable borrow index. Expressed in ray
-        uint256 baseLTVasCollateral;                    //the ltv of the instrument. Expressed in percentage (0-100)
-        uint256 liquidationThreshold;                   //the liquidation threshold of the instrument. Expressed in percentage (0-100)
-        uint256 liquidationBonus;                       //the liquidation bonus of the instrument. Expressed in percentage
-        uint256 decimals;                               //the decimals of the instrument asset
-        address iTokenAddress;                          // address of the iToken representing the asset
-        address interestRateStrategyAddress;            // address of the interest rate strategy contract
+        uint256 currentLiquidityRate;                   //the current supply rate. Expressed in ray
+
+        uint256 totalBorrowsStable;                     //the total borrows at stable rate. Expressed in the currency decimals
+        uint256 totalBorrowsVariable;                   //the total borrows at variable rate. Expressed in the currency decimals
+
+        uint256 currentAverageStableBorrowRate;         // Current Average Stable Borrow Rate --> Weighted average of all the different stable rate loans. Expressed in ray
+
+        uint256 lastVariableBorrowCumulativeIndex;      // Variable Borrow Index --> Expressed in ray
+        uint256 lastLiquidityCumulativeIndex;           // Liquidity Index --> Expressed in ray
+
+        uint256 baseLTVasCollateral;                    // LTV (Loan to Volume) of the instrument --> Expressed in percentage (0-100)
+
+        uint256 liquidationThreshold;                   // Liquidation Threshold --> Expressed in percentage (0-100)
+        uint256 liquidationBonus;                       // Liquidation Bonus --> Expressed in percentage
+
         uint40 lastUpdateTimestamp;
-        bool borrowingEnabled;                          // borrowingEnabled = true means users can borrow from this instrument
-        bool usageAsCollateralEnabled;                  // usageAsCollateralEnabled = true means users can use this instrument as collateral
-        bool isStableBorrowRateEnabled;                 // isStableBorrowRateEnabled = true means users can borrow at a stable rate
-        bool isActive;                                  // isActive = true means the instrument has been activated and properly configured
-        bool isFreezed;                                 // isFreezed = true means the instrument only allows repays and redeems, but not deposits, new borrowings or rate swap
     }
 
 
