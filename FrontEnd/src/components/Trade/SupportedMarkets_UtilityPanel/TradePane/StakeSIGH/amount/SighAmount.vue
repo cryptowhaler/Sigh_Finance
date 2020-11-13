@@ -6,105 +6,136 @@ import {mapState,mapActions,} from 'vuex';
 
 export default {
 
-  name: 'depositAmount',
+  name: 'sighQuantity',
 
   data() {
     return {
-      selectedInstrument: this.$store.state.currentlySelectedInstrument,
+      sighInstrument: this.$store.state.SighInstrumentState,
       formData : {
-        depositQuantity: null,
-        depositValue: null,
-        enteredReferralCode: 0,
+        sighQuantity: null,
+        sighValue: null
       },
+      stakedSighBalance : null,      
       availableAllowance: null,
       showLoader: false,
-      // showApproveButton: true,
-      // showConfirm: false,
     };
   },
   
 
   created() {
-    this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
-    this.updateAvailableAllowance();
-    this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
-      this.selectedInstrument = selectedInstrument_.instrument;        
-      console.log('DEPOSIT : changeSelectedInstrument - ');
-      console.log(this.selectedInstrument);
-      this.updateAvailableAllowance();
-    };
-    ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
+    this.sighInstrument = this.$store.state.SighInstrumentState;
+    this.getAllowanceAndStakedBalance();
   },
 
 
   computed: {
     calculatedQuantity() {
         console.log('calculatedQuantity');
-        if (this.selectedInstrument) {
-          console.log(this.selectedInstrument);
-          this.formData.depositQuantity = Number((this.formData.depositValue) / (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4) ; 
-          console.log('depositQuantity (computed) ' + this.formData.depositQuantity);          
-          return this.formData.depositQuantity;
-          }
+        if (this.sighInstrument) {
+          let price = (this.sighInstrument.price / Math.pow(10,this.sighInstrument.priceDecimals)).toFixed(4);
+          let quantity = (this.formData.sighValue) / price ; 
+          return quantity;
+        }
       return 0;
     }
   },
 
   methods: {
 
-    ...mapActions(['LendingPool_deposit','ERC20_increaseAllowance','ERC20_getAllowance']),
+    ...mapActions(['SIGHStaking_stake_SIGH','SIGHStaking_unstake_SIGH','ERC20_increaseAllowance','ERC20_getAllowance','SIGHStaking_getStakedBalanceForStaker']),
     
-    async deposit() {   //DEPOSIT (WORKS PROPERLY)
-      this.showLoader = true;
-      let price = (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals)).toFixed(4);
-      let value = price * this.formData.depositQuantity;
-      console.log('Selected Instrument - ' + this.selectedInstrument.symbol);
+
+    async stakeSIGH() {                           //STAKE SIGH (WORKS PROPERLY)
+      let price = (this.sighInstrument.price / Math.pow(10,this.sighInstrument.priceDecimals)).toFixed(4);
+      let quantity = this.formData.sighValue / price;
+
+      console.log('Stak Sigh- ' + this.sighInstrument.address);
+      console.log('Stak Sigh- ' + this.sighInstrument.symbol);
       console.log('Available Allowance - ' + this.availableAllowance );      
-      console.log('Deposit Quantity - ' + this.formData.depositQuantity);
-      console.log('Deposit Value - ' + value);
-      console.log('Instrument Price - ' + price);     
+      console.log('Stake Quantity - ' + quantity);
+      console.log('Stake Value - ' + this.formData.sighValue);
+      console.log('Stake Price - ' + price);     
 
       // WHEN THE ALLOWANCE IS LESS THAN WHAT IS NEEDED
-      if ( Number(this.formData.depositQuantity) >  Number(this.availableAllowance)  ) {
-        let dif = this.formData.depositQuantity - this.availableAllowance;
-        this.$showInfoMsg({message: " You first need to 'APPROVE' an amount greater than " + dif + " " + this.selectedInstrument.symbol + " so that the deposit can be processed through the ERC20 Interface's transferFrom() Function."}); // this.formData.depositQuantity + "  " + this.selectedInstrument.symbol +  " worth " + value + " USD approval failed. Try increasing Gas or contact our team at contact@sigh.finance in case of any queries." });        
-        this.$showInfoMsg({message: "Available Allowance : " + this.availableAllowance + " " + this.selectedInstrument.symbol });        
-        this.showLoader = false;
+      if ( Number(quantity) >  Number(this.availableAllowance)  ) {
+        let dif = Number(quantity) - Number(this.availableAllowance);
+        this.$showInfoMsg({message: " You first need to 'APPROVE' an amount greater than " + dif + " " + this.sighInstrument.symbol + " so that the stake's deposit can be processed through the ERC20 Interface's transferFrom() Function."}); 
+        this.$showInfoMsg({message: "Available SIGH Allowance : " + this.availableAllowance + " " + this.sighInstrument.symbol });        
       }
-      // WHEN ALLOWANCE CONDITION IS MET SO THE TRANSACTION GOES THROUGH
       else {
-        let response =  await this.LendingPool_deposit( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.depositQuantity, _referralCode: this.formData.enteredReferralCode } );
-        if (response.status) {      
-          this.$showSuccessMsg({message: "DEPOSIT SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully deposited to SIGH Finance. Gas used = " + response.gasUsed });
-          await this.updateAvailableAllowance();
-          // this.$showInfoMsg({message: "Available Allowance : " + this.availableAllowance + " " + this.selectedInstrument.symbol });        
-          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
+        this.showLoader = true;
+        let response =  await this.SIGHStaking_stake_SIGH( { amountToBeStaked:  quantity } );
+        if (response.status) {  
+          await this.getAllowanceAndStakedBalance();
+          let valueOfTotalStaked_SIGH = price * this.stakedSighBalance;
+          this.$showSuccessMsg({message: "SIGH STAKING SUCCESS : " + quantity + "  " +  this.sighInstrument.symbol +  " worth " + this.formData.sighValue + " USD has been successfully staked. You currently have " + this.stakedSighBalance + " SIGH having worth " + valueOfTotalStaked_SIGH + " USD Staked farming staking rewards for you. Enjoy farming SIGH Staking rewards!"  });
+          this.$showInfoMsg({message: " Additional SIGH that can be staked : " + this.availableAllowance + " SIGH" });           
+          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Staked',Service: 'STAKING'});
         }
         else {
-          this.$showErrorMsg({message: "DEPOSIT FAILED : " + response.message  }); // this.formData.depositQuantity + "  " + this.selectedInstrument.symbol +  " worth " + value + " USD approval failed. Try increasing Gas or contact our team at contact@sigh.finance in case of any queries." });        
-          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); // this.formData.depositQuantity + "  " + this.selectedInstrument.symbol +  " worth " + value + " USD approval failed. Try increasing Gas or contact our team at contact@sigh.finance in case of any queries." });        
+          this.$showErrorMsg({message: "SIGH STAKING  FAILED : " + response.message  });
+          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
           // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
         }
-        this.formData.depositQuantity = null;
+        this.formData.sighQuantity = null;
         this.showLoader = false;
       }
     },
+
+
+
+    async unstakeSIGH() {
+      let price = (this.sighInstrument.price / Math.pow(10,this.sighInstrument.priceDecimals)).toFixed(4);
+      let quantity = this.formData.sighValue / price ;
+
+      console.log('Stak Sigh- ' + this.sighInstrument.address);
+      console.log('Stak Sigh- ' + this.sighInstrument.symbol);
+      console.log('Available Allowance - ' + this.availableAllowance );      
+      console.log('UN-Stake sighValue - ' + this.formData.sighValue);
+      console.log('UN-Stake Quantity - ' + quantity);
+      console.log('UN-Stake Price - ' + price);     
+      console.log('UN-Stake : Currently staked balance - ' + this.stakedSighBalance);     
+
+      if ( Number(quantity) > Number(this.stakedSighBalance) ) {
+        this.$showErrorMsg({message: "The amount entered for unstaking exceeds your current Staking balance. Please enter a valid amount. Current SIGH Staked = " + this.stakedSighBalance + " SIGH"  });
+      }
+      else {
+        this.showLoader = true;
+        let response =  await this.SIGHStaking_unstake_SIGH( { amountToBeUNStaked:  quantity } );
+        if (response.status) {      
+          await this.getAllowanceAndStakedBalance();
+          let valueOfTotalStaked_SIGH = price * this.stakedSighBalance;
+          this.$showSuccessMsg({message: "SIGH UN-STAKING SUCCESS : " + quantity + "  " +  this.sighInstrument.symbol +  " worth " + this.formData.sighValue + " USD has been successfully un-staked. You currently have " + this.stakedSighBalance + " SIGH having worth " + valueOfTotalStaked_SIGH + " USD Staked farming staking rewards for you! " });
+          this.$showInfoMsg({message: " Additional SIGH that can be staked : " + this.availableAllowance + " SIGH" }); 
+          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Un-Staked',Service: 'STAKING'});
+        }
+        else {
+          this.$showErrorMsg({message: "SIGH UN-STAKING FAILED : " + response.message  });
+          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+            // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
+          }
+          this.formData.sighQuantity = null;
+          this.showLoader = false;      
+      }
+    },
+
+
       
 
-    async approve() {   //APPROVE (WORKS PROPERLY)
-      this.showLoader = true;
+
+    async approve() {   //APPROVE (WORKS PROPERLY) - calls increaseAllowance() Function  // Need to handle tokens which do not have it implemented
       console.log('Selected Instrument - ')
-      console.log(this.selectedInstrument);
-      console.log('Quantity to be Approved - ' + this.formData.depositQuantity);
-      let price = (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals)).toFixed(4);
-      let value = price * this.formData.depositQuantity;
-      console.log('Instrument Price - ' + price);
-      let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  this.formData.depositQuantity } );
+      console.log(this.sighInstrument);
+      console.log('Amount (Value) to be Approved - ' + this.formData.sighValue);
+      let price = (this.sighInstrument.price / Math.pow(10,this.sighInstrument.priceDecimals)).toFixed(4);
+      let quantity = this.formData.sighValue / price ;
+      console.log('Instrument Price - ' + price + ' SIGH Quantity - ' + quantity );
+      this.showLoader = true;
+      let response = await this.ERC20_increaseAllowance( { tokenAddress: this.sighInstrument.address, spender: this.$store.getters.sighStakingContractAddress , addedValue: quantity } );
       if (response.status) { 
-        this.$showSuccessMsg({message: "APPROVAL SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });
-        this.formData.depositQuantity = null;
-        await this.updateAvailableAllowance();
-        // this.$showInfoMsg({message: "Available Allowance : " + this.availableAllowance + " " + this.selectedInstrument.symbol });        
+        await this.getAllowanceAndStakedBalance();        
+        this.$showSuccessMsg({message: "APPROVAL SUCCESS : Allowance Added = " + this.formData.sighQuantity +  " SIGH. Maximum of " + this.availableAllowance + "  " +  this.sighInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });
+        this.formData.sighValue = null;
         // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});      
       }
       else {
@@ -115,12 +146,16 @@ export default {
       this.showLoader = false;
     }, 
 
-    async updateAvailableAllowance() {
-      this.availableAllowance = await this.ERC20_getAllowance({tokenAddress: this.selectedInstrument.instrumentAddress, owner: this.$store.getters.connectedWallet, spender: this.$store.getters.LendingPoolCoreContractAddress });
-      console.log(this.availableAllowance);
-      this.$showInfoMsg({message: "Available Allowance : " + this.availableAllowance + " " + this.selectedInstrument.symbol });        
-      console.log( 'Current available allowance for ' + this.selectedInstrument.symbol + " is " + this.availableAllowance );
+
+
+    async getAllowanceAndStakedBalance() {
+      this.availableAllowance = await this.ERC20_getAllowance({tokenAddress: this.sighInstrument.address, owner: this.$store.getters.connectedWallet, spender: this.$store.getters.sighStakingContractAddress });
+      this.stakedSighBalance = await this.SIGHStaking_getStakedBalanceForStaker({ _user: this.$store.getters.connectedWallet  });
+      let price = (this.sighInstrument.price / Math.pow(10,this.sighInstrument.priceDecimals)).toFixed(4);
+      let value = price * this.stakedSighBalance;
+      console.log( this.stakedSighBalance + " SIGH worth " + value + " USD currently staked. Addition SIGH that can be Staked =  " + this.availableAllowance + " SIGH"  );
     }
+
   },
 
   destroyed() {

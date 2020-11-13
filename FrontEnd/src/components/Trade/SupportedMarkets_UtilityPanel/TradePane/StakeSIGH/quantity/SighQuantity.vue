@@ -66,8 +66,8 @@ export default {
         if (response.status) {  
           await this.getAllowanceAndStakedBalance();
           let valueOfTotalStaked_SIGH = price * this.stakedSighBalance;
-          this.$showSuccessMsg({message: "SIGH STAKING SUCCESS : " + this.formData.sighQuantity + "  " +  this.sighInstrument.symbol +  " worth " + value + " USD has been successfully staked. You currently have " + this.stakedSighBalance + " SIGH having worth " + this.valueOfTotalStaked_SIGH + " USD Staked farming staking rewards for you. Enjoy farming SIGH Staking rewards!"  });
-          this.$showInfoMsg({message: " Available allowance : " + this.availableAllowance + " SIGH" });           
+          this.$showSuccessMsg({message: "SIGH STAKING SUCCESS : " + this.formData.sighQuantity + "  " +  this.sighInstrument.symbol +  " worth " + value + " USD has been successfully staked. You currently have " + this.stakedSighBalance + " SIGH having worth " + valueOfTotalStaked_SIGH + " USD Staked farming staking rewards for you. Enjoy farming SIGH Staking rewards!"  });
+          this.$showInfoMsg({message: " Additional SIGH that can be staked : " + this.availableAllowance + " SIGH" });           
           this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Staked',Service: 'STAKING'});
         }
         else {
@@ -92,40 +92,47 @@ export default {
       console.log('UN-Stake Quantity - ' + this.formData.sighQuantity);
       console.log('UN-Stake Value - ' + value);
       console.log('UN-Stake Price - ' + price);     
+      console.log('UN-Stake : Currently staked balance - ' + this.stakedSighBalance);     
 
-      this.showLoader = true;
-      let response =  await this.SIGHStaking_unstake_SIGH( { amountToBeUNStaked:  this.formData.sighQuantity } );
-      if (response.status) {      
-        await this.getAllowanceAndStakedBalance();
-        let valueOfTotalStaked_SIGH = price * this.stakedSighBalance;
-        this.$showSuccessMsg({message: "SIGH UN-STAKING SUCCESS : " + this.formData.sighQuantity + "  " +  this.sighInstrument.symbol +  " worth " + value + " USD has been successfully un-staked. You currently have " + this.stakedSighBalance + " SIGH having worth " + this.valueOfTotalStaked_SIGH + " USD Staked farming staking rewards for you! " });
-        this.$showInfoMsg({message: " Available allowance : " + this.availableAllowance + " SIGH" }); 
-        this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Un-Staked',Service: 'STAKING'});
+      if ( Number(this.formData.sighQuantity) > Number(this.stakedSighBalance) ) {
+        this.$showErrorMsg({message: "The amount entered for unstaking exceeds your current Staking balance. Please enter a valid amount. Current SIGH Staked = " + this.stakedSighBalance + " SIGH"  });
       }
       else {
-        this.$showErrorMsg({message: "SIGH UN-STAKING FAILED : " + response.message  });
-        this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-          // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
+        this.showLoader = true;
+        let response =  await this.SIGHStaking_unstake_SIGH( { amountToBeUNStaked:  this.formData.sighQuantity } );
+        if (response.status) {      
+          await this.getAllowanceAndStakedBalance();
+          let valueOfTotalStaked_SIGH = price * this.stakedSighBalance;
+          this.$showSuccessMsg({message: "SIGH UN-STAKING SUCCESS : " + this.formData.sighQuantity + "  " +  this.sighInstrument.symbol +  " worth " + value + " USD has been successfully un-staked. You currently have " + this.stakedSighBalance + " SIGH having worth " + valueOfTotalStaked_SIGH + " USD Staked farming staking rewards for you! " });
+          this.$showInfoMsg({message: " Additional SIGH that can be staked : " + this.availableAllowance + " SIGH" }); 
+          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Un-Staked',Service: 'STAKING'});
         }
-
-        this.formData.sighQuantity = null;
-        this.showLoader = false;      
+        else {
+          this.$showErrorMsg({message: "SIGH UN-STAKING FAILED : " + response.message  });
+          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+            // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
+          }
+          this.formData.sighQuantity = null;
+          this.showLoader = false;      
+      }
     },
+
+
       
 
 
     async approve() {   //APPROVE (WORKS PROPERLY) - calls increaseAllowance() Function  // Need to handle tokens which do not have it implemented
-      this.showLoader = true;
       console.log('Selected Instrument - ')
       console.log(this.sighInstrument);
       console.log('Quantity to be Approved - ' + this.formData.sighQuantity);
       let price = (this.sighInstrument.price / Math.pow(10,this.sighInstrument.priceDecimals)).toFixed(4);
       let value = price * this.formData.sighQuantity;
       console.log('Instrument Price - ' + price);
+      this.showLoader = true;
       let response = await this.ERC20_increaseAllowance( { tokenAddress: this.sighInstrument.address, spender: this.$store.getters.sighStakingContractAddress , addedValue:  this.formData.sighQuantity } );
       if (response.status) { 
         await this.getAllowanceAndStakedBalance();        
-        this.$showSuccessMsg({message: "APPROVAL SUCCESS : Maximum of " + this.availableAllowance + "  " +  this.sighInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });
+        this.$showSuccessMsg({message: "APPROVAL SUCCESS : Allowance Added = " + this.formData.sighQuantity +  " SIGH. Maximum of " + this.availableAllowance + "  " +  this.sighInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });
         this.formData.sighQuantity = null;
         // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});      
       }
@@ -142,9 +149,11 @@ export default {
     async getAllowanceAndStakedBalance() {
       this.availableAllowance = await this.ERC20_getAllowance({tokenAddress: this.sighInstrument.address, owner: this.$store.getters.connectedWallet, spender: this.$store.getters.sighStakingContractAddress });
       this.stakedSighBalance = await this.SIGHStaking_getStakedBalanceForStaker({ _user: this.$store.getters.connectedWallet  });
+      let price = (this.sighInstrument.price / Math.pow(10,this.sighInstrument.priceDecimals)).toFixed(4);
+      let value = price * this.stakedSighBalance;
       console.log( this.stakedSighBalance + " SIGH worth " + value + " USD currently staked. Addition SIGH that can be Staked =  " + this.availableAllowance + " SIGH"  );
     }
-    
+
   },
 
   destroyed() {
