@@ -35,16 +35,6 @@ export default {
 
     activeTabChange(activeTab) {
       this.activeTab = activeTab;
-      if (activeTab == 'Deposit') {
-        this.$store.commit('changeInvestTab');
-      } 
-      else {
-        this.$store.commit('changeHedgeTab');
-      }
-      if (this.preActive !== activeTab) {
-        this.$root.$emit('tabChange', activeTab);
-        this.preActive = activeTab;
-      }
     },
      
     // Selecting an Instrument from dropdown

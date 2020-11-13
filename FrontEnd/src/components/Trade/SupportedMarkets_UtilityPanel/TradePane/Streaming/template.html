@@ -1,32 +1,36 @@
-<!-- The options under supply borrow begin here -->
-<div id="landing-trade-tab" style="padding-left: 30%;"> 
-    <div class="buy-sell-tab-dropdown uk-position-top-right">
-        <!-- Pair change (Dropdown), the new selected pair gets stored directly in store.state.seletedPair, and an event is emitted in Vue.JS -->
-        <div class="form-elm select" style="width: 251px;">
-            <span style='color:cyan'>  Select Market  </span>
-            <select class="form-ctrl select2-single" @change=marketChange v-model=selectedMarket>
-                <!-- Options dropdown loaded with available pairs from DropDown -->
-                <option v-for="val in $store.getters.LiveMarkets" :key=val.id :value=val>
-                    {{ val.symbol }}
-                </option>
-            </select>
-        </div>
-    </div>
-    <!-- Tabbing between Market/Limit -->
-    <div class="cs-tab-1 uk-position-relative ">
-        <tab-bar :mobileDropdown=false marketDropdown="false" :tabs=tabs @tab-change="activeTabChange" />
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
+<div class="Streaming">
+    <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
+        <div class="cs-tab-2  uk-position-relative " style=" padding-left: 30px; padding-right: 50px; padding-top: 12px;">
 
-        <keep-alive>
-        <supply v-if="activeTab === 'Supply '" />
-        <borrow-order v-else-if="activeTab === 'Borrow '" style="padding-right: 42px; padding-left: 42px;" />
-        <Redeem-Component v-else-if="activeTab === 'Redeem'" />
-        <!-- <Swap-Tokens-0xAPI v-else-if="activeTab === 'SwapTokens0xAPI'" /> -->
-        <!-- <stop-market-order v-else-if="activeTab === 'Stop Market'" /> -->
-    </keep-alive>
+
+            <!-- SELECT INSTRUMENT DROPDOWN -->
+            <div class="buy-sell-tab-dropdown uk-position-top-right">
+                <div class="form-elm select" style="width: 251px;">
+                    <span style='color:cyan; font-size: 13px; font-weight: 400;'>  Select Instrument  </span>
+                    <!-- Instrument selected is directly stored in 'this.selectedInstrument' -->
+                    <select class="form-ctrl select2-single" @change=updateSelectedInstrument v-model=selectedInstrument>
+                        <!-- Dropdown list of instruments supported by SIGH Finance -->
+                        <option v-for="instrument in $store.getters.getSupportedInstruments" :key=instrument.instrumentAddress :value=instrument>
+                            {{ instrument.symbol }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div id="subtab-market" :title-link-class="'tab-title-class'">
+                <tab-bar :mobileDropdown=false :tabs=tabs @tab-change="activeTabChange" />
+            </div>
+            
+            <!-- <div> 
+                <span>Price : {{ selectedInstrumentPrice  }} </span>
+            </div> -->
+
+            <keep-alive>
+                <sighStream v-if="activeTab === '$SIGH Stream'" />
+                <interestStream v-if="activeTab === 'Interest Stream'" />
+            </keep-alive>
+
+        </div>
     </div>
 </div>

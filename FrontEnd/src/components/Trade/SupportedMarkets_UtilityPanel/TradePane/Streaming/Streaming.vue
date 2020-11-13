@@ -2,58 +2,49 @@
 
 <script>
 import TabBar from '@/components/TabBar/TabBar.vue';
-import Supply from './Supply/Supply.vue';
-import BorrowOrder from './BorrowOrder/BorrowOrder.vue';
-import RedeemComponent from './RedeemOrder/RedeemOrder.vue';
-// import SwapTokens0xAPI from './SwapTokens0xAPI/SwapTokens0xAPI.vue';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 
+import sighStream from './sighStream/sighStream.vue';
+import interestStream from './interestStream/interestStream.vue';
+
 export default {
-  name: 'trade-tab',
+  name: 'Streaming',
+
   components: {
     TabBar,
-    Supply,
-    BorrowOrder,
-    RedeemComponent,
+    sighStream,
+    interestStream,
   },
+
   data() {
     return {
-      activeTab: 'Supply ',
-      selectedMarket: {},
-      tabs: ['Supply ', 'Borrow ','Redeem'],
-      preActive: 'Supply ',
+      activeTab: '$SIGH Stream',
+      tabs: ['$SIGH Stream','Interest Stream'], 
+      preActive:'$SIGH Stream',
+      selectedInstrument: {},
+      height: 0,
+      statusCode: '',
     };
   },
+
   methods: {
+
     activeTabChange(activeTab) {
       this.activeTab = activeTab;
-      if (activeTab == 'Supply ') {
-        this.$store.commit('changeInvestTab');
-      } else {
-        this.$store.commit('changeHedgeTab');
-      }
-      if (this.preActive !== activeTab) {
-        this.$root.$emit('tabChange', activeTab);
-        this.preActive = activeTab;
-      }
-    },
-    // Changing Selected Pair from dropdown
-    marketChange() {
-      // console.log(this.selectedMarket);
-      this.$store.commit('addLoaderTask', 3, false);
-      this.$store.commit('selectedMarketId', this.selectedMarket.id );  //Name change (eq - ETHVUSD/DEC20)
-      this.$store.commit('selectedMarketSymbol', this.selectedMarket.symbol );   //Selected market in TradeTab - ID Change
-      this.$store.commit('selectedMarketUnderlyingSymbol', this.selectedMarket.underlyingSymbol );
-      this.$store.commit('selectedMarketUnderlyingPriceUSD', this.selectedMarket.underlyingPriceUSD );
-      this.$store.commit('selectedMarketExchangeRate', this.selectedMarket.exchangeRate );
-      this.$store.commit('selectedMarketUnderlyingAddress', this.selectedMarket.underlyingAddress );
+    }, 
+ 
+    // Selecting an Instrument from dropdown
+    updateSelectedInstrument() {
+      console.log(this.selectedInstrument);
+      this.$store.commit('addLoaderTask', 3, false);    
+      this.$store.commit('updateSelectedInstrument',this.selectedInstrument);
+      ExchangeDataEventBus.$emit('change-selected-instrument', {'instrument':this.selectedInstrument });    
+    }
+  },  
 
-      ExchangeDataEventBus.$emit('change-selected-instrument', {'symbol':this.selectedMarket.symbol,  'Id':this.selectedMarket.id,  'underlyingSymbol':this.selectedMarket.underlyingSymbol,    'underlyingPriceUSD':this.selectedMarket.underlyingPriceUSD,        'exchangeRate':this.selectedMarket.exchangeRate    , 'underlyingAddress':this.selectedMarket.underlyingAddress   });    //TO CHANGE ORDER-BOOK/Supported-Money-Markets
-      // ExchangeDataEventBus.$emit('change-vega-header', {'Name':this.selectedMarket.data.name,'Summary':this.selectedMarket.data.instrument_name,}); //TO CHANGE HEADER LIVE FEED               
-      // ExchangeDataEventBus.$emit('change-symbol',this.$store.state.selectedPair);
-    },
-  },
+     
 };
 </script>
+
 
 <style lang="scss" src="./style.scss" scoped></style>
