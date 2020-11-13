@@ -25,6 +25,25 @@
         </div>
     </div>
 
+        <div class="uk-grid uk-grid-small f1-form-grid">
+            <div class="uk-width-1-1">
+                <div class="form-grp">
+                    <div class="form-elm">
+                        <span style='color:antiquewhite; font-size: 13px; font-weight: 400;'>  Interest Mode  </span>
+                        <!-- Instrument selected is directly stored in 'this.selectedInstrument' -->
+                        <select class="form-ctrl select2-single" v-model=formData.interestRateMode>
+                            <!-- Dropdown list of instruments supported by SIGH Finance -->
+                            <option v-for="option in interestRateModes" :key=option :value=option>
+                                {{ option }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
     <!-- Loading image -->
     
     <div class="uk-grid uk-grid-small f1-form-grid">

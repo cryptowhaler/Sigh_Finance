@@ -6,7 +6,7 @@ import {mapState,mapActions,} from 'vuex';
 
 export default {
 
-  name: 'depositQuantity',
+  name: 'depositAmount',
 
   data() {
     return {
@@ -26,7 +26,7 @@ export default {
 
   created() {
     this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
-    // this.updateAvailableAllowance();
+    this.updateAvailableAllowance();
     this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
       this.selectedInstrument = selectedInstrument_.instrument;        
       console.log('DEPOSIT : changeSelectedInstrument - ');
@@ -38,11 +38,13 @@ export default {
 
 
   computed: {
-    calculatedValue() {
-        console.log('calculatedValue');
+    calculatedQuantity() {
+        console.log('calculatedQuantity');
         if (this.selectedInstrument) {
           console.log(this.selectedInstrument);
-          return ((this.formData.depositQuantity) * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4) ; 
+          this.formData.depositQuantity = Number((this.formData.depositValue) / (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4) ; 
+          console.log('depositQuantity (computed) ' + this.formData.depositQuantity);          
+          return this.formData.depositQuantity;
           }
       return 0;
     }
@@ -73,8 +75,7 @@ export default {
       else {
         let response =  await this.LendingPool_deposit( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.depositQuantity, _referralCode: this.formData.enteredReferralCode } );
         if (response.status) {      
-          this.$showSuccessMsg({message: "DEPOSIT SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully deposited to SIGH Finance. Enjoy your $SIGH farm yields." });
-          this.$showInfoMsg({message: " Interest & $SIGH bearing ITokens (ERC20) are issued as debt against the deposits made in the SIGH Finance Protocol on a 1:1 basis. You can read more about it at medium.com/SighFinance" });
+          this.$showSuccessMsg({message: "DEPOSIT SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully deposited to SIGH Finance. Gas used = " + response.gasUsed });
           await this.updateAvailableAllowance();
           // this.$showInfoMsg({message: "Available Allowance : " + this.availableAllowance + " " + this.selectedInstrument.symbol });        
           this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
@@ -90,7 +91,7 @@ export default {
     },
       
 
-    async approve() {   //APPROVE (WORKS PROPERLY) - calls increaseAllowance() Function  // Need to handle tokens which do not have it implemented
+    async approve() {   //APPROVE (WORKS PROPERLY)
       this.showLoader = true;
       console.log('Selected Instrument - ')
       console.log(this.selectedInstrument);
@@ -100,9 +101,10 @@ export default {
       console.log('Instrument Price - ' + price);
       let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  this.formData.depositQuantity } );
       if (response.status) { 
-        await this.updateAvailableAllowance();        
-        this.$showSuccessMsg({message: "APPROVAL SUCCESS : Maximum of " + this.availableAllowance + "  " +  this.selectedInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });
+        this.$showSuccessMsg({message: "APPROVAL SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });
         this.formData.depositQuantity = null;
+        await this.updateAvailableAllowance();
+        // this.$showInfoMsg({message: "Available Allowance : " + this.availableAllowance + " " + this.selectedInstrument.symbol });        
         // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});      
       }
       else {

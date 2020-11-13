@@ -14,7 +14,9 @@ export default {
       formData : {
         borrowQuantity: null,
         borrowValue: null,
+        interestRateMode: 'Stable',
       },
+      interestRateModes: ['Stable','Variable'],
       remainingBalance: null,
       showLoader: false,
     };
@@ -47,24 +49,25 @@ export default {
 
   methods: {
 
-    ...mapActions(['IToken_borrow','ERC20_balanceOf']),
+    ...mapActions(['LendingPool_borrow','ERC20_balanceOf']),
     
     async borrow() {   //DEPOSIT (WORKS PROPERLY)
       this.showLoader = true;
       let price = (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals)).toFixed(4);
       let value = price * this.formData.borrowQuantity;
       console.log('Selected Instrument - ' + this.selectedInstrument.symbol);
-      console.log('Selected IToken - ' + this.selectedInstrument.iTokenAddress);
       console.log('Borrow Quantity - ' + this.formData.borrowQuantity);
       console.log('Borrow Value - ' + value);
       console.log('Instrument Price - ' + price);     
+      console.log('Interest Rate Mode - ' + this.formData.interestRateMode);     
 
       // WHEN THE AMOUNT ENTERED FOR BORROWING IS GREATER THAN THE AVAILABLE BALANCE
       if ( Number(this.formData.borrowQuantity) >  Number(this.remainingBalance)  ) {
         this.formData.borrowQuantity = this.remainingBalance;
         this.$showInfoMsg({message: " The provided amount to be borrowed exceeds your depsited balance . So your entire " + this.selectedInstrument.symbol +  " balance will be borrowed."});
       }
-      let response =  await this.IToken_borrow( { iTokenAddress: this.selectedInstrument.iTokenAddress , _amount:  this.formData.borrowQuantity } );
+      let interestRateMode = this.formData.interestRateMode == 'Stable' ? 0 : 1;      
+      let response =  await this.LendingPool_borrow( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.borrowQuantity, _interestRateMode: interestRateMode, _referralCode: 0 } );
       if (response.status) {      
         this.$showSuccessMsg({message: "BORROW SUCCESS : " + this.formData.borrowQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully borrowed from SIGH Finance. Gas used = " + response.gasUsed });
         this.$showInfoMsg({message: " $SIGH Farms looks forward to serving you again!"});
@@ -86,13 +89,14 @@ export default {
       console.log(this.remainingBalance);
       let remainingValue = (this.remainingBalance * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4); 
       this.$showInfoMsg({message: this.remainingBalance + " " + this.selectedInstrument.symbol  + " worth $" + remainingValue + " USD are currently farming $SIGH and Interest for you at SIGH Finance! "});        
-      console.log( 'Current remaining deposited balance for ' + this.selectedInstrument.symbol + " is " + this.remainingBalance + " worth " +  remainingValue + " USD");
+      console.log( 'Current deposited balance for ' + this.selectedInstrument.symbol + " is " + this.remainingBalance + " worth " +  remainingValue + " USD");
     }
   },
 
   destroyed() {
     ExchangeDataEventBus.$off('change-selected-instrument', this.changeSelectedInstrument);    
   },
+  
 };
 </script>
 

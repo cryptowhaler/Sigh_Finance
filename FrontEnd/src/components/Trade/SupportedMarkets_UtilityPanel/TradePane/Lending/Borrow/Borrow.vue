@@ -2,8 +2,8 @@
 
 <script>
 import TabBar from '@/components/TabBar/TabBar.vue';
-import redeemQuantity from './quantity/borrowQuantity.vue';
-import redeemAmount from './amount/borrowAmount.vue';
+import borrowQuantity from './quantity/borrowQuantity.vue';
+import borrowAmount from './amount/borrowAmount.vue';
 
 export default {
   name: 'Borrow',

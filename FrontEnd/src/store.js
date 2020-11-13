@@ -108,6 +108,7 @@ const store = new Vuex.Store({
     supportedInstrumentConfigs: new Map(), // Instrument Address -> Instrument Config  MAPPING  
     currentlySelectedInstrument : null, //  {instrumentAddress: '0x00' , name: 'Wrapped Bitcoin', symbol: 'WBTC', decimals: 18, iTokenAddress: '0x00' , priceDecimals: 8, price: 0 },  // Currently Selected Instrument
     sessionTransactions : [],
+    SighInstrumentState : { name: 'SIGH Instrument', symbol : 'SIGH', address: null, price: 0, mintSpeed: 0, totalSupply: 0, priceDecimals: 8 },
     username: null, //Added
     websocketStatus: 'Closed',
     loaderCounter: 0,
@@ -225,6 +226,9 @@ const store = new Vuex.Store({
       }
       return 0;
     }, 
+    getSighPrice(state) {
+      return state.SighInstrumentState.price;
+    }, 
     showLoader(state) {
       return state > 0;
     },
@@ -299,6 +303,7 @@ const store = new Vuex.Store({
     // SIGH RELATED CONTRACTS
     updateSIGHContractAddress(state,newContractAddress) {         
       state.SIGHContractAddress = newContractAddress;
+      state.SighInstrumentState.address = newContractAddress;
       console.log("In updateSIGHContractAddress - " + state.SIGHContractAddress);
     },    
     updateSIGHSpeedControllerAddress(state,newContractAddress) {         
@@ -372,6 +377,10 @@ const store = new Vuex.Store({
       state.sessionTransactions.push(obj);
       console.log(obj);
       console.log('Transaction history stored');
+    },
+    updateSIGHPrice(state, updatedPrice) {
+      state.SighInstrumentState.price = updatedPrice;
+      // console.log('In updateSIGHPrice -' + state.SighInstrumentState.price);
     },
     changeWebsocketStatus(state, websocketStatus) {
       state.websocketStatus = websocketStatus;
@@ -661,6 +670,11 @@ const store = new Vuex.Store({
           }
         }
       }
+      let updatedSighPrice_ = await store.dispatch('getInstrumentPrice', { _instrumentAddress : state.SIGHContractAddress } );
+      if (updatedSighPrice_) {
+        console.log(" SIGH - current price is " + updatedSighPrice_);
+        commit('updateSIGHPrice',updatedSighPrice_);  
+      }
     }, 5000);
   },
 
@@ -823,21 +837,22 @@ const store = new Vuex.Store({
 // ############ SIGH Staking --- claimAllAccumulatedInstruments() FUNCTION ############
 // ############ SIGH Staking --- instrumentToBeClaimed() FUNCTION ############
 // ############ SIGH Staking --- updateBalance() FUNCTION ############
+// ############ SIGH Staking --- getStakedBalanceForStaker() VIEW FUNCTION ############
 // ######################################################
 
     SIGHStaking_stake_SIGH: async ({commit,state},{amountToBeStaked}) => {
       if (state.web3 && state.sighStakingContractAddress && state.sighStakingContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighStakingContract = new state.web3.eth.Contract(SighStakingInterface.abi, state.sighStakingContractAddress );
         console.log(sighStakingContract);
-        sighStakingContract.methods.stake_SIGH(amountToBeStaked).send({from: state.connectedWallet})
-        .then(receipt => { 
-          console.log(receipt);
-          return receipt;
-          })
-        .catch(error => {
+        try {             // console.log('Making transaction (in store)');
+          const response = await sighStakingContract.methods.stake_SIGH(amountToBeStaked).send({from: state.connectedWallet});
+          console.log(response);
+          return response;
+        }
+        catch(error) {    // console.log('Making transaction (in store - catch)');            
           console.log(error);
           return error;
-        })
+        }
       }
       else {
         console.log("SIGH Finance (SIGH Staking Contract) is currently not been deployed on " + getters.networkName);
@@ -848,16 +863,16 @@ const store = new Vuex.Store({
     SIGHStaking_unstake_SIGH: async ({commit,state},{amountToBeUNStaked}) => {
       if (state.web3 && state.sighStakingContractAddress && state.sighStakingContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighStakingContract = new state.web3.eth.Contract(SighStakingInterface.abi, state.sighStakingContractAddress );
-        console.log(sighStakingContract);
-        sighStakingContract.methods.unstake_SIGH(amountToBeUNStaked).send({from: state.connectedWallet})
-        .then(receipt => { 
-          console.log(receipt);
-          return receipt;
-          })
-        .catch(error => {
+        console.log(sighStakingContract);        
+        try {             // console.log('Making transaction (in store)');
+          const response = await sighStakingContract.methods.unstake_SIGH(amountToBeUNStaked).send({from: state.connectedWallet});
+          console.log(response);
+          return response;
+        }
+        catch(error) {    // console.log('Making transaction (in store - catch)');            
           console.log(error);
           return error;
-        })
+        }
       }
       else {
         console.log("SIGH Finance (SIGH Staking Contract) is currently not been deployed on " + getters.networkName);
@@ -868,16 +883,16 @@ const store = new Vuex.Store({
     SIGHStaking_claimAllAccumulatedInstruments: async ({commit,state}) => {
       if (state.web3 && state.sighStakingContractAddress && state.sighStakingContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighStakingContract = new state.web3.eth.Contract(SighStakingInterface.abi, state.sighStakingContractAddress );
-        console.log(sighStakingContract);
-        sighStakingContract.methods.claimAllAccumulatedInstruments().send({from: state.connectedWallet})
-        .then(receipt => { 
-          console.log(receipt);
-          return receipt;
-          })
-        .catch(error => {
+        console.log(sighStakingContract);        
+        try {             // console.log('Making transaction (in store)');
+          const response = await sighStakingContract.methods.claimAllAccumulatedInstruments().send({from: state.connectedWallet});
+          console.log(response);
+          return response;
+        }
+        catch(error) {    // console.log('Making transaction (in store - catch)');            
           console.log(error);
           return error;
-        })
+        }
       }
       else {
         console.log("SIGH Finance (SIGH Staking Contract) is currently not been deployed on " + getters.networkName);
@@ -889,15 +904,15 @@ const store = new Vuex.Store({
       if (state.web3 && state.sighStakingContractAddress && state.sighStakingContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighStakingContract = new state.web3.eth.Contract(SighStakingInterface.abi, state.sighStakingContractAddress );
         console.log(sighStakingContract);
-        sighStakingContract.methods.claimAccumulatedInstrument(instrumentToBeClaimed).send({from: state.connectedWallet})
-        .then(receipt => { 
-          console.log(receipt);
-          return receipt;
-          })
-        .catch(error => {
+        try {             // console.log('Making transaction (in store)');
+          const response = await sighStakingContract.methods.claimAccumulatedInstrument(instrumentToBeClaimed).send({from: state.connectedWallet});
+          console.log(response);
+          return response;
+        }
+        catch(error) {    // console.log('Making transaction (in store - catch)');            
           console.log(error);
           return error;
-        })
+        }
       }
       else {
         console.log("SIGH Finance (SIGH Staking Contract) is currently not been deployed on " + getters.networkName);
@@ -908,20 +923,34 @@ const store = new Vuex.Store({
     SIGHStaking_updateBalance: async ({commit,state},{instrument}) => {
       if (state.web3 && state.sighStakingContractAddress && state.sighStakingContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighStakingContract = new state.web3.eth.Contract(SighStakingInterface.abi, state.sighStakingContractAddress );
-        console.log(sighStakingContract);
-        sighStakingContract.methods.updateBalance(instrument).send({from: state.connectedWallet})
-        .then(receipt => { 
-          console.log(receipt);
-          return receipt;
-          })
-        .catch(error => {
+        console.log(sighStakingContract);        
+        try {             // console.log('Making transaction (in store)');
+          const response = await sighStakingContract.methods.updateBalance(instrument).send({from: state.connectedWallet});
+          console.log(response);
+          return response;
+        }
+        catch(error) {    // console.log('Making transaction (in store - catch)');            
           console.log(error);
           return error;
-        })
+        }
       }
       else {
         console.log("SIGH Finance (SIGH Staking Contract) is currently not been deployed on " + getters.networkName);
         return "SIGH Finance (SIGH Staking Contract) is currently not been deployed on ";
+      }
+    },
+
+    SIGHStaking_getStakedBalanceForStaker: async ({commit,state},{_user}) => {
+      if (state.web3 && state.sighStakingContractAddress && state.sighStakingContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const sighStakingContract = new state.web3.eth.Contract(SighStakingInterface.abi, state.sighStakingContractAddress );
+        console.log(sighStakingContract);
+        const response = await sighStakingContract.methods.getStakedBalanceForStaker(_user).call();
+        console.log(response);
+        return response;
+      }
+      else {
+        console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
+        return "This particular Instrument is currently not supported by SIGH Finance on ";
       }
     },
 
@@ -963,19 +992,21 @@ const store = new Vuex.Store({
     },
 
     LendingPool_borrow: async ({commit,state},{_instrument,_amount,_interestRateMode,_referralCode}) => {
+      console.log(_instrument);     
+      console.log(_amount);     
+      console.log(_interestRateMode);     
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
         console.log(lendingPoolContract);
-        try {  // console.log('Making transaction (in store)');
+        try {             // console.log('Making transaction (in store)');
           const response = await lendingPoolContract.methods.borrow(_instrument,_amount,_interestRateMode,_referralCode).send({from: state.connectedWallet});
           console.log(response);
           return response;
-          }
-          catch(error) {
-            // console.log('Making transaction (in store - catch)');
-            console.log(error);
-            return error;
-          }
+        }
+        catch(error) {    // console.log('Making transaction (in store - catch)');            
+          console.log(error);
+          return error;
+        }
       }
       else {
         console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + getters.networkName);
@@ -1115,6 +1146,23 @@ const store = new Vuex.Store({
         return "SIGH Finance (Lending Pool Contract) is currently not been deployed on ";
       }
     },
+
+    LendingPoolCore_getUserBorrowBalances: async ({commit,state},{_instrument,_user}) => {
+      if (state.web3 && state.LendingPoolCoreContractAddress && state.LendingPoolCoreContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const lendingPoolCoreContract = new state.web3.eth.Contract(LendingPoolCore.abi, state.LendingPoolCoreContractAddress );
+        console.log(lendingPoolCoreContract);
+        const response = await lendingPoolCoreContract.methods.getUserBorrowBalances(_instrument,_user).call();
+        console.log(response);
+        return response;
+      }
+      else {
+        console.log("SIGH Finance (Lending Pool Core Contract) is currently not been deployed on " + getters.networkName);
+        return "SIGH Finance (Lending Pool Core Contract) is currently not been deployed on ";
+      }
+    },
+
+
+    
 
 // ######################################################
 // ############ ITOKEN Functions --- redeem() FUNCTION 
@@ -1302,15 +1350,8 @@ IToken_isTransferAllowed: async ({commit,state},{iTokenAddress,_user,_amount}) =
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
     const response = await iTokenContract.methods.isTransferAllowed(_user,_amount).call();
-    try {
-      const response = await iTokenContract.methods.redeem(_amount).send({from: state.connectedWallet});
-      console.log(response);
-      return response;  
-    }
-    catch (error) {
-      console.log(error);
-      return error;
-    }
+    console.log(response);
+    return response;  
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -1323,15 +1364,8 @@ IToken_principalBalanceOf: async ({commit,state},{iTokenAddress,_user}) => {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
     const response = await iTokenContract.methods.principalBalanceOf(_user).call();
-    try {
-      const response = await iTokenContract.methods.redeem(_amount).send({from: state.connectedWallet});
-      console.log(response);
-      return response;  
-    }
-    catch (error) {
-      console.log(error);
-      return error;
-    }
+    console.log(response);
+    return response;  
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -1344,15 +1378,8 @@ IToken_getInterestRedirectionAddress: async ({commit,state},{iTokenAddress,_user
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
     const response = await iTokenContract.methods.getInterestRedirectionAddress(_user).call();
-    try {
-      const response = await iTokenContract.methods.redeem(_amount).send({from: state.connectedWallet});
-      console.log(response);
-      return response;  
-    }
-    catch (error) {
-      console.log(error);
-      return error;
-    }
+    console.log(response);
+    return response;  
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -1365,15 +1392,8 @@ IToken_getRedirectedBalance: async ({commit,state},{iTokenAddress,_user}) => {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
     const response = await iTokenContract.methods.getRedirectedBalance(_user).call();
-    try {
-      const response = await iTokenContract.methods.redeem(_amount).send({from: state.connectedWallet});
-      console.log(response);
-      return response;  
-    }
-    catch (error) {
-      console.log(error);
-      return error;
-    }
+    console.log(response);
+    return response;  
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);

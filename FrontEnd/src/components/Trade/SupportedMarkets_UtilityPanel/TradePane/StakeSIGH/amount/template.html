@@ -1,4 +1,4 @@
-<div class= "repayAmount">
+<div class= "Deposit">
     <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
     </div> 
 
@@ -7,7 +7,7 @@
         <div class="uk-width-1-1">
             <div class="form-grp">
                 <div class="form-elm">
-                    <input style="text-align: right;"  class="form-ctrl" type="text" placeholder=" Amount (USD)" v-model="formData.repayValue">
+                    <input style="text-align: center;"  class="form-ctrl" type="text" placeholder=" Amount (USD)" v-model="formData.depositValue">
                     <span  style='color:antiquewhite'> USD </span>
                 </div>
             </div>
@@ -19,23 +19,13 @@
         <div class="uk-width-1-1">
             <div class="form-grp">
                 <div class="form-elm">
-                    <input style="text-align: right;" class="form-ctrl" type="text" placeholder="Number of tokens" readonly :value="calculatedQuantity">
+                    <input style="text-align: center;" class="form-ctrl" type="text" placeholder="Number of tokens" readonly :value="calculatedQuantity">
                     <span style='color:antiquewhite'>  {{ selectedInstrument.symbol  }}  </span>
                 </div>
             </div>
         </div>
     </div>
     
-    <div class="uk-grid uk-grid-small f1-form-grid">
-        <div class="uk-width-1-1">
-            <div class="form-grp">
-                <div class="form-elm">
-                    <input style="text-align: right;"  class="form-ctrl" type="text" placeholder="Address (Optional)" v-model="formData.onBehalfOf">
-                    <span  style='color:antiquewhite'> On Behalf Of </span>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Loading image -->
     <div class="uk-grid uk-grid-small f1-form-grid">  
@@ -47,8 +37,8 @@
 
 <!-- Buttons (Approve/Deposit) -->
             <div class="left">
-                <!-- <button class="uk-button uk-button-green"  @click="approve()">Approve</button> -->
-                <button class="uk-button uk-button-green" style="padding: 0 81px;"  @click="repay()">Repay</button>
+                <button class="uk-button uk-button-green"  @click="approve()">Approve</button>
+                <button class="uk-button uk-button-green"  @click="deposit()">Deposit</button>
             </div>
         </div>
     </div>

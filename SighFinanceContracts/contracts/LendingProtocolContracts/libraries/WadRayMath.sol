@@ -46,7 +46,7 @@ library WadRayMath {
     }
 
     function rayMul(uint256 a, uint256 b) internal pure returns (uint256) {
-        return halfRAY.add(a.mul(b)).div(RAY);
+        return halfRAY.add(a.mul(b)).div(RAY);        // ( (1e27/2) + (a*b) ) / 1e27
     }
 
     function rayDiv(uint256 a, uint256 b) internal pure returns (uint256) {
@@ -69,10 +69,10 @@ library WadRayMath {
     * @dev calculates base^exp. The code uses the ModExp precompile
     * @return base^exp, in ray
     */
-    //solium-disable-next-line
+    //solium-disable-next-line 
     function rayPow(uint256 x, uint256 n) internal pure returns (uint256 z) {
 
-        z = n % 2 != 0 ? x : RAY;
+        z = n % 2 != 0 ? x : RAY;   // z = 1e27 when n is even
 
         for (n /= 2; n != 0; n /= 2) {
             x = rayMul(x, x);

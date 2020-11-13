@@ -839,7 +839,11 @@ contract LendingPoolCore is VersionedInitializable {
     * needed to calculate the global account data in the LendingPoolDataProvider
     * @param _instrument the address of the instrument
     * @param _user the address of the user
-    * @return the user deposited balance, the principal borrow balance, the fee, and if the instrument is enabled as collateral or not
+    * @return User's Deposited Balance                         // returns IToken Balance
+    * @return User's Principal Borrow Balance                 // calculated by compound interest (stable / variable interests have different caculations)
+    * @return User's Origination Fee                         // stored value is returmed
+    * @return Instrument is enabled as collateral or not    // returns a stored boolean
+    the principal borrow balance, the fee, and if the instrument is enabled as collateral or not
     **/
     function getUserBasicInstrumentData(address _instrument, address _user) external view returns (uint256, uint256, uint256, bool) {
         CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
@@ -980,10 +984,10 @@ contract LendingPoolCore is VersionedInitializable {
     /**
     * @dev this function aggregates the configuration parameters of the instrument. It's used in the LendingPoolDataProvider specifically to save gas, and avoid multiple external contract calls to fetch the same data.
     * @param _instrument the _instrument address
-    * @return the instrument decimals
-    * @return the base ltv as collateral
-    * @return the liquidation threshold
-    * @return if the instrument is used as collateral or not
+    * @return Instrument's Decimals
+    * @return Base LTV (Loan To Volume) as Collateral
+    * @return Liquidation Threshold
+    * @return Instrument Used as Collateral or not
     **/
     function getInstrumentConfiguration(address _instrument) external  view returns (uint256, uint256, uint256, bool) {
         uint256 decimals;

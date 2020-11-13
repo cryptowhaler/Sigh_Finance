@@ -197,15 +197,11 @@ library CoreLibrary {
     **/
     function increaseTotalBorrowsStableAndUpdateAverageRate( InstrumentData storage _instrument,  uint256 _amount, uint256 _rate ) internal {
         uint256 previousTotalBorrowStable = _instrument.totalBorrowsStable;
-        //updating instrument borrows stable
-        _instrument.totalBorrowsStable = _instrument.totalBorrowsStable.add(_amount);
-
-        //update the average stable rate
-        //weighted average of all the borrows
+        _instrument.totalBorrowsStable = _instrument.totalBorrowsStable.add(_amount);       //updating instrument borrows stable
+        
         uint256 weightedLastBorrow = _amount.wadToRay().rayMul(_rate);
-        uint256 weightedPreviousTotalBorrows = previousTotalBorrowStable.wadToRay().rayMul( _instrument.currentAverageStableBorrowRate );
-
-        _instrument.currentAverageStableBorrowRate = weightedLastBorrow.add(weightedPreviousTotalBorrows).rayDiv(_instrument.totalBorrowsStable.wadToRay());
+        uint256 weightedPreviousTotalBorrows = previousTotalBorrowStable.wadToRay().rayMul( _instrument.currentAverageStableBorrowRate );                   //weighted average of all the borrows
+        _instrument.currentAverageStableBorrowRate = weightedLastBorrow.add(weightedPreviousTotalBorrows).rayDiv(_instrument.totalBorrowsStable.wadToRay());    //update the average stable rate
     }
 
     /**
@@ -277,10 +273,10 @@ library CoreLibrary {
         uint256 compoundedBalance = 0;
         uint256 cumulatedInterest = 0;
 
-        if (user_instrument.stableBorrowRate > 0) {
+        if (user_instrument.stableBorrowRate > 0) {     // stable interest
             cumulatedInterest = calculateCompoundedInterest( user_instrument.stableBorrowRate, user_instrument.lastUpdateTimestamp );
         } 
-        else {        //variable interest
+        else {                                          //variable interest
             cumulatedInterest = calculateCompoundedInterest( _instrument.currentVariableBorrowRate,   _instrument.lastUpdateTimestamp).rayMul(_instrument.lastVariableBorrowCumulativeIndex).rayDiv(user_instrument.lastVariableBorrowCumulativeIndex);
         }
 
@@ -330,7 +326,8 @@ library CoreLibrary {
     function calculateCompoundedInterest(uint256 _rate, uint40 _lastUpdateTimestamp) internal view returns (uint256) {
         uint256 timeDifference = block.timestamp.sub(uint256(_lastUpdateTimestamp));
         uint256 ratePerSecond = _rate.div(SECONDS_PER_YEAR);
-        return ratePerSecond.add(WadRayMath.ray()).rayPow(timeDifference);
+        return let cumulated interest = ratePerSecond.add(WadRayMath.ray()).rayPow(timeDifference);
+        return  cumulated interest;
     }
 
     /**

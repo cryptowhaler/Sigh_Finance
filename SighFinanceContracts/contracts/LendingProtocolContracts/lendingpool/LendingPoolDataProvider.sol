@@ -45,6 +45,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
     * @dev struct to hold calculateUserGlobalData() local computations
     **/
     struct UserGlobalDataLocalVars {
+        address currentInstrument;        
         uint256 instrumentUnitPrice;
         uint256 tokenUnit;
         uint256 compoundedLiquidityBalance;
@@ -55,7 +56,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
         uint256 originationFee;
         bool usageAsCollateralEnabled;
         bool userUsesInstrumentAsCollateral;
-        address currentInstrument;
+
     }
 
     /**
@@ -67,13 +68,13 @@ contract LendingPoolDataProvider is VersionedInitializable {
     * also the average Ltv, liquidation threshold, and the health factor
     **/
     function calculateUserGlobalData(address _user) public view returns (
-            uint256 totalLiquidityBalanceETH,
-            uint256 totalCollateralBalanceETH,
-            uint256 totalBorrowBalanceETH,
-            uint256 totalFeesETH,
-            uint256 currentLtv,
-            uint256 currentLiquidationThreshold,
-            uint256 healthFactor,
+            uint256 totalLiquidityBalanceETH,           // Total amount deposited by user in SIGH Finance
+            uint256 totalCollateralBalanceETH,          // User's Total Collateral Balance 
+            uint256 totalBorrowBalanceETH,              // User's Total Borrow Balance
+            uint256 totalFeesETH,                       // Total Fee
+            uint256 currentLtv,                         // Total LTV = Sum( deposited Balance Value * baseLTV ) / (User's Total Collateral Balance )
+            uint256 currentLiquidationThreshold,        // Liquidation Threshold = Sum( deposited Balance Value * instrument's_liquidationThreshold ) / (User's Total Collateral Balance )
+            uint256 healthFactor,                       // ( User's Total Collateral Balance ) * (Liquidation Threshold/ 100 ) / (User's Total Borrow Balance + Total Fee)
             bool healthFactorBelowThreshold
         )
     {
@@ -84,13 +85,14 @@ contract LendingPoolDataProvider is VersionedInitializable {
 
         for (uint256 i = 0; i < instruments.length; i++) {
 
+            // fetch user's data for the current instrument
             vars.currentInstrument = instruments[i];
             ( vars.compoundedLiquidityBalance, vars.compoundedBorrowBalance, vars.originationFee, vars.userUsesInstrumentAsCollateral ) = core.getUserBasicInstrumentData(vars.currentInstrument, _user);
             if (vars.compoundedLiquidityBalance == 0 && vars.compoundedBorrowBalance == 0) {
                 continue;
             }
 
-            //fetch instrument data
+            //fetch instrument's gobal configuration data data
             ( vars.instrumentDecimals, vars.baseLtv, vars.liquidationThreshold, vars.usageAsCollateralEnabled ) = core.getInstrumentConfiguration(vars.currentInstrument);
             vars.tokenUnit = 10 ** vars.instrumentDecimals;
             vars.instrumentUnitPrice = oracle.getAssetPrice(vars.currentInstrument);
@@ -187,8 +189,8 @@ contract LendingPoolDataProvider is VersionedInitializable {
    * @param _instrument the instrument from which the user wants to borrow
    * @param _amount the amount the user wants to borrow
    * @param _fee the fee for the amount that the user needs to cover
-   * @param _userCurrentBorrowBalanceTH the current borrow balance of the user (before the borrow)
-   * @param _userCurrentLtv the average ltv of the user given his current collateral
+   * @param _userCurrentBorrowBalanceTH the current global borrow balance of the user (before the borrow)
+   * @param _userCurrentLtv the average ltv of the user given his current collateral (before the borrow)
    * @return the total amount of collateral in ETH to cover the current borrow balance + the new amount + fee
    **/
     function calculateCollateralNeededInETH( address _instrument, uint256 _amount, uint256 _fee, uint256 _userCurrentBorrowBalanceTH, uint256 _userCurrentFeesETH, uint256 _userCurrentLtv ) external view returns (uint256) {

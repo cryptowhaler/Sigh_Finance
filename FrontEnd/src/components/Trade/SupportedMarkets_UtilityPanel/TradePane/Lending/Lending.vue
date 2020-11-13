@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       tabs: ['Deposit','Redeem','Borrow','Repay'],
-      activeTab: 'Deposit ',
+      activeTab: 'Deposit',
       preActive: 'Deposit',
       selectedInstrument: {},
     };
