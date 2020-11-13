@@ -2,7 +2,7 @@
 
 <script>
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
-import {mapState,mapActions,} from 'vuex';
+import TabBar from '@/components/TabBar/TabBar.vue';
 
 import yourAccount from './yourAccount/yourAccount.vue';
 import anotherAccount from './anotherAccount/anotherAccount.vue';
@@ -34,6 +34,7 @@ export default {
     activeTabChange(activeTab) {
       this.activeTab = activeTab;
     }, 
+  },
  
 };
 </script>
