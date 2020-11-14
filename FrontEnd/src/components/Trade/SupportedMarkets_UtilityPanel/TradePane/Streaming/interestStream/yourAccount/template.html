@@ -1,4 +1,4 @@
-<div class= "sighQuantity">
+<div class= "yourAccount">
     <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
     </div> 
     
@@ -7,14 +7,14 @@
         <div class="uk-width-1-1">
             <div class="form-grp">
                 <div class="form-elm">
-                    <input style="text-align: center;" class="form-ctrl" type="text" placeholder="SIGH to be staked" v-model="formData.sighQuantity">
-                    <span style='color:antiquewhite'>  SIGH  </span>
+                    <input style="text-align: center;" class="form-ctrl" type="text" placeholder="To Account (Address)" v-model="formData.toAccount">
+                    <span style='color:antiquewhite'>  TO ACCOUNT  </span>
                 </div>
             </div>
         </div>
     </div>
     
-    <div class="uk-grid uk-grid-small f1-form-grid">
+    <!-- <div class="uk-grid uk-grid-small f1-form-grid">
         <div class="uk-width-1-1">
             <div class="form-grp">
                 <div class="form-elm">
@@ -23,7 +23,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Loading image -->
     
@@ -33,11 +33,10 @@
         </div>
         <div v-else class="uk-width-1-1">
 
-<!-- Buttons (Stake/Unstake) -->
+<!-- Buttons (Re-Direct Interest Stream / Transfer Administrator Priviledges) -->
             <div class="left">
-                <button class="uk-button uk-button-green"  @click="approve()">Approve</button>
-                <button class="uk-button uk-button-green"  @click="stakeSIGH()">Stake SIGH</button>
-                <button class="uk-button uk-button-green"  @click="unstakeSIGH()">Unstake SIGH</button>
+                <button class="uk-button uk-button-green"  @click="redirectInterestStream()">Re-Direct Interest Stream</button>
+                <button class="uk-button uk-button-green"  @click="allowInterestRedirectionTo()">Transfer Administrator Priviledges</button>
             </div>
         </div>
     </div>
