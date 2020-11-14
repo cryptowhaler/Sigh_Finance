@@ -48,7 +48,7 @@ export default {
       // let price = (this.$store.state.SighInstrumentState.price / Math.pow(10,this.$store.state.SighInstrumentState.priceDecimals)).toFixed(4);
       console.log('Addresses to which it is to be re-directed to = ' + this.formData.toAccount);
 
-      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) ) {       // Network Currently Connected To Check
+      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showInfoMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
         this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
       }
@@ -82,7 +82,7 @@ export default {
       // let price = (this.$store.state.SighInstrumentState.price / Math.pow(10,this.$store.state.SighInstrumentState.priceDecimals)).toFixed(4);
       console.log('Account to which the administrator priviledges to re-direct interest will be transferred = ' + this.formData.toAccount);
 
-      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) ) {       // Network Currently Connected To Check
+      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showInfoMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
         this.$showInfoMsg({message: " Networks currently supported by SIGH Finance - 1) Ethereum :  Kovan Testnet(42) " }); 
       }      
@@ -122,8 +122,8 @@ export default {
       let price = (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals)).toFixed(4);
       this.redirectedBalanceWorth = price * this.redirectedBalance;
       if (toDisplay) {
-          this.$showInfoMsg({message: this.selectedInstrument.symbol " Accuring Interest for you = " + this.redirectedBalance + " worth " + this.redirectedBalanceWorth + " USD" });
-          this.$showInfoMsg({message: "Your Interest Stream currently re-directed to = " + this.currentlyRedirectedTo ". Your Interest Stream's administrator right's holder " + this.currentlyAdministrator });
+          this.$showInfoMsg({message: this.selectedInstrument.symbol + " Accuring Interest for you = " + this.redirectedBalance + " worth " + this.redirectedBalanceWorth + " USD" });
+          this.$showInfoMsg({message: "Your Interest Stream currently re-directed to = " + this.currentlyRedirectedTo + ". Your Interest Stream's administrator right's holder " + this.currentlyAdministrator });
       }
     }
   },
