@@ -43,7 +43,7 @@ contract IToken is ERC20, ERC20Detailed {
     mapping (address => uint256) private userIndexes;                       // index values. Taken from core lending pool contract
     mapping (address => address) private interestRedirectionAddresses;      // Address to which the interest stream is being redirected
     mapping (address => uint256) private redirectedBalances;
-    mapping (address => address) private interestRedirectionAllowances;     // Address allowed to perform interest redirection by the user
+    mapping (address => address) public interestRedirectionAllowances;     // Address allowed to perform interest redirection by the user
 
     uint public sigh_Transfer_Threshold = 1e18;                         // SIGH Transferred when accured >= 1 SIGH (in ETH)
     mapping (address => uint256) private AccuredSighBalances;           // SIGH Collected - ADDED BY SIGH FINANCE

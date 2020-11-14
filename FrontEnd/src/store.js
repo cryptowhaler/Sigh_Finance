@@ -64,6 +64,7 @@ const store = new Vuex.Store({
     connectedWallet: null,
     networkId: null,
     ethBalance: null,
+    isNetworkSupported: null,
 // ######################################################
 // ############ PROTOCOL CONTRACT ADDRESSES  ############
 // ######################################################
@@ -1179,6 +1180,7 @@ const store = new Vuex.Store({
 // ############ ITOKEN Functions --- isTransferAllowed() VIEW FUNCTION 
 // ############ ITOKEN Functions --- principalBalanceOf() VIEW FUNCTION 
 // ############ ITOKEN Functions --- getInterestRedirectionAddress() VIEW FUNCTION 
+// ############ ITOKEN Functions --- interestRedirectionAllowances() VIEW FUNCTION 
 // ############ ITOKEN Functions --- getRedirectedBalance() VIEW FUNCTION 
 // ############ ITOKEN Functions --- getSighAccured() VIEW FUNCTION 
 // ############ ITOKEN Functions --- getSighStreamRedirectedTo() VIEW FUNCTION 
@@ -1206,6 +1208,7 @@ IToken_redeem: async ({commit,state},{iTokenAddress,_amount}) => {
 },
 
 IToken_redirectInterestStream: async ({commit,state},{iTokenAddress,_to}) => {
+  // Instrument Not supported on the connected Network
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
@@ -1226,6 +1229,7 @@ IToken_redirectInterestStream: async ({commit,state},{iTokenAddress,_to}) => {
 },
 
 IToken_allowInterestRedirectionTo: async ({commit,state},{iTokenAddress,_to}) => {
+  // Instrument Not supported on the connected Network
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
@@ -1386,6 +1390,24 @@ IToken_getInterestRedirectionAddress: async ({commit,state},{iTokenAddress,_user
     return "This particular Instrument is currently not supported by SIGH Finance on ";
   }
 },
+
+
+// Returns the account which holds the right to re-direct interest of the user account
+IToken_getinterestRedirectionAllowances: async ({commit,state},{iTokenAddress,_user}) => {
+  if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
+    console.log(iTokenContract);
+    const response = await iTokenContract.methods.interestRedirectionAllowances(_user).call();
+    console.log(response);
+    return response;  
+  }
+  else {
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
+    return "This particular Instrument is currently not supported by SIGH Finance on ";
+  }
+},
+
+
 
 IToken_getRedirectedBalance: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
