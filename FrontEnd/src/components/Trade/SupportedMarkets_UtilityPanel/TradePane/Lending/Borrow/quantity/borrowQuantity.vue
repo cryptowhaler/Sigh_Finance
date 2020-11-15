@@ -50,7 +50,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['LendingPool_borrow','ERC20_balanceOf']),
+    ...mapActions(['LendingPool_borrow','ERC20_balanceOf','LendingPoolCore_getUserBorrowBalances']),
     
     async borrow() {   //BORROW --> TO BE CHECKED
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
@@ -95,14 +95,29 @@ export default {
       
 
     async getRemainingBalance(toDisplay) {
-      this.remainingBalance = await this.ERC20_balanceOf({tokenAddress: this.selectedInstrument.iTokenAddress, account: this.$store.getters.connectedWallet });
-      console.log(this.remainingBalance);
-      let remainingValue = (this.remainingBalance * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4); 
-      if (toDisplay) {
-        this.$showInfoMsg({message: this.remainingBalance + " " + this.selectedInstrument.symbol  + " worth $" + remainingValue + " USD are currently farming $SIGH and Interest for you at SIGH Finance! "});        
+      if (this.selectedInstrument.iTokenAddress && this.$store.getters.connectedWallet) {
+        this.remainingBalance = await this.ERC20_balanceOf({tokenAddress: this.selectedInstrument.iTokenAddress, account: this.$store.getters.connectedWallet });
+        console.log(this.remainingBalance);
+        let remainingValue = (this.remainingBalance * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4); 
+        if (toDisplay) {
+          this.$showInfoMsg({message: this.remainingBalance + " " + this.selectedInstrument.symbol  + " worth $" + remainingValue + " USD are currently farming $SIGH and Interest for you at SIGH Finance! "});        
+        }
+        console.log( 'Current deposited balance for ' + this.selectedInstrument.symbol + " is " + this.remainingBalance + " worth " +  remainingValue + " USD");
       }
-      console.log( 'Current deposited balance for ' + this.selectedInstrument.symbol + " is " + this.remainingBalance + " worth " +  remainingValue + " USD");
-    }
+    },
+
+    async getUserBorrowBalances(toDisplay) {
+      let balances = await this.LendingPoolCore_getUserBorrowBalances({_instrument: this.selectedInstrument.instrumentAddress, _user: this.$store.getters.connectedWallet });
+      console.log(balances);
+      this.principalBorrowBalance = balances[0];
+      this.compoundedBorrowBalance =  balances[1];
+      this.borrowBalanceIncrease =  balances[2];
+      let compoundedBorrowBalanceValue = (this.compoundedBorrowBalance * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4); 
+      if (toDisplay && Number(this.compoundedBorrowBalance)!= 0 ) {
+        this.$showInfoMsg({message: this.compoundedBorrowBalance + " " + this.selectedInstrument.symbol  + " worth $" + compoundedBorrowBalanceValue + " USD have been borrowed which farm $SIGH for you whenever its price increases over any 24 hour period! "});        
+      }
+    }    
+
   },
 
   destroyed() {

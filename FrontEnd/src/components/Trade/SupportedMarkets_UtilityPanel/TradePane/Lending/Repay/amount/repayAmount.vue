@@ -52,7 +52,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['IToken_repay','ERC20_balanceOf']),
+    ...mapActions(['IToken_repay','ERC20_balanceOf','LendingPoolCore_getUserBorrowBalances']),
     
     async repay() {   //REPAY
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
@@ -104,15 +104,17 @@ export default {
       
 
     async getUserBorrowBalances(toDisplay) {
-      let user = this.formData.onBehalfOf ? this.formData.onBehalfOf : this.$store.getters.connectedWallet;
-      let balances = await this.LendingPoolCore_getUserBorrowBalances({_instrument: this.selectedInstrument.instrumentAddress, _user: user });
-      console.log(balances);
-      this.principalBorrowBalance = balances[0];
-      this.compoundedBorrowBalance =  balances[1];
-      this.borrowBalanceIncrease =  balances[2];
-      let compoundedBorrowBalanceValue = (this.compoundedBorrowBalance * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4); 
-      if (toDisplay && Number(this.compoundedBorrowBalance)!= 0 ) {
-        this.$showInfoMsg({message: this.compoundedBorrowBalance + " " + this.selectedInstrument.symbol  + " worth $" + compoundedBorrowBalanceValue + " USD have been borrowed which farm $SIGH for you whenever its price increases over any 24 hour period! "});        
+      if ( this.selectedInstrument.instrumentAddress ) {
+        let user = this.formData.onBehalfOf ? this.formData.onBehalfOf : this.$store.getters.connectedWallet;
+        let balances = await this.LendingPoolCore_getUserBorrowBalances({_instrument: this.selectedInstrument.instrumentAddress, _user: user });
+        console.log(balances);
+        this.principalBorrowBalance = balances[0];
+        this.compoundedBorrowBalance =  balances[1];
+        this.borrowBalanceIncrease =  balances[2];
+        let compoundedBorrowBalanceValue = (this.compoundedBorrowBalance * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4); 
+        if (toDisplay && Number(this.compoundedBorrowBalance)!= 0 ) {
+          this.$showInfoMsg({message: this.compoundedBorrowBalance + " " + this.selectedInstrument.symbol  + " worth $" + compoundedBorrowBalanceValue + " USD have been borrowed which farm $SIGH for you whenever its price increases over any 24 hour period! "});        
+        }
       }
     }
   },

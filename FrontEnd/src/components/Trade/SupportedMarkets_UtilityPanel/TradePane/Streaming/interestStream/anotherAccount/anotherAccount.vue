@@ -49,23 +49,23 @@ export default {
       console.log('Addresses to which it is to be re-directed to = ' + this.formData.toAccount);
 
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
-        this.$showInfoMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
+        this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
         this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
       }
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
-        this.$showInfoMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
+        this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else if ( !Web3.utils.isAddress(this.formData.fromAccount) ) {            // 'ToAccount' provided is not Valid
-        this.$showInfoMsg({message: " The 'From Account' Address provided is not valid ( check-sum check failed). Check the address again or contact our support team at contact@sigh.finance in case of any queries! "}); 
+        this.$showErrorMsg({message: " The 'From Account' Address provided is not valid ( check-sum check failed). Check the address again or contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else if ( !Web3.utils.isAddress(this.formData.toAccount) ) {            // 'ToAccount' provided is not Valid
-        this.$showInfoMsg({message: " The 'To Account' Address provided is not valid ( check-sum check failed). Check the address again or contact our support team at contact@sigh.finance in case of any queries! "}); 
+        this.$showErrorMsg({message: " The 'To Account' Address provided is not valid ( check-sum check failed). Check the address again or contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else if ( this.$store.state.connectedWallet !=  this.fromAccountAdministrator ) {
-        this.$showInfoMsg({message: "The connected Account does not have administrator priviledges over the provided 'From Account'. Administrator privileges over the 'From Account' are currently held by " +  this.fromAccountAdministrator +  " . Contact our support team at contact@sigh.finance in case of any queries! "}); 
+        this.$showErrorMsg({message: "The connected Account does not have administrator priviledges over the provided 'From Account'. Administrator privileges over the 'From Account' are currently held by " +  this.fromAccountAdministrator +  " . Contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else if (Number(this.redirectedBalance) == 0 && Number(this.instrumentBalances[0]) == 0  ) {
-        this.$showInfoMsg({message: " The 'From Account' " + this.$store.state.connectedWallet + " doesn't have any " + this.selectedInstrument.symbol + " balance (redirected or suppplied) accuring Interest for itself.  The 'From Account' needs to have a valid deposted amount before you can Re-direct its interest stream. Contact our support team at contact@sigh.finance in case of any queries! "}); 
+        this.$showErrorMsg({message: " The 'From Account' " + this.$store.state.connectedWallet + " doesn't have any " + this.selectedInstrument.symbol + " balance (redirected or suppplied) accuring Interest for itself.  The 'From Account' needs to have a valid deposted amount before you can Re-direct its interest stream. Contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else {                                  // EXECUTE THE TRANSACTION
         this.showLoader = true;

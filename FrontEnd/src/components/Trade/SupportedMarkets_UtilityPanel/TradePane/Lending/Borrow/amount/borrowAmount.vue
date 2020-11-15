@@ -53,7 +53,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['LendingPool_borrow','ERC20_balanceOf']),
+    ...mapActions(['LendingPool_borrow','ERC20_balanceOf','LendingPoolCore_getUserBorrowBalances']),
     
     async borrow() {   //BORROW --> TO BE CHECKED
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
@@ -103,13 +103,15 @@ export default {
       
 
     async getRemainingBalance(toDisplay) {
-      this.remainingBalance = await this.ERC20_balanceOf({tokenAddress: this.selectedInstrument.iTokenAddress, account: this.$store.getters.connectedWallet });
-      console.log(this.remainingBalance);
-      if ( toDisplay && this.selectedInstrument.priceDecimals ) {
-        let remainingValue = (this.remainingBalance * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4); 
-        this.$showInfoMsg({message: this.remainingBalance + " " + this.selectedInstrument.symbol  + " worth $" + remainingValue + " USD are currently farming $SIGH for you at SIGH Finance! "});        
+      if (this.selectedInstrument.iTokenAddress && this.$store.getters.connectedWallet) {
+        this.remainingBalance = await this.ERC20_balanceOf({tokenAddress: this.selectedInstrument.iTokenAddress, account: this.$store.getters.connectedWallet });
+        console.log(this.remainingBalance);
+        if ( toDisplay && this.selectedInstrument.priceDecimals ) {
+          let remainingValue = (this.remainingBalance * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4); 
+          this.$showInfoMsg({message: this.remainingBalance + " " + this.selectedInstrument.symbol  + " worth $" + remainingValue + " USD are currently farming $SIGH for you at SIGH Finance! "});        
+        }
+        console.log( 'Current deposited balance for ' + this.selectedInstrument.symbol + " is " + this.remainingBalance + " worth " +  remainingValue + " USD");
       }
-      console.log( 'Current deposited balance for ' + this.selectedInstrument.symbol + " is " + this.remainingBalance + " worth " +  remainingValue + " USD");
     },
 
     async getUserBorrowBalances(toDisplay) {

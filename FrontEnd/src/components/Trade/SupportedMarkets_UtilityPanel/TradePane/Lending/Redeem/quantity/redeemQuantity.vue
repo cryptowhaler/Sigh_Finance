@@ -50,7 +50,7 @@ export default {
 
     ...mapActions(['IToken_redeem','ERC20_balanceOf']),
     
-    async redeem() {   //DEPOSIT (WORKS PROPERLY)
+    async redeem() {   //REDEEM 
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
         this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
