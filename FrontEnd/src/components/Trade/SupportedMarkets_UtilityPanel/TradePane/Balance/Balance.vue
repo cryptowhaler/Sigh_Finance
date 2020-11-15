@@ -15,21 +15,19 @@ export default {
     };
   },
   
-  async created() {
+  created() {
+    console.log("IN BALANCE (TRADE-PANE) FUNCTION ");
   },
   
   mounted() {
-    this.userwalletConnected = () => this.setpubkeys();
-    this.userWalletDisconnectedListener = () => this.setpubkeysEmpty();
-    EventBus.$on(EventNames.userWalletConnected, this.userwalletConnected);
-    EventBus.$on(EventNames.userWalletDisconnected, this.userWalletDisconnectedListener);
+    // this.userwalletConnected = () => this.setpubkeys();
+    // this.userWalletDisconnectedListener = () => this.setpubkeysEmpty();
+    // EventBus.$on(EventNames.userWalletConnected, this.userwalletConnected);
+    // EventBus.$on(EventNames.userWalletDisconnected, this.userWalletDisconnectedListener);
   },
 
   methods: {
-    setpubkeys() {
-    },
-    setpubkeysEmpty() {
-    },
+
   },
 
   destroyed() {

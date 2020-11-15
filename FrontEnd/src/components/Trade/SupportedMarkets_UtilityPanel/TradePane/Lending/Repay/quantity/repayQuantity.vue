@@ -26,6 +26,7 @@ export default {
   
 
   created() {
+    console.log("IN LENDING / REPAY / QUANTITY (TRADE-PANE) FUNCTION ");
     this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
     this.getUserBorrowBalances(false);
     this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument

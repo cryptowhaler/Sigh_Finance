@@ -13,6 +13,12 @@ export default   {
     SupportedMoneyMarkets,
   },
 
+
+  created() {  
+    console.log('IN CREATED supported-markets_utility-panel File');
+  },
+
+
   data() {
     return {
       height: 0,
@@ -29,8 +35,8 @@ export default   {
 
   methods :{
 
-
   },
+
 };
 </script>
 

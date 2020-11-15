@@ -25,6 +25,7 @@ export default {
   
 
   created() {
+    console.log("IN LENDING / DEPOSIT / AMOUNT (TRADE-PANE) FUNCTION ");
     this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
     this.updateAvailableAllowance();
     this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument

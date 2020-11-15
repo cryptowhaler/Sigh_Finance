@@ -38,6 +38,10 @@ export default {
     };
   },
 
+  created() {
+    console.log(" IN trade-pane Created Function");
+  },
+
   updated() {
     this.height = this.$refs.tradePane.clientHeight;
   },
@@ -60,10 +64,12 @@ export default {
         el.style.height = 'calc(100%)';
       }
     },
+
     userWalletDisconnectedListener() {
       this.activeTab = 'Balance';
       this.tabBarEventBus.$emit('change-active-tab', 'Balance');
     },    
+
   },
 
 };

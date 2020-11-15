@@ -19,74 +19,11 @@ export default {
 
   data() {
     return {
-      trades: {},
+      instruments: [],      
       tableHeight: '',
-      showLoader:true,
-      markets: [],
-      marketAddress: '',
-
-      
+      showLoader:false,
     };
   },
-
-  // apollo: {
-  //   $subscribe: {
-  //     markets: {
-  //       query: gql`subscription  {
-  //         markets {
-  //             id
-  //             symbol
-  //             name
-  //             exchangeRate
-  //             underlyingAddress
-  //             underlyingName
-  //             underlyingPrice
-  //             underlyingSymbol
-  //             underlyingPriceUSD
-  //             underlyingDecimals
-  //             totalSupply
-  //             totalBorrows
-  //             reserves
-  //             borrowRate
-  //             supplyRate
-  //             collateralFactor
-  //             numberOfBorrowers
-  //             numberOfSuppliers
-  //             interestRateModelAddress
-  //             accrualBlockNumber
-  //             blockTimestamp
-  //             borrowIndex
-  //             reserveFactor
-  //             gsighSpeed
-  //             totalGsighDistributedToSuppliers
-  //             totalGsighDistributedToBorrowers
-  //             pendingAdmin
-  //             admin
-  //             sightroller
-  //             sighSpeed
-  //             savePriceSnapshot
-  //             sighAccuredInCurrentCycle              
-  //           }                
-  //         }`,
-
-  //       // variables() {  return {marketId: this.marketId,};  },
-
-  //       result({data,loading,}) {
-  //         if (loading) {
-  //           console.log('loading');
-  //         }
-  //         else {
-  //           console.log(data);
-  //           let _markets = data.markets;
-  //           // console.log(_markets);
-  //           this.markets = [];
-  //           this.handleMarkets(_markets);
-  //           this.showLoader = false;
-  //         }
-  //       },
-  //     },
-  //   },
-  // },
 
   watch: {
     parentHeight: function(newVal) {
@@ -96,56 +33,31 @@ export default {
   },
 
   created() {
-
-    // this.handleMarkets = _markets => {
-
-    //   for (let i = (_markets.length-1) ; i>=0; i--) {
-
-    //     let liveMarket = _markets[i];
-    //     console.log(liveMarket);
-
-    //     if ( this.marketIsSupported(liveMarket.id) ) {
-    //       let obj = [];
-    //       obj.id =  liveMarket.id;
-    //       obj.symbol = liveMarket.symbol;
-    //       obj.underlyingSymbol = liveMarket.underlyingSymbol;
-    //       obj.totalSupply = Number(Number(liveMarket.totalSupply)/10000000000).toFixed(3) ;
-    //       obj.totalBorrows = Number(Number(liveMarket.totalBorrows)).toFixed(3) ;
-    //       obj.supplyRate = liveMarket.supplyRate;
-    //       obj.borrowRate = liveMarket.borrowRate;
-    //       obj.gsighSpeed = liveMarket.gsighSpeed;
-    //       console.log()        
-    //       obj.exchangeRate = Number(liveMarket.exchangeRate*10000000000).toFixed(3);
-    //       obj.underlyingPrice = Number(Number(liveMarket.underlyingPrice)*100000000000).toFixed(3) ;
-    //       obj.underlyingPriceUSD = Number(Number(liveMarket.underlyingPrice)*100000000000).toFixed(3) ;
-    //       obj.numberOfBorrowers = liveMarket.numberOfBorrowers;
-    //       obj.numberOfSuppliers = liveMarket.numberOfSuppliers;
-    //       obj.totalGsighDistributedToSuppliers = liveMarket.totalGsighDistributedToSuppliers;
-    //       obj.totalGsighDistributedToBorrowers = liveMarket.totalGsighDistributedToBorrowers;
-    //       obj.underlyingAddress = liveMarket.underlyingAddress;        
-    //       obj.sighSpeed = liveMarket.sighSpeed;
-
-    //       obj.savePriceSnapshot = liveMarket.savePriceSnapshot;
-    //       obj.sighAccuredInCurrentCycle = liveMarket.savePriceSnapshot;    
-
-    //       // obj.lossesRecovered =       (market.sighAccuredInCurrentCycle) * sighPrice  / market.totalSupply * ( Number(market.savePriceSnapshot) - Number(market.underlyingPrice) )
-      
-    //       if (liveMarket.underlyingPrice == '0') {
-    //         obj.underlyingPrice = liveMarket.underlyingPriceUSD;
-    //       }
-          
-    //       this.markets.push(obj);
-    //       console.log(this.markets);
-    //     }
-    //   }
-
-    //   this.$store.commit('LiveMarkets', this.markets);
-    // };
+    console.log(" IN Supported-Money-Markets Created Function");
+    // this.instruments = this.$store.state.supportedInstruments;
+    // this.updateLocalInstrumentStates();
   },
 
   methods: {
 
-    // ...mapActions(['marketIsSupported']),
+    updateLocalInstrumentStates() {
+      let array = this.$store.state.supportedInstruments;
+      // for (let i=0;i < array.length;i++ ) {
+      //   let cur_instrument = {};
+      //   console.log(array);
+        // cur_instrument.symbol = array[i].symbol;
+        // cur_instrument.totalSupply = array[i].globalBalances.totalLiquidity;
+        // cur_instrument.totalSupplyWorth = Number(array[i].globalBalances.totalLiquidity) * Number( array[i].price ) / Number(array[i].pricedecimals)  ;
+        // cur_instrument.totalBorrow = array[i].globalBalances.totalBorrows;
+        // cur_instrument.totalBorrowWorth = Number(array[i].globalBalances.totalBorrows) * Number( array[i].price ) / Number(array[i].pricedecimals)  ;
+        // cur_instrument.supplyAPY = array[i].globalBalances.liquidityRate;
+        // cur_instrument.stableBorrowAPY = array[i].globalBalances.stableBorrowRate;
+        // cur_instrument.variableBorrowAPY = array[i].globalBalances.variableBorrowRate;
+        // cur_instrument.sighYieldSuppliers =  0; //array.symbol;
+        // cur_instrument.sighYieldBorrowers =  0; // array.symbol;
+        // this.instruments.push(cur_instrument);
+      // }
+    },
 
   },
 

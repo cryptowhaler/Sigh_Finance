@@ -36,7 +36,7 @@ import Datetime from 'vue-datetime';
 // You need a specific loader for CSS files
 import 'vue-datetime/dist/vue-datetime.css';
 import {mapState,mapActions,} from 'vuex';
-
+import Web3 from 'web3';
  
 Vue.use(Datetime);
 Vue.use(Vuikit);
@@ -95,7 +95,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['loadWeb3','getWalletConfig','getContractAddresses']),
+    ...mapActions(['loadWeb3','getWalletConfig','getContractAddresses','refreshConnectedAccountState']),
 
     // Connects to WEB3, Wallet, and initiates balance polling
     async handleWeb3() {
@@ -103,46 +103,54 @@ export default {
       let isWeb3loaded = await this.loadWeb3();
 
       if (isWeb3loaded == 'EthereumEnabled') {
-          this.$showSuccessMsg({message:"Successfully connected to the Ethereum Network's '" + this.$store.getters.networkName + "' ! Welcome to SIGH Finance!"});
+          this.$showSuccessMsg({message:" Welcome to SIGH Finance! Successfully connected to the Ethereum Network's '" + this.$store.getters.networkName });
       }
       if (isWeb3loaded == 'EthereumNotEnabled') {
-          this.$showErrorMsg({message:'Permission to connect your wallet denied. In case you have security concerns or are facing any issues, reach out to our support team at support@sigh.finance. '});
+          this.$showErrorMsg({message:' Welcome to SIGH Finance! Permission to connect your wallet denied. In case you have security concerns or are facing any issues, reach out to our support team at support@sigh.finance. '});
       }
       if (isWeb3loaded == 'BSCConnected') {
-        this.$showSuccessMsg({message:"Successfully connected to the Binance Smart Chain's '" + this.$store.getters.networkName + "'! Welcome to SIGH Finance!"});
+        this.$showSuccessMsg({message:" Welcome to SIGH Finance! Successfully connected to the Binance Smart Chain's '" + this.$store.getters.networkName + "'! Welcome to SIGH Finance!"});
       }
       if (isWeb3loaded == 'Web3Connected') {
-        this.$showSuccessMsg({message:"Successfully connected to the Ethereum Network's '" + this.$store.getters.networkName  + "' (not a Metamask wallet) ! Welcome to SIGH Finance!"});
+        this.$showSuccessMsg({message:" Welcome to SIGH Finance! Successfully connected to the Ethereum Network's '" + this.$store.getters.networkName  + "' (not a Metamask wallet) !"});
       }
       if (isWeb3loaded == 'false') {
-        this.$showErrorMsg({message:'No Web3 Object injected into browser. Read-only access. Please install MetaMask browser extension or connect our support team at support@sigh.finance. '});
+        this.$showErrorMsg({message:' Welcome to SIGH Finance! No Web3 Object injected into browser. Read-only access. Please install MetaMask browser extension or connect our support team at support@sigh.finance. '});
       }
 
       // If wallet is allowed to connect, then fetch the details
-      if (isWeb3loaded == 'EthereumEnabled' ) {   
+      if ( this.$store.getters.isNetworkSupported ) {   
         let walletConnected = await this.getWalletConfig();
         this.$showInfoMsg({message: "You are currently connected with the wallet - " + this.$store.getters.connectedWallet });        
-        this.loadContractAddresses();
+        await this.fetchSessionProtocolStateData();
+        if (  Web3.utils.isAddress(this.$store.getters.connectedWallet) ) {
+          this.fetchSessionUserStateData();
+        }
         // EventBus.$emit(EventNames.userWalletConnected, { username: walletConnected,}); //User has logged in (event)
       }
     },
 
     // Loads addresses of the contracts from the network
-    async loadContractAddresses() {
+    async fetchSessionProtocolStateData() {
       let id = this.$store.getters.networkId;
-      console.log('loadContractAddresses() in APP - ' + id);
-      if ( this.$store.getters.getWeb3 && (id == '42' || id == '97' ) ) {
-        let contractAddressesInitialized = await this.getContractAddresses();
+      console.log('fetchSessionProtocolStateData() in APP - ' + id);
+      if ( this.$store.getters.getWeb3 && this.$store.getters.isNetworkSupported ) {
+        let contractAddressesInitialized = await this.getContractAddresses();  // Fetches Addresses & Instrument states
         if (contractAddressesInitialized) {
-          this.$showInfoMsg({message: " Contract Addresses fetched successfully for network " + id + " - " + this.$store.getters.networkName });
+          this.$showInfoMsg({message: " SIGH Finance Protocol State fetched successfully for network " + id + " - " + this.$store.getters.networkName });
         }
         else {
-          this.$showErrorMsg({message: " Something went wrong when fetching contract addresses for teh network - " + this.$store.getters.networkName + ". Please connect to either Kovan Testnet or Ethereum Main-net." });
+          this.$showErrorMsg({message: " Something went wrong when fetching SIGH Finance State for the network - " + this.$store.getters.networkName + ". Please connect to either Kovan Testnet or Ethereum Main-net or reach out to our Support Team at support@sigh.finance" });
         }
       }
       else {
-          this.$showErrorMsg({message: " SIGH Finance is currently not available of the connected blockchain network " });
+          this.$showErrorMsg({message: " SIGH Finance is currently not available on the connected blockchain network " });
       }
+    },
+
+    async fetchSessionUserStateData() {
+      // let response = await this.refreshConnectedAccountState();
+      this.$showInfoMsg({message: " Balances for the connected wallet " + this.$store.getters.connectedWallet + " fetched successfully. Enjoy Farming $SIGH! "});
     },
 
     async fetchConfigsWalletConnected() {
@@ -154,9 +162,6 @@ export default {
       console.log('IN fetchConfigsWalletDisconnected() in APP.vue');
       this.$store.commit('addLoaderTask', 1, false);
       this.$store.commit('removeLoaderTask', 1);
-      // console.log('IN LOGOUT TOGGLING');
-      // console.log(this.toggleLogoutModal);
-      // console.log(this.toggleLogoutModal);
     },
 
     toggleContactModal() {   //ADDED
@@ -164,34 +169,7 @@ export default {
       this.contactModalShown = !this.contactModalShown;
       // console.log(this.contactModalShown);        
     },
-    
-    // async getMarkets() {    //getting markets
-    //   const markets = await VegaProtocolService.get_markets();
-    //   // console.log(markets);
-    //   if (markets.status == 200 ) {
-    //     let marketsData = [];
-    //     for (let i=0;i<markets.data.markets.length;i++) { 
-    //       let obj = {};
-    //       obj.id = markets.data.markets[i].id;
-    //       obj.data = {};
-    //       obj.data.name = markets.data.markets[i].name;
-    //       obj.data.instrument_name = markets.data.markets[i].tradableInstrument.instrument.name;          
-    //       obj.baseName = markets.data.markets[i].tradableInstrument.instrument.baseName;
-    //       obj.quoteName = markets.data.markets[i].tradableInstrument.instrument.quoteName;          
-    //       // console.log(obj);     
-    //       this.$store.commit('mappedMarkets',obj);        //mapping markets by ID
-    //       this.$store.commit('mappedMarketsbyName',obj);  //mapping markets by name
-    //       marketsData.push(obj);    
-    //     }
-    //     // console.log(marketsData);
-    //     this.$store.commit('markets',marketsData);
-    //     // console.log(this.$store.getters.markets);
-    //     // console.log(this.$store.getters.mappedMarkets);
-    //   }
-    //   else {
-    //     this.$showErrorMsg({message: 'Couldn\'t fetch Markets data. Some of the features may not function properly',});
-    //   }
-    // },
+
 
   },
 };

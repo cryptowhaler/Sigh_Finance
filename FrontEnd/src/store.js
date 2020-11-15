@@ -162,6 +162,9 @@ const store = new Vuex.Store({
     ethBalance(state) {
       return state.ethBalance;
     },
+    isNetworkSupported(state) {
+      return state.isNetworkSupported;
+    },
 // ####################################################
 // ############  PROTOCOL CONTRACT GETTERS ############
 // ####################################################
@@ -469,7 +472,7 @@ const store = new Vuex.Store({
 // ############ polling : UPDATES ACCOUNT AND WALLET WHENEVER THEY CHANGE ############
 // ######################################################
 
-    // CONNECTS TO WEB3 NETWORK (ETHEREUM/BSC ETC)
+    // CONNECTS TO WEB3 NETWORK (ETHEREUM/BSC ETC) : Only stores networkId, web3 Object. No contract / wallet related calls
     loadWeb3: async ({ commit , state, store}) => {
       // IN CASE ETHEREUM HAS BEEN INJECTED IN THE WINDOW
       if (window.ethereum) {  
@@ -530,7 +533,6 @@ const store = new Vuex.Store({
           commit('connectedWallet',accounts[0]);
           commit('isWalletConnected',true);  
           console.log( 'Account - ' + state.connectedWallet );
-          await store.dispatch("refreshConnectedAccountState");
           store.dispatch('polling'); 
           return "You are now connected with wallet - ";
         }
@@ -568,7 +570,7 @@ const store = new Vuex.Store({
 
 // ######################################################
 // ############ getContractAddresses : calls getAddresses() to fetch and store all the contract addresses based on the network we are connected to (ETHEREUM/BSC) ############
-// ############ getAddresses : // fetches and updates all the contract addresses ############
+// ############ getAddressesAndGlobalState : // fetches and updates all the contract addresses and the State ############
 // ############ getSupportedInstrumentStatesData : Gets the addresses of the ITokens and the corresponding Insturments ############
 // ######################################################
 
@@ -576,21 +578,21 @@ const store = new Vuex.Store({
   getContractAddresses: async ({commit, state}) => {
     console.log("getContractAddresses ACTION FUNCTION CALLED IN STORE");
     if ( state.networkId == '42')  {    // KOVAN 
-      return store.dispatch('getAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractKovan });
+      return await store.dispatch('getAddressesAndGlobalState',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractKovan });
     }  
     else if (state.networkId == '97') {   // BSC TESTNET
-      return store.dispatch('getAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractBSCTestnet });
+      return await store.dispatch('getAddressesAndGlobalState',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractBSCTestnet });
     }
     else if (state.networkId == '1') {    // ETHEREUM MAINNET
-      return store.dispatch('getAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractMainNet });
+      return await store.dispatch('getAddressesAndGlobalState',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractMainNet });
     }
     else if (state.networkId == '56') {   // BSC MAINNET
-      return store.dispatch('getAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractBSC });
+      return await store.dispatch('getAddressesAndGlobalState',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractBSC });
     }
   },
 
   // [TESTED. WORKING AS EXPECTED] fetches and stores the protocol's contract addresses 
-  getAddresses: async ({commit,state},{globalAddressesProviderAddress}) => {
+  getAddressesAndGlobalState: async ({commit,state},{globalAddressesProviderAddress}) => {
 
     const currentGlobalAddressesProviderContract = new state.web3.eth.Contract(GlobalAddressesProviderInterface.abi, globalAddressesProviderAddress );
     console.log(currentGlobalAddressesProviderContract);
@@ -635,7 +637,7 @@ const store = new Vuex.Store({
   // [TESTED. WORKING AS EXPECTED] Gets the addresses of the ITokens and the corresponding Supported Instrument STATES
   getSupportedInstrumentStatesData: async ({commit,state}) => { 
     console.log("getSupportedInstrumentStatesData ACTION");
-    if (state.web3 && state.LendingPoolCoreContractAddress && state.LendingPoolCoreContractAddress != "0x0000000000000000000000000000000000000000") {
+    if (state.web3 && state.isNetworkSupported && state.LendingPoolCoreContractAddress && state.LendingPoolCoreContractAddress != "0x0000000000000000000000000000000000000000") {
       const lendingPoolCoreContract = new state.web3.eth.Contract(LendingPoolCore.abi, state.LendingPoolCoreContractAddress );
       console.log(lendingPoolCoreContract);
 
@@ -646,8 +648,14 @@ const store = new Vuex.Store({
       // Loop over the instrument addresses to fetch iToken Address, name, symbol, decimals and add them to the supported instruments list
       if (instruments) {
         for (let i=0; i<instruments.length; i++) {
-          let instrumentState = await store.dispatch('refershInstrumentState',{instrumentAddress: instruments[i] });
+          let data = await store.dispatch('refershInstrumentState',{instrumentAddress: instruments[i] });
+          let instrumentState = data.instrumentState;
+          let instrumentConfiguration = data.instrumentConfiguration;
+          let instrumentBalances = data.instrumentBalances;
+          console.log('RETURNED DATA');
           console.log(instrumentState);
+          console.log(instrumentConfiguration);
+          console.log(instrumentBalances);
           instrumentState.price = null;
           commit('addToSupportedInstrumentsArray',instrumentState);
           commit('addToSupportedInstrumentsConfigsMapping',{instrumentAddress:instruments[i], instrumentDetails:instrumentState});
@@ -666,6 +674,9 @@ const store = new Vuex.Store({
   // FETCHES THE DATA FOR AN INSTRUMENT (CONFIGURATION & BALANCES)
   refershInstrumentState: async ({commit,state},{instrumentAddress}) => {
     let instrumentState = {};    
+    let instrumentConfiguration = {};    
+    let instrumentBalances = {};    
+
     const priceOracleContract = new state.web3.eth.Contract(IPriceOracleGetter.abi, state.IPriceOracleGetterAddress );
     if ( state.web3 && instrumentAddress && instrumentAddress!= '0x0000000000000000000000000000000000000000') {
       let erc20Contract = new state.web3.eth.Contract(ERC20Detailed.abi, instrumentAddress );      
@@ -674,47 +685,54 @@ const store = new Vuex.Store({
       instrumentState.name = await erc20Contract.methods.name().call();
       instrumentState.symbol = await erc20Contract.methods.symbol().call();
       instrumentState.decimals = await erc20Contract.methods.decimals().call();
-      instrumentState.iTokenAddress = await lendingPoolCoreContract.methods.getInstrumentITokenAddress(instrumentAddress).call();
       instrumentState.priceDecimals = await priceOracleContract.methods.getAssetPriceDecimals(instrumentAddress).call();
       // INSTRUMENT CONFIGURATION          
-      let instrumentConfig = await store.dispatch("getInstrumentConfiguration",{_instrumentAddress:instrumentAddress });        
-      instrumentState.configuration.liquidationThreshold = instrumentConfig.liquidationThreshold;
-      instrumentState.configuration.liquidationBonus = instrumentConfig.liquidationBonus;
-      instrumentState.configuration.ltv = instrumentConfig.ltv;
-      instrumentState.configuration.usageAsCollateralEnabled = instrumentConfig.usageAsCollateralEnabled;
-      instrumentState.configuration.borrowingEnabled = instrumentConfig.borrowingEnabled;
-      instrumentState.configuration.stableBorrowRateEnabled = instrumentConfig.stableBorrowRateEnabled;
-      instrumentState.configuration.isActive = instrumentConfig.isActive;
+      let instrumentConfig = await store.dispatch("getInstrumentConfiguration",{_instrumentAddress:instrumentAddress });  
+      instrumentConfiguration.liquidationThreshold = instrumentConfig.liquidationThreshold;
+      instrumentConfiguration.liquidationBonus = instrumentConfig.liquidationBonus;
+      instrumentConfiguration.ltv = instrumentConfig.ltv;
+      instrumentConfiguration.usageAsCollateralEnabled = instrumentConfig.usageAsCollateralEnabled;
+      instrumentConfiguration.borrowingEnabled = instrumentConfig.borrowingEnabled;
+      instrumentConfiguration.stableBorrowRateEnabled = instrumentConfig.stableBorrowRateEnabled;
+      instrumentConfiguration.isActive = instrumentConfig.isActive;
       // INSTRUMENT GLOBAL BALANCES          
-      let instrumentGlobalBalances = await store.dispatch("getInstrumentMarketState",{_instrumentAddress:instrumentAddress });        
-      instrumentState.globalBalances.totalLiquidity = instrumentGlobalBalances.totalLiquidity;
-      instrumentState.globalBalances.totalBorrowsStable = instrumentGlobalBalances.totalBorrowsStable;
-      instrumentState.globalBalances.totalBorrowsVariable = instrumentGlobalBalances.totalBorrowsVariable;
-      instrumentState.globalBalances.totalBorrows = Number(instrumentGlobalBalances.totalBorrowsStable) + Number(instrumentGlobalBalances.totalBorrowsVariable) ;
-      instrumentState.globalBalances.availableLiquidity = instrumentGlobalBalances.availableLiquidity;
-      instrumentState.globalBalances.liquidityRate = instrumentGlobalBalances.liquidityRate;
-      instrumentState.globalBalances.variableBorrowRate = instrumentGlobalBalances.variableBorrowRate;
-      instrumentState.globalBalances.stableBorrowRate = instrumentGlobalBalances.stableBorrowRate;
-      instrumentState.globalBalances.averageStableBorrowRate = instrumentGlobalBalances.averageStableBorrowRate;
-      instrumentState.globalBalances.utilizationRate = instrumentGlobalBalances.utilizationRate;
-      instrumentState.globalBalances.liquidityIndex = instrumentGlobalBalances.liquidityIndex;
-      instrumentState.globalBalances.variableBorrowIndex = instrumentGlobalBalances.variableBorrowIndex;  
-      return instrumentState;
+      let instrumentGlobalBalances = await store.dispatch("getInstrumentMarketState",{_instrumentAddress:instrumentAddress });           
+      instrumentState.iTokenAddress = instrumentGlobalBalances.iTokenAddress;
+      instrumentBalances.totalLiquidity = instrumentGlobalBalances.totalLiquidity;
+      instrumentBalances.totalBorrowsStable = instrumentGlobalBalances.totalBorrowsStable;
+      instrumentBalances.totalBorrowsVariable = instrumentGlobalBalances.totalBorrowsVariable;
+      instrumentBalances.totalBorrows = Number(instrumentGlobalBalances.totalBorrowsStable) + Number(instrumentGlobalBalances.totalBorrowsVariable) ;
+      instrumentBalances.availableLiquidity = instrumentGlobalBalances.availableLiquidity;
+      instrumentBalances.liquidityRate = instrumentGlobalBalances.liquidityRate;
+      instrumentBalances.variableBorrowRate = instrumentGlobalBalances.variableBorrowRate;
+      instrumentBalances.stableBorrowRate = instrumentGlobalBalances.stableBorrowRate;
+      instrumentBalances.averageStableBorrowRate = instrumentGlobalBalances.averageStableBorrowRate;
+      instrumentBalances.utilizationRate = instrumentGlobalBalances.utilizationRate;
+      instrumentBalances.liquidityIndex = instrumentGlobalBalances.liquidityIndex;
+      instrumentBalances.variableBorrowIndex = instrumentGlobalBalances.variableBorrowIndex;  
     }
-    else {
-      return instrumentState;
-    }
+    console.log(instrumentState);
+    console.log(instrumentConfiguration);
+    console.log(instrumentBalances);
+      return {instrumentState, instrumentConfiguration,instrumentBalances};
   },
 
   refreshConnectedAccountState: async ({commit, state}) => {
     console.log("refreshConnectedAccountState : refreshing user Balances");
-    let globalBalances = await store.dispatch("getUserAccountState",{_user: state.connectedWallet});
+    let globalBalances = await store.dispatch("getUserProtocolState",{_user: state.connectedWallet});
     console.log('Global balances retrieved for the connected wallet');
     console.log(globalBalances);
     console.log(state.supportedInstrumentAddresses);
     for (let i=0; i<state.supportedInstrumentAddresses.length; i++ ) {
       console.log(state.supportedInstrumentAddresses[i]);
-      let userInstrumentBalance = await store.dispatch("getUserInstrumentState",{_instrumentAddress:state.supportedInstrumentAddresses[i] , _user} );
+      let userInstrumentBalance;
+      try {
+        userInstrumentBalance = await store.dispatch("getUserInstrumentState",{_instrumentAddress: state.supportedInstrumentAddresses[i] , _user :state.connectedWallet } );
+      }
+      catch (error) {
+        userInstrumentBalance = {};
+        console.log(error);
+      }
       console.log(userInstrumentBalance);
     }    
   },
@@ -800,17 +818,17 @@ getInstrumentMarketState: async ({commit,state},{_instrumentAddress}) => {
 // ############ GET THE CONNECTED ACCOUNT's GLOBAL STATE AND INSTRUMENT MARKET STATE
 // ######################################################
 
-getUserAccountState: async ({commit,state},{_user}) => {
+getUserProtocolState: async ({commit,state},{_user}) => {
   if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
     const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-    console.log('getUserAccountState');
-    console.log(_instrumentAddress);
+    console.log('getUserProtocolState');
+    console.log(_user);
     let response = await lendingPoolContract.methods.getUserAccountData(_user).call();
     console.log(response);
-    return response;
+    return response;å
   }
   else {
-    console.log('getUserAccountState() function in store.js. Protocol not supported on connected blockchain network');
+    console.log('getUserProtocolState() function in store.js. Protocol not supported on connected blockchain network');
     return null;
   }
 },
@@ -820,6 +838,7 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
     console.log('getUserInstrumentState');
     console.log(_instrumentAddress);
+    console.log(_user);
     let response = await lendingPoolContract.methods.getUserInstrumentData(_instrumentAddress,_user).call();
     console.log(response);
     return response;

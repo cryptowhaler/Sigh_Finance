@@ -3,51 +3,45 @@
         <!-- Live markets heading -->
         <h3 class="uk-panel-title uk-text-center" style="padding-bottom: 15px; font-size: 21px !important;">SUPPORTED MONEY MARKETS</h3>
     </div>
-    <template v-if="!showLoader">
+    <!-- v-if="!showLoader" -->
+    <template >   
         <div class="noShow noHorizontal"> 
             <div id="hello" data-simplebar data-simplebar-auto-hide="false" :style="{ height: tableHeight }">
                 <table >
                     <thead class="uk-visible">
-                        <!-- live markets Bar heading -->
+                        <!-- live instruments Bar heading -->
                         <tr>
-                            <th class="uk-text-center">Market</th>
+                            <th class="uk-text-center">Instrument</th>
                             <th class="uk-text-center">Total Supply</th>
                             <th class="uk-text-center">Total Borrow</th>
                             <th class="uk-text-center">Supply APY</th>
-                            <th class="uk-text-center">Borrow APY</th>
-                            <th class="uk-text-center"> Underlying Market </th>
-                            <th class="uk-text-center"> Exchange Rate </th>
-                            <th class="uk-text-center"> Underlying Price </th>
-                            <th class="uk-text-center"> Recorded Price </th>
-                            <th class="uk-text-center"> Sigh Speed </th>
-                            <th class="uk-text-center"> Losses Recovered (24 hrs) </th>
-                            <!-- <th class="uk-text-center"> Losses Recovered % </th> -->
-
+                            <th class="uk-text-center">Borrow APY (Stable)</th>
+                            <th class="uk-text-center">Borrow APY (Variable)</th>
+                            <th class="uk-text-center"> $SIGH Yield (Suppliers) </th>
+                            <th class="uk-text-center"> $SIGH Yield (Borrowers) </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- live markets content -->
-                        <!-- <tr v-for="market in markets">
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ market.symbol }}</td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ market.totalSupply }}</td>
-                            <td class="uk-text-center c-white" style="line-height: 4;"  >{{ market.totalBorrows }} </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" >{{(Number(market.supplyRate)*1000000).toFixed(2)}} % </td>
-                            <td class="uk-text-center c-red" style="line-height: 4;" >{{(Number(market.borrowRate)*10000000).toFixed(2)}} %</td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ market.underlyingSymbol }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ market.exchangeRate }} </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(market.underlyingPrice).toFixed(3) }} </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(Number(market.savePriceSnapshot)/10000000).toFixed(3) }} </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ market.sighSpeed }} </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(Number(market.sighAccuredInCurrentCycle)/10000000).toFixed(2) }} </td>
-                        </tr> -->
+                        <!-- live instruments content -->
+                        <!-- <tr v-for="instrument in instruments"> -->
+                            <!-- <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.symbol }}</td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" > $ {{ instrument.totalSupplyWorth }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;"  > $ {{ instrument.totalBorrowWorth }} </td>
+                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ instrument.supplyAPY  }} % </td>
+                            <td class="uk-text-center c-red" style="line-height: 4;" >{{ instrument.stableBorrowAPY  }} % </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.variableBorrowAPY  }} %  </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.sighYieldSuppliers }} </td>
+                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ instrument.sighYieldBorrowers }} </td> -->
+                            <!-- <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(Number(instrument.sighAccuredInCurrentCycle)/10000000).toFixed(2) }} </td> -->
+                        <!-- </tr> -->
                     </tbody>
                 </table>
             </div>
         </div>
     </template>
 <!-- LOADER (SPINNER) -->
-    <template v-else>
+    <!-- <template v-else>
         <spinner mTop="calc(100% - 30px)" />
-    </template>
+    </template> -->
 
 </div>

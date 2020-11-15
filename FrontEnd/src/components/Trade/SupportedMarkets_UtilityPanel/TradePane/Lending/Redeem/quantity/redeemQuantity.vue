@@ -22,6 +22,7 @@ export default {
   
 
   created() {
+    console.log("IN LENDING / REDEEM / QUANTITY (TRADE-PANE) FUNCTION ");
     this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
     this.getRemainingBalance();
     this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument

@@ -23,6 +23,7 @@ export default {
   
 
   created() {
+    console.log("IN STAKE SIGH / AMOUNT (TRADE-PANE) FUNCTION ");
     this.sighInstrument = this.$store.state.SighInstrumentState;
     this.getAllowanceAndStakedBalance();
   },
