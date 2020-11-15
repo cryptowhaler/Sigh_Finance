@@ -16,6 +16,7 @@ tbody {
 // }
 thead tr {
   width: calc(100% - 20px);
+  border-bottom: beige solid 2px;  
 }
 
 #simpleBarContainer {
@@ -34,20 +35,28 @@ th {
   padding-bottom: 7px;
 }
 
+td {
+  color: mintcream;
+}
+
 tbody tr td {
-  width: 25%;
-  border-bottom: 1px solid var(--border-bottom-color);
+  width: 15%;
+  color: aliceblue;
   padding-top: 7px;
   padding-bottom: 7px;
 }
 thead th {
-  width: 25%;
-  border-bottom: 1px solid var(--border-bottom-color);
+  border-bottom: 1px solid wheat; // var(--border-bottom-color);
+  width: 15%;
+  font-weight: 400;
+  color: gold;  
+  font-size: smaller;  
 }
 
 tbody tr {
   width: calc(100% - 10px);
   table-layout: fixed;
+  border-bottom: white dotted 0.5px;  
 }
 
 // #line {

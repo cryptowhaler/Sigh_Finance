@@ -112,7 +112,7 @@ const store = new Vuex.Store({
     sessionTransactions : [],
     SighInstrumentState : { name: 'SIGH Instrument', symbol : 'SIGH', address: null, price: 0, mintSpeed: 0, totalSupply: 0, priceDecimals: 8 },
     instrumentGlobalBalances : [],        // Protocol Level Data for a supported Instrument
-
+    userProtocolBalances: {},
     username: null, //Added
     websocketStatus: 'Closed',
     loaderCounter: 0,
@@ -239,6 +239,10 @@ const store = new Vuex.Store({
     getInstrumentGlobalBalances(state) {
       return state.instrumentGlobalBalances;
     },
+    getUserProtocolBalances(state) {
+      return state.userProtocolBalances;
+    },
+
     showLoader(state) {
       return state > 0;
     },
@@ -399,6 +403,16 @@ const store = new Vuex.Store({
     updateSIGHPrice(state, updatedPrice) {
       state.SighInstrumentState.price = updatedPrice;
       // console.log('In updateSIGHPrice -' + state.SighInstrumentState.price);
+    },
+    setUserProtocolStateBalances(state,userProtocolBalances) {    // SETS THE USER's PROTOCOL LEVEL BALANCES
+      state.userProtocolBalances.totalLiquidity = userProtocolBalances.totalLiquidityETH;
+      state.userProtocolBalances.totalCollateral = userProtocolBalances.totalCollateralETH;
+      state.userProtocolBalances.totalBorrows = userProtocolBalances.totalBorrowsETH;
+      state.userProtocolBalances.totalFees = userProtocolBalances.totalFeesETH;
+      state.userProtocolBalances.availableBorrows = userProtocolBalances.availableBorrowsETH;
+      state.userProtocolBalances.currentLiquidationThreshold = userProtocolBalances.currentLiquidationThreshold;
+      state.userProtocolBalances.ltv = userProtocolBalances.ltv;
+      state.userProtocolBalances.healthFactor = userProtocolBalances.healthFactor;
     },
     changeWebsocketStatus(state, websocketStatus) {
       state.websocketStatus = websocketStatus;
@@ -719,22 +733,24 @@ const store = new Vuex.Store({
 
   refreshConnectedAccountState: async ({commit, state}) => {
     console.log("refreshConnectedAccountState : refreshing user Balances");
-    let globalBalances = await store.dispatch("getUserProtocolState",{_user: state.connectedWallet});
-    console.log('Global balances retrieved for the connected wallet');
-    console.log(globalBalances);
-    console.log(state.supportedInstrumentAddresses);
-    for (let i=0; i<state.supportedInstrumentAddresses.length; i++ ) {
-      console.log(state.supportedInstrumentAddresses[i]);
-      let userInstrumentBalance;
-      try {
+    try {
+      let globalBalances = await store.dispatch("getUserProtocolState",{_user: state.connectedWallet});
+      console.log('Global balances retrieved for the connected wallet');
+      console.log(globalBalances);
+      commit("setUserProtocolStateBalances",globalBalances);  // SETTING CONNECTED WALLET'S PROTOCOL LEVEL BALANCES
+      console.log(state.supportedInstrumentAddresses);
+      for (let i=0; i<state.supportedInstrumentAddresses.length; i++ ) {
+        console.log(state.supportedInstrumentAddresses[i]);
+        let userInstrumentBalance;
         userInstrumentBalance = await store.dispatch("getUserInstrumentState",{_instrumentAddress: state.supportedInstrumentAddresses[i] , _user :state.connectedWallet } );
-      }
-      catch (error) {
-        userInstrumentBalance = {};
-        console.log(error);
-      }
-      console.log(userInstrumentBalance);
-    }    
+        console.log(userInstrumentBalance);
+      }    
+      return true;
+    }
+    catch (error) {
+      console.log(error);
+      return false;
+    }
   },
 
   // [TESTED. WORKING AS EXPECTED] KEEP UPDATING PRICES OF THE SUPPORTED INSTRUMENTS
@@ -839,9 +855,15 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     console.log('getUserInstrumentState');
     console.log(_instrumentAddress);
     console.log(_user);
-    let response = await lendingPoolContract.methods.getUserInstrumentData(_instrumentAddress,_user).call();
-    console.log(response);
-    return response;
+    try {
+      let response = await lendingPoolContract.methods.getUserInstrumentData(_instrumentAddress,_user).call();
+      console.log(response);
+      return response;
+    }
+    catch (error) {
+      console.log(error);
+      return [];
+    }
   }
   else {
     console.log('getUserInstrumentState() function in store.js. Protocol not supported on connected blockchain network');

@@ -2,75 +2,124 @@
     <div class="sv-table-wrapper ticker-table cs-table-1">
 
         <table class="sv-table display nowrap" style="width:100%" data-scroll-y="291px">
-            <thead>
+            <thead class="uk-visible">
                 <tr>
-                    <th class="uk-text-center">Currency</th>
-                    <th class="uk-text-center">Available</th>
-                    <th class="uk-text-center">Blocked</th>
-                    <th class="uk-text-center">Total</th>
+                    <th class="uk-text-center">Instrument</th>
+                    <th class="uk-text-center">Supplied</th>
+                    <th class="uk-text-center">Borrowed</th>
+                    <th class="uk-text-center">Interest APY</th>
+                    <th class="uk-text-center">$SIGH Yield</th>
                 </tr>
             </thead>
             <div id="simpleBarContainer" data-simplebar data-simplebar-auto-hide="false">
-                <tbody>
-                    <tr>
-                        <td class="uk-text-center">BTC</td>
-                        <td class="uk-text-center">0.24</td>
-                        <td class="uk-text-center">0.33</td>
-                        <td class="uk-text-center">0.57</td>
-                    </tr>
-                    <tr>
-                        <td class="uk-text-center">VUSD</td>
-                        <td class="uk-text-center">4.32</td>
-                        <td class="uk-text-center">1.72</td>
-                        <td class="uk-text-center">6.04</td>
-                    </tr>
-                </tbody>
+            <tbody>
+            <!-- <tr v-for="instrument in instruments"> -->
+                <!-- <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.symbol }}</td> -->
+            <!-- </tr> -->
+                <tr>
+                    <td class="uk-text-center">VUSD</td>
+                    <td class="uk-text-center">4.32</td>
+                    <td class="uk-text-center">1.72</td>
+                    <td class="uk-text-center">6.04</td>
+                    <td class="uk-text-center">6.04</td>
+                </tr>
+                <tr>
+                    <td class="uk-text-center">VUSD</td>
+                    <td class="uk-text-center">4.32</td>
+                    <td class="uk-text-center">1.72</td>
+                    <td class="uk-text-center">6.04</td>
+                    <td class="uk-text-center">6.04</td>
+                </tr>
+                <tr>
+                    <td class="uk-text-center">VUSD</td>
+                    <td class="uk-text-center">4.32</td>
+                    <td class="uk-text-center">1.72</td>
+                    <td class="uk-text-center">6.04</td>
+                    <td class="uk-text-center">6.04</td>
+                </tr>
+                <tr>
+                    <td class="uk-text-center">VUSD</td>
+                    <td class="uk-text-center">4.32</td>
+                    <td class="uk-text-center">1.72</td>
+                    <td class="uk-text-center">6.04</td>
+                    <td class="uk-text-center">6.04</td>
+                </tr>
+                <tr>
+                    <td class="uk-text-center">VUSD</td>
+                    <td class="uk-text-center">4.32</td>
+                    <td class="uk-text-center">1.72</td>
+                    <td class="uk-text-center">6.04</td>
+                    <td class="uk-text-center">6.04</td>
+                </tr>
+                <tr>
+                    <td class="uk-text-center">VUSD</td>
+                    <td class="uk-text-center">4.32</td>
+                    <td class="uk-text-center">1.72</td>
+                    <td class="uk-text-center">6.04</td>
+                    <td class="uk-text-center">6.04</td>
+                </tr>
+                <tr>
+                    <td class="uk-text-center">VUSD</td>
+                    <td class="uk-text-center">4.32</td>
+                    <td class="uk-text-center">1.72</td>
+                    <td class="uk-text-center">6.04</td>
+                    <td class="uk-text-center">6.04</td>
+                </tr>
+                <tr>
+                    <td class="uk-text-center">VUSD</td>
+                    <td class="uk-text-center">4.32</td>
+                    <td class="uk-text-center">1.72</td>
+                    <td class="uk-text-center">6.04</td>
+                    <td class="uk-text-center">6.04</td>
+                </tr>
+            </tbody>
             </div>
         </table>
 
         <br>
 
         <div> 
-            <table>
-                <tr>
-                    <td>Margin Gross Balance: </td>
-                </tr>
-                <tr>
-                    <td>Margin Tradeable Balance:</td>
-                </tr>
-            </table>
+
             <fieldset>
-                    <legend>General Margin info</legend>
+                    <legend style="color: white;" > Aggregated Account Info</legend>
             <table>
-                    <!-- <tr>
-                            <td>UnRealized PNL (VUSD): </td> 
-                            <td v-bind:class="{'c-green': this.$store.getters.totalUnrealizedPNL_VUSD >= 0, 'c-red': 0 > this.$store.getters.totalUnrealizedPNL_VUSD }">{{this.$store.getters.totalUnrealizedPNL_VUSD.toFixed(5)}} </td>
+                    <tr>
+                        <td>Total Value Supplied :  </td> 
+                        <td class="c-green">{{ this.$store.state.userProtocolBalances.totalLiquidity }} </td>
+                        <span> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp</span>
+                        <td>Total Collateral : </td> 
+                        <td class="c-green">{{ this.$store.state.userProtocolBalances.totalCollateral }} </td>
                     </tr>
                     <tr>
-                            <td>Realized PNL (VUSD): </td> 
-                            <td v-bind:class="{'c-green': this.$store.getters.totalRealizedPNL_VUSD >= 0, 'c-red': 0 > this.$store.getters.totalRealizedPNL_VUSD }">{{this.$store.getters.totalRealizedPNL_VUSD.toFixed(5)}} </td>                          
+                        <td>Total Value Borrowed : </td> 
+                        <td class="c-red">{{ this.$store.state.userProtocolBalances.totalBorrows }} </td>
+                        <span> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp</span>
+                        <td>Available Borrows : </td> 
+                        <td class="c-green">{{ this.$store.state.userProtocolBalances.availableBorrows }} </td>
                     </tr>
                     <tr>
-                        <td>UnRealized PNL (BTC): </td> 
-                        <td v-bind:class="{'c-green': this.$store.getters.totalUnrealizedPNL_BTC >= 0, 'c-red': 0 > this.$store.getters.totalUnrealizedPNL_BTC }">{{this.$store.getters.totalUnrealizedPNL_BTC.toFixed(5)}} </td>
+                        <td>Liquidation Threshold : </td> 
+                        <td class="c-green">{{ this.$store.state.userProtocolBalances.currentLiquidationThreshold }} </td>
+                        <span> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp</span>
+                        <td>Loan To Value (LTV) : </td> 
+                        <td class="c-green">{{ this.$store.state.userProtocolBalances.ltv }} </td>
                     </tr>
                     <tr>
-                            <td>Realized PNL (BTC): </td> 
-                            <td v-bind:class="{'c-green': this.$store.getters.totalRealizedPNL_BTC >= 0, 'c-red': 0 > this.$store.getters.totalRealizedPNL_BTC }">{{this.$store.getters.totalRealizedPNL_BTC.toFixed(5)}} </td>                          
-                    </tr>
- -->
-                    <!-- <tr>
-                            <td>Margin Net:</td>
-                    </tr> -->
-                    <tr>
-                            <td>Margin Balance:</td>
-                    </tr>
-                    <tr>
-                        <td>Margin Required:</td>
+                        <td>Health Factor : </td> 
+                        <td class="c-green">{{ this.$store.state.userProtocolBalances.healthFactor }} </td>
+                        <span> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp</span>
+                        <td>Total Fee : </td> 
+                        <td class="c-green">{{ this.$store.state.userProtocolBalances.totalFees }} </td>
                     </tr>
             </table>
-        </fieldset>
+            </fieldset>
         </div>
+
+        <div class="center">
+            <button class="uk-button uk-button-green" style="padding: 0 17px;"  @click="refresh()">Refresh</button>
+        </div>
+
+
     </div>
     <!-- <div v-if=showLoader  class="center">
             <img width="75px" src="https://image.ibb.co/dc02hd/30.gif" />

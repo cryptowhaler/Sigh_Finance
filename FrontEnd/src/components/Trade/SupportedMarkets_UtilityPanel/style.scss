@@ -2,7 +2,7 @@
 .marketview {
   @include breakpoint(medium) {
     position: relative;
-    height: calc(100vh - 55px);
+    height: calc(100vh - 250px);
     &.sidebar-col1-hide {
       .stockchart-wrap {
         width: calc(50% - 20px);
@@ -106,7 +106,7 @@
   }
   @media screen and (max-width: 1500px) and (min-width: 1300px) {
     &.sidebar-col1 {
-      width: 790px;
+      width: 578px;
       left: 0px;
     }
     &.sidebar-col2 {
