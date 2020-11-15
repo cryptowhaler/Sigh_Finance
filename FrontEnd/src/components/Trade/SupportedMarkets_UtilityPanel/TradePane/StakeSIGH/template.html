@@ -1,9 +1,19 @@
-<div id="lending-trade-tab" style="padding-left: 22%; padding-top: 7%; position: inherit;"> 
+<div id="lending-trade-tab" style="padding-left: 22%; padding-top: 1%; position: inherit;"> 
 
     <!-- SELECT INSTRUMENT DROPDOWN -->
     
+    <span style="color: aliceblue; font-size: 11px; line-height: 15px;" > Your Staked Balance :   </span>
+    <br>
+    <span style="color: aliceblue; font-size: 11px; line-height: 15px;" > Total SIGH Staked :  </span>
+    <br>
+    <span style="color: aliceblue; font-size: 11px; line-height: 15px;" > Staking Contribution Ratio :  </span>
+    <br>
+    <span style="color: aliceblue; font-size: 11px; line-height: 15px;" > Reward Distribution Speed :  </span>
+    <br>
+    <span style="color: aliceblue; font-size: 11px; line-height: 15px;" > Current APY :  </span>
+
         <!-- Tabbing between Deposit/Redeem/Borrow/Repay -->
-        <div class="cs-tab-1 uk-position-relative ">
+        <div style="padding-top: 42px;" class="cs-tab-1 uk-position-relative ">
             <tab-bar :mobileDropdown=false marketDropdown="false" :tabs=tabs @tab-change="activeTabChange" />
     
             <keep-alive>

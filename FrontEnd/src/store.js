@@ -111,6 +111,8 @@ const store = new Vuex.Store({
     currentlySelectedInstrument : null, //  {instrumentAddress: '0x00' , name: 'Wrapped Bitcoin', symbol: 'WBTC', decimals: 18, iTokenAddress: '0x00' , priceDecimals: 8, price: 0 },  // Currently Selected Instrument
     sessionTransactions : [],
     SighInstrumentState : { name: 'SIGH Instrument', symbol : 'SIGH', address: null, price: 0, mintSpeed: 0, totalSupply: 0, priceDecimals: 8 },
+    instrumentGlobalBalances : [],        // Protocol Level Data for a supported Instrument
+
     username: null, //Added
     websocketStatus: 'Closed',
     loaderCounter: 0,
@@ -231,6 +233,9 @@ const store = new Vuex.Store({
     getSighPrice(state) {
       return state.SighInstrumentState.price;
     }, 
+    getInstrumentGlobalBalances(state) {
+      return state.instrumentGlobalBalances;
+    },
     showLoader(state) {
       return state > 0;
     },
@@ -281,7 +286,7 @@ const store = new Vuex.Store({
       }
       console.log("networkId MUTATION CALLED IN STORE - " + state.networkId);
     },   
-    updateWallet(state,newWallet,newBalance) {
+    updateWallet(state,{newWallet,newBalance}) {
       console.log("UPDATEWALLET MUTATION CALLED IN STORE");
       state.connectedWallet = newWallet;
       state.ethBalance = newBalance;
@@ -515,7 +520,7 @@ const store = new Vuex.Store({
         console.log("getWalletConfig ACTION FUNCTION CALLED IN STORE = web3 not set yet");
         await store.dispatch("loadWeb3");
         if (state.web3) {
-          store.dispatch("getContractAddresses");
+          await store.dispatch("getContractAddresses");
         }
       }
       if (state.web3) {
@@ -525,6 +530,7 @@ const store = new Vuex.Store({
           commit('connectedWallet',accounts[0]);
           commit('isWalletConnected',true);  
           console.log( 'Account - ' + state.connectedWallet );
+          await store.dispatch("refreshConnectedAccountState");
           store.dispatch('polling'); 
           return "You are now connected with wallet - ";
         }
@@ -539,7 +545,7 @@ const store = new Vuex.Store({
         }
    },
 
-  // UPDATES ACCOUNT AND WALLET WHENEVER THEY CHANGE
+  // UPDATES ACCOUNT AND BALANCE (ETH) WHENEVER THEY CHANGE
    polling: async ({commit,store,state}) => {
     console.log("polling ACTION FUNCTION CALLED IN STORE");
       setInterval(async () => {
@@ -549,7 +555,8 @@ const store = new Vuex.Store({
         const newBalance_ = await state.web3.eth.getBalance(account);
         // console.log(newBalance_);
         if (account !== state.connectedWallet) {  // ACCOUNT CONNECTED CHANGED. BOTH ACCOUNT AND BALANCE UPDATED 
-          commit('updateWallet',account, newBalance_);
+          commit('updateWallet',{ newWallet: account, newBalance: newBalance_});
+          await store.dispatch("refreshConnectedAccountState");
           // EventBus.$emit(EventNames.userWalletConnected, { username: walletConnected,}); //User has logged in (event)          
         } 
         else if (newBalance_ !== state.ethBalance) {    // ONLY BALANCE UPDATED WHEN IT IS CHANGED
@@ -562,7 +569,7 @@ const store = new Vuex.Store({
 // ######################################################
 // ############ getContractAddresses : calls getAddresses() to fetch and store all the contract addresses based on the network we are connected to (ETHEREUM/BSC) ############
 // ############ getAddresses : // fetches and updates all the contract addresses ############
-// ############ getSupportedInstrumentAddresses : Gets the addresses of the ITokens and the corresponding Insturments ############
+// ############ getSupportedInstrumentStatesData : Gets the addresses of the ITokens and the corresponding Insturments ############
 // ######################################################
 
   // calls getAddresses() to fetch and store all the contract addresses based on the network we are connected to
@@ -616,7 +623,7 @@ const store = new Vuex.Store({
       const iPriceOracleGetterAddress = await currentGlobalAddressesProviderContract.methods.getPriceOracle().call();        
       commit('updateIPriceOracleGetterAddress',iPriceOracleGetterAddress);
 
-      await store.dispatch('getSupportedInstrumentAddresses');
+      await store.dispatch('getSupportedInstrumentStatesData');  // SUPPORTED INSTRUMENTS BASIC DATA
 
       return true;
     }
@@ -625,9 +632,9 @@ const store = new Vuex.Store({
     }
   },
 
-  // [TESTED. WORKING AS EXPECTED] Gets the addresses of the ITokens and the corresponding Supported Instruments
-  getSupportedInstrumentAddresses: async ({commit,state}) => { 
-    console.log("getSupportedInstrumentAddresses ACTION");
+  // [TESTED. WORKING AS EXPECTED] Gets the addresses of the ITokens and the corresponding Supported Instrument STATES
+  getSupportedInstrumentStatesData: async ({commit,state}) => { 
+    console.log("getSupportedInstrumentStatesData ACTION");
     if (state.web3 && state.LendingPoolCoreContractAddress && state.LendingPoolCoreContractAddress != "0x0000000000000000000000000000000000000000") {
       const lendingPoolCoreContract = new state.web3.eth.Contract(LendingPoolCore.abi, state.LendingPoolCoreContractAddress );
       console.log(lendingPoolCoreContract);
@@ -636,23 +643,14 @@ const store = new Vuex.Store({
       const instruments = await lendingPoolCoreContract.methods.getInstruments().call();        
       commit('setSupportedInstrumentAddresses',instruments);
 
-      const priceOracleContract = new state.web3.eth.Contract(IPriceOracleGetter.abi, state.IPriceOracleGetterAddress );
-
       // Loop over the instrument addresses to fetch iToken Address, name, symbol, decimals and add them to the supported instruments list
       if (instruments) {
         for (let i=0; i<instruments.length; i++) {
-          let erc20Contract = new state.web3.eth.Contract(ERC20Detailed.abi, instruments[i] );
-          let instrumentState = {};
-          instrumentState.instrumentAddress = instruments[i];
-          instrumentState.name = await erc20Contract.methods.name().call();
-          instrumentState.symbol = await erc20Contract.methods.symbol().call();
-          instrumentState.decimals = await erc20Contract.methods.decimals().call();
-          instrumentState.iTokenAddress = await lendingPoolCoreContract.methods.getInstrumentITokenAddress(instruments[i]).call();
-          instrumentState.priceDecimals = await priceOracleContract.methods.getAssetPriceDecimals(instruments[i]).call();
+          let instrumentState = await store.dispatch('refershInstrumentState',{instrumentAddress: instruments[i] });
           console.log(instrumentState);
-          commit('addToSupportedInstrumentsArray',instrumentState);
           instrumentState.price = null;
-          commit('addToSupportedInstrumentsConfigsMapping',{instrumentAddress:instruments[i],instrumentDetails:instrumentState});
+          commit('addToSupportedInstrumentsArray',instrumentState);
+          commit('addToSupportedInstrumentsConfigsMapping',{instrumentAddress:instruments[i], instrumentDetails:instrumentState});
         }
         commit('updateSelectedInstrument',state.supportedInstruments[0]); // THE FIRST INSTRUMENT IS BY DEFAULT THE SELECTED INSTRUMENT
         store.dispatch('initiatePollingInstrumentPrices');
@@ -663,6 +661,62 @@ const store = new Vuex.Store({
       console.log("Contracts have not been currently deployed on this network");
       return false;
     }
+  },
+
+  // FETCHES THE DATA FOR AN INSTRUMENT (CONFIGURATION & BALANCES)
+  refershInstrumentState: async ({commit,state},{instrumentAddress}) => {
+    let instrumentState = {};    
+    const priceOracleContract = new state.web3.eth.Contract(IPriceOracleGetter.abi, state.IPriceOracleGetterAddress );
+    if ( state.web3 && instrumentAddress && instrumentAddress!= '0x0000000000000000000000000000000000000000') {
+      let erc20Contract = new state.web3.eth.Contract(ERC20Detailed.abi, instrumentAddress );      
+      // INSTRUMENT BASIC DATA
+      instrumentState.instrumentAddress = instrumentAddress;
+      instrumentState.name = await erc20Contract.methods.name().call();
+      instrumentState.symbol = await erc20Contract.methods.symbol().call();
+      instrumentState.decimals = await erc20Contract.methods.decimals().call();
+      instrumentState.iTokenAddress = await lendingPoolCoreContract.methods.getInstrumentITokenAddress(instrumentAddress).call();
+      instrumentState.priceDecimals = await priceOracleContract.methods.getAssetPriceDecimals(instrumentAddress).call();
+      // INSTRUMENT CONFIGURATION          
+      let instrumentConfig = await store.dispatch("getInstrumentConfiguration",{_instrumentAddress:instrumentAddress });        
+      instrumentState.configuration.liquidationThreshold = instrumentConfig.liquidationThreshold;
+      instrumentState.configuration.liquidationBonus = instrumentConfig.liquidationBonus;
+      instrumentState.configuration.ltv = instrumentConfig.ltv;
+      instrumentState.configuration.usageAsCollateralEnabled = instrumentConfig.usageAsCollateralEnabled;
+      instrumentState.configuration.borrowingEnabled = instrumentConfig.borrowingEnabled;
+      instrumentState.configuration.stableBorrowRateEnabled = instrumentConfig.stableBorrowRateEnabled;
+      instrumentState.configuration.isActive = instrumentConfig.isActive;
+      // INSTRUMENT GLOBAL BALANCES          
+      let instrumentGlobalBalances = await store.dispatch("getInstrumentMarketState",{_instrumentAddress:instrumentAddress });        
+      instrumentState.globalBalances.totalLiquidity = instrumentGlobalBalances.totalLiquidity;
+      instrumentState.globalBalances.totalBorrowsStable = instrumentGlobalBalances.totalBorrowsStable;
+      instrumentState.globalBalances.totalBorrowsVariable = instrumentGlobalBalances.totalBorrowsVariable;
+      instrumentState.globalBalances.totalBorrows = Number(instrumentGlobalBalances.totalBorrowsStable) + Number(instrumentGlobalBalances.totalBorrowsVariable) ;
+      instrumentState.globalBalances.availableLiquidity = instrumentGlobalBalances.availableLiquidity;
+      instrumentState.globalBalances.liquidityRate = instrumentGlobalBalances.liquidityRate;
+      instrumentState.globalBalances.variableBorrowRate = instrumentGlobalBalances.variableBorrowRate;
+      instrumentState.globalBalances.stableBorrowRate = instrumentGlobalBalances.stableBorrowRate;
+      instrumentState.globalBalances.averageStableBorrowRate = instrumentGlobalBalances.averageStableBorrowRate;
+      instrumentState.globalBalances.utilizationRate = instrumentGlobalBalances.utilizationRate;
+      instrumentState.globalBalances.liquidityIndex = instrumentGlobalBalances.liquidityIndex;
+      instrumentState.globalBalances.variableBorrowIndex = instrumentGlobalBalances.variableBorrowIndex;  
+      return instrumentState;
+    }
+    else {
+      return instrumentState;
+    }
+  },
+
+  refreshConnectedAccountState: async ({commit, state}) => {
+    console.log("refreshConnectedAccountState : refreshing user Balances");
+    let globalBalances = await store.dispatch("getUserAccountState",{_user: state.connectedWallet});
+    console.log('Global balances retrieved for the connected wallet');
+    console.log(globalBalances);
+    console.log(state.supportedInstrumentAddresses);
+    for (let i=0; i<state.supportedInstrumentAddresses.length; i++ ) {
+      console.log(state.supportedInstrumentAddresses[i]);
+      let userInstrumentBalance = await store.dispatch("getUserInstrumentState",{_instrumentAddress:state.supportedInstrumentAddresses[i] , _user} );
+      console.log(userInstrumentBalance);
+    }    
   },
 
   // [TESTED. WORKING AS EXPECTED] KEEP UPDATING PRICES OF THE SUPPORTED INSTRUMENTS
@@ -707,6 +761,75 @@ const store = new Vuex.Store({
       return null;
     }
   },
+
+// ######################################################
+// ############ GET SUPPORTED INSTRUMENT's MARKET CONFIGURATION AND STATE
+// ######################################################
+
+getInstrumentConfiguration: async ({commit,state},{_instrumentAddress}) => {
+  if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+    console.log('getInstrumentConfiguration');
+    console.log(_instrumentAddress);
+    let response = await lendingPoolContract.methods.getInstrumentConfigurationData(_instrumentAddress).call();
+    console.log(response);
+    return response;
+  }
+  else {
+    console.log('getInstrumentConfiguration() function in store.js. Protocol not supported on connected blockchain network');
+    return null;
+  }
+},
+
+getInstrumentMarketState: async ({commit,state},{_instrumentAddress}) => {
+  if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+    console.log('getInstrumentMarketState');
+    console.log(_instrumentAddress);
+    let response = await lendingPoolContract.methods.getInstrumentData(_instrumentAddress).call();
+    console.log(response);
+    return response;
+  }
+  else {
+    console.log('getInstrumentMarketState() function in store.js. Protocol not supported on connected blockchain network');
+    return null;
+  }
+},
+
+// ######################################################
+// ############ GET THE CONNECTED ACCOUNT's GLOBAL STATE AND INSTRUMENT MARKET STATE
+// ######################################################
+
+getUserAccountState: async ({commit,state},{_user}) => {
+  if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+    console.log('getUserAccountState');
+    console.log(_instrumentAddress);
+    let response = await lendingPoolContract.methods.getUserAccountData(_user).call();
+    console.log(response);
+    return response;
+  }
+  else {
+    console.log('getUserAccountState() function in store.js. Protocol not supported on connected blockchain network');
+    return null;
+  }
+},
+
+getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
+  if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+    console.log('getUserInstrumentState');
+    console.log(_instrumentAddress);
+    let response = await lendingPoolContract.methods.getUserInstrumentData(_instrumentAddress,_user).call();
+    console.log(response);
+    return response;
+  }
+  else {
+    console.log('getUserInstrumentState() function in store.js. Protocol not supported on connected blockchain network');
+    return null;
+  }
+},
+
 
 // ######################################################
 // ############ SIGH ---  SIGH_mintCoins() FUNCTION : mint new Coins when cycle gets completed
