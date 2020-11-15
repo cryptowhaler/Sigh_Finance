@@ -24,12 +24,12 @@ export default {
   created() {
     console.log("IN LENDING / REDEEM / AMOUNT (TRADE-PANE) FUNCTION ");
     this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
-    this.getRemainingBalance();
+    this.getRemainingBalance(false);
     this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
       this.selectedInstrument = selectedInstrument_.instrument;        
       console.log('REDEEM : changeSelectedInstrument - ');
       console.log(this.selectedInstrument);
-      this.getRemainingBalance();
+      this.getRemainingBalance(false);
     };
     ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
   },
@@ -38,7 +38,7 @@ export default {
   computed: {
     calculatedQuantity() {
         console.log('calculatedquantity');
-        if (this.selectedInstrument) {
+        if (this.selectedInstrument && this.selectedInstrument.priceDecimals) {
           console.log(this.selectedInstrument);
           return ((this.formData.redeemValue) / (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(9) ; 
           }
@@ -50,7 +50,7 @@ export default {
 
     ...mapActions(['IToken_redeem','ERC20_balanceOf']),
     
-    async redeem() {   //DEPOSIT (WORKS PROPERLY)
+    async redeem() {   //REDEEM (WORKS PROPERLY)
       this.showLoader = true;
       let price = (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals)).toFixed(4);
       if (price > 0) {
@@ -69,7 +69,7 @@ export default {
         if (response.status) {      
           this.$showSuccessMsg({message: "REDEEM SUCCESS : " + quantity + "  " +  this.selectedInstrument.symbol +  " worth " + this.formData.redeemValue + " USD was successfully redeemed from SIGH Finance. Gas used = " + response.gasUsed });
           this.$showInfoMsg({message: " $SIGH Farms looks forward to serving you again!"});
-          await this.getRemainingBalance();
+          await this.getRemainingBalance(true);
           this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Redeem',Service: 'LENDING'});
         }
         else {
@@ -86,11 +86,13 @@ export default {
     },
       
 
-    async getRemainingBalance() {
+    async getRemainingBalance(toDisplay) {
       this.remainingBalance = await this.ERC20_balanceOf({tokenAddress: this.selectedInstrument.iTokenAddress, account: this.$store.getters.connectedWallet });
       console.log(this.remainingBalance);
-      let remainingValue = (this.remainingBalance * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4); 
-      this.$showInfoMsg({message: this.remainingBalance + " " + this.selectedInstrument.symbol  + " worth $" + remainingValue + " USD are currently farming $SIGH for you at SIGH Finance! "});        
+      if (toDisplay && this.selectedInstrument.priceDecimals) {
+        let remainingValue = (this.remainingBalance * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4); 
+        this.$showInfoMsg({message: this.remainingBalance + " " + this.selectedInstrument.symbol  + " worth $" + remainingValue + " USD are currently farming $SIGH for you at SIGH Finance! "});        
+      }      
       console.log( 'Current remaining deposited balance for ' + this.selectedInstrument.symbol + " is " + this.remainingBalance + " worth " +  remainingValue + " USD");
     }
   },

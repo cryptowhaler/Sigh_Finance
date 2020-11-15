@@ -108,7 +108,7 @@ const store = new Vuex.Store({
     supportedInstrumentAddresses: null,
     supportedInstruments : [],      // INSTRUMENTS SUPPORTED BY THE PROTOCOL (FOR LENDING - ITOKEN & INSTRUMENT ADDRESSES + SYMBOL/NAME WILL BE STORED)
     supportedInstrumentConfigs: new Map(), // Instrument Address -> Instrument Config  MAPPING  
-    currentlySelectedInstrument : null, //  {instrumentAddress: '0x00' , name: 'Wrapped Bitcoin', symbol: 'WBTC', decimals: 18, iTokenAddress: '0x00' , priceDecimals: 8, price: 0 },  // Currently Selected Instrument
+    currentlySelectedInstrument : {symbol:'WBTC'}, //  {instrumentAddress: '0x00' , name: 'Wrapped Bitcoin', symbol: 'WBTC', decimals: 18, iTokenAddress: '0x00' , priceDecimals: 8, price: 0 },  // Currently Selected Instrument
     sessionTransactions : [],
     SighInstrumentState : { name: 'SIGH Instrument', symbol : 'SIGH', address: null, price: 0, mintSpeed: 0, totalSupply: 0, priceDecimals: 8 },
     instrumentGlobalBalances : [],        // Protocol Level Data for a supported Instrument

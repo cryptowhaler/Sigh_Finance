@@ -14,6 +14,7 @@ export default {
 
   name: 'Lending',
   
+
   components: {
     TabBar,
     Deposit,
@@ -21,6 +22,7 @@ export default {
     Borrow,
     Repay,
   },
+
 
   data() {
     return {
@@ -31,14 +33,15 @@ export default {
     };
   },
 
+
   methods: {
 
     activeTabChange(activeTab) {
       this.activeTab = activeTab;
     },
      
-    // Selecting an Instrument from dropdown
-    updateSelectedInstrument() {
+    
+    updateSelectedInstrument() {        // Selecting an Instrument from dropdown
       console.log(this.selectedInstrument);
       this.$store.commit('addLoaderTask', 3, false);    
       this.$store.commit('updateSelectedInstrument',this.selectedInstrument);

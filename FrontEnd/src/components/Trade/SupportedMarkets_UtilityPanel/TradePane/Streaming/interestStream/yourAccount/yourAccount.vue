@@ -50,17 +50,17 @@ export default {
       console.log('Addresses to which it is to be re-directed to = ' + this.formData.toAccount);
 
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
-        this.$showInfoMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
+        this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
         this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
       }
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
-        this.$showInfoMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
+        this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else if (Number(this.redirectedBalance) == 0 && Number(this.instrumentBalances[0]) == 0  ) {
-        this.$showInfoMsg({message: " The Connected Account " + this.$store.state.connectedWallet + " doesn't have any " + this.selectedInstrument.symbol + " balance (redirected or suppplied) accuring Interest for itself. You need to have a valid deposted amount before you can Re-direct its interest stream. Contact our support team at contact@sigh.finance in case of any queries! "}); 
+        this.$showErrorMsg({message: " The Connected Account " + this.$store.state.connectedWallet + " doesn't have any " + this.selectedInstrument.symbol + " balance (redirected or suppplied) accuring Interest for itself. You need to have a valid deposted amount before you can Re-direct its interest stream. Contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else if ( !Web3.utils.isAddress(this.formData.toAccount) ) {            // 'ToAccount' provided is not Valid
-        this.$showInfoMsg({message: " The Account Address provided is not valid ( check-sum check failed). Check the address again or contact our support team at contact@sigh.finance in case of any queries! "}); 
+        this.$showErrorMsg({message: " The Account Address provided is not valid ( check-sum check failed). Check the address again or contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else {                                  // EXECUTE THE TRANSACTION
         this.showLoader = true;

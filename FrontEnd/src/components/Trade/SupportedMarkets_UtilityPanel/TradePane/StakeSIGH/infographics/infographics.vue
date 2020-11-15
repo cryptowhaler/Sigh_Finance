@@ -40,7 +40,7 @@ export default {
   computed: {
     // calculatedValue() {
     //     console.log('calculatedValue');
-    //     if (this.selectedInstrument) {
+    //     if (this.selectedInstrument && this.selectedInstrument.priceDecimals) {
     //       console.log(this.selectedInstrument);
     //       return ((this.formData.sighQuantity) * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4) ; 
     //       }
