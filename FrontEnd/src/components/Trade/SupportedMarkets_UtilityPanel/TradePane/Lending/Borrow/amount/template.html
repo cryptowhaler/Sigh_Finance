@@ -33,7 +33,7 @@
                 <div class="form-elm">
                     <span style='color:antiquewhite; font-size: 13px; font-weight: 400;'>  Interest Mode  </span>
                     <!-- Instrument selected is directly stored in 'this.selectedInstrument' -->
-                    <select class="form-ctrl select2-single" v-model=formData.interestRateMode>
+                    <select class="form-ctrl select2-single" style="width:51%; padding-left: 20px;" v-model=formData.interestRateMode>
                         <!-- Dropdown list of instruments supported by SIGH Finance -->
                         <option v-for="option in interestRateModes" :key=option :value=option>
                             {{ option }}
@@ -54,7 +54,7 @@
         <div v-else class="uk-width-1-1">
 
 <!-- Buttons (Approve/Deposit) -->
-            <div class="left">
+            <div class="center">
                 <!-- <button class="uk-button uk-button-green"  @click="approve()">Approve</button> -->
                 <button class="uk-button uk-button-green" style="padding: 0 81px;"  @click="borrow()">Borrow</button>
             </div>

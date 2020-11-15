@@ -12,10 +12,10 @@
   }
 }
 
-.buy-sell-tab-dropdown {
-  right: -15px;
-  width: 67%;
-  top: 111px;
+.select-instrument-dropbox {
+  right: 0px;
+  width: 70%;
+  top: 133px;
   z-index: 2;
   position: relative;
   .form-elm-select {
@@ -23,7 +23,7 @@
   }
 }
 
-.buy-sell-tab-dropdown select option {
+.select-instrument-dropbox select option {
   background-color: var(--main-bg-color);
   color: var(--pri-label-color);
 }
@@ -46,7 +46,7 @@
 }
 
 @media screen and (max-width: 768px) {
-  .buy-sell-tab-dropdown {
+  .select-instrument-dropbox {
     right:5px;
     top: 45px;
   }

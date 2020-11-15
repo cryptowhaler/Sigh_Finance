@@ -1,23 +1,16 @@
-<div class="StakeSIGH">
-    <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
+<div id="lending-trade-tab" style="padding-left: 22%; padding-top: 7%; position: inherit;"> 
 
-    <!-- IMPLEMENTING -->
-        <div class="cs-tab-2  uk-position-relative " style=" padding-left: 30px; padding-right: 50px; padding-top: 12px;">
-
-            <div id="subtab-market" :title-link-class="'tab-title-class'">
-                <tab-bar :mobileDropdown=false :tabs=tabs @tab-change="activeTabChange" />
-            </div>
-            
-            <!-- <div> 
-                <span>Price : {{ selectedInstrumentPrice  }} </span>
-            </div> -->
-
+    <!-- SELECT INSTRUMENT DROPDOWN -->
+    
+        <!-- Tabbing between Deposit/Redeem/Borrow/Repay -->
+        <div class="cs-tab-1 uk-position-relative ">
+            <tab-bar :mobileDropdown=false marketDropdown="false" :tabs=tabs @tab-change="activeTabChange" />
+    
             <keep-alive>
-                <sighQuantity v-if="activeTab === 'Quantity'" />
-                <sighAmount v-if="activeTab === 'Amount'" />
+                <sighQuantity style="width: 54%;" v-if="activeTab === 'Quantity'" />
+                <sighAmount style="width: 54%;" v-if="activeTab === 'Amount'" />
                 <!-- <infographics v-if="activeTab === 'Analytics'" /> -->
             </keep-alive>
 
         </div>
-    </div>
 </div>
