@@ -1,6 +1,7 @@
 <template src='./template.html'></template>
 
 <script>
+import CustomerSupport from '@/components/CustomerSupport';
 import SupportedMarkets_UtilityPanel from './SupportedMarkets_UtilityPanel/SupportedMarkets_UtilityPanel.vue';
 // import Protocol_Infographics from './Protocol_Infographics/Protocol_Infographics.vue';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
@@ -11,6 +12,7 @@ export default {
 
   components: {
     SupportedMarkets_UtilityPanel,
+    'customer-support': CustomerSupport,
     // Protocol_Infographics,
     faqs: FAQs,
   },

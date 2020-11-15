@@ -2,7 +2,6 @@
     <vk-modal-close @click=closeModal  />
 
     <h3 v-if="internalComponent === 'contact'" style="text-align: center;" class="fs20 mb20 c-white uk-text-uppercase">CONTACT FORM</h3>
-
-    <contact v-else-if="internalComponent === 'contact'" class="i-widget ui-widget-content" />
+    <contact v-if="internalComponent === 'contact'" class="i-widget ui-widget-content" />
 
 </vk-modal>

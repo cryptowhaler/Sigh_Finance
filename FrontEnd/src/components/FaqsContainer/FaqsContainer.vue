@@ -76,8 +76,8 @@ export default {
         faq1: {
           open: false,
           title: 'What is SIGH Finance?',
-          content: 'SIGH Finance is a money-market protocol allowing Institutional Investors to invest in DIAs (tokenized basket of crypto assets) and earn additional lending interest by allowing it to be borrowed by the borrowers in the market.',
-          issubcontentAvailable: true,
+          content: 'SIGH Finance is a money-market protocol allowing Investors to supply/borrow Individual crypto-assets as well as DIAs (tokenized basket of crypto assets) to earn lending interest (when assets are supplied) or to short a particular crypto asset or a DIA Instrument through borrowing. ',
+          issubcontentAvailable: false,
           subcontent1: '1. The inflationary SIGH token is distributed through an Engineered liquidity mining pipeline controlled by A.I models which performs the following tasks :- ',
           subcontent2: ' --> It tries to minimize losses (if any) accured by the investors on a daily basis due to the inherent volatility of the underlying crypto assets by adjusting SIGH distribution rate across supported DIAs and individual markets.',
           subcontent3: ' -->  It uses the protocol\'s collected fee and SIGH\'s inflationary supply to buy yield generating crypto assets (WBTC/WETH/LINK/SIGH tokens) and deposits them in the protocol\'s treasury.',

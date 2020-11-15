@@ -155,19 +155,15 @@ export default {
 
     async fetchConfigsWalletConnected() {
       console.log('IN fetchConfigsWalletConnected() in APP.vue');
-      this.$store.commit('addLoaderTask', 1, false);
-      this.$store.commit('removeLoaderTask', 1);
     },
     async fetchConfigsWalletDisconnected() {
       console.log('IN fetchConfigsWalletDisconnected() in APP.vue');
-      this.$store.commit('addLoaderTask', 1, false);
-      this.$store.commit('removeLoaderTask', 1);
     },
 
     toggleContactModal() {   //ADDED
-      // console.log(this.contactModalShown);    
+      console.log(this.contactModalShown);    
       this.contactModalShown = !this.contactModalShown;
-      // console.log(this.contactModalShown);        
+      console.log(this.contactModalShown);        
     },
 
 
