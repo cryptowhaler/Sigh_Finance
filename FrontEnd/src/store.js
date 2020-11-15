@@ -113,6 +113,7 @@ const store = new Vuex.Store({
     SighInstrumentState : { name: 'SIGH Instrument', symbol : 'SIGH', address: null, price: 0, mintSpeed: 0, totalSupply: 0, priceDecimals: 8 },
     instrumentGlobalBalances : [],        // Protocol Level Data for a supported Instrument
     userProtocolBalances: {},
+    userInstrumentStateBalances: [{}],
     username: null, //Added
     websocketStatus: 'Closed',
     loaderCounter: 0,
@@ -413,6 +414,14 @@ const store = new Vuex.Store({
       state.userProtocolBalances.currentLiquidationThreshold = userProtocolBalances.currentLiquidationThreshold;
       state.userProtocolBalances.ltv = userProtocolBalances.ltv;
       state.userProtocolBalances.healthFactor = userProtocolBalances.healthFactor;
+      console.log("IN COMMIT 'setUserProtocolStateBalances' ");
+      console.log(state.userProtocolBalances);
+    },
+    resetUserInstrumentStateBalances(state) {   // RESETS THE ACCOUNT's INSTRUMENT STATE BALANCES
+      state.userInstrumentStateBalances = [{}];
+    },
+    addToUserInstrumentStateBalances(state,userInstrumentStateBalance) {   // ADDS TO THE ACCOUNT's INSTRUMENT STATE BALANCES
+      state.userInstrumentStateBalances.push(userInstrumentStateBalance);
     },
     changeWebsocketStatus(state, websocketStatus) {
       state.websocketStatus = websocketStatus;
@@ -572,7 +581,7 @@ const store = new Vuex.Store({
         // console.log(newBalance_);
         if (account !== state.connectedWallet) {  // ACCOUNT CONNECTED CHANGED. BOTH ACCOUNT AND BALANCE UPDATED 
           commit('updateWallet',{ newWallet: account, newBalance: newBalance_});
-          await store.dispatch("refreshConnectedAccountState");
+          await store.dispatch("refreshConnectedWalletState");
           // EventBus.$emit(EventNames.userWalletConnected, { username: walletConnected,}); //User has logged in (event)          
         } 
         else if (newBalance_ !== state.ethBalance) {    // ONLY BALANCE UPDATED WHEN IT IS CHANGED
@@ -685,6 +694,8 @@ const store = new Vuex.Store({
     }
   },
 
+
+
   // FETCHES THE DATA FOR AN INSTRUMENT (CONFIGURATION & BALANCES)
   refershInstrumentState: async ({commit,state},{instrumentAddress}) => {
     let instrumentState = {};    
@@ -731,19 +742,28 @@ const store = new Vuex.Store({
       return {instrumentState, instrumentConfiguration,instrumentBalances};
   },
 
-  refreshConnectedAccountState: async ({commit, state}) => {
-    console.log("refreshConnectedAccountState : refreshing user Balances");
+
+
+
+  refreshConnectedWalletState: async ({commit, state}) => {
+    console.log("refreshConnectedWalletState : refreshing user Balances");
     try {
       let globalBalances = await store.dispatch("getUserProtocolState",{_user: state.connectedWallet});
       console.log('Global balances retrieved for the connected wallet');
       console.log(globalBalances);
       commit("setUserProtocolStateBalances",globalBalances);  // SETTING CONNECTED WALLET'S PROTOCOL LEVEL BALANCES
-      console.log(state.supportedInstrumentAddresses);
-      for (let i=0; i<state.supportedInstrumentAddresses.length; i++ ) {
-        console.log(state.supportedInstrumentAddresses[i]);
-        let userInstrumentBalance;
+      console.log(state.supportedInstruments);
+      commit("resetUserInstrumentStateBalances");  // SETTING CONNECTED WALLET'S PROTOCOL LEVEL BALANCES
+      for (let i=0; i<state.supportedInstruments.length; i++ ) {
+        console.log(state.supportedInstruments[i]);
+        let userInstrumentBalance = {};
+        userInstrumentBalance.instrument = state.supportedInstruments[i].instrumentAddress;
+        userInstrumentBalance.symbol = state.supportedInstruments[i].symbol;
+        userInstrumentBalance.decimals = state.supportedInstruments[i].decimals;
+        userInstrumentBalance.priceDecimals = state.supportedInstruments[i].priceDecimals;
         userInstrumentBalance = await store.dispatch("getUserInstrumentState",{_instrumentAddress: state.supportedInstrumentAddresses[i] , _user :state.connectedWallet } );
         console.log(userInstrumentBalance);
+        commit("addToUserInstrumentStateBalances",userInstrumentBalance);  // ADDING TO THE CONNECTED WALLET'S INSTRUMENT LEVEL BALANCES
       }    
       return true;
     }
@@ -752,6 +772,8 @@ const store = new Vuex.Store({
       return false;
     }
   },
+
+
 
   // [TESTED. WORKING AS EXPECTED] KEEP UPDATING PRICES OF THE SUPPORTED INSTRUMENTS
   initiatePollingInstrumentPrices: async ({commit,state}) => {

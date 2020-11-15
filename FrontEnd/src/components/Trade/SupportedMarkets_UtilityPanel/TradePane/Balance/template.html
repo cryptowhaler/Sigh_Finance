@@ -7,15 +7,21 @@
                     <th class="uk-text-center">Instrument</th>
                     <th class="uk-text-center">Supplied</th>
                     <th class="uk-text-center">Borrowed</th>
-                    <th class="uk-text-center">Interest APY</th>
+                    <th class="uk-text-center">Supply APY</th>
+                    <th class="uk-text-center">Borrow APY</th>
                     <th class="uk-text-center">$SIGH Yield</th>
                 </tr>
             </thead>
             <div id="simpleBarContainer" data-simplebar data-simplebar-auto-hide="false">
             <tbody>
-            <!-- <tr v-for="instrument in instruments"> -->
-                <!-- <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.symbol }}</td> -->
-            <!-- </tr> -->
+            <tr v-for="userInstrumentBalance in $store.state.userInstrumentStateBalances ">
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ userInstrumentBalance.symbol }}</td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ userInstrumentBalance.currentITokenBalance }}</td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ userInstrumentBalance.currentBorrowBalance }}</td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ userInstrumentBalance.liquidityRate }}</td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ userInstrumentBalance.borrowRate }}</td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ userInstrumentBalance.borrowRate }}</td>
+            </tr>
                 <tr>
                     <td class="uk-text-center">VUSD</td>
                     <td class="uk-text-center">4.32</td>
@@ -84,32 +90,32 @@
                     <legend style="color: white;" > Aggregated Account Info</legend>
             <table>
                     <tr>
-                        <td>Total Value Supplied :  </td> 
-                        <td class="c-green">{{ this.$store.state.userProtocolBalances.totalLiquidity }} </td>
-                        <span> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp</span>
-                        <td>Total Collateral : </td> 
-                        <td class="c-green">{{ this.$store.state.userProtocolBalances.totalCollateral }} </td>
+                        <td>Total Value Supplied : {{ $store.state.userProtocolBalances.totalLiquidity }} </td> 
+                        <!-- <span> &nbsp &nbsp &nbsp</span> -->
                     </tr>
                     <tr>
-                        <td>Total Value Borrowed : </td> 
-                        <td class="c-red">{{ this.$store.state.userProtocolBalances.totalBorrows }} </td>
-                        <span> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp</span>
-                        <td>Available Borrows : </td> 
-                        <td class="c-green">{{ this.$store.state.userProtocolBalances.availableBorrows }} </td>
+                        <td>Total Collateral : {{ $store.state.userProtocolBalances.totalCollateral }}  </td> 
                     </tr>
                     <tr>
-                        <td>Liquidation Threshold : </td> 
-                        <td class="c-green">{{ this.$store.state.userProtocolBalances.currentLiquidationThreshold }} </td>
-                        <span> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp</span>
-                        <td>Loan To Value (LTV) : </td> 
-                        <td class="c-green">{{ this.$store.state.userProtocolBalances.ltv }} </td>
+                        <td>Total Value Borrowed : {{ $store.state.userProtocolBalances.totalBorrows }} </td> 
                     </tr>
                     <tr>
-                        <td>Health Factor : </td> 
-                        <td class="c-green">{{ this.$store.state.userProtocolBalances.healthFactor }} </td>
-                        <span> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp</span>
-                        <td>Total Fee : </td> 
-                        <td class="c-green">{{ this.$store.state.userProtocolBalances.totalFees }} </td>
+                        <!-- <span> &nbsp &nbsp &nbsp</span> -->
+                        <td>Available Borrows : {{ $store.state.userProtocolBalances.availableBorrows }}</td> 
+                    </tr>
+                    <tr>
+                        <td>Liquidation Threshold : {{ $store.state.userProtocolBalances.currentLiquidationThreshold }} </td> 
+                        <!-- <span> &nbsp &nbsp &nbsp</span> -->
+                    </tr>
+                    <tr>
+                        <td>Loan To Value (LTV) : {{ $store.state.userProtocolBalances.ltv }} </td> 
+                    </tr>
+                    <tr>
+                        <td>Health Factor : {{ $store.state.userProtocolBalances.healthFactor }} </td> 
+                    </tr>
+                    <tr>
+                        <!-- <span> &nbsp &nbsp &nbsp</span> -->
+                        <td>Total Fee : {{ $store.state.userProtocolBalances.totalFees }} </td> 
                     </tr>
             </table>
             </fieldset>

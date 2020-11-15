@@ -1,7 +1,6 @@
 <template src="./template.html"></template>
 
 <script>
-import { ConnectedWallet } from '../../../../../utils/localStorage';
 // import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import EventBus, {EventNames,} from '@/eventBuses/default';
 import {mapState,mapActions,} from 'vuex';
@@ -13,7 +12,7 @@ export default {
 
   data() {
     return {
-      balance: {},
+      userProtocolBalances: this.$store.state.userProtocolBalances,
     };
   },
   
@@ -30,7 +29,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['refreshConnectedAccountState']),
+    ...mapActions(['refreshConnectedWalletState']),
 
     async refresh() {
       console.log("refreshing User Balances");
@@ -42,12 +41,12 @@ export default {
         this.$showInfoMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else {                                  // EXECUTE THE TRANSACTION
-        let response = await this.refreshConnectedAccountState();
+        let response = await this.refreshConnectedWalletState();
         if (response) {
-          this.$showInfoMsg({message: " Balances refreshed successfully for the account " + this.$store.state.connectedAccount  });
+          this.$showInfoMsg({message: " Balances refreshed successfully for the account " + this.$store.state.connectedWallet  });
         }
         else {
-          this.$showInfoMsg({message: " Could not refresh balances for the account " + this.$store.state.connectedAccount + ". Something went wrong. Contact our team at contact@sigh.finance in case of any queries!"  });
+          this.$showInfoMsg({message: " Could not refresh balances for the account " + this.$store.state.connectedWallet + ". Something went wrong. Contact our team at contact@sigh.finance in case of any queries!"  });
         }
      }
     }
