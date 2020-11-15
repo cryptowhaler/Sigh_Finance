@@ -64,7 +64,7 @@ const store = new Vuex.Store({
     connectedWallet: null,
     networkId: null,
     ethBalance: null,
-    isNetworkSupported: null,
+    isNetworkSupported: false,
 // ######################################################
 // ############ PROTOCOL CONTRACT ADDRESSES  ############
 // ######################################################
@@ -104,6 +104,7 @@ const store = new Vuex.Store({
     NETWORKS : { '1': 'Main Net', '2': 'Deprecated Morden test network','3': 'Ropsten test network',
       '4': 'Rinkeby test network','42': 'Kovan test network', '1337': 'Tokamak network', '4447': 'Truffle Develop Network','5777': 'Ganache Blockchain',
       '56':'Binance Smart Chain Main Network','97':'Binance Smart Chain Test Network'},
+    supportedNetworks: ['42'],
     supportedInstrumentAddresses: null,
     supportedInstruments : [],      // INSTRUMENTS SUPPORTED BY THE PROTOCOL (FOR LENDING - ITOKEN & INSTRUMENT ADDRESSES + SYMBOL/NAME WILL BE STORED)
     supportedInstrumentConfigs: new Map(), // Instrument Address -> Instrument Config  MAPPING  
@@ -270,6 +271,14 @@ const store = new Vuex.Store({
     },    
     networkId(state,networkId) {         
       state.networkId = networkId;
+      for (let i=0;i <state.supportedNetworks.length; i++ ) {
+        if ( state.networkId == state.supportedNetworks[i] ) {
+          state.isNetworkSupported = true;
+        }
+        else {
+          state.isNetworkSupported = false;
+        }
+      }
       console.log("networkId MUTATION CALLED IN STORE - " + state.networkId);
     },   
     updateWallet(state,newWallet,newBalance) {
@@ -1148,6 +1157,90 @@ const store = new Vuex.Store({
       }
     },
 
+    LendingPool_getInstrumentConfigurationData: async ({commit,state},{_instrument}) => {
+      if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+        console.log(lendingPoolContract);
+        try {
+          const response = await lendingPoolContract.methods.getInstrumentConfigurationData(_instrument).call();
+          console.log(response);
+          return response;
+          }
+          catch(error) {
+            // console.log('Making transaction (in store - catch)');
+            console.log(error);
+            return error;
+          }
+      }
+      else {
+        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + getters.networkName);
+        return "SIGH Finance (Lending Pool Contract) is currently not been deployed on ";
+      }
+    },    
+
+    LendingPool_getInstrumentData: async ({commit,state},{_instrument}) => {
+      if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+        console.log(lendingPoolContract);
+        try {
+          const response = await lendingPoolContract.methods.getInstrumentData(_instrument).call();
+          console.log(response);
+          return response;
+          }
+          catch(error) {
+            // console.log('Making transaction (in store - catch)');
+            console.log(error);
+            return error;
+          }
+      }
+      else {
+        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + getters.networkName);
+        return "SIGH Finance (Lending Pool Contract) is currently not been deployed on ";
+      }
+    },
+
+    LendingPool_getUserAccountData: async ({commit,state},{_user}) => {
+      if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+        console.log(lendingPoolContract);
+        try {
+          const response = await lendingPoolContract.methods.getUserAccountData(_user).call();
+          console.log(response);
+          return response;
+          }
+          catch(error) {
+            // console.log('Making transaction (in store - catch)');
+            console.log(error);
+            return error;
+          }
+      }
+      else {
+        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + getters.networkName);
+        return "SIGH Finance (Lending Pool Contract) is currently not been deployed on ";
+      }
+    },
+
+    LendingPool_getUserInstrumentData: async ({commit,state},{_instrument, _user}) => {
+      if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+        console.log(lendingPoolContract);
+        try {
+          const response = await lendingPoolContract.methods.getUserInstrumentData(_instrument, _user).call();
+          console.log(response);
+          return response;
+          }
+          catch(error) {
+            // console.log('Making transaction (in store - catch)');
+            console.log(error);
+            return error;
+          }
+      }
+      else {
+        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + getters.networkName);
+        return "SIGH Finance (Lending Pool Contract) is currently not been deployed on ";
+      }
+    },    
+    
     LendingPoolCore_getUserBorrowBalances: async ({commit,state},{_instrument,_user}) => {
       if (state.web3 && state.LendingPoolCoreContractAddress && state.LendingPoolCoreContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolCoreContract = new state.web3.eth.Contract(LendingPoolCore.abi, state.LendingPoolCoreContractAddress );
@@ -1162,7 +1255,23 @@ const store = new Vuex.Store({
       }
     },
 
-
+    LendingPoolCore_getUserBasicInstrumentData: async ({commit,state},{_instrument,_user}) => {
+      if (state.web3 && state.LendingPoolCoreContractAddress && state.LendingPoolCoreContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const lendingPoolCoreContract = new state.web3.eth.Contract(LendingPoolCore.abi, state.LendingPoolCoreContractAddress );
+        console.log('LendingPoolCore_getUserBasicInstrumentData');
+        console.log(_instrument);
+        console.log(_user);
+        console.log(lendingPoolCoreContract);
+        const response = await lendingPoolCoreContract.methods.getUserBasicInstrumentData(_instrument,_user).call();
+        console.log(response);
+        return response;
+      }
+      else {
+        console.log("SIGH Finance (Lending Pool Core Contract) is currently not been deployed on " + getters.networkName);
+        return "SIGH Finance (Lending Pool Core Contract) is currently not been deployed on ";
+      }
+    },
+    
     
 
 // ######################################################
@@ -1380,6 +1489,7 @@ IToken_principalBalanceOf: async ({commit,state},{iTokenAddress,_user}) => {
 IToken_getInterestRedirectionAddress: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
+    console.log('IToken_getInterestRedirectionAddress');
     console.log(iTokenContract);
     const response = await iTokenContract.methods.getInterestRedirectionAddress(_user).call();
     console.log(response);
@@ -1396,10 +1506,17 @@ IToken_getInterestRedirectionAddress: async ({commit,state},{iTokenAddress,_user
 IToken_getinterestRedirectionAllowances: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
+    console.log('IToken_getinterestRedirectionAllowances');
     console.log(iTokenContract);
-    const response = await iTokenContract.methods.interestRedirectionAllowances(_user).call();
-    console.log(response);
-    return response;  
+    try {
+      const response = await iTokenContract.methods.interestRedirectionAllowances(_user).call();
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;    
+    }
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -1412,6 +1529,7 @@ IToken_getinterestRedirectionAllowances: async ({commit,state},{iTokenAddress,_u
 IToken_getRedirectedBalance: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
+    console.log('IToken_getRedirectedBalance');
     console.log(iTokenContract);
     const response = await iTokenContract.methods.getRedirectedBalance(_user).call();
     console.log(response);
@@ -1426,6 +1544,9 @@ IToken_getRedirectedBalance: async ({commit,state},{iTokenAddress,_user}) => {
 IToken_getSighAccured: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
+    console.log('IToken_getSighAccured');
+    console.log(iTokenAddress);
+    console.log(_user);
     console.log(iTokenContract);
     const response = await iTokenContract.methods.getRedirectedBalance(_user).call();
     console.log(response);
@@ -1440,6 +1561,9 @@ IToken_getSighAccured: async ({commit,state},{iTokenAddress,_user}) => {
 IToken_getSighStreamRedirectedTo: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
+    console.log('IToken_getSighStreamRedirectedTo');
+    console.log(iTokenAddress);
+    console.log(_user);
     console.log(iTokenContract);
     const response = await iTokenContract.methods.getSighStreamRedirectedTo(_user).call();
     console.log(response);
@@ -1454,6 +1578,9 @@ IToken_getSighStreamRedirectedTo: async ({commit,state},{iTokenAddress,_user}) =
 IToken_getSighStreamAllowances: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
+    console.log('IToken_getSighStreamAllowances');
+    console.log(iTokenAddress);
+    console.log(_user);
     console.log(iTokenContract);
     const response = await iTokenContract.methods.getSighStreamAllowances(_user).call();
     console.log(response);

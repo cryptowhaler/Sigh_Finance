@@ -1,4 +1,4 @@
-#landing-trade-tab {
+#lending-trade-tab {
   width: 100%;
   position: relative;
   div {
@@ -13,9 +13,9 @@
 }
 
 .buy-sell-tab-dropdown {
-  right: 15px;
-  width: 70%;
-  top: 51px;
+  right: -15px;
+  width: 67%;
+  top: 111px;
   z-index: 2;
   position: relative;
   .form-elm-select {

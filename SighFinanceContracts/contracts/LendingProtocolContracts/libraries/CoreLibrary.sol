@@ -326,8 +326,8 @@ library CoreLibrary {
     function calculateCompoundedInterest(uint256 _rate, uint40 _lastUpdateTimestamp) internal view returns (uint256) {
         uint256 timeDifference = block.timestamp.sub(uint256(_lastUpdateTimestamp));
         uint256 ratePerSecond = _rate.div(SECONDS_PER_YEAR);
-        return let cumulated interest = ratePerSecond.add(WadRayMath.ray()).rayPow(timeDifference);
-        return  cumulated interest;
+        uint256 cumulated_interest = ratePerSecond.add(WadRayMath.ray()).rayPow(timeDifference);
+        return  cumulated_interest;
     }
 
     /**

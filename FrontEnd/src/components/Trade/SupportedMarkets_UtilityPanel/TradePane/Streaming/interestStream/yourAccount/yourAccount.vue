@@ -19,7 +19,8 @@ export default {
       currentlyRedirectedTo : null,       // Interest currently re-directed to
       redirectedBalance: null,            // The redirected balance is the balance redirected by other accounts to the user,  that is accrueing interest for him.
       redirectedBalanceWorth: null,       // redirectedBalance * redirectedBalanceWorth
-
+      suppliedBalanceWorth: null,
+      instrumentBalances: [],             // supplied / borrowed balances
       showLoader: false,
     };
   },
@@ -29,7 +30,7 @@ export default {
     this. getCurrentStateOfInterestStream(false);                   // get the address to which the Interest Stream is currently re-directed            
     this.changeSelectedInstrument = (selectedInstrument_) => {                 //Changing Selected Instrument
       this.selectedInstrument = selectedInstrument_.instrument;        
-      console.log('DEPOSIT : selected instrument changed - '+ this.selectedInstrument );
+      console.log('INTEREST-STREAM : selected instrument changed - '+ this.selectedInstrument );
       this. getCurrentStateOfInterestStream(true);
     };    
     ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);    
@@ -41,7 +42,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['IToken_redirectInterestStream','IToken_allowInterestRedirectionTo','IToken_getInterestRedirectionAddress','IToken_getRedirectedBalance','IToken_getinterestRedirectionAllowances']),
+    ...mapActions(['IToken_redirectInterestStream','IToken_allowInterestRedirectionTo','IToken_getInterestRedirectionAddress','IToken_getRedirectedBalance','IToken_getinterestRedirectionAllowances','LendingPoolCore_getUserBasicInstrumentData']),
     
 
     async redirectInterestStream() {                           // RE-DIRECT INTEREST STREAM
@@ -55,8 +56,8 @@ export default {
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
         this.$showInfoMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
-      else if (Number(this.redirectedBalance) == 0 ) {
-        this.$showInfoMsg({message: " The Connected Account " + this.$store.state.connectedWallet + " doesn't have any deposited " + this.selectedInstrument.symbol + " accuring Interest for itself. You need to have a valid deposted amount before you can Re-direct its interest stream. Contact our support team at contact@sigh.finance in case of any queries! "}); 
+      else if (Number(this.redirectedBalance) == 0 && Number(this.instrumentBalances[0]) == 0  ) {
+        this.$showInfoMsg({message: " The Connected Account " + this.$store.state.connectedWallet + " doesn't have any " + this.selectedInstrument.symbol + " balance (redirected or suppplied) accuring Interest for itself. You need to have a valid deposted amount before you can Re-direct its interest stream. Contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else if ( !Web3.utils.isAddress(this.formData.toAccount) ) {            // 'ToAccount' provided is not Valid
         this.$showInfoMsg({message: " The Account Address provided is not valid ( check-sum check failed). Check the address again or contact our support team at contact@sigh.finance in case of any queries! "}); 
@@ -89,8 +90,8 @@ export default {
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
         this.$showInfoMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
-      else if (Number(this.redirectedBalance) == 0 ) {
-        this.$showInfoMsg({message: " The Connected Account " + this.$store.state.connectedWallet + " doesn't have any deposited " + this.selectedInstrument.symbol + " accuring Interest for itself. You need to have a valid deposted amount before you can Transfer the administrator priviledges over its interest stream. Contact our support team at contact@sigh.finance in case of any queries! "}); 
+      else if (Number(this.redirectedBalance) == 0 && Number(this.instrumentBalances[0]) == 0  ) {
+        this.$showInfoMsg({message: " The Connected Account " + this.$store.state.connectedWallet + " doesn't have any " + this.selectedInstrument.symbol + " balance (redirected or suppplied) accuring Interest for itself. You need to have a valid deposted amount before you can Re-direct its interest stream. Contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else if ( !Web3.utils.isAddress(this.formData.toAccount) ) {            // 'ToAccount' provided is not Valid
         this.$showInfoMsg({message: " The Account Address provided is not valid ( check-sum check failed). Check the address again or contact our support team at contact@sigh.finance in case of any queries! "}); 
@@ -118,11 +119,13 @@ export default {
       this.currentlyAdministrator = await this.IToken_getinterestRedirectionAllowances({ iTokenAddress: this.selectedInstrument.iTokenAddress, _user: this.$store.getters.connectedWallet  });
       this.currentlyRedirectedTo = await this.IToken_getInterestRedirectionAddress({iTokenAddress: this.selectedInstrument.iTokenAddress, _user: this.$store.getters.connectedWallet });
       this.redirectedBalance = await this.IToken_getRedirectedBalance({ iTokenAddress: this.selectedInstrument.iTokenAddress, _user: this.$store.getters.connectedWallet  });
+      this.instrumentBalances = await this.LendingPoolCore_getUserBasicInstrumentData({ _instrument: this.selectedInstrument.instrumentAddress, _user: this.$store.getters.connectedWallet  });
       
       let price = (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals)).toFixed(4);
       this.redirectedBalanceWorth = price * this.redirectedBalance;
+      this.suppliedBalanceWorth = price * this.instrumentBalances[0];
       if (toDisplay) {
-          this.$showInfoMsg({message: this.selectedInstrument.symbol + " Accuring Interest for you = " + this.redirectedBalance + " worth " + this.redirectedBalanceWorth + " USD" });
+          this.$showInfoMsg({message: "Your deposited " + this.instrumentBalances[0] + " " + this.selectedInstrument.symbol + " (" +  this.suppliedBalanceWorth + " USD)" + " and the redirected " + this.redirectedBalance + this.selectedInstrument.symbol  + " (" + this.redirectedBalanceWorth + " USD) is currently farming Interest for you!" });
           this.$showInfoMsg({message: "Your Interest Stream currently re-directed to = " + this.currentlyRedirectedTo + ". Your Interest Stream's administrator right's holder " + this.currentlyAdministrator });
       }
     }

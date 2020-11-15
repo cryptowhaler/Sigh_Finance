@@ -19,7 +19,7 @@ export default {
       fromAccountAdministrator : null,      // Interest Stream: Administrator Rights Holder
       fromAccountRedirectedBalance: null,            // The redirected balance is the balance redirected by other accounts to the user,  that is accrueing interest for him.
       fromAccountRedirectedBalanceWorth: null,       // fromAccountRedirectedBalance * fromAccountRedirectedBalanceWorth
-
+      instrumentBalances: [],
       showLoader: false,
     };
   },
@@ -41,7 +41,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['IToken_redirectInterestStreamOf','IToken_getfromAccountRedirectedBalance','IToken_getinterestRedirectionAllowances']),
+    ...mapActions(['IToken_redirectInterestStreamOf','IToken_getfromAccountRedirectedBalance','IToken_getinterestRedirectionAllowances','LendingPoolCore_getUserBasicInstrumentData']),
     
 
     async redirectInterestStreamOf() {                           // RE-DIRECT INTEREST STREAM
@@ -64,8 +64,8 @@ export default {
       else if ( this.$store.state.connectedWallet !=  this.fromAccountAdministrator ) {
         this.$showInfoMsg({message: "The connected Account does not have administrator priviledges over the provided 'From Account'. Administrator privileges over the 'From Account' are currently held by " +  this.fromAccountAdministrator +  " . Contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
-      else if (Number(this.fromAccountRedirectedBalance) == 0 ) {
-        this.$showInfoMsg({message: " The 'From Account' " + this.formData.fromAccount + " doesn't have any deposited " + this.selectedInstrument.symbol + " accuring Interest. The 'From Account' needs to have a valid deposted amount before you can Re-direct its interest stream. Contact our support team at contact@sigh.finance in case of any queries! "}); 
+      else if (Number(this.redirectedBalance) == 0 && Number(this.instrumentBalances[0]) == 0  ) {
+        this.$showInfoMsg({message: " The 'From Account' " + this.$store.state.connectedWallet + " doesn't have any " + this.selectedInstrument.symbol + " balance (redirected or suppplied) accuring Interest for itself.  The 'From Account' needs to have a valid deposted amount before you can Re-direct its interest stream. Contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else {                                  // EXECUTE THE TRANSACTION
         this.showLoader = true;
@@ -89,10 +89,11 @@ export default {
       if ( this.formData.iTokenAddress && Web3.utils.isAddress(this.formData.fromAccount)  )  {
         this.fromAccountAdministrator = await this.IToken_getinterestRedirectionAllowances({ iTokenAddress: this.formData.iTokenAddress, _user: this.formData.fromAccount  });
         this.fromAccountRedirectedBalance = await this.IToken_getfromAccountRedirectedBalance({ iTokenAddress: this.selectedInstrument.iTokenAddress, _user: this.formData.fromAccount  });
+        this.instrumentBalances = await this.LendingPoolCore_getUserBasicInstrumentData({ _instrument: this.selectedInstrument.instrumentAddress, _user: this.formData.fromAccount  });
         let price = (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals)).toFixed(4);
         this.fromAccountRedirectedBalanceWorth = price * this.fromAccountRedirectedBalance;
         if (toDisplay) {
-            this.$showInfoMsg({message: this.fromAccountRedirectedBalance  + " " + this.selectedInstrument.symbol + " worth " + this.fromAccountRedirectedBalanceWorth + " USD accuring Interest in the provided From Account " });
+          this.$showInfoMsg({message: "The deposited " + this.instrumentBalances[0] + " " + this.selectedInstrument.symbol + " and the redirected " + this.redirectedBalance + this.selectedInstrument.symbol + " is currently farming Interest for you!" });
         }
       }
     }

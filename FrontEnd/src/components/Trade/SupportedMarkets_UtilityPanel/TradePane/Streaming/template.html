@@ -1,7 +1,8 @@
-<div class="Streaming">
+<!-- <div class="Streaming">
     <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
-        <div class="cs-tab-2  uk-position-relative " style=" padding-left: 30px; padding-right: 50px; padding-top: 12px;">
+        <div class="cs-tab-2  uk-position-relative " style=" padding-left: 30px; padding-right: 50px; padding-top: 12px;"> -->
 
+        <div id="lending-trade-tab" style="padding-left: 30%; padding-top: 3%; position: inherit;"> 
 
             <!-- SELECT INSTRUMENT DROPDOWN -->
             <div class="buy-sell-tab-dropdown uk-position-top-right">
@@ -14,23 +15,20 @@
                             {{ instrument.symbol }}
                         </option>
                     </select>
+                    <span style="color: aliceblue; font-size: 10px; line-height: 15px;" > Instrument Address : {{ $store.state.currentlySelectedInstrument.instrumentAddress }}  </span>
+                    <span style="color: aliceblue; font-size: 10px; line-height: 15px;" > IToken Address : {{ $store.state.currentlySelectedInstrument.iTokenAddress }} </span>
                 </div>
             </div>
 
 
-            <div id="subtab-market" :title-link-class="'tab-title-class'">
-                <tab-bar :mobileDropdown=false :tabs=tabs @tab-change="activeTabChange" />
-            </div>
+            <div class="cs-tab-1 uk-position-relative ">
+                <tab-bar :mobileDropdown=false marketDropdown="false" :tabs=tabs @tab-change="activeTabChange" />
             
-            <!-- <div> 
-                <span>Price : {{ selectedInstrumentPrice  }} </span>
-            </div> -->
-
-            <keep-alive>
-                <sighStream v-if="activeTab === '$SIGH Stream'" />
-                <interestStream v-if="activeTab === 'Interest Stream'" />
-            </keep-alive>
-
+                <keep-alive>
+                    <sighStream style="padding-top: 142px;" v-if="activeTab === '$SIGH Stream'" />
+                    <interestStream  style="padding-top: 142px; padding-right: 64px;" v-if="activeTab === 'Interest Stream'" />
+                </keep-alive>
+            </div>
         </div>
-    </div>
-</div>
+    <!-- </div> -->
+<!-- </div> -->

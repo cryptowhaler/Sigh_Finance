@@ -360,11 +360,11 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"contract GlobalAddressesProvider\",\"name\":\"_provider\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_baseVariableBorrowRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_variableRateSlope1\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_variableRateSlope2\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_stableRateSlope1\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_stableRateSlope2\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"constant\":true,\"inputs\":[],\"name\":\"EXCESS_UTILIZATION_RATE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"OPTIMAL_UTILIZATION_RATE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"addressesProvider\",\"outputs\":[{\"internalType\":\"contract GlobalAddressesProvider\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"baseVariableBorrowRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_availableLiquidity\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_totalBorrowsStable\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_totalBorrowsVariable\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_averageStableBorrowRate\",\"type\":\"uint256\"}],\"name\":\"calculateInterestRates\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"currentLiquidityRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"currentStableBorrowRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"currentVariableBorrowRate\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getBaseVariableBorrowRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getStableRateSlope1\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getStableRateSlope2\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getVariableRateSlope1\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getVariableRateSlope2\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newBorrowRate\",\"type\":\"uint256\"}],\"name\":\"setBaseVariableBorrowRate\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newstableRateSlope1\",\"type\":\"uint256\"}],\"name\":\"setStableRateSlope1\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newstableRateSlope2\",\"type\":\"uint256\"}],\"name\":\"setStableRateSlope2\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newVariableRateSlope1\",\"type\":\"uint256\"}],\"name\":\"setVariableRateSlope1\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newVariableRateSlope2\",\"type\":\"uint256\"}],\"name\":\"setVariableRateSlope2\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"stableRateSlope1\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"stableRateSlope2\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"variableRateSlope1\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"variableRateSlope2\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Aave, SIGH Finance*\",\"details\":\"if there is need to update the calculation of the interest rates for a specific Instrument, a new version of this contract will be deployed.\",\"methods\":{\"calculateInterestRates(address,uint256,uint256,uint256,uint256)\":{\"details\":\"calculates the interest rates depending on the available liquidity and the total borrowed.\",\"params\":{\"_availableLiquidity\":\"the liquidity available in the instrument\",\"_averageStableBorrowRate\":\"the weighted average of all the stable rate borrows\",\"_instrument\":\"the address of the instrument\",\"_totalBorrowsStable\":\"the total borrowed from the instrument a stable rate\",\"_totalBorrowsVariable\":\"the total borrowed from the instrument at a variable rate\"},\"return\":\"the liquidity rate, stable borrow rate and variable borrow rate calculated from the input parameters*\"}},\"title\":\"DefaultInstrumentInterestRateStrategy contract\"},\"userdoc\":{\"methods\":{},\"notice\":\"implements the calculation of the interest rates depending on the Instrument parameters.\"}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/lendingpool/DefaultInstrumentInterestRateStrategy.sol\":\"DefaultInstrumentInterestRateStrategy\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingRateOracle.sol\":{\"keccak256\":\"0x6d15213822a26f5f75a70d45b652ad179c417f50d3f7f42952acd1b631170972\",\"urls\":[\"bzz-raw://35346d875f7b882f14e5f5b8d33340afe8e29df8132a384df63985628079d7c9\",\"dweb:/ipfs/QmRQcrGHZTm1oDGnkmtYZwhHtn8SXqEiCYZfYvd7S2tFFY\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/I_InstrumentInterestRateStrategy.sol\":{\"keccak256\":\"0x8a36fc5c3cea6f913fcd6248447157311a6ec22752aff7710bd58114bfd2840a\",\"urls\":[\"bzz-raw://2e287714f3b6ffd0254d2832421faa1613c26e6192f301b28886466bb79e3471\",\"dweb:/ipfs/QmfBhVBbzdnFyHuFdtndQDLfVC4TePLUEXhqDAWmbAgeJ6\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/lendingpool/DefaultInstrumentInterestRateStrategy.sol\":{\"keccak256\":\"0xd31b7c1905482103722bfbbd470eb77acad6c910cdc2518ad8bd3f8313228d68\",\"urls\":[\"bzz-raw://e13a1cbae43d1a3ed0792c7bb1ea096eedf1ce8fb57ae68e3ac38196e3257241\",\"dweb:/ipfs/QmdxzqYofvTN1bMg1ZwGkZGDqgvEwKcQPAs9udnp4arxmP\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/libraries/WadRayMath.sol\":{\"keccak256\":\"0x126c58b068a25a9721da9933c377361f9194ab839dd6ad627d8f78a062fe0cc3\",\"urls\":[\"bzz-raw://810142a1a4ecd60c3f36ab696cdcb34bfb5a52d241591229659bb5c02c40c5cc\",\"dweb:/ipfs/Qma8sCTftr1468EKegJuXnNXqTySUGtk683kAfyhMyHpiL\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/configuration/AddressStorage.sol\":{\"keccak256\":\"0x0d0b40ccc403e45861faf71d042f5c419ff51930a45896633052c91b7ed6eae4\",\"urls\":[\"bzz-raw://ad8c170f6b3b87ec85076f3fdcd006fcef61ef47c978a9da8971df22682cf657\",\"dweb:/ipfs/QmRWUQzdk7GHfcyrPzE6vw9ipfrW6Kiq1Jyp9xzbWqmv5p\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/configuration/GlobalAddressesProvider.sol\":{\"keccak256\":\"0x5310631fce62fd0b130b3dd17ea42fdaf15e669ff38d3215883033ba3ab130c7\",\"urls\":[\"bzz-raw://cd78074a70018b3dd57649c93702cb85758151b7e153750903484eeb89d2587a\",\"dweb:/ipfs/QmWFoi9YgJVuaBThwVMLE9hYjrZtZhsYN8fNj59sCsi4kr\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/configuration/IGlobalAddressesProvider.sol\":{\"keccak256\":\"0x3cac9f73a1e6cbd9bdd703519a1a43bd8215f284910dda0807440d01193178b3\",\"urls\":[\"bzz-raw://e33089eb2c49cbc820f1aeb05e48d041a22838681769dfca9fdae797ee37f26f\",\"dweb:/ipfs/QmNRwngcxxRd5LkNKTDm68kgrQ3K2aYvxFVVDF3Sm8RcYH\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol\":{\"keccak256\":\"0x6bb623c8fe336eeba953283dbe3014ab18e882d3a3f27f38234672a5a69885d1\",\"urls\":[\"bzz-raw://2810308c8de3ef8291356ea30e866a0b20e2729223caffc43b0f6513f7b0aaeb\",\"dweb:/ipfs/QmT6AD9CxgeeUndEj6F6z9zd8eJLDxUxJcHekcBRGop3ch\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin-upgradeability/BaseUpgradeabilityProxy.sol\":{\"keccak256\":\"0x99e393b97e79374c0dd133282f83ac48f15777d3894eafb9257768a1bf7acff5\",\"urls\":[\"bzz-raw://1c9d283b3442e71b7c611f8f79e792b248d97e1502a14d8507f131161b288f8b\",\"dweb:/ipfs/QmWxuFrfdLHmhJrpoGwHRujeV6zpdFydVM1DY3N5RBwNs5\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin-upgradeability/InitializableAdminUpgradeabilityProxy.sol\":{\"keccak256\":\"0x7928dfc5736d1ec6a29672f41458b7de688ef2d0ec31b3e4a16e6bc554b87df1\",\"urls\":[\"bzz-raw://712ce2645eeb72c5c12e40ef1e04f7161ab9f8aaae3413b82f6a1b48956d6c38\",\"dweb:/ipfs/QmcTNBeHbqBUj2UUgNob1s22oMjj4UpcLMNdXTBC2m1b6p\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin-upgradeability/InitializableUpgradeabilityProxy.sol\":{\"keccak256\":\"0x46052d95ea9b770116913041555f808f1b099c0a35e5c7ecbfc04ffef64a83bd\",\"urls\":[\"bzz-raw://67c2cacee01c1c8972a195be9f018abeae6917f45e45a4dc22b462fbb148150f\",\"dweb:/ipfs/QmZhM5vvrvjFbTXjzYDB3ZTtNbTf3j54v76SZoDSbFTjdU\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin-upgradeability/Proxy.sol\":{\"keccak256\":\"0xd8dcdaaf2f03c606a569d91506958bf78df9adfb41df76727857e5dfe956e872\",\"urls\":[\"bzz-raw://1d780033022b07478621ce08cd4e668603fc899ae3212a883eea23347937e8d5\",\"dweb:/ipfs/QmVZkBHpdDjko87qT4597e3UZ5uYdrEfPYbamEjBep52Se\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin-upgradeability/UpgradeabilityProxy.sol\":{\"keccak256\":\"0x5829b59012f64d1ce3ae6b98a61ddf5d6daa6e6f1a54e336ce910c8afd415c69\",\"urls\":[\"bzz-raw://28cba7d1f3d67aab91a4f88df4cb63762b443c31cb62a87e957add0b43dc8e1a\",\"dweb:/ipfs/QmUXzpQDBXA2xGSNRqjn3VMJ3o8RXmpATieU9ovvk6QDAD\"]},\"openzeppelin-solidity/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x7f293e2ee29a32416531a0bf3da9972358887c45ec1836642ec8e700cc152ba0\",\"urls\":[\"bzz-raw://e6ca40872864cb64a2dcc1b4f0be6a3cfc406f363e045fa7991f9f22f6257a63\",\"dweb:/ipfs/QmdsPdEayCcUa1fg3YTbhTPn3GTcjfNYZqnwf9EDC3QGpp\"]},\"openzeppelin-solidity/contracts/utils/Address.sol\":{\"keccak256\":\"0x58543a8d0f0fc465618566ee6b3c04071965cd26ba20d1de3f9768014ed807e4\",\"urls\":[\"bzz-raw://f060c6ee3ca16eb001823e2c0f8b642ecf3ead486721bab6f6be5220158d4421\",\"dweb:/ipfs/QmWv1ms6aLAfjZ49dNnffbg49XiKmuEWHeu4wi6EinkEek\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b50604051610db4380380610db4833981810160405260c081101561003357600080fd5b508051602082015160408301516060840151608085015160a090950151600080546001600160a01b039096166001600160a01b031990961695909517909455600192909255600255600355600491909155600555610d1e806100966000396000f3fe608060405234801561001057600080fd5b50600436106101215760003560e01c8063925b3ef8116100ad578063bfa6daef11610071578063bfa6daef14610252578063c72c4d101461026f578063ccab01a314610293578063d5cd73911461029b578063f4202409146102a357610121565b8063925b3ef8146101eb5780639a207c2314610208578063a15f30ac14610225578063b0dfd97d1461022d578063b25895441461024a57610121565b8063280c95b3116100f4578063280c95b31461015857806334762ca51461017757806357e37af01461017f57806365614f81146101db5780637b832f58146101e357610121565b80630b3429a2146101265780630bdf953f1461014057806314e32da4146101485780631731987314610150575b600080fd5b61012e6102ab565b60408051918252519081900360200190f35b61012e6102b1565b61012e6102b7565b61012e6102bd565b6101756004803603602081101561016e57600080fd5b50356102cc565b005b61012e610386565b6101bd600480360360a081101561019557600080fd5b506001600160a01b03813516906020810135906040810135906060810135906080013561038c565b60408051938452602084019290925282820152519081900360600190f35b61012e610633565b61012e610639565b6101756004803603602081101561020157600080fd5b503561063f565b6101756004803603602081101561021e57600080fd5b50356106f9565b61012e6107b3565b6101756004803603602081101561024357600080fd5b50356107c3565b61012e61087d565b6101756004803603602081101561026857600080fd5b5035610883565b61027761093d565b604080516001600160a01b039092168252519081900360200190f35b61012e61094c565b61012e610952565b61012e610958565b60025490565b60045481565b60055490565b6aa56fa5b99019a5c800000081565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b15801561031057600080fd5b505afa158015610324573d6000803e3d6000fd5b505050506040513d602081101561033a57600080fd5b50516001600160a01b0316146103815760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600155565b60015490565b60008080806103a1878763ffffffff61095e16565b90506000811580156103b1575088155b6103da576103d56103c88a8463ffffffff61095e16565b839063ffffffff6109c116565b6103dd565b60005b90506000809054906101000a90046001600160a01b03166001600160a01b0316633618abba6040518163ffffffff1660e01b815260040160206040518083038186803b15801561042c57600080fd5b505afa158015610440573d6000803e3d6000fd5b505050506040513d602081101561045657600080fd5b50516040805163bb85c0bb60e01b81526001600160a01b038d811660048301529151919092169163bb85c0bb916024808301926020929190829003018186803b1580156104a257600080fd5b505afa1580156104b6573d6000803e3d6000fd5b505050506040513d60208110156104cc57600080fd5b505193506b0295be96e64066972000000081111561058e57600061051d6aa56fa5b99019a5c8000000610511846b0295be96e64066972000000063ffffffff610a0516565b9063ffffffff6109c116565b905061055761053782600554610a4790919063ffffffff16565b60045461054b90889063ffffffff61095e16565b9063ffffffff61095e16565b945061058661057182600354610a4790919063ffffffff16565b60025460015461054b9163ffffffff61095e16565b935050610614565b6105cc6105bf6105b0836b0295be96e64066972000000063ffffffff6109c116565b6004549063ffffffff610a4716565b859063ffffffff61095e16565b93506106116106026002546105f66b0295be96e640669720000000856109c190919063ffffffff16565b9063ffffffff610a4716565b6001549063ffffffff61095e16565b92505b610624816105f68a8a878b610a7f565b94505050955095509592505050565b60035481565b60025481565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b15801561068357600080fd5b505afa158015610697573d6000803e3d6000fd5b505050506040513d60208110156106ad57600080fd5b50516001600160a01b0316146106f45760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600255565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b15801561073d57600080fd5b505afa158015610751573d6000803e3d6000fd5b505050506040513d602081101561076757600080fd5b50516001600160a01b0316146107ae5760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600355565b6b0295be96e64066972000000081565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b15801561080757600080fd5b505afa15801561081b573d6000803e3d6000fd5b505050506040513d602081101561083157600080fd5b50516001600160a01b0316146108785760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600555565b60015481565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b1580156108c757600080fd5b505afa1580156108db573d6000803e3d6000fd5b505050506040513d60208110156108f157600080fd5b50516001600160a01b0316146109385760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600455565b6000546001600160a01b031681565b60055481565b60045490565b60035490565b6000828201838110156109b8576040805162461bcd60e51b815260206004820152601b60248201527f536166654d6174683a206164646974696f6e206f766572666c6f770000000000604482015290519081900360640190fd5b90505b92915050565b6000600282046109fd836109f16109e4876b033b2e3c9fd0803ce8000000610af0565b849063ffffffff61095e16565b9063ffffffff610b4916565b949350505050565b60006109b883836040518060400160405280601e81526020017f536166654d6174683a207375627472616374696f6e206f766572666c6f770000815250610b8b565b60006109b86b033b2e3c9fd0803ce80000006109f1610a6c868663ffffffff610af016565b6b019d971e4fe8401e740000009061095e565b600080610a92868663ffffffff61095e16565b905080610aa35760009150506109fd565b6000610ab2856105f688610c22565b90506000610ac3856105f68a610c22565b90506000610ae3610ad385610c22565b610511858563ffffffff61095e16565b9998505050505050505050565b600082610aff575060006109bb565b82820282848281610b0c57fe5b04146109b85760405162461bcd60e51b8152600401808060200182810382526021815260200180610c9e6021913960400191505060405180910390fd5b60006109b883836040518060400160405280601a81526020017f536166654d6174683a206469766973696f6e206279207a65726f000000000000815250610c38565b60008184841115610c1a5760405162461bcd60e51b81526004018080602001828103825283818151815260200191508051906020019080838360005b83811015610bdf578181015183820152602001610bc7565b50505050905090810190601f168015610c0c5780820380516001836020036101000a031916815260200191505b509250505060405180910390fd5b505050900390565b60006109bb82633b9aca0063ffffffff610af016565b60008183610c875760405162461bcd60e51b8152602060048201818152835160248401528351909283926044909101919085019080838360008315610bdf578181015183820152602001610bc7565b506000838581610c9357fe5b049594505050505056fe536166654d6174683a206d756c7469706c69636174696f6e206f766572666c6f775468652063616c6c6572206d75737420626520746865206c656e64696e6720706f6f6c206d616e61676572a265627a7a723158201bd92674417bb9e09033ae6afa22e12b23791eeb77594f01f45363ad77018d7664736f6c63430005100032",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106101215760003560e01c8063925b3ef8116100ad578063bfa6daef11610071578063bfa6daef14610252578063c72c4d101461026f578063ccab01a314610293578063d5cd73911461029b578063f4202409146102a357610121565b8063925b3ef8146101eb5780639a207c2314610208578063a15f30ac14610225578063b0dfd97d1461022d578063b25895441461024a57610121565b8063280c95b3116100f4578063280c95b31461015857806334762ca51461017757806357e37af01461017f57806365614f81146101db5780637b832f58146101e357610121565b80630b3429a2146101265780630bdf953f1461014057806314e32da4146101485780631731987314610150575b600080fd5b61012e6102ab565b60408051918252519081900360200190f35b61012e6102b1565b61012e6102b7565b61012e6102bd565b6101756004803603602081101561016e57600080fd5b50356102cc565b005b61012e610386565b6101bd600480360360a081101561019557600080fd5b506001600160a01b03813516906020810135906040810135906060810135906080013561038c565b60408051938452602084019290925282820152519081900360600190f35b61012e610633565b61012e610639565b6101756004803603602081101561020157600080fd5b503561063f565b6101756004803603602081101561021e57600080fd5b50356106f9565b61012e6107b3565b6101756004803603602081101561024357600080fd5b50356107c3565b61012e61087d565b6101756004803603602081101561026857600080fd5b5035610883565b61027761093d565b604080516001600160a01b039092168252519081900360200190f35b61012e61094c565b61012e610952565b61012e610958565b60025490565b60045481565b60055490565b6aa56fa5b99019a5c800000081565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b15801561031057600080fd5b505afa158015610324573d6000803e3d6000fd5b505050506040513d602081101561033a57600080fd5b50516001600160a01b0316146103815760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600155565b60015490565b60008080806103a1878763ffffffff61095e16565b90506000811580156103b1575088155b6103da576103d56103c88a8463ffffffff61095e16565b839063ffffffff6109c116565b6103dd565b60005b90506000809054906101000a90046001600160a01b03166001600160a01b0316633618abba6040518163ffffffff1660e01b815260040160206040518083038186803b15801561042c57600080fd5b505afa158015610440573d6000803e3d6000fd5b505050506040513d602081101561045657600080fd5b50516040805163bb85c0bb60e01b81526001600160a01b038d811660048301529151919092169163bb85c0bb916024808301926020929190829003018186803b1580156104a257600080fd5b505afa1580156104b6573d6000803e3d6000fd5b505050506040513d60208110156104cc57600080fd5b505193506b0295be96e64066972000000081111561058e57600061051d6aa56fa5b99019a5c8000000610511846b0295be96e64066972000000063ffffffff610a0516565b9063ffffffff6109c116565b905061055761053782600554610a4790919063ffffffff16565b60045461054b90889063ffffffff61095e16565b9063ffffffff61095e16565b945061058661057182600354610a4790919063ffffffff16565b60025460015461054b9163ffffffff61095e16565b935050610614565b6105cc6105bf6105b0836b0295be96e64066972000000063ffffffff6109c116565b6004549063ffffffff610a4716565b859063ffffffff61095e16565b93506106116106026002546105f66b0295be96e640669720000000856109c190919063ffffffff16565b9063ffffffff610a4716565b6001549063ffffffff61095e16565b92505b610624816105f68a8a878b610a7f565b94505050955095509592505050565b60035481565b60025481565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b15801561068357600080fd5b505afa158015610697573d6000803e3d6000fd5b505050506040513d60208110156106ad57600080fd5b50516001600160a01b0316146106f45760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600255565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b15801561073d57600080fd5b505afa158015610751573d6000803e3d6000fd5b505050506040513d602081101561076757600080fd5b50516001600160a01b0316146107ae5760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600355565b6b0295be96e64066972000000081565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b15801561080757600080fd5b505afa15801561081b573d6000803e3d6000fd5b505050506040513d602081101561083157600080fd5b50516001600160a01b0316146108785760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600555565b60015481565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b1580156108c757600080fd5b505afa1580156108db573d6000803e3d6000fd5b505050506040513d60208110156108f157600080fd5b50516001600160a01b0316146109385760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600455565b6000546001600160a01b031681565b60055481565b60045490565b60035490565b6000828201838110156109b8576040805162461bcd60e51b815260206004820152601b60248201527f536166654d6174683a206164646974696f6e206f766572666c6f770000000000604482015290519081900360640190fd5b90505b92915050565b6000600282046109fd836109f16109e4876b033b2e3c9fd0803ce8000000610af0565b849063ffffffff61095e16565b9063ffffffff610b4916565b949350505050565b60006109b883836040518060400160405280601e81526020017f536166654d6174683a207375627472616374696f6e206f766572666c6f770000815250610b8b565b60006109b86b033b2e3c9fd0803ce80000006109f1610a6c868663ffffffff610af016565b6b019d971e4fe8401e740000009061095e565b600080610a92868663ffffffff61095e16565b905080610aa35760009150506109fd565b6000610ab2856105f688610c22565b90506000610ac3856105f68a610c22565b90506000610ae3610ad385610c22565b610511858563ffffffff61095e16565b9998505050505050505050565b600082610aff575060006109bb565b82820282848281610b0c57fe5b04146109b85760405162461bcd60e51b8152600401808060200182810382526021815260200180610c9e6021913960400191505060405180910390fd5b60006109b883836040518060400160405280601a81526020017f536166654d6174683a206469766973696f6e206279207a65726f000000000000815250610c38565b60008184841115610c1a5760405162461bcd60e51b81526004018080602001828103825283818151815260200191508051906020019080838360005b83811015610bdf578181015183820152602001610bc7565b50505050905090810190601f168015610c0c5780820380516001836020036101000a031916815260200191505b509250505060405180910390fd5b505050900390565b60006109bb82633b9aca0063ffffffff610af016565b60008183610c875760405162461bcd60e51b8152602060048201818152835160248401528351909283926044909101919085019080838360008315610bdf578181015183820152602001610bc7565b506000838581610c9357fe5b049594505050505056fe536166654d6174683a206d756c7469706c69636174696f6e206f766572666c6f775468652063616c6c6572206d75737420626520746865206c656e64696e6720706f6f6c206d616e61676572a265627a7a723158201bd92674417bb9e09033ae6afa22e12b23791eeb77594f01f45363ad77018d7664736f6c63430005100032",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"contract GlobalAddressesProvider\",\"name\":\"_provider\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_baseVariableBorrowRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_variableRateSlope1\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_variableRateSlope2\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_stableRateSlope1\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_stableRateSlope2\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"constant\":true,\"inputs\":[],\"name\":\"EXCESS_UTILIZATION_RATE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"OPTIMAL_UTILIZATION_RATE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"addressesProvider\",\"outputs\":[{\"internalType\":\"contract GlobalAddressesProvider\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"baseVariableBorrowRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_availableLiquidity\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_totalBorrowsStable\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_totalBorrowsVariable\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_averageStableBorrowRate\",\"type\":\"uint256\"}],\"name\":\"calculateInterestRates\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"currentLiquidityRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"currentStableBorrowRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"currentVariableBorrowRate\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getBaseVariableBorrowRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getStableRateSlope1\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getStableRateSlope2\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getVariableRateSlope1\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getVariableRateSlope2\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newBorrowRate\",\"type\":\"uint256\"}],\"name\":\"setBaseVariableBorrowRate\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newstableRateSlope1\",\"type\":\"uint256\"}],\"name\":\"setStableRateSlope1\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newstableRateSlope2\",\"type\":\"uint256\"}],\"name\":\"setStableRateSlope2\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newVariableRateSlope1\",\"type\":\"uint256\"}],\"name\":\"setVariableRateSlope1\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newVariableRateSlope2\",\"type\":\"uint256\"}],\"name\":\"setVariableRateSlope2\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"stableRateSlope1\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"stableRateSlope2\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"variableRateSlope1\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"variableRateSlope2\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Aave, SIGH Finance*\",\"details\":\"if there is need to update the calculation of the interest rates for a specific Instrument, a new version of this contract will be deployed.\",\"methods\":{\"calculateInterestRates(address,uint256,uint256,uint256,uint256)\":{\"details\":\"calculates the interest rates depending on the available liquidity and the total borrowed.\",\"params\":{\"_availableLiquidity\":\"the liquidity available in the instrument\",\"_averageStableBorrowRate\":\"the weighted average of all the stable rate borrows\",\"_instrument\":\"the address of the instrument\",\"_totalBorrowsStable\":\"the total borrowed from the instrument a stable rate\",\"_totalBorrowsVariable\":\"the total borrowed from the instrument at a variable rate\"},\"return\":\"the liquidity rate, stable borrow rate and variable borrow rate calculated from the input parameters*\"}},\"title\":\"DefaultInstrumentInterestRateStrategy contract\"},\"userdoc\":{\"methods\":{},\"notice\":\"implements the calculation of the interest rates depending on the Instrument parameters.\"}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/lendingpool/DefaultInstrumentInterestRateStrategy.sol\":\"DefaultInstrumentInterestRateStrategy\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingRateOracle.sol\":{\"keccak256\":\"0x6d15213822a26f5f75a70d45b652ad179c417f50d3f7f42952acd1b631170972\",\"urls\":[\"bzz-raw://35346d875f7b882f14e5f5b8d33340afe8e29df8132a384df63985628079d7c9\",\"dweb:/ipfs/QmRQcrGHZTm1oDGnkmtYZwhHtn8SXqEiCYZfYvd7S2tFFY\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/I_InstrumentInterestRateStrategy.sol\":{\"keccak256\":\"0x8a36fc5c3cea6f913fcd6248447157311a6ec22752aff7710bd58114bfd2840a\",\"urls\":[\"bzz-raw://2e287714f3b6ffd0254d2832421faa1613c26e6192f301b28886466bb79e3471\",\"dweb:/ipfs/QmfBhVBbzdnFyHuFdtndQDLfVC4TePLUEXhqDAWmbAgeJ6\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/lendingpool/DefaultInstrumentInterestRateStrategy.sol\":{\"keccak256\":\"0xd31b7c1905482103722bfbbd470eb77acad6c910cdc2518ad8bd3f8313228d68\",\"urls\":[\"bzz-raw://e13a1cbae43d1a3ed0792c7bb1ea096eedf1ce8fb57ae68e3ac38196e3257241\",\"dweb:/ipfs/QmdxzqYofvTN1bMg1ZwGkZGDqgvEwKcQPAs9udnp4arxmP\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/libraries/WadRayMath.sol\":{\"keccak256\":\"0xdecb27b23892c48ef8ff2e63de656c06b1abd745f6bd0e8f91f203d32cf00cd7\",\"urls\":[\"bzz-raw://1c57032f9ee17dddf672e68d5142011c06f5b8b2379f3c9f63ab77232ffd86e1\",\"dweb:/ipfs/QmeZie4G7caYQsuFbaVqt3YRnrr2s42VAgVHeW1WAq3BRh\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/configuration/AddressStorage.sol\":{\"keccak256\":\"0x0d0b40ccc403e45861faf71d042f5c419ff51930a45896633052c91b7ed6eae4\",\"urls\":[\"bzz-raw://ad8c170f6b3b87ec85076f3fdcd006fcef61ef47c978a9da8971df22682cf657\",\"dweb:/ipfs/QmRWUQzdk7GHfcyrPzE6vw9ipfrW6Kiq1Jyp9xzbWqmv5p\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/configuration/GlobalAddressesProvider.sol\":{\"keccak256\":\"0x5310631fce62fd0b130b3dd17ea42fdaf15e669ff38d3215883033ba3ab130c7\",\"urls\":[\"bzz-raw://cd78074a70018b3dd57649c93702cb85758151b7e153750903484eeb89d2587a\",\"dweb:/ipfs/QmWFoi9YgJVuaBThwVMLE9hYjrZtZhsYN8fNj59sCsi4kr\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/configuration/IGlobalAddressesProvider.sol\":{\"keccak256\":\"0x3cac9f73a1e6cbd9bdd703519a1a43bd8215f284910dda0807440d01193178b3\",\"urls\":[\"bzz-raw://e33089eb2c49cbc820f1aeb05e48d041a22838681769dfca9fdae797ee37f26f\",\"dweb:/ipfs/QmNRwngcxxRd5LkNKTDm68kgrQ3K2aYvxFVVDF3Sm8RcYH\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol\":{\"keccak256\":\"0x6bb623c8fe336eeba953283dbe3014ab18e882d3a3f27f38234672a5a69885d1\",\"urls\":[\"bzz-raw://2810308c8de3ef8291356ea30e866a0b20e2729223caffc43b0f6513f7b0aaeb\",\"dweb:/ipfs/QmT6AD9CxgeeUndEj6F6z9zd8eJLDxUxJcHekcBRGop3ch\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin-upgradeability/BaseUpgradeabilityProxy.sol\":{\"keccak256\":\"0x99e393b97e79374c0dd133282f83ac48f15777d3894eafb9257768a1bf7acff5\",\"urls\":[\"bzz-raw://1c9d283b3442e71b7c611f8f79e792b248d97e1502a14d8507f131161b288f8b\",\"dweb:/ipfs/QmWxuFrfdLHmhJrpoGwHRujeV6zpdFydVM1DY3N5RBwNs5\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin-upgradeability/InitializableAdminUpgradeabilityProxy.sol\":{\"keccak256\":\"0x7928dfc5736d1ec6a29672f41458b7de688ef2d0ec31b3e4a16e6bc554b87df1\",\"urls\":[\"bzz-raw://712ce2645eeb72c5c12e40ef1e04f7161ab9f8aaae3413b82f6a1b48956d6c38\",\"dweb:/ipfs/QmcTNBeHbqBUj2UUgNob1s22oMjj4UpcLMNdXTBC2m1b6p\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin-upgradeability/InitializableUpgradeabilityProxy.sol\":{\"keccak256\":\"0x46052d95ea9b770116913041555f808f1b099c0a35e5c7ecbfc04ffef64a83bd\",\"urls\":[\"bzz-raw://67c2cacee01c1c8972a195be9f018abeae6917f45e45a4dc22b462fbb148150f\",\"dweb:/ipfs/QmZhM5vvrvjFbTXjzYDB3ZTtNbTf3j54v76SZoDSbFTjdU\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin-upgradeability/Proxy.sol\":{\"keccak256\":\"0xd8dcdaaf2f03c606a569d91506958bf78df9adfb41df76727857e5dfe956e872\",\"urls\":[\"bzz-raw://1d780033022b07478621ce08cd4e668603fc899ae3212a883eea23347937e8d5\",\"dweb:/ipfs/QmVZkBHpdDjko87qT4597e3UZ5uYdrEfPYbamEjBep52Se\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/openzeppelin-upgradeability/UpgradeabilityProxy.sol\":{\"keccak256\":\"0x5829b59012f64d1ce3ae6b98a61ddf5d6daa6e6f1a54e336ce910c8afd415c69\",\"urls\":[\"bzz-raw://28cba7d1f3d67aab91a4f88df4cb63762b443c31cb62a87e957add0b43dc8e1a\",\"dweb:/ipfs/QmUXzpQDBXA2xGSNRqjn3VMJ3o8RXmpATieU9ovvk6QDAD\"]},\"openzeppelin-solidity/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x7f293e2ee29a32416531a0bf3da9972358887c45ec1836642ec8e700cc152ba0\",\"urls\":[\"bzz-raw://e6ca40872864cb64a2dcc1b4f0be6a3cfc406f363e045fa7991f9f22f6257a63\",\"dweb:/ipfs/QmdsPdEayCcUa1fg3YTbhTPn3GTcjfNYZqnwf9EDC3QGpp\"]},\"openzeppelin-solidity/contracts/utils/Address.sol\":{\"keccak256\":\"0x58543a8d0f0fc465618566ee6b3c04071965cd26ba20d1de3f9768014ed807e4\",\"urls\":[\"bzz-raw://f060c6ee3ca16eb001823e2c0f8b642ecf3ead486721bab6f6be5220158d4421\",\"dweb:/ipfs/QmWv1ms6aLAfjZ49dNnffbg49XiKmuEWHeu4wi6EinkEek\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50604051610db4380380610db4833981810160405260c081101561003357600080fd5b508051602082015160408301516060840151608085015160a090950151600080546001600160a01b039096166001600160a01b031990961695909517909455600192909255600255600355600491909155600555610d1e806100966000396000f3fe608060405234801561001057600080fd5b50600436106101215760003560e01c8063925b3ef8116100ad578063bfa6daef11610071578063bfa6daef14610252578063c72c4d101461026f578063ccab01a314610293578063d5cd73911461029b578063f4202409146102a357610121565b8063925b3ef8146101eb5780639a207c2314610208578063a15f30ac14610225578063b0dfd97d1461022d578063b25895441461024a57610121565b8063280c95b3116100f4578063280c95b31461015857806334762ca51461017757806357e37af01461017f57806365614f81146101db5780637b832f58146101e357610121565b80630b3429a2146101265780630bdf953f1461014057806314e32da4146101485780631731987314610150575b600080fd5b61012e6102ab565b60408051918252519081900360200190f35b61012e6102b1565b61012e6102b7565b61012e6102bd565b6101756004803603602081101561016e57600080fd5b50356102cc565b005b61012e610386565b6101bd600480360360a081101561019557600080fd5b506001600160a01b03813516906020810135906040810135906060810135906080013561038c565b60408051938452602084019290925282820152519081900360600190f35b61012e610633565b61012e610639565b6101756004803603602081101561020157600080fd5b503561063f565b6101756004803603602081101561021e57600080fd5b50356106f9565b61012e6107b3565b6101756004803603602081101561024357600080fd5b50356107c3565b61012e61087d565b6101756004803603602081101561026857600080fd5b5035610883565b61027761093d565b604080516001600160a01b039092168252519081900360200190f35b61012e61094c565b61012e610952565b61012e610958565b60025490565b60045481565b60055490565b6aa56fa5b99019a5c800000081565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b15801561031057600080fd5b505afa158015610324573d6000803e3d6000fd5b505050506040513d602081101561033a57600080fd5b50516001600160a01b0316146103815760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600155565b60015490565b60008080806103a1878763ffffffff61095e16565b90506000811580156103b1575088155b6103da576103d56103c88a8463ffffffff61095e16565b839063ffffffff6109c116565b6103dd565b60005b90506000809054906101000a90046001600160a01b03166001600160a01b0316633618abba6040518163ffffffff1660e01b815260040160206040518083038186803b15801561042c57600080fd5b505afa158015610440573d6000803e3d6000fd5b505050506040513d602081101561045657600080fd5b50516040805163bb85c0bb60e01b81526001600160a01b038d811660048301529151919092169163bb85c0bb916024808301926020929190829003018186803b1580156104a257600080fd5b505afa1580156104b6573d6000803e3d6000fd5b505050506040513d60208110156104cc57600080fd5b505193506b0295be96e64066972000000081111561058e57600061051d6aa56fa5b99019a5c8000000610511846b0295be96e64066972000000063ffffffff610a0516565b9063ffffffff6109c116565b905061055761053782600554610a4790919063ffffffff16565b60045461054b90889063ffffffff61095e16565b9063ffffffff61095e16565b945061058661057182600354610a4790919063ffffffff16565b60025460015461054b9163ffffffff61095e16565b935050610614565b6105cc6105bf6105b0836b0295be96e64066972000000063ffffffff6109c116565b6004549063ffffffff610a4716565b859063ffffffff61095e16565b93506106116106026002546105f66b0295be96e640669720000000856109c190919063ffffffff16565b9063ffffffff610a4716565b6001549063ffffffff61095e16565b92505b610624816105f68a8a878b610a7f565b94505050955095509592505050565b60035481565b60025481565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b15801561068357600080fd5b505afa158015610697573d6000803e3d6000fd5b505050506040513d60208110156106ad57600080fd5b50516001600160a01b0316146106f45760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600255565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b15801561073d57600080fd5b505afa158015610751573d6000803e3d6000fd5b505050506040513d602081101561076757600080fd5b50516001600160a01b0316146107ae5760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600355565b6b0295be96e64066972000000081565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b15801561080757600080fd5b505afa15801561081b573d6000803e3d6000fd5b505050506040513d602081101561083157600080fd5b50516001600160a01b0316146108785760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600555565b60015481565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b1580156108c757600080fd5b505afa1580156108db573d6000803e3d6000fd5b505050506040513d60208110156108f157600080fd5b50516001600160a01b0316146109385760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600455565b6000546001600160a01b031681565b60055481565b60045490565b60035490565b6000828201838110156109b8576040805162461bcd60e51b815260206004820152601b60248201527f536166654d6174683a206164646974696f6e206f766572666c6f770000000000604482015290519081900360640190fd5b90505b92915050565b6000600282046109fd836109f16109e4876b033b2e3c9fd0803ce8000000610af0565b849063ffffffff61095e16565b9063ffffffff610b4916565b949350505050565b60006109b883836040518060400160405280601e81526020017f536166654d6174683a207375627472616374696f6e206f766572666c6f770000815250610b8b565b60006109b86b033b2e3c9fd0803ce80000006109f1610a6c868663ffffffff610af016565b6b019d971e4fe8401e740000009061095e565b600080610a92868663ffffffff61095e16565b905080610aa35760009150506109fd565b6000610ab2856105f688610c22565b90506000610ac3856105f68a610c22565b90506000610ae3610ad385610c22565b610511858563ffffffff61095e16565b9998505050505050505050565b600082610aff575060006109bb565b82820282848281610b0c57fe5b04146109b85760405162461bcd60e51b8152600401808060200182810382526021815260200180610c9e6021913960400191505060405180910390fd5b60006109b883836040518060400160405280601a81526020017f536166654d6174683a206469766973696f6e206279207a65726f000000000000815250610c38565b60008184841115610c1a5760405162461bcd60e51b81526004018080602001828103825283818151815260200191508051906020019080838360005b83811015610bdf578181015183820152602001610bc7565b50505050905090810190601f168015610c0c5780820380516001836020036101000a031916815260200191505b509250505060405180910390fd5b505050900390565b60006109bb82633b9aca0063ffffffff610af016565b60008183610c875760405162461bcd60e51b8152602060048201818152835160248401528351909283926044909101919085019080838360008315610bdf578181015183820152602001610bc7565b506000838581610c9357fe5b049594505050505056fe536166654d6174683a206d756c7469706c69636174696f6e206f766572666c6f775468652063616c6c6572206d75737420626520746865206c656e64696e6720706f6f6c206d616e61676572a265627a7a723158200a11072ca416dfc7af684e8b8f31d8f832d7a8c179dacf068bf3fe765c0441d164736f6c63430005100032",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106101215760003560e01c8063925b3ef8116100ad578063bfa6daef11610071578063bfa6daef14610252578063c72c4d101461026f578063ccab01a314610293578063d5cd73911461029b578063f4202409146102a357610121565b8063925b3ef8146101eb5780639a207c2314610208578063a15f30ac14610225578063b0dfd97d1461022d578063b25895441461024a57610121565b8063280c95b3116100f4578063280c95b31461015857806334762ca51461017757806357e37af01461017f57806365614f81146101db5780637b832f58146101e357610121565b80630b3429a2146101265780630bdf953f1461014057806314e32da4146101485780631731987314610150575b600080fd5b61012e6102ab565b60408051918252519081900360200190f35b61012e6102b1565b61012e6102b7565b61012e6102bd565b6101756004803603602081101561016e57600080fd5b50356102cc565b005b61012e610386565b6101bd600480360360a081101561019557600080fd5b506001600160a01b03813516906020810135906040810135906060810135906080013561038c565b60408051938452602084019290925282820152519081900360600190f35b61012e610633565b61012e610639565b6101756004803603602081101561020157600080fd5b503561063f565b6101756004803603602081101561021e57600080fd5b50356106f9565b61012e6107b3565b6101756004803603602081101561024357600080fd5b50356107c3565b61012e61087d565b6101756004803603602081101561026857600080fd5b5035610883565b61027761093d565b604080516001600160a01b039092168252519081900360200190f35b61012e61094c565b61012e610952565b61012e610958565b60025490565b60045481565b60055490565b6aa56fa5b99019a5c800000081565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b15801561031057600080fd5b505afa158015610324573d6000803e3d6000fd5b505050506040513d602081101561033a57600080fd5b50516001600160a01b0316146103815760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600155565b60015490565b60008080806103a1878763ffffffff61095e16565b90506000811580156103b1575088155b6103da576103d56103c88a8463ffffffff61095e16565b839063ffffffff6109c116565b6103dd565b60005b90506000809054906101000a90046001600160a01b03166001600160a01b0316633618abba6040518163ffffffff1660e01b815260040160206040518083038186803b15801561042c57600080fd5b505afa158015610440573d6000803e3d6000fd5b505050506040513d602081101561045657600080fd5b50516040805163bb85c0bb60e01b81526001600160a01b038d811660048301529151919092169163bb85c0bb916024808301926020929190829003018186803b1580156104a257600080fd5b505afa1580156104b6573d6000803e3d6000fd5b505050506040513d60208110156104cc57600080fd5b505193506b0295be96e64066972000000081111561058e57600061051d6aa56fa5b99019a5c8000000610511846b0295be96e64066972000000063ffffffff610a0516565b9063ffffffff6109c116565b905061055761053782600554610a4790919063ffffffff16565b60045461054b90889063ffffffff61095e16565b9063ffffffff61095e16565b945061058661057182600354610a4790919063ffffffff16565b60025460015461054b9163ffffffff61095e16565b935050610614565b6105cc6105bf6105b0836b0295be96e64066972000000063ffffffff6109c116565b6004549063ffffffff610a4716565b859063ffffffff61095e16565b93506106116106026002546105f66b0295be96e640669720000000856109c190919063ffffffff16565b9063ffffffff610a4716565b6001549063ffffffff61095e16565b92505b610624816105f68a8a878b610a7f565b94505050955095509592505050565b60035481565b60025481565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b15801561068357600080fd5b505afa158015610697573d6000803e3d6000fd5b505050506040513d60208110156106ad57600080fd5b50516001600160a01b0316146106f45760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600255565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b15801561073d57600080fd5b505afa158015610751573d6000803e3d6000fd5b505050506040513d602081101561076757600080fd5b50516001600160a01b0316146107ae5760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600355565b6b0295be96e64066972000000081565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b15801561080757600080fd5b505afa15801561081b573d6000803e3d6000fd5b505050506040513d602081101561083157600080fd5b50516001600160a01b0316146108785760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600555565b60015481565b600054604080516333128d5960e01b8152905133926001600160a01b0316916333128d59916004808301926020929190829003018186803b1580156108c757600080fd5b505afa1580156108db573d6000803e3d6000fd5b505050506040513d60208110156108f157600080fd5b50516001600160a01b0316146109385760405162461bcd60e51b815260040180806020018281038252602b815260200180610cbf602b913960400191505060405180910390fd5b600455565b6000546001600160a01b031681565b60055481565b60045490565b60035490565b6000828201838110156109b8576040805162461bcd60e51b815260206004820152601b60248201527f536166654d6174683a206164646974696f6e206f766572666c6f770000000000604482015290519081900360640190fd5b90505b92915050565b6000600282046109fd836109f16109e4876b033b2e3c9fd0803ce8000000610af0565b849063ffffffff61095e16565b9063ffffffff610b4916565b949350505050565b60006109b883836040518060400160405280601e81526020017f536166654d6174683a207375627472616374696f6e206f766572666c6f770000815250610b8b565b60006109b86b033b2e3c9fd0803ce80000006109f1610a6c868663ffffffff610af016565b6b019d971e4fe8401e740000009061095e565b600080610a92868663ffffffff61095e16565b905080610aa35760009150506109fd565b6000610ab2856105f688610c22565b90506000610ac3856105f68a610c22565b90506000610ae3610ad385610c22565b610511858563ffffffff61095e16565b9998505050505050505050565b600082610aff575060006109bb565b82820282848281610b0c57fe5b04146109b85760405162461bcd60e51b8152600401808060200182810382526021815260200180610c9e6021913960400191505060405180910390fd5b60006109b883836040518060400160405280601a81526020017f536166654d6174683a206469766973696f6e206279207a65726f000000000000815250610c38565b60008184841115610c1a5760405162461bcd60e51b81526004018080602001828103825283818151815260200191508051906020019080838360005b83811015610bdf578181015183820152602001610bc7565b50505050905090810190601f168015610c0c5780820380516001836020036101000a031916815260200191505b509250505060405180910390fd5b505050900390565b60006109bb82633b9aca0063ffffffff610af016565b60008183610c875760405162461bcd60e51b8152602060048201818152835160248401528351909283926044909101919085019080838360008315610bdf578181015183820152602001610bc7565b506000838581610c9357fe5b049594505050505056fe536166654d6174683a206d756c7469706c69636174696f6e206f766572666c6f775468652063616c6c6572206d75737420626520746865206c656e64696e6720706f6f6c206d616e61676572a265627a7a723158200a11072ca416dfc7af684e8b8f31d8f832d7a8c179dacf068bf3fe765c0441d164736f6c63430005100032",
   "sourceMap": "635:8158:23:-;;;2402:533;8:9:-1;5:2;;;30:1;27;20:12;5:2;2402:533:23;;;;;;;;;;;;;;;13:3:-1;8;5:12;2:2;;;30:1;27;20:12;2:2;-1:-1;2402:533:23;;;;;;;;;;;;;;;;;;;;;;;2612:17;:29;;-1:-1:-1;;;;;2612:29:23;;;-1:-1:-1;;;;;;2612:29:23;;;;;;;;;;;2651:48;;;;2709:18;:40;2759:18;:40;2809:16;:36;;;;2855:16;:36;635:8158;;;;;;",
-  "deployedSourceMap": "635:8158:23:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;635:8158:23;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3404:107;;;:::i;:::-;;;;;;;;;;;;;;;;1764:31;;;:::i;4216:103::-;;;:::i;1248:60::-;;;:::i;3253:145::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;3253:145:23;;:::i;:::-;;3128:115;;;:::i;5598:1807::-;;;;;;13:3:-1;8;5:12;2:2;;;30:1;27;20:12;2:2;-1:-1;;;;;;5598:1807:23;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;1606:33;;;:::i;1439:::-;;;:::i;3517:153::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;3517:153:23;;:::i;3793:::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;3793:153:23;;:::i;980:61::-;;;:::i;4325:145::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;4325:145:23;;:::i;1315:37::-;;;:::i;4061:145::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;4061:145:23;;:::i;792:48::-;;;:::i;:::-;;;;-1:-1:-1;;;;;792:48:23;;;;;;;;;;;;;;1929:31;;;:::i;3952:103::-;;;:::i;3676:107::-;;;:::i;3404:::-;3486:18;;3404:107;:::o;1764:31::-;;;;:::o;4216:103::-;4296:16;;4216:103;:::o;1248:60::-;1298:10;1248:60;:::o;3253:145::-;2273:17;;:41;;;-1:-1:-1;;;2273:41:23;;;;2318:10;;-1:-1:-1;;;;;2273:17:23;;:39;;:41;;;;;;;;;;;;;;:17;:41;;;5:2:-1;;;;30:1;27;20:12;5:2;2273:41:23;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;2273:41:23;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;2273:41:23;-1:-1:-1;;;;;2273:55:23;;2264:113;;;;-1:-1:-1;;;2264:113:23;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3353:22;:38;3253:145::o;3128:115::-;3214:22;;3128:115;:::o;5598:1807::-;5813:28;;;;5945:46;:19;5969:21;5945:46;:23;:46;:::i;:::-;5922:69;-1:-1:-1;6054:23:23;6081:17;;:45;;;;-1:-1:-1;6102:24:23;;6081:45;6080:112;;6134:58;6154:37;:19;6178:12;6154:37;:23;:37;:::i;:::-;6134:12;;:58;:19;:58;:::i;:::-;6080:112;;;6130:1;6080:112;6054:138;;6327:17;;;;;;;;;-1:-1:-1;;;;;6327:17:23;-1:-1:-1;;;;;6327:38:23;;:40;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;6327:40:23;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;6327:40:23;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;6327:40:23;6307:95;;;-1:-1:-1;;;6307:95:23;;-1:-1:-1;;;;;6307:95:23;;;;;;;;;:82;;;;;;;:95;;;;;6327:40;;6307:95;;;;;;;:82;:95;;;5:2:-1;;;;30:1;27;20:12;5:2;6307:95:23;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;6307:95:23;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;6307:95:23;;-1:-1:-1;1031:10:23;6417:42;;6413:801;;;6475:34;6512:77;1298:10;6512:45;:15;1031:10;6512:45;:19;:45;:::i;:::-;:52;:77;:52;:77;:::i;:::-;6475:114;;6629:104;6680:51;6704:26;6680:16;;:23;;:51;;;;:::i;:::-;6657:16;;6629:45;;:23;;:45;:27;:45;:::i;:::-;:49;:104;:49;:104;:::i;:::-;6603:130;;6775:107;6827:53;6853:26;6827:18;;:25;;:53;;;;:::i;:::-;6802:18;;6775:22;;:46;;;:26;:46;:::i;:107::-;6747:135;;6413:801;;;;6948:108;6977:77;7002:50;:15;1031:10;7002:50;:22;:50;:::i;:::-;6977:16;;;:77;:23;:77;:::i;:::-;6948:23;;:108;:27;:108;:::i;:::-;6922:134;;7098:105;7126:75;7182:18;;7126:48;1031:10;7126:15;:22;;:48;;;;:::i;:::-;:55;:75;:55;:75;:::i;:::-;7098:22;;;:105;:26;:105;:::i;:::-;7070:133;;6413:801;7247:151;7382:15;7247:127;7277:19;7298:21;7321:25;7348:24;7247:28;:127::i;:151::-;7224:174;;5598:1807;;;;;;;;;;;:::o;1606:33::-;;;;:::o;1439:::-;;;;:::o;3517:153::-;2273:17;;:41;;;-1:-1:-1;;;2273:41:23;;;;2318:10;;-1:-1:-1;;;;;2273:17:23;;:39;;:41;;;;;;;;;;;;;;:17;:41;;;5:2:-1;;;;30:1;27;20:12;5:2;2273:41:23;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;2273:41:23;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;2273:41:23;-1:-1:-1;;;;;2273:55:23;;2264:113;;;;-1:-1:-1;;;2264:113:23;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3621:18;:42;3517:153::o;3793:::-;2273:17;;:41;;;-1:-1:-1;;;2273:41:23;;;;2318:10;;-1:-1:-1;;;;;2273:17:23;;:39;;:41;;;;;;;;;;;;;;:17;:41;;;5:2:-1;;;;30:1;27;20:12;5:2;2273:41:23;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;2273:41:23;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;2273:41:23;-1:-1:-1;;;;;2273:55:23;;2264:113;;;;-1:-1:-1;;;2264:113:23;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3897:18;:42;3793:153::o;980:61::-;1031:10;980:61;:::o;4325:145::-;2273:17;;:41;;;-1:-1:-1;;;2273:41:23;;;;2318:10;;-1:-1:-1;;;;;2273:17:23;;:39;;:41;;;;;;;;;;;;;;:17;:41;;;5:2:-1;;;;30:1;27;20:12;5:2;2273:41:23;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;2273:41:23;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;2273:41:23;-1:-1:-1;;;;;2273:55:23;;2264:113;;;;-1:-1:-1;;;2264:113:23;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4425:16;:38;4325:145::o;1315:37::-;;;;:::o;4061:145::-;2273:17;;:41;;;-1:-1:-1;;;2273:41:23;;;;2318:10;;-1:-1:-1;;;;;2273:17:23;;:39;;:41;;;;;;;;;;;;;;:17;:41;;;5:2:-1;;;;30:1;27;20:12;5:2;2273:41:23;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;2273:41:23;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;2273:41:23;-1:-1:-1;;;;;2273:55:23;;2264:113;;;;-1:-1:-1;;;2264:113:23;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4161:16;:38;4061:145::o;792:48::-;;;-1:-1:-1;;;;;792:48:23;;:::o;1929:31::-;;;;:::o;3952:103::-;4032:16;;3952:103;:::o;3676:107::-;3758:18;;3676:107;:::o;874:176:106:-;932:7;963:5;;;986:6;;;;978:46;;;;;-1:-1:-1;;;978:46:106;;;;;;;;;;;;;;;;;;;;;;;;;;;;1042:1;-1:-1:-1;874:176:106;;;;;:::o;1370:154:31:-;1431:7;1470:1;1466:5;;1489:28;1466:1;1489:21;1499:10;:1;468:4;1499:5;:10::i;:::-;1489:5;;:21;:9;:21;:::i;:::-;:25;:28;:25;:28;:::i;:::-;1482:35;1370:154;-1:-1:-1;;;;1370:154:31:o;1321:134:106:-;1379:7;1405:43;1409:1;1412;1405:43;;;;;;;;;;;;;;;;;:3;:43::i;1240:124:31:-;1301:7;1327:30;468:4;1327:21;1339:8;:1;1345;1339:8;:5;:8;:::i;:::-;514:7;;1327:11;:21::i;8068:723:23:-;8268:7;;8310:46;:19;8334:21;8310:46;:23;:46;:::i;:::-;8287:69;-1:-1:-1;8371:17:23;8367:44;;8410:1;8403:8;;;;;8367:44;8422:28;8453:69;8494:26;8453:32;:21;:30;:32::i;:69::-;8422:100;;8532:26;8561:72;8600:31;8561:30;:19;:28;:30::i;:72::-;8532:101;;8643:25;8671:78;8724:23;:12;:21;:23::i;:::-;8671:44;:20;8696:18;8671:44;:24;:44;:::i;:78::-;8643:106;8068:723;-1:-1:-1;;;;;;;;;8068:723:23:o;2180:459:106:-;2238:7;2479:6;2475:45;;-1:-1:-1;2508:1:106;2501:8;;2475:45;2542:5;;;2546:1;2542;:5;:1;2565:5;;;;;:10;2557:56;;;;-1:-1:-1;;;2557:56:106;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3101:130;3159:7;3185:39;3189:1;3192;3185:39;;;;;;;;;;;;;;;;;:3;:39::i;1746:187::-;1832:7;1867:12;1859:6;;;;1851:29;;;;-1:-1:-1;;;1851:29:106;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;90:11;;;84:18;71:11;;;64:39;52:2;45:10;8:100;;;12:14;1851:29:106;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;1902:5:106;;;1746:187::o;1704:105:31:-;1756:7;1782:20;:1;570:3;1782:20;:5;:20;:::i;3713:272:106:-;3799:7;3833:12;3826:5;3818:28;;;;-1:-1:-1;;;3818:28:106;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;27:10:-1;;8:100;;90:11;;;84:18;71:11;;;64:39;52:2;45:10;8:100;;3818:28:106;;3856:9;3872:1;3868;:5;;;;;;;3713:272;-1:-1:-1;;;;;3713:272:106:o",
+  "deployedSourceMap": "635:8158:23:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;635:8158:23;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3404:107;;;:::i;:::-;;;;;;;;;;;;;;;;1764:31;;;:::i;4216:103::-;;;:::i;1248:60::-;;;:::i;3253:145::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;3253:145:23;;:::i;:::-;;3128:115;;;:::i;5598:1807::-;;;;;;13:3:-1;8;5:12;2:2;;;30:1;27;20:12;2:2;-1:-1;;;;;;5598:1807:23;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;1606:33;;;:::i;1439:::-;;;:::i;3517:153::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;3517:153:23;;:::i;3793:::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;3793:153:23;;:::i;980:61::-;;;:::i;4325:145::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;4325:145:23;;:::i;1315:37::-;;;:::i;4061:145::-;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;4061:145:23;;:::i;792:48::-;;;:::i;:::-;;;;-1:-1:-1;;;;;792:48:23;;;;;;;;;;;;;;1929:31;;;:::i;3952:103::-;;;:::i;3676:107::-;;;:::i;3404:::-;3486:18;;3404:107;:::o;1764:31::-;;;;:::o;4216:103::-;4296:16;;4216:103;:::o;1248:60::-;1298:10;1248:60;:::o;3253:145::-;2273:17;;:41;;;-1:-1:-1;;;2273:41:23;;;;2318:10;;-1:-1:-1;;;;;2273:17:23;;:39;;:41;;;;;;;;;;;;;;:17;:41;;;5:2:-1;;;;30:1;27;20:12;5:2;2273:41:23;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;2273:41:23;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;2273:41:23;-1:-1:-1;;;;;2273:55:23;;2264:113;;;;-1:-1:-1;;;2264:113:23;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3353:22;:38;3253:145::o;3128:115::-;3214:22;;3128:115;:::o;5598:1807::-;5813:28;;;;5945:46;:19;5969:21;5945:46;:23;:46;:::i;:::-;5922:69;-1:-1:-1;6054:23:23;6081:17;;:45;;;;-1:-1:-1;6102:24:23;;6081:45;6080:112;;6134:58;6154:37;:19;6178:12;6154:37;:23;:37;:::i;:::-;6134:12;;:58;:19;:58;:::i;:::-;6080:112;;;6130:1;6080:112;6054:138;;6327:17;;;;;;;;;-1:-1:-1;;;;;6327:17:23;-1:-1:-1;;;;;6327:38:23;;:40;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;6327:40:23;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;6327:40:23;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;6327:40:23;6307:95;;;-1:-1:-1;;;6307:95:23;;-1:-1:-1;;;;;6307:95:23;;;;;;;;;:82;;;;;;;:95;;;;;6327:40;;6307:95;;;;;;;:82;:95;;;5:2:-1;;;;30:1;27;20:12;5:2;6307:95:23;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;6307:95:23;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;6307:95:23;;-1:-1:-1;1031:10:23;6417:42;;6413:801;;;6475:34;6512:77;1298:10;6512:45;:15;1031:10;6512:45;:19;:45;:::i;:::-;:52;:77;:52;:77;:::i;:::-;6475:114;;6629:104;6680:51;6704:26;6680:16;;:23;;:51;;;;:::i;:::-;6657:16;;6629:45;;:23;;:45;:27;:45;:::i;:::-;:49;:104;:49;:104;:::i;:::-;6603:130;;6775:107;6827:53;6853:26;6827:18;;:25;;:53;;;;:::i;:::-;6802:18;;6775:22;;:46;;;:26;:46;:::i;:107::-;6747:135;;6413:801;;;;6948:108;6977:77;7002:50;:15;1031:10;7002:50;:22;:50;:::i;:::-;6977:16;;;:77;:23;:77;:::i;:::-;6948:23;;:108;:27;:108;:::i;:::-;6922:134;;7098:105;7126:75;7182:18;;7126:48;1031:10;7126:15;:22;;:48;;;;:::i;:::-;:55;:75;:55;:75;:::i;:::-;7098:22;;;:105;:26;:105;:::i;:::-;7070:133;;6413:801;7247:151;7382:15;7247:127;7277:19;7298:21;7321:25;7348:24;7247:28;:127::i;:151::-;7224:174;;5598:1807;;;;;;;;;;;:::o;1606:33::-;;;;:::o;1439:::-;;;;:::o;3517:153::-;2273:17;;:41;;;-1:-1:-1;;;2273:41:23;;;;2318:10;;-1:-1:-1;;;;;2273:17:23;;:39;;:41;;;;;;;;;;;;;;:17;:41;;;5:2:-1;;;;30:1;27;20:12;5:2;2273:41:23;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;2273:41:23;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;2273:41:23;-1:-1:-1;;;;;2273:55:23;;2264:113;;;;-1:-1:-1;;;2264:113:23;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3621:18;:42;3517:153::o;3793:::-;2273:17;;:41;;;-1:-1:-1;;;2273:41:23;;;;2318:10;;-1:-1:-1;;;;;2273:17:23;;:39;;:41;;;;;;;;;;;;;;:17;:41;;;5:2:-1;;;;30:1;27;20:12;5:2;2273:41:23;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;2273:41:23;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;2273:41:23;-1:-1:-1;;;;;2273:55:23;;2264:113;;;;-1:-1:-1;;;2264:113:23;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3897:18;:42;3793:153::o;980:61::-;1031:10;980:61;:::o;4325:145::-;2273:17;;:41;;;-1:-1:-1;;;2273:41:23;;;;2318:10;;-1:-1:-1;;;;;2273:17:23;;:39;;:41;;;;;;;;;;;;;;:17;:41;;;5:2:-1;;;;30:1;27;20:12;5:2;2273:41:23;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;2273:41:23;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;2273:41:23;-1:-1:-1;;;;;2273:55:23;;2264:113;;;;-1:-1:-1;;;2264:113:23;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4425:16;:38;4325:145::o;1315:37::-;;;;:::o;4061:145::-;2273:17;;:41;;;-1:-1:-1;;;2273:41:23;;;;2318:10;;-1:-1:-1;;;;;2273:17:23;;:39;;:41;;;;;;;;;;;;;;:17;:41;;;5:2:-1;;;;30:1;27;20:12;5:2;2273:41:23;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;2273:41:23;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;2273:41:23;-1:-1:-1;;;;;2273:55:23;;2264:113;;;;-1:-1:-1;;;2264:113:23;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4161:16;:38;4061:145::o;792:48::-;;;-1:-1:-1;;;;;792:48:23;;:::o;1929:31::-;;;;:::o;3952:103::-;4032:16;;3952:103;:::o;3676:107::-;3758:18;;3676:107;:::o;874:176:106:-;932:7;963:5;;;986:6;;;;978:46;;;;;-1:-1:-1;;;978:46:106;;;;;;;;;;;;;;;;;;;;;;;;;;;;1042:1;-1:-1:-1;874:176:106;;;;;:::o;1408:154:31:-;1469:7;1508:1;1504:5;;1527:28;1504:1;1527:21;1537:10;:1;468:4;1537:5;:10::i;:::-;1527:5;;:21;:9;:21;:::i;:::-;:25;:28;:25;:28;:::i;:::-;1520:35;1408:154;-1:-1:-1;;;;1408:154:31:o;1321:134:106:-;1379:7;1405:43;1409:1;1412;1405:43;;;;;;;;;;;;;;;;;:3;:43::i;1240:162:31:-;1301:7;1327:30;468:4;1327:21;1339:8;:1;1345;1339:8;:5;:8;:::i;:::-;514:7;;1327:11;:21::i;8068:723:23:-;8268:7;;8310:46;:19;8334:21;8310:46;:23;:46;:::i;:::-;8287:69;-1:-1:-1;8371:17:23;8367:44;;8410:1;8403:8;;;;;8367:44;8422:28;8453:69;8494:26;8453:32;:21;:30;:32::i;:69::-;8422:100;;8532:26;8561:72;8600:31;8561:30;:19;:28;:30::i;:72::-;8532:101;;8643:25;8671:78;8724:23;:12;:21;:23::i;:::-;8671:44;:20;8696:18;8671:44;:24;:44;:::i;:78::-;8643:106;8068:723;-1:-1:-1;;;;;;;;;8068:723:23:o;2180:459:106:-;2238:7;2479:6;2475:45;;-1:-1:-1;2508:1:106;2501:8;;2475:45;2542:5;;;2546:1;2542;:5;:1;2565:5;;;;;:10;2557:56;;;;-1:-1:-1;;;2557:56:106;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3101:130;3159:7;3185:39;3189:1;3192;3185:39;;;;;;;;;;;;;;;;;:3;:39::i;1746:187::-;1832:7;1867:12;1859:6;;;;1851:29;;;;-1:-1:-1;;;1851:29:106;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;90:11;;;84:18;71:11;;;64:39;52:2;45:10;8:100;;;12:14;1851:29:106;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;1902:5:106;;;1746:187::o;1742:105:31:-;1794:7;1820:20;:1;570:3;1820:20;:5;:20;:::i;3713:272:106:-;3799:7;3833:12;3826:5;3818:28;;;;-1:-1:-1;;;3818:28:106;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;27:10:-1;;8:100;;90:11;;;84:18;71:11;;;64:39;52:2;45:10;8:100;;3818:28:106;;3856:9;3872:1;3868;:5;;;;;;;3713:272;-1:-1:-1;;;;;3713:272:106:o",
   "source": "pragma solidity ^0.5.0;\n\nimport \"openzeppelin-solidity/contracts/math/SafeMath.sol\";\nimport \"../libraries/WadRayMath.sol\";\n\nimport \"../../configuration/GlobalAddressesProvider.sol\";\nimport \"../interfaces/I_InstrumentInterestRateStrategy.sol\";\nimport \"../interfaces/ILendingRateOracle.sol\";\n\n\n\n/**\n* @title DefaultInstrumentInterestRateStrategy contract\n* @notice implements the calculation of the interest rates depending on the Instrument parameters.\n* @dev if there is need to update the calculation of the interest rates for a specific Instrument,\n* a new version of this contract will be deployed.\n* @author Aave, SIGH Finance\n**/\ncontract DefaultInstrumentInterestRateStrategy is I_InstrumentInterestRateStrategy {\n\n    using WadRayMath for uint256;\n    using SafeMath for uint256;\n\n    GlobalAddressesProvider public addressesProvider;\n\n    // this constant represents the utilization rate at which the pool aims to obtain most competitive borrow rates expressed in ray\n    uint256 public constant OPTIMAL_UTILIZATION_RATE = 0.8 * 1e27;\n\n    // this constant represents the excess utilization rate above the optimal. It's always equal to 1-optimal utilization rate. \n    // Added as a constant here for gas optimizations expressed in ray\n    uint256 public constant EXCESS_UTILIZATION_RATE = 0.2 * 1e27;\n\n    uint256 public baseVariableBorrowRate;          //base variable borrow rate when Utilization rate = 0. Expressed in ray\n    uint256 public variableRateSlope1;              //slope of the variable interest curve when utilization rate > 0 and <= OPTIMAL_UTILIZATION_RATE. Expressed in ray\n    uint256 public variableRateSlope2;              //slope of the variable interest curve when utilization rate > OPTIMAL_UTILIZATION_RATE. Expressed in ray\n    uint256 public stableRateSlope1;                //slope of the stable interest curve when utilization rate > 0 and <= OPTIMAL_UTILIZATION_RATE. Expressed in ray\n    uint256 public stableRateSlope2;                //slope of the stable interest curve when utilization rate > OPTIMAL_UTILIZATION_RATE. Expressed in ray\n    // address public instrument;\n\n    /**\n    * @dev only the lending pool manager can call functions affected by this modifier\n    **/\n    modifier onlyLendingPoolManager {\n        require( addressesProvider.getLendingPoolManager() == msg.sender, \"The caller must be the lending pool manager\" );\n        _;\n    }\n\n\n    constructor( GlobalAddressesProvider _provider, uint256 _baseVariableBorrowRate, uint256 _variableRateSlope1,uint256 _variableRateSlope2, uint256 _stableRateSlope1, uint256 _stableRateSlope2 ) public {\n        addressesProvider = _provider;\n        baseVariableBorrowRate = _baseVariableBorrowRate;\n        variableRateSlope1 = _variableRateSlope1;\n        variableRateSlope2 = _variableRateSlope2;\n        stableRateSlope1 = _stableRateSlope1;\n        stableRateSlope2 = _stableRateSlope2;\n        // instrument = _instrument;\n    }\n\n    // ######################################################\n    // ####### VIEW FUNCTIONS TO GET CONSTANTS   ############\n    // ################################################ #####\n\n    function getBaseVariableBorrowRate() external view returns (uint256) {\n        return baseVariableBorrowRate;\n    }\n    \n    function setBaseVariableBorrowRate(uint256 newBorrowRate) external onlyLendingPoolManager {\n        baseVariableBorrowRate = newBorrowRate;\n    }\n\n    function getVariableRateSlope1() external view returns (uint256) {\n        return variableRateSlope1;\n    }\n\n    function setVariableRateSlope1(uint256 newVariableRateSlope1) external onlyLendingPoolManager {\n        variableRateSlope1 = newVariableRateSlope1;\n    }\n\n    function getVariableRateSlope2() external view returns (uint256) {\n        return variableRateSlope2;\n    }\n    \n    function setVariableRateSlope2(uint256 newVariableRateSlope2) external onlyLendingPoolManager {\n        variableRateSlope2 = newVariableRateSlope2;\n    }\n\n    function getStableRateSlope1() external view returns (uint256) {\n        return stableRateSlope1;\n    }\n\n    function setStableRateSlope1(uint256 newstableRateSlope1) external onlyLendingPoolManager {\n        stableRateSlope1 = newstableRateSlope1;\n    }\n    \n    function getStableRateSlope2() external view returns (uint256) {\n        return stableRateSlope2;\n    }\n\n    function setStableRateSlope2(uint256 newstableRateSlope2) external onlyLendingPoolManager {\n        stableRateSlope2 = newstableRateSlope2;\n    }\n\n    // ##################################################################################################################\n    // ####### THE MAIN INTEREST RATE FUNCTIONS (VIEW)   ################################################################\n    // ####### 1. calculateInterestRates() : Returns LiquidityRate, StableBorrowRate, VariableBorrowRate   ##############\n    // ##################################################################################################################\n\n\n    /**\n    * @dev calculates the interest rates depending on the available liquidity and the total borrowed.\n    * @param _instrument the address of the instrument\n    * @param _availableLiquidity the liquidity available in the instrument\n    * @param _totalBorrowsStable the total borrowed from the instrument a stable rate\n    * @param _totalBorrowsVariable the total borrowed from the instrument at a variable rate\n    * @param _averageStableBorrowRate the weighted average of all the stable rate borrows\n    * @return the liquidity rate, stable borrow rate and variable borrow rate calculated from the input parameters\n    **/\n    function calculateInterestRates(  address _instrument,  uint256 _availableLiquidity,  uint256 _totalBorrowsStable,  uint256 _totalBorrowsVariable,  uint256 _averageStableBorrowRate ) external view\n        returns ( uint256 currentLiquidityRate, uint256 currentStableBorrowRate, uint256 currentVariableBorrowRate ) {\n        uint256 totalBorrows = _totalBorrowsStable.add(_totalBorrowsVariable); // TOTAL BORROWS = STABLE BORROWS + VARIABLE BORROWS\n        uint256 utilizationRate = (totalBorrows == 0 && _availableLiquidity == 0) ? 0 : totalBorrows.rayDiv(_availableLiquidity.add(totalBorrows));   // UTILIZATION RATE = TOTAL BORROWS / (AVAILABLE LIQUIDITY + TOTAL BORROWS)\n\n        currentStableBorrowRate = ILendingRateOracle( addressesProvider.getLendingRateOracle() ).getMarketBorrowRate(_instrument);\n\n        if (utilizationRate > OPTIMAL_UTILIZATION_RATE) {\n            uint256 excessUtilizationRateRatio = utilizationRate.sub(OPTIMAL_UTILIZATION_RATE).rayDiv(EXCESS_UTILIZATION_RATE);\n            currentStableBorrowRate = currentStableBorrowRate.add(stableRateSlope1).add( stableRateSlope2.rayMul(excessUtilizationRateRatio) );\n            currentVariableBorrowRate = baseVariableBorrowRate.add(variableRateSlope1).add( variableRateSlope2.rayMul(excessUtilizationRateRatio) );\n        } \n        else {\n            currentStableBorrowRate = currentStableBorrowRate.add( stableRateSlope1.rayMul( utilizationRate.rayDiv( OPTIMAL_UTILIZATION_RATE ) ) );\n            currentVariableBorrowRate = baseVariableBorrowRate.add( utilizationRate.rayDiv(OPTIMAL_UTILIZATION_RATE).rayMul(variableRateSlope1) );\n        }\n\n        currentLiquidityRate = getOverallBorrowRateInternal( _totalBorrowsStable, _totalBorrowsVariable, currentVariableBorrowRate, _averageStableBorrowRate ).rayMul(utilizationRate);\n    }\n\n// ###################################\n// ####### INTERNAL FUNCTION #######\n// #################################\n    /**\n    * @dev calculates the overall borrow rate as the weighted average between the total variable borrows and total stable borrows.\n    * @param _totalBorrowsStable the total borrowed from the instrument a stable rate\n    * @param _totalBorrowsVariable the total borrowed from the instrument at a variable rate\n    * @param _currentVariableBorrowRate the current variable borrow rate\n    * @param _currentAverageStableBorrowRate the weighted average of all the stable rate borrows\n    * @return the weighted averaged borrow rate\n    **/\n    function getOverallBorrowRateInternal( uint256 _totalBorrowsStable, uint256 _totalBorrowsVariable, uint256 _currentVariableBorrowRate, uint256 _currentAverageStableBorrowRate ) internal pure returns (uint256) {\n        uint256 totalBorrows = _totalBorrowsStable.add(_totalBorrowsVariable);\n\n        if (totalBorrows == 0) \n            return 0;\n\n        uint256 weightedVariableRate = _totalBorrowsVariable.wadToRay().rayMul( _currentVariableBorrowRate );\n        uint256 weightedStableRate = _totalBorrowsStable.wadToRay().rayMul( _currentAverageStableBorrowRate );\n        uint256 overallBorrowRate = weightedVariableRate.add(weightedStableRate).rayDiv( totalBorrows.wadToRay() );\n\n        return overallBorrowRate;\n    }\n}\n",
   "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/lendingpool/DefaultInstrumentInterestRateStrategy.sol",
   "ast": {
@@ -394,7 +394,7 @@
         "id": 5368,
         "nodeType": "ImportDirective",
         "scope": 5755,
-        "sourceUnit": 30748,
+        "sourceUnit": 30752,
         "src": "25:59:23",
         "symbolAliases": [],
         "unitAlias": ""
@@ -405,7 +405,7 @@
         "id": 5369,
         "nodeType": "ImportDirective",
         "scope": 5755,
-        "sourceUnit": 14237,
+        "sourceUnit": 14241,
         "src": "85:37:23",
         "symbolAliases": [],
         "unitAlias": ""
@@ -416,7 +416,7 @@
         "id": 5370,
         "nodeType": "ImportDirective",
         "scope": 5755,
-        "sourceUnit": 29755,
+        "sourceUnit": 29759,
         "src": "124:57:23",
         "symbolAliases": [],
         "unitAlias": ""
@@ -485,10 +485,10 @@
               "id": 5375,
               "name": "WadRayMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 14236,
+              "referencedDeclaration": 14240,
               "src": "731:10:23",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_WadRayMath_$14236",
+                "typeIdentifier": "t_contract$_WadRayMath_$14240",
                 "typeString": "library WadRayMath"
               }
             },
@@ -512,10 +512,10 @@
               "id": 5378,
               "name": "SafeMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 30747,
+              "referencedDeclaration": 30751,
               "src": "765:8:23",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SafeMath_$30747",
+                "typeIdentifier": "t_contract$_SafeMath_$30751",
                 "typeString": "library SafeMath"
               }
             },
@@ -542,7 +542,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+              "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
               "typeString": "contract GlobalAddressesProvider"
             },
             "typeName": {
@@ -550,10 +550,10 @@
               "id": 5381,
               "name": "GlobalAddressesProvider",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 29754,
+              "referencedDeclaration": 29758,
               "src": "792:23:23",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+                "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
                 "typeString": "contract GlobalAddressesProvider"
               }
             },
@@ -885,7 +885,7 @@
                               "referencedDeclaration": 5382,
                               "src": "2273:17:23",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+                                "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
                                 "typeString": "contract GlobalAddressesProvider"
                               }
                             },
@@ -896,7 +896,7 @@
                             "lValueRequested": false,
                             "memberName": "getLendingPoolManager",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 29105,
+                            "referencedDeclaration": 29109,
                             "src": "2273:39:23",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -927,7 +927,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 31810,
+                            "referencedDeclaration": 31814,
                             "src": "2318:3:23",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -988,10 +988,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        31813,
-                        31814
+                        31817,
+                        31818
                       ],
-                      "referencedDeclaration": 31814,
+                      "referencedDeclaration": 31818,
                       "src": "2264:7:23",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -1059,7 +1059,7 @@
                       "referencedDeclaration": 5382,
                       "src": "2612:17:23",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+                        "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
                         "typeString": "contract GlobalAddressesProvider"
                       }
                     },
@@ -1074,13 +1074,13 @@
                       "referencedDeclaration": 5418,
                       "src": "2632:9:23",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+                        "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
                         "typeString": "contract GlobalAddressesProvider"
                       }
                     },
                     "src": "2612:29:23",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+                      "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
                       "typeString": "contract GlobalAddressesProvider"
                     }
                   },
@@ -1341,7 +1341,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+                    "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
                     "typeString": "contract GlobalAddressesProvider"
                   },
                   "typeName": {
@@ -1349,10 +1349,10 @@
                     "id": 5417,
                     "name": "GlobalAddressesProvider",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 29754,
+                    "referencedDeclaration": 29758,
                     "src": "2415:23:23",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+                      "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
                       "typeString": "contract GlobalAddressesProvider"
                     }
                   },
@@ -2612,7 +2612,7 @@
                       "lValueRequested": false,
                       "memberName": "add",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 30587,
+                      "referencedDeclaration": 30591,
                       "src": "5945:23:23",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -2854,7 +2854,7 @@
                             "lValueRequested": false,
                             "memberName": "add",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 30587,
+                            "referencedDeclaration": 30591,
                             "src": "6154:23:23",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -2903,7 +2903,7 @@
                         "lValueRequested": false,
                         "memberName": "rayDiv",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 14145,
+                        "referencedDeclaration": 14149,
                         "src": "6134:19:23",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -3021,7 +3021,7 @@
                                   "referencedDeclaration": 5382,
                                   "src": "6327:17:23",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+                                    "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
                                     "typeString": "contract GlobalAddressesProvider"
                                   }
                                 },
@@ -3032,7 +3032,7 @@
                                 "lValueRequested": false,
                                 "memberName": "getLendingRateOracle",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 29460,
+                                "referencedDeclaration": 29464,
                                 "src": "6327:38:23",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -3248,7 +3248,7 @@
                                       "lValueRequested": false,
                                       "memberName": "rayDiv",
                                       "nodeType": "MemberAccess",
-                                      "referencedDeclaration": 14145,
+                                      "referencedDeclaration": 14149,
                                       "src": "7002:22:23",
                                       "typeDescriptions": {
                                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -3297,7 +3297,7 @@
                                   "lValueRequested": false,
                                   "memberName": "rayMul",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 14118,
+                                  "referencedDeclaration": 14122,
                                   "src": "6977:23:23",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -3346,7 +3346,7 @@
                               "lValueRequested": false,
                               "memberName": "add",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 30587,
+                              "referencedDeclaration": 30591,
                               "src": "6948:27:23",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -3471,7 +3471,7 @@
                                       "lValueRequested": false,
                                       "memberName": "rayDiv",
                                       "nodeType": "MemberAccess",
-                                      "referencedDeclaration": 14145,
+                                      "referencedDeclaration": 14149,
                                       "src": "7126:22:23",
                                       "typeDescriptions": {
                                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -3499,7 +3499,7 @@
                                   "lValueRequested": false,
                                   "memberName": "rayMul",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 14118,
+                                  "referencedDeclaration": 14122,
                                   "src": "7126:55:23",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -3548,7 +3548,7 @@
                               "lValueRequested": false,
                               "memberName": "add",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 30587,
+                              "referencedDeclaration": 30591,
                               "src": "7098:26:23",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -3690,7 +3690,7 @@
                                 "lValueRequested": false,
                                 "memberName": "sub",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 30603,
+                                "referencedDeclaration": 30607,
                                 "src": "6512:19:23",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -3718,7 +3718,7 @@
                             "lValueRequested": false,
                             "memberName": "rayDiv",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 14145,
+                            "referencedDeclaration": 14149,
                             "src": "6512:52:23",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -3812,7 +3812,7 @@
                                   "lValueRequested": false,
                                   "memberName": "rayMul",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 14118,
+                                  "referencedDeclaration": 14122,
                                   "src": "6680:23:23",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -3885,7 +3885,7 @@
                                   "lValueRequested": false,
                                   "memberName": "add",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 30587,
+                                  "referencedDeclaration": 30591,
                                   "src": "6629:27:23",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -3913,7 +3913,7 @@
                               "lValueRequested": false,
                               "memberName": "add",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 30587,
+                              "referencedDeclaration": 30591,
                               "src": "6629:49:23",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -4014,7 +4014,7 @@
                                   "lValueRequested": false,
                                   "memberName": "rayMul",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 14118,
+                                  "referencedDeclaration": 14122,
                                   "src": "6827:25:23",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -4087,7 +4087,7 @@
                                   "lValueRequested": false,
                                   "memberName": "add",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 30587,
+                                  "referencedDeclaration": 30591,
                                   "src": "6775:26:23",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -4115,7 +4115,7 @@
                               "lValueRequested": false,
                               "memberName": "add",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 30587,
+                              "referencedDeclaration": 30591,
                               "src": "6775:50:23",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -4303,7 +4303,7 @@
                         "lValueRequested": false,
                         "memberName": "rayMul",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 14118,
+                        "referencedDeclaration": 14122,
                         "src": "7247:134:23",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -4655,7 +4655,7 @@
                       "lValueRequested": false,
                       "memberName": "add",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 30587,
+                      "referencedDeclaration": 30591,
                       "src": "8310:23:23",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -4841,7 +4841,7 @@
                           "lValueRequested": false,
                           "memberName": "wadToRay",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 14180,
+                          "referencedDeclaration": 14184,
                           "src": "8453:30:23",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_pure$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -4869,7 +4869,7 @@
                       "lValueRequested": false,
                       "memberName": "rayMul",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 14118,
+                      "referencedDeclaration": 14122,
                       "src": "8453:39:23",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -4975,7 +4975,7 @@
                           "lValueRequested": false,
                           "memberName": "wadToRay",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 14180,
+                          "referencedDeclaration": 14184,
                           "src": "8561:28:23",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_pure$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -5003,7 +5003,7 @@
                       "lValueRequested": false,
                       "memberName": "rayMul",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 14118,
+                      "referencedDeclaration": 14122,
                       "src": "8561:37:23",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -5088,7 +5088,7 @@
                           "lValueRequested": false,
                           "memberName": "wadToRay",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 14180,
+                          "referencedDeclaration": 14184,
                           "src": "8724:21:23",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_pure$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -5161,7 +5161,7 @@
                           "lValueRequested": false,
                           "memberName": "add",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 30587,
+                          "referencedDeclaration": 30591,
                           "src": "8671:24:23",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -5189,7 +5189,7 @@
                       "lValueRequested": false,
                       "memberName": "rayDiv",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 14145,
+                      "referencedDeclaration": 14149,
                       "src": "8671:51:23",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -5425,7 +5425,7 @@
         "id": 5368,
         "nodeType": "ImportDirective",
         "scope": 5755,
-        "sourceUnit": 30748,
+        "sourceUnit": 30752,
         "src": "25:59:23",
         "symbolAliases": [],
         "unitAlias": ""
@@ -5436,7 +5436,7 @@
         "id": 5369,
         "nodeType": "ImportDirective",
         "scope": 5755,
-        "sourceUnit": 14237,
+        "sourceUnit": 14241,
         "src": "85:37:23",
         "symbolAliases": [],
         "unitAlias": ""
@@ -5447,7 +5447,7 @@
         "id": 5370,
         "nodeType": "ImportDirective",
         "scope": 5755,
-        "sourceUnit": 29755,
+        "sourceUnit": 29759,
         "src": "124:57:23",
         "symbolAliases": [],
         "unitAlias": ""
@@ -5516,10 +5516,10 @@
               "id": 5375,
               "name": "WadRayMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 14236,
+              "referencedDeclaration": 14240,
               "src": "731:10:23",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_WadRayMath_$14236",
+                "typeIdentifier": "t_contract$_WadRayMath_$14240",
                 "typeString": "library WadRayMath"
               }
             },
@@ -5543,10 +5543,10 @@
               "id": 5378,
               "name": "SafeMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 30747,
+              "referencedDeclaration": 30751,
               "src": "765:8:23",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SafeMath_$30747",
+                "typeIdentifier": "t_contract$_SafeMath_$30751",
                 "typeString": "library SafeMath"
               }
             },
@@ -5573,7 +5573,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+              "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
               "typeString": "contract GlobalAddressesProvider"
             },
             "typeName": {
@@ -5581,10 +5581,10 @@
               "id": 5381,
               "name": "GlobalAddressesProvider",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 29754,
+              "referencedDeclaration": 29758,
               "src": "792:23:23",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+                "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
                 "typeString": "contract GlobalAddressesProvider"
               }
             },
@@ -5916,7 +5916,7 @@
                               "referencedDeclaration": 5382,
                               "src": "2273:17:23",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+                                "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
                                 "typeString": "contract GlobalAddressesProvider"
                               }
                             },
@@ -5927,7 +5927,7 @@
                             "lValueRequested": false,
                             "memberName": "getLendingPoolManager",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 29105,
+                            "referencedDeclaration": 29109,
                             "src": "2273:39:23",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -5958,7 +5958,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 31810,
+                            "referencedDeclaration": 31814,
                             "src": "2318:3:23",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -6019,10 +6019,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        31813,
-                        31814
+                        31817,
+                        31818
                       ],
-                      "referencedDeclaration": 31814,
+                      "referencedDeclaration": 31818,
                       "src": "2264:7:23",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -6090,7 +6090,7 @@
                       "referencedDeclaration": 5382,
                       "src": "2612:17:23",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+                        "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
                         "typeString": "contract GlobalAddressesProvider"
                       }
                     },
@@ -6105,13 +6105,13 @@
                       "referencedDeclaration": 5418,
                       "src": "2632:9:23",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+                        "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
                         "typeString": "contract GlobalAddressesProvider"
                       }
                     },
                     "src": "2612:29:23",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+                      "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
                       "typeString": "contract GlobalAddressesProvider"
                     }
                   },
@@ -6372,7 +6372,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+                    "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
                     "typeString": "contract GlobalAddressesProvider"
                   },
                   "typeName": {
@@ -6380,10 +6380,10 @@
                     "id": 5417,
                     "name": "GlobalAddressesProvider",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 29754,
+                    "referencedDeclaration": 29758,
                     "src": "2415:23:23",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+                      "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
                       "typeString": "contract GlobalAddressesProvider"
                     }
                   },
@@ -7643,7 +7643,7 @@
                       "lValueRequested": false,
                       "memberName": "add",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 30587,
+                      "referencedDeclaration": 30591,
                       "src": "5945:23:23",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -7885,7 +7885,7 @@
                             "lValueRequested": false,
                             "memberName": "add",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 30587,
+                            "referencedDeclaration": 30591,
                             "src": "6154:23:23",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -7934,7 +7934,7 @@
                         "lValueRequested": false,
                         "memberName": "rayDiv",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 14145,
+                        "referencedDeclaration": 14149,
                         "src": "6134:19:23",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -8052,7 +8052,7 @@
                                   "referencedDeclaration": 5382,
                                   "src": "6327:17:23",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29754",
+                                    "typeIdentifier": "t_contract$_GlobalAddressesProvider_$29758",
                                     "typeString": "contract GlobalAddressesProvider"
                                   }
                                 },
@@ -8063,7 +8063,7 @@
                                 "lValueRequested": false,
                                 "memberName": "getLendingRateOracle",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 29460,
+                                "referencedDeclaration": 29464,
                                 "src": "6327:38:23",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -8279,7 +8279,7 @@
                                       "lValueRequested": false,
                                       "memberName": "rayDiv",
                                       "nodeType": "MemberAccess",
-                                      "referencedDeclaration": 14145,
+                                      "referencedDeclaration": 14149,
                                       "src": "7002:22:23",
                                       "typeDescriptions": {
                                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -8328,7 +8328,7 @@
                                   "lValueRequested": false,
                                   "memberName": "rayMul",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 14118,
+                                  "referencedDeclaration": 14122,
                                   "src": "6977:23:23",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -8377,7 +8377,7 @@
                               "lValueRequested": false,
                               "memberName": "add",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 30587,
+                              "referencedDeclaration": 30591,
                               "src": "6948:27:23",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -8502,7 +8502,7 @@
                                       "lValueRequested": false,
                                       "memberName": "rayDiv",
                                       "nodeType": "MemberAccess",
-                                      "referencedDeclaration": 14145,
+                                      "referencedDeclaration": 14149,
                                       "src": "7126:22:23",
                                       "typeDescriptions": {
                                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -8530,7 +8530,7 @@
                                   "lValueRequested": false,
                                   "memberName": "rayMul",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 14118,
+                                  "referencedDeclaration": 14122,
                                   "src": "7126:55:23",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -8579,7 +8579,7 @@
                               "lValueRequested": false,
                               "memberName": "add",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 30587,
+                              "referencedDeclaration": 30591,
                               "src": "7098:26:23",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -8721,7 +8721,7 @@
                                 "lValueRequested": false,
                                 "memberName": "sub",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 30603,
+                                "referencedDeclaration": 30607,
                                 "src": "6512:19:23",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -8749,7 +8749,7 @@
                             "lValueRequested": false,
                             "memberName": "rayDiv",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 14145,
+                            "referencedDeclaration": 14149,
                             "src": "6512:52:23",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -8843,7 +8843,7 @@
                                   "lValueRequested": false,
                                   "memberName": "rayMul",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 14118,
+                                  "referencedDeclaration": 14122,
                                   "src": "6680:23:23",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -8916,7 +8916,7 @@
                                   "lValueRequested": false,
                                   "memberName": "add",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 30587,
+                                  "referencedDeclaration": 30591,
                                   "src": "6629:27:23",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -8944,7 +8944,7 @@
                               "lValueRequested": false,
                               "memberName": "add",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 30587,
+                              "referencedDeclaration": 30591,
                               "src": "6629:49:23",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -9045,7 +9045,7 @@
                                   "lValueRequested": false,
                                   "memberName": "rayMul",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 14118,
+                                  "referencedDeclaration": 14122,
                                   "src": "6827:25:23",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -9118,7 +9118,7 @@
                                   "lValueRequested": false,
                                   "memberName": "add",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 30587,
+                                  "referencedDeclaration": 30591,
                                   "src": "6775:26:23",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -9146,7 +9146,7 @@
                               "lValueRequested": false,
                               "memberName": "add",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 30587,
+                              "referencedDeclaration": 30591,
                               "src": "6775:50:23",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -9334,7 +9334,7 @@
                         "lValueRequested": false,
                         "memberName": "rayMul",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 14118,
+                        "referencedDeclaration": 14122,
                         "src": "7247:134:23",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -9686,7 +9686,7 @@
                       "lValueRequested": false,
                       "memberName": "add",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 30587,
+                      "referencedDeclaration": 30591,
                       "src": "8310:23:23",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -9872,7 +9872,7 @@
                           "lValueRequested": false,
                           "memberName": "wadToRay",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 14180,
+                          "referencedDeclaration": 14184,
                           "src": "8453:30:23",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_pure$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -9900,7 +9900,7 @@
                       "lValueRequested": false,
                       "memberName": "rayMul",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 14118,
+                      "referencedDeclaration": 14122,
                       "src": "8453:39:23",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -10006,7 +10006,7 @@
                           "lValueRequested": false,
                           "memberName": "wadToRay",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 14180,
+                          "referencedDeclaration": 14184,
                           "src": "8561:28:23",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_pure$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -10034,7 +10034,7 @@
                       "lValueRequested": false,
                       "memberName": "rayMul",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 14118,
+                      "referencedDeclaration": 14122,
                       "src": "8561:37:23",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -10119,7 +10119,7 @@
                           "lValueRequested": false,
                           "memberName": "wadToRay",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 14180,
+                          "referencedDeclaration": 14184,
                           "src": "8724:21:23",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_pure$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -10192,7 +10192,7 @@
                           "lValueRequested": false,
                           "memberName": "add",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 30587,
+                          "referencedDeclaration": 30591,
                           "src": "8671:24:23",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -10220,7 +10220,7 @@
                       "lValueRequested": false,
                       "memberName": "rayDiv",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 14145,
+                      "referencedDeclaration": 14149,
                       "src": "8671:51:23",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -10435,7 +10435,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-11-12T07:48:38.295Z",
+  "updatedAt": "2020-11-14T07:26:42.917Z",
   "devdoc": {
     "author": "Aave, SIGH Finance*",
     "details": "if there is need to update the calculation of the interest rates for a specific Instrument, a new version of this contract will be deployed.",

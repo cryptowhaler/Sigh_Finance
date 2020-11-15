@@ -1,5 +1,5 @@
 <!-- The options under supply borrow begin here -->
-<div id="landing-trade-tab" style="padding-left: 30%; padding-top: 3%; position: inherit;"> 
+<div id="lending-trade-tab" style="padding-left: 30%; padding-top: 3%; position: inherit;"> 
 
 <!-- SELECT INSTRUMENT DROPDOWN -->
     <div class="buy-sell-tab-dropdown uk-position-top-right">
@@ -12,6 +12,8 @@
                     {{ instrument.symbol }}
                 </option>
             </select>
+            <span style="color: aliceblue; font-size: 10px; line-height: 15px;" > Instrument Address : {{ $store.state.currentlySelectedInstrument.instrumentAddress }}  </span>
+            <span style="color: aliceblue; font-size: 10px; line-height: 15px;" > IToken Address : {{ $store.state.currentlySelectedInstrument.iTokenAddress }} </span>
         </div>
     </div>
 
@@ -22,10 +24,10 @@
         <br> <br> <br> <br>
 
         <keep-alive>
-            <Deposit v-if="activeTab === 'Deposit' " />
-            <Redeem v-if="activeTab === 'Redeem' " style="padding-right: 42px; padding-left: 42px;" />
-            <Borrow v-if="activeTab === 'Borrow' " />
-            <Repay v-if="activeTab === 'Repay' " />
+            <Deposit style="padding-top: 42px;" v-if="activeTab === 'Deposit' " />
+            <Redeem  style="padding-top: 42px; padding-left: 42px;" v-if="activeTab === 'Redeem' " />
+            <Borrow style="padding-top: 42px;" v-if="activeTab === 'Borrow' " />
+            <Repay style="padding-top: 42px;" v-if="activeTab === 'Repay' " />
         </keep-alive>
 
     </div>

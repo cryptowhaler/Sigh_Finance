@@ -533,23 +533,23 @@ nav {
 
 /*navbar for mobile screens end*/
 
-#landing-trade-tab .uk-tab > .uk-active > a {
+#lending-trade-tab .uk-tab > .uk-active > a {
   color: var(--primary-text-color);
   border-bottom: 3px solid var(--tab-color);
   background: transparent !important;
 }
 
-#landing-trade-tab .uk-tab > * > a {
+#lending-trade-tab .uk-tab > * > a {
   /* padding: 0 7px 2px 7px; */
   padding: 0px 0px 2px 0px;
   font-size: 11px;
 }
 
-#landing-trade-tab .uk-tab {
+#lending-trade-tab .uk-tab {
   margin-top: -15px;
 }
 
-#landing-trade-tab .uk-tab > .uk-active > a::after {
+#lending-trade-tab .uk-tab > .uk-active > a::after {
   content: "";
   position: absolute;
   bottom: -7px;
