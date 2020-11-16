@@ -78,6 +78,15 @@
 			{
 				"constant": false,
 				"inputs": [],
+				"name": "refreshLendingPoolConfiguration",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
 				"name": "refreshLendingPoolCoreConfiguration",
 				"outputs": [],
 				"payable": false,
@@ -359,10 +368,10 @@
 	},
 	"sources": {
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolConfigurator.sol": {
-			"keccak256": "0xece8c130d5202eb936c51c2bf2e09871c5e3c83b1c1b03214c755fdd3fd7f888",
+			"keccak256": "0x0c027c2da98a802dd496556384260030a299b3ebf8f42bcb7292a87d2ebcf25e",
 			"urls": [
-				"bzz-raw://7e8aaf54afd7274cbc526b5682882b1caf8cd871466c649fd4c0fda3f6c98189",
-				"dweb:/ipfs/QmRaLiqX1AT9cRMY5KvxtdvohJyUXMeJuA5jrTu9wsTF4d"
+				"bzz-raw://008848d39d9c64050e39ca0d7671fce1a20d5b251f63f2c957ab8c0124dcdd85",
+				"dweb:/ipfs/QmRxoDhrhY37fwVtVudNVQf9cK6fUebHw68Gbt7PVq3vfd"
 			]
 		}
 	},

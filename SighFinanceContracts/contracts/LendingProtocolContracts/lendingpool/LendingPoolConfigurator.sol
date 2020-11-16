@@ -146,7 +146,7 @@ contract LendingPoolConfigurator is VersionedInitializable {
     * @param _instrument the address of the _instrument
     * @param switch_  true / false to activate / deactivate
     **/
-    function switchInstrument(address _instrument, bool switch_) external onlyLendingPoolManager {
+    function instrumentActivationSwitch(address _instrument, bool switch_) external onlyLendingPoolManager {
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
         if (switch_) {
             core.activateInstrument(_instrument);
@@ -163,7 +163,7 @@ contract LendingPoolConfigurator is VersionedInitializable {
     * @param _instrument the address of the instrument
     * @param borrowRateSwitch true if stable borrow rate needs to be enabled & false if it needs to be disabled
     **/
-    function switchBorrowingOnInstrument(address _instrument, bool borrowRateSwitch) external onlyLendingPoolManager {
+    function instrumentBorrowingSwitch(address _instrument, bool borrowRateSwitch) external onlyLendingPoolManager {
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
         if (borrowRateSwitch) {
             core.enableBorrowingOnInstrument(_instrument, borrowRateSwitch);
@@ -180,7 +180,7 @@ contract LendingPoolConfigurator is VersionedInitializable {
     * @param _instrument the address of the instrument
     * @param switchStableBorrowRate true / false to enable / disable
     **/
-    function switchInstrumentStableBorrowRate(address _instrument,bool switchStableBorrowRate) external onlyLendingPoolManager {
+    function instrumentStableBorrowRateSwitch(address _instrument,bool switchStableBorrowRate) external onlyLendingPoolManager {
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
         if (switchStableBorrowRate) {
             core.enableInstrumentStableBorrowRate(_instrument);
@@ -218,7 +218,7 @@ contract LendingPoolConfigurator is VersionedInitializable {
     * @dev freezes an _instrument. A freezed _instrument doesn't accept any new deposit, borrow or rate swap, but can accept repayments, liquidations, rate rebalances and redeems
     * @param _instrument the address of the _instrument
     **/
-    function switchInstrumentFreeze(address _instrument, bool switch_) external onlyLendingPoolManager {
+    function instrumentFreezeSwitch(address _instrument, bool switch_) external onlyLendingPoolManager {
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
         if (switch_) {
             core.freezeInstrument(_instrument);
@@ -281,9 +281,9 @@ contract LendingPoolConfigurator is VersionedInitializable {
     }
 
 //   // refreshes the lending pool configuration to update the cached address
-//     function refreshLendingPoolConfiguration() external onlyLendingPoolManager {
-//         ILendingPool lendingPool = ILendingPool(globalAddressesProvider.getLendingPool());
-//         core.refreshConfig();
-//     }
+    function refreshLendingPoolConfiguration() external onlyLendingPoolManager {
+        ILendingPool lendingPool = ILendingPool(globalAddressesProvider.getLendingPool());
+        lendingPool.refreshConfig();
+    }
 
 }

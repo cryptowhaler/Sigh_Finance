@@ -70,7 +70,8 @@ const store = new Vuex.Store({
 // ############ PROTOCOL CONTRACT ADDRESSES  ############
 // ######################################################
     
-    GlobalAddressesProviderContractKovan: "0x029f2175B6256F441E89E8949dD267204BDffC44",
+    GlobalAddressesProviderContractKovan: "0x745e43654860a51A1666185171D800bcbCF56145",
+    ethereumPriceOracleAddressKovan: "0xa077B3b82c7205eE5bCA46C553520F65e516eF5A",
     GlobalAddressesProviderContractMainNet: null,
     GlobalAddressesProviderContractBSCTestnet: null,
     GlobalAddressesProviderContractBSC: null,
@@ -106,15 +107,25 @@ const store = new Vuex.Store({
       '4': 'Rinkeby test network','42': 'Kovan test network', '1337': 'Tokamak network', '4447': 'Truffle Develop Network','5777': 'Ganache Blockchain',
       '56':'Binance Smart Chain Main Network','97':'Binance Smart Chain Test Network'},
     supportedNetworks: ['42'],
-    supportedInstrumentAddresses: null,
-    supportedInstruments : [],      // INSTRUMENTS SUPPORTED BY THE PROTOCOL (FOR LENDING - ITOKEN & INSTRUMENT ADDRESSES + SYMBOL/NAME WILL BE STORED)
-    supportedInstrumentConfigs: new Map(), // Instrument Address -> Instrument Config  MAPPING  
+    // SESSION DATA 
+    supportedInstrumentAddresses: null,    //          INSTRUMENT                    // Array of Addresses
+    supportedInstruments : [],             //          INSTRUMENT                    // INSTRUMENTS SUPPORTED BY THE PROTOCOL (FOR LENDING - ITOKEN & INSTRUMENT ADDRESSES + SYMBOL/NAME WILL BE STORED)
+    supportedInstrumentGlobalStates: new Map(),   //   INSTRUMENT                    // Instrument Address -> Instrument GLOBAL STATES (APY, SIGH YIELDS, TOTAL LIQUIDITY ETC) MAPPING  
+    supportedInstrumentConfigs: new Map(),        //   INSTRUMENT                    // Instrument Address -> Instrument Config  MAPPING  (instrument's liquidation threshold etc)
+    walletInstrumentStates: new Map(),            //   WALLET - INSTRUMENT           // CONNECTED WALLET --> "EACH INSTRUMENT" STATE MAPPING ( deposited, balance, borrowed, fee, etc )
+    walletSIGH_FinanceState: null,                //   WALLET - SIGH FINANCE         // CONNECTED WALLET --> "SIGH FINANCE" STATE MAPPING (total deposited, total borrowed, lifeTime Deposit, lifeTime Borrowed,  )
+    walletSIGHState: null,                        //   WALLET - SIGH Token           // CONNECTED WALLET --> "SIGH" STATE MAPPING (sigh balance, lifeTimeSighVolume, contributionRatio = lifeTimeSighVolume/ SighGlobalTradeVolume)
+    SIGHFinanceState: null,                       //   SIGH FINANCE                  // SIGH's STATE (totalSupply, mintSpeed, burnSpeed, totalMinted, price, Sigh Global Trade Volume, bonding Curve Health)
+    SIGHState: null,                              //   SIGH                          // SIGH's STATE (totalSupply, mintSpeed, burnSpeed, totalMinted, price, Sigh Global Trade Volume, bonding Curve Health)
+
     currentlySelectedInstrument : {symbol:'WBTC'}, //  {instrumentAddress: '0x00' , name: 'Wrapped Bitcoin', symbol: 'WBTC', decimals: 18, iTokenAddress: '0x00' , priceDecimals: 8, price: 0 },  // Currently Selected Instrument
+
     sessionTransactions : [],
-    SighInstrumentState : { name: 'SIGH Instrument', symbol : 'SIGH', address: null, price: 0, mintSpeed: 0, totalSupply: 0, priceDecimals: 8 },
-    instrumentGlobalBalances : [],        // Protocol Level Data for a supported Instrument
-    userProtocolBalances: {},
-    userInstrumentStateBalances: [{}],
+    
+    // ETH PRICE & SIGH PRICE
+    ethPriceDecimals: null,             // Decimals 
+    ethereumPriceUSD: null,             // ETH Price in USD
+
     username: null, //Added
     websocketStatus: 'Closed',
     loaderCounter: 0,
@@ -207,43 +218,67 @@ const store = new Vuex.Store({
       return state.IPriceOracleGetterAddress;    
     },        
     // ######################################################
-    // ############ TO BE WORKED UPON ############
+    // ############ SESSION DATA ############
     // ######################################################
+    // ETH PRICE
+    getETHPrice(state) {
+      return state.ethereumPriceUSD;
+    },     
+    getEthPriceDecimals(state) {
+      return state.ethPriceDecimals;
+    },
+    // SUPPRTED INSTRUMENTS ARRAY
+    getSupportedInstrumentAddresses(state) {
+      return state.supportedInstrumentAddresses;
+    },
     getSupportedInstruments(state) {
       return state.supportedInstruments;
     },
-    currentlySelectedInstrument(state) {
-      return state.currentlySelectedInstrument;
+    // SUPPRTED INSTRUMENTS - GLOBAL STATE
+    getsupportedInstrumentGlobalStates(state) {
+      return state.supportedInstrumentGlobalStates;
+    },
+    getsupportedInstrumentGlobalState(state,instrumentAddress) {
+      return state.supportedInstrumentGlobalStates.get(instrumentAddress);
+    },
+    // SUPPRTED INSTRUMENTS - CONFIG STATE    
+    getInstrumentConfigs(state) {
+    return state.supportedInstrumentConfigs;
     },
     getInstrumentConfig(state,instrumentAddress) {
       return state.supportedInstrumentConfigs.get(instrumentAddress);
     },
-    getInstrumentPrice(state) {
-      return instrumentAddress => {
-        console.log('Getter getInstrumentPrice in store');
-        let config =  state.supportedInstrumentConfigs.get(instrumentAddress);
-        if (config.price) {
-          return config.price;
-        }
-        return 0;
-      }
+    // WALLET  - SUPPORTED INSTRUMENTS   
+    getWalletInstrumentStates(state) {
+      return state.walletInstrumentStates;
     },
-    getSelectedInstrumentPrice(state) {
-      let cur_instrument = state.supportedInstrumentConfigs.get(state.currentlySelectedInstrument);
-      if (cur_instrument) {
-        return cur_instrument.price;
-      }
-      return 0;
-    }, 
+    getWalletInstrumentState(state,instrumentAddress) {
+      return state.walletInstrumentStates.get(instrumentAddress);
+    },
+    // WALLET  - SIGH FINANCE   
+    getWalletSIGH_FinanceState(state) {
+      return state.walletSIGH_FinanceState;
+    },
+    // WALLET  - SIGH INSTRUMENT
+    getWalletSIGHState(state) {
+      return state.walletSIGHState;
+    },
+    // SIGH FINANCE
+    getSIGHFinanceState(state) {
+      return state.SIGHFinanceState;
+    },
+    // SIGH INSTRUMENT
+    getSIGHState(state) {
+      return state.SIGHState;
+    },
+  
+    currentlySelectedInstrument(state) {
+      return state.currentlySelectedInstrument;
+    },
     getSighPrice(state) {
-      return state.SighInstrumentState.price;
+      return state.SIGHState.priceETH;
     }, 
-    getInstrumentGlobalBalances(state) {
-      return state.instrumentGlobalBalances;
-    },
-    getUserProtocolBalances(state) {
-      return state.userProtocolBalances;
-    },
+
 
     showLoader(state) {
       return state > 0;
@@ -327,7 +362,7 @@ const store = new Vuex.Store({
     // SIGH RELATED CONTRACTS
     updateSIGHContractAddress(state,newContractAddress) {         
       state.SIGHContractAddress = newContractAddress;
-      state.SighInstrumentState.address = newContractAddress;
+      state.SIGHState.address = newContractAddress;
       console.log("In updateSIGHContractAddress - " + state.SIGHContractAddress);
     },    
     updateSIGHSpeedControllerAddress(state,newContractAddress) {         
@@ -365,32 +400,69 @@ const store = new Vuex.Store({
     // ######################################################
     // ############ TO BE WORKED UPON ############
     // ######################################################
-    setSupportedInstrumentAddresses(state,_supportedinstruments) {      // LIST OF INSTRUMENTS SUPPORTED BY SIGH FINANCE      
-      state.supportedInstrumentAddresses = _supportedinstruments;
-      // console.log(state.supportedInstrumentAddresses);
-      // console.log("In setSupportedInstrumentAddresses ");
-    },    
-    addToSupportedInstrumentsArray(state,instrumentState) {
-      state.supportedInstruments.push(instrumentState);
-      // console.log(state.supportedInstruments);
-      // console.log("In addToSupportedInstrumentsArray ");
-
+    // ETH PRICE
+    setEthPriceDecimals(state, decimals) {
+      state.ethPriceDecimals = decimals;
+      console.log('setEthPriceDecimals' + state.ethPriceDecimals);      
     },
-    addToSupportedInstrumentsConfigsMapping(state,{instrumentAddress,instrumentDetails}) {  // ADDS THE 'Instrument Address' => 'Instrument Details' MAPPING
-      state.supportedInstrumentConfigs.set(instrumentAddress,instrumentDetails);  // creates a mapping from instrument address to instrument config data
-      // console.log(state.supportedInstrumentConfigs.get(instrumentAddress));
-      // console.log("In addToSupportedInstrumentsConfigsMapping ");
+    updateETHPrice(state, updatedPrice) {
+      state.ethereumPriceUSD = updatedPrice;
+      console.log('In updateETHPrice -' + state.ethereumPriceUSD);
     },
+    // SUPPRTED INSTRUMENTS ARRAY
+    setSupportedInstrumentAddresses(state,supportedInstrumentAddresses_) {
+      state.supportedInstrumentAddresses = supportedInstrumentAddresses_;
+      console.log('In setSupportedInstrumentAddresses -' + state.supportedInstrumentAddresses);
+    },
+    setSupportedInstruments(state,supportedInstruments_) {
+      state.supportedInstruments = supportedInstruments_;
+      console.log('In setSupportedInstruments -' + state.supportedInstruments);
+    },
+    // SUPPRTED INSTRUMENTS - GLOBAL STATE (MAP)
+    addToSupportedInstrumentGlobalStates(state,{instrumentAddress, instrumentGlobalState}) {
+      state.supportedInstrumentGlobalStates.set(instrumentAddress,instrumentGlobalState);
+      console.log('In addToSupportedInstrumentGlobalStates -' + state.supportedInstrumentGlobalStates.get(instrumentAddress));
+    },
+    // SUPPRTED INSTRUMENTS - CONFIG STATE (MAP)    
+    addToSupportedInstrumentConfigs(state,{instrumentAddress, instrumentConfig}) {
+      state.supportedInstrumentConfigs.set(instrumentAddress,instrumentConfig);
+      console.log('In addToSupportedInstrumentConfigs -' + state.supportedInstrumentConfigs.get(instrumentAddress));
+    },
+    // WALLET  - SUPPORTED INSTRUMENTS (MAP)     
+    addToWalletInstrumentStates(state,{instrumentAddress, walletInstrumentState}) {
+      state.walletInstrumentStates.set(instrumentAddress,walletInstrumentState);
+      console.log('In addToWalletInstrumentStates -' + state.walletInstrumentStates.get(instrumentAddress));
+    },
+    // WALLET  - SIGH FINANCE   
+    setWalletSIGH_FinanceState(state,walletSighFinanceState) {
+      state.walletSIGH_FinanceState =  walletSighFinanceState;
+      console.log('In setWalletSIGH_FinanceState -' + state.walletSIGH_FinanceState);
+    },
+    // WALLET  - SIGH INSTRUMENT
+    setWalletSIGHState(state,walletSIGHState_) {
+      state.walletSIGHState =  walletSIGHState_;
+      console.log('In setWalletSIGHState -' + state.walletSIGHState);
+    },
+    // SIGH FINANCE
+    setSIGHFinanceState(state,sighFinanceState) {
+      state.SIGHFinanceState = sighFinanceState;
+      console.log('In getSIGHFinanceState -' + state.SIGHFinanceState);
+    },
+    // SIGH INSTRUMENT
+    setSIGHState(state,sighState) {
+      state.SIGHState = sighState;
+      console.log('In setSIGHState -' + state.SIGHState);
+    },
+    // UPDATE INSTRUMENT PRICE
     updateInstrumentPrice(state,{instrumentAddress,updatedPrice}) {               // UPDATES THE CURRENT INSTRUMENT PRICE. CONSTANTLY CALLED BY THE PRICE POLLING FUNCTION
       let instrumentConfig = state.supportedInstrumentConfigs.get(instrumentAddress); 
       instrumentConfig.price = updatedPrice;      
       state.supportedInstrumentConfigs.set(instrumentAddress,instrumentConfig);
     },
+    // UPDATE SELECTED INSTRUMENT
     updateSelectedInstrument(state, selectedInstrument_) {
       state.currentlySelectedInstrument = selectedInstrument_;
-      console.log(selectedInstrument_);
-      console.log(state.currentlySelectedInstrument);
-      console.log("In updateSelectedInstrument ");
+      console.log("In updateSelectedInstrument " + state.currentlySelectedInstrument);
     },
     addTransactionDetails(state,{status,Hash,Utility,Service}) {
       let obj = {};
@@ -402,28 +474,7 @@ const store = new Vuex.Store({
       console.log(obj);
       console.log('Transaction history stored');
     },
-    updateSIGHPrice(state, updatedPrice) {
-      state.SighInstrumentState.price = updatedPrice;
-      // console.log('In updateSIGHPrice -' + state.SighInstrumentState.price);
-    },
-    setUserProtocolStateBalances(state,userProtocolBalances) {    // SETS THE USER's PROTOCOL LEVEL BALANCES
-      state.userProtocolBalances.totalLiquidity = userProtocolBalances.totalLiquidityETH;
-      state.userProtocolBalances.totalCollateral = userProtocolBalances.totalCollateralETH;
-      state.userProtocolBalances.totalBorrows = userProtocolBalances.totalBorrowsETH;
-      state.userProtocolBalances.totalFees = userProtocolBalances.totalFeesETH;
-      state.userProtocolBalances.availableBorrows = userProtocolBalances.availableBorrowsETH;
-      state.userProtocolBalances.currentLiquidationThreshold = userProtocolBalances.currentLiquidationThreshold;
-      state.userProtocolBalances.ltv = userProtocolBalances.ltv;
-      state.userProtocolBalances.healthFactor = userProtocolBalances.healthFactor;
-      console.log("IN COMMIT 'setUserProtocolStateBalances' ");
-      console.log(state.userProtocolBalances);
-    },
-    resetUserInstrumentStateBalances(state) {   // RESETS THE ACCOUNT's INSTRUMENT STATE BALANCES
-      state.userInstrumentStateBalances = [{}];
-    },
-    addToUserInstrumentStateBalances(state,userInstrumentStateBalance) {   // ADDS TO THE ACCOUNT's INSTRUMENT STATE BALANCES
-      state.userInstrumentStateBalances.push(userInstrumentStateBalance);
-    },
+    
     changeWebsocketStatus(state, websocketStatus) {
       state.websocketStatus = websocketStatus;
     },
@@ -622,6 +673,7 @@ const store = new Vuex.Store({
     console.log(currentGlobalAddressesProviderContract);
 
     if (currentGlobalAddressesProviderContract) {
+      console.log(globalAddressesProviderAddress);
       const sighAddress = await currentGlobalAddressesProviderContract.methods.getSIGHAddress().call();        
       commit('updateSIGHContractAddress',sighAddress);
 
@@ -669,6 +721,8 @@ const store = new Vuex.Store({
       const instruments = await lendingPoolCoreContract.methods.getInstruments().call();        
       commit('setSupportedInstrumentAddresses',instruments);
 
+      const priceOracleContract = new state.web3.eth.Contract(IPriceOracleGetter.abi, state.IPriceOracleGetterAddress );
+
       // Loop over the instrument addresses to fetch iToken Address, name, symbol, decimals and add them to the supported instruments list
       if (instruments) {
         for (let i=0; i<instruments.length; i++) {
@@ -685,7 +739,13 @@ const store = new Vuex.Store({
           commit('addToSupportedInstrumentsConfigsMapping',{instrumentAddress:instruments[i], instrumentDetails:instrumentState});
         }
         commit('updateSelectedInstrument',state.supportedInstruments[0]); // THE FIRST INSTRUMENT IS BY DEFAULT THE SELECTED INSTRUMENT
-        store.dispatch('initiatePollingInstrumentPrices');
+
+        let ethPriceDecimals = await priceOracleContract.methods.getAssetPriceDecimals(state.ethereumPriceOracleAddressKovan).call();
+        commit('setEthPriceDecimals',ethPriceDecimals);                                                         // ETH Price Decimals
+        let sighPriceDecimals  = await priceOracleContract.methods.getAssetPriceDecimals(state.SIGHContractAddress).call();
+        commit('setSighPriceDecimals',sighPriceDecimals);                                                        // SIGH Price Decimals
+
+        store.dispatch('initiatePollingETH_SIGHPrices');
       }
       return true;
     }
@@ -722,20 +782,20 @@ const store = new Vuex.Store({
       instrumentConfiguration.stableBorrowRateEnabled = instrumentConfig.stableBorrowRateEnabled;
       instrumentConfiguration.isActive = instrumentConfig.isActive;
       // INSTRUMENT GLOBAL BALANCES          
-      let instrumentGlobalBalances = await store.dispatch("getInstrumentMarketState",{_instrumentAddress:instrumentAddress });           
-      instrumentState.iTokenAddress = instrumentGlobalBalances.iTokenAddress;
-      instrumentBalances.totalLiquidity = instrumentGlobalBalances.totalLiquidity;
-      instrumentBalances.totalBorrowsStable = instrumentGlobalBalances.totalBorrowsStable;
-      instrumentBalances.totalBorrowsVariable = instrumentGlobalBalances.totalBorrowsVariable;
-      instrumentBalances.totalBorrows = Number(instrumentGlobalBalances.totalBorrowsStable) + Number(instrumentGlobalBalances.totalBorrowsVariable) ;
-      instrumentBalances.availableLiquidity = instrumentGlobalBalances.availableLiquidity;
-      instrumentBalances.liquidityRate = instrumentGlobalBalances.liquidityRate;
-      instrumentBalances.variableBorrowRate = instrumentGlobalBalances.variableBorrowRate;
-      instrumentBalances.stableBorrowRate = instrumentGlobalBalances.stableBorrowRate;
-      instrumentBalances.averageStableBorrowRate = instrumentGlobalBalances.averageStableBorrowRate;
-      instrumentBalances.utilizationRate = instrumentGlobalBalances.utilizationRate;
-      instrumentBalances.liquidityIndex = instrumentGlobalBalances.liquidityIndex;
-      instrumentBalances.variableBorrowIndex = instrumentGlobalBalances.variableBorrowIndex;  
+      let supportedInstrumentGlobalStates = await store.dispatch("getInstrumentMarketState",{_instrumentAddress:instrumentAddress });           
+      instrumentState.iTokenAddress = supportedInstrumentGlobalStates.iTokenAddress;
+      instrumentBalances.totalLiquidity = supportedInstrumentGlobalStates.totalLiquidity;
+      instrumentBalances.totalBorrowsStable = supportedInstrumentGlobalStates.totalBorrowsStable;
+      instrumentBalances.totalBorrowsVariable = supportedInstrumentGlobalStates.totalBorrowsVariable;
+      instrumentBalances.totalBorrows = Number(supportedInstrumentGlobalStates.totalBorrowsStable) + Number(supportedInstrumentGlobalStates.totalBorrowsVariable) ;
+      instrumentBalances.availableLiquidity = supportedInstrumentGlobalStates.availableLiquidity;
+      instrumentBalances.liquidityRate = supportedInstrumentGlobalStates.liquidityRate;
+      instrumentBalances.variableBorrowRate = supportedInstrumentGlobalStates.variableBorrowRate;
+      instrumentBalances.stableBorrowRate = supportedInstrumentGlobalStates.stableBorrowRate;
+      instrumentBalances.averageStableBorrowRate = supportedInstrumentGlobalStates.averageStableBorrowRate;
+      instrumentBalances.utilizationRate = supportedInstrumentGlobalStates.utilizationRate;
+      instrumentBalances.liquidityIndex = supportedInstrumentGlobalStates.liquidityIndex;
+      instrumentBalances.variableBorrowIndex = supportedInstrumentGlobalStates.variableBorrowIndex;  
     }
     console.log(instrumentState);
     console.log(instrumentConfiguration);
@@ -754,7 +814,7 @@ const store = new Vuex.Store({
       console.log(globalBalances);
       commit("setUserProtocolStateBalances",globalBalances);  // SETTING CONNECTED WALLET'S PROTOCOL LEVEL BALANCES
       console.log(state.supportedInstruments);
-      commit("resetUserInstrumentStateBalances");  // SETTING CONNECTED WALLET'S PROTOCOL LEVEL BALANCES
+      commit("resetwalletInstrumentStates");  // SETTING CONNECTED WALLET'S PROTOCOL LEVEL BALANCES
       for (let i=0; i<state.supportedInstruments.length; i++ ) {
         console.log(state.supportedInstruments[i]);
         let userInstrumentBalance = {};
@@ -764,7 +824,7 @@ const store = new Vuex.Store({
         userInstrumentBalance.priceDecimals = state.supportedInstruments[i].priceDecimals;
         userInstrumentBalance = await store.dispatch("getUserInstrumentState",{_instrumentAddress: state.supportedInstrumentAddresses[i] , _user :state.connectedWallet } );
         console.log(userInstrumentBalance);
-        commit("addToUserInstrumentStateBalances",userInstrumentBalance);  // ADDING TO THE CONNECTED WALLET'S INSTRUMENT LEVEL BALANCES
+        commit("addTowalletInstrumentStates",userInstrumentBalance);  // ADDING TO THE CONNECTED WALLET'S INSTRUMENT LEVEL BALANCES
       }    
       return true;
     }
@@ -777,25 +837,23 @@ const store = new Vuex.Store({
 
 
   // [TESTED. WORKING AS EXPECTED] KEEP UPDATING PRICES OF THE SUPPORTED INSTRUMENTS
-  initiatePollingInstrumentPrices: async ({commit,state}) => {
-    console.log("initiatePollingInstrumentPrices : updating prices");
+  initiatePollingETH_SIGHPrices: async ({commit,state}) => {
+    console.log("initiatePollingETH_SIGHPrices : updating prices");
     let instruments = state.supportedInstrumentAddresses;
     console.log(instruments);
     setInterval(async () => {
       if (instruments) {
-        for (let i=0; i<instruments.length; i++ ) {
-          let updatedPrice_ = await store.dispatch('getInstrumentPrice', { _instrumentAddress : instruments[i] } );
+          let updatedPrice_ = await store.dispatch('getInstrumentPrice', { _instrumentAddress : state.ethereumPriceOracleAddressKovan } );
           if (updatedPrice_) {
-            console.log(state.supportedInstrumentConfigs.get(instruments[i]).name +  " - current price is " + updatedPrice_);
-            commit('updateInstrumentPrice',{instrumentAddress: instruments[i], updatedPrice: updatedPrice_});  
+            commit("updateETHPrice",updatedPrice_);
+            console.log( " ETH - current price is " + updatedPrice_);
+          }
+          let updatedSighPrice_ = await store.dispatch('getInstrumentPrice', { _instrumentAddress : state.SIGHContractAddress } );
+          if (updatedSighPrice_) {
+            console.log(" SIGH - current price is " + updatedSighPrice_);
+            commit('updateSIGHPrice',updatedSighPrice_);  
           }
         }
-      }
-      let updatedSighPrice_ = await store.dispatch('getInstrumentPrice', { _instrumentAddress : state.SIGHContractAddress } );
-      if (updatedSighPrice_) {
-        console.log(" SIGH - current price is " + updatedSighPrice_);
-        commit('updateSIGHPrice',updatedSighPrice_);  
-      }
     }, 5000);
   },
 
@@ -807,10 +865,10 @@ const store = new Vuex.Store({
   getInstrumentPrice: async ({commit,state},{_instrumentAddress}) => {
     if (state.web3 && state.IPriceOracleGetterAddress && state.IPriceOracleGetterAddress!= "0x0000000000000000000000000000000000000000" ) {
       const priceOracleContract = new state.web3.eth.Contract(IPriceOracleGetter.abi, state.IPriceOracleGetterAddress );
-      // console.log(priceOracleContract);
-      // console.log(_instrumentAddress);
+      console.log('getInstrumentPrice');
+      console.log(_instrumentAddress);
       let response = await priceOracleContract.methods.getAssetPrice(_instrumentAddress).call();
-      // console.log(response);
+      console.log(response);
       return response;
     }
     else {
@@ -1938,6 +1996,7 @@ ERC20_balanceOf: async ({commit,state},{tokenAddress,account }) => {
   if (state.web3 && account && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     console.log(erc20Contract);
+    console.log('Balance Of Call');
     const response = await erc20Contract.methods.balanceOf(account).call();
     console.log(response);
     return response;

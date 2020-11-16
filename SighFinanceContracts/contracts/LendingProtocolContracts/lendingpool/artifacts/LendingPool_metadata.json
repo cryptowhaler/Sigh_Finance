@@ -1197,10 +1197,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPool.sol": {
-			"keccak256": "0x859ddbdf65b7d43d0ee3d6406650fc38b32124d0df2292e237584ad7be7d5a68",
+			"keccak256": "0x9293968389a224ec42c1ce4b82cfd01f5c487dc632198472100eae41f1447da8",
 			"urls": [
-				"bzz-raw://a403ac06472ceeeddcc35e9e1f268616b9ab7ae300e3738472bdbceec3c49835",
-				"dweb:/ipfs/QmSTeihp9gb2MX8QpHN9DmnFBRPh4iwQXxLTEXXy5BxENK"
+				"bzz-raw://3dc57e90f36750703617a69c0f24407b782a1b5b7ae81d332f20de5c4ec37454",
+				"dweb:/ipfs/QmchfrDX8WCX759DeDRGEmFLQrp3wuw3rGvjQons7AefzE"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
@@ -1239,10 +1239,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPool.sol": {
-			"keccak256": "0x886fa07635b874413b32fcc281545c0f97d754a8a578952cd21ef1fba49e1912",
+			"keccak256": "0xf19fec223687ae26462e01a4a46b999bd72cddb20e3bae898ab26fc1d99d7daf",
 			"urls": [
-				"bzz-raw://3b2c831bcda4d422d1a793cf8517ecbf12385545965342b6458d1a414b525665",
-				"dweb:/ipfs/QmXDyhouvBtfjGWpf1fMqyu63GQ6qPxTrgjkTsjec2T1M9"
+				"bzz-raw://cd404984df64a054a152bb1e21cda2a754af55791d6327affe9cf699163cbfb9",
+				"dweb:/ipfs/QmUSG6m3aBhEEEEs4CXXKvguUnB459y5VyWqSyJyYPo32q"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolLiquidationManager.sol": {
@@ -1253,10 +1253,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
-			"keccak256": "0x79342c1cf9c5ea998cfd0ea87130ced2493dc9085bd56633db76f8b751c572c6",
+			"keccak256": "0x1b3f4e9a62042178a0b4c6dbde1dadec6b9c40d6ea8731226351273183f9c027",
 			"urls": [
-				"bzz-raw://d5e0e4e209d5697f18227736610b5abc7c6f62b72f4994a6cf0ddb95b90e2740",
-				"dweb:/ipfs/QmbXhwYTcLQdamzw28MXnbo1vkgpnU45tuJraZMW3Nut5Q"
+				"bzz-raw://d4b9a10a8658bba25f7cd644becfa036ade3db810033da8ac665163a81a81ad7",
+				"dweb:/ipfs/QmbUhQGUHL8z7e1aAVe4gtncU26TFCYr38aZqVNTttgt7D"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/EthAddressLib.sol": {
@@ -1267,10 +1267,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/WadRayMath.sol": {
-			"keccak256": "0x126c58b068a25a9721da9933c377361f9194ab839dd6ad627d8f78a062fe0cc3",
+			"keccak256": "0xdecb27b23892c48ef8ff2e63de656c06b1abd745f6bd0e8f91f203d32cf00cd7",
 			"urls": [
-				"bzz-raw://810142a1a4ecd60c3f36ab696cdcb34bfb5a52d241591229659bb5c02c40c5cc",
-				"dweb:/ipfs/Qma8sCTftr1468EKegJuXnNXqTySUGtk683kAfyhMyHpiL"
+				"bzz-raw://1c57032f9ee17dddf672e68d5142011c06f5b8b2379f3c9f63ab77232ffd86e1",
+				"dweb:/ipfs/QmeZie4G7caYQsuFbaVqt3YRnrr2s42VAgVHeW1WAq3BRh"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {

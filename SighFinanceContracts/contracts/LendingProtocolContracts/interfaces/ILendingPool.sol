@@ -5,6 +5,7 @@ interface ILendingPool {
 // ###########################################################
 // ######  EXTERNAL FUNCTIONS THAT USERS INTERACT WITH  ######
 // ###########################################################
+    function refreshConfig() external;  // Called by LendingPool Configurator - to refresh addresses
 
     function deposit(address _instrument, uint256 _amount, uint16 _referralCode) external payable ;
 

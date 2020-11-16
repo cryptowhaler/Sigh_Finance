@@ -47,6 +47,7 @@
 			"disableInstrumentAsCollateral(address)": "ea84c1ba",
 			"enableInstrumentAsCollateral(address,uint256,uint256,uint256)": "e6df474e",
 			"initInstrument(address,uint8,address)": "409df552",
+			"refreshLendingPoolConfiguration()": "dfc75726",
 			"refreshLendingPoolCoreConfiguration()": "e12dcc6c",
 			"removeLastAddedInstrument(address)": "2b169ae3",
 			"setAssetSources(address[],address[])": "abfd5310",
@@ -129,6 +130,15 @@
 				}
 			],
 			"name": "initInstrument",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [],
+			"name": "refreshLendingPoolConfiguration",
 			"outputs": [],
 			"payable": false,
 			"stateMutability": "nonpayable",

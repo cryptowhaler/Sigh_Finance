@@ -11,8 +11,8 @@
                     {{ instrument.symbol }}
                 </option>
             </select>
-            <span style="color: aliceblue; font-size: 10px; line-height: 15px;" > Instrument Address : {{ $store.state.currentlySelectedInstrument.instrumentAddress }}  </span>
-            <span style="color: aliceblue; font-size: 10px; line-height: 15px;" > IToken Address : {{ $store.state.currentlySelectedInstrument.iTokenAddress }} </span>
+            <span style="color: aliceblue; font-size: 10px; line-height: 15px;" > {{ $store.state.currentlySelectedInstrument.symbol  }} Address : {{ $store.state.currentlySelectedInstrument.instrumentAddress }}  </span>
+            <span style="color: aliceblue; font-size: 10px; line-height: 15px;" > {{ $store.state.currentlySelectedInstrument.symbol  }}'s IToken Address : {{ $store.state.currentlySelectedInstrument.iTokenAddress }} </span>
         </div>
     </div>
 

@@ -422,10 +422,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/WadRayMath.sol": {
-			"keccak256": "0x126c58b068a25a9721da9933c377361f9194ab839dd6ad627d8f78a062fe0cc3",
+			"keccak256": "0xdecb27b23892c48ef8ff2e63de656c06b1abd745f6bd0e8f91f203d32cf00cd7",
 			"urls": [
-				"bzz-raw://810142a1a4ecd60c3f36ab696cdcb34bfb5a52d241591229659bb5c02c40c5cc",
-				"dweb:/ipfs/Qma8sCTftr1468EKegJuXnNXqTySUGtk683kAfyhMyHpiL"
+				"bzz-raw://1c57032f9ee17dddf672e68d5142011c06f5b8b2379f3c9f63ab77232ffd86e1",
+				"dweb:/ipfs/QmeZie4G7caYQsuFbaVqt3YRnrr2s42VAgVHeW1WAq3BRh"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {

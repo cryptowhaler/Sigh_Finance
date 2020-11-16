@@ -35,6 +35,7 @@ interface ILendingPoolConfigurator {
     // ####### --> setInstrumentDecimals()               :   SETTING VARIABLES  ###########################
     // ####### --> setInstrumentInterestRateStrategyAddress()     : SETTING INTEREST RATE STRATEGY  #######
     // ####### --> refreshLendingPoolCoreConfiguration()   :   REFRESH THE ADDRESS OF CORE  ###############
+    // ####### --> refreshLendingPoolConfiguration()   :   REFRESH THE ADDRESS OF CORE  ###############
     // ###################################################################################################
 
 
@@ -57,6 +58,9 @@ interface ILendingPoolConfigurator {
     function setInstrumentInterestRateStrategyAddress(address _instrument, address _rateStrategyAddress) external ;
 
     function refreshLendingPoolCoreConfiguration() external ;
+
+    function refreshLendingPoolConfiguration() external ;
+
 
     // ##########################################################################################
     // ###############  LENDING POOL CONFIGURATOR'S CONTROL OVER SIGH MECHANICS  ################

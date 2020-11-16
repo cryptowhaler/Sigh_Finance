@@ -17,7 +17,13 @@ export default {
         depositValue: null,
         enteredReferralCode: 0,
       },
-      availableAllowance: null,
+      userBalanceWorth: null,
+      depositedBalanceWorth: null,
+      userDepositAllowanceWorth: null,
+      borrowedBalanceWorth: null,
+
+      selectedInstrumentPriceETH: null,  // PRICE CONSTANTLY UPDATED
+
       showLoader: false,
       // showApproveButton: true,
       // showConfirm: false,
@@ -28,31 +34,36 @@ export default {
   created() {
     console.log("IN LENDING / DEPOSIT / QUANTITY (TRADE-PANE) FUNCTION ");
     this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
-    this.updateAvailableAllowance(false);
+    this.updateCurrentInstrumentUserState(false);
     this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
       this.selectedInstrument = selectedInstrument_.instrument;        
-      console.log('DEPOSIT : changeSelectedInstrument - ');
-      console.log(this.selectedInstrument);
-      this.updateAvailableAllowance(false);
+      // console.log('DEPOSIT : changeSelectedInstrument - ');
+      // console.log(this.selectedInstrument);
+      this.updateCurrentInstrumentUserState(false);
     };
+    if ( this.$store.state.isNetworkSupported ) {
+      setInterval(async () => {
+        this.selectedInstrumentPriceETH = await this.getInstrumentPrice({_instrumentAddress : this.selectedInstrument.instrumentAddress });
+        // console.log( 'this.selectedInstrumentPriceETH' + this.selectedInstrumentPriceETH);
+      },10000);
+    }
     ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
   },
 
 
   computed: {
     calculatedValue() {
-        console.log('calculatedValue');
+        // console.log('calculatedValue');
         if (this.selectedInstrument && this.selectedInstrument.priceDecimals) {
-          console.log(this.selectedInstrument);
-          return ((this.formData.depositQuantity) * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4) ; 
+          return (Number(this.formData.depositQuantity) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ; 
           }
       return 0;
-    }
+    },
   },
 
   methods: {
 
-    ...mapActions(['LendingPool_deposit','ERC20_increaseAllowance','ERC20_getAllowance','ERC20_mint','getInstrumentPrice']),
+    ...mapActions(['LendingPool_deposit','ERC20_increaseAllowance','ERC20_getAllowance','ERC20_mint','getInstrumentPrice','getUserInstrumentState','ERC20_balanceOf']),
     
     async deposit() {   //DEPOSIT (WORKS PROPERLY)
       
@@ -64,10 +75,10 @@ export default {
         this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
       }       
       // WHEN THE ALLOWANCE IS LESS THAN WHAT IS NEEDED
-      else if ( Number(this.formData.depositQuantity) >  Number(this.availableAllowance)  ) {
-        let dif = this.formData.depositQuantity - this.availableAllowance;
+      else if ( Number(this.formData.depositQuantity) >  Number(this.userDepositAllowance)  ) {
+        let dif = this.formData.depositQuantity - this.userDepositAllowance;
         this.$showInfoMsg({message: " You first need to 'APPROVE' an amount greater than " + dif + " " + this.selectedInstrument.symbol + " so that the deposit can be processed through the ERC20 Interface's transferFrom() Function."}); // this.formData.depositQuantity + "  " + this.selectedInstrument.symbol +  " worth " + value + " USD approval failed. Try increasing Gas or contact our team at contact@sigh.finance in case of any queries." });        
-        this.$showInfoMsg({message: "Available Allowance : " + this.availableAllowance + " " + this.selectedInstrument.symbol });        
+        this.$showInfoMsg({message: "Available Allowance : " + this.userDepositAllowance + " " + this.selectedInstrument.symbol });        
       }
       else {       // WHEN ABOVE CONDITIONS ARE MET SO THE TRANSACTION GOES THROUGH
         this.showLoader = true;
@@ -75,7 +86,7 @@ export default {
         let price = (currentPrice / Math.pow(10,this.selectedInstrument.priceDecimals)).toFixed(4);
         let value = price * this.formData.depositQuantity;
         console.log('Selected Instrument - ' + this.selectedInstrument.symbol);
-        console.log('Available Allowance - ' + this.availableAllowance );      
+        console.log('Available Allowance - ' + this.userDepositAllowance );      
         console.log('Deposit Quantity - ' + this.formData.depositQuantity);
         console.log('Deposit Value - ' + value);
         console.log('Instrument Price - ' + price);     
@@ -84,8 +95,8 @@ export default {
         if (response.status) {      
           this.$showSuccessMsg({message: "DEPOSIT SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully deposited to SIGH Finance. Enjoy your $SIGH farm yields." });
           this.$showInfoMsg({message: " Interest & $SIGH bearing ITokens (ERC20) are issued as debt against the deposits made in the SIGH Finance Protocol on a 1:1 basis. You can read more about it at medium.com/SighFinance" });
-          await this.updateAvailableAllowance(true);
-          // this.$showInfoMsg({message: "Available Allowance : " + this.availableAllowance + " " + this.selectedInstrument.symbol });        
+          await this.updateCurrentInstrumentUserState(true);
+          // this.$showInfoMsg({message: "Available Allowance : " + this.userDepositAllowance + " " + this.selectedInstrument.symbol });        
           this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
         }
         else {
@@ -123,7 +134,7 @@ export default {
         let response = await this.ERC20_mint({tokenAddress: this.selectedInstrument.instrumentAddress , quantity: this.formData.depositQuantity });
         if (response.status) {      
           this.$showSuccessMsg({message: "DEPOSIT (MINT) SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully minted for testing. Gas used = " + response.gasUsed });
-          await this.updateAvailableAllowance(true);
+          await this.updateCurrentInstrumentUserState(true);
           this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Minting',Service: 'LENDING'});
         }
         else {
@@ -156,8 +167,8 @@ export default {
         console.log('Instrument Price - ' + price);
         let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  this.formData.depositQuantity } );
         if (response.status) { 
-          await this.updateAvailableAllowance(true);        
-          this.$showSuccessMsg({message: "APPROVAL SUCCESS : Maximum of " + this.availableAllowance + "  " +  this.selectedInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });
+          await this.updateCurrentInstrumentUserState(true);        
+          this.$showSuccessMsg({message: "APPROVAL SUCCESS : Maximum of " + this.userDepositAllowance + "  " +  this.selectedInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });
           this.formData.depositQuantity = null;
           // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});      
         }
@@ -170,13 +181,28 @@ export default {
       }
     }, 
 
-    async updateAvailableAllowance(toDisplay) {
-      this.availableAllowance = await this.ERC20_getAllowance({tokenAddress: this.selectedInstrument.instrumentAddress, owner: this.$store.getters.connectedWallet, spender: this.$store.getters.LendingPoolCoreContractAddress });
-      console.log(this.availableAllowance);
-      if (toDisplay) {
-        this.$showInfoMsg({message: "Available Allowance : " + this.availableAllowance + " " + this.selectedInstrument.symbol });        
+    async updateCurrentInstrumentUserState(toDisplay) {
+      if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+      console.log('updateCurrentInstrumentUserState');
+      let response = await this.getUserInstrumentState({_instrumentAddress: this.selectedInstrument.instrumentAddress, _user: this.$store.state.connectedWallet });
+      console.log(response);
+      this.selectedInstrument.userBalance  = await this.ERC20_balanceOf({tokenAddress: this.selectedInstrument.instrumentAddress, account: this.$store.state.connectedWallet });
+      this.selectedInstrument.userDepositedBalance = response.currentITokenBalance;
+      this.selectedInstrument.userBorrowedBalance = response.currentBorrowBalance;
+      this.selectedInstrument.userDepositAllowance = await this.ERC20_getAllowance({tokenAddress: this.selectedInstrument.instrumentAddress, owner: this.$store.state.connectedWallet, spender: this.$store.state.LendingPoolCoreContractAddress });
+      console.log(this.selectedInstrument);
+      this.userBalanceWorth = ( Number(this.selectedInstrument.userBalance) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ; 
+      this.depositedBalanceWorth = ( Number(this.selectedInstrument.userDepositedBalance)* ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ; 
+      this.borrowedBalanceWorth = ( Number(this.selectedInstrument.userBorrowedBalance) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ; 
+      this.userDepositAllowanceWorth = ( Number(this.selectedInstrument.userDepositAllowance) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ; 
+
+      // if (toDisplay) {
+      //   this.$showInfoMsg({message: "Available Allowance : " + this.userDepositAllowance + " " + this.selectedInstrument.symbol });        
+      // }
+      // console.log( 'Current available allowance for ' + this.selectedInstrument.symbol + " is " + this.userDepositAllowance );
+
       }
-      console.log( 'Current available allowance for ' + this.selectedInstrument.symbol + " is " + this.availableAllowance );
+
     }
   },
 

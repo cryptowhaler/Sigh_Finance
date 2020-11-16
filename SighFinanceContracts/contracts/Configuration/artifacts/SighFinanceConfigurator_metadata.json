@@ -1,0 +1,691 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_iToken",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "_interestRateStrategyAddress",
+						"type": "address"
+					}
+				],
+				"name": "InstrumentInitialized",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					}
+				],
+				"name": "InstrumentRemoved",
+				"type": "event"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "CONFIGURATOR_REVISION",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrument_",
+						"type": "address"
+					}
+				],
+				"name": "SIGH_the_instrument_In_SIGH_Distribution_Handler",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "bool",
+						"name": "isActivated",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "profitPercentage",
+						"type": "uint256"
+					}
+				],
+				"name": "SpeedUpperCheckSwitch_In_SIGH_Distribution_Handler",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrument_",
+						"type": "address"
+					}
+				],
+				"name": "UNsigh_instrument_In_SIGH_Distribution_Handler",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "beginDrippingFromSIGHSpeedController",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrumentToBeDistributed",
+						"type": "address"
+					}
+				],
+				"name": "changeInstrumentBeingDrippedInSIGHTreasury",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "targetAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "newSpeed_",
+						"type": "uint256"
+					}
+				],
+				"name": "changeProtocolSIGHSpeedInSIGHSpeedController",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "globalAddressesProvider",
+				"outputs": [
+					{
+						"internalType": "contract GlobalAddressesProvider",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "contract GlobalAddressesProvider",
+						"name": "_globalAddressesProvider",
+						"type": "address"
+					}
+				],
+				"name": "initialize",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "targetAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "instrumnetToBeDistributed",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "distributionSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "initializeInstrumentDistributionInSIGHTreasury",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrument",
+						"type": "address"
+					}
+				],
+				"name": "initializeInstrumentStateInSIGHTreasury",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "refreshConfigInSIGHTreasury",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "refreshSIGHDistributionHandlerConfig",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrument",
+						"type": "address"
+					}
+				],
+				"name": "removeInstrumentFromDistributionInSIGH_Staking",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "protocolAddress_",
+						"type": "address"
+					}
+				],
+				"name": "removeSupportedProtocolFromSIGHSpeedController",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "resetInstrumentDistributionInSIGHTreasury",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "speed",
+						"type": "uint256"
+					}
+				],
+				"name": "setDistributionSpeedForStakingRewardInSIGH_Staking",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "speed",
+						"type": "uint256"
+					}
+				],
+				"name": "supportNewInstrumentForDistributionInSIGH_Staking",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newProtocolAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "sighSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "supportNewProtocolInSIGHSpeedController",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "switchSIGHBurnAllowedInSIGHTreasury",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "target",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "transferSighFromSIGHTreasury",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "deltaBlocksLimit",
+						"type": "uint256"
+					}
+				],
+				"name": "updateDeltaBlocksForSpeedRefresh_In_SIGH_Distribution_Handler",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newdistributionSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "updateDripSpeedInSIGHTreasury",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "updateMaxSighThatCanBeStakedInSIGH_Staking",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "updateSIGHBurnSpeedInSIGHTreasury",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newSighSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "updateSIGHSpeed_In_SIGH_Distribution_Handler",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrument_",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "newStakingSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "updateStakingSpeedForAnInstrument_In_SIGH_Distribution_Handler",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "SIGH Finance",
+			"methods": {},
+			"title": "SighFinanceConfigurator contract"
+		},
+		"userdoc": {
+			"methods": {},
+			"notice": "Executes configuration methods for SIGH FINANCE contract, SIGHDistributionHandler and the SighStaking Contract to efficiently regulate the SIGH economics*"
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/SIGHFinanceContracts/SighFinanceConfigurator.sol": "SighFinanceConfigurator"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
+			"keccak256": "0x9d0aa9c01420096ea2fb48c683d5d993a89263e515cc42f1740240f76831307c",
+			"urls": [
+				"bzz-raw://8c2543f98e68df1145f3e60d02976ec91576a391acf1608cfb8150713c208384",
+				"dweb:/ipfs/QmZY3f13oqGSK2MUZPJ4oQCxMpeGnHyEZTMUkC2ajWFars"
+			]
+		},
+		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighSpeedController.sol": {
+			"keccak256": "0xb2733186b95be314fa2641cfce71cf044cceef3f07a45733f86b71fa91cfd619",
+			"urls": [
+				"bzz-raw://e6a8c90fd192c7671d4a9e976e03d522980b6199a93403a5bbc3190f43e57c92",
+				"dweb:/ipfs/QmfEZZD5Q6AcCRoa26n7wAXZXsSnExEjcNqNNx66mPnGjK"
+			]
+		},
+		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighStaking.sol": {
+			"keccak256": "0x256abe6fec67bbd8e4e90a768a4bf212e3bc9f50d9c50eedf0dce572e44ecc63",
+			"urls": [
+				"bzz-raw://c3c737c32afe162443dad9f5d061477b23689e6a6f9adee14edc034a2ec0234e",
+				"dweb:/ipfs/QmSRX76WBVCq7aPkp9hADoQDRtAtipUwSjmRBqRZQMVxM4"
+			]
+		},
+		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighTreasury.sol": {
+			"keccak256": "0xa1156fd3f8055082a846fa38bed54320ce0c791d0e18329498327d9ff26a4032",
+			"urls": [
+				"bzz-raw://99eef20ff7f059d98d0ba1999ec3c90f63962f17c1538e4ce3aeb40a62feb143",
+				"dweb:/ipfs/QmXjP2aT7dzdskvgXYh5ssAATkPmk9wPXF2JTH2SD6Nmsa"
+			]
+		},
+		"localhost/contracts/SIGHFinanceContracts/SighFinanceConfigurator.sol": {
+			"keccak256": "0x3ec6f13eb9f71eb3834cd85232405be324d6918d5a9c27884a97beaa05d9ebb9",
+			"urls": [
+				"bzz-raw://44ec94653d57443b5319d9250cf6ca30e9c1a2f3eae490529c4bafd18c484786",
+				"dweb:/ipfs/QmQXoZs9XtoexZAAgiSAapCgBjCdfaNUPXeG3dHv1rib62"
+			]
+		},
+		"localhost/contracts/configuration/AddressStorage.sol": {
+			"keccak256": "0x0d0b40ccc403e45861faf71d042f5c419ff51930a45896633052c91b7ed6eae4",
+			"urls": [
+				"bzz-raw://ad8c170f6b3b87ec85076f3fdcd006fcef61ef47c978a9da8971df22682cf657",
+				"dweb:/ipfs/QmRWUQzdk7GHfcyrPzE6vw9ipfrW6Kiq1Jyp9xzbWqmv5p"
+			]
+		},
+		"localhost/contracts/configuration/GlobalAddressesProvider.sol": {
+			"keccak256": "0x5310631fce62fd0b130b3dd17ea42fdaf15e669ff38d3215883033ba3ab130c7",
+			"urls": [
+				"bzz-raw://cd78074a70018b3dd57649c93702cb85758151b7e153750903484eeb89d2587a",
+				"dweb:/ipfs/QmWFoi9YgJVuaBThwVMLE9hYjrZtZhsYN8fNj59sCsi4kr"
+			]
+		},
+		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {
+			"keccak256": "0x3cac9f73a1e6cbd9bdd703519a1a43bd8215f284910dda0807440d01193178b3",
+			"urls": [
+				"bzz-raw://e33089eb2c49cbc820f1aeb05e48d041a22838681769dfca9fdae797ee37f26f",
+				"dweb:/ipfs/QmNRwngcxxRd5LkNKTDm68kgrQ3K2aYvxFVVDF3Sm8RcYH"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {
+			"keccak256": "0x6bb623c8fe336eeba953283dbe3014ab18e882d3a3f27f38234672a5a69885d1",
+			"urls": [
+				"bzz-raw://2810308c8de3ef8291356ea30e866a0b20e2729223caffc43b0f6513f7b0aaeb",
+				"dweb:/ipfs/QmT6AD9CxgeeUndEj6F6z9zd8eJLDxUxJcHekcBRGop3ch"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/BaseUpgradeabilityProxy.sol": {
+			"keccak256": "0x99e393b97e79374c0dd133282f83ac48f15777d3894eafb9257768a1bf7acff5",
+			"urls": [
+				"bzz-raw://1c9d283b3442e71b7c611f8f79e792b248d97e1502a14d8507f131161b288f8b",
+				"dweb:/ipfs/QmWxuFrfdLHmhJrpoGwHRujeV6zpdFydVM1DY3N5RBwNs5"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/InitializableAdminUpgradeabilityProxy.sol": {
+			"keccak256": "0x7928dfc5736d1ec6a29672f41458b7de688ef2d0ec31b3e4a16e6bc554b87df1",
+			"urls": [
+				"bzz-raw://712ce2645eeb72c5c12e40ef1e04f7161ab9f8aaae3413b82f6a1b48956d6c38",
+				"dweb:/ipfs/QmcTNBeHbqBUj2UUgNob1s22oMjj4UpcLMNdXTBC2m1b6p"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/InitializableUpgradeabilityProxy.sol": {
+			"keccak256": "0x46052d95ea9b770116913041555f808f1b099c0a35e5c7ecbfc04ffef64a83bd",
+			"urls": [
+				"bzz-raw://67c2cacee01c1c8972a195be9f018abeae6917f45e45a4dc22b462fbb148150f",
+				"dweb:/ipfs/QmZhM5vvrvjFbTXjzYDB3ZTtNbTf3j54v76SZoDSbFTjdU"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/Proxy.sol": {
+			"keccak256": "0xd8dcdaaf2f03c606a569d91506958bf78df9adfb41df76727857e5dfe956e872",
+			"urls": [
+				"bzz-raw://1d780033022b07478621ce08cd4e668603fc899ae3212a883eea23347937e8d5",
+				"dweb:/ipfs/QmVZkBHpdDjko87qT4597e3UZ5uYdrEfPYbamEjBep52Se"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/UpgradeabilityProxy.sol": {
+			"keccak256": "0x5829b59012f64d1ce3ae6b98a61ddf5d6daa6e6f1a54e336ce910c8afd415c69",
+			"urls": [
+				"bzz-raw://28cba7d1f3d67aab91a4f88df4cb63762b443c31cb62a87e957add0b43dc8e1a",
+				"dweb:/ipfs/QmUXzpQDBXA2xGSNRqjn3VMJ3o8RXmpATieU9ovvk6QDAD"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/VersionedInitializable.sol": {
+			"keccak256": "0x3f7fa91853dcdf84684887deaa056f5b3803b46e7efb71704dcc625a63eeac55",
+			"urls": [
+				"bzz-raw://c7b50d4feda87e8875541afeb44f802ab539272bfb22f7c7da84c3d26e03a266",
+				"dweb:/ipfs/QmdSYn9D1Q3FRXRNDLYGGFoYb8rsN4U2MYdxciuZBTSg83"
+			]
+		},
+		"openzeppelin-solidity/contracts/math/SafeMath.sol": {
+			"keccak256": "0x7f293e2ee29a32416531a0bf3da9972358887c45ec1836642ec8e700cc152ba0",
+			"urls": [
+				"bzz-raw://e6ca40872864cb64a2dcc1b4f0be6a3cfc406f363e045fa7991f9f22f6257a63",
+				"dweb:/ipfs/QmdsPdEayCcUa1fg3YTbhTPn3GTcjfNYZqnwf9EDC3QGpp"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol": {
+			"keccak256": "0x4f4577659871ebf814a4adfb96bfec76b5a5e9dd7a414ca545152fe4ba1b932d",
+			"urls": [
+				"bzz-raw://d188138f791cdab03f888e06417d5eedfb378a3ed6f0d8e063da6403b4c6b9c6",
+				"dweb:/ipfs/Qme3scJo781TbYD8Svx86JhLvyY1Tk1ekXvw5novFwaS9Y"
+			]
+		},
+		"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0xe92a180661a6e21051d45be08a572dbf8d61e04c142d4284e503f615aed587fd",
+			"urls": [
+				"bzz-raw://003c6da07a3cbc576a9a59f462ed67d9041ff89e106463817ce9f005e24d83c8",
+				"dweb:/ipfs/QmemQazcc1Cww2Umgc4UFYpwF8WRqajPB6z5TNdC13XJCR"
+			]
+		},
+		"openzeppelin-solidity/contracts/utils/Address.sol": {
+			"keccak256": "0x58543a8d0f0fc465618566ee6b3c04071965cd26ba20d1de3f9768014ed807e4",
+			"urls": [
+				"bzz-raw://f060c6ee3ca16eb001823e2c0f8b642ecf3ead486721bab6f6be5220158d4421",
+				"dweb:/ipfs/QmWv1ms6aLAfjZ49dNnffbg49XiKmuEWHeu4wi6EinkEek"
+			]
+		}
+	},
+	"version": 1
+}

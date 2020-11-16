@@ -40,5 +40,23 @@
                 <button class="uk-button uk-button-green"  @click="deposit()">Deposit</button>
             </div>
         </div>
+
+        
     </div>
+    <div style="border: aliceblue solid 0.3px; padding: 14px; margin-top: 20px; margin-bottom: 20px;" >
+        <span style="color: aliceblue; font-size: 11px; line-height: 15px;" > {{ selectedInstrument.symbol  }} Balance : {{ selectedInstrument.userBalance  }} ( {{ userBalanceWorth  }} USD )  </span>
+        <br>         
+        <span style="color: aliceblue; font-size: 11px; line-height: 15px;" > {{ selectedInstrument.symbol  }} Deposited : {{ selectedInstrument.userDepositedBalance  }} ( {{ depositedBalanceWorth  }} USD ) </span>
+        <br>
+        <span style="color: aliceblue; font-size: 11px; line-height: 15px;" > {{ selectedInstrument.symbol  }} Deposit Allowance : {{ selectedInstrument.userDepositAllowance  }} ( {{ userDepositAllowanceWorth  }} USD )  </span>
+        <br>
+        <span style="color: aliceblue; font-size: 11px; line-height: 15px;" > {{ selectedInstrument.symbol  }} Borrowed : {{ selectedInstrument.userBorrowedBalance  }} ( {{ borrowedBalanceWorth  }} USD ) </span>
+        <br>
+    </div>
+    <!-- <span style="color: aliceblue; font-size: 11px; line-height: 15px;" > Current APY :  </span> -->
+    <div class="center">
+        <button class="uk-button uk-button-black"  @click="updateCurrentInstrumentUserState()">Refresh</button>
+    </div>
+
+
 </div>

@@ -1,0 +1,127 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_asset",
+						"type": "address"
+					}
+				],
+				"name": "getMarketBorrowRate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_asset",
+						"type": "address"
+					}
+				],
+				"name": "getMarketLiquidityRate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_asset",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_rate",
+						"type": "uint256"
+					}
+				],
+				"name": "setMarketBorrowRate",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_asset",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_rate",
+						"type": "uint256"
+					}
+				],
+				"name": "setMarketLiquidityRate",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"methods": {}
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/LendingProtocolContracts/LendingRateOracle.sol": "LendingRateOracle"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/LendingProtocolContracts/LendingRateOracle.sol": {
+			"keccak256": "0x47a710f59b3f55c665819e47fa0072dde501aeae640ef61bdf7ac2ea7c8be333",
+			"urls": [
+				"bzz-raw://5a2473a147d0a21c629fb2fe049dff1b9ec3e145b06d8dde26252fafbd8069eb",
+				"dweb:/ipfs/Qmb4Zh6RyR2h5aVErMVRo5q3VwzgW4SRTLFsWXWQ41e56f"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingRateOracle.sol": {
+			"keccak256": "0x6d15213822a26f5f75a70d45b652ad179c417f50d3f7f42952acd1b631170972",
+			"urls": [
+				"bzz-raw://35346d875f7b882f14e5f5b8d33340afe8e29df8132a384df63985628079d7c9",
+				"dweb:/ipfs/QmRQcrGHZTm1oDGnkmtYZwhHtn8SXqEiCYZfYvd7S2tFFY"
+			]
+		}
+	},
+	"version": 1
+}

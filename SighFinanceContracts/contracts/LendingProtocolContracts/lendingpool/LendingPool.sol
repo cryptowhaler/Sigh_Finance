@@ -232,10 +232,13 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
     **/
     function initialize(GlobalAddressesProvider _addressesProvider) public initializer {
         addressesProvider = _addressesProvider;
-        refreshConfig();
     }
     
-    function refreshConfig() public  {    // onlyLendingPoolConfigurator
+    function refreshConfig() external onlyLendingPoolConfigurator {     
+        refreshConfigInternal();
+    }
+
+    function refreshConfigInternal() internal {
         core = ILendingPoolCore(addressesProvider.getLendingPoolCore());
         dataProvider = ILendingPoolDataProvider(addressesProvider.getLendingPoolDataProvider());
         parametersProvider = ILendingPoolParametersProvider(addressesProvider.getLendingPoolParametersProvider());
@@ -596,6 +599,11 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
 
 // ####################################################################
 // ######  FUNCTIONS TO FETCH DATA FROM THE CORE CONTRACT  ############
+// ######  1. getInstrumentConfigurationData()  ############
+// ######  2. getInstrumentData()  ############
+// ######  3. getUserAccountData()  ############
+// ######  4. getUserInstrumentData()  ############
+// ######  5. getUserInstrumentData()  ############
 // ####################################################################
     /**
     * @dev accessory functions to fetch data from the core contract
