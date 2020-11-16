@@ -1,0 +1,4420 @@
+{
+  "contractName": "ILendingPoolDataProvider",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        }
+      ],
+      "name": "calculateUserGlobalData",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "totalLiquidityBalanceETH",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalCollateralBalanceETH",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalBorrowBalanceETH",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalFeesETH",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "currentLtv",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "currentLiquidationThreshold",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "healthFactor",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "healthFactorBelowThreshold",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_instrument",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "balanceDecreaseAllowed",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_instrument",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_fee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_userCurrentBorrowBalanceTH",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_userCurrentFeesETH",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_userCurrentLtv",
+          "type": "uint256"
+        }
+      ],
+      "name": "calculateCollateralNeededInETH",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_instrument",
+          "type": "address"
+        }
+      ],
+      "name": "getInstrumentConfigurationData",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "ltv",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "liquidationThreshold",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "liquidationBonus",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "rateStrategyAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "usageAsCollateralEnabled",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "borrowingEnabled",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "stableBorrowRateEnabled",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "isActive",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_instrument",
+          "type": "address"
+        }
+      ],
+      "name": "getInstrumentData",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "totalLiquidity",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "availableLiquidity",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalBorrowsStable",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalBorrowsVariable",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "liquidityRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "variableBorrowRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "stableBorrowRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "averageStableBorrowRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "utilizationRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "liquidityIndex",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "variableBorrowIndex",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "iTokenAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint40",
+          "name": "lastUpdateTimestamp",
+          "type": "uint40"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_instrument",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        }
+      ],
+      "name": "getUserInstrumentData",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "currentITokenBalance",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "currentBorrowBalance",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "principalBorrowBalance",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "borrowRateMode",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "borrowRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "liquidityRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "originationFee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "variableBorrowIndex",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lastUpdateTimestamp",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "usageAsCollateralEnabled",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getHealthFactorLiquidationThreshold",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        }
+      ],
+      "name": "getUserAccountData",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "totalLiquidityETH",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalCollateralETH",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalBorrowsETH",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalFeesETH",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "availableBorrowsETH",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "currentLiquidationThreshold",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "ltv",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "healthFactor",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"balanceDecreaseAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_fee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_userCurrentBorrowBalanceTH\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_userCurrentFeesETH\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_userCurrentLtv\",\"type\":\"uint256\"}],\"name\":\"calculateCollateralNeededInETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"calculateUserGlobalData\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"totalLiquidityBalanceETH\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalCollateralBalanceETH\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalBorrowBalanceETH\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalFeesETH\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"currentLtv\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"currentLiquidationThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"healthFactor\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"healthFactorBelowThreshold\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getHealthFactorLiquidationThreshold\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentConfigurationData\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"ltv\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"liquidationThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"liquidationBonus\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"rateStrategyAddress\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"usageAsCollateralEnabled\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"borrowingEnabled\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"stableBorrowRateEnabled\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"isActive\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentData\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"totalLiquidity\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"availableLiquidity\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalBorrowsStable\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalBorrowsVariable\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"liquidityRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"variableBorrowRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"stableBorrowRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"averageStableBorrowRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"utilizationRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"liquidityIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"variableBorrowIndex\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"iTokenAddress\",\"type\":\"address\"},{\"internalType\":\"uint40\",\"name\":\"lastUpdateTimestamp\",\"type\":\"uint40\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserAccountData\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"totalLiquidityETH\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalCollateralETH\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalBorrowsETH\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalFeesETH\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"availableBorrowsETH\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"currentLiquidationThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"ltv\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"healthFactor\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserInstrumentData\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"currentITokenBalance\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"currentBorrowBalance\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"principalBorrowBalance\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"borrowRateMode\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"borrowRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"liquidityRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"originationFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"variableBorrowIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lastUpdateTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"usageAsCollateralEnabled\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Aave, SIGH Finance \",\"methods\":{\"balanceDecreaseAllowed(address,address,uint256)\":{\"details\":\"check if a specific balance decrease is allowed (i.e. doesn't bring the user borrow position health factor under 1e18)\",\"params\":{\"_amount\":\"the amount to decrease\",\"_instrument\":\"the address of the instrument\",\"_user\":\"the address of the user\"},\"return\":\"true if the decrease of the balance is allowed*\"},\"calculateCollateralNeededInETH(address,uint256,uint256,uint256,uint256,uint256)\":{\"params\":{\"_amount\":\"the amount the user wants to borrow\",\"_fee\":\"the fee for the amount that the user needs to cover\",\"_instrument\":\"the instrument from which the user wants to borrow\",\"_userCurrentBorrowBalanceTH\":\"the current borrow balance of the user (before the borrow)\",\"_userCurrentLtv\":\"the average ltv of the user given his current collateral\"},\"return\":\"the total amount of collateral in ETH to cover the current borrow balance + the new amount + fee*\"},\"calculateUserGlobalData(address)\":{\"details\":\"calculates the user data across the instruments. this includes the total liquidity/collateral/borrow balances in ETH, the average Loan To Value, the average Liquidation Ratio, and the Health factor.\",\"params\":{\"_user\":\"the address of the user\"},\"return\":\"the total liquidity, total collateral, total borrow balances of the user in ETH. also the average Ltv, liquidation threshold, and the health factor*\"},\"getInstrumentConfigurationData(address)\":{\"details\":\"accessory functions to fetch data from the lendingPoolCore*\"}},\"title\":\"LendingPoolDataProvider contract \"},\"userdoc\":{\"methods\":{\"calculateCollateralNeededInETH(address,uint256,uint256,uint256,uint256,uint256)\":{\"notice\":\"calculates the amount of collateral needed in ETH to cover a new borrow.\"}},\"notice\":\"Implements functions to fetch data from the core, and aggregate them in order to allow computation on the compounded balances and the account balances in ETH*\"}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingPoolDataProvider.sol\":\"ILendingPoolDataProvider\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingPoolDataProvider.sol\":{\"keccak256\":\"0xef2d74cb5475d64cb8ab4ba9199af7182f001e3611b6fc602155179db5592ae2\",\"urls\":[\"bzz-raw://4d6a7d824dd105d8a4e3c0f8ab9e82ecac31f8d3e9b2e2ef5fd1da314b5c6a28\",\"dweb:/ipfs/QmX117j9cyVA9BUmMV1AJTzp6CwL3L2PBYZyx2bMrNNrdk\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.5.0;\n\n/**\n* @title LendingPoolDataProvider contract \n* @author Aave, SIGH Finance \n* @notice Implements functions to fetch data from the core, and aggregate them in order to allow computation on the compounded balances and the account balances in ETH\n**/\ninterface ILendingPoolDataProvider {\n\n\n// #############################################################################################################################\n// ############ PUBLIC VIEW FUNCTION (also called within this contract) TO CALCULATE USER DATA ACROSS THE PROTOCOL  ############\n// #############################################################################################################################\n\n\n\n    /**\n    * @dev calculates the user data across the instruments.\n    * this includes the total liquidity/collateral/borrow balances in ETH,\n    * the average Loan To Value, the average Liquidation Ratio, and the Health factor.\n    * @param _user the address of the user\n    * @return the total liquidity, total collateral, total borrow balances of the user in ETH.\n    * also the average Ltv, liquidation threshold, and the health factor\n    **/\n    function calculateUserGlobalData(address _user) external view returns (\n            uint256 totalLiquidityBalanceETH,\n            uint256 totalCollateralBalanceETH,\n            uint256 totalBorrowBalanceETH,\n            uint256 totalFeesETH,\n            uint256 currentLtv,\n            uint256 currentLiquidationThreshold,\n            uint256 healthFactor,\n            bool healthFactorBelowThreshold\n        );\n \n// ############################################################################################################################################################\n// ############ EXTERNAL VIEW FUNCTION (called within LendingPool's setUserUseInstrumentAsCollateral() FUNCTION)    ###########################################\n// ############ balanceDecreaseAllowedLocalVars() --> check if a specific balance decrease doesn't bring the user borrow position health factor    ############\n// ############################################################################################################################################################\n\n    /**\n    * @dev check if a specific balance decrease is allowed (i.e. doesn't bring the user borrow position health factor under 1e18)\n    * @param _instrument the address of the instrument\n    * @param _user the address of the user\n    * @param _amount the amount to decrease\n    * @return true if the decrease of the balance is allowed\n    **/\n    function balanceDecreaseAllowed(address _instrument, address _user, uint256 _amount)  external view returns (bool); \n\n// ##########################################################################################################################################\n// ############ EXTERNAL VIEW FUNCTION (called within LendingPool's borrow() FUNCTION)    ###################################################\n// ############ calculateCollateralNeededInETH() --> calculates the amount of collateral needed in ETH to cover a new borrow     ############\n// ##########################################################################################################################################\n\n    /**\n   * @notice calculates the amount of collateral needed in ETH to cover a new borrow.\n   * @param _instrument the instrument from which the user wants to borrow\n   * @param _amount the amount the user wants to borrow\n   * @param _fee the fee for the amount that the user needs to cover\n   * @param _userCurrentBorrowBalanceTH the current borrow balance of the user (before the borrow)\n   * @param _userCurrentLtv the average ltv of the user given his current collateral\n   * @return the total amount of collateral in ETH to cover the current borrow balance + the new amount + fee\n   **/\n    function calculateCollateralNeededInETH( address _instrument, uint256 _amount, uint256 _fee, uint256 _userCurrentBorrowBalanceTH, uint256 _userCurrentFeesETH, uint256 _userCurrentLtv ) external view returns (uint256) ;\n\n\n// ##########################################################################################################################################\n// ############ EXTERNAL VIEW FUNCTIONS WHICH SIMPLY GET DATA FROM CORE CONTRACT  ###########################################################\n// ############ 1. getInstrumentConfigurationData() --> Returns the configuration paramters related to an instrument     #######################\n// ############ 2. getInstrumentData() --> Returns the performance metrics  related to an instrument    ########################################\n// ############ 3. getUserInstrumentData() --> Returns the details of the user balance in an instrument   ######################################\n// ##########################################################################################################################################\n\n    /**\n    * @dev accessory functions to fetch data from the lendingPoolCore\n    **/\n    function getInstrumentConfigurationData(address _instrument) external view returns ( \n                                                                                        uint256 ltv,  \n                                                                                        uint256 liquidationThreshold, \n                                                                                        uint256 liquidationBonus,  \n                                                                                        address rateStrategyAddress, \n                                                                                        bool usageAsCollateralEnabled, \n                                                                                        bool borrowingEnabled, \n                                                                                        bool stableBorrowRateEnabled,  \n                                                                                        bool isActive \n                                                                                        ) ;\n\n    function getInstrumentData(address _instrument) external view returns (\n                                                                                uint256 totalLiquidity,\n                                                                                uint256 availableLiquidity,\n                                                                                uint256 totalBorrowsStable,\n                                                                                uint256 totalBorrowsVariable,\n                                                                                uint256 liquidityRate,\n                                                                                uint256 variableBorrowRate,\n                                                                                uint256 stableBorrowRate,\n                                                                                uint256 averageStableBorrowRate,\n                                                                                uint256 utilizationRate,\n                                                                                uint256 liquidityIndex,\n                                                                                uint256 variableBorrowIndex,\n                                                                                address iTokenAddress,\n                                                                                uint40 lastUpdateTimestamp\n                                                                            );\n\n    function getUserInstrumentData(address _instrument, address _user) external view returns (\n                                                                                    uint256 currentITokenBalance,\n                                                                                    uint256 currentBorrowBalance,\n                                                                                    uint256 principalBorrowBalance,\n                                                                                    uint256 borrowRateMode,\n                                                                                    uint256 borrowRate,\n                                                                                    uint256 liquidityRate,\n                                                                                    uint256 originationFee,\n                                                                                    uint256 variableBorrowIndex,\n                                                                                    uint256 lastUpdateTimestamp,\n                                                                                    bool usageAsCollateralEnabled\n                                                                                );\n\n// #####################################################################################\n// ############ returns the health factor liquidation threshold  #######################\n// #####################################################################################\n\n    function getHealthFactorLiquidationThreshold() external pure returns (uint256) ;\n\n\n// ################################################################################################\n// ############ EXTERNAL VIEW FUNCTION  ###########################################################\n// ############ 1. getUserAccountData() --> Returns the global account data for a user     ########\n// ################################################################################################\n\n    function getUserAccountData(address _user) external view returns (\n            uint256 totalLiquidityETH,\n            uint256 totalCollateralETH,\n            uint256 totalBorrowsETH,\n            uint256 totalFeesETH,\n            uint256 availableBorrowsETH,\n            uint256 currentLiquidationThreshold,\n            uint256 ltv,\n            uint256 healthFactor\n        );\n\n}\n",
+  "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingPoolDataProvider.sol",
+  "ast": {
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingPoolDataProvider.sol",
+    "exportedSymbols": {
+      "ILendingPoolDataProvider": [
+        5009
+      ]
+    },
+    "id": 5010,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 4854,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:16"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": "@title LendingPoolDataProvider contract \n@author Aave, SIGH Finance \n@notice Implements functions to fetch data from the core, and aggregate them in order to allow computation on the compounded balances and the account balances in ETH*",
+        "fullyImplemented": false,
+        "id": 5009,
+        "linearizedBaseContracts": [
+          5009
+        ],
+        "name": "ILendingPoolDataProvider",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": "@dev calculates the user data across the instruments.\nthis includes the total liquidity/collateral/borrow balances in ETH,\nthe average Loan To Value, the average Liquidation Ratio, and the Health factor.\n@param _user the address of the user\n@return the total liquidity, total collateral, total borrow balances of the user in ETH.\nalso the average Ltv, liquidation threshold, and the health factor*",
+            "id": 4875,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "calculateUserGlobalData",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4857,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4856,
+                  "name": "_user",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1189:13:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4855,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1189:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1188:15:16"
+            },
+            "returnParameters": {
+              "id": 4874,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4859,
+                  "name": "totalLiquidityBalanceETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1240:32:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4858,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1240:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4861,
+                  "name": "totalCollateralBalanceETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1286:33:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4860,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1286:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4863,
+                  "name": "totalBorrowBalanceETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1333:29:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4862,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1333:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4865,
+                  "name": "totalFeesETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1376:20:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4864,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1376:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4867,
+                  "name": "currentLtv",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1410:18:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4866,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1410:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4869,
+                  "name": "currentLiquidationThreshold",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1442:35:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4868,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1442:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4871,
+                  "name": "healthFactor",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1491:20:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4870,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1491:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4873,
+                  "name": "healthFactorBelowThreshold",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1525:31:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4872,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1525:4:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1226:340:16"
+            },
+            "scope": 5009,
+            "src": "1156:411:16",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "@dev check if a specific balance decrease is allowed (i.e. doesn't bring the user borrow position health factor under 1e18)\n@param _instrument the address of the instrument\n@param _user the address of the user\n@param _amount the amount to decrease\n@return true if the decrease of the balance is allowed*",
+            "id": 4886,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "balanceDecreaseAllowed",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4882,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4877,
+                  "name": "_instrument",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4886,
+                  "src": "2596:19:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4876,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2596:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4879,
+                  "name": "_user",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4886,
+                  "src": "2617:13:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4878,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2617:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4881,
+                  "name": "_amount",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4886,
+                  "src": "2632:15:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4880,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2632:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2595:53:16"
+            },
+            "returnParameters": {
+              "id": 4885,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4884,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4886,
+                  "src": "2673:4:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4883,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2673:4:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2672:6:16"
+            },
+            "scope": 5009,
+            "src": "2564:115:16",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "@notice calculates the amount of collateral needed in ETH to cover a new borrow.\n@param _instrument the instrument from which the user wants to borrow\n@param _amount the amount the user wants to borrow\n@param _fee the fee for the amount that the user needs to cover\n@param _userCurrentBorrowBalanceTH the current borrow balance of the user (before the borrow)\n@param _userCurrentLtv the average ltv of the user given his current collateral\n@return the total amount of collateral in ETH to cover the current borrow balance + the new amount + fee*",
+            "id": 4903,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "calculateCollateralNeededInETH",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4899,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4888,
+                  "name": "_instrument",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4903,
+                  "src": "3891:19:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4887,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3891:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4890,
+                  "name": "_amount",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4903,
+                  "src": "3912:15:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4889,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3912:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4892,
+                  "name": "_fee",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4903,
+                  "src": "3929:12:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4891,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3929:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4894,
+                  "name": "_userCurrentBorrowBalanceTH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4903,
+                  "src": "3943:35:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4893,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3943:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4896,
+                  "name": "_userCurrentFeesETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4903,
+                  "src": "3980:27:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4895,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3980:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4898,
+                  "name": "_userCurrentLtv",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4903,
+                  "src": "4009:23:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4897,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4009:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3889:145:16"
+            },
+            "returnParameters": {
+              "id": 4902,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4901,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4903,
+                  "src": "4058:7:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4900,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4058:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4057:9:16"
+            },
+            "scope": 5009,
+            "src": "3850:218:16",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "@dev accessory functions to fetch data from the lendingPoolCore*",
+            "id": 4924,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getInstrumentConfigurationData",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4906,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4905,
+                  "name": "_instrument",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "5063:19:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4904,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5063:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5062:21:16"
+            },
+            "returnParameters": {
+              "id": 4923,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4908,
+                  "name": "ltv",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "5197:11:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4907,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5197:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4910,
+                  "name": "liquidationThreshold",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "5300:28:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4909,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5300:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4912,
+                  "name": "liquidationBonus",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "5419:24:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4911,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5419:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4914,
+                  "name": "rateStrategyAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "5535:27:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4913,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5535:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4916,
+                  "name": "usageAsCollateralEnabled",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "5653:29:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4915,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5653:4:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4918,
+                  "name": "borrowingEnabled",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "5773:21:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4917,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5773:4:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4920,
+                  "name": "stableBorrowRateEnabled",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "5885:28:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4919,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5885:4:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4922,
+                  "name": "isActive",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "6005:13:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4921,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6005:4:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5106:1003:16"
+            },
+            "scope": 5009,
+            "src": "5023:1088:16",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 4955,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getInstrumentData",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4927,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4926,
+                  "name": "_instrument",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "6144:19:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4925,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6144:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "6143:21:16"
+            },
+            "returnParameters": {
+              "id": 4954,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4929,
+                  "name": "totalLiquidity",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "6269:22:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4928,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6269:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4931,
+                  "name": "availableLiquidity",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "6373:26:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4930,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6373:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4933,
+                  "name": "totalBorrowsStable",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "6481:26:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4932,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6481:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4935,
+                  "name": "totalBorrowsVariable",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "6589:28:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4934,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6589:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4937,
+                  "name": "liquidityRate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "6699:21:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4936,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6699:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4939,
+                  "name": "variableBorrowRate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "6802:26:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4938,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6802:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4941,
+                  "name": "stableBorrowRate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "6910:24:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4940,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6910:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4943,
+                  "name": "averageStableBorrowRate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "7016:31:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4942,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7016:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4945,
+                  "name": "utilizationRate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "7129:23:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4944,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7129:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4947,
+                  "name": "liquidityIndex",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "7234:22:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4946,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7234:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4949,
+                  "name": "variableBorrowIndex",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "7338:27:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4948,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7338:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4951,
+                  "name": "iTokenAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "7447:21:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4950,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7447:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4953,
+                  "name": "lastUpdateTimestamp",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "7550:26:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint40",
+                    "typeString": "uint40"
+                  },
+                  "typeName": {
+                    "id": 4952,
+                    "name": "uint40",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7550:6:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint40",
+                      "typeString": "uint40"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "6187:1467:16"
+            },
+            "scope": 5009,
+            "src": "6117:1538:16",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 4982,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getUserInstrumentData",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4960,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4957,
+                  "name": "_instrument",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "7692:19:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4956,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7692:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4959,
+                  "name": "_user",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "7713:13:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4958,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7713:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "7691:36:16"
+            },
+            "returnParameters": {
+              "id": 4981,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4962,
+                  "name": "currentITokenBalance",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "7836:28:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4961,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7836:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4964,
+                  "name": "currentBorrowBalance",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "7950:28:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4963,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7950:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4966,
+                  "name": "principalBorrowBalance",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "8064:30:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4965,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8064:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4968,
+                  "name": "borrowRateMode",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "8180:22:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4967,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8180:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4970,
+                  "name": "borrowRate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "8288:18:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4969,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8288:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4972,
+                  "name": "liquidityRate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "8392:21:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4971,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8392:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4974,
+                  "name": "originationFee",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "8499:22:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4973,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8499:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4976,
+                  "name": "variableBorrowIndex",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "8607:27:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4975,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8607:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4978,
+                  "name": "lastUpdateTimestamp",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "8720:27:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4977,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8720:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4980,
+                  "name": "usageAsCollateralEnabled",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "8833:29:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4979,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8833:4:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "7750:1194:16"
+            },
+            "scope": 5009,
+            "src": "7661:1284:16",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 4987,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getHealthFactorLiquidationThreshold",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4983,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "9263:2:16"
+            },
+            "returnParameters": {
+              "id": 4986,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4985,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4987,
+                  "src": "9289:7:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4984,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9289:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "9288:9:16"
+            },
+            "scope": 5009,
+            "src": "9219:80:16",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 5008,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getUserAccountData",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4990,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4989,
+                  "name": "_user",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "9735:13:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4988,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9735:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "9734:15:16"
+            },
+            "returnParameters": {
+              "id": 5007,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4992,
+                  "name": "totalLiquidityETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "9786:25:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4991,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9786:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4994,
+                  "name": "totalCollateralETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "9825:26:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4993,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9825:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4996,
+                  "name": "totalBorrowsETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "9865:23:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4995,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9865:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4998,
+                  "name": "totalFeesETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "9902:20:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4997,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9902:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5000,
+                  "name": "availableBorrowsETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "9936:27:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4999,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9936:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5002,
+                  "name": "currentLiquidationThreshold",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "9977:35:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5001,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9977:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5004,
+                  "name": "ltv",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "10026:11:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5003,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "10026:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5006,
+                  "name": "healthFactor",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "10051:20:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5005,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "10051:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "9772:309:16"
+            },
+            "scope": 5009,
+            "src": "9707:375:16",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 5010,
+        "src": "274:9811:16"
+      }
+    ],
+    "src": "0:10086:16"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingPoolDataProvider.sol",
+    "exportedSymbols": {
+      "ILendingPoolDataProvider": [
+        5009
+      ]
+    },
+    "id": 5010,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 4854,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:16"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": "@title LendingPoolDataProvider contract \n@author Aave, SIGH Finance \n@notice Implements functions to fetch data from the core, and aggregate them in order to allow computation on the compounded balances and the account balances in ETH*",
+        "fullyImplemented": false,
+        "id": 5009,
+        "linearizedBaseContracts": [
+          5009
+        ],
+        "name": "ILendingPoolDataProvider",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": "@dev calculates the user data across the instruments.\nthis includes the total liquidity/collateral/borrow balances in ETH,\nthe average Loan To Value, the average Liquidation Ratio, and the Health factor.\n@param _user the address of the user\n@return the total liquidity, total collateral, total borrow balances of the user in ETH.\nalso the average Ltv, liquidation threshold, and the health factor*",
+            "id": 4875,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "calculateUserGlobalData",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4857,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4856,
+                  "name": "_user",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1189:13:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4855,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1189:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1188:15:16"
+            },
+            "returnParameters": {
+              "id": 4874,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4859,
+                  "name": "totalLiquidityBalanceETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1240:32:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4858,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1240:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4861,
+                  "name": "totalCollateralBalanceETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1286:33:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4860,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1286:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4863,
+                  "name": "totalBorrowBalanceETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1333:29:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4862,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1333:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4865,
+                  "name": "totalFeesETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1376:20:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4864,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1376:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4867,
+                  "name": "currentLtv",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1410:18:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4866,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1410:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4869,
+                  "name": "currentLiquidationThreshold",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1442:35:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4868,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1442:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4871,
+                  "name": "healthFactor",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1491:20:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4870,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1491:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4873,
+                  "name": "healthFactorBelowThreshold",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4875,
+                  "src": "1525:31:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4872,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1525:4:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1226:340:16"
+            },
+            "scope": 5009,
+            "src": "1156:411:16",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "@dev check if a specific balance decrease is allowed (i.e. doesn't bring the user borrow position health factor under 1e18)\n@param _instrument the address of the instrument\n@param _user the address of the user\n@param _amount the amount to decrease\n@return true if the decrease of the balance is allowed*",
+            "id": 4886,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "balanceDecreaseAllowed",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4882,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4877,
+                  "name": "_instrument",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4886,
+                  "src": "2596:19:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4876,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2596:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4879,
+                  "name": "_user",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4886,
+                  "src": "2617:13:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4878,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2617:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4881,
+                  "name": "_amount",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4886,
+                  "src": "2632:15:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4880,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2632:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2595:53:16"
+            },
+            "returnParameters": {
+              "id": 4885,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4884,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4886,
+                  "src": "2673:4:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4883,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2673:4:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2672:6:16"
+            },
+            "scope": 5009,
+            "src": "2564:115:16",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "@notice calculates the amount of collateral needed in ETH to cover a new borrow.\n@param _instrument the instrument from which the user wants to borrow\n@param _amount the amount the user wants to borrow\n@param _fee the fee for the amount that the user needs to cover\n@param _userCurrentBorrowBalanceTH the current borrow balance of the user (before the borrow)\n@param _userCurrentLtv the average ltv of the user given his current collateral\n@return the total amount of collateral in ETH to cover the current borrow balance + the new amount + fee*",
+            "id": 4903,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "calculateCollateralNeededInETH",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4899,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4888,
+                  "name": "_instrument",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4903,
+                  "src": "3891:19:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4887,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3891:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4890,
+                  "name": "_amount",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4903,
+                  "src": "3912:15:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4889,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3912:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4892,
+                  "name": "_fee",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4903,
+                  "src": "3929:12:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4891,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3929:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4894,
+                  "name": "_userCurrentBorrowBalanceTH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4903,
+                  "src": "3943:35:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4893,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3943:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4896,
+                  "name": "_userCurrentFeesETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4903,
+                  "src": "3980:27:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4895,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3980:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4898,
+                  "name": "_userCurrentLtv",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4903,
+                  "src": "4009:23:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4897,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4009:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3889:145:16"
+            },
+            "returnParameters": {
+              "id": 4902,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4901,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4903,
+                  "src": "4058:7:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4900,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4058:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4057:9:16"
+            },
+            "scope": 5009,
+            "src": "3850:218:16",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "@dev accessory functions to fetch data from the lendingPoolCore*",
+            "id": 4924,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getInstrumentConfigurationData",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4906,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4905,
+                  "name": "_instrument",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "5063:19:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4904,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5063:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5062:21:16"
+            },
+            "returnParameters": {
+              "id": 4923,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4908,
+                  "name": "ltv",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "5197:11:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4907,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5197:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4910,
+                  "name": "liquidationThreshold",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "5300:28:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4909,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5300:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4912,
+                  "name": "liquidationBonus",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "5419:24:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4911,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5419:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4914,
+                  "name": "rateStrategyAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "5535:27:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4913,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5535:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4916,
+                  "name": "usageAsCollateralEnabled",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "5653:29:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4915,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5653:4:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4918,
+                  "name": "borrowingEnabled",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "5773:21:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4917,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5773:4:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4920,
+                  "name": "stableBorrowRateEnabled",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "5885:28:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4919,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5885:4:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4922,
+                  "name": "isActive",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4924,
+                  "src": "6005:13:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4921,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6005:4:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5106:1003:16"
+            },
+            "scope": 5009,
+            "src": "5023:1088:16",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 4955,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getInstrumentData",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4927,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4926,
+                  "name": "_instrument",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "6144:19:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4925,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6144:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "6143:21:16"
+            },
+            "returnParameters": {
+              "id": 4954,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4929,
+                  "name": "totalLiquidity",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "6269:22:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4928,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6269:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4931,
+                  "name": "availableLiquidity",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "6373:26:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4930,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6373:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4933,
+                  "name": "totalBorrowsStable",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "6481:26:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4932,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6481:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4935,
+                  "name": "totalBorrowsVariable",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "6589:28:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4934,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6589:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4937,
+                  "name": "liquidityRate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "6699:21:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4936,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6699:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4939,
+                  "name": "variableBorrowRate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "6802:26:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4938,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6802:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4941,
+                  "name": "stableBorrowRate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "6910:24:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4940,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6910:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4943,
+                  "name": "averageStableBorrowRate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "7016:31:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4942,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7016:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4945,
+                  "name": "utilizationRate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "7129:23:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4944,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7129:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4947,
+                  "name": "liquidityIndex",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "7234:22:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4946,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7234:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4949,
+                  "name": "variableBorrowIndex",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "7338:27:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4948,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7338:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4951,
+                  "name": "iTokenAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "7447:21:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4950,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7447:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4953,
+                  "name": "lastUpdateTimestamp",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4955,
+                  "src": "7550:26:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint40",
+                    "typeString": "uint40"
+                  },
+                  "typeName": {
+                    "id": 4952,
+                    "name": "uint40",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7550:6:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint40",
+                      "typeString": "uint40"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "6187:1467:16"
+            },
+            "scope": 5009,
+            "src": "6117:1538:16",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 4982,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getUserInstrumentData",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4960,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4957,
+                  "name": "_instrument",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "7692:19:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4956,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7692:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4959,
+                  "name": "_user",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "7713:13:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4958,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7713:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "7691:36:16"
+            },
+            "returnParameters": {
+              "id": 4981,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4962,
+                  "name": "currentITokenBalance",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "7836:28:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4961,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7836:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4964,
+                  "name": "currentBorrowBalance",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "7950:28:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4963,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7950:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4966,
+                  "name": "principalBorrowBalance",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "8064:30:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4965,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8064:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4968,
+                  "name": "borrowRateMode",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "8180:22:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4967,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8180:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4970,
+                  "name": "borrowRate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "8288:18:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4969,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8288:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4972,
+                  "name": "liquidityRate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "8392:21:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4971,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8392:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4974,
+                  "name": "originationFee",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "8499:22:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4973,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8499:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4976,
+                  "name": "variableBorrowIndex",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "8607:27:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4975,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8607:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4978,
+                  "name": "lastUpdateTimestamp",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "8720:27:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4977,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8720:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4980,
+                  "name": "usageAsCollateralEnabled",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4982,
+                  "src": "8833:29:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4979,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8833:4:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "7750:1194:16"
+            },
+            "scope": 5009,
+            "src": "7661:1284:16",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 4987,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getHealthFactorLiquidationThreshold",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4983,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "9263:2:16"
+            },
+            "returnParameters": {
+              "id": 4986,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4985,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4987,
+                  "src": "9289:7:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4984,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9289:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "9288:9:16"
+            },
+            "scope": 5009,
+            "src": "9219:80:16",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 5008,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getUserAccountData",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4990,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4989,
+                  "name": "_user",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "9735:13:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4988,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9735:7:16",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "9734:15:16"
+            },
+            "returnParameters": {
+              "id": 5007,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4992,
+                  "name": "totalLiquidityETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "9786:25:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4991,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9786:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4994,
+                  "name": "totalCollateralETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "9825:26:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4993,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9825:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4996,
+                  "name": "totalBorrowsETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "9865:23:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4995,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9865:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4998,
+                  "name": "totalFeesETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "9902:20:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4997,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9902:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5000,
+                  "name": "availableBorrowsETH",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "9936:27:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4999,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9936:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5002,
+                  "name": "currentLiquidationThreshold",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "9977:35:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5001,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9977:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5004,
+                  "name": "ltv",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "10026:11:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5003,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "10026:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5006,
+                  "name": "healthFactor",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5008,
+                  "src": "10051:20:16",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5005,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "10051:7:16",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "9772:309:16"
+            },
+            "scope": 5009,
+            "src": "9707:375:16",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 5010,
+        "src": "274:9811:16"
+      }
+    ],
+    "src": "0:10086:16"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.2.4",
+  "updatedAt": "2020-11-16T00:51:24.307Z",
+  "devdoc": {
+    "author": "Aave, SIGH Finance ",
+    "methods": {
+      "balanceDecreaseAllowed(address,address,uint256)": {
+        "details": "check if a specific balance decrease is allowed (i.e. doesn't bring the user borrow position health factor under 1e18)",
+        "params": {
+          "_amount": "the amount to decrease",
+          "_instrument": "the address of the instrument",
+          "_user": "the address of the user"
+        },
+        "return": "true if the decrease of the balance is allowed*"
+      },
+      "calculateCollateralNeededInETH(address,uint256,uint256,uint256,uint256,uint256)": {
+        "params": {
+          "_amount": "the amount the user wants to borrow",
+          "_fee": "the fee for the amount that the user needs to cover",
+          "_instrument": "the instrument from which the user wants to borrow",
+          "_userCurrentBorrowBalanceTH": "the current borrow balance of the user (before the borrow)",
+          "_userCurrentLtv": "the average ltv of the user given his current collateral"
+        },
+        "return": "the total amount of collateral in ETH to cover the current borrow balance + the new amount + fee*"
+      },
+      "calculateUserGlobalData(address)": {
+        "details": "calculates the user data across the instruments. this includes the total liquidity/collateral/borrow balances in ETH, the average Loan To Value, the average Liquidation Ratio, and the Health factor.",
+        "params": {
+          "_user": "the address of the user"
+        },
+        "return": "the total liquidity, total collateral, total borrow balances of the user in ETH. also the average Ltv, liquidation threshold, and the health factor*"
+      },
+      "getInstrumentConfigurationData(address)": {
+        "details": "accessory functions to fetch data from the lendingPoolCore*"
+      }
+    },
+    "title": "LendingPoolDataProvider contract "
+  },
+  "userdoc": {
+    "methods": {
+      "calculateCollateralNeededInETH(address,uint256,uint256,uint256,uint256,uint256)": {
+        "notice": "calculates the amount of collateral needed in ETH to cover a new borrow."
+      }
+    },
+    "notice": "Implements functions to fetch data from the core, and aggregate them in order to allow computation on the compounded balances and the account balances in ETH*"
+  }
+}

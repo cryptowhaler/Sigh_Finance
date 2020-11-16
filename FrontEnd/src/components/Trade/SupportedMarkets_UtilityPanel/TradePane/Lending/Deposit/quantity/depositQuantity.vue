@@ -3,6 +3,7 @@
 <script>
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import {mapState,mapActions,} from 'vuex';
+import Web3 from 'web3';
 
 export default {
 
@@ -51,7 +52,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['LendingPool_deposit','ERC20_increaseAllowance','ERC20_getAllowance']),
+    ...mapActions(['LendingPool_deposit','ERC20_increaseAllowance','ERC20_getAllowance','ERC20_mint','getInstrumentPrice']),
     
     async deposit() {   //DEPOSIT (WORKS PROPERLY)
       
@@ -70,7 +71,8 @@ export default {
       }
       else {       // WHEN ABOVE CONDITIONS ARE MET SO THE TRANSACTION GOES THROUGH
         this.showLoader = true;
-        let price = (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals)).toFixed(4);
+        let currentPrice = await this.getInstrumentPrice({ _instrumentAddress: this.selectedInstrument.instrumentAddress });
+        let price = (currentPrice / Math.pow(10,this.selectedInstrument.priceDecimals)).toFixed(4);
         let value = price * this.formData.depositQuantity;
         console.log('Selected Instrument - ' + this.selectedInstrument.symbol);
         console.log('Available Allowance - ' + this.availableAllowance );      
@@ -96,6 +98,45 @@ export default {
       }
     },
       
+
+
+    async mint() {
+      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
+        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
+      }
+      else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
+        this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
+      }       
+      else if (this.$store.state.networkId != '42' ) { 
+        this.$showErrorMsg({message: " Mock tokens are not available for testing over the currently connected Network. "}); 
+      }
+      else {
+        let currentPrice = await this.getInstrumentPrice({_instrumentAddress: this.selectedInstrument.instrumentAddress });
+        let price = (currentPrice / Math.pow(10,this.selectedInstrument.priceDecimals)).toFixed(4);
+        let value = price * this.formData.depositQuantity;
+        console.log('Selected Instrument - ' + this.selectedInstrument.symbol);
+        console.log('Deposit (Mint) Quantity - ' + this.formData.depositQuantity);
+        console.log('Deposit Value - ' + value);
+        console.log('Instrument Price - ' + price);     
+        this.showLoader = true;
+        let response = await this.ERC20_mint({tokenAddress: this.selectedInstrument.instrumentAddress , quantity: this.formData.depositQuantity });
+        if (response.status) {      
+          this.$showSuccessMsg({message: "DEPOSIT (MINT) SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully minted for testing. Gas used = " + response.gasUsed });
+          await this.updateAvailableAllowance(true);
+          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Minting',Service: 'LENDING'});
+        }
+        else {
+          this.$showErrorMsg({message: "DEPOSIT (MINT) FAILED : " + response.message  }); 
+          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+          // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
+        }
+        this.formData.depositValue = null;
+        this.showLoader = false;
+      }
+    },
+
+
 
     async approve() {   //APPROVE (WORKS PROPERLY) - calls increaseAllowance() Function  // Need to handle tokens which do not have it implemented
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check

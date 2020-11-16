@@ -101,7 +101,7 @@
         "id": 3585,
         "nodeType": "ImportDirective",
         "scope": 3655,
-        "sourceUnit": 30534,
+        "sourceUnit": 30538,
         "src": "26:70:6",
         "symbolAliases": [],
         "unitAlias": ""
@@ -155,10 +155,10 @@
               "id": 3590,
               "name": "VersionedInitializable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 30533,
+              "referencedDeclaration": 30537,
               "src": "455:22:6",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_VersionedInitializable_$30533",
+                "typeIdentifier": "t_contract$_VersionedInitializable_$30537",
                 "typeString": "contract VersionedInitializable"
               }
             },
@@ -169,7 +169,7 @@
         ],
         "contractDependencies": [
           5029,
-          30533
+          30537
         ],
         "contractKind": "contract",
         "documentation": "@title LendingPoolParametersProvider (Taken from Aave, Modified by SIGH Finance)\n@author Aave, SIGH Finance\n@notice stores the configuration parameters of the Lending Pool contract*",
@@ -177,7 +177,7 @@
         "id": 3654,
         "linearizedBaseContracts": [
           3654,
-          30533,
+          30537,
           5029
         ],
         "name": "LendingPoolParametersProvider",
@@ -528,7 +528,7 @@
             "scope": 3654,
             "src": "909:100:6",
             "stateMutability": "pure",
-            "superFunction": 30514,
+            "superFunction": 30518,
             "visibility": "internal"
           },
           {
@@ -552,7 +552,7 @@
                   "name": "initializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 30509,
+                  "referencedDeclaration": 30513,
                   "src": "1247:11:6",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -938,7 +938,7 @@
         "id": 3585,
         "nodeType": "ImportDirective",
         "scope": 3655,
-        "sourceUnit": 30534,
+        "sourceUnit": 30538,
         "src": "26:70:6",
         "symbolAliases": [],
         "unitAlias": ""
@@ -992,10 +992,10 @@
               "id": 3590,
               "name": "VersionedInitializable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 30533,
+              "referencedDeclaration": 30537,
               "src": "455:22:6",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_VersionedInitializable_$30533",
+                "typeIdentifier": "t_contract$_VersionedInitializable_$30537",
                 "typeString": "contract VersionedInitializable"
               }
             },
@@ -1006,7 +1006,7 @@
         ],
         "contractDependencies": [
           5029,
-          30533
+          30537
         ],
         "contractKind": "contract",
         "documentation": "@title LendingPoolParametersProvider (Taken from Aave, Modified by SIGH Finance)\n@author Aave, SIGH Finance\n@notice stores the configuration parameters of the Lending Pool contract*",
@@ -1014,7 +1014,7 @@
         "id": 3654,
         "linearizedBaseContracts": [
           3654,
-          30533,
+          30537,
           5029
         ],
         "name": "LendingPoolParametersProvider",
@@ -1365,7 +1365,7 @@
             "scope": 3654,
             "src": "909:100:6",
             "stateMutability": "pure",
-            "superFunction": 30514,
+            "superFunction": 30518,
             "visibility": "internal"
           },
           {
@@ -1389,7 +1389,7 @@
                   "name": "initializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 30509,
+                  "referencedDeclaration": 30513,
                   "src": "1247:11:6",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -1754,7 +1754,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-11-12T07:48:38.270Z",
+  "updatedAt": "2020-11-16T00:51:24.270Z",
   "devdoc": {
     "author": "Aave, SIGH Finance",
     "methods": {

@@ -3,6 +3,7 @@
 <script>
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import {mapState,mapActions,} from 'vuex';
+import Web3 from 'web3';
 
 export default {
 

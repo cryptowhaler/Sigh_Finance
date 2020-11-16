@@ -1,0 +1,535 @@
+{
+  "contractName": "ILendingPoolParametersProvider",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getMaxStableRateBorrowSizePercent",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getRebalanceDownRateDelta",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getFlashLoanFeesInBips",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[],\"name\":\"getFlashLoanFeesInBips\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getMaxStableRateBorrowSizePercent\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getRebalanceDownRateDelta\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{},\"title\":\"ILendingPoolParametersProvider interface\"},\"userdoc\":{\"methods\":{},\"notice\":\"**********Interface for the SIGH Finance's Lending Protocol arameters Provider.\"}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingPoolParametersProvider.sol\":\"ILendingPoolParametersProvider\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingPoolParametersProvider.sol\":{\"keccak256\":\"0x66134954110991c7c40c831d9e83c2b5108612817c057648b544d0fd9be1c08e\",\"urls\":[\"bzz-raw://e08ad6ff745897680b9e4ab3b154b1f66877ab70270c84c92ddc11e26d4dae98\",\"dweb:/ipfs/QmVcajsEDKVgb5d21seZqGwV4fu3giEe2jq6N5KqQzw8Eb\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.5.0;\n\n/************\n@title ILendingPoolParametersProvider interface\n@notice Interface for the SIGH Finance's Lending Protocol arameters Provider.\n*/\n\ninterface ILendingPoolParametersProvider {\n\n    //returns the maximum stable rate borrow size, in percentage of the available liquidity.\n    function getMaxStableRateBorrowSizePercent() external pure returns (uint256);\n    \n    // returns the delta between the current stable rate and the user stable rate at  which the borrow position of the user will be rebalanced (scaled down)    \n    function getRebalanceDownRateDelta() external pure returns (uint256);\n\n    // returns the fee applied to a flashloan and the portion to redirect to the protocol, in basis points.\n    function getFlashLoanFeesInBips() external pure returns (uint256, uint256);\n\n}\n",
+  "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingPoolParametersProvider.sol",
+  "ast": {
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingPoolParametersProvider.sol",
+    "exportedSymbols": {
+      "ILendingPoolParametersProvider": [
+        5029
+      ]
+    },
+    "id": 5030,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 5011,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:17"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": "**********\n@title ILendingPoolParametersProvider interface\n@notice Interface for the SIGH Finance's Lending Protocol arameters Provider.",
+        "fullyImplemented": false,
+        "id": 5029,
+        "linearizedBaseContracts": [
+          5029
+        ],
+        "name": "ILendingPoolParametersProvider",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "id": 5016,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getMaxStableRateBorrowSizePercent",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5012,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "352:2:17"
+            },
+            "returnParameters": {
+              "id": 5015,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5014,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5016,
+                  "src": "378:7:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5013,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "378:7:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "377:9:17"
+            },
+            "scope": 5029,
+            "src": "310:77:17",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 5021,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getRebalanceDownRateDelta",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5017,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "592:2:17"
+            },
+            "returnParameters": {
+              "id": 5020,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5019,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5021,
+                  "src": "618:7:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5018,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "618:7:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "617:9:17"
+            },
+            "scope": 5029,
+            "src": "558:69:17",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 5028,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getFlashLoanFeesInBips",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5022,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "772:2:17"
+            },
+            "returnParameters": {
+              "id": 5027,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5024,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5028,
+                  "src": "798:7:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5023,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "798:7:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5026,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5028,
+                  "src": "807:7:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5025,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "807:7:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "797:18:17"
+            },
+            "scope": 5029,
+            "src": "741:75:17",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 5030,
+        "src": "169:650:17"
+      }
+    ],
+    "src": "0:820:17"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingPoolParametersProvider.sol",
+    "exportedSymbols": {
+      "ILendingPoolParametersProvider": [
+        5029
+      ]
+    },
+    "id": 5030,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 5011,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:17"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": "**********\n@title ILendingPoolParametersProvider interface\n@notice Interface for the SIGH Finance's Lending Protocol arameters Provider.",
+        "fullyImplemented": false,
+        "id": 5029,
+        "linearizedBaseContracts": [
+          5029
+        ],
+        "name": "ILendingPoolParametersProvider",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "id": 5016,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getMaxStableRateBorrowSizePercent",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5012,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "352:2:17"
+            },
+            "returnParameters": {
+              "id": 5015,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5014,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5016,
+                  "src": "378:7:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5013,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "378:7:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "377:9:17"
+            },
+            "scope": 5029,
+            "src": "310:77:17",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 5021,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getRebalanceDownRateDelta",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5017,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "592:2:17"
+            },
+            "returnParameters": {
+              "id": 5020,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5019,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5021,
+                  "src": "618:7:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5018,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "618:7:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "617:9:17"
+            },
+            "scope": 5029,
+            "src": "558:69:17",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 5028,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getFlashLoanFeesInBips",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5022,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "772:2:17"
+            },
+            "returnParameters": {
+              "id": 5027,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5024,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5028,
+                  "src": "798:7:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5023,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "798:7:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5026,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5028,
+                  "src": "807:7:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5025,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "807:7:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "797:18:17"
+            },
+            "scope": 5029,
+            "src": "741:75:17",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 5030,
+        "src": "169:650:17"
+      }
+    ],
+    "src": "0:820:17"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.2.4",
+  "updatedAt": "2020-11-16T00:51:24.310Z",
+  "devdoc": {
+    "methods": {},
+    "title": "ILendingPoolParametersProvider interface"
+  },
+  "userdoc": {
+    "methods": {},
+    "notice": "**********Interface for the SIGH Finance's Lending Protocol arameters Provider."
+  }
+}

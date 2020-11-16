@@ -17,6 +17,7 @@ import LendingPoolCore from '@/contracts/LendingPoolCore.json'; // LendingPoolCo
 import IToken from '@/contracts/IToken.json'; // IToken Contract ABI
 
 import IPriceOracleGetter from '@/contracts/IPriceOracleGetter.json'; // IToken Contract ABI
+import MintableERC20 from '@/contracts/MintableERC20.json'; // MINTABLE ERC20 Contract ABI
 import ERC20 from '@/contracts/ERC20.json'; // ERC20 Contract ABI
 import ERC20Detailed from '@/contracts/ERC20Detailed.json'; // ERC20 Contract ABI
 
@@ -1813,6 +1814,27 @@ ERC20_approve: async ({commit,state},{tokenAddress,spender,amount }) => {
     return "This ERC20 Contract has currently not been deployed on ";
   }
 },
+
+ERC20_mint: async ({commit,state},{tokenAddress,quantity }) => {
+  if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const erc20Contract = new state.web3.eth.Contract(MintableERC20.abi, tokenAddress );
+    console.log(erc20Contract);
+    try {
+      const response = await erc20Contract.methods.mint(quantity).send({from: state.connectedWallet});
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+  else {
+    console.log("This ERC20 Contract has currently not been deployed on " + getters.networkName);
+    return "This ERC20 Contract has currently not been deployed on ";
+  }
+},
+
 
 ERC20_transfer: async ({commit,state},{tokenAddress,recepient,amount }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {

@@ -9254,7 +9254,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 31855,
+                        "referencedDeclaration": 31873,
                         "src": "18885:5:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_IToken_$3158",
@@ -12133,7 +12133,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 31855,
+                        "referencedDeclaration": 31873,
                         "src": "25224:5:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_IToken_$3158",
@@ -14951,7 +14951,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 31855,
+                        "referencedDeclaration": 31873,
                         "src": "30143:5:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_IToken_$3158",
@@ -15826,7 +15826,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 31855,
+                        "referencedDeclaration": 31873,
                         "src": "31651:5:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_IToken_$3158",
@@ -15998,7 +15998,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 31855,
+                        "referencedDeclaration": 31873,
                         "src": "31995:5:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_IToken_$3158",
@@ -18677,7 +18677,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 31855,
+                        "referencedDeclaration": 31873,
                         "src": "35987:5:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_IToken_$3158",
@@ -24378,7 +24378,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 31855,
+                        "referencedDeclaration": 31873,
                         "src": "45029:5:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_IToken_$3158",
@@ -36840,7 +36840,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 31855,
+                        "referencedDeclaration": 31873,
                         "src": "18885:5:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_IToken_$3158",
@@ -39719,7 +39719,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 31855,
+                        "referencedDeclaration": 31873,
                         "src": "25224:5:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_IToken_$3158",
@@ -42537,7 +42537,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 31855,
+                        "referencedDeclaration": 31873,
                         "src": "30143:5:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_IToken_$3158",
@@ -43412,7 +43412,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 31855,
+                        "referencedDeclaration": 31873,
                         "src": "31651:5:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_IToken_$3158",
@@ -43584,7 +43584,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 31855,
+                        "referencedDeclaration": 31873,
                         "src": "31995:5:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_IToken_$3158",
@@ -46263,7 +46263,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 31855,
+                        "referencedDeclaration": 31873,
                         "src": "35987:5:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_IToken_$3158",
@@ -51964,7 +51964,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 31855,
+                        "referencedDeclaration": 31873,
                         "src": "45029:5:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_IToken_$3158",
@@ -56479,7 +56479,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-11-14T07:26:42.744Z",
+  "updatedAt": "2020-11-16T00:51:24.173Z",
   "devdoc": {
     "author": "Aave, SIGH Finance (modified by SIGH Finance)",
     "details": "Implementation of the interest bearing token for the protocol.",

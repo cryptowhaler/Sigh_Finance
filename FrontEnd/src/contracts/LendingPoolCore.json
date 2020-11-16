@@ -4534,7 +4534,7 @@
                                   "name": "this",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 31910,
+                                  "referencedDeclaration": 31926,
                                   "src": "5884:4:26",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_contract$_LendingPoolCore_$11544",
@@ -25739,7 +25739,7 @@
                                     "name": "this",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 31910,
+                                    "referencedDeclaration": 31926,
                                     "src": "43765:4:26",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_contract$_LendingPoolCore_$11544",
@@ -25920,7 +25920,7 @@
                                   "name": "this",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 31910,
+                                  "referencedDeclaration": 31926,
                                   "src": "43664:4:26",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_contract$_LendingPoolCore_$11544",
@@ -47298,7 +47298,7 @@
                                   "name": "this",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 31910,
+                                  "referencedDeclaration": 31926,
                                   "src": "5884:4:26",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_contract$_LendingPoolCore_$11544",
@@ -68503,7 +68503,7 @@
                                     "name": "this",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 31910,
+                                    "referencedDeclaration": 31926,
                                     "src": "43765:4:26",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_contract$_LendingPoolCore_$11544",
@@ -68684,7 +68684,7 @@
                                   "name": "this",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 31910,
+                                  "referencedDeclaration": 31926,
                                   "src": "43664:4:26",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_contract$_LendingPoolCore_$11544",
@@ -87273,7 +87273,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-11-14T07:26:43.180Z",
+  "updatedAt": "2020-11-16T00:51:24.502Z",
   "devdoc": {
     "author": "Aave, SIGH Finance",
     "details": "NOTE: The core does not enforce security checks on the update of the state (eg, updateStateOnBorrow() does not enforce that borrowed is enabled on the Instrument). The check that an action can be performed is a duty of the overlying LendingPool contract.*",
