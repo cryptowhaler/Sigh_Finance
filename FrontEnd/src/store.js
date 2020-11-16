@@ -398,7 +398,7 @@ const store = new Vuex.Store({
       console.log("In updateIPriceOracleGetterAddress - " + state.IPriceOracleGetterAddress);
     },    
     // ######################################################
-    // ############ TO BE WORKED UPON ############
+    // ############ SESSION DATA ############
     // ######################################################
     // ETH PRICE
     setEthPriceDecimals(state, decimals) {
@@ -423,15 +423,27 @@ const store = new Vuex.Store({
       state.supportedInstrumentGlobalStates.set(instrumentAddress,instrumentGlobalState);
       console.log('In addToSupportedInstrumentGlobalStates -' + state.supportedInstrumentGlobalStates.get(instrumentAddress));
     },
+    resetSupportedInstrumentGlobalStates(state) {
+      state.supportedInstrumentGlobalStates = new Map();
+      console.log('In resetSupportedInstrumentGlobalStates -');
+    },
     // SUPPRTED INSTRUMENTS - CONFIG STATE (MAP)    
     addToSupportedInstrumentConfigs(state,{instrumentAddress, instrumentConfig}) {
       state.supportedInstrumentConfigs.set(instrumentAddress,instrumentConfig);
       console.log('In addToSupportedInstrumentConfigs -' + state.supportedInstrumentConfigs.get(instrumentAddress));
     },
+    resetSupportedInstrumentConfigs(state) {
+      state.supportedInstrumentConfigs = new Map();
+      console.log('In resetSupportedInstrumentConfigs -');
+    },
     // WALLET  - SUPPORTED INSTRUMENTS (MAP)     
     addToWalletInstrumentStates(state,{instrumentAddress, walletInstrumentState}) {
       state.walletInstrumentStates.set(instrumentAddress,walletInstrumentState);
       console.log('In addToWalletInstrumentStates -' + state.walletInstrumentStates.get(instrumentAddress));
+    },
+    resetWalletInstrumentStates(state) {
+      state.walletInstrumentStates = new Map();
+      console.log('In resetWalletInstrumentStates -');
     },
     // WALLET  - SIGH FINANCE   
     setWalletSIGH_FinanceState(state,walletSighFinanceState) {
@@ -474,31 +486,7 @@ const store = new Vuex.Store({
       console.log(obj);
       console.log('Transaction history stored');
     },
-    
-    changeWebsocketStatus(state, websocketStatus) {
-      state.websocketStatus = websocketStatus;
-    },
-    changeHedgeTab(state) {     //Added
-      state.limitTab = true;
-    },
-    changeToLimitFOKTab(state) {     //Added
-      state.limitFOKTab = true;
-    },
-    changeToLimitGTCTab(state) {     //Added
-      state.limitGTCTab = true;
-    },
-    changeToLimitIOCTab(state) {     //Added
-      state.limitIOCTab = true;
-    },
-    changeInvestTab(state) {    //Added
-      state.limitTab = false;
-    },
-    changeInvest_Invest_Tab(state) {
-      state.marketIOCTab = false;
-    },
-    changeInvest_Withdraw_Tab(state) {
-      state.marketIOCTab = true;
-    },
+
 
     addLoaderTask(state, count, cancellable = false) {
       // // console.log(count);
@@ -521,12 +509,6 @@ const store = new Vuex.Store({
         document.body.classList.remove('no-scroll');
       }
       state.sidebarOpen = !state.sidebarOpen;
-    },
-    toggleTradePaneClosed(state) {
-      state.tradePaneClosed = !state.tradePaneClosed;
-    },
-    toggleBookPaneClosed(state) {
-      state.bookPaneClosed = !state.bookPaneClosed;
     },
     closeSidebar(state) {
       if (!state.sidebarOpen) {
@@ -552,18 +534,15 @@ const store = new Vuex.Store({
       // IN CASE ETHEREUM HAS BEEN INJECTED IN THE WINDOW
       if (window.ethereum) {  
         state.web3 = new Web3(window.ethereum);
-        console.log(state.web3);
+        // console.log(state.web3);
         const networkId = await state.web3.eth.net.getId(); 
-        console.log(networkId);
+        // console.log(networkId);
         commit('networkId',networkId);        
         try {                                  // Request account access if needed
           await window.ethereum.enable();
-          console.log('Ethereum Enabled');  
           return 'EthereumEnabled';
         } 
         catch (error) {
-          console.log('Ethereum NOT enabled');  
-          console.error(error);
           return 'EthereumNotEnabled';
         }
       }
@@ -571,7 +550,7 @@ const store = new Vuex.Store({
       else if (window.BinanceChain) {
         state.web3 = new Web3(window.BinanceChain);
         const networkId = await state.web3.BinanceChain.chainId;
-        console.log(networkId);
+        // console.log(networkId);
         commit('networkId',networkId);        
         return 'BSCConnected';
       } 
@@ -579,7 +558,7 @@ const store = new Vuex.Store({
       else if (window.web3) {      //   // // // For older version dapp browsers ... Use Mist / MetaMask's provider.
         state.web3 = new Web3(window.web3.currentProvider);
         const networkId = await state.web3.eth.net.getId(); 
-        console.log(networkId);
+        // console.log(networkId);
         commit('networkId',networkId);        
         return 'Web3Connected';
       }
@@ -590,6 +569,88 @@ const store = new Vuex.Store({
     },
 
 
+
+  // calls getAddresses() to fetch and store all the contract addresses based on the network we are connected to
+  getContractsBasedOnNetwork: async ({commit, state}) => {
+    console.log("getContractsBasedOnNetwork ACTION FUNCTION CALLED IN STORE");
+    if ( state.networkId == '42')  {    // KOVAN 
+      return await store.dispatch('getProtocolContractAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractKovan });
+    }  
+    else if (state.networkId == '97') {   // BSC TESTNET
+      return await store.dispatch('getProtocolContractAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractBSCTestnet });
+    }
+    else if (state.networkId == '1') {    // ETHEREUM MAINNET
+      return await store.dispatch('getProtocolContractAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractMainNet });
+    }
+    else if (state.networkId == '56') {   // BSC MAINNET
+      return await store.dispatch('getProtocolContractAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractBSC });
+    }
+  },
+
+
+
+  // [TESTED. WORKING AS EXPECTED] fetches and stores the protocol's contract addresses 
+  getProtocolContractAddresses: async ({commit,state},{globalAddressesProviderAddress}) => {
+
+    const currentGlobalAddressesProviderContract = new state.web3.eth.Contract(GlobalAddressesProviderInterface.abi, globalAddressesProviderAddress );
+    console.log(currentGlobalAddressesProviderContract);
+
+    if (currentGlobalAddressesProviderContract) {
+      console.log(globalAddressesProviderAddress);
+
+      try {
+        const sighAddress = await currentGlobalAddressesProviderContract.methods.getSIGHAddress().call();        
+        commit('updateSIGHContractAddress',sighAddress);
+  
+        const sighSpeedControllerAddress = await currentGlobalAddressesProviderContract.methods.getSIGHSpeedController().call();        
+        commit('updateSIGHSpeedControllerAddress',sighSpeedControllerAddress);
+  
+        const sighStakingContractAddress = await currentGlobalAddressesProviderContract.methods.getSIGHStaking().call();        
+        commit('updatesighStakingContractAddress',sighStakingContractAddress);
+        
+        const sighTreasuryAddress = await currentGlobalAddressesProviderContract.methods.getSIGHTreasury().call();        
+        commit('updateSIGHTreasuryContractAddress',sighTreasuryAddress);
+  
+        const sighDistributionHandlerAddress = await currentGlobalAddressesProviderContract.methods.getSIGHMechanismHandler().call();        
+        commit('updateSIGHDistributionHandlerAddress',sighDistributionHandlerAddress);
+  
+        const lendingPoolAddress = await currentGlobalAddressesProviderContract.methods.getLendingPool().call();        
+        commit('updateLendingPoolContractAddress',lendingPoolAddress);
+    
+        const lendingPoolCoreAddress = await currentGlobalAddressesProviderContract.methods.getLendingPoolCore().call();        
+        commit('updateLendingPoolCoreContractAddress',lendingPoolCoreAddress);
+  
+        const lendingPoolDataProviderAddress = await currentGlobalAddressesProviderContract.methods.getLendingPoolDataProvider().call();        
+        commit('updateLendingPoolDataProviderContract',lendingPoolDataProviderAddress);
+  
+        const iPriceOracleGetterAddress = await currentGlobalAddressesProviderContract.methods.getPriceOracle().call();        
+        commit('updateIPriceOracleGetterAddress',iPriceOracleGetterAddress);  
+
+        return true;
+      }
+      catch (error) {
+        return false;
+      }
+    }
+  },
+
+
+  fetchSighFinanceProtocolState: async ({state,commit}) => {
+
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+
     // SETS USER ACCOUNT FROM THE WEB3 OBJECT OF THE STORE
     getWalletConfig: async ({commit,state}) => {
       console.log("getWalletConfig ACTION FUNCTION CALLED IN STORE"); 
@@ -598,7 +659,7 @@ const store = new Vuex.Store({
         console.log("getWalletConfig ACTION FUNCTION CALLED IN STORE = web3 not set yet");
         await store.dispatch("loadWeb3");
         if (state.web3) {
-          await store.dispatch("getContractAddresses");
+          await store.dispatch("getContractsBasedOnNetwork");
         }
       }
       if (state.web3) {
@@ -644,71 +705,12 @@ const store = new Vuex.Store({
 
 
 // ######################################################
-// ############ getContractAddresses : calls getAddresses() to fetch and store all the contract addresses based on the network we are connected to (ETHEREUM/BSC) ############
-// ############ getAddressesAndGlobalState : // fetches and updates all the contract addresses and the State ############
+// ############ getContractsBasedOnNetwork : calls getAddresses() to fetch and store all the contract addresses based on the network we are connected to (ETHEREUM/BSC) ############
+// ############ getProtocolContractAddresses : // fetches and updates all the contract addresses and the State ############
 // ############ getSupportedInstrumentStatesData : Gets the addresses of the ITokens and the corresponding Insturments ############
 // ######################################################
 
-  // calls getAddresses() to fetch and store all the contract addresses based on the network we are connected to
-  getContractAddresses: async ({commit, state}) => {
-    console.log("getContractAddresses ACTION FUNCTION CALLED IN STORE");
-    if ( state.networkId == '42')  {    // KOVAN 
-      return await store.dispatch('getAddressesAndGlobalState',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractKovan });
-    }  
-    else if (state.networkId == '97') {   // BSC TESTNET
-      return await store.dispatch('getAddressesAndGlobalState',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractBSCTestnet });
-    }
-    else if (state.networkId == '1') {    // ETHEREUM MAINNET
-      return await store.dispatch('getAddressesAndGlobalState',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractMainNet });
-    }
-    else if (state.networkId == '56') {   // BSC MAINNET
-      return await store.dispatch('getAddressesAndGlobalState',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractBSC });
-    }
-  },
 
-  // [TESTED. WORKING AS EXPECTED] fetches and stores the protocol's contract addresses 
-  getAddressesAndGlobalState: async ({commit,state},{globalAddressesProviderAddress}) => {
-
-    const currentGlobalAddressesProviderContract = new state.web3.eth.Contract(GlobalAddressesProviderInterface.abi, globalAddressesProviderAddress );
-    console.log(currentGlobalAddressesProviderContract);
-
-    if (currentGlobalAddressesProviderContract) {
-      console.log(globalAddressesProviderAddress);
-      const sighAddress = await currentGlobalAddressesProviderContract.methods.getSIGHAddress().call();        
-      commit('updateSIGHContractAddress',sighAddress);
-
-      const sighSpeedControllerAddress = await currentGlobalAddressesProviderContract.methods.getSIGHSpeedController().call();        
-      commit('updateSIGHSpeedControllerAddress',sighSpeedControllerAddress);
-
-      const sighStakingContractAddress = await currentGlobalAddressesProviderContract.methods.getSIGHStaking().call();        
-      commit('updatesighStakingContractAddress',sighStakingContractAddress);
-      
-      const sighTreasuryAddress = await currentGlobalAddressesProviderContract.methods.getSIGHTreasury().call();        
-      commit('updateSIGHTreasuryContractAddress',sighTreasuryAddress);
-
-      const sighDistributionHandlerAddress = await currentGlobalAddressesProviderContract.methods.getSIGHMechanismHandler().call();        
-      commit('updateSIGHDistributionHandlerAddress',sighDistributionHandlerAddress);
-
-      const lendingPoolAddress = await currentGlobalAddressesProviderContract.methods.getLendingPool().call();        
-      commit('updateLendingPoolContractAddress',lendingPoolAddress);
-  
-      const lendingPoolCoreAddress = await currentGlobalAddressesProviderContract.methods.getLendingPoolCore().call();        
-      commit('updateLendingPoolCoreContractAddress',lendingPoolCoreAddress);
-
-      const lendingPoolDataProviderAddress = await currentGlobalAddressesProviderContract.methods.getLendingPoolDataProvider().call();        
-      commit('updateLendingPoolDataProviderContract',lendingPoolDataProviderAddress);
-
-      const iPriceOracleGetterAddress = await currentGlobalAddressesProviderContract.methods.getPriceOracle().call();        
-      commit('updateIPriceOracleGetterAddress',iPriceOracleGetterAddress);
-
-      await store.dispatch('getSupportedInstrumentStatesData');  // SUPPORTED INSTRUMENTS BASIC DATA
-
-      return true;
-    }
-    else {
-      return false;
-    }
-  },
 
   // [TESTED. WORKING AS EXPECTED] Gets the addresses of the ITokens and the corresponding Supported Instrument STATES
   getSupportedInstrumentStatesData: async ({commit,state}) => { 

@@ -95,7 +95,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['loadWeb3','getWalletConfig','getContractAddresses','refreshConnectedAccountState']),
+    ...mapActions(['loadWeb3','getWalletConfig','getContractsBasedOnNetwork','refreshConnectedAccountState']),
 
     // Connects to WEB3, Wallet, and initiates balance polling
     async handleWeb3() {
@@ -118,24 +118,25 @@ export default {
         this.$showErrorMsg({message:' Welcome to SIGH Finance! No Web3 Object injected into browser. Read-only access. Please install MetaMask browser extension or connect our support team at support@sigh.finance. '});
       }
 
-      // If wallet is allowed to connect, then fetch the details
+      // If the current Network is, then fetch the details
       if ( this.$store.getters.isNetworkSupported ) {   
-        let walletConnected = await this.getWalletConfig();
-        this.$showInfoMsg({message: "You are currently connected with the wallet - " + this.$store.getters.connectedWallet });        
-        await this.fetchSessionProtocolStateData();
-        if (  Web3.utils.isAddress(this.$store.getters.connectedWallet) ) {
-          this.fetchSessionUserStateData();
-        }
-        // EventBus.$emit(EventNames.userWalletConnected, { username: walletConnected,}); //User has logged in (event)
+        await this.fetchSessionSIGHFinanceStateData();
       }
+      }
+        // let walletConnected = await this.getWalletConfig();
+        // this.$showInfoMsg({message: "You are currently connected with the wallet - " + this.$store.getters.connectedWallet });        
+        // if (  Web3.utils.isAddress(this.$store.getters.connectedWallet) ) {
+        //   this.fetchSessionUserStateData();
+        // }
+
     },
 
     // Loads addresses of the contracts from the network
-    async fetchSessionProtocolStateData() {
+    async fetchSessionSIGHFinanceStateData() {
       let id = this.$store.getters.networkId;
-      console.log('fetchSessionProtocolStateData() in APP - ' + id);
+      console.log('fetchSessionSIGHFinanceStateData() in APP - ' + id);
       if ( this.$store.getters.getWeb3 && this.$store.getters.isNetworkSupported ) {
-        let contractAddressesInitialized = await this.getContractAddresses();  // Fetches Addresses & Instrument states
+        let contractAddressesInitialized = await this.getContractsBasedOnNetwork();  // Fetches Addresses & Instrument states
         if (contractAddressesInitialized) {
           this.$showInfoMsg({message: " SIGH Finance Protocol State fetched successfully for network " + id + " - " + this.$store.getters.networkName });
         }
