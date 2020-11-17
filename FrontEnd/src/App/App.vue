@@ -95,7 +95,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['loadWeb3','getWalletConfig','getContractsBasedOnNetwork','refreshConnectedAccountState']),
+    ...mapActions(['loadWeb3','getContractsBasedOnNetwork','fetchSighFinanceProtocolState','getWalletConfig','refreshConnectedAccountState']),
 
     // Connects to WEB3, Wallet, and initiates balance polling
     async handleWeb3() {
@@ -122,13 +122,6 @@ export default {
       if ( this.$store.getters.isNetworkSupported ) {   
         await this.fetchSessionSIGHFinanceStateData();
       }
-      }
-        // let walletConnected = await this.getWalletConfig();
-        // this.$showInfoMsg({message: "You are currently connected with the wallet - " + this.$store.getters.connectedWallet });        
-        // if (  Web3.utils.isAddress(this.$store.getters.connectedWallet) ) {
-        //   this.fetchSessionUserStateData();
-        // }
-
     },
 
     // Loads addresses of the contracts from the network
@@ -138,10 +131,17 @@ export default {
       if ( this.$store.getters.getWeb3 && this.$store.getters.isNetworkSupported ) {
         let contractAddressesInitialized = await this.getContractsBasedOnNetwork();  // Fetches Addresses & Instrument states
         if (contractAddressesInitialized) {
-          this.$showInfoMsg({message: " SIGH Finance Protocol State fetched successfully for network " + id + " - " + this.$store.getters.networkName });
+          this.$showInfoMsg({message: " SIGH Finance Contracts fetched successfully for the network " + id + " - " + this.$store.getters.networkName });
+          let response = await this.fetchSighFinanceProtocolState();
+          if (response) {
+            this.$showSuccessMsg({message:" SIGH Finance Current State fetched Successfully"});
+          }
+          else {
+            this.$showErrorMsg({message: " Something went wrong when fetching SIGH Finance's current protocol state." });
+          }
         }
         else {
-          this.$showErrorMsg({message: " Something went wrong when fetching SIGH Finance State for the network - " + this.$store.getters.networkName + ". Please connect to either Kovan Testnet or Ethereum Main-net or reach out to our Support Team at support@sigh.finance" });
+          this.$showErrorMsg({message: " Something went wrong when fetching SIGH Finance Contracts for the network - " + this.$store.getters.networkName + ". Please connect to either Kovan Testnet or Ethereum Main-net or reach out to our Support Team at support@sigh.finance" });
         }
       }
       else {
@@ -149,17 +149,17 @@ export default {
       }
     },
 
-    async fetchSessionUserStateData() {
-      // let response = await this.refreshConnectedAccountState();
-      this.$showInfoMsg({message: " Balances for the connected wallet " + this.$store.getters.connectedWallet + " fetched successfully. Enjoy Farming $SIGH! "});
-    },
+    // async fetchSessionUserStateData() {
+    //   // let response = await this.refreshConnectedAccountState();
+    //   this.$showInfoMsg({message: " Balances for the connected wallet " + this.$store.getters.connectedWallet + " fetched successfully. Enjoy Farming $SIGH! "});
+    // },
 
-    async fetchConfigsWalletConnected() {
-      console.log('IN fetchConfigsWalletConnected() in APP.vue');
-    },
-    async fetchConfigsWalletDisconnected() {
-      console.log('IN fetchConfigsWalletDisconnected() in APP.vue');
-    },
+    // async fetchConfigsWalletConnected() {
+    //   console.log('IN fetchConfigsWalletConnected() in APP.vue');
+    // },
+    // async fetchConfigsWalletDisconnected() {
+    //   console.log('IN fetchConfigsWalletDisconnected() in APP.vue');
+    // },
 
     toggleContactModal() {   //ADDED
       console.log(this.contactModalShown);    

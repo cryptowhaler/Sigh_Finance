@@ -73,9 +73,13 @@ const store = new Vuex.Store({
     GlobalAddressesProviderContractKovan: "0x745e43654860a51A1666185171D800bcbCF56145",
     ethereumPriceOracleAddressKovan: "0xa077B3b82c7205eE5bCA46C553520F65e516eF5A",
     GlobalAddressesProviderContractMainNet: null,
+    ethereumPriceOracleAddressMainNet: "",
     GlobalAddressesProviderContractBSCTestnet: null,
+    ethereumPriceOracleAddressBSCTestnet: "",
     GlobalAddressesProviderContractBSC: null,
+    ethereumPriceOracleAddressBSC: "",
 
+    EthereumPriceOracleAddress: null,
     SIGHContractAddress: null,                                 // Approve, Transfer, TransferFrom, Allowance,      totalSupply, BalanceOf
     SIGHSpeedControllerAddress: null,                  // Drip
     sighStakingContractAddress: null,                          // Stake, Unstake, ClaimAllAccumulatedInstruments
@@ -113,16 +117,16 @@ const store = new Vuex.Store({
     supportedInstrumentGlobalStates: new Map(),   //   INSTRUMENT                    // Instrument Address -> Instrument GLOBAL STATES (APY, SIGH YIELDS, TOTAL LIQUIDITY ETC) MAPPING  
     supportedInstrumentConfigs: new Map(),        //   INSTRUMENT                    // Instrument Address -> Instrument Config  MAPPING  (instrument's liquidation threshold etc)
     walletInstrumentStates: new Map(),            //   WALLET - INSTRUMENT           // CONNECTED WALLET --> "EACH INSTRUMENT" STATE MAPPING ( deposited, balance, borrowed, fee, etc )
-    walletSIGH_FinanceState: null,                //   WALLET - SIGH FINANCE         // CONNECTED WALLET --> "SIGH FINANCE" STATE MAPPING (total deposited, total borrowed, lifeTime Deposit, lifeTime Borrowed,  )
-    walletSIGHState: null,                        //   WALLET - SIGH Token           // CONNECTED WALLET --> "SIGH" STATE MAPPING (sigh balance, lifeTimeSighVolume, contributionRatio = lifeTimeSighVolume/ SighGlobalTradeVolume)
-    SIGHFinanceState: null,                       //   SIGH FINANCE                  // SIGH's STATE (totalSupply, mintSpeed, burnSpeed, totalMinted, price, Sigh Global Trade Volume, bonding Curve Health)
-    SIGHState: null,                              //   SIGH                          // SIGH's STATE (totalSupply, mintSpeed, burnSpeed, totalMinted, price, Sigh Global Trade Volume, bonding Curve Health)
+    walletSIGH_FinanceState: {},                //   WALLET - SIGH FINANCE         // CONNECTED WALLET --> "SIGH FINANCE" STATE MAPPING (total deposited, total borrowed, lifeTime Deposit, lifeTime Borrowed,  )
+    walletSIGHState: {},                        //   WALLET - SIGH Token           // CONNECTED WALLET --> "SIGH" STATE MAPPING (sigh balance, lifeTimeSighVolume, contributionRatio = lifeTimeSighVolume/ SighGlobalTradeVolume)
+    SIGHFinanceState: {},                       //   SIGH FINANCE                  // SIGH's STATE (totalSupply, mintSpeed, burnSpeed, totalMinted, price, Sigh Global Trade Volume, bonding Curve Health)
+    SIGHState: {},                              //   SIGH                          // SIGH's STATE (totalSupply, mintSpeed, burnSpeed, totalMinted, price, Sigh Global Trade Volume, bonding Curve Health)
 
     currentlySelectedInstrument : {symbol:'WBTC'}, //  {instrumentAddress: '0x00' , name: 'Wrapped Bitcoin', symbol: 'WBTC', decimals: 18, iTokenAddress: '0x00' , priceDecimals: 8, price: 0 },  // Currently Selected Instrument
 
     sessionTransactions : [],
     
-    // ETH PRICE & SIGH PRICE
+    // ETH PRICE 
     ethPriceDecimals: null,             // Decimals 
     ethereumPriceUSD: null,             // ETH Price in USD
 
@@ -220,7 +224,10 @@ const store = new Vuex.Store({
     // ######################################################
     // ############ SESSION DATA ############
     // ######################################################
-    // ETH PRICE
+    // ETH PRICE ORACLE ADDRESS, PRICE (ETH to USD), Price Decimals
+    getETHPriceOracleAddress(state) {
+      return state.EthereumPriceOracleAddress;
+    },     
     getETHPrice(state) {
       return state.ethereumPriceUSD;
     },     
@@ -400,7 +407,11 @@ const store = new Vuex.Store({
     // ######################################################
     // ############ SESSION DATA ############
     // ######################################################
-    // ETH PRICE
+    // ETH PRICE ORACLE ADDRESS, PRICE (ETH to USD), Price Decimals
+    setEthereumPriceOracleAddress(state, _EthereumPriceOracleAddress) {
+      state.EthereumPriceOracleAddress = _EthereumPriceOracleAddress;
+      console.log('setEthereumPriceOracleAddress' + state.EthereumPriceOracleAddress);      
+    },
     setEthPriceDecimals(state, decimals) {
       state.ethPriceDecimals = decimals;
       console.log('setEthPriceDecimals' + state.ethPriceDecimals);      
@@ -409,13 +420,23 @@ const store = new Vuex.Store({
       state.ethereumPriceUSD = updatedPrice;
       console.log('In updateETHPrice -' + state.ethereumPriceUSD);
     },
-    // SUPPRTED INSTRUMENTS ARRAY
+    // SIGH FINANCE
+    setSIGHFinanceState(state,sighFinanceState) {
+      state.SIGHFinanceState = sighFinanceState;
+      console.log('In getSIGHFinanceState -' + state.SIGHFinanceState);
+    },
+    // SIGH INSTRUMENT
+    setSIGHState(state,sighState) {
+      state.SIGHState = sighState;
+      console.log('In setSIGHState -' + state.SIGHState);
+    },
+    // SUPPRTED INSTRUMENT ADDRESSES ARRAY
     setSupportedInstrumentAddresses(state,supportedInstrumentAddresses_) {
       state.supportedInstrumentAddresses = supportedInstrumentAddresses_;
       console.log('In setSupportedInstrumentAddresses -' + state.supportedInstrumentAddresses);
     },
-    setSupportedInstruments(state,supportedInstruments_) {
-      state.supportedInstruments = supportedInstruments_;
+    addToSupportedInstrumentsArray(state,supportedInstrument_) {
+      state.supportedInstruments.push(supportedInstrument_);
       console.log('In setSupportedInstruments -' + state.supportedInstruments);
     },
     // SUPPRTED INSTRUMENTS - GLOBAL STATE (MAP)
@@ -454,16 +475,6 @@ const store = new Vuex.Store({
     setWalletSIGHState(state,walletSIGHState_) {
       state.walletSIGHState =  walletSIGHState_;
       console.log('In setWalletSIGHState -' + state.walletSIGHState);
-    },
-    // SIGH FINANCE
-    setSIGHFinanceState(state,sighFinanceState) {
-      state.SIGHFinanceState = sighFinanceState;
-      console.log('In getSIGHFinanceState -' + state.SIGHFinanceState);
-    },
-    // SIGH INSTRUMENT
-    setSIGHState(state,sighState) {
-      state.SIGHState = sighState;
-      console.log('In setSIGHState -' + state.SIGHState);
     },
     // UPDATE INSTRUMENT PRICE
     updateInstrumentPrice(state,{instrumentAddress,updatedPrice}) {               // UPDATES THE CURRENT INSTRUMENT PRICE. CONSTANTLY CALLED BY THE PRICE POLLING FUNCTION
@@ -574,15 +585,19 @@ const store = new Vuex.Store({
   getContractsBasedOnNetwork: async ({commit, state}) => {
     console.log("getContractsBasedOnNetwork ACTION FUNCTION CALLED IN STORE");
     if ( state.networkId == '42')  {    // KOVAN 
+      commit("setEthereumPriceOracleAddress",state.ethereumPriceOracleAddressKovan);
       return await store.dispatch('getProtocolContractAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractKovan });
     }  
     else if (state.networkId == '97') {   // BSC TESTNET
+      commit("setEthereumPriceOracleAddress",state.ethereumPriceOracleAddressBSCTestnet);
       return await store.dispatch('getProtocolContractAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractBSCTestnet });
     }
     else if (state.networkId == '1') {    // ETHEREUM MAINNET
+      commit("setEthereumPriceOracleAddress",state.ethereumPriceOracleAddressMainNet);
       return await store.dispatch('getProtocolContractAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractMainNet });
     }
     else if (state.networkId == '56') {   // BSC MAINNET
+      commit("setEthereumPriceOracleAddress",state.ethereumPriceOracleAddressBSC);
       return await store.dispatch('getProtocolContractAddresses',{ globalAddressesProviderAddress:  state.GlobalAddressesProviderContractBSC });
     }
   },
@@ -600,6 +615,7 @@ const store = new Vuex.Store({
 
       try {
         const sighAddress = await currentGlobalAddressesProviderContract.methods.getSIGHAddress().call();        
+        console.log(sighAddress);
         commit('updateSIGHContractAddress',sighAddress);
   
         const sighSpeedControllerAddress = await currentGlobalAddressesProviderContract.methods.getSIGHSpeedController().call();        
@@ -637,9 +653,159 @@ const store = new Vuex.Store({
 
   fetchSighFinanceProtocolState: async ({state,commit}) => {
 
+    try {
+      // FETCHING "SIGH INSTRUMENT" STATE
+      let sighDetails = {};
+      sighDetails.name = await store.dispatch("ERC20_name",{tokenAddress: state.SIGHContractAddress}); 
+      sighDetails.symbol = await store.dispatch("ERC20_symbol",{tokenAddress: state.SIGHContractAddress}); 
+      sighDetails.decimals = await store.dispatch("ERC20_decimals",{tokenAddress: state.SIGHContractAddress}); 
+      sighDetails.treasuryAddress = await store.dispatch("getSIGHInstrumentTreasury",{tokenAddress: state.SIGHContractAddress}); 
+      sighDetails.speedControllerAddress = await store.dispatch("getSighInstrumentSpeedController",{tokenAddress: state.SIGHContractAddress}); 
+      sighDetails.priceETH = await store.dispatch("getInstrumentPrice",{_instrumentAddress: state.SIGHContractAddress}); 
+      sighDetails.priceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: state.SIGHContractAddress});   
+      let response1 = await store.dispatch("getCurrentCycle");
+      let response2 = await store.dispatch("getMintSnapshotForCycle",{cycle: (Number(response1) - 1) });
+      console.log(response2);
+      sighDetails.cycle = response2.cycle;
+      sighDetails.era = response2.era;
+      sighDetails.inflationRate = response2.inflationRate;
+      sighDetails.mintedAmount = response2.mintedAmount;
+      sighDetails.prevMintSpeed = response2.mintSpeed;
+      sighDetails.newTotalSupply = response2.newTotalSupply;
+      sighDetails.minter = response2.minter;
+      sighDetails.blockNumber = response2.blockNumber;
+      sighDetails.totalSighBurnt = await store.dispatch("getTotalSighBurnt");
+      sighDetails.blocksRemainingToMint = await store.dispatch("getBlocksRemainingToMint");
+      sighDetails.currentMintSpeed = await store.dispatch("getCurrentMintSpeed");
+      console.log(" SIGH INSTRUMENT : STATE FETCHED (SESSION INITIALIALIZATION)");
+      console.log(sighDetails);
+      // commit("setSIGHState",sighDetails);
+
+      // FETCHING "SIGH FINANCE" STATE
+      let sighFinanceDetails = {};
+      sighFinanceDetails.speedControllerBalance = await store.dispatch("getSIGHSpeedControllerBalance"); 
+      sighFinanceDetails.supportedProtocolAddresses = await store.dispatch("getSIGHSpeedControllerSupportedProtocols"); 
+      sighFinanceDetails.supportedProtocolStates = [];
+      for (let i=0; i<sighFinanceDetails.supportedProtocolAddresses.length; i++ ) {
+        let addresses = sighFinanceDetails.supportedProtocolAddresses;
+        let response = await store.dispatch("getSIGHSpeedControllerSupportedProtocolState",{protocolAddress: addresses[i] }); 
+        console.log(response);
+        sighFinanceDetails.supportedProtocolStates.push(response);
+        if (sighDetails.treasuryAddress == addresses[i] ) {
+          sighFinanceDetails.treasuryAddress = addresses[i];
+          sighFinanceDetails.treasuryState = response;
+        }
+      }
+      console.log(" SIGH SPEED CONTROLLER : STATE FETCHED (SESSION INITIALIALIZATION)");
+      console.log(sighFinanceDetails);
+      // commit("setSIGHFinanceState",sighFinanceDetails);
+
+      // FETCHING "SUPPRTED INSTRUMENT ADDRESSES" 
+      let supportedInstrumentAddresses =  await store.dispatch("setSupportedInstrumentAddresses"); ;
+      console.log(supportedInstrumentAddresses);
+      // commit("setSupportedInstrumentAddresses",supportedInstrumentAddresses);
+
+      // FETCHING "SUPPRTED INSTRUMENT" STATES  : STATE, GLOBAL BALANCES, CONFIG
+      for (let i=0; i<supportedInstrumentAddresses.length; i++) {
+        let data = await store.dispatch('refershInstrumentState',{instrumentAddress: instruments[i] });
+        console.log(" SUPPORTED INSTRUMENT - " + i + " : STATE FETCHED (SESSION INITIALIALIZATION)");
+        console.log(instrumentState);
+        // commit("addToSupportedInstrumentsArray",instrumentState);
+        console.log(instrumentConfiguration);
+        // commit("addToSupportedInstrumentConfigs",instrumentConfiguration);
+        console.log(instrumentGlobalBalances);
+        // commit("addToSupportedInstrumentGlobalStates",instrumentGlobalBalances);
+      }
+
+      // LENDING PROTOCOL TOTAL STATE
+      // commit("addToSupportedInstrumentGlobalStates",instrumentGlobalBalances);
+
+      // 
+      commit('updateSelectedInstrument',state.supportedInstruments[0]); // THE FIRST INSTRUMENT IS BY DEFAULT THE SELECTED INSTRUMENT
+
+      // ETHEREUM PRICE (IN USD ) & PRICE DECIMALS
+      let ethPriceUSD = await store.dispatch("getInstrumentPrice",{_instrumentAddress: state.EthereumPriceOracleAddress}); 
+      let ethPriceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: state.EthereumPriceOracleAddress});   
+      commit('updateETHPrice',ethPriceUSD);                             // ETH Price 
+      commit('setEthPriceDecimals',ethPriceDecimals);                  // ETH Price Decimals
+
+      store.dispatch('initiatePolling_ETH_Prices');
+
+      return true;
+    }
+    catch (error) {
+      console.log(error);
+      return false;
+    }
+  },
+
+  // [TESTED. WORKING AS EXPECTED] KEEP UPDATING ETH PRICE
+  initiatePolling_ETH_Prices: async ({commit,state}) => {
+    console.log("initiatePolling_ETH_Prices : updating ETH price");
+    setInterval(async () => {
+      if (state.EthereumPriceOracleAddress) {
+          let updatedPrice_ = await store.dispatch('getInstrumentPrice', { _instrumentAddress : state.EthereumPriceOracleAddress } );
+          if (updatedPrice_) {
+            commit("updateETHPrice",updatedPrice_);
+            console.log( " ETH - current price is " + updatedPrice_);
+          }
+        }
+    }, 5000);
   },
 
 
+
+
+
+    // FETCHES THE DATA FOR AN INSTRUMENT (CONFIGURATION & BALANCES)
+    refershInstrumentState: async ({commit,state},{instrumentAddress}) => {
+      let instrumentState = {};    
+      let instrumentConfiguration = {};    
+      let instrumentGlobalBalances = {};    
+  
+      const priceOracleContract = new state.web3.eth.Contract(IPriceOracleGetter.abi, state.IPriceOracleGetterAddress );
+      if ( state.web3 && instrumentAddress && instrumentAddress!= '0x0000000000000000000000000000000000000000') {
+  
+        // INSTRUMENT BASIC DATA
+        instrumentState.instrumentAddress = instrumentAddress;
+        instrumentState.name = await store.dispatch("ERC20_name",{tokenAddress: instrumentAddress}); 
+        instrumentState.symbol =  await store.dispatch("ERC20_symbol",{tokenAddress: instrumentAddress}); 
+        instrumentState.decimals =  await store.dispatch("ERC20_decimals",{tokenAddress: instrumentAddress}); 
+        instrumentState.priceETH = await store.dispatch("getInstrumentPrice",{_instrumentAddress: instrumentAddress}); 
+        instrumentState.priceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: instrumentAddress}); 
+  
+        // INSTRUMENT CONFIGURATION          
+        let instrumentConfig = await store.dispatch("LendingPool_getInstrumentConfigurationData",{_instrumentAddress: instrumentAddress });  
+        instrumentConfiguration.interestRateStrategyAddress = instrumentConfig.interestRateStrategyAddress;
+        instrumentConfiguration.liquidationThreshold = instrumentConfig.liquidationThreshold;
+        instrumentConfiguration.liquidationBonus = instrumentConfig.liquidationBonus;
+        instrumentConfiguration.ltv = instrumentConfig.ltv;
+        instrumentConfiguration.usageAsCollateralEnabled = instrumentConfig.usageAsCollateralEnabled;
+        instrumentConfiguration.borrowingEnabled = instrumentConfig.borrowingEnabled;
+        instrumentConfiguration.stableBorrowRateEnabled = instrumentConfig.stableBorrowRateEnabled;
+        instrumentConfiguration.isActive = instrumentConfig.isActive;
+  
+        // INSTRUMENT GLOBAL BALANCES   
+        let instrumentGlobalState = await store.dispatch("LendingPool_getInstrumentData",{_instrumentAddress:instrumentAddress });           
+        instrumentGlobalBalances.iTokenAddress = instrumentGlobalState.iTokenAddress;
+        instrumentGlobalBalances.totalLiquidity = instrumentGlobalState.totalLiquidity;
+        instrumentGlobalBalances.totalBorrowsStable = instrumentGlobalState.totalBorrowsStable;
+        instrumentGlobalBalances.totalBorrowsVariable = instrumentGlobalState.totalBorrowsVariable;
+        instrumentGlobalBalances.totalBorrows = Number(instrumentGlobalState.totalBorrowsStable) + Number(instrumentGlobalState.totalBorrowsVariable) ;
+        instrumentGlobalBalances.availableLiquidity = instrumentGlobalState.availableLiquidity;
+        instrumentGlobalBalances.liquidityRate = instrumentGlobalState.liquidityRate;
+        instrumentGlobalBalances.variableBorrowRate = instrumentGlobalState.variableBorrowRate;
+        instrumentGlobalBalances.stableBorrowRate = instrumentGlobalState.stableBorrowRate;
+        instrumentGlobalBalances.averageStableBorrowRate = instrumentGlobalState.averageStableBorrowRate;
+        instrumentGlobalBalances.utilizationRate = instrumentGlobalState.utilizationRate;
+        instrumentGlobalBalances.liquidityIndex = instrumentGlobalState.liquidityIndex;
+        instrumentGlobalBalances.variableBorrowIndex = instrumentGlobalState.variableBorrowIndex;  
+      }
+      console.log(instrumentState);
+      console.log(instrumentConfiguration);
+      console.log(instrumentBalances);
+      return {instrumentState, instrumentConfiguration,instrumentGlobalBalances};
+    },
 
 
 
@@ -707,103 +873,7 @@ const store = new Vuex.Store({
 // ######################################################
 // ############ getContractsBasedOnNetwork : calls getAddresses() to fetch and store all the contract addresses based on the network we are connected to (ETHEREUM/BSC) ############
 // ############ getProtocolContractAddresses : // fetches and updates all the contract addresses and the State ############
-// ############ getSupportedInstrumentStatesData : Gets the addresses of the ITokens and the corresponding Insturments ############
 // ######################################################
-
-
-
-  // [TESTED. WORKING AS EXPECTED] Gets the addresses of the ITokens and the corresponding Supported Instrument STATES
-  getSupportedInstrumentStatesData: async ({commit,state}) => { 
-    console.log("getSupportedInstrumentStatesData ACTION");
-    if (state.web3 && state.isNetworkSupported && state.LendingPoolCoreContractAddress && state.LendingPoolCoreContractAddress != "0x0000000000000000000000000000000000000000") {
-      const lendingPoolCoreContract = new state.web3.eth.Contract(LendingPoolCore.abi, state.LendingPoolCoreContractAddress );
-      console.log(lendingPoolCoreContract);
-
-      // Returns an array of supported instrument addresses
-      const instruments = await lendingPoolCoreContract.methods.getInstruments().call();        
-      commit('setSupportedInstrumentAddresses',instruments);
-
-      const priceOracleContract = new state.web3.eth.Contract(IPriceOracleGetter.abi, state.IPriceOracleGetterAddress );
-
-      // Loop over the instrument addresses to fetch iToken Address, name, symbol, decimals and add them to the supported instruments list
-      if (instruments) {
-        for (let i=0; i<instruments.length; i++) {
-          let data = await store.dispatch('refershInstrumentState',{instrumentAddress: instruments[i] });
-          let instrumentState = data.instrumentState;
-          let instrumentConfiguration = data.instrumentConfiguration;
-          let instrumentBalances = data.instrumentBalances;
-          console.log('RETURNED DATA');
-          console.log(instrumentState);
-          console.log(instrumentConfiguration);
-          console.log(instrumentBalances);
-          instrumentState.price = null;
-          commit('addToSupportedInstrumentsArray',instrumentState);
-          commit('addToSupportedInstrumentsConfigsMapping',{instrumentAddress:instruments[i], instrumentDetails:instrumentState});
-        }
-        commit('updateSelectedInstrument',state.supportedInstruments[0]); // THE FIRST INSTRUMENT IS BY DEFAULT THE SELECTED INSTRUMENT
-
-        let ethPriceDecimals = await priceOracleContract.methods.getAssetPriceDecimals(state.ethereumPriceOracleAddressKovan).call();
-        commit('setEthPriceDecimals',ethPriceDecimals);                                                         // ETH Price Decimals
-        let sighPriceDecimals  = await priceOracleContract.methods.getAssetPriceDecimals(state.SIGHContractAddress).call();
-        commit('setSighPriceDecimals',sighPriceDecimals);                                                        // SIGH Price Decimals
-
-        store.dispatch('initiatePollingETH_SIGHPrices');
-      }
-      return true;
-    }
-    else {
-      console.log("Contracts have not been currently deployed on this network");
-      return false;
-    }
-  },
-
-
-
-  // FETCHES THE DATA FOR AN INSTRUMENT (CONFIGURATION & BALANCES)
-  refershInstrumentState: async ({commit,state},{instrumentAddress}) => {
-    let instrumentState = {};    
-    let instrumentConfiguration = {};    
-    let instrumentBalances = {};    
-
-    const priceOracleContract = new state.web3.eth.Contract(IPriceOracleGetter.abi, state.IPriceOracleGetterAddress );
-    if ( state.web3 && instrumentAddress && instrumentAddress!= '0x0000000000000000000000000000000000000000') {
-      let erc20Contract = new state.web3.eth.Contract(ERC20Detailed.abi, instrumentAddress );      
-      // INSTRUMENT BASIC DATA
-      instrumentState.instrumentAddress = instrumentAddress;
-      instrumentState.name = await erc20Contract.methods.name().call();
-      instrumentState.symbol = await erc20Contract.methods.symbol().call();
-      instrumentState.decimals = await erc20Contract.methods.decimals().call();
-      instrumentState.priceDecimals = await priceOracleContract.methods.getAssetPriceDecimals(instrumentAddress).call();
-      // INSTRUMENT CONFIGURATION          
-      let instrumentConfig = await store.dispatch("getInstrumentConfiguration",{_instrumentAddress:instrumentAddress });  
-      instrumentConfiguration.liquidationThreshold = instrumentConfig.liquidationThreshold;
-      instrumentConfiguration.liquidationBonus = instrumentConfig.liquidationBonus;
-      instrumentConfiguration.ltv = instrumentConfig.ltv;
-      instrumentConfiguration.usageAsCollateralEnabled = instrumentConfig.usageAsCollateralEnabled;
-      instrumentConfiguration.borrowingEnabled = instrumentConfig.borrowingEnabled;
-      instrumentConfiguration.stableBorrowRateEnabled = instrumentConfig.stableBorrowRateEnabled;
-      instrumentConfiguration.isActive = instrumentConfig.isActive;
-      // INSTRUMENT GLOBAL BALANCES          
-      let supportedInstrumentGlobalStates = await store.dispatch("getInstrumentMarketState",{_instrumentAddress:instrumentAddress });           
-      instrumentState.iTokenAddress = supportedInstrumentGlobalStates.iTokenAddress;
-      instrumentBalances.totalLiquidity = supportedInstrumentGlobalStates.totalLiquidity;
-      instrumentBalances.totalBorrowsStable = supportedInstrumentGlobalStates.totalBorrowsStable;
-      instrumentBalances.totalBorrowsVariable = supportedInstrumentGlobalStates.totalBorrowsVariable;
-      instrumentBalances.totalBorrows = Number(supportedInstrumentGlobalStates.totalBorrowsStable) + Number(supportedInstrumentGlobalStates.totalBorrowsVariable) ;
-      instrumentBalances.availableLiquidity = supportedInstrumentGlobalStates.availableLiquidity;
-      instrumentBalances.liquidityRate = supportedInstrumentGlobalStates.liquidityRate;
-      instrumentBalances.variableBorrowRate = supportedInstrumentGlobalStates.variableBorrowRate;
-      instrumentBalances.stableBorrowRate = supportedInstrumentGlobalStates.stableBorrowRate;
-      instrumentBalances.averageStableBorrowRate = supportedInstrumentGlobalStates.averageStableBorrowRate;
-      instrumentBalances.utilizationRate = supportedInstrumentGlobalStates.utilizationRate;
-      instrumentBalances.liquidityIndex = supportedInstrumentGlobalStates.liquidityIndex;
-      instrumentBalances.variableBorrowIndex = supportedInstrumentGlobalStates.variableBorrowIndex;  
-    }
-    console.log(instrumentState);
-    console.log(instrumentConfiguration);
-    console.log(instrumentBalances);
-      return {instrumentState, instrumentConfiguration,instrumentBalances};
-  },
 
 
 
@@ -838,26 +908,6 @@ const store = new Vuex.Store({
 
 
 
-  // [TESTED. WORKING AS EXPECTED] KEEP UPDATING PRICES OF THE SUPPORTED INSTRUMENTS
-  initiatePollingETH_SIGHPrices: async ({commit,state}) => {
-    console.log("initiatePollingETH_SIGHPrices : updating prices");
-    let instruments = state.supportedInstrumentAddresses;
-    console.log(instruments);
-    setInterval(async () => {
-      if (instruments) {
-          let updatedPrice_ = await store.dispatch('getInstrumentPrice', { _instrumentAddress : state.ethereumPriceOracleAddressKovan } );
-          if (updatedPrice_) {
-            commit("updateETHPrice",updatedPrice_);
-            console.log( " ETH - current price is " + updatedPrice_);
-          }
-          let updatedSighPrice_ = await store.dispatch('getInstrumentPrice', { _instrumentAddress : state.SIGHContractAddress } );
-          if (updatedSighPrice_) {
-            console.log(" SIGH - current price is " + updatedSighPrice_);
-            commit('updateSIGHPrice',updatedSighPrice_);  
-          }
-        }
-    }, 5000);
-  },
 
 // ######################################################
 // ############ getInstrumentPrice --- VIEW Funtion to get instrument's price from the price oracle
@@ -867,10 +917,9 @@ const store = new Vuex.Store({
   getInstrumentPrice: async ({commit,state},{_instrumentAddress}) => {
     if (state.web3 && state.IPriceOracleGetterAddress && state.IPriceOracleGetterAddress!= "0x0000000000000000000000000000000000000000" ) {
       const priceOracleContract = new state.web3.eth.Contract(IPriceOracleGetter.abi, state.IPriceOracleGetterAddress );
-      console.log('getInstrumentPrice');
       console.log(_instrumentAddress);
       let response = await priceOracleContract.methods.getAssetPrice(_instrumentAddress).call();
-      console.log(response);
+      console.log('getInstrumentPrice = ' + response);
       return response;
     }
     else {
@@ -879,39 +928,26 @@ const store = new Vuex.Store({
     }
   },
 
+  // [TESTED. WORKING AS EXPECTED] Gets the current price of the instrument
+  getInstrumentPriceDecimals: async ({commit,state},{_instrumentAddress}) => {
+    if (state.web3 && state.IPriceOracleGetterAddress && state.IPriceOracleGetterAddress!= "0x0000000000000000000000000000000000000000" ) {
+      const priceOracleContract = new state.web3.eth.Contract(IPriceOracleGetter.abi, state.IPriceOracleGetterAddress );
+      let response = await priceOracleContract.methods.getAssetPriceDecimals(_instrumentAddress).call();
+      console.log('getInstrumentPriceDecimals' + response);
+      return response;
+    }
+    else {
+      console.log('getInstrumentPriceDecimals() function in store.js. Protocol not supported on connected blockchain network');
+      return null;
+    }
+  },
+
+
 // ######################################################
 // ############ GET SUPPORTED INSTRUMENT's MARKET CONFIGURATION AND STATE
 // ######################################################
 
-getInstrumentConfiguration: async ({commit,state},{_instrumentAddress}) => {
-  if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
-    const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-    console.log('getInstrumentConfiguration');
-    console.log(_instrumentAddress);
-    let response = await lendingPoolContract.methods.getInstrumentConfigurationData(_instrumentAddress).call();
-    console.log(response);
-    return response;
-  }
-  else {
-    console.log('getInstrumentConfiguration() function in store.js. Protocol not supported on connected blockchain network');
-    return null;
-  }
-},
 
-getInstrumentMarketState: async ({commit,state},{_instrumentAddress}) => {
-  if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
-    const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-    console.log('getInstrumentMarketState');
-    console.log(_instrumentAddress);
-    let response = await lendingPoolContract.methods.getInstrumentData(_instrumentAddress).call();
-    console.log(response);
-    return response;
-  }
-  else {
-    console.log('getInstrumentMarketState() function in store.js. Protocol not supported on connected blockchain network');
-    return null;
-  }
-},
 
 // ######################################################
 // ############ GET THE CONNECTED ACCOUNT's GLOBAL STATE AND INSTRUMENT MARKET STATE
@@ -956,29 +992,8 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
 
 
 // ######################################################
-// ############ SIGH ---  SIGH_mintCoins() FUNCTION : mint new Coins when cycle gets completed
 // ############ SIGHSPEEDCONTROLLER --- DRIP() FUNCTION 
 // ######################################################
-
-    SIGH_mintCoins: async ({commit,state}) => {
-      if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
-        const sighContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
-        console.log(sighContract);
-        sighContract.methods.mintCoins().send({from: state.connectedWallet})
-        .then(receipt => { 
-          console.log(receipt);
-          return receipt;
-          })
-        .catch(error => {
-          console.log(error);
-          return error;
-        })
-      }
-      else {
-        console.log("SIGH Finance (SIGH Instrument Contract) is currently not been deployed on " + getters.networkName);
-        return "SIGH Finance (SIGH Instrument Contract) is currently not been deployed on ";
-      }
-    },
 
     SIGHSpeedController_drip: async ({commit,state}) => {
       if (state.web3 && state.SIGHSpeedControllerAddress && state.SIGHSpeedControllerAddress!= "0x0000000000000000000000000000000000000000" ) {
@@ -1000,6 +1015,69 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       }
     },
 
+    getSIGHSpeedControllerBalance: async ({commit,state}) => {
+      if (state.web3 && state.SIGHSpeedControllerAddress && state.SIGHSpeedControllerAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const sighSpeedControllerContract = new state.web3.eth.Contract(SighSpeedController.abi, state.SIGHSpeedControllerAddress );
+        console.log(sighSpeedControllerContract);
+        try {
+          let response = sighSpeedControllerContract.methods.getSIGHBalance().call();
+          console.log(response);
+          return response;
+          }
+        catch(error) {
+          console.log(error);
+          return error;
+        }
+      }
+      else {
+        console.log("SIGH Finance (SIGH Speed Controller Contract) is currently not been deployed on " + getters.networkName);
+        return "SIGH Finance (SIGH Speed Controller Contract) is currently not been deployed on ";
+      }
+    },
+
+    getSIGHSpeedControllerSupportedProtocols: async ({commit,state}) => {
+      if (state.web3 && state.SIGHSpeedControllerAddress && state.SIGHSpeedControllerAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const sighSpeedControllerContract = new state.web3.eth.Contract(SighSpeedController.abi, state.SIGHSpeedControllerAddress );
+        console.log(sighSpeedControllerContract);
+        try {
+          let response = sighSpeedControllerContract.methods.getSupportedProtocols().call();
+          console.log(response);
+          return response;
+          }
+        catch(error) {
+          console.log(error);
+          return error;
+        }
+      }
+      else {
+        console.log("SIGH Finance (SIGH Speed Controller Contract) is currently not been deployed on " + getters.networkName);
+        return "SIGH Finance (SIGH Speed Controller Contract) is currently not been deployed on ";
+      }
+    },
+
+    getSIGHSpeedControllerSupportedProtocolState: async ({commit,state},{protocolAddress}) => {
+      if (state.web3 && state.SIGHSpeedControllerAddress && state.SIGHSpeedControllerAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const sighSpeedControllerContract = new state.web3.eth.Contract(SighSpeedController.abi, state.SIGHSpeedControllerAddress );
+        console.log(sighSpeedControllerContract);
+        try {
+          let response = sighSpeedControllerContract.methods.getSupportedProtocolState(protocolAddress).call();
+          console.log(response);
+          return response;
+          }
+        catch(error) {
+          console.log(error);
+          return error;
+        }
+      }
+      else {
+        console.log("SIGH Finance (SIGH Speed Controller Contract) is currently not been deployed on " + getters.networkName);
+        return "SIGH Finance (SIGH Speed Controller Contract) is currently not been deployed on ";
+      }
+    },    
+
+
+
+    
 // ######################################################
 // ############ SIGHDISTRIBUTIONHANDLER --- REFRESHSIGHSPEEDS() FUNCTION 
 // ############ SIGHTREASURY --- BURN() FUNCTION ############
@@ -1404,12 +1482,12 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       }
     },
 
-    LendingPool_getInstrumentConfigurationData: async ({commit,state},{_instrument}) => {
+    LendingPool_getInstrumentConfigurationData: async ({commit,state},{_instrumentAddress}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
         console.log(lendingPoolContract);
         try {
-          const response = await lendingPoolContract.methods.getInstrumentConfigurationData(_instrument).call();
+          const response = await lendingPoolContract.methods.getInstrumentConfigurationData(_instrumentAddress).call();
           console.log(response);
           return response;
           }
@@ -1425,12 +1503,12 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       }
     },    
 
-    LendingPool_getInstrumentData: async ({commit,state},{_instrument}) => {
+    LendingPool_getInstrumentData: async ({commit,state},{_instrumentAddress}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
         console.log(lendingPoolContract);
         try {
-          const response = await lendingPoolContract.methods.getInstrumentData(_instrument).call();
+          const response = await lendingPoolContract.methods.getInstrumentData(_instrumentAddress).call();
           console.log(response);
           return response;
           }
@@ -2022,6 +2100,176 @@ ERC20_totalSupply: async ({commit,state},{tokenAddress}) => {
     return "This ERC20 Contract has currently not been deployed on ";
   }
 },
+
+ERC20_name: async ({commit,state},{tokenAddress}) => {
+  if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const erc20Contract = new state.web3.eth.Contract(ERC20Detailed.abi, tokenAddress );
+    // console.log(erc20Contract);
+    const response = await erc20Contract.methods.name().call();
+    console.log("ERC20_name" + response);
+    return response;
+  }
+  else {
+    console.log("This ERC20 Contract has currently not been deployed on " + getters.networkName);
+    return "This ERC20 Contract has currently not been deployed on ";
+  }
+},
+
+ERC20_symbol: async ({commit,state},{tokenAddress}) => {
+  if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const erc20Contract = new state.web3.eth.Contract(ERC20Detailed.abi, tokenAddress );
+    // console.log(erc20Contract);
+    const response = await erc20Contract.methods.symbol().call();
+    console.log("ERC20_symbol" + response);
+    return response;
+  }
+  else {
+    console.log("This ERC20 Contract has currently not been deployed on " + getters.networkName);
+    return "This ERC20 Contract has currently not been deployed on ";
+  }
+},
+
+ERC20_decimals: async ({commit,state},{tokenAddress}) => {
+  if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const erc20Contract = new state.web3.eth.Contract(ERC20Detailed.abi, tokenAddress );
+    // console.log(erc20Contract);
+    const response = await erc20Contract.methods.decimals().call();
+    console.log("ERC20_symbol" + response);
+    return response;
+  }
+  else {
+    console.log("This ERC20 Contract has currently not been deployed on " + getters.networkName);
+    return "This ERC20 Contract has currently not been deployed on ";
+  }
+},
+
+
+// #########################################
+// ############ SIGH INSTRUMENT ############
+// #########################################
+
+SIGH_mintCoins: async ({commit,state}) => {
+  if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const sighContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
+    console.log(sighContract);
+    sighContract.methods.mintCoins().send({from: state.connectedWallet})
+    .then(receipt => { 
+      console.log(receipt);
+      return receipt;
+      })
+    .catch(error => {
+      console.log(error);
+      return error;
+    })
+  }
+  else {
+    console.log("SIGH Finance (SIGH Instrument Contract) is currently not been deployed on " + getters.networkName);
+    return "SIGH Finance (SIGH Instrument Contract) is currently not been deployed on ";
+  }
+},
+getCurrentCycle: async ({commit,state}) => {
+  if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const sighInstrumentContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
+    console.log('getCurrentCycle');
+    let response = await sighInstrumentContract.methods.getCurrentCycle().call();
+    console.log(response);
+    return response;
+  }
+  else {
+    console.log('getLatestMintSnapshot() function in store.js. Protocol not supported on connected blockchain network');
+    return null;
+  }
+},
+getMintSnapshotForCycle: async ({commit,state},{cycle}) => {
+  if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const sighInstrumentContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
+    console.log('getMintSnapshotForCycle');
+    let response = await sighInstrumentContract.methods.getMintSnapshotForCycle(cycle).call();
+    console.log(response);
+    return response;
+  }
+  else {
+    console.log('getLatestMintSnapshot() function in store.js. Protocol not supported on connected blockchain network');
+    return null;
+  }
+},
+getLatestMintSnapshot: async ({commit,state}) => {
+  if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const sighInstrumentContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
+    console.log('getLatestMintSnapshot');
+    let response = await sighInstrumentContract.methods.getLatestMintSnapshot().call();
+    console.log(response);
+    return response;
+  }
+  else {
+    console.log('getLatestMintSnapshot() function in store.js. Protocol not supported on connected blockchain network');
+    return null;
+  }
+},
+getTotalSighBurnt: async ({commit,state}) => {
+  if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const sighInstrumentContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
+    console.log('getTotalSighBurnt');
+    let response = await sighInstrumentContract.methods.getTotalSighBurnt().call();
+    console.log(response);
+    return response;
+  }
+  else {
+    console.log('getTotalSighBurnt() function in store.js. Protocol not supported on connected blockchain network');
+    return null;
+  }
+},
+getBlocksRemainingToMint: async ({commit,state}) => {
+  if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const sighInstrumentContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
+    console.log('getBlocksRemainingToMint');
+    let response = await sighInstrumentContract.methods.getBlocksRemainingToMint().call();
+    console.log(response);
+    return response;
+  }
+  else {
+    console.log('getBlocksRemainingToMint() function in store.js. Protocol not supported on connected blockchain network');
+    return null;
+  }
+},
+getCurrentMintSpeed: async ({commit,state}) => {
+  if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const sighInstrumentContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
+    console.log('getCurrentMintSpeed');
+    let response = await sighInstrumentContract.methods.getCurrentMintSpeed().call();
+    console.log(response);
+    return response;
+  }
+  else {
+    console.log('getCurrentMintSpeed() function in store.js. Protocol not supported on connected blockchain network');
+    return null;
+  }
+},  
+getSIGHInstrumentTreasury: async ({commit,state}) => {
+  if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const sighInstrumentContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
+    let response = await sighInstrumentContract.methods.getTreasury().call();
+    console.log('getSIGHInstrumentTreasury ' + response );
+    return response;
+  }
+  else {
+    console.log('getSIGHInstrumentTreasury() function in store.js. Protocol not supported on connected blockchain network');
+    return null;
+  }
+},  
+getSighInstrumentSpeedController: async ({commit,state}) => {
+  if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const sighInstrumentContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
+    let response = await sighInstrumentContract.methods.getSpeedController().call();
+    console.log('getSighInstrumentSpeedController ' + response );
+    return response;
+  }
+  else {
+    console.log('getSighInstrumentSpeedController() function in store.js. Protocol not supported on connected blockchain network');
+    return null;
+  }
+},  
+
 
 // #########################################
 // ############ UTILITY ACTIONS ############

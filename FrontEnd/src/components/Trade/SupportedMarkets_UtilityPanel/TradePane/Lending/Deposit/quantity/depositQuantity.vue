@@ -34,6 +34,7 @@ export default {
   created() {
     console.log("IN LENDING / DEPOSIT / QUANTITY (TRADE-PANE) FUNCTION ");
     this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
+    // console.log(this.selectedInstrument);
     this.updateCurrentInstrumentUserState(false);
     this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
       this.selectedInstrument = selectedInstrument_.instrument;        
@@ -183,9 +184,9 @@ export default {
 
     async updateCurrentInstrumentUserState(toDisplay) {
       if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
-      console.log('updateCurrentInstrumentUserState');
+      // console.log('updateCurrentInstrumentUserState');
       let response = await this.getUserInstrumentState({_instrumentAddress: this.selectedInstrument.instrumentAddress, _user: this.$store.state.connectedWallet });
-      console.log(response);
+      // console.log(response);
       this.selectedInstrument.userBalance  = await this.ERC20_balanceOf({tokenAddress: this.selectedInstrument.instrumentAddress, account: this.$store.state.connectedWallet });
       this.selectedInstrument.userDepositedBalance = response.currentITokenBalance;
       this.selectedInstrument.userBorrowedBalance = response.currentBorrowBalance;
@@ -195,7 +196,7 @@ export default {
       this.depositedBalanceWorth = ( Number(this.selectedInstrument.userDepositedBalance)* ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ; 
       this.borrowedBalanceWorth = ( Number(this.selectedInstrument.userBorrowedBalance) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ; 
       this.userDepositAllowanceWorth = ( Number(this.selectedInstrument.userDepositAllowance) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ; 
-
+      // this.
       // if (toDisplay) {
       //   this.$showInfoMsg({message: "Available Allowance : " + this.userDepositAllowance + " " + this.selectedInstrument.symbol });        
       // }
