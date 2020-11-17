@@ -1,7 +1,7 @@
 <div id="tab-a3 noHorizontal" class="tikertab-content"> 
     <div class="sv-table-wrapper ticker-table cs-table-1">
 
-        <table class="sv-table display nowrap" style="width:100%" data-scroll-y="291px">
+        <table class="sv-table display nowrap" style="width:100%" data-scroll-y="21px">
             <thead class="uk-visible">
                 <tr>
                     <th class="uk-text-center">Instrument</th>
@@ -10,74 +10,29 @@
                     <th class="uk-text-center">Supply APY</th>
                     <th class="uk-text-center">Borrow APY</th>
                     <th class="uk-text-center">$SIGH Yield</th>
+                    <th class="uk-text-center">Net Performance (24 Hr)</th>
                 </tr>
             </thead>
             <div id="simpleBarContainer" data-simplebar data-simplebar-auto-hide="false">
             <tbody>
-            <tr v-for="userInstrumentBalance in $store.state.userInstrumentStateBalances ">
+            <tr v-if="!displayInUSD" v-for="userInstrumentBalance in walletInstrumentStatesArray ">
                 <td class="uk-text-center c-white" style="line-height: 4;" >{{ userInstrumentBalance.symbol }}</td>
-                <td class="uk-text-center c-white" style="line-height: 4;" >{{ userInstrumentBalance.currentITokenBalance }}</td>
-                <td class="uk-text-center c-white" style="line-height: 4;" >{{ userInstrumentBalance.currentBorrowBalance }}</td>
-                <td class="uk-text-center c-white" style="line-height: 4;" >{{ userInstrumentBalance.liquidityRate }}</td>
-                <td class="uk-text-center c-white" style="line-height: 4;" >{{ userInstrumentBalance.borrowRate }}</td>
-                <td class="uk-text-center c-white" style="line-height: 4;" >{{ userInstrumentBalance.borrowRate }}</td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.userDepositedBalance).toFixed(2) }} </td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.currentBorrowBalance).toFixed(2) }} </td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.liquidityRate).toFixed(2)  }}</td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.borrowRate).toFixed(2) }}</td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.SighSpeedForUser).toFixed(2) }}</td>
+                <td class="uk-text-center c-white" style="line-height: 4;" > {{ Number(userInstrumentBalance.netPerformance).toFixed(2) }} </td>
             </tr>
-                <!-- <tr>
-                    <td class="uk-text-center">VUSD</td>
-                    <td class="uk-text-center">4.32</td>
-                    <td class="uk-text-center">1.72</td>
-                    <td class="uk-text-center">6.04</td>
-                    <td class="uk-text-center">6.04</td>
-                </tr>
-                <tr>
-                    <td class="uk-text-center">VUSD</td>
-                    <td class="uk-text-center">4.32</td>
-                    <td class="uk-text-center">1.72</td>
-                    <td class="uk-text-center">6.04</td>
-                    <td class="uk-text-center">6.04</td>
-                </tr>
-                <tr>
-                    <td class="uk-text-center">VUSD</td>
-                    <td class="uk-text-center">4.32</td>
-                    <td class="uk-text-center">1.72</td>
-                    <td class="uk-text-center">6.04</td>
-                    <td class="uk-text-center">6.04</td>
-                </tr>
-                <tr>
-                    <td class="uk-text-center">VUSD</td>
-                    <td class="uk-text-center">4.32</td>
-                    <td class="uk-text-center">1.72</td>
-                    <td class="uk-text-center">6.04</td>
-                    <td class="uk-text-center">6.04</td>
-                </tr>
-                <tr>
-                    <td class="uk-text-center">VUSD</td>
-                    <td class="uk-text-center">4.32</td>
-                    <td class="uk-text-center">1.72</td>
-                    <td class="uk-text-center">6.04</td>
-                    <td class="uk-text-center">6.04</td>
-                </tr>
-                <tr>
-                    <td class="uk-text-center">VUSD</td>
-                    <td class="uk-text-center">4.32</td>
-                    <td class="uk-text-center">1.72</td>
-                    <td class="uk-text-center">6.04</td>
-                    <td class="uk-text-center">6.04</td>
-                </tr>
-                <tr>
-                    <td class="uk-text-center">VUSD</td>
-                    <td class="uk-text-center">4.32</td>
-                    <td class="uk-text-center">1.72</td>
-                    <td class="uk-text-center">6.04</td>
-                    <td class="uk-text-center">6.04</td>
-                </tr>
-                <tr>
-                    <td class="uk-text-center">VUSD</td>
-                    <td class="uk-text-center">4.32</td>
-                    <td class="uk-text-center">1.72</td>
-                    <td class="uk-text-center">6.04</td>
-                    <td class="uk-text-center">6.04</td>
-                </tr> -->
+            <tr v-if="displayInUSD" v-for="userInstrumentBalance in walletInstrumentStatesArray ">
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ userInstrumentBalance.symbol }}</td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.userDepositedBalanceWorth).toFixed(2) }} USD</td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.currentBorrowBalanceWorth).toFixed(2) }} USD</td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.liquidityRate).toFixed(2)  }}</td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.borrowRate).toFixed(2) }}</td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.SighSpeedForUser).toFixed(2) }}</td>
+                <td class="uk-text-center c-white" style="line-height: 4;" > {{ Number(userInstrumentBalance.netPerformance).toFixed(2) }} </td>
+            </tr>
             </tbody>
             </div>
         </table>
@@ -88,41 +43,69 @@
 
             <fieldset>
                     <legend style="color: white;" > Aggregated Account Info</legend>
-            <table>
+                <table v-if="!displayInUSD">
+                    <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 4px; "> Balances </h3>
                     <tr>
-                        <td>Total Value Supplied : {{ $store.state.userProtocolBalances.totalLiquidity }} </td> 
-                        <!-- <span> &nbsp &nbsp &nbsp</span> -->
+                        <td> >  &nbsp; Total Value Supplied : &nbsp; {{ Number(walletLendingProtocolState.totalLiquidityETH).toFixed(4) }} ETH </td> 
                     </tr>
                     <tr>
-                        <td>Total Collateral : {{ $store.state.userProtocolBalances.totalCollateral }}  </td> 
+                        <td> >  &nbsp; Total Collateral : {{ Number(walletLendingProtocolState.totalCollateralETH).toFixed(4) }} ETH </td> 
                     </tr>
                     <tr>
-                        <td>Total Value Borrowed : {{ $store.state.userProtocolBalances.totalBorrows }} </td> 
+                        <td> >  &nbsp; Total Value Borrowed : {{ Number(walletLendingProtocolState.totalBorrowsETH).toFixed(4) }} ETH </td> 
                     </tr>
                     <tr>
-                        <!-- <span> &nbsp &nbsp &nbsp</span> -->
-                        <td>Available Borrows : {{ $store.state.userProtocolBalances.availableBorrows }}</td> 
+                        <td> >  &nbsp; Available Borrows : {{ Number(walletLendingProtocolState.availableBorrowsETH).toFixed(4) }} ETH </td> 
+                    </tr>
+                    <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 4px; "> Parameters </h3>
+                    <tr>
+                        <td>Liquidation Threshold : {{ walletLendingProtocolState.currentLiquidationThreshold }} </td> 
                     </tr>
                     <tr>
-                        <td>Liquidation Threshold : {{ $store.state.userProtocolBalances.currentLiquidationThreshold }} </td> 
-                        <!-- <span> &nbsp &nbsp &nbsp</span> -->
+                        <td>Loan To Value (LTV) : {{ walletLendingProtocolState.ltv }} </td> 
                     </tr>
                     <tr>
-                        <td>Loan To Value (LTV) : {{ $store.state.userProtocolBalances.ltv }} </td> 
+                        <td>Health Factor : {{ walletLendingProtocolState.healthFactor }} </td> 
                     </tr>
                     <tr>
-                        <td>Health Factor : {{ $store.state.userProtocolBalances.healthFactor }} </td> 
+                        <td>Total Fee : {{ Number(walletLendingProtocolState.totalFeesETH).toFixed(4) }} ETH </td> 
+                    </tr>
+                </table>
+                <table v-if="displayInUSD">
+                    <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 4px; "> Balances </h3>
+                    <tr>
+                        <td> >  &nbsp; Total Value Supplied &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalLiquidityUSD).toFixed(4) }} USD </td> 
                     </tr>
                     <tr>
-                        <!-- <span> &nbsp &nbsp &nbsp</span> -->
-                        <td>Total Fee : {{ $store.state.userProtocolBalances.totalFees }} </td> 
+                        <td>>  &nbsp; Total Collateral &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalCollateralUSD).toFixed(4) }} USD </td> 
                     </tr>
-            </table>
+                    <tr>
+                        <td>>  &nbsp;Total Value Borrowed &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalBorrowsUSD).toFixed(4) }} USD </td> 
+                    </tr>
+                    <tr>
+                        <td> >  &nbsp; Available Borrows &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.availableBorrowsUSD).toFixed(4) }} USD </td> 
+                    </tr>
+                    <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 4px; "> Parameters </h3>
+                    <tr>
+                        <td>Liquidation Threshold &nbsp; : &nbsp; {{ walletLendingProtocolState.currentLiquidationThreshold }} </td> 
+                    </tr>
+                    <tr>
+                        <td>Loan To Value (LTV) &nbsp; : &nbsp; {{ walletLendingProtocolState.ltv }} </td> 
+                    </tr>
+                    <tr>
+                        <td>Health Factor &nbsp; : &nbsp; {{ walletLendingProtocolState.healthFactor }} </td> 
+                    </tr>
+                    <tr>
+                        <td>Total Fee &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalFeesUSD).toFixed(4) }} USD </td> 
+                    </tr>
+                </table>
+
             </fieldset>
         </div>
 
         <div class="center">
             <button class="uk-button uk-button-green" style="padding: 0 17px;"  @click="refresh()">Refresh</button>
+            <button class="uk-button uk-button-green" style="padding: 0 17px;"  @click="toggleTable()">Toggle</button>
         </div>
 
 

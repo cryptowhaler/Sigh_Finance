@@ -12,12 +12,18 @@ export default {
 
   data() {
     return {
-      userProtocolBalances: this.$store.state.userProtocolBalances,
+      walletInstrumentStatesArray: [],  // Wallet - Instrument States
+      walletLendingProtocolState: {},   // Wallet : Lending Protocol Global State
+      displayInUSD: false,
+      // walletG
     };
   },
   
-  created() {
+  async created() {
     console.log("IN BALANCE (TRADE-PANE) FUNCTION ");
+    if (this.$store.state.web3 && this.$store.state.isNetworkSupported && this.$store.state.connectedWallet) {
+      await this.refreshConnectedWalletInstrumentStates(false);
+    }
   },
   
   mounted() {
@@ -26,7 +32,11 @@ export default {
 
   methods: {
 
-    ...mapActions(['refreshConnectedWalletState']),
+    ...mapActions(['refresh_User_Instrument_State','refresh_User_SIGH_Finance_State']),
+
+    toggleTable() {
+      this.displayInUSD = !this.displayInUSD;
+    },
 
     async refresh() {
       console.log("refreshing User Balances");
@@ -38,7 +48,7 @@ export default {
         this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else {                                  // EXECUTE THE TRANSACTION
-        let response = await this.refreshConnectedWalletState();
+        let response = await this.refreshConnectedWalletInstrumentStates(true);
         if (response) {
           this.$showInfoMsg({message: " Balances refreshed successfully for the account " + this.$store.state.connectedWallet  });
         }
@@ -46,6 +56,34 @@ export default {
           this.$showErrorMsg({message: " Could not refresh balances for the account " + this.$store.state.connectedWallet + ". Something went wrong. Contact our team at contact@sigh.finance in case of any queries!"  });
         }
      }
+    },
+
+    async refreshConnectedWalletInstrumentStates(toDisplay) {      
+      let instruments = this.$store.getters.getSupportedInstruments;
+      console.log(instruments);
+      this.walletInstrumentStatesArray = [];              // RESET LOCALLY STORED STATES
+      this.walletLendingProtocolState = {};               // RESET LOCALLY STORED GLOBAL STATE
+      this.$store.commit("resetWalletInstrumentStates");  // RESET SESSION DATA STORED STATES
+      this.$store.commit("setWalletSIGH_FinanceState",{});  // RESET SESSION DATA STORED GLOBAL STATE 
+      try {
+        let userGlobalState = await this.refresh_User_SIGH_Finance_State();
+        this.$store.commit("setWalletSIGH_FinanceState",userGlobalState);
+        this.walletLendingProtocolState = userGlobalState;   
+        console.log("this.walletLendingProtocolState");            
+        console.log(this.walletLendingProtocolState);            
+        for (let i=0; i < instruments.length; i++) { 
+            let currentUserInstrumentState = await this.refresh_User_Instrument_State({ cur_instrument: instruments[i] }); 
+            console.log(currentUserInstrumentState);
+            this.$store.commit("addToWalletInstrumentStates",{ instrumentAddress: instruments[i].instrumentAddress, walletInstrumentState: currentUserInstrumentState }); 
+            this.walletInstrumentStatesArray.push(currentUserInstrumentState);
+        }
+        console.log(this.walletInstrumentStatesArray);
+        return true;
+      }
+      catch (error) {
+        console.log(error);
+        return false;
+      }
     }
 
   },

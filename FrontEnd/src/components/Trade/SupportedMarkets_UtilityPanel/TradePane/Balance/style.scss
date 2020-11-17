@@ -28,22 +28,24 @@ table {
   display: block;
 }
 th {
-  margin-left: -10px;
+  margin-left: 10px;
   color: var(--primary-text-color);
-  text-transform: uppercase;
-  padding-top: 7px;
-  padding-bottom: 7px;
+  // text-transform: uppercase;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
 td {
   color: mintcream;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 tbody tr td {
   width: 15%;
   color: aliceblue;
-  padding-top: 7px;
-  padding-bottom: 7px;
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 thead th {
   border-bottom: 1px solid wheat; // var(--border-bottom-color);

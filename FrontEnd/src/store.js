@@ -829,7 +829,8 @@ const store = new Vuex.Store({
       // INSTRUMENT GLOBAL BALANCES   
       let instrumentGlobalState = await store.dispatch("LendingPool_getInstrumentData",{_instrumentAddress:instrumentAddress });           
       instrumentState.iTokenAddress = instrumentGlobalState.iTokenAddress;
-      instrumentGlobalBalances.iTokenAddress = instrumentGlobalState.iTokenAddress;        instrumentGlobalBalances.totalLiquidity = instrumentGlobalState.totalLiquidity;
+      instrumentGlobalBalances.iTokenAddress = instrumentGlobalState.iTokenAddress;        
+      instrumentGlobalBalances.totalLiquidity = instrumentGlobalState.totalLiquidity;
       instrumentGlobalBalances.totalBorrowsStable = instrumentGlobalState.totalBorrowsStable;
       instrumentGlobalBalances.totalBorrowsVariable = instrumentGlobalState.totalBorrowsVariable;
       instrumentGlobalBalances.totalBorrows = Number(instrumentGlobalState.totalBorrowsStable) + Number(instrumentGlobalState.totalBorrowsVariable) ;
@@ -851,7 +852,6 @@ const store = new Vuex.Store({
       instrumentSighState.suppliers_Speed = curInstrumentSIGHState.suppliers_Speed;
       instrumentSighState.borrowers_Speed = curInstrumentSIGHState.borrowers_Speed;
       instrumentSighState.staking_Speed = curInstrumentSIGHState.staking_Speed;
-
     }
     // console.log(instrumentState);
     // console.log(instrumentConfiguration);
@@ -1015,13 +1015,16 @@ const store = new Vuex.Store({
         cur_user_instrument_state.currentBorrowBalance = response.currentBorrowBalance;
         cur_user_instrument_state.currentBorrowBalanceWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.currentBorrowBalance) * Number(cur_instrument.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) }); 
 
-        // Additional Parameters (APYs, fee, etc)
+        // Additional Parameters (APYs, fee, SIGH Yield etc etc)
         cur_user_instrument_state.borrowRateMode =  response.borrowRateMode ;
         cur_user_instrument_state.borrowRate =  response.borrowRate ;
         cur_user_instrument_state.liquidityRate =  response.liquidityRate ;
         cur_user_instrument_state.originationFee =  response.originationFee ;
         cur_user_instrument_state.variableBorrowIndex =  response.variableBorrowIndex ;      
         cur_user_instrument_state.usageAsCollateralEnabled = response.usageAsCollateralEnabled ;       
+        cur_user_instrument_state.sighSupplierSpeed = response.usageAsCollateralEnabled ;       
+        cur_user_instrument_state.sighBorrowerSpeed = response.usageAsCollateralEnabled ;       
+        cur_user_instrument_state.sighStakingSpeed = response.usageAsCollateralEnabled ;       
 
         // INTEREST STREAM 
         cur_user_instrument_state.redirectedBalance =  await store.dispatch("IToken_getRedirectedBalance",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
@@ -1032,6 +1035,25 @@ const store = new Vuex.Store({
         cur_user_instrument_state.sighAccured =  await store.dispatch("IToken_getSighAccured",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
         cur_user_instrument_state.sighStreamRedirectedTo =  await store.dispatch("IToken_getSighStreamRedirectedTo",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
         cur_user_instrument_state.sighStreamAllowance =  await store.dispatch("IToken_getSighStreamAllowances",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ; 
+
+        // SIGH SPEEDS FOR THE USER
+        let sighSpeeds = await store.dispatch("SIGHDistributionHandler_getInstrumentSpeeds",{instrument_:cur_instrument.instrumentAddress });           
+
+        let globalState = state.supportedInstrumentGlobalStates.get(cur_instrument.instrumentAddress);
+        let suppliedSighSpeedForUser = 0;        
+        let borrowedSighSpeedForUser = 0;        
+        if (globalState.totalLiquidity > 0) {
+          suppliedSighSpeedForUser = ( Number(sighSpeeds.suppliers_Speed) + Number(sighSpeeds.borrowers_Speed) ) * ( Number(cur_user_instrument_state.userDepositedBalance) / Number(globalState.totalLiquidity) );
+        }
+        if (globalState.totalBorrows > 0) {
+          borrowedSighSpeedForUser = ( Number(sighSpeeds.borrowers_Speed) + Number(sighSpeeds.borrowers_Speed) ) * ( Number(cur_user_instrument_state.currentBorrowBalance) / Number(globalState.totalBorrows) );
+        }
+        cur_user_instrument_state.suppliedSighSpeedForUser = suppliedSighSpeedForUser;
+        cur_user_instrument_state.borrowedSighSpeedForUser = borrowedSighSpeedForUser;
+        cur_user_instrument_state.SighSpeedForUser = Number(suppliedSighSpeedForUser) + Number(borrowedSighSpeedForUser);
+
+        // NET PERFORMANCE ( INSTRUMENT PERFORMANCE +  SUPPLIED APY (USD) - BORROWED APY (USD) + SIGH YIELD (USD) )        
+        cur_user_instrument_state.netPerformance = 0 ;
 
         return cur_user_instrument_state;
       }
