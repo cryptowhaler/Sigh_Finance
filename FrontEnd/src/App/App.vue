@@ -56,6 +56,7 @@ export default {
 
   data() {
     return {
+      sighFinanceInitialized : false,  
       loaderLabel: 'Loading...',
       contactModalShown: false,
       firstTime: true,
@@ -74,7 +75,8 @@ export default {
 
 
   async created() {         //GETS WEB3
-    this.handleWeb3();    
+    await this.handleWeb3();   
+    await this.fetchSessionUserStateData(); 
   },
 
   mounted() {
@@ -95,7 +97,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['loadWeb3','getContractsBasedOnNetwork','fetchSighFinanceProtocolState','getWalletConfig','refreshConnectedAccountState']),
+    ...mapActions(['loadWeb3','getContractsBasedOnNetwork','fetchSighFinanceProtocolState','getWalletConfig','getConnectedWalletState']),
 
     // Connects to WEB3, Wallet, and initiates balance polling
     async handleWeb3() {
@@ -118,9 +120,9 @@ export default {
         this.$showErrorMsg({message:' Welcome to SIGH Finance! No Web3 Object injected into browser. Read-only access. Please install MetaMask browser extension or connect our support team at support@sigh.finance. '});
       }
 
-      // If the current Network is, then fetch the details
+      // FETCHING CONTRACTS AND STATE FOR SIGH FINANCE
       if ( this.$store.getters.isNetworkSupported ) {   
-        await this.fetchSessionSIGHFinanceStateData();
+        this.sighFinanceInitialized = await this.fetchSessionSIGHFinanceStateData();
       }
     },
 
@@ -135,31 +137,65 @@ export default {
           let response = await this.fetchSighFinanceProtocolState();
           if (response) {
             this.$showSuccessMsg({message:" SIGH Finance Current State fetched Successfully"});
+            return true;
           }
           else {
             this.$showErrorMsg({message: " Something went wrong when fetching SIGH Finance's current protocol state." });
+            return false;
           }
         }
         else {
           this.$showErrorMsg({message: " Something went wrong when fetching SIGH Finance Contracts for the network - " + this.$store.getters.networkName + ". Please connect to either Kovan Testnet or Ethereum Main-net or reach out to our Support Team at support@sigh.finance" });
+          return false;
         }
       }
       else {
           this.$showErrorMsg({message: " SIGH Finance is currently not available on the connected blockchain network " });
+          return false;
       }
     },
 
-    // async fetchSessionUserStateData() {
-    //   // let response = await this.refreshConnectedAccountState();
-    //   this.$showInfoMsg({message: " Balances for the connected wallet " + this.$store.getters.connectedWallet + " fetched successfully. Enjoy Farming $SIGH! "});
-    // },
+    async fetchSessionUserStateData() {
+      if ( this.sighFinanceInitialized ) {
+        console.log("WALLET STATE FETCHING INITIATIATED IN APP.VUE");
+        let response = await this.getConnectedWalletState();
+        if (response) {
+          this.$showSuccessMsg({message:"Successfully fetched SIGH Finance Session for the account : " + this.$store.state.connectedWallet });
+        }
+        else if (this.$store.state.connectedWallet) {
+          this.$showErrorMsg({message:"Failed to fetch SIGH Finance Session for the account : " + this.$store.state.connectedWallet });
+        }
+        else {
+          this.$showErrorMsg({message: "Web3 wallet not detected. Read only access." });
+        }
+      }
+      else {
+        await this.handleWeb3();
+        if ( this.sighFinanceInitialized ) {
+          console.log("WALLET STATE FETCHING INITIATIATED IN APP.VUE");
+          let response = await this.getConnectedWalletState();
+          if (response) {
+            this.$showSuccessMsg({message:"Successfully fetched SIGH Finance Session for the account : " + this.$store.state.connectedWallet });
+          }
+          else if (this.$store.state.connectedWallet) {
+            this.$showErrorMsg({message:"Failed to fetch SIGH Finance Session for the account : " + this.$store.state.connectedWallet });
+          }
+          else {
+            this.$showErrorMsg({message: "Web3 wallet not detected. Read only access." });
+          }
+        }
+      }
+    },
 
-    // async fetchConfigsWalletConnected() {
-    //   console.log('IN fetchConfigsWalletConnected() in APP.vue');
-    // },
-    // async fetchConfigsWalletDisconnected() {
-    //   console.log('IN fetchConfigsWalletDisconnected() in APP.vue');
-    // },
+
+
+    async fetchConfigsWalletConnected() {
+      console.log('IN fetchConfigsWalletConnected() in APP.vue');
+    },
+
+    async fetchConfigsWalletDisconnected() {
+      console.log('IN fetchConfigsWalletDisconnected() in APP.vue');
+    },
 
     toggleContactModal() {   //ADDED
       console.log(this.contactModalShown);    

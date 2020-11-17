@@ -116,6 +116,7 @@ const store = new Vuex.Store({
     supportedInstrumentAddresses: null,    //          INSTRUMENT                    // Array of Addresses
     supportedInstruments : [],             //          INSTRUMENT                    // INSTRUMENTS SUPPORTED BY THE PROTOCOL (FOR LENDING - ITOKEN & INSTRUMENT ADDRESSES + SYMBOL/NAME WILL BE STORED)
     supportedInstrumentGlobalStates: new Map(),   //   INSTRUMENT                    // Instrument Address -> Instrument GLOBAL STATES (APY, SIGH YIELDS, TOTAL LIQUIDITY ETC) MAPPING  
+    supportedInstrumentSIGHStates: new Map(),       //   INSTRUMENT                    // SIGH Speeds etc
     supportedInstrumentConfigs: new Map(),        //   INSTRUMENT                    // Instrument Address -> Instrument Config  MAPPING  (instrument's liquidation threshold etc)
     walletInstrumentStates: new Map(),            //   WALLET - INSTRUMENT           // CONNECTED WALLET --> "EACH INSTRUMENT" STATE MAPPING ( deposited, balance, borrowed, fee, etc )
     walletSIGH_FinanceState: {},                //   WALLET - SIGH FINANCE         // CONNECTED WALLET --> "SIGH FINANCE" STATE MAPPING (total deposited, total borrowed, lifeTime Deposit, lifeTime Borrowed,  )
@@ -249,6 +250,13 @@ const store = new Vuex.Store({
     getsupportedInstrumentGlobalState(state,instrumentAddress) {
       return state.supportedInstrumentGlobalStates.get(instrumentAddress);
     },
+    // SUPPRTED INSTRUMENTS - SIGH STATE
+    getsupportedInstrumentSIGHStates(state) {
+      return state.supportedInstrumentSIGHStates;
+    },
+    getsupportedInstrumentSIGHState(state,instrumentAddress) {
+      return state.supportedInstrumentSIGHStates.get(instrumentAddress);
+    },    
     // SUPPRTED INSTRUMENTS - CONFIG STATE    
     getInstrumentConfigs(state) {
     return state.supportedInstrumentConfigs;
@@ -442,6 +450,16 @@ const store = new Vuex.Store({
       state.supportedInstrumentGlobalStates = new Map();
       console.log('In resetSupportedInstrumentGlobalStates -');
     },
+    // SUPPRTED INSTRUMENTS - SIGH STATE (MAP)
+    addToSupportedInstrumentSIGHStates(state,{instrumentAddress, instrumentSIGHState}) {
+      state.supportedInstrumentSIGHStates.set(instrumentAddress,instrumentSIGHState);
+      console.log('In addToSupportedInstrumentSIGHStates (MUTATION)');
+      console.log(instrumentSIGHState);
+    },
+    resetSupportedInstrumentSIGHStates(state) {
+      state.supportedInstrumentSIGHStates = new Map();
+      console.log('In resetSupportedInstrumentGlobalStates -');
+    },
     // SUPPRTED INSTRUMENTS - CONFIG STATE (MAP)    
     addToSupportedInstrumentConfigs(state,{instrumentAddress, instrumentConfig}) {
       state.supportedInstrumentConfigs.set(instrumentAddress,instrumentConfig);
@@ -455,7 +473,8 @@ const store = new Vuex.Store({
     // WALLET  - SUPPORTED INSTRUMENTS (MAP)     
     addToWalletInstrumentStates(state,{instrumentAddress, walletInstrumentState}) {
       state.walletInstrumentStates.set(instrumentAddress,walletInstrumentState);
-      console.log('In addToWalletInstrumentStates -' + state.walletInstrumentStates.get(instrumentAddress));
+      console.log('In addToWalletInstrumentStates -');
+      console.log(state.walletInstrumentStates.get(instrumentAddress));
     },
     resetWalletInstrumentStates(state) {
       state.walletInstrumentStates = new Map();
@@ -464,12 +483,14 @@ const store = new Vuex.Store({
     // WALLET  - SIGH FINANCE   
     setWalletSIGH_FinanceState(state,walletSighFinanceState) {
       state.walletSIGH_FinanceState =  walletSighFinanceState;
-      console.log('In setWalletSIGH_FinanceState -' + state.walletSIGH_FinanceState);
+      console.log('In setWalletSIGH_FinanceState -');
+      console.log(state.walletSIGH_FinanceState);
     },
     // WALLET  - SIGH INSTRUMENT
     setWalletSIGHState(state,walletSIGHState_) {
       state.walletSIGHState =  walletSIGHState_;
-      console.log('In setWalletSIGHState -' + state.walletSIGHState);
+      console.log('In setWalletSIGHState -');
+      console.log(state.walletSIGHState);
     },
     // UPDATE INSTRUMENT PRICE
     updateInstrumentPrice(state,{instrumentAddress,updatedPrice}) {               // UPDATES THE CURRENT INSTRUMENT PRICE. CONSTANTLY CALLED BY THE PRICE POLLING FUNCTION
@@ -655,53 +676,17 @@ const store = new Vuex.Store({
     if (state.GlobalAddressesProviderAddress) {
       try {
         // FETCHING "SIGH INSTRUMENT" STATE
-        let sighDetails = {};
-        sighDetails.name = await store.dispatch("ERC20_name",{tokenAddress: state.SIGHContractAddress}); 
-        sighDetails.symbol = await store.dispatch("ERC20_symbol",{tokenAddress: state.SIGHContractAddress}); 
-        sighDetails.decimals = await store.dispatch("ERC20_decimals",{tokenAddress: state.SIGHContractAddress}); 
-        sighDetails.treasuryAddress = await store.dispatch("getSIGHInstrumentTreasury",{tokenAddress: state.SIGHContractAddress}); 
-        sighDetails.speedControllerAddress = await store.dispatch("getSighInstrumentSpeedController",{tokenAddress: state.SIGHContractAddress}); 
-        sighDetails.priceETH = await store.dispatch("getInstrumentPrice",{_instrumentAddress: state.SIGHContractAddress}); 
-        sighDetails.priceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: state.SIGHContractAddress});   
-        let response1 = await store.dispatch("getCurrentCycle");
-        let response2 = await store.dispatch("getMintSnapshotForCycle",{cycle: (Number(response1) - 1) });
-        sighDetails.cycle = response1;
-        sighDetails.era = response2.era;
-        sighDetails.inflationRate = response2.inflationRate;
-        sighDetails.mintedAmount = response2.mintedAmount;
-        sighDetails.prevMintSpeed = response2.mintSpeed;
-        sighDetails.newTotalSupply = response2.newTotalSupply;
-        sighDetails.minter = response2.minter;
-        sighDetails.blockNumber = response2.blockNumber;
-        sighDetails.totalSighBurnt = await store.dispatch("getTotalSighBurnt");
-        sighDetails.blocksRemainingToMint = await store.dispatch("getBlocksRemainingToMint");
-        sighDetails.currentMintSpeed = await store.dispatch("getCurrentMintSpeed");
         console.log(" SIGH INSTRUMENT : STATE FETCHED (SESSION INITIALIALIZATION)");
-        // console.log(sighDetails);
+        let sighDetails = await store.dispatch("refresh_SIGH_State");
         commit("setSIGHState",sighDetails);
   
         // FETCHING "SIGH FINANCE" STATE
-        let sighFinanceDetails = {};
-        sighFinanceDetails.speedControllerBalance = await store.dispatch("getSIGHSpeedControllerBalance"); 
-        sighFinanceDetails.supportedProtocolAddresses = await store.dispatch("getSIGHSpeedControllerSupportedProtocols"); 
-        sighFinanceDetails.supportedProtocolStates = [];
-        for (let i=0; i<sighFinanceDetails.supportedProtocolAddresses.length; i++ ) {
-          let addresses = sighFinanceDetails.supportedProtocolAddresses;
-          let response = await store.dispatch("getSIGHSpeedControllerSupportedProtocolState",{protocolAddress: addresses[i] }); 
-          // console.log(response);
-          sighFinanceDetails.supportedProtocolStates.push(response);
-          if (sighDetails.treasuryAddress == addresses[i] ) {
-            sighFinanceDetails.treasuryAddress = addresses[i];
-            sighFinanceDetails.treasuryState = response;
-          }
-        }
-        console.log(" SIGH SPEED CONTROLLER : STATE FETCHED (SESSION INITIALIALIZATION)");
-        // console.log(sighFinanceDetails);
+        console.log(" SIGH SPEED CONTROLLER (Treasury, Distribution Handler) : STATE FETCHED (SESSION INITIALIALIZATION)");
+        let sighFinanceDetails = await store.dispatch("refresh_Sigh_Finance_State");
         commit("setSIGHFinanceState",sighFinanceDetails);
   
         // FETCHING "SUPPRTED INSTRUMENT ADDRESSES" 
         let supportedInstrumentAddresses =  await store.dispatch("LendingPool_getInstruments"); ;
-        // console.log(supportedInstrumentAddresses);
         commit("setSupportedInstrumentAddresses",supportedInstrumentAddresses);
   
         // FETCHING "SUPPRTED INSTRUMENT" STATES  : STATE, GLOBAL BALANCES, CONFIG
@@ -711,16 +696,16 @@ const store = new Vuex.Store({
           console.log(data);
   
           console.log(" SUPPORTED INSTRUMENT - " + i + " : BASIC STATE");
-          // console.log(data.instrumentState);
           commit("addToSupportedInstrumentsArray",data.instrumentState);
   
           console.log(" SUPPORTED INSTRUMENT - " + i + " : CONFIGURATION");
-          // console.log(data.instrumentConfiguration);
           commit("addToSupportedInstrumentConfigs",{instrumentAddress: supportedInstrumentAddresses[i] , instrumentConfig: data.instrumentConfiguration});
   
-          console.log(" SUPPORTED INSTRUMENT - " + i + " : GLOBAL BALANCES");
-          // console.log(data.instrumentGlobalBalances);
+          console.log(" SUPPORTED INSTRUMENT - " + i + " : GLOBAL BALANCES");          // console.log(data.instrumentGlobalBalances);
           commit("addToSupportedInstrumentGlobalStates",{instrumentAddress: supportedInstrumentAddresses[i] , instrumentGlobalState: data.instrumentGlobalBalances});
+
+          console.log(" SUPPORTED INSTRUMENT - " + i + " : SIGH STATES");          // console.log(data.instrumentGlobalBalances);
+          commit("addToSupportedInstrumentSIGHStates",{instrumentAddress: supportedInstrumentAddresses[i] , instrumentSIGHState: data.instrumentSighState});
         }
   
         // LENDING PROTOCOL TOTAL STATE
@@ -748,6 +733,133 @@ const store = new Vuex.Store({
     }
   },
 
+  // FETCHES SIGH FINANCE STATE ( SIGH SPEED CONTROLLER, TREASURY, DISTRIBUTION HANDLER )
+  refresh_SIGH_State: async ({commit,state}) => {
+    let sighDetails = {};
+    if ( state.web3 && state.isNetworkSupported ) {
+      sighDetails.name = await store.dispatch("ERC20_name",{tokenAddress: state.SIGHContractAddress}); 
+      sighDetails.symbol = await store.dispatch("ERC20_symbol",{tokenAddress: state.SIGHContractAddress}); 
+      sighDetails.decimals = await store.dispatch("ERC20_decimals",{tokenAddress: state.SIGHContractAddress}); 
+      sighDetails.treasuryAddress = await store.dispatch("getSIGHInstrumentTreasury",{tokenAddress: state.SIGHContractAddress}); 
+      sighDetails.SIGHDistributionHandlerAddress = state.SIGHDistributionHandlerAddress;        
+      sighDetails.speedControllerAddress = await store.dispatch("getSighInstrumentSpeedController",{tokenAddress: state.SIGHContractAddress}); 
+      sighDetails.priceETH = await store.dispatch("getInstrumentPrice",{_instrumentAddress: state.SIGHContractAddress}); 
+      sighDetails.priceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: state.SIGHContractAddress});   
+      console.log('refresh_SIGH_State - 1'); 
+      console.log(sighDetails); 
+      let response1 = await store.dispatch("getCurrentCycle");
+      let response2 = await store.dispatch("getMintSnapshotForCycle",{cycle: (Number(response1) - 1) });
+      sighDetails.cycle = response1;
+      sighDetails.era = response2.era;
+      sighDetails.inflationRate = response2.inflationRate;
+      sighDetails.mintedAmount = response2.mintedAmount;
+      sighDetails.prevMintSpeed = response2.mintSpeed;
+      sighDetails.newTotalSupply = response2.newTotalSupply;
+      sighDetails.minter = response2.minter;
+      sighDetails.blockNumber = response2.blockNumber;
+      console.log('refresh_SIGH_State - 2'); 
+      console.log(sighDetails); 
+      sighDetails.totalSighBurnt = await store.dispatch("getTotalSighBurnt");
+      sighDetails.blocksRemainingToMint = await store.dispatch("getBlocksRemainingToMint");
+      sighDetails.currentMintSpeed = await store.dispatch("getCurrentMintSpeed");
+      console.log('refresh_SIGH_State - 3'); 
+      console.log(sighDetails); 
+    }
+    return sighDetails;
+  },  
+
+  // FETCHES SIGH FINANCE STATE ( SIGH SPEED CONTROLLER, TREASURY, DISTRIBUTION HANDLER )
+  refresh_Sigh_Finance_State: async ({commit,state}) => {
+    let sighFinanceDetails = {};
+    if ( state.web3 && state.isNetworkSupported ) {
+      sighFinanceDetails.speedControllerBalance = await store.dispatch("getSIGHSpeedControllerBalance"); 
+      sighFinanceDetails.supportedProtocolAddresses = await store.dispatch("getSIGHSpeedControllerSupportedProtocols"); 
+      sighFinanceDetails.supportedProtocolStates = [];
+      // Loop Over Supported Protocols
+      let addresses = sighFinanceDetails.supportedProtocolAddresses;
+      for (let i=0; i<addresses.length; i++ ) {
+        let response = await store.dispatch("getSIGHSpeedControllerSupportedProtocolState",{protocolAddress: addresses[i] }); 
+        response.SighBalance = await store.dispatch("ERC20_balanceOf",{tokenAddress: state.SIGHContractAddress , account: addresses[i]});
+        sighFinanceDetails.supportedProtocolStates.push(response);
+        // Handling TREASURY
+        if (sighDetails.treasuryAddress == addresses[i] ) {
+          sighFinanceDetails.treasuryAddress = addresses[i];
+          sighFinanceDetails.treasuryState = response;
+        }
+        // Handling DISTRIBUTION HANDLER        
+        if (sighDetails.SIGHDistributionHandlerAddress == addresses[i] ) {
+          sighFinanceDetails.SIGHDistributionHandlerAddress = addresses[i];
+          sighFinanceDetails.SIGHDistributionHandlerState = response;
+          sighFinanceDetails.SIGHDistributionHandlerState.SighSpeed =  await store.dispatch("SIGHDistributionHandler_getSIGHSpeed");
+        }
+      }
+    }
+    return sighFinanceDetails;
+  },
+
+
+
+    // FETCHES THE DATA FOR AN INSTRUMENT (CONFIGURATION & BALANCES)
+  refershInstrumentState: async ({commit,state},{instrumentAddress}) => {
+    let instrumentState = {};    
+    let instrumentConfiguration = {};    
+    let instrumentGlobalBalances = {};   
+    let instrumentSighState = {}; 
+  
+    if ( state.web3 && instrumentAddress && instrumentAddress!= '0x0000000000000000000000000000000000000000') {
+      // INSTRUMENT BASIC DATA
+      instrumentState.instrumentAddress = instrumentAddress;
+      instrumentState.name = await store.dispatch("ERC20_name",{tokenAddress: instrumentAddress}); 
+      instrumentState.symbol =  await store.dispatch("ERC20_symbol",{tokenAddress: instrumentAddress}); 
+      instrumentState.decimals =  await store.dispatch("ERC20_decimals",{tokenAddress: instrumentAddress}); 
+      instrumentState.priceETH = await store.dispatch("getInstrumentPrice",{_instrumentAddress: instrumentAddress}); 
+      instrumentState.priceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: instrumentAddress}); 
+  
+      // INSTRUMENT CONFIGURATION          
+      let instrumentConfig = await store.dispatch("LendingPool_getInstrumentConfigurationData",{_instrumentAddress: instrumentAddress });  
+      instrumentConfiguration.interestRateStrategyAddress = instrumentConfig.interestRateStrategyAddress;
+      instrumentConfiguration.liquidationThreshold = instrumentConfig.liquidationThreshold;
+      instrumentConfiguration.liquidationBonus = instrumentConfig.liquidationBonus;
+      instrumentConfiguration.ltv = instrumentConfig.ltv;
+      instrumentConfiguration.usageAsCollateralEnabled = instrumentConfig.usageAsCollateralEnabled;
+      instrumentConfiguration.borrowingEnabled = instrumentConfig.borrowingEnabled;
+      instrumentConfiguration.stableBorrowRateEnabled = instrumentConfig.stableBorrowRateEnabled;
+      instrumentConfiguration.isActive = instrumentConfig.isActive;
+  
+      // INSTRUMENT GLOBAL BALANCES   
+      let instrumentGlobalState = await store.dispatch("LendingPool_getInstrumentData",{_instrumentAddress:instrumentAddress });           
+      instrumentState.iTokenAddress = instrumentGlobalState.iTokenAddress;
+      instrumentGlobalBalances.iTokenAddress = instrumentGlobalState.iTokenAddress;        instrumentGlobalBalances.totalLiquidity = instrumentGlobalState.totalLiquidity;
+      instrumentGlobalBalances.totalBorrowsStable = instrumentGlobalState.totalBorrowsStable;
+      instrumentGlobalBalances.totalBorrowsVariable = instrumentGlobalState.totalBorrowsVariable;
+      instrumentGlobalBalances.totalBorrows = Number(instrumentGlobalState.totalBorrowsStable) + Number(instrumentGlobalState.totalBorrowsVariable) ;
+      instrumentGlobalBalances.availableLiquidity = instrumentGlobalState.availableLiquidity;
+      instrumentGlobalBalances.liquidityRate = instrumentGlobalState.liquidityRate;
+      instrumentGlobalBalances.variableBorrowRate = instrumentGlobalState.variableBorrowRate;
+      instrumentGlobalBalances.stableBorrowRate = instrumentGlobalState.stableBorrowRate;
+      instrumentGlobalBalances.averageStableBorrowRate = instrumentGlobalState.averageStableBorrowRate;
+      instrumentGlobalBalances.utilizationRate = instrumentGlobalState.utilizationRate;
+      instrumentGlobalBalances.liquidityIndex = instrumentGlobalState.liquidityIndex;
+      instrumentGlobalBalances.variableBorrowIndex = instrumentGlobalState.variableBorrowIndex;  
+
+      // INSTRUMENT - SIGH STATE         
+      let curInstrumentSIGHState = await store.dispatch("SIGHDistributionHandler_getInstrumentData",{instrument_:instrumentAddress });           
+      instrumentSighState.isSIGHMechanismActivated = curInstrumentSIGHState.isSIGHMechanismActivated;
+      instrumentSighState.borrowindex = curInstrumentSIGHState.borrowindex;
+      instrumentSighState.supplyindex = curInstrumentSIGHState.supplyindex;
+      curInstrumentSIGHState = await store.dispatch("SIGHDistributionHandler_getInstrumentSpeeds",{instrument_:instrumentAddress });           
+      instrumentSighState.suppliers_Speed = curInstrumentSIGHState.suppliers_Speed;
+      instrumentSighState.borrowers_Speed = curInstrumentSIGHState.borrowers_Speed;
+      instrumentSighState.staking_Speed = curInstrumentSIGHState.staking_Speed;
+
+    }
+    // console.log(instrumentState);
+    // console.log(instrumentConfiguration);
+    // console.log(instrumentGlobalBalances);
+    return {instrumentState, instrumentConfiguration,instrumentGlobalBalances,instrumentSighState};
+  },
+
+
   // [TESTED. WORKING AS EXPECTED] KEEP UPDATING ETH PRICE
   initiatePolling_ETH_Prices: async ({commit,state}) => {
     console.log("initiatePolling_ETH_Prices : updating ETH price");
@@ -766,60 +878,6 @@ const store = new Vuex.Store({
 
 
 
-    // FETCHES THE DATA FOR AN INSTRUMENT (CONFIGURATION & BALANCES)
-    refershInstrumentState: async ({commit,state},{instrumentAddress}) => {
-      let instrumentState = {};    
-      let instrumentConfiguration = {};    
-      let instrumentGlobalBalances = {};    
-  
-      if ( state.web3 && instrumentAddress && instrumentAddress!= '0x0000000000000000000000000000000000000000') {
-  
-        // INSTRUMENT BASIC DATA
-        instrumentState.instrumentAddress = instrumentAddress;
-        instrumentState.name = await store.dispatch("ERC20_name",{tokenAddress: instrumentAddress}); 
-        instrumentState.symbol =  await store.dispatch("ERC20_symbol",{tokenAddress: instrumentAddress}); 
-        instrumentState.decimals =  await store.dispatch("ERC20_decimals",{tokenAddress: instrumentAddress}); 
-        instrumentState.priceETH = await store.dispatch("getInstrumentPrice",{_instrumentAddress: instrumentAddress}); 
-        instrumentState.priceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: instrumentAddress}); 
-  
-        // INSTRUMENT CONFIGURATION          
-        let instrumentConfig = await store.dispatch("LendingPool_getInstrumentConfigurationData",{_instrumentAddress: instrumentAddress });  
-        instrumentConfiguration.interestRateStrategyAddress = instrumentConfig.interestRateStrategyAddress;
-        instrumentConfiguration.liquidationThreshold = instrumentConfig.liquidationThreshold;
-        instrumentConfiguration.liquidationBonus = instrumentConfig.liquidationBonus;
-        instrumentConfiguration.ltv = instrumentConfig.ltv;
-        instrumentConfiguration.usageAsCollateralEnabled = instrumentConfig.usageAsCollateralEnabled;
-        instrumentConfiguration.borrowingEnabled = instrumentConfig.borrowingEnabled;
-        instrumentConfiguration.stableBorrowRateEnabled = instrumentConfig.stableBorrowRateEnabled;
-        instrumentConfiguration.isActive = instrumentConfig.isActive;
-  
-        // INSTRUMENT GLOBAL BALANCES   
-        let instrumentGlobalState = await store.dispatch("LendingPool_getInstrumentData",{_instrumentAddress:instrumentAddress });           
-        instrumentState.iTokenAddress = instrumentGlobalState.iTokenAddress;
-        instrumentGlobalBalances.iTokenAddress = instrumentGlobalState.iTokenAddress;
-        instrumentGlobalBalances.totalLiquidity = instrumentGlobalState.totalLiquidity;
-        instrumentGlobalBalances.totalBorrowsStable = instrumentGlobalState.totalBorrowsStable;
-        instrumentGlobalBalances.totalBorrowsVariable = instrumentGlobalState.totalBorrowsVariable;
-        instrumentGlobalBalances.totalBorrows = Number(instrumentGlobalState.totalBorrowsStable) + Number(instrumentGlobalState.totalBorrowsVariable) ;
-        instrumentGlobalBalances.availableLiquidity = instrumentGlobalState.availableLiquidity;
-        instrumentGlobalBalances.liquidityRate = instrumentGlobalState.liquidityRate;
-        instrumentGlobalBalances.variableBorrowRate = instrumentGlobalState.variableBorrowRate;
-        instrumentGlobalBalances.stableBorrowRate = instrumentGlobalState.stableBorrowRate;
-        instrumentGlobalBalances.averageStableBorrowRate = instrumentGlobalState.averageStableBorrowRate;
-        instrumentGlobalBalances.utilizationRate = instrumentGlobalState.utilizationRate;
-        instrumentGlobalBalances.liquidityIndex = instrumentGlobalState.liquidityIndex;
-        instrumentGlobalBalances.variableBorrowIndex = instrumentGlobalState.variableBorrowIndex;  
-      }
-      // console.log(instrumentState);
-      // console.log(instrumentConfiguration);
-      // console.log(instrumentGlobalBalances);
-      return {instrumentState, instrumentConfiguration,instrumentGlobalBalances};
-    },
-
-
-
-
-
 
 
 
@@ -829,38 +887,52 @@ const store = new Vuex.Store({
     // SETS USER ACCOUNT FROM THE WEB3 OBJECT OF THE STORE
     getWalletConfig: async ({commit,state}) => {
       console.log("getWalletConfig ACTION FUNCTION CALLED IN STORE"); 
-      let accounts = null;     
-      if (!state.web3) {
+      if (!state.web3 || !state.isNetworkSupported ) {
         console.log("getWalletConfig ACTION FUNCTION CALLED IN STORE = web3 not set yet");
         await store.dispatch("loadWeb3");
-        if (state.web3) {
-          await store.dispatch("getContractsBasedOnNetwork");
+        if (state.web3 && state.isNetworkSupported) {
+          let contractsInitialized = await store.dispatch("getContractsBasedOnNetwork");
+          if (contractsInitialized) {
+            let protocolStateInitialized = await store.dispatch("fetchSighFinanceProtocolState");
+            if (protocolStateInitialized) {
+              await store.dispatch("getConnectedWalletState");
+            }
+          }
+        }
+        else {
+          return "No Web3 Object detected. Read-only access" ;
         }
       }
-      if (state.web3) {
-        accounts = await state.web3.eth.getAccounts();
+      else {
+        await store.dispatch("getConnectedWalletState");
+        }
+    },
+
+    // GETS WALLET ADDRESS. LOADS WALLET-SIGH_FINANCE STATE, WALLET-LENDING_PROTOCOL STATE
+    getConnectedWalletState: async ({commit,state}) => {
+      if (state.web3 && state.isNetworkSupported ) {
+        let accounts = await state.web3.eth.getAccounts();
         console.log(accounts);
         if (accounts) {
           commit('connectedWallet',accounts[0]);
           commit('isWalletConnected',true);  
-          console.log( 'Account - ' + state.connectedWallet );
+          let response = await store.dispatch("getWalletSIGHFinanceState");
+          // console.log( 'Account - ' + state.connectedWallet );
           store.dispatch('polling'); 
-          return "You are now connected with wallet - ";
+          return response;
         }
         else {
           commit('connectedWallet',null);
           commit('isWalletConnected',false);  
-          return "No Wallet detected. Read-only access" ;
-        }
+          return false;
+        }     
       }
-      else {
-          return "No Web3 Object detected. Read-only access" ;
-        }
-   },
+    },
 
-  // UPDATES ACCOUNT AND BALANCE (ETH) WHENEVER THEY CHANGE
-   polling: async ({commit,store,state}) => {
-    console.log("polling ACTION FUNCTION CALLED IN STORE");
+
+   // UPDATES ACCOUNT AND BALANCE (ETH) WHENEVER THEY CHANGE
+    polling: async ({commit,store,state}) => {
+      console.log("polling ACTION FUNCTION CALLED IN STORE");
       setInterval(async () => {
         const accounts = await state.web3.eth.getAccounts();
         const account = accounts[0];
@@ -869,7 +941,7 @@ const store = new Vuex.Store({
         // console.log(newBalance_);
         if (account !== state.connectedWallet) {  // ACCOUNT CONNECTED CHANGED. BOTH ACCOUNT AND BALANCE UPDATED 
           commit('updateWallet',{ newWallet: account, newBalance: newBalance_});
-          await store.dispatch("refreshConnectedWalletState");
+          await store.dispatch("getWalletSIGHFinanceState");
           // EventBus.$emit(EventNames.userWalletConnected, { username: walletConnected,}); //User has logged in (event)          
         } 
         else if (newBalance_ !== state.ethBalance) {    // ONLY BALANCE UPDATED WHEN IT IS CHANGED
@@ -879,42 +951,133 @@ const store = new Vuex.Store({
     },
 
 
-// ######################################################
-// ############ getContractsBasedOnNetwork : calls getAddresses() to fetch and store all the contract addresses based on the network we are connected to (ETHEREUM/BSC) ############
-// ############ getProtocolContractAddresses : // fetches and updates all the contract addresses and the State ############
-// ######################################################
+    getWalletSIGHFinanceState: async ({commit,state}) => {
+
+      try {
+        console.log("FETCHING USER SESSION : BEGINNING INITIALIZATION ");
+        commit("resetWalletInstrumentStates"); // RESETTING WALLET - INSTRUMENT STATE
+        let walletSighState = {};
+        walletSighState.sighBalance = await store.dispatch("ERC20_balanceOf",{tokenAddress: state.SIGHContractAddress , account: state.connectedWallet});
+        walletSighState.sighBalanceWorth = Number(walletSighState.sighBalance) * (Number(state.SIGHState.priceETH) / Math.pow(10,Number(state.SIGHState.priceDecimals))) * (Number(state.ethereumPriceUSD) / Math.pow(10,state.ethPriceDecimals));
+
+        walletSighState.sighStaked = await store.dispatch("SIGHStaking_getStakedBalanceForStaker",{ _user: state.connectedWallet});
+        walletSighState.sighStakedWorth = Number(walletSighState.sighStaked) * (Number(state.SIGHState.priceETH) / Math.pow(10,Number(state.SIGHState.priceDecimals))) * (Number(state.ethereumPriceUSD) / Math.pow(10,state.ethPriceDecimals));
+        // walletSighState.sighStakingAPY = 
+        // walletSighState.sighStakingAPYWorth = store.dispatch("SIGHStaking_getStakedBalanceForStaker",{ _user: state.connectedWallet});
+
+        console.log(state.supportedInstruments);
+
+        for (let i=0; i < state.supportedInstruments.length; i++) { 
+          let currentUserInstrumentState = await store.dispatch("refresh_User_Instrument_State",{cur_instrument: state.supportedInstruments[i]  }); 
+          commit("addToWalletInstrumentStates",{ instrumentAddress: state.supportedInstruments[i].instrumentAddress, walletInstrumentState: currentUserInstrumentState }); 
+
+          // Calculating Protocol Level Values by adding across instruments
+          walletSighState.totalSighAccured = Number(walletSighState.totalSighAccured) + Number(currentUserInstrumentState.sighAccured) ;
+        }
+
+        walletSighState.totalSighAccuredWorth = await store.dispatch("convertToUSD",{ETHValue: Number(walletSighState.totalSighAccured) * Number(state.SIGHState.priceETH) / Math.pow(10,Number(state.SIGHState.priceDecimals)) }); 
+        // walletSighState.sighAccuredPerBlock = 
+        // walletSighState.sighAccuredPerBlockWorth = 
+        commit("setWalletSIGHState",walletSighState);
+
+        let userGlobalState = await store.dispatch("refresh_User_SIGH_Finance_State");
+        commit("setWalletSIGH_FinanceState",userGlobalState);
+        return true;
+      }
+      catch (error) {
+        console.log(error);
+        return false;
+      }
+    }, 
 
 
+  refresh_User_Instrument_State: async({commit,state},{cur_instrument}) => {
+    if (state.web3 && state.isNetworkSupported && state.connectedWallet) {
+      try {
+        let cur_user_instrument_state = {};
 
+        // Instrument Basic Info
+        cur_user_instrument_state.symbol = cur_instrument.symbol;
+        cur_user_instrument_state.instrumentAddress = cur_instrument.instrumentAddress;      
+        cur_user_instrument_state.iTokenAddress = cur_instrument.iTokenAddress;      
+        cur_user_instrument_state.decimals = cur_instrument.decimals;
+        cur_user_instrument_state.priceETH = cur_instrument.priceETH;
+        cur_user_instrument_state.priceDecimals = cur_instrument.priceDecimals;
+        
+        // User Balances
+        cur_user_instrument_state.userBalance = await store.dispatch("ERC20_balanceOf",{tokenAddress: cur_instrument.instrumentAddress , account: state.connectedWallet});
+        cur_user_instrument_state.userBalanceWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.userBalance) * Number(cur_instrument.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) });
+        let response = await store.dispatch('getUserInstrumentState',{_instrumentAddress:cur_instrument.instrumentAddress , _user: state.connectedWallet });
+        cur_user_instrument_state.userDepositedBalance = response.currentITokenBalance;
+        cur_user_instrument_state.userDepositedBalanceWorth = await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.userDepositedBalance) * Number(cur_instrument.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) }); 
+        cur_user_instrument_state.principalBorrowBalance = response.principalBorrowBalance;
+        cur_user_instrument_state.principalBorrowBalanceWorth = await  store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.principalBorrowBalance) * Number(cur_instrument.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) });
+        cur_user_instrument_state.currentBorrowBalance = response.currentBorrowBalance;
+        cur_user_instrument_state.currentBorrowBalanceWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.currentBorrowBalance) * Number(cur_instrument.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) }); 
 
-  refreshConnectedWalletState: async ({commit, state}) => {
-    console.log("refreshConnectedWalletState : refreshing user Balances");
-    try {
-      let globalBalances = await store.dispatch("getUserProtocolState",{_user: state.connectedWallet});
-      console.log('Global balances retrieved for the connected wallet');
-      console.log(globalBalances);
-      commit("setUserProtocolStateBalances",globalBalances);  // SETTING CONNECTED WALLET'S PROTOCOL LEVEL BALANCES
-      console.log(state.supportedInstruments);
-      commit("resetwalletInstrumentStates");  // SETTING CONNECTED WALLET'S PROTOCOL LEVEL BALANCES
-      for (let i=0; i<state.supportedInstruments.length; i++ ) {
-        console.log(state.supportedInstruments[i]);
-        let userInstrumentBalance = {};
-        userInstrumentBalance.instrument = state.supportedInstruments[i].instrumentAddress;
-        userInstrumentBalance.symbol = state.supportedInstruments[i].symbol;
-        userInstrumentBalance.decimals = state.supportedInstruments[i].decimals;
-        userInstrumentBalance.priceDecimals = state.supportedInstruments[i].priceDecimals;
-        userInstrumentBalance = await store.dispatch("getUserInstrumentState",{_instrumentAddress: state.supportedInstrumentAddresses[i] , _user :state.connectedWallet } );
-        console.log(userInstrumentBalance);
-        commit("addTowalletInstrumentStates",userInstrumentBalance);  // ADDING TO THE CONNECTED WALLET'S INSTRUMENT LEVEL BALANCES
-      }    
-      return true;
+        // Additional Parameters (APYs, fee, etc)
+        cur_user_instrument_state.borrowRateMode =  response.borrowRateMode ;
+        cur_user_instrument_state.borrowRate =  response.borrowRate ;
+        cur_user_instrument_state.liquidityRate =  response.liquidityRate ;
+        cur_user_instrument_state.originationFee =  response.originationFee ;
+        cur_user_instrument_state.variableBorrowIndex =  response.variableBorrowIndex ;      
+        cur_user_instrument_state.usageAsCollateralEnabled = response.usageAsCollateralEnabled ;       
+
+        // INTEREST STREAM 
+        cur_user_instrument_state.redirectedBalance =  await store.dispatch("IToken_getRedirectedBalance",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
+        cur_user_instrument_state.interestRedirectionAllowance =  await store.dispatch("IToken_getinterestRedirectionAllowances",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
+        cur_user_instrument_state.interestRedirectionAddress =  await store.dispatch("IToken_getInterestRedirectionAddress",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
+
+        // SIGH STREAM 
+        cur_user_instrument_state.sighAccured =  await store.dispatch("IToken_getSighAccured",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
+        cur_user_instrument_state.sighStreamRedirectedTo =  await store.dispatch("IToken_getSighStreamRedirectedTo",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
+        cur_user_instrument_state.sighStreamAllowance =  await store.dispatch("IToken_getSighStreamAllowances",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ; 
+
+        return cur_user_instrument_state;
+      }
+      catch (error) {
+        console.log("refresh_User_Instrument_State");
+        console.log(error);
+        return {};
+      }
     }
-    catch (error) {
-      console.log(error);
-      return false;
-    }
+    return {};
+
   },
 
+  refresh_User_SIGH_Finance_State: async({commit,state}) => {
+    if (state.web3 && state.isNetworkSupported && state.connectedWallet) {
+      try {
+        let userGlobalState = {};
+        let userGlobalStateResponse = await store.dispatch("getUserProtocolState", {_user: state.connectedWallet} );
+        userGlobalState.totalLiquidityETH = userGlobalStateResponse.totalLiquidityETH ;
+        userGlobalState.totalLiquidityUSD = await store.dispatch("convertToUSD",{ETHValue: Number(userGlobalState.totalLiquidityETH)}); 
+        userGlobalState.totalCollateralETH = userGlobalStateResponse.totalCollateralETH ;
+        userGlobalState.totalCollateralUSD = await store.dispatch("convertToUSD",{ETHValue: Number(userGlobalState.totalCollateralETH)}); 
+        userGlobalState.totalBorrowsETH = userGlobalStateResponse.totalBorrowsETH ;
+        userGlobalState.totalBorrowsUSD = await store.dispatch("convertToUSD",{ETHValue: Number(userGlobalState.totalBorrowsETH)}); 
+        userGlobalState.totalFeesETH = userGlobalStateResponse.totalFeesETH ;
+        userGlobalState.totalFeesUSD = await store.dispatch("convertToUSD",{ETHValue: Number(userGlobalState.totalFeesETH)}); 
+        userGlobalState.availableBorrowsETH = userGlobalStateResponse.availableBorrowsETH ;
+        userGlobalState.availableBorrowsUSD = await store.dispatch("convertToUSD",{ETHValue: Number(userGlobalState.availableBorrowsETH)}); 
+        userGlobalState.currentLiquidationThreshold = userGlobalStateResponse.currentLiquidationThreshold ;
+        userGlobalState.ltv = userGlobalStateResponse.ltv ;
+        userGlobalState.healthFactor = userGlobalStateResponse.healthFactor ;  
+        return userGlobalState;
+      }
+      catch (error) {
+        console.log("refresh_User_SIGH_Finance_State");
+        console.log(error);
+        return {};
+      }
+    }
+    return {};
+  },
+
+
+  convertToUSD: ({state},{ETHValue}) => {
+    return Number(ETHValue) * (Number(state.ethereumPriceUSD) / Math.pow(10,state.ethPriceDecimals)) ;
+  },
 
 
 
@@ -1085,9 +1248,6 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     
 // ######################################################
 // ############ SIGHDISTRIBUTIONHANDLER --- REFRESHSIGHSPEEDS() FUNCTION 
-// ############ SIGHTREASURY --- BURN() FUNCTION ############
-// ############ SIGHTREASURY --- DRIP() FUNCTION ############
-// ############ SIGHTREASURY --- UPDATEINSTRUMENT() FUNCTION ############
 // ######################################################
 
     SIGHDistributionHandler_refreshSighSpeeds: async ({commit,state}) => {
@@ -1109,6 +1269,83 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
         return "SIGH Finance (SIGH Distribution Handler Contract) is currently not been deployed on ";
       }
     },
+
+    SIGHDistributionHandler_getSIGHBalance: async ({commit,state}) => {
+      if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
+        // console.log(sighDistributionHandlerContract);
+        let response = await sighDistributionHandlerContract.methods.getSIGHBalance().call();
+        console.log("sighDistributionHandler SIGH Balance = " + response );        
+        return response;            
+      }
+      else {
+        console.log("SIGH Finance (SIGH Distribution Handler Contract) is currently not been deployed on " + getters.networkName);
+        return "SIGH Finance (SIGH Distribution Handler Contract) is currently not been deployed on ";
+      }
+    },
+
+    SIGHDistributionHandler_getSIGHSpeed: async ({commit,state}) => {
+      if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
+        // console.log(sighDistributionHandlerContract);
+        let response = await sighDistributionHandlerContract.methods.getSIGHSpeed().call();
+        console.log("sighDistributionHandler SIGH Speed = " + response );        
+        return response;            
+      }
+      else {
+        console.log("SIGH Finance (SIGH Distribution Handler Contract) is currently not been deployed on " + getters.networkName);
+        return "SIGH Finance (SIGH Distribution Handler Contract) is currently not been deployed on ";
+      }
+    },
+
+    SIGHDistributionHandler_getBlocksRemainingToNextSpeedRefresh: async ({commit,state}) => {
+      if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
+        // console.log(sighDistributionHandlerContract);
+        let response = await sighDistributionHandlerContract.methods.getBlocksRemainingToNextSpeedRefresh().call();
+        console.log("sighDistributionHandler Blocks remaining to refresh = " + response );        
+        return response;            
+      }
+      else {
+        console.log("SIGH Finance (SIGH Distribution Handler Contract) is currently not been deployed on " + getters.networkName);
+        return "SIGH Finance (SIGH Distribution Handler Contract) is currently not been deployed on ";
+      }
+    },
+
+    SIGHDistributionHandler_getInstrumentData: async ({commit,state},{instrument_}) => {
+      if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
+        // console.log(sighDistributionHandlerContract);
+        let response = await sighDistributionHandlerContract.methods.getInstrumentData(instrument_).call();
+        console.log("sighDistributionHandler INSTRUMENT Data = " );
+        console.log(response);   
+        return response;            
+      }
+      else {
+        console.log("SIGH Finance (SIGH Distribution Handler Contract) is currently not been deployed on " + getters.networkName);
+        return "SIGH Finance (SIGH Distribution Handler Contract) is currently not been deployed on ";
+      }
+    },    
+
+    SIGHDistributionHandler_getInstrumentSpeeds: async ({commit,state},{instrument_}) => {
+      if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
+        // console.log(sighDistributionHandlerContract);
+        let response = await sighDistributionHandlerContract.methods.getInstrumentSpeeds(instrument_).call();
+        console.log("sighDistributionHandler INSTRUMENT Data = " );
+        console.log(response);                
+        return response;            
+      }
+      else {
+        console.log("SIGH Finance (SIGH Distribution Handler Contract) is currently not been deployed on " + getters.networkName);
+        return "SIGH Finance (SIGH Distribution Handler Contract) is currently not been deployed on ";
+      }
+    },        
+// ######################################################################
+// ############ SIGHTREASURY --- BURN() FUNCTION ########################
+// ############ SIGHTREASURY --- DRIP() FUNCTION ########################
+// ############ SIGHTREASURY --- UPDATEINSTRUMENT() FUNCTION ############
+// ######################################################################
 
     SighTreasury_burnSIGHTokens: async ({commit,state}) => {
       if (state.web3 && state.SIGHTreasuryContractAddress && state.SIGHTreasuryContractAddress!= "0x0000000000000000000000000000000000000000" ) {
@@ -1283,9 +1520,9 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     SIGHStaking_getStakedBalanceForStaker: async ({commit,state},{_user}) => {
       if (state.web3 && state.sighStakingContractAddress && state.sighStakingContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighStakingContract = new state.web3.eth.Contract(SighStakingInterface.abi, state.sighStakingContractAddress );
-        console.log(sighStakingContract);
+        // console.log(sighStakingContract);
         const response = await sighStakingContract.methods.getStakedBalanceForStaker(_user).call();
-        console.log(response);
+        console.log('SIGH Staked Balance = ' + response);
         return response;
       }
       else {
@@ -1775,7 +2012,7 @@ IToken_redirectSighStreamOf: async ({commit,state},{iTokenAddress,_from,_to}) =>
 IToken_allowSighRedirectionTo: async ({commit,state},{iTokenAddress,_to}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    console.log(iTokenContract);
+    // console.log(iTokenContract);
     try {
       const response = await iTokenContract.methods.allowSighRedirectionTo(_to).send({from: state.connectedWallet});
       console.log(response);
@@ -1795,7 +2032,7 @@ IToken_allowSighRedirectionTo: async ({commit,state},{iTokenAddress,_to}) => {
 IToken_claimMySIGH: async ({commit,state},{iTokenAddress}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    console.log(iTokenContract);
+    // console.log(iTokenContract);
     try {
       const response = await iTokenContract.methods.claimMySIGH().send({from: state.connectedWallet});
       console.log(response);
@@ -1815,9 +2052,9 @@ IToken_claimMySIGH: async ({commit,state},{iTokenAddress}) => {
 IToken_isTransferAllowed: async ({commit,state},{iTokenAddress,_user,_amount}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    console.log(iTokenContract);
+    // console.log(iTokenContract);
     const response = await iTokenContract.methods.isTransferAllowed(_user,_amount).call();
-    console.log(response);
+    console.log( "IToken_isTransferAllowed " + response);
     return response;  
   }
   else {
@@ -1829,9 +2066,9 @@ IToken_isTransferAllowed: async ({commit,state},{iTokenAddress,_user,_amount}) =
 IToken_principalBalanceOf: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    console.log(iTokenContract);
+    // console.log(iTokenContract);
     const response = await iTokenContract.methods.principalBalanceOf(_user).call();
-    console.log(response);
+    console.log("IToken_principalBalanceOf " + response);
     return response;  
   }
   else {
@@ -1843,10 +2080,10 @@ IToken_principalBalanceOf: async ({commit,state},{iTokenAddress,_user}) => {
 IToken_getInterestRedirectionAddress: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    console.log('IToken_getInterestRedirectionAddress');
-    console.log(iTokenContract);
+    // console.log(iTokenContract);
     const response = await iTokenContract.methods.getInterestRedirectionAddress(_user).call();
-    console.log(response);
+    console.log('IToken_getInterestRedirectionAddress ' + response);
+    // console.log(response);
     return response;  
   }
   else {
@@ -1860,11 +2097,11 @@ IToken_getInterestRedirectionAddress: async ({commit,state},{iTokenAddress,_user
 IToken_getinterestRedirectionAllowances: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    console.log('IToken_getinterestRedirectionAllowances');
-    console.log(iTokenContract);
+    // console.log(iTokenContract);
     try {
       const response = await iTokenContract.methods.interestRedirectionAllowances(_user).call();
-      console.log(response);
+      console.log('IToken_getinterestRedirectionAllowances - ' + response);
+      // console.log(response);
       return response;  
     }
     catch (error) {
@@ -1883,10 +2120,10 @@ IToken_getinterestRedirectionAllowances: async ({commit,state},{iTokenAddress,_u
 IToken_getRedirectedBalance: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    console.log('IToken_getRedirectedBalance');
-    console.log(iTokenContract);
+    // console.log(iTokenContract);
     const response = await iTokenContract.methods.getRedirectedBalance(_user).call();
-    console.log(response);
+    console.log('IToken_getRedirectedBalance - ' + response);
+    // console.log(response);
     return response;  
   }
   else {
@@ -1898,12 +2135,12 @@ IToken_getRedirectedBalance: async ({commit,state},{iTokenAddress,_user}) => {
 IToken_getSighAccured: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    console.log('IToken_getSighAccured');
-    console.log(iTokenAddress);
-    console.log(_user);
-    console.log(iTokenContract);
+    // console.log(iTokenAddress);
+    // console.log(_user);
+    // console.log(iTokenContract);
     const response = await iTokenContract.methods.getRedirectedBalance(_user).call();
-    console.log(response);
+    console.log('IToken_getSighAccured ' + response);
+    // console.log(response);
     return response;
   }
   else {
@@ -1915,12 +2152,11 @@ IToken_getSighAccured: async ({commit,state},{iTokenAddress,_user}) => {
 IToken_getSighStreamRedirectedTo: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    console.log('IToken_getSighStreamRedirectedTo');
-    console.log(iTokenAddress);
-    console.log(_user);
-    console.log(iTokenContract);
+    // console.log(iTokenAddress);
+    // console.log(_user);
+    // console.log(iTokenContract);
     const response = await iTokenContract.methods.getSighStreamRedirectedTo(_user).call();
-    console.log(response);
+    console.log('IToken_getSighStreamRedirectedTo ' + response);
     return response;
   }
   else {
@@ -1932,12 +2168,12 @@ IToken_getSighStreamRedirectedTo: async ({commit,state},{iTokenAddress,_user}) =
 IToken_getSighStreamAllowances: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    console.log('IToken_getSighStreamAllowances');
-    console.log(iTokenAddress);
-    console.log(_user);
-    console.log(iTokenContract);
+    // console.log(iTokenAddress);
+    // console.log(_user);
+    // console.log(iTokenContract);
     const response = await iTokenContract.methods.getSighStreamAllowances(_user).call();
-    console.log(response);
+    console.log('IToken_getSighStreamAllowances ' + response );
+    // console.log(response);
     return response;
   }
   else {
@@ -2104,10 +2340,10 @@ ERC20_getAllowance: async ({commit,getters,state},{tokenAddress,owner,spender })
 ERC20_balanceOf: async ({commit,state},{tokenAddress,account }) => {
   if (state.web3 && account && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
-    console.log(erc20Contract);
-    console.log('Balance Of Call');
+    // console.log(erc20Contract);
+    // console.log('Balance Of Call');
     const response = await erc20Contract.methods.balanceOf(account).call();
-    console.log(response);
+    console.log(tokenAddress + ' Balance ' + response);
     return response;
   }
   else {
