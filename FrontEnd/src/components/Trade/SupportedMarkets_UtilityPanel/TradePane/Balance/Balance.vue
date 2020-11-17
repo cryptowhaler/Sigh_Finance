@@ -3,19 +3,30 @@
 <script>
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import EventBus, {EventNames,} from '@/eventBuses/default';
-import {mapState,mapActions,} from 'vuex';
+import TabBar from '@/components/TabBar/TabBar.vue';
+import lendingInfo from './lendingInfo/lendingInfo.vue';
 import Web3 from 'web3';
+import {mapState,mapActions,} from 'vuex';
 
 export default {
 
   name: 'balance',
 
+  components: {
+    TabBar,
+    lendingInfo,
+  },
+
+
   data() {
     return {
+      activeTab: 'Aggregated User Balance (Lending)',
+      tabs: [ 'Aggregated User Balance (Lending)',],
+      height: 0,
+      preActive:'Aggregated User Balance (Lending)',
+
       walletInstrumentStatesArray: [],  // Wallet - Instrument States
-      walletLendingProtocolState: {},   // Wallet : Lending Protocol Global State
       displayInUSD: false,
-      // walletG
     };
   },
   
@@ -32,11 +43,15 @@ export default {
 
   methods: {
 
-    ...mapActions(['refresh_User_Instrument_State','refresh_User_SIGH_Finance_State']),
+    ...mapActions(['refresh_User_Instrument_State']),
 
     toggleTable() {
       this.displayInUSD = !this.displayInUSD;
     },
+
+    activeTabChange(activeTab) {
+      this.activeTab = activeTab;
+    }, 
 
     async refresh() {
       console.log("refreshing User Balances");
@@ -62,15 +77,8 @@ export default {
       let instruments = this.$store.getters.getSupportedInstruments;
       console.log(instruments);
       this.walletInstrumentStatesArray = [];              // RESET LOCALLY STORED STATES
-      this.walletLendingProtocolState = {};               // RESET LOCALLY STORED GLOBAL STATE
-      this.$store.commit("resetWalletInstrumentStates");  // RESET SESSION DATA STORED STATES
       this.$store.commit("setWalletSIGH_FinanceState",{});  // RESET SESSION DATA STORED GLOBAL STATE 
       try {
-        let userGlobalState = await this.refresh_User_SIGH_Finance_State();
-        this.$store.commit("setWalletSIGH_FinanceState",userGlobalState);
-        this.walletLendingProtocolState = userGlobalState;   
-        console.log("this.walletLendingProtocolState");            
-        console.log(this.walletLendingProtocolState);            
         for (let i=0; i < instruments.length; i++) { 
             let currentUserInstrumentState = await this.refresh_User_Instrument_State({ cur_instrument: instruments[i] }); 
             console.log(currentUserInstrumentState);

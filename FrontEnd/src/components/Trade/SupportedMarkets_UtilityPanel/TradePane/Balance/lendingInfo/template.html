@@ -1,0 +1,77 @@
+<div class= "lendingInfo" style="color:white; border: dotted 1px white; padding: 10px 10px;">
+    <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
+    </div> 
+    
+    <div> 
+
+        <fieldset>
+
+            <table v-if="!displayInUSD">
+                <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 4px; "> Balances </h3>
+                <tr>
+                    <td> >  &nbsp; Total Value Supplied : &nbsp; {{ Number(walletLendingProtocolState.totalLiquidityETH).toFixed(4) }} ETH </td> 
+                </tr>
+                <tr>
+                    <td> >  &nbsp; Total Collateral &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalCollateralETH).toFixed(4) }} ETH </td> 
+                </tr>
+                <tr>
+                    <td> >  &nbsp; Total Value Borrowed &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalBorrowsETH).toFixed(4) }} ETH </td> 
+                </tr>
+                <tr>
+                    <td> >  &nbsp; Available Borrows &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.availableBorrowsETH).toFixed(4) }} ETH </td> 
+                </tr>
+                <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 4px; "> Parameters </h3>
+                <tr>
+                    <td> >  &nbsp; Liquidation Threshold &nbsp; : &nbsp; {{ walletLendingProtocolState.currentLiquidationThreshold }} </td> 
+                </tr>
+                <tr>
+                    <td> >  &nbsp; Loan To Value (LTV) &nbsp; : &nbsp; {{ walletLendingProtocolState.ltv }} </td> 
+                </tr>
+                <tr>
+                    <td> >  &nbsp; Health Factor &nbsp; : &nbsp; {{ walletLendingProtocolState.healthFactor }} </td> 
+                </tr>
+                <tr>
+                    <td> >  &nbsp; Total Fee &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalFeesETH).toFixed(4) }} ETH </td> 
+                </tr>
+            </table>
+            
+            <table v-if="displayInUSD">
+                <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 4px; "> Balances </h3>
+                <tr>
+                    <td> >  &nbsp; Total Value Supplied &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalLiquidityUSD).toFixed(4) }} USD </td> 
+                </tr>
+                <tr>
+                    <td>>  &nbsp; Total Collateral &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalCollateralUSD).toFixed(4) }} USD </td> 
+                </tr>
+                <tr>
+                    <td>>  &nbsp;Total Value Borrowed &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalBorrowsUSD).toFixed(4) }} USD </td> 
+                </tr>
+                <tr>
+                    <td> >  &nbsp; Available Borrows &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.availableBorrowsUSD).toFixed(4) }} USD </td> 
+                </tr>
+                <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 4px; "> Parameters </h3>
+                <tr>
+                    <td>>  &nbsp; Liquidation Threshold &nbsp; : &nbsp; {{ walletLendingProtocolState.currentLiquidationThreshold }} </td> 
+                </tr>
+                <tr>
+                    <td>>  &nbsp; Loan To Value (LTV) &nbsp; : &nbsp; {{ walletLendingProtocolState.ltv }} </td> 
+                </tr>
+                <tr>
+                    <td>>  &nbsp; Health Factor &nbsp; : &nbsp; {{ walletLendingProtocolState.healthFactor }} </td> 
+                </tr>
+                <tr>
+                    <td>>  &nbsp; Total Fee &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalFeesUSD).toFixed(4) }} USD </td> 
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+
+    
+    <!-- Buttons -->
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="center">
+            <button class="uk-button uk-button-green"  @click="refresh()">Refresh</button>
+            <button class="uk-button uk-button-green"  @click="toggleTable()">Toggle</button>
+        </div>
+    </div>
+</div>

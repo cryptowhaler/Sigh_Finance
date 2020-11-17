@@ -37,80 +37,28 @@
             </div>
         </table>
 
-        <br>
-
-        <div> 
-
-            <fieldset>
-                    <legend style="color: white;" > Aggregated Account Info</legend>
-                <table v-if="!displayInUSD">
-                    <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 4px; "> Balances </h3>
-                    <tr>
-                        <td> >  &nbsp; Total Value Supplied : &nbsp; {{ Number(walletLendingProtocolState.totalLiquidityETH).toFixed(4) }} ETH </td> 
-                    </tr>
-                    <tr>
-                        <td> >  &nbsp; Total Collateral : {{ Number(walletLendingProtocolState.totalCollateralETH).toFixed(4) }} ETH </td> 
-                    </tr>
-                    <tr>
-                        <td> >  &nbsp; Total Value Borrowed : {{ Number(walletLendingProtocolState.totalBorrowsETH).toFixed(4) }} ETH </td> 
-                    </tr>
-                    <tr>
-                        <td> >  &nbsp; Available Borrows : {{ Number(walletLendingProtocolState.availableBorrowsETH).toFixed(4) }} ETH </td> 
-                    </tr>
-                    <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 4px; "> Parameters </h3>
-                    <tr>
-                        <td>Liquidation Threshold : {{ walletLendingProtocolState.currentLiquidationThreshold }} </td> 
-                    </tr>
-                    <tr>
-                        <td>Loan To Value (LTV) : {{ walletLendingProtocolState.ltv }} </td> 
-                    </tr>
-                    <tr>
-                        <td>Health Factor : {{ walletLendingProtocolState.healthFactor }} </td> 
-                    </tr>
-                    <tr>
-                        <td>Total Fee : {{ Number(walletLendingProtocolState.totalFeesETH).toFixed(4) }} ETH </td> 
-                    </tr>
-                </table>
-                <table v-if="displayInUSD">
-                    <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 4px; "> Balances </h3>
-                    <tr>
-                        <td> >  &nbsp; Total Value Supplied &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalLiquidityUSD).toFixed(4) }} USD </td> 
-                    </tr>
-                    <tr>
-                        <td>>  &nbsp; Total Collateral &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalCollateralUSD).toFixed(4) }} USD </td> 
-                    </tr>
-                    <tr>
-                        <td>>  &nbsp;Total Value Borrowed &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalBorrowsUSD).toFixed(4) }} USD </td> 
-                    </tr>
-                    <tr>
-                        <td> >  &nbsp; Available Borrows &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.availableBorrowsUSD).toFixed(4) }} USD </td> 
-                    </tr>
-                    <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 4px; "> Parameters </h3>
-                    <tr>
-                        <td>Liquidation Threshold &nbsp; : &nbsp; {{ walletLendingProtocolState.currentLiquidationThreshold }} </td> 
-                    </tr>
-                    <tr>
-                        <td>Loan To Value (LTV) &nbsp; : &nbsp; {{ walletLendingProtocolState.ltv }} </td> 
-                    </tr>
-                    <tr>
-                        <td>Health Factor &nbsp; : &nbsp; {{ walletLendingProtocolState.healthFactor }} </td> 
-                    </tr>
-                    <tr>
-                        <td>Total Fee &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalFeesUSD).toFixed(4) }} USD </td> 
-                    </tr>
-                </table>
-
-            </fieldset>
-        </div>
-
-        <div class="center">
-            <button class="uk-button uk-button-green" style="padding: 0 17px;"  @click="refresh()">Refresh</button>
+        <div class="center" style="padding-top: 17px;">
+            <button class="uk-button uk-button-green" style="padding: 0 17px; margin-right: 37px;"  @click="refresh()">Refresh</button>
             <button class="uk-button uk-button-green" style="padding: 0 17px;"  @click="toggleTable()">Toggle</button>
         </div>
 
+        <br>
+
+        <div class="cs-tab-3  uk-position-relative " style=" padding-left: 0px; padding-right: 50px; padding-bottom: 50px;  padding-top: 12px;">
+
+            <div id="subtab-limit" :title-link-class="'tab-title-class'">
+                <tab-bar :mobileDropdown=false :tabs=tabs @tab-change="activeTabChange" />
+            </div>
+
+            <keep-alive>
+                <lendingInfo v-if="activeTab === 'Aggregated User Balance (Lending)'" />
+                <!-- <repayAmount v-if="activeTab === 'Amount'" /> -->
+            </keep-alive>
+            
+        </div>
+
+
+
 
     </div>
-    <!-- <div v-if=showLoader  class="center">
-            <img width="75px" src="https://image.ibb.co/dc02hd/30.gif" />
-    </div> -->
 </div>
