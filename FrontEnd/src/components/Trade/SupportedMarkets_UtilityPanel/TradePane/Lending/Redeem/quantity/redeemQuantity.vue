@@ -56,7 +56,7 @@ export default {
     calculatedValue() {
         console.log('calculatedValue');
         if (this.selectedInstrument && this.selectedInstrument.priceDecimals) {
-          console.log(this.selectedInstrument);
+          console.log("COMPUTED VALUE : REDEEM QUANTITY");
           return (Number(this.formData.redeemQuantity) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ; 
           }
       return 0;
@@ -75,6 +75,7 @@ export default {
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
         this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
       } 
+        // WHEN THE AMOUNT ENTERED FOR REDEEMING IS GREATER THAN THE AVAILABLE BALANCE
       else if ( Number(this.formData.redeemQuantity) >  Number(this.selectedInstrumentWalletState.userDepositedBalance  )  ) {
           this.$showErrorMsg({message: " Please enter an amount less than your depsited balance . Try refreshing balances in-case it is not showing your correct deposted balance!"});
       }
@@ -83,7 +84,6 @@ export default {
         console.log('Selected Instrument - ' + this.selectedInstrument.symbol);
         console.log('Redeem Quantity - ' + this.formData.redeemQuantity);
         console.log('Redeem Value - ' + value);
-        // WHEN THE AMOUNT ENTERED FOR REDEEMING IS GREATER THAN THE AVAILABLE BALANCE
         this.showLoader = true;
         let response =  await this.IToken_redeem( { iTokenAddress: this.selectedInstrument.iTokenAddress , _amount:  this.formData.redeemQuantity } );
         if (response.status) {      

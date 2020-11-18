@@ -12,36 +12,49 @@ export default {
   data() {
     return {
       selectedInstrument: this.$store.state.currentlySelectedInstrument,
+      selectedInstrumentWalletState: {},
       formData : {
         redeemQuantity: null,
         redeemValue: null,
       },
-      remainingBalance: null,
+      selectedInstrumentPriceETH: null,  // PRICE CONSTANTLY UPDATED
       showLoader: false,
     };
   },
   
 
   created() {
-    console.log("IN LENDING / REDEEM / AMOUNT (TRADE-PANE) FUNCTION ");
+    console.log("IN LENDING / REDEEM / QUANTITY (TRADE-PANE) FUNCTION ");
     this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
-    this.getRemainingBalance(false);
+    console.log(this.selectedInstrument);
+    if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+    }
+    console.log(this.selectedInstrumentWalletState);
+    if ( this.$store.state.isNetworkSupported  ) {
+      setInterval(async () => {
+        console.log("IN SET INTERVAL (REDEEM / QUANTITY)");
+        if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+          this.selectedInstrumentPriceETH = await this.getInstrumentPrice({_instrumentAddress : this.selectedInstrument.instrumentAddress });
+        }
+      },1000);
+    }
     this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
-      this.selectedInstrument = selectedInstrument_.instrument;        
-      console.log('REDEEM : changeSelectedInstrument - ');
-      console.log(this.selectedInstrument);
-      this.getRemainingBalance(false);
+      console.log("NEW SELECTED INSTRUMENT");
+      this.selectedInstrument = selectedInstrument_.instrument;       // UPDATED SELECTED INSTRUMENT (LOCALLY)
+      console.log(this.selectedInstrument);   
+      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+      console.log(this.selectedInstrumentWalletState);
     };
     ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
   },
-
 
   computed: {
     calculatedQuantity() {
         console.log('calculatedquantity');
         if (this.selectedInstrument && this.selectedInstrument.priceDecimals) {
-          console.log(this.selectedInstrument);
-          return ((this.formData.redeemValue) / (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(9) ; 
+          console.log("COMPUTED QUANTITY : VALUE ");
+          return ((this.formData.redeemValue) / ( ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ) ).toFixed(4) ;
           }
       return 0;
     }
@@ -49,9 +62,14 @@ export default {
 
   methods: {
 
-    ...mapActions(['IToken_redeem','ERC20_balanceOf']),
+    ...mapActions(['IToken_redeem','refresh_User_Instrument_State','getInstrumentPrice']),
     
     async redeem() {   //REDEEM 
+      let quantity = null;
+      if (this.$store.state.isNetworkSupported && this.selectedInstrument.priceDecimals && this.$store.state.ethereumPriceUSD ) {
+        quantity =  (Number(this.formData.redeemValue) / ( ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ) ).toFixed(4) ;
+      }
+
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
         this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
@@ -59,54 +77,56 @@ export default {
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
         this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
       } 
-      else {        
-        let price = (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals)).toFixed(4);
-        if (price > 0) {
-          let quantity = (this.formData.redeemValue / price);
-          console.log('Selected Instrument - ' + this.selectedInstrument.symbol);
-          console.log('Selected IToken - ' + this.selectedInstrument.iTokenAddress);
-          console.log('Redeem Quantity - ' + quantity);
-          console.log('Redeem Value - ' + this.formData.redeemValue);
-          console.log('Instrument Price - ' + price);     
         // WHEN THE AMOUNT ENTERED FOR REDEEMING IS GREATER THAN THE AVAILABLE BALANCE
-          if ( Number(quantity) >  Number(this.remainingBalance)  ) {
-            quantity = this.remainingBalance;
-            this.$showInfoMsg({message: " The provided amount to be redeemed exceeds your depsited balance . So your entire " + this.selectedInstrument.symbol +  " balance will be redeemed."});
-          }
-          this.showLoader = true;
-          let response =  await this.IToken_redeem( { iTokenAddress: this.selectedInstrument.iTokenAddress , _amount:  quantity } );
-          if (response.status) {      
-            this.$showSuccessMsg({message: "REDEEM SUCCESS : " + quantity + "  " +  this.selectedInstrument.symbol +  " worth " + this.formData.redeemValue + " USD was successfully redeemed from SIGH Finance. Gas used = " + response.gasUsed });
-            this.$showInfoMsg({message: " $SIGH Farms looks forward to serving you again!"});
-            await this.getRemainingBalance(true);
-            this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Redeem',Service: 'LENDING'});
-          }
-          else {
-            this.$showErrorMsg({message: "REDEEM FAILED : " + response.message  }); 
-            this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-            // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
-          }
-          this.formData.redeemQuantity = null;
-          this.showLoader = false;
+      else if ( Number(quantity) >  Number(this.selectedInstrumentWalletState.userDepositedBalance  )  ) {
+          this.$showErrorMsg({message: " Please enter an amount less than your depsited balance . Try refreshing balances in-case it is not showing your correct deposted balance!"});
+      }
+      else {        
+        console.log('Selected Instrument - ' + this.selectedInstrument.symbol);
+        console.log('Redeem Quantity - ' + quantity );
+        console.log('Redeem Value - ' + this.formData.redeemValue);
+        this.showLoader = true;
+        let response =  await this.IToken_redeem( { iTokenAddress: this.selectedInstrument.iTokenAddress , _amount:  parseInt(quantity) } );
+        if (response.status) {      
+          this.$showSuccessMsg({message: "REDEEM SUCCESS : " + quantity + "  " +  this.selectedInstrument.symbol +  " worth " +  this.formData.redeemValue + " USD have been successfully redeemed from SIGH Finance. Gas used = " + response.gasUsed });
+          this.$showInfoMsg({message: " $SIGH Farms looks forward to serving you again!"});
+          await this.refreshCurrentInstrumentWalletState(false);
+          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Redeem',Service: 'LENDING'});
         }
         else {
-            this.$showErrorMsg({message: "Seems like the pricefeed is not functioning correctly. Please try again later! " }); 
+          this.$showErrorMsg({message: "REDEEM FAILED : " + response.message  }); 
+          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+          // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
         }
+        this.formData.redeemQuantity = null;
+        this.showLoader = false;
       }
     },
       
+      
 
-    async getRemainingBalance(toDisplay) {
-      if (this.$store.getters.connectedWallet && his.selectedInstrument.iTokenAddress) {
-        this.remainingBalance = await this.ERC20_balanceOf({tokenAddress: this.selectedInstrument.iTokenAddress, account: this.$store.getters.connectedWallet });
-        console.log(this.remainingBalance);
-        if (toDisplay && this.selectedInstrument.priceDecimals) {
-          let remainingValue = (this.remainingBalance * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4); 
-          this.$showInfoMsg({message: this.remainingBalance + " " + this.selectedInstrument.symbol  + " worth $" + remainingValue + " USD are currently farming $SIGH for you at SIGH Finance! "});        
-        }      
-        console.log( 'Current remaining deposited balance for ' + this.selectedInstrument.symbol + " is " + this.remainingBalance + " worth " +  remainingValue + " USD");
+    async refreshCurrentInstrumentWalletState(toDisplay) {
+      if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        try {
+          console.log("refreshCurrentInstrumentWalletState() in DEPOSIT-QUANTITY");
+          let response = await this.refresh_User_Instrument_State({cur_instrument: this.selectedInstrument });
+          console.log(response);
+          console.log("getting WalletInstrumentStates MAPPING before UPDATING & COMMITING  in DEPOSIT-QUANTITY");
+          console.log(this.$store.getters.getWalletInstrumentStates);
+          this.$store.commit("addToWalletInstrumentStates",{instrumentAddress : this.selectedInstrument.instrumentAddress  , walletInstrumentState: response});
+          console.log("getting WalletInstrumentStates MAPPING after UPDATING & COMMITING  in DEPOSIT-QUANTITY");
+          console.log(this.$store.getters.getWalletInstrumentStates);
+          this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+          if (toDisplay) {
+            this.$showInfoMsg({message: "Updated balances" });        
+          }
+        }
+        catch(error) {
+          console.log( 'FAILED' );
         }
       }
+    }
+
   },
 
   destroyed() {

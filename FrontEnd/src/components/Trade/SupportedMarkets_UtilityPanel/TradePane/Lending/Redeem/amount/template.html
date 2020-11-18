@@ -1,10 +1,11 @@
-<div class= "Deposit">
-    <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
+<div class= "redeemValue">
+    <div class="f1-form-grid" style="position: relative;">
     </div> 
 
+<div class="redeem-value-form" >    
     <!-- Amount to be entered -->    
     <div class="uk-grid uk-grid-small f1-form-grid">
-        <div class="uk-width-1-1">
+        <div class="uk-width-1-1"  style=" width: 51%; margin-left: 104px;">
             <div class="form-grp">
                 <div class="form-elm">
                     <input style="text-align: center;"  class="form-ctrl" type="text" placeholder=" Amount (USD)" v-model="formData.redeemValue">
@@ -16,7 +17,7 @@
 
     <!-- Displays the symbol of the selected Instrument -->
     <div class="uk-grid uk-grid-small f1-form-grid">
-        <div class="uk-width-1-1">
+        <div class="uk-width-1-1" style=" width: 51%; margin-left: 104px;">
             <div class="form-grp">
                 <div class="form-elm">
                     <input style="text-align: center;" class="form-ctrl" type="text" placeholder="Number of tokens" readonly :value="calculatedQuantity">
@@ -27,19 +28,87 @@
     </div>
     
 
-    <!-- Loading image -->
-    <div class="uk-grid uk-grid-small f1-form-grid">  
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <!-- Loading image -->    
         <div v-if="showLoader" class="uk-width-1-1 center">
             <img src="https://image.ibb.co/dc02hd/30.gif" />
         </div>
-
+        <!-- Buttons (Approve/Deposit) -->
         <div v-else class="uk-width-1-1">
-
-<!-- Buttons (Approve/Deposit) -->
             <div class="center">
-                <!-- <button class="uk-button uk-button-green"  @click="approve()">Approve</button> -->
-                <button class="uk-button uk-button-green" style="padding: 0 81px;"  @click="redeem()">Redeem</button>
+                <button class="uk-button uk-button-green"  @click="redeem()">Redeem</button>
             </div>
-        </div>
+        </div>        
+    </div>    
+</div>
+
+
+
+
+
+
+    <div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 20px; margin-bottom: 20px;" >
+        <table style="color: white;" >
+            <tr>
+                <td > >   {{ selectedInstrument.symbol  }} Price &nbsp; : &nbsp;{{  ( ( Number(selectedInstrumentPriceETH) / Math.pow(10,selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) }} USD   </td> 
+            </tr>
+            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> CONTRACT ADDRESSES </h3>
+            <tr>
+                <td> >   {{ selectedInstrument.symbol  }} &nbsp; : &nbsp;{{ selectedInstrumentWalletState.instrumentAddress  }}   </td> 
+            </tr>
+            <tr>
+                <td> >   {{ selectedInstrument.symbol  }} ITOKEN &nbsp; : &nbsp;{{ selectedInstrumentWalletState.iTokenAddress  }} </td> 
+            </tr>
+            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> BALANCES </h3>
+            <tr>
+                <td> >   {{ selectedInstrument.symbol  }} Balance &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.userBalanceWorth).toFixed(4)  }} USD )  </td> 
+            </tr>
+            <tr>
+                <td> >  {{ selectedInstrument.symbol  }} Deposited &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(4)  }} USD ) </td> 
+            </tr>
+            <tr>
+                <td> >   {{ selectedInstrument.symbol  }} Deposit Allowance &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userAvailableAllowance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.userAvailableAllowanceWorth).toFixed(4)  }} USD ) </td> 
+            </tr>
+            <tr>
+                <td> >   {{ selectedInstrument.symbol  }} Principal Borrowed &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.principalBorrowBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.principalBorrowBalanceWorth).toFixed(4)  }} USD ) </td> 
+            </tr>
+            <tr>
+                <td> >   {{ selectedInstrument.symbol  }} Compounded Borrowed &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.currentBorrowBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.currentBorrowBalanceWorth).toFixed(4)  }} USD ) </td> 
+            </tr>
+            <tr>
+                <td> >   {{ selectedInstrument.symbol  }} Origination Fee &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.originationFee).toFixed(4)  }} </td> 
+            </tr>
+            <tr>
+                <td> >   {{ selectedInstrument.symbol  }} Borrow Type &nbsp; : &nbsp;{{ selectedInstrumentWalletState.borrowRateMode }}</td> 
+            </tr>
+            <tr>
+                <td> >   {{ selectedInstrument.symbol  }} Enabled As Collateral &nbsp; : &nbsp;{{ selectedInstrumentWalletState.usageAsCollateralEnabled }}</td> 
+            </tr>
+            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> PARAMETERS </h3>
+            <tr>
+                <td> >  &nbsp; Supply APY &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.liquidityRate).toFixed(4)  }} %</td> 
+            </tr>
+            <tr>
+                <td> >  &nbsp; Borrow APY &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.borrowRate).toFixed(4)  }} %</td> 
+            </tr>
+            <tr>
+                <td> >  &nbsp; Average Volatility (30 days) &nbsp; : &nbsp; 0 % </td> 
+            </tr>
+            <tr>
+                <td> >  &nbsp; $SIGH Yield vs Loss Ratio (Suppliers) &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.suppliedSighSpeedForUser).toFixed(4) }} % </td> 
+            </tr>
+            <tr>
+                <td> >  &nbsp; $SIGH Yield vs Loss Ratio (Borrowers) &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.borrowedSighSpeedForUser).toFixed(4) }}  % </td> 
+            </tr>
+            <tr>
+                <td> >  &nbsp; Your $SIGH Yield  &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.SighSpeedForUser).toFixed(4) }} % </td> 
+            </tr>
+        </table>
     </div>
+
+    <!-- <span style="color: aliceblue; font-size: 11px; line-height: 15px;" > Current APY :  </span> -->
+    <div class="center">
+        <button class="uk-button uk-button-black"  @click="refreshCurrentInstrumentWalletState(true)">Refresh</button>
+    </div>
+
 </div>

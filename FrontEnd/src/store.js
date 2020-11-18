@@ -1629,8 +1629,7 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     LendingPool_repay: async ({commit,state},{_instrument,_amount,_onBehalfOf}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-        console.log(lendingPoolContract);
-        const response = await lendingPoolContract.methods.repay(_instrument,_amount,_onBehalfOf).send({from: state.connectedWallet});
+        // console.log(lendingPoolContract);
         try {
           // console.log('Making transaction (in store)');
           const response = await lendingPoolContract.methods.repay(_instrument,_amount,_onBehalfOf).send({from: state.connectedWallet});

@@ -65,7 +65,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['LendingPool_repay','refresh_User_Instrument_State','LendingPoolCore_getUserBorrowBalances','getInstrumentPrice']),
+    ...mapActions(['LendingPool_repay','ERC20_increaseAllowance','refresh_User_Instrument_State','LendingPoolCore_getUserBorrowBalances','getInstrumentPrice']),
     
     async repay() {   //REPAY
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
@@ -78,13 +78,22 @@ export default {
       else if (this.formData.onBehalfOf && !Web3.utils.isAddress(this.formData.onBehalfOf) ) {
         this.$showErrorMsg({message: " The address provided in 'onBehalfOf' section is invalid. Please provide the correct address or make this column empty if you want to repay the borrow amount for the connected wallet." });         
       }
+      // USER BALANCE IS LESS THAN WHAT HE WANTS TO REPAY
+      else if ( Number(this.formData.repayQuantity) >  Number(this.selectedInstrumentWalletState.userBalance)  ) {
+        this.$showErrorMsg({message: " You do not have the mentioned amount of " + this.selectedInstrument.symbol +  " tokens. Please make sure that you have the needed amount in your connected Wallet! " });        
+      }
+      // WHEN THE ALLOWANCE IS LESS THAN WHAT IS NEEDED
+      else if ( Number(this.formData.repayQuantity) >  Number(this.selectedInstrumentWalletState.userAvailableAllowance)  ) {
+        let dif = Number(this.formData.repayQuantity) - Number(this.selectedInstrumentWalletState.userAvailableAllowance);
+        this.$showErrorMsg({message: " You first need to 'APPROVE' an amount greater than " + dif + " " + this.selectedInstrument.symbol + " so that the repayment can be processed through the ERC20 Interface's transferFrom() Function."}); 
+      }
       else {      
         let value =  (Number(this.formData.repayQuantity) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ;
         console.log('Selected Instrument - ' + this.selectedInstrument.symbol);
         console.log('Repay Quantity - ' + this.formData.repayQuantity);
         console.log('Repay Value - ' + value);
         // ON BEHALF OF 
-        if (this.formData.onBehalfOf) { 
+        if (Web3.utils.isAddress(this.formData.onBehalfOf)) { 
           let borrowBalance = await this.getOnBehalfOfBorrowBalances();
           if (Number(borrowBalance) < Number(this.formData.repayQuantity) ) {
             this.$showErrorMsg({message: " The amount entered to be repaid for the account " + this.formData.onBehalfOf +  " exceeds its current borrowed balance, which is + " + borrowBalance + " " + this.selectedInstrument.symbol + ". Please enter an amount less than its current Borrowed Balance!" }); 
@@ -104,11 +113,13 @@ export default {
               this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
               // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Repay',Service: 'LENDING'});
             }
+            this.showLoader = false;     
+            this.formData.repayQuantity = null;
           }
         }
         // REPAYING YOUR OWN LOAN
         else {
-          if (Number(this.selectedInstrumentWalletState.compoundedBorrowBalance) < Number(this.formData.repayQuantity) ) {
+          if (Number(this.selectedInstrumentWalletState.currentBorrowBalance) < Number(this.formData.repayQuantity) ) {
             this.$showErrorMsg({message: " The amount entered to be repaid for the account exceeds your current borrowed balance, which is + " + this.selectedInstrumentWalletState.compoundedBorrowBalance + " " + this.selectedInstrument.symbol + ". Please enter an amount less than your current Borrowed Balance!" }); 
           }
           else {
@@ -126,12 +137,43 @@ export default {
               // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Repay',Service: 'LENDING'});
             }
           }
+          this.formData.repayQuantity = null;
+          this.showLoader = false;
         }
-        this.formData.repayQuantity = null;
-        this.showLoader = false;
       }
     },
       
+
+    async approve() {   //APPROVE (WORKS PROPERLY) - calls increaseAllowance() Function  // Need to handle tokens which do not have it implemented
+      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
+        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
+      }
+      else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
+        this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
+      }       
+      else {       // WHEN ABOVE CONDITIONS ARE MET SO THE TRANSACTION GOES THROUGH
+        this.showLoader = true;
+        let value =  (Number(this.formData.repayQuantity) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ;
+        console.log('Selected Instrument - ' + this.selectedInstrument.symbol)
+        console.log('Quantity to be Approved - ' + this.formData.repayQuantity);
+        console.log('Value - ' + value);
+        let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  this.formData.repayQuantity } );
+        if (response.status) { 
+          await this.refreshCurrentInstrumentWalletState(true);        
+          this.$showSuccessMsg({message: "APPROVAL SUCCESS : Maximum of " + this.selectedInstrumentWalletState.userAvailableAllowance + "  " +  this.selectedInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });
+          this.formData.repayQuantity = null;
+          // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});      
+        }
+        else {
+          this.$showErrorMsg({message: "APPROVAL FAILED : " + response.message  }); 
+          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+          // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});              
+        }
+        this.showLoader = false;
+      }
+    }, 
+
 
     async refreshCurrentInstrumentWalletState(toDisplay) {
       if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check

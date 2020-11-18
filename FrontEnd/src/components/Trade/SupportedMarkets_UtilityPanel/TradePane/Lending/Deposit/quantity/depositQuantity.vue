@@ -57,14 +57,14 @@ export default {
         if (this.selectedInstrument && this.selectedInstrument.priceDecimals) {
           console.log("COMPUTED VALUED");
           return (Number(this.formData.depositQuantity) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ; 
-        }
+          }
       return 0;
     },
   },
 
   methods: {
 
-    ...mapActions(['ERC20_mint','LendingPool_deposit','ERC20_increaseAllowance',,'getInstrumentPrice','refresh_User_Instrument_State']),
+    ...mapActions(['ERC20_mint','LendingPool_deposit','ERC20_increaseAllowance','getInstrumentPrice','refresh_User_Instrument_State']),
     
     async deposit() {   //DEPOSIT (WORKS PROPERLY)
       
@@ -77,14 +77,12 @@ export default {
       }       
       // USER BALANCE IS LESS THAN WHAT HE WANTS TO DEPOSIT
       else if ( Number(this.formData.depositQuantity) >  Number(this.selectedInstrumentWalletState.userBalance)  ) {
-        let dif = Number(this.formData.depositQuantity) - Number(this.selectedInstrumentWalletState.userAvailableAllowance);
-        this.$showErrorMsg({message: " You do not have the mentioned amount of " + this.selectedInstrument.symbol +  " tokens. Please make sure that you have the needed amount in your the connected Wallet! " });        
+        this.$showErrorMsg({message: " You do not have the mentioned amount of " + this.selectedInstrument.symbol +  " tokens. Please make sure that you have the needed amount in your connected Wallet! " });        
       }
       // WHEN THE ALLOWANCE IS LESS THAN WHAT IS NEEDED
       else if ( Number(this.formData.depositQuantity) >  Number(this.selectedInstrumentWalletState.userAvailableAllowance)  ) {
         let dif = Number(this.formData.depositQuantity) - Number(this.selectedInstrumentWalletState.userAvailableAllowance);
         this.$showErrorMsg({message: " You first need to 'APPROVE' an amount greater than " + dif + " " + this.selectedInstrument.symbol + " so that the deposit can be processed through the ERC20 Interface's transferFrom() Function."}); // this.formData.depositQuantity + "  " + this.selectedInstrument.symbol +  " worth " + value + " USD approval failed. Try increasing Gas or contact our team at contact@sigh.finance in case of any queries." });        
-        this.$showInfoMsg({message: "Available Allowance : " + this.selectedInstrumentWalletState.userAvailableAllowance + " " + this.selectedInstrument.symbol });        
       }
       else {       // WHEN ABOVE CONDITIONS ARE MET SO THE TRANSACTION GOES THROUGH
         this.showLoader = true;
@@ -96,9 +94,9 @@ export default {
 
         let response =  await this.LendingPool_deposit( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.depositQuantity, _referralCode: this.formData.enteredReferralCode } );
         if (response.status) {      
-          this.$showSuccessMsg({message: "DEPOSIT SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully deposited to SIGH Finance. Enjoy your $SIGH farm yields." });
+          this.$showSuccessMsg({message: "DEPOSIT SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD have been successfully deposited to SIGH Finance. Enjoy your $SIGH farm yields." });
           this.$showInfoMsg({message: " Interest & $SIGH bearing ITokens (ERC20) are issued as debt against the deposits made in the SIGH Finance Protocol on a 1:1 basis. You can read more about it at medium.com/SighFinance" });
-          await this.refreshCurrentInstrumentWalletState(true);
+          await this.refreshCurrentInstrumentWalletState(false);
           // this.$showInfoMsg({message: "Available Allowance : " + this.selectedInstrumentWalletState.userAvailableAllowance + " " + this.selectedInstrument.symbol });        
           this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
         }
@@ -134,7 +132,7 @@ export default {
         let response = await this.ERC20_mint({tokenAddress: this.selectedInstrument.instrumentAddress , quantity: this.formData.depositQuantity });
         if (response.status) {      
           this.$showSuccessMsg({message: "DEPOSIT (MINT) SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully minted for testing. Gas used = " + response.gasUsed });
-          await this.refreshCurrentInstrumentWalletState(true);         // UPDATE THE STATE OF THE SELECTED INSTRUMENT
+          await this.refreshCurrentInstrumentWalletState(false);         // UPDATE THE STATE OF THE SELECTED INSTRUMENT
           this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Minting',Service: 'LENDING'});
         }
         else {
@@ -149,7 +147,7 @@ export default {
 
 
 
-    async approve() {   //APPROVE (WORKS PROPERLY) - calls increaseAllowance() Function  // Need to handle tokens which do not have it implemented
+    async approve() {   //APPROVE (WORKS PROPERLY) 
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
         this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
@@ -165,7 +163,7 @@ export default {
         console.log('Value - ' + value);
         let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  this.formData.depositQuantity } );
         if (response.status) { 
-          await this.refreshCurrentInstrumentWalletState(true);        
+          await this.refreshCurrentInstrumentWalletState(false);        
           this.$showSuccessMsg({message: "APPROVAL SUCCESS : Maximum of " + this.selectedInstrumentWalletState.userAvailableAllowance + "  " +  this.selectedInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });
           this.formData.depositQuantity = null;
           // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});      
@@ -192,7 +190,7 @@ export default {
           console.log(this.$store.getters.getWalletInstrumentStates);
           this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
           if (toDisplay) {
-            this.$showInfoMsg({message: "Updated balances" });        
+            this.$showInfoMsg({message: "Connected Wallet's " + this.selectedInstrument.symbol +  " Balances and Farming Yields have been refreshed! " });        
           }
         }
         catch(error) {
