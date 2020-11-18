@@ -5,6 +5,7 @@ import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import EventBus, {EventNames,} from '@/eventBuses/default';
 import TabBar from '@/components/TabBar/TabBar.vue';
 import lendingInfo from './lendingInfo/lendingInfo.vue';
+import sighBalance from './sighBalance/sighBalance.vue';
 import Web3 from 'web3';
 import {mapState,mapActions,} from 'vuex';
 
@@ -15,15 +16,16 @@ export default {
   components: {
     TabBar,
     lendingInfo,
+    sighBalance,
   },
 
 
   data() {
     return {
-      activeTab: 'Aggregated User Balance (Lending)',
-      tabs: [ 'Aggregated User Balance (Lending)',],
+      activeTab: 'Total Balance (Lending)',
+      tabs: [ 'Total Balance (Lending)','SIGH Balances'],
       height: 0,
-      preActive:'Aggregated User Balance (Lending)',
+      preActive:'Total Balance (Lending)',
 
       walletInstrumentStatesArray: [],  // Wallet - Instrument States
       displayInUSD: false,
@@ -76,15 +78,16 @@ export default {
     async refreshConnectedWalletInstrumentStates(toDisplay) {      
       let instruments = this.$store.getters.getSupportedInstruments;
       console.log(instruments);
-      this.walletInstrumentStatesArray = [];              // RESET LOCALLY STORED STATES
+      let  _walletInstrumentStatesArray = [];            
       this.$store.commit("setWalletSIGH_FinanceState",{});  // RESET SESSION DATA STORED GLOBAL STATE 
       try {
         for (let i=0; i < instruments.length; i++) { 
             let currentUserInstrumentState = await this.refresh_User_Instrument_State({ cur_instrument: instruments[i] }); 
             console.log(currentUserInstrumentState);
             this.$store.commit("addToWalletInstrumentStates",{ instrumentAddress: instruments[i].instrumentAddress, walletInstrumentState: currentUserInstrumentState }); 
-            this.walletInstrumentStatesArray.push(currentUserInstrumentState);
+            _walletInstrumentStatesArray.push(currentUserInstrumentState);
         }
+        this.walletInstrumentStatesArray = _walletInstrumentStatesArray;
         console.log(this.walletInstrumentStatesArray);
         return true;
       }

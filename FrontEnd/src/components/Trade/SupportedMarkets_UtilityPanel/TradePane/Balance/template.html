@@ -1,4 +1,4 @@
-<div id="tab-a3 noHorizontal" class="tikertab-content"> 
+<div id="lending-trade-tab"  class="tikertab-content"> 
     <div class="sv-table-wrapper ticker-table cs-table-1">
 
         <table class="sv-table display nowrap" style="width:100%" data-scroll-y="21px">
@@ -44,21 +44,15 @@
 
         <br>
 
-        <div class="cs-tab-3  uk-position-relative " style=" padding-left: 0px; padding-right: 50px; padding-bottom: 50px;  padding-top: 12px;">
 
-            <div id="subtab-limit" :title-link-class="'tab-title-class'">
-                <tab-bar :mobileDropdown=false :tabs=tabs @tab-change="activeTabChange" />
-            </div>
-
-            <keep-alive>
-                <lendingInfo v-if="activeTab === 'Aggregated User Balance (Lending)'" />
-                <!-- <repayAmount v-if="activeTab === 'Amount'" /> -->
-            </keep-alive>
-            
+        <div class="cs-tab-1 uk-position-relative" style=" padding-left: 0px; padding-right: 50px; padding-bottom: 50px;  padding-top: 30px;">
+            <tab-bar :mobileDropdown=false marketDropdown="false" :tabs=tabs @tab-change="activeTabChange" />
+        
+                <keep-alive>
+                    <lendingInfo v-if="activeTab === 'Total Balance (Lending)'" />
+                    <sighBalance v-if="activeTab === 'SIGH Balances'" />
+                </keep-alive>
+    
         </div>
-
-
-
-
     </div>
 </div>

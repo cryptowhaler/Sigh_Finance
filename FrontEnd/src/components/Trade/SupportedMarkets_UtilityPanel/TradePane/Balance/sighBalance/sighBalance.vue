@@ -7,34 +7,29 @@ import Web3 from 'web3';
 
 export default {
 
-  name: 'lendingInfo',
+  name: 'sighBalance',
 
   data() {
     return {
-      walletLendingProtocolState: {},   // Wallet : Lending Protocol Global State
-      displayInUSD: false,
+      walletSIGHBalances: {},   // Wallet : SIGH INSTRUMENT State
     };
   },
   
 
   async created() {
-    console.log("IN BALANCE / LENDING-INFO (TRADE-PANE) FUNCTION ");
+    console.log("IN BALANCE /SIGH-BALANCE (TRADE-PANE) FUNCTION ");
     if (this.$store.state.web3 && this.$store.state.isNetworkSupported && this.$store.state.connectedWallet) {
-      await this.refreshConnectedWalletGlobalStates(false);
+        this.walletSIGHBalances = this.$store.getters.getWalletSIGHState;
     }
   },
 
 
   methods: {
 
-    ...mapActions(['refresh_User_SIGH_Finance_State']),
+    ...mapActions(['getWalletSIGHFinanceState']),
     
-    toggleTable() {
-      this.displayInUSD = !this.displayInUSD;
-    },
-
     async refresh() {
-      console.log("refreshing User GLOBAL Balances");
+      console.log("refreshing User SIGH Balances");
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
         this.$showInfoMsg({message: " Networks currently supported by SIGH Finance - 1) Ethereum :  Kovan Testnet(42) " }); 
@@ -43,25 +38,20 @@ export default {
         this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else {                                  // EXECUTE THE TRANSACTION
-        let response = await this.refreshConnectedWalletGlobalStates(true);
+        let response = await this.refreshWalletSessionData(true);
         if (response) {
-          this.$showInfoMsg({message: " Global Lending Protocol Balances refreshed successfully for the account " + this.$store.state.connectedWallet  });
+          this.$showInfoMsg({message: " SIGH Balances refreshed successfully for the account " + this.$store.state.connectedWallet  });
         }
         else {
-          this.$showErrorMsg({message: " Could not refresh Global Lending Protocol Balances for the account " + this.$store.state.connectedWallet + ". Something went wrong. Contact our team at contact@sigh.finance in case of any queries!"  });
+          this.$showErrorMsg({message: " Could not refresh SIGH Balances for the account " + this.$store.state.connectedWallet + ". Something went wrong. Contact our team at contact@sigh.finance in case of any queries!"  });
         }
      }
     },
 
-    async refreshConnectedWalletGlobalStates(toDisplay) {      
-      // this.walletLendingProtocolState = {};               // RESET LOCALLY STORED GLOBAL STATE
-      // this.$store.commit("setWalletSIGH_FinanceState",{});  // RESET SESSION DATA STORED GLOBAL STATE 
+    async refreshWalletSessionData(toDisplay) {      
       try {
-        let userGlobalState = await this.refresh_User_SIGH_Finance_State();
-        this.$store.commit("setWalletSIGH_FinanceState",userGlobalState);
-        this.walletLendingProtocolState = userGlobalState;   
-        console.log("this.walletLendingProtocolState");            
-        console.log(this.walletLendingProtocolState);            
+        let response = await this.getWalletSIGHFinanceState();
+        this.walletSIGHBalances = this.$store.getters.getWalletSIGHState;
         return true;
       }
       catch (error) {

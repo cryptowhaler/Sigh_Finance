@@ -973,10 +973,16 @@ const store = new Vuex.Store({
 
           // Calculating Protocol Level Values by adding across instruments
           walletSighState.totalSighAccured = Number(walletSighState.totalSighAccured) + Number(currentUserInstrumentState.sighAccured) ;
+          walletSighState.totalSuppliedSighSpeedForUser = Number(walletSighState.totalSuppliedSighSpeedForUser) + Number(currentUserInstrumentState.suppliedSighSpeedForUser);
+          walletSighState.totalBorrowedSighSpeedForUser = Number(walletSighState.totalBorrowedSighSpeedForUser) + Number(currentUserInstrumentState.borrowedSighSpeedForUser);
+          walletSighState.totalSighSpeedForUser = Number(walletSighState.totalSighSpeedForUser) + Number(currentUserInstrumentState.SighSpeedForUser);
         }
 
         walletSighState.totalSighAccuredWorth = await store.dispatch("convertToUSD",{ETHValue: Number(walletSighState.totalSighAccured) * Number(state.SIGHState.priceETH) / Math.pow(10,Number(state.SIGHState.priceDecimals)) }); 
-        // walletSighState.sighAccuredPerBlock = 
+        walletSighState.totalSuppliedSighSpeedForUserWorth = await store.dispatch("convertToUSD",{ETHValue: Number(walletSighState.totalSuppliedSighSpeedForUser) * Number(state.SIGHState.priceETH) / Math.pow(10,Number(state.SIGHState.priceDecimals)) }); 
+        walletSighState.totalBorrowedSighSpeedForUserWorth = await store.dispatch("convertToUSD",{ETHValue: Number(walletSighState.totalBorrowedSighSpeedForUser) * Number(state.SIGHState.priceETH) / Math.pow(10,Number(state.SIGHState.priceDecimals)) }); 
+        walletSighState.totalSighSpeedForUserWorth = await store.dispatch("convertToUSD",{ETHValue: Number(walletSighState.totalSighSpeedForUser) * Number(state.SIGHState.priceETH) / Math.pow(10,Number(state.SIGHState.priceDecimals)) }); 
+      // walletSighState.sighAccuredPerBlock = 
         // walletSighState.sighAccuredPerBlockWorth = 
         commit("setWalletSIGHState",walletSighState);
 
