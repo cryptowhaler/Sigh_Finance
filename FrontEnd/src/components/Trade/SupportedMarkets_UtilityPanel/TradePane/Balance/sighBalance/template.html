@@ -7,14 +7,14 @@
         <fieldset>
 
             <table >
-                <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 4px; "> SIGH Balances </h3>
+                <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px;"> SIGH Balances </h3>
                 <tr>
                     <td> >  &nbsp; SIGH Balance &nbsp; : &nbsp; {{ Number(walletSIGHBalances.sighBalance).toFixed(4) }}  &nbsp; ( {{Number(walletSIGHBalances.sighBalanceWorth).toFixed(4)}} USD )  </td> 
                 </tr>
                 <tr>
                     <td> >  &nbsp; SIGH Staked &nbsp; : &nbsp; {{ Number(walletSIGHBalances.sighStaked).toFixed(4) }}  &nbsp; ( {{Number(walletSIGHBalances.sighStakedWorth).toFixed(4)}} USD )  </td> 
                 </tr>
-                <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 4px; "> SIGH Speeds </h3>
+                <h3 style="font-size: 15px; margin-top: 15px; color: aquamarine; margin-bottom: 4px;"> SIGH Speeds </h3>
                 <tr>
                     <td> >  &nbsp; Total SIGH Speed (Deposits) &nbsp; : &nbsp; {{ Number(walletSIGHBalances.totalSuppliedSighSpeedForUser).toFixed(4) }}  &nbsp; ( {{Number(walletSIGHBalances.totalSuppliedSighSpeedForUserWorth).toFixed(4)}} USD )  </td> 
                 </tr>
@@ -24,7 +24,7 @@
                 <tr>
                     <td> >  &nbsp; Total SIGH Speed  &nbsp; : &nbsp; {{ Number(walletSIGHBalances.totalSighSpeedForUser).toFixed(4) }}  &nbsp; ( {{Number(walletSIGHBalances.totalSighSpeedForUserWorth).toFixed(4)}} USD )  </td> 
                 </tr>
-                <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 4px; "> SIGH Accured </h3>
+                <h3 style="font-size: 15px; margin-top: 15px; color: aquamarine; margin-bottom: 4px;"> SIGH Accured </h3>
                 <tr>
                     <td> >  &nbsp; Total SIGH Accured &nbsp; : &nbsp; {{ Number(walletSIGHBalances.totalSighAccured).toFixed(4) }}  &nbsp; ( {{Number(walletSIGHBalances.totalSighAccuredWorth).toFixed(4)}} USD )  </td> 
                 </tr>
@@ -35,9 +35,9 @@
 
     
     <!-- Buttons -->
-    <div class="uk-grid uk-grid-small f1-form-grid">
-        <div class="center">
-            <button class="uk-button " style="background-color: indianred;"  @click="refresh()">Refresh</button>
-        </div>
-    </div>
+    <!-- <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="center"> -->
+            <button class="uk-button " style="background-color: indianred; margin: 0 auto; display: block;"  @click="refresh()">Refresh</button>
+        <!-- </div>
+    </div> -->
 </div>

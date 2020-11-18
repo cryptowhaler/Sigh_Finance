@@ -440,6 +440,10 @@ const store = new Vuex.Store({
       console.log('In addToSupportedInstrumentsArray (MUTATION)');
       console.log(supportedInstrument_);
     },
+    resetSupportedInstrumentsArray(state) {
+      state.supportedInstruments = [];
+      console.log('In resetSupportedInstrumentsArray -');
+    },
     // SUPPRTED INSTRUMENTS - GLOBAL STATE (MAP)
     addToSupportedInstrumentGlobalStates(state,{instrumentAddress, instrumentGlobalState}) {
       state.supportedInstrumentGlobalStates.set(instrumentAddress,instrumentGlobalState);
