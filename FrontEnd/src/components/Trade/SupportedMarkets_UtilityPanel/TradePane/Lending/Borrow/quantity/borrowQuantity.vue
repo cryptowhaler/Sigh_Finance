@@ -56,7 +56,7 @@ export default {
   computed: {
     calculatedValue() {
         if (this.selectedInstrument && this.selectedInstrument.priceDecimals) {
-          console.log("COMPUTED VALUED");
+          console.log("COMPUTED : BORROW QUANTITY");
           return (Number(this.formData.borrowQuantity) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ; 
           }
       return 0;
@@ -100,13 +100,13 @@ export default {
           if (response.status) {      
             this.$showSuccessMsg({message: "BORROW SUCCESS : " + this.formData.borrowQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully borrowed from SIGH Finance. Gas used = " + response.gasUsed });
             this.$showInfoMsg({message: "ThankYou for choosing $SIGH Farms! We look forward to serving your capital requirements again!"});
-            await this.refreshCurrentInstrumentWalletState(true);
+            await this.refreshCurrentInstrumentWalletState(false);
             this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Borrow',Service: 'LENDING'});
           }
           else {
             this.$showErrorMsg({message: "BORROW FAILED : " + response.message  }); 
             this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-            // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
+            // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Borrow',Service: 'LENDING'});
           }
           this.formData.borrowQuantity = null;
           this.showLoader = false;
@@ -119,17 +119,17 @@ export default {
     async refreshCurrentInstrumentWalletState(toDisplay) {
       if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         try {
-          console.log("refreshCurrentInstrumentWalletState() in DEPOSIT-QUANTITY");
+          console.log("refreshCurrentInstrumentWalletState() in BORROW-QUANTITY");
           let response = await this.refresh_User_Instrument_State({cur_instrument: this.selectedInstrument });
           console.log(response);
-          console.log("getting WalletInstrumentStates MAPPING before UPDATING & COMMITING  in DEPOSIT-QUANTITY");
+          console.log("getting WalletInstrumentStates MAPPING before UPDATING & COMMITING  in BORROW-QUANTITY");
           console.log(this.$store.getters.getWalletInstrumentStates);
           this.$store.commit("addToWalletInstrumentStates",{instrumentAddress : this.selectedInstrument.instrumentAddress  , walletInstrumentState: response});
-          console.log("getting WalletInstrumentStates MAPPING after UPDATING & COMMITING  in DEPOSIT-QUANTITY");
+          console.log("getting WalletInstrumentStates MAPPING after UPDATING & COMMITING  in BORROW-QUANTITY");
           console.log(this.$store.getters.getWalletInstrumentStates);
           this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
           if (toDisplay) {
-            this.$showInfoMsg({message: "Updated balances" });        
+            this.$showInfoMsg({message: "Connected Wallet's " + this.selectedInstrument.symbol +  " Balances and Farming Yields have been refreshed! " });            
           }
         }
         catch(error) {

@@ -54,9 +54,8 @@ export default {
 
   computed: {
     calculatedValue() {
-        console.log('calculatedValue');
         if (this.selectedInstrument && this.selectedInstrument.priceDecimals) {
-          console.log("COMPUTED VALUED");
+          console.log("COMPUTED : REPAY");
           return (Number(this.formData.repayQuantity) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ; 
         }
       return 0;
@@ -105,7 +104,7 @@ export default {
             if (response.status) {      
               this.$showSuccessMsg({message: "REPAY SUCCESS : " + this.formData.repayQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully repayed to SIGH Finance for the Account + " + this.formData.onBehalfOf +  ". Gas used = " + response.gasUsed });
               this.$showInfoMsg({message: " $SIGH FARMS look forward to serving you again!"});
-              await this.refreshCurrentInstrumentWalletState(true);
+              await this.refreshCurrentInstrumentWalletState(false);
               this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Repay',Service: 'LENDING'});
             }
             else {
@@ -128,7 +127,7 @@ export default {
             if (response.status) {      
               this.$showSuccessMsg({message: "REPAY SUCCESS : " + this.formData.repayQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully repayed to SIGH Finance! Gas used = " + response.gasUsed });
               this.$showInfoMsg({message: " $SIGH FARMS look forward to serving you again!"});
-              await this.refreshCurrentInstrumentWalletState(true);
+              await this.refreshCurrentInstrumentWalletState(false);
               this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Repay',Service: 'LENDING'});
             }
             else {
@@ -136,9 +135,9 @@ export default {
               this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
               // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Repay',Service: 'LENDING'});
             }
+            this.formData.repayQuantity = null;
+            this.showLoader = false;
           }
-          this.formData.repayQuantity = null;
-          this.showLoader = false;
         }
       }
     },
@@ -160,7 +159,7 @@ export default {
         console.log('Value - ' + value);
         let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  this.formData.repayQuantity } );
         if (response.status) { 
-          await this.refreshCurrentInstrumentWalletState(true);        
+          await this.refreshCurrentInstrumentWalletState(false);        
           this.$showSuccessMsg({message: "APPROVAL SUCCESS : Maximum of " + this.selectedInstrumentWalletState.userAvailableAllowance + "  " +  this.selectedInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });
           this.formData.repayQuantity = null;
           // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});      
@@ -188,7 +187,7 @@ export default {
           console.log(this.$store.getters.getWalletInstrumentStates);
           this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
           if (toDisplay) {
-            this.$showInfoMsg({message: "Updated balances" });        
+            this.$showInfoMsg({message: "Connected Wallet's " + this.selectedInstrument.symbol +  " Balances and Farming Yields have been refreshed! " });        
           }
         }
         catch(error) {

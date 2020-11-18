@@ -89,14 +89,14 @@ export default {
         let response =  await this.IToken_redeem( { iTokenAddress: this.selectedInstrument.iTokenAddress , _amount:  parseInt(quantity) } );
         if (response.status) {      
           this.$showSuccessMsg({message: "REDEEM SUCCESS : " + quantity + "  " +  this.selectedInstrument.symbol +  " worth " +  this.formData.redeemValue + " USD have been successfully redeemed from SIGH Finance. Gas used = " + response.gasUsed });
-          this.$showInfoMsg({message: " $SIGH Farms looks forward to serving you again!"});
+          this.$showInfoMsg({message: " $SIGH FARMS Look forward to serving you again!"});
           await this.refreshCurrentInstrumentWalletState(false);
           this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Redeem',Service: 'LENDING'});
         }
         else {
           this.$showErrorMsg({message: "REDEEM FAILED : " + response.message  }); 
           this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-          // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
+          // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Redeem',Service: 'LENDING'});
         }
         this.formData.redeemQuantity = null;
         this.showLoader = false;
@@ -108,17 +108,17 @@ export default {
     async refreshCurrentInstrumentWalletState(toDisplay) {
       if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         try {
-          console.log("refreshCurrentInstrumentWalletState() in DEPOSIT-QUANTITY");
+          console.log("refreshCurrentInstrumentWalletState() in REDEEM-QUANTITY");
           let response = await this.refresh_User_Instrument_State({cur_instrument: this.selectedInstrument });
           console.log(response);
-          console.log("getting WalletInstrumentStates MAPPING before UPDATING & COMMITING  in DEPOSIT-QUANTITY");
+          console.log("getting WalletInstrumentStates MAPPING before UPDATING & COMMITING  in REDEEM-QUANTITY");
           console.log(this.$store.getters.getWalletInstrumentStates);
           this.$store.commit("addToWalletInstrumentStates",{instrumentAddress : this.selectedInstrument.instrumentAddress  , walletInstrumentState: response});
-          console.log("getting WalletInstrumentStates MAPPING after UPDATING & COMMITING  in DEPOSIT-QUANTITY");
+          console.log("getting WalletInstrumentStates MAPPING after UPDATING & COMMITING  in REDEEM-QUANTITY");
           console.log(this.$store.getters.getWalletInstrumentStates);
           this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
           if (toDisplay) {
-            this.$showInfoMsg({message: "Updated balances" });        
+            this.$showInfoMsg({message: "Connected Wallet's " + this.selectedInstrument.symbol +  " Balances and Farming Yields have been refreshed! " });             
           }
         }
         catch(error) {
