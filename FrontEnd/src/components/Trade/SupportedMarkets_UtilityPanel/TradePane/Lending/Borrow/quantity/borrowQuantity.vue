@@ -19,6 +19,7 @@ export default {
         interestRateMode: 'Stable',
       },
       interestRateModes: ['Stable','Variable'],
+      selectedInstrumentPriceETH: null,
       showLoader: false,
     };
   },
@@ -64,7 +65,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['LendingPool_borrow','ERC20_balanceOf','LendingPoolCore_getUserBorrowBalances']),
+    ...mapActions(['LendingPool_borrow','getInstrumentPrice','refresh_User_Instrument_State']),
     
     async borrow() {   //BORROW --> TO BE CHECKED
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
@@ -74,63 +75,69 @@ export default {
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
         this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
       } 
-      else {        
-        let price = (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals)).toFixed(4);
-        let value = price * this.formData.borrowQuantity;
-        console.log('Selected Instrument - ' + this.selectedInstrument.symbol);
-        console.log('Borrow Quantity - ' + this.formData.borrowQuantity);
-        console.log('Borrow Value - ' + value);
-        console.log('Instrument Price - ' + price);     
-        console.log('Interest Rate Mode - ' + this.formData.interestRateMode);     
-
-        // WHEN THE AMOUNT ENTERED FOR BORROWING IS GREATER THAN THE AVAILABLE BALANCE
-        if ( Number(this.formData.borrowQuantity) >  Number(this.remainingBalance)  ) {
-          this.formData.borrowQuantity = this.remainingBalance;
-          this.$showInfoMsg({message: " The provided amount to be borrowed exceeds your depsited balance . So your entire " + this.selectedInstrument.symbol +  " balance will be borrowed."});
+      else  {       
+        let instrumentGlobalState = this.$store.state.supportedInstrumentGlobalStates.get(this.selectedInstrument.instrumentAddress);
+        let instrumentGlobalStateConfig = this.$store.state.supportedInstrumentGlobalStates.get(this.selectedInstrument.instrumentAddress);
+        if ( !instrumentGlobalStateConfig.borrowingEnabled  ) {
+          this.$showErrorMsg({message: " Borrowing is currently disabled for the selected Instrument. Contact our Team at contact@sigh.finance in case you have any queries! "}); 
         }
-        this.showLoader = true;        
-        let interestRateMode = this.formData.interestRateMode == 'Stable' ? 0 : 1;      
-        let response =  await this.LendingPool_borrow( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.borrowQuantity, _interestRateMode: interestRateMode, _referralCode: 0 } );
-        if (response.status) {      
-          this.$showSuccessMsg({message: "BORROW SUCCESS : " + this.formData.borrowQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully borrowed from SIGH Finance. Gas used = " + response.gasUsed });
-          this.$showInfoMsg({message: " $SIGH Farms looks forward to serving you again!"});
-          await this.getRemainingBalance(true);
-          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Borrow',Service: 'LENDING'});
+        else if ( this.formData.interestRateMode == 'Stable' && !instrumentGlobalStateConfig.stableBorrowRateEnabled) {
+          this.$showErrorMsg({message: " Stable borrow rate is currently disabled for the selected Instrument. Try borrowing at variable rate. Contact our Team at contact@sigh.finance in case you have any queries! "}); 
+        }
+        else if ( Number(this.formData.borrowQuantity) > Number(instrumentGlobalState.availableLiquidity ) ) {
+          this.$showErrorMsg({message: " SIGH Finance currently doesn't have the needed Liquidity to process this Loan. Available Liquidity =  " + instrumentGlobalState.availableLiquidity + " " + this.selectedInstrument.symbol + ". Try again after some time! "}); 
         }
         else {
-          this.$showErrorMsg({message: "BORROW FAILED : " + response.message  }); 
-          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-          // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
+          let value =  (Number(this.formData.borrowQuantity) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ;
+          console.log('Selected Instrument - ' + this.selectedInstrument.symbol);
+          console.log('Borrow Quantity - ' + this.formData.borrowQuantity);
+          console.log('Interest Rate Mode - ' + this.formData.interestRateMode);     
+          console.log('Borrow Value - ' + value);
+
+          this.showLoader = true;        
+          let interestRateMode = this.formData.interestRateMode == 'Stable' ? 0 : 1;      
+          let response =  await this.LendingPool_borrow( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.borrowQuantity, _interestRateMode: interestRateMode, _referralCode: 0 } );
+          if (response.status) {      
+            this.$showSuccessMsg({message: "BORROW SUCCESS : " + this.formData.borrowQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully borrowed from SIGH Finance. Gas used = " + response.gasUsed });
+            this.$showInfoMsg({message: "ThankYou for choosing $SIGH Farms! We look forward to serving your capital requirements again!"});
+            await this.refreshCurrentInstrumentWalletState(true);
+            this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Borrow',Service: 'LENDING'});
+          }
+          else {
+            this.$showErrorMsg({message: "BORROW FAILED : " + response.message  }); 
+            this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+            // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
+          }
+          this.formData.borrowQuantity = null;
+          this.showLoader = false;
         }
-        this.formData.borrowQuantity = null;
-        this.showLoader = false;
       }
-    },
+    }, 
       
 
-    async getRemainingBalance(toDisplay) {
-      if (this.selectedInstrument.iTokenAddress && this.$store.getters.connectedWallet) {
-        this.remainingBalance = await this.ERC20_balanceOf({tokenAddress: this.selectedInstrument.iTokenAddress, account: this.$store.getters.connectedWallet });
-        console.log(this.remainingBalance);
-        let remainingValue = (this.remainingBalance * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4); 
-        if (toDisplay) {
-          this.$showInfoMsg({message: this.remainingBalance + " " + this.selectedInstrument.symbol  + " worth $" + remainingValue + " USD are currently farming $SIGH and Interest for you at SIGH Finance! "});        
-        }
-        console.log( 'Current deposited balance for ' + this.selectedInstrument.symbol + " is " + this.remainingBalance + " worth " +  remainingValue + " USD");
-      }
-    },
 
-    async getUserBorrowBalances(toDisplay) {
-      let balances = await this.LendingPoolCore_getUserBorrowBalances({_instrument: this.selectedInstrument.instrumentAddress, _user: this.$store.getters.connectedWallet });
-      console.log(balances);
-      this.principalBorrowBalance = balances[0];
-      this.compoundedBorrowBalance =  balances[1];
-      this.borrowBalanceIncrease =  balances[2];
-      let compoundedBorrowBalanceValue = (this.compoundedBorrowBalance * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4); 
-      if (toDisplay && Number(this.compoundedBorrowBalance)!= 0 ) {
-        this.$showInfoMsg({message: this.compoundedBorrowBalance + " " + this.selectedInstrument.symbol  + " worth $" + compoundedBorrowBalanceValue + " USD have been borrowed which farm $SIGH for you whenever its price increases over any 24 hour period! "});        
+    async refreshCurrentInstrumentWalletState(toDisplay) {
+      if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        try {
+          console.log("refreshCurrentInstrumentWalletState() in DEPOSIT-QUANTITY");
+          let response = await this.refresh_User_Instrument_State({cur_instrument: this.selectedInstrument });
+          console.log(response);
+          console.log("getting WalletInstrumentStates MAPPING before UPDATING & COMMITING  in DEPOSIT-QUANTITY");
+          console.log(this.$store.getters.getWalletInstrumentStates);
+          this.$store.commit("addToWalletInstrumentStates",{instrumentAddress : this.selectedInstrument.instrumentAddress  , walletInstrumentState: response});
+          console.log("getting WalletInstrumentStates MAPPING after UPDATING & COMMITING  in DEPOSIT-QUANTITY");
+          console.log(this.$store.getters.getWalletInstrumentStates);
+          this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+          if (toDisplay) {
+            this.$showInfoMsg({message: "Updated balances" });        
+          }
+        }
+        catch(error) {
+          console.log( 'FAILED' );
+        }
       }
-    }    
+    }
+
 
   },
 

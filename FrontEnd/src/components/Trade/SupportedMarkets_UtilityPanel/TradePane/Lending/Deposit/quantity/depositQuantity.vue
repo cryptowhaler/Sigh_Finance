@@ -57,7 +57,7 @@ export default {
         if (this.selectedInstrument && this.selectedInstrument.priceDecimals) {
           console.log("COMPUTED VALUED");
           return (Number(this.formData.depositQuantity) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ; 
-          }
+        }
       return 0;
     },
   },

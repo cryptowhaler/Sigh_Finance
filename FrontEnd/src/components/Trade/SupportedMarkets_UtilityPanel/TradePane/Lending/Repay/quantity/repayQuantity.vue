@@ -12,14 +12,13 @@ export default {
   data() {
     return {
       selectedInstrument: this.$store.state.currentlySelectedInstrument,
+      selectedInstrumentWalletState: {},
       formData : {
         repayQuantity: null,
         repayValue: null,
         onBehalfOf: null,
       },
-      principalBorrowBalance: null,
-      compoundedBorrowBalance: null,
-      borrowBalanceIncrease: null,            
+      selectedInstrumentPriceETH: null,  // PRICE CONSTANTLY UPDATED
       showLoader: false,
     };
   },
@@ -28,12 +27,26 @@ export default {
   created() {
     console.log("IN LENDING / REPAY / QUANTITY (TRADE-PANE) FUNCTION ");
     this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
-    this.getUserBorrowBalances(false);
+    console.log(this.selectedInstrument);
+    if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+    }
+    console.log(this.selectedInstrumentWalletState);
+    if ( this.$store.state.isNetworkSupported  ) {
+      setInterval(async () => {
+        console.log("IN SET INTERVAL (REPAY / QUANTITY)");
+        if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+          this.selectedInstrumentPriceETH = await this.getInstrumentPrice({_instrumentAddress : this.selectedInstrument.instrumentAddress });
+        }
+      },1000);
+    }
+
     this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
-      this.selectedInstrument = selectedInstrument_.instrument;        
-      console.log('REPAY : changeSelectedInstrument - ');
-      console.log(this.selectedInstrument);
-      this.getUserBorrowBalances(true);
+      console.log("NEW SELECTED INSTRUMENT");
+      this.selectedInstrument = selectedInstrument_.instrument;       // UPDATED SELECTED INSTRUMENT (LOCALLY)
+      console.log(this.selectedInstrument);   
+      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+      console.log(this.selectedInstrumentWalletState);
     };
     ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
   },
@@ -43,16 +56,16 @@ export default {
     calculatedValue() {
         console.log('calculatedValue');
         if (this.selectedInstrument && this.selectedInstrument.priceDecimals) {
-          console.log(this.selectedInstrument);
-          return ((this.formData.repayQuantity) * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4) ; 
-          }
+          console.log("COMPUTED VALUED");
+          return (Number(this.formData.repayQuantity) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ; 
+        }
       return 0;
     }
   },
 
   methods: {
 
-    ...mapActions(['LendingPool_repay','LendingPoolCore_getUserBorrowBalances']),
+    ...mapActions(['LendingPool_repay','refresh_User_Instrument_State','LendingPoolCore_getUserBorrowBalances','getInstrumentPrice']),
     
     async repay() {   //REPAY
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
@@ -66,33 +79,52 @@ export default {
         this.$showErrorMsg({message: " The address provided in 'onBehalfOf' section is invalid. Please provide the correct address or make this column empty if you want to repay the borrow amount for the connected wallet." });         
       }
       else {      
-        let price = (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals)).toFixed(4);
-        let value = price * this.formData.repayQuantity;
-        this.getUserBorrowBalances(false);
-
+        let value =  (Number(this.formData.repayQuantity) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ;
         console.log('Selected Instrument - ' + this.selectedInstrument.symbol);
         console.log('Repay Quantity - ' + this.formData.repayQuantity);
         console.log('Repay Value - ' + value);
-        console.log('Instrument Price - ' + price); 
-            
-        let onBehalfOf_ = this.formData.onBehalfOf ? this.formData.onBehalfOf : this.$store.getters.connectedWallet;
-
-        if ( Number(this.formData.repayQuantity) >  Number(this.compoundedBorrowBalance) ) {
-          this.$showErrorMsg({message: "The amount to be repaid is greater than the current compounded borrow balance = " +  this.compoundedBorrowBalance + " " + this.selectedInstrument.symbol + ". Please provide a lesser / equal amount than the current compounded borrow balance." });
-        }
-        else {
-          this.showLoader = true;      
-          let response =  await this.LendingPool_repay( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.repayQuantity, _onBehalfOf: onBehalfOf_ } );
-          if (response.status) {      
-            this.$showSuccessMsg({message: "REPAY SUCCESS : " + this.formData.repayQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully repayed to SIGH Finance. Gas used = " + response.gasUsed });
-            this.$showInfoMsg({message: " $SIGH FARMS look forward to serving you again!"});
-            await this.getUserBorrowBalances(true);
-            this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Repay',Service: 'LENDING'});
+        // ON BEHALF OF 
+        if (this.formData.onBehalfOf) { 
+          let borrowBalance = await this.getOnBehalfOfBorrowBalances();
+          if (Number(borrowBalance) < Number(this.formData.repayQuantity) ) {
+            this.$showErrorMsg({message: " The amount entered to be repaid for the account " + this.formData.onBehalfOf +  " exceeds its current borrowed balance, which is + " + borrowBalance + " " + this.selectedInstrument.symbol + ". Please enter an amount less than its current Borrowed Balance!" }); 
           }
           else {
-            this.$showErrorMsg({message: "REPAY FAILED : " + response.message  }); 
-            this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-            // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
+            console.log('ON BEHALF OF  - ' +  this.formData.onBehalfOf);
+            this.showLoader = true;      
+            let response =  await this.LendingPool_repay( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.repayQuantity, _onBehalfOf: this.formData.onBehalfOf } );
+            if (response.status) {      
+              this.$showSuccessMsg({message: "REPAY SUCCESS : " + this.formData.repayQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully repayed to SIGH Finance for the Account + " + this.formData.onBehalfOf +  ". Gas used = " + response.gasUsed });
+              this.$showInfoMsg({message: " $SIGH FARMS look forward to serving you again!"});
+              await this.refreshCurrentInstrumentWalletState(true);
+              this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Repay',Service: 'LENDING'});
+            }
+            else {
+              this.$showErrorMsg({message: "REPAY FAILED : " + response.message  }); 
+              this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+              // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Repay',Service: 'LENDING'});
+            }
+          }
+        }
+        // REPAYING YOUR OWN LOAN
+        else {
+          if (Number(this.selectedInstrumentWalletState.compoundedBorrowBalance) < Number(this.formData.repayQuantity) ) {
+            this.$showErrorMsg({message: " The amount entered to be repaid for the account exceeds your current borrowed balance, which is + " + this.selectedInstrumentWalletState.compoundedBorrowBalance + " " + this.selectedInstrument.symbol + ". Please enter an amount less than your current Borrowed Balance!" }); 
+          }
+          else {
+            this.showLoader = true;      
+            let response =  await this.LendingPool_repay( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.repayQuantity, _onBehalfOf: this.$store.state.connectedWallet  } );
+            if (response.status) {      
+              this.$showSuccessMsg({message: "REPAY SUCCESS : " + this.formData.repayQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully repayed to SIGH Finance! Gas used = " + response.gasUsed });
+              this.$showInfoMsg({message: " $SIGH FARMS look forward to serving you again!"});
+              await this.refreshCurrentInstrumentWalletState(true);
+              this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Repay',Service: 'LENDING'});
+            }
+            else {
+              this.$showErrorMsg({message: "REPAY FAILED : " + response.message  }); 
+              this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+              // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Repay',Service: 'LENDING'});
+            }
           }
         }
         this.formData.repayQuantity = null;
@@ -100,20 +132,37 @@ export default {
       }
     },
       
-    async getUserBorrowBalances(toDisplay) {
-      if ( this.selectedInstrument.instrumentAddress ) {
-        let user = this.formData.onBehalfOf ? this.formData.onBehalfOf : this.$store.getters.connectedWallet;
-        let balances = await this.LendingPoolCore_getUserBorrowBalances({_instrument: this.selectedInstrument.instrumentAddress, _user: user });
-        console.log(balances);
-        this.principalBorrowBalance = balances[0];
-        this.compoundedBorrowBalance =  balances[1];
-        this.borrowBalanceIncrease =  balances[2];
-        let compoundedBorrowBalanceValue = (this.compoundedBorrowBalance * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4); 
-        if (toDisplay && Number(this.compoundedBorrowBalance)!= 0 ) {
-          this.$showInfoMsg({message: this.compoundedBorrowBalance + " " + this.selectedInstrument.symbol  + " worth $" + compoundedBorrowBalanceValue + " USD have been borrowed which farm $SIGH for you whenever its price increases over any 24 hour period! "});        
+
+    async refreshCurrentInstrumentWalletState(toDisplay) {
+      if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        try {
+          console.log("refreshCurrentInstrumentWalletState() in REPAY-QUANTITY");
+          let response = await this.refresh_User_Instrument_State({cur_instrument: this.selectedInstrument });
+          console.log(response);
+          console.log("getting WalletInstrumentStates MAPPING before UPDATING & COMMITING  in REPAY-QUANTITY");
+          console.log(this.$store.getters.getWalletInstrumentStates);
+          this.$store.commit("addToWalletInstrumentStates",{instrumentAddress : this.selectedInstrument.instrumentAddress  , walletInstrumentState: response});
+          console.log("getting WalletInstrumentStates MAPPING after UPDATING & COMMITING  in REPAY-QUANTITY");
+          console.log(this.$store.getters.getWalletInstrumentStates);
+          this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+          if (toDisplay) {
+            this.$showInfoMsg({message: "Updated balances" });        
+          }
+        }
+        catch(error) {
+          console.log( 'FAILED' );
         }
       }
-    }
+    },
+
+
+    async getOnBehalfOfBorrowBalances(onBehalfOfAddress) {
+      if ( this.selectedInstrument.instrumentAddress ) {
+        let balances = await this.LendingPoolCore_getUserBorrowBalances({_instrument: this.selectedInstrument.instrumentAddress, _user: onBehalfOfAddress });
+        console.log(balances);
+        return balances[1];  // returning compounded borrow balance
+        }
+      }
   },
 
   destroyed() {
