@@ -1,4 +1,4 @@
-<div id="lending-trade-tab" style="padding-left: 22%; padding-top: 7%; position: inherit;"> 
+<div id="lending-trade-tab" style="padding: 24px 24px; position: inherit;"> 
 
 <!-- SELECT INSTRUMENT DROPDOWN -->
     <div class="select-instrument-dropbox uk-position-top-right">
@@ -11,8 +11,8 @@
                     {{ instrument.symbol }}
                 </option>
             </select>
-            <span style="color: aliceblue; font-size: 10px; line-height: 15px;" > {{ $store.state.currentlySelectedInstrument.symbol  }} Address : {{ $store.state.currentlySelectedInstrument.instrumentAddress }}  </span>
-            <span style="color: aliceblue; font-size: 10px; line-height: 15px;" > {{ $store.state.currentlySelectedInstrument.symbol  }}'s IToken Address : {{ $store.state.currentlySelectedInstrument.iTokenAddress }} </span>
+            <!-- <span style="color: aliceblue; font-size: 10px; line-height: 15px;" > {{ $store.state.currentlySelectedInstrument.symbol  }} Address : {{ $store.state.currentlySelectedInstrument.instrumentAddress }}  </span>
+            <span style="color: aliceblue; font-size: 10px; line-height: 15px;" > {{ $store.state.currentlySelectedInstrument.symbol  }}'s IToken Address : {{ $store.state.currentlySelectedInstrument.iTokenAddress }} </span> -->
         </div>
     </div>
 
@@ -23,10 +23,10 @@
         <br> <br> <br> <br>
 
         <keep-alive>
-            <Deposit style="padding-top: 42px;" v-if="activeTab === 'Deposit' " />
-            <Redeem  style="padding-top: 42px; padding-left: 42px;" v-if="activeTab === 'Redeem' " />
-            <Borrow style="padding-top: 42px;" v-if="activeTab === 'Borrow' " />
-            <Repay style="padding-top: 42px;" v-if="activeTab === 'Repay' " />
+            <Deposit  v-if="activeTab === 'Deposit' " />
+            <Redeem   v-if="activeTab === 'Redeem' " />
+            <Borrow  v-if="activeTab === 'Borrow' " />
+            <Repay  v-if="activeTab === 'Repay' " />
         </keep-alive>
 
     </div>

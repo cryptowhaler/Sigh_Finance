@@ -9,7 +9,7 @@
             <table v-if="!displayInUSD">
                 <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 4px; "> Balances </h3>
                 <tr>
-                    <td> >  &nbsp; Total Value Supplied : &nbsp; {{ Number(walletLendingProtocolState.totalLiquidityETH).toFixed(4) }} ETH </td> 
+                    <td> >  &nbsp; Total Value Supplied &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalLiquidityETH).toFixed(4) }} ETH </td> 
                 </tr>
                 <tr>
                     <td> >  &nbsp; Total Collateral &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalCollateralETH).toFixed(4) }} ETH </td> 
@@ -44,7 +44,7 @@
                     <td>>  &nbsp; Total Collateral &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalCollateralUSD).toFixed(4) }} USD </td> 
                 </tr>
                 <tr>
-                    <td>>  &nbsp;Total Value Borrowed &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalBorrowsUSD).toFixed(4) }} USD </td> 
+                    <td>>  &nbsp; Total Value Borrowed &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalBorrowsUSD).toFixed(4) }} USD </td> 
                 </tr>
                 <tr>
                     <td> >  &nbsp; Available Borrows &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.availableBorrowsUSD).toFixed(4) }} USD </td> 

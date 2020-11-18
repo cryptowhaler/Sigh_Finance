@@ -29,7 +29,7 @@ export default {
     ...mapActions(['getWalletSIGHFinanceState']),
     
     async refresh() {
-      console.log("refreshing User SIGH Balances");
+      console.log("refreshing User Your SIGH Balances");
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
         this.$showInfoMsg({message: " Networks currently supported by SIGH Finance - 1) Ethereum :  Kovan Testnet(42) " }); 
@@ -40,10 +40,10 @@ export default {
       else {                                  // EXECUTE THE TRANSACTION
         let response = await this.refreshWalletSessionData(true);
         if (response) {
-          this.$showInfoMsg({message: " SIGH Balances refreshed successfully for the account " + this.$store.state.connectedWallet  });
+          this.$showInfoMsg({message: " Your SIGH Balances refreshed successfully for the account " + this.$store.state.connectedWallet  });
         }
         else {
-          this.$showErrorMsg({message: " Could not refresh SIGH Balances for the account " + this.$store.state.connectedWallet + ". Something went wrong. Contact our team at contact@sigh.finance in case of any queries!"  });
+          this.$showErrorMsg({message: " Could not refresh Your SIGH Balances for the account " + this.$store.state.connectedWallet + ". Something went wrong. Contact our team at contact@sigh.finance in case of any queries!"  });
         }
      }
     },

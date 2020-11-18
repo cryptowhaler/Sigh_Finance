@@ -12,13 +12,13 @@ export default {
   data() {
     return {
       selectedInstrument: this.$store.state.currentlySelectedInstrument,
+      selectedInstrumentWalletState: {},
       formData : {
         borrowQuantity: null,
         borrowValue: null,
         interestRateMode: 'Stable',
       },
       interestRateModes: ['Stable','Variable'],
-      remainingBalance: null,
       showLoader: false,
     };
   },
@@ -27,23 +27,36 @@ export default {
   created() {
     console.log("IN LENDING / BORROW / QUANTITY (TRADE-PANE) FUNCTION ");
     this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
-    this.getRemainingBalance(false);
+    console.log(this.selectedInstrument);
+    if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+    }
+    console.log(this.selectedInstrumentWalletState);
+    if ( this.$store.state.isNetworkSupported  ) {
+      setInterval(async () => {
+        console.log("IN SET NULL");
+        if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+          this.selectedInstrumentPriceETH = await this.getInstrumentPrice({_instrumentAddress : this.selectedInstrument.instrumentAddress });
+        }
+      },1000);
+    }
+
     this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
-      this.selectedInstrument = selectedInstrument_.instrument;        
-      console.log('BORROW : changeSelectedInstrument - ');
-      console.log(this.selectedInstrument);
-      this.getRemainingBalance(false);
+      console.log("NEW SELECTED INSTRUMENT");
+      this.selectedInstrument = selectedInstrument_.instrument;       // UPDATED SELECTED INSTRUMENT (LOCALLY)
+      console.log(this.selectedInstrument);   
+      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+      console.log(this.selectedInstrumentWalletState);
     };
-    ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
+    ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);         
   },
 
 
   computed: {
     calculatedValue() {
-        console.log('calculatedValue');
         if (this.selectedInstrument && this.selectedInstrument.priceDecimals) {
-          console.log(this.selectedInstrument);
-          return ((this.formData.borrowQuantity) * (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals))).toFixed(4) ; 
+          console.log("COMPUTED VALUED");
+          return (Number(this.formData.borrowQuantity) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ; 
           }
       return 0;
     }

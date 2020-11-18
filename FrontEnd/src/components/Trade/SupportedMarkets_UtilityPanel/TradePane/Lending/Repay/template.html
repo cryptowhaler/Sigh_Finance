@@ -1,16 +1,9 @@
 <div class="borrow-order">
-    <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
-
-    <!-- <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
-        <div>
-            <span class="dot" :class="statusCode" :title="statusCode"></span>
-        </div>         
-    </div>  -->
+    <div class="f1-form-grid" style="position: relative;">
         <!-- IMPLEMENTING  -->
+        <div class="cs-tab-3  uk-position-relative " style=" padding-left: 9px; padding-right: 9px; padding-top: 12px;">
 
-        <div class="cs-tab-3  uk-position-relative " style=" padding-left: 30px; padding-right: 50px; padding-top: 12px;">
-
-            <div id="subtab-limit" :title-link-class="'tab-title-class'">
+            <div id="subtab-limit" :title-link-class="'tab-title-class'"  style="padding-left: 20%;"  >
                 <tab-bar :mobileDropdown=false :tabs=tabs @tab-change="activeTabChange" />
             </div>
 

@@ -124,7 +124,7 @@ const store = new Vuex.Store({
     SIGHFinanceState: {},                       //   SIGH FINANCE                  // SIGH's STATE (totalSupply, mintSpeed, burnSpeed, totalMinted, price, Sigh Global Trade Volume, bonding Curve Health)
     SIGHState: {},                              //   SIGH                          // SIGH's STATE (totalSupply, mintSpeed, burnSpeed, totalMinted, price, Sigh Global Trade Volume, bonding Curve Health)
 
-    currentlySelectedInstrument : {symbol:'WBTC'}, //  {instrumentAddress: '0x00' , name: 'Wrapped Bitcoin', symbol: 'WBTC', decimals: 18, iTokenAddress: '0x00' , priceDecimals: 8, price: 0 },  // Currently Selected Instrument
+    currentlySelectedInstrument : {symbol:'WBTC',instrumentAddress: '0x0000000000000000000000000000000000000000' , name: 'Wrapped Bitcoin', symbol: 'WBTC', decimals: 18, iTokenAddress: '0x0000000000000000000000000000000000000000' , priceDecimals: 8, price: 0 },  // Currently Selected Instrument
 
     sessionTransactions : [],
     
@@ -1011,19 +1011,22 @@ const store = new Vuex.Store({
         cur_user_instrument_state.instrumentAddress = cur_instrument.instrumentAddress;      
         cur_user_instrument_state.iTokenAddress = cur_instrument.iTokenAddress;      
         cur_user_instrument_state.decimals = cur_instrument.decimals;
-        cur_user_instrument_state.priceETH = cur_instrument.priceETH;
+        cur_user_instrument_state.priceETH =  await store.dispatch('getInstrumentPrice',{_instrumentAddress:cur_instrument.instrumentAddress });
         cur_user_instrument_state.priceDecimals = cur_instrument.priceDecimals;
         
         // User Balances
         cur_user_instrument_state.userBalance = await store.dispatch("ERC20_balanceOf",{tokenAddress: cur_instrument.instrumentAddress , account: state.connectedWallet});
-        cur_user_instrument_state.userBalanceWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.userBalance) * Number(cur_instrument.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) });
+        cur_user_instrument_state.userBalanceWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.userBalance) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) });
         let response = await store.dispatch('getUserInstrumentState',{_instrumentAddress:cur_instrument.instrumentAddress , _user: state.connectedWallet });
+        console.log("Calling ERC20_getAllowance while updating Wallet - Instrument state in function refresh_User_Instrument_State in store.js ");
+        cur_user_instrument_state.userAvailableAllowance = await store.dispatch("ERC20_getAllowance",{tokenAddress: cur_instrument.instrumentAddress , owner: state.connectedWallet, spender: state.LendingPoolCoreContractAddress });
+        cur_user_instrument_state.userAvailableAllowanceWorth = await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.userAvailableAllowance) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) }); 
         cur_user_instrument_state.userDepositedBalance = response.currentITokenBalance;
-        cur_user_instrument_state.userDepositedBalanceWorth = await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.userDepositedBalance) * Number(cur_instrument.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) }); 
+        cur_user_instrument_state.userDepositedBalanceWorth = await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.userDepositedBalance) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) }); 
         cur_user_instrument_state.principalBorrowBalance = response.principalBorrowBalance;
-        cur_user_instrument_state.principalBorrowBalanceWorth = await  store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.principalBorrowBalance) * Number(cur_instrument.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) });
+        cur_user_instrument_state.principalBorrowBalanceWorth = await  store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.principalBorrowBalance) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) });
         cur_user_instrument_state.currentBorrowBalance = response.currentBorrowBalance;
-        cur_user_instrument_state.currentBorrowBalanceWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.currentBorrowBalance) * Number(cur_instrument.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) }); 
+        cur_user_instrument_state.currentBorrowBalanceWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.currentBorrowBalance) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) }); 
 
         // Additional Parameters (APYs, fee, SIGH Yield etc etc)
         cur_user_instrument_state.borrowRateMode =  response.borrowRateMode ;
@@ -1123,7 +1126,7 @@ const store = new Vuex.Store({
       const priceOracleContract = new state.web3.eth.Contract(IPriceOracleGetter.abi, state.IPriceOracleGetterAddress );
       // console.log(_instrumentAddress);
       let response = await priceOracleContract.methods.getAssetPrice(_instrumentAddress).call();
-      // console.log('getInstrumentPrice = ' + response);
+      console.log('getInstrumentPrice = ' + response);
       return response;
     }
     else {
@@ -2353,6 +2356,8 @@ ERC20_decreaseAllowance: async ({commit,state},{tokenAddress,spender,subtractedV
 
 ERC20_getAllowance: async ({commit,getters,state},{tokenAddress,owner,spender }) => {
   console.log(tokenAddress);
+  console.log(owner);
+  console.log(spender);
   if (state.web3 && owner && spender && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     // console.log(erc20Contract);

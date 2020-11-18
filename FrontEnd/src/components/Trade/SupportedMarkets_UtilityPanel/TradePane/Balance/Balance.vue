@@ -23,7 +23,7 @@ export default {
   data() {
     return {
       activeTab: 'Total Balance (Lending)',
-      tabs: [ 'Total Balance (Lending)','SIGH Balances'],
+      tabs: [ 'Total Balance (Lending)','Your SIGH Balances'],
       height: 0,
       preActive:'Total Balance (Lending)',
 
