@@ -1,46 +1,108 @@
-<div class= "sighAmount">
-    <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
+<div class= "sighAmount"  style="margin-top: 51px;">
+    <div class="f1-form-grid" style="position: relative;">
     </div> 
 
-    <!-- Amount to be entered -->    
-    <div class="uk-grid uk-grid-small f1-form-grid">
-        <div class="uk-width-1-1">
-            <div class="form-grp">
-                <div class="form-elm">
-                    <input style="text-align: center;"  class="form-ctrl" type="text" placeholder=" Amount (USD)" v-model="formData.sighValue">
-                    <span    style='color:antiquewhite; padding-left:10px;'> USD </span>
+    <div class="stake-amount-form" style="margin-bottom: 51px;"> 
+        <!-- Amount to be entered -->    
+        <div class="uk-grid uk-grid-small f1-form-grid">
+            <div class="uk-width-1-1">
+                <div class="form-grp">
+                    <div class="form-elm">
+                        <input style="text-align: center;"  class="form-ctrl" type="text" placeholder=" Amount (USD)" v-model="formData.sighValue">
+                        <span    style='color:antiquewhite; padding-left:10px;'> USD </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Displays the symbol of the selected Instrument -->
+        <div class="uk-grid uk-grid-small f1-form-grid">
+            <div class="uk-width-1-1">
+                <div class="form-grp">
+                    <div class="form-elm">
+                        <input style="text-align: center;" class="form-ctrl" type="text" placeholder="SIGH to be staked" readonly :value="calculatedQuantity">
+                        <span   style='color:antiquewhite; padding-left:10px;'>  SIGH  </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="uk-grid uk-grid-small f1-form-grid">
+            <!-- Loading image -->
+            <div v-if="showLoader" class="uk-width-1-1 center">
+                <img src="https://image.ibb.co/dc02hd/30.gif" />
+            </div>
+            <!-- Buttons (Stake/Unstake) -->
+            <div v-else class="uk-width-1-1">
+                <div class="center" style="padding-top: 33px;">
+                    <button class="uk-button uk-button-green"  @click="approve()">Approve</button>
+                    <button class="uk-button uk-button-green"  @click="stakeSIGH()">Stake SIGH</button>
+                    <button class="uk-button uk-button-green"  @click="unstakeSIGH()">Unstake SIGH</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Displays the symbol of the selected Instrument -->
+
+    <div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 20px; margin-bottom: 20px;" >
+        <table style="color: white;" >
+            <tr>
+                <td > >   {{ sighInstrument.symbol  }} Price &nbsp; : &nbsp;{{  calculatedSIGH_PRICE_USD }} USD </td> 
+            </tr>   
+            <tr>                
+                <td > >   {{ sighInstrument.symbol  }} YIELDS (Speed) &nbsp; : &nbsp;{{  Number(WalletSIGHState.totalSighSpeedForUser).toFixed(4) }} ( {{  Number(Number(WalletSIGHState.totalSighSpeedForUser) * (Number(SIGH_Price_USD_)) ).toFixed(4) }} USD )  </td> 
+            </tr>
+            <tr>
+                <td> >  Portfolio Volatility (Avg.) &nbsp; : &nbsp;{{ Number(WalletSIGHState.marketTotalVolatility).toFixed(4)  }} </td> 
+            </tr>
+            <tr>
+                <td> >  $SIGH Yields vs Loss Ratio &nbsp; : &nbsp;{{ Number(WalletSIGHState.SighYieldsLossRatio).toFixed(4)  }} </td> 
+            </tr>
+            <!-- CONTRACT ADDREDDES -->
+            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> CONTRACT ADDRESSES </h3>
+            <tr>
+                <td> >   {{ sighInstrument.symbol  }} &nbsp; : &nbsp;{{ this.$store.state.SIGHContractAddress  }}   </td> 
+            </tr>
+            <!-- SIGH BALANCES -->
+            <h3 style="font-size: 14px; color: aquamarine; margin-bottom: 7px; margin-top: 15px; "> $SIGH BALANCES : {{ this.$store.state.connectedWallet }}  </h3>
+            <tr>
+                <td > >  $SIGH Balance &nbsp; : &nbsp;{{  Number(WalletSIGHState.sighBalance).toFixed(4) }} ( {{  (Number(Number(WalletSIGHState.sighBalance) * (Number(SIGH_Price_USD_)))).toFixed(4) }} USD )  </td> 
+            </tr>   
+            <tr>
+                <td> >  $SIGH Staked &nbsp; : &nbsp;{{ Number(WalletSIGHState.sighStaked).toFixed(4)  }} ( {{ (Number(WalletSIGHState.sighStaked) * (Number(SIGH_Price_USD_))).toFixed(4)  }} USD ) </td> 
+            </tr>
+            <tr>
+                <td> >  Available $SIGH Staking Allowance &nbsp; : &nbsp;{{ Number(WalletSIGHState.sighStakingAllowance).toFixed(4)  }} ( {{ (Number(WalletSIGHState.sighStakingAllowance) * (Number(SIGH_Price_USD_))).toFixed(4)  }} USD ) </td> 
+            </tr>
+            <tr>
+                <td> >  STAKING APY &nbsp; : &nbsp;{{ Number(WalletSIGHState.yourSighStakedAPY).toFixed(4)  }} ( {{ (Number(WalletSIGHState.yourSighStakedAPY) * (Number(SIGH_Price_USD_))).toFixed(4)  }} USD ) </td> 
+            </tr>
+            <!-- SIGH FARMING YIELDS -->
+            <h3 style="font-size: 14px; color: aquamarine; margin-bottom: 7px; margin-top: 15px; "> $SIGH METRICS : {{ this.$store.state.connectedWallet }} </h3>
+            <tr>
+                <td> >  $SIGH Speed (Supplied Balances) &nbsp; : &nbsp;{{ Number(WalletSIGHState.totalSuppliedSighSpeedForUser).toFixed(4)  }} ( {{ (Number(WalletSIGHState.totalSuppliedSighSpeedForUser) * (Number(SIGH_Price_USD_))).toFixed(4)  }} USD ) </td> 
+            </tr>
+            <tr>
+                <td> >  $SIGH Speed (Borrowed Balances) &nbsp; : &nbsp;{{ Number(WalletSIGHState.totalBorrowedSighSpeedForUser).toFixed(4)  }} ( {{ (Number(WalletSIGHState.totalBorrowedSighSpeedForUser) * (Number(SIGH_Price_USD_))).toFixed(4)  }} USD ) </td> 
+            </tr>
+            <tr>
+                <td> >  $SIGH Total Speed &nbsp; : &nbsp;{{ Number(WalletSIGHState.totalSighSpeedForUser).toFixed(4)  }} ( {{ (Number(WalletSIGHState.totalSighSpeedForUser) * (Number(SIGH_Price_USD_))).toFixed(4)  }} USD ) </td> 
+            </tr>
+        </table>
+    </div>
+
     <div class="uk-grid uk-grid-small f1-form-grid">
-        <div class="uk-width-1-1">
-            <div class="form-grp">
-                <div class="form-elm">
-                    <input style="text-align: center;" class="form-ctrl" type="text" placeholder="SIGH to be staked" readonly :value="calculatedQuantity">
-                    <span   style='color:antiquewhite; padding-left:10px;'>  SIGH  </span>
-                </div>
+        <!-- Loading image -->
+        <div v-if="showLoaderRefresh" class="uk-width-1-1 center">
+            <img src="https://image.ibb.co/dc02hd/30.gif" />
+        </div>
+        <!-- Buttons (Stake/Unstake) -->
+        <div v-else class="uk-width-1-1">
+            <div class="center">
+                <button class="uk-button uk-button-black"  @click="refresh_Wallet_SIGH_State(true)">Refresh</button>
             </div>
         </div>
     </div>
     
-
-    <!-- Loading image -->
-    <div class="uk-grid uk-grid-small f1-form-grid">  
-        <div v-if="showLoader" class="uk-width-1-1 center">
-            <img src="https://image.ibb.co/dc02hd/30.gif" />
-        </div>
-
-        <div v-else class="uk-width-1-1">
-
-<!-- Buttons (Approve/Stake) -->
-            <div class="center">
-                <button class="uk-button uk-button-green"  @click="approve()">Approve</button>
-                <button class="uk-button uk-button-green"  @click="stakeSIGH()">Stake SIGH</button>
-                <button class="uk-button uk-button-green"  @click="unstakeSIGH()">Unstake SIGH</button>
-            </div>
-        </div>
-    </div>
 </div>

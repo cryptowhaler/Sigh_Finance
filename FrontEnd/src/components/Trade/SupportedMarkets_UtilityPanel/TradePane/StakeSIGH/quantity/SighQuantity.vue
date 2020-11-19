@@ -64,14 +64,14 @@ export default {
     calculatedValue() {
         console.log('calculatedValue');
         if (this.sighInstrument && this.sighInstrument.priceDecimals) {
-          console.log("COMPUTED : SIGH STAKING");          
+          console.log("COMPUTED VALUE : SIGH STAKING");          
           return  ( Number(this.formData.sighQuantity) * Number(this.SIGH_Price_USD_) ).toFixed(4) ; 
         }
       return 0;
     }
-
-
   },
+
+
 
   methods: {
 
@@ -104,7 +104,7 @@ export default {
         let response =  await this.SIGHStaking_stake_SIGH( { amountToBeStaked:  this.formData.sighQuantity } );
         if (response.status) {  
           this.showLoader = false;
-          this.$showSuccessMsg({message: "SIGH STAKING SUCCESS : " + this.formData.sighQuantity + "  $SIGH worth " + value + " USD have been successfully staked. You currently have " + this.stakedSighBalance + " SIGH having worth " + value + " USD Staked farming staking rewards for you. Enjoy farming SIGH Staking rewards!"  });
+          this.$showSuccessMsg({message: "SIGH STAKING SUCCESS : " + this.formData.sighQuantity + "  $SIGH worth " + value + " USD have been successfully staked. You currently have " + this.WalletSIGHState.sighStaked + " SIGH having worth " + (Number(this.WalletSIGHState.sighStaked) * (Number(this.SIGH_Price_USD_))).toFixed(4) + " USD Staked farming staking rewards for you. Enjoy farming SIGH Staking rewards!"  });
           this.formData.sighQuantity = null;
           await this.refresh_Wallet_SIGH_State(false);        
           // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Staked',Service: 'STAKING'});
@@ -141,7 +141,7 @@ export default {
         let response =  await this.SIGHStaking_unstake_SIGH( { amountToBeUNStaked:  this.formData.sighQuantity } );
         if (response.status) { 
           this.showLoader = false;
-          this.$showSuccessMsg({message: "SIGH UN-STAKING SUCCESS : " + this.formData.sighQuantity + "  " +  this.sighInstrument.symbol +  " worth " + value + " USD has been successfully un-staked. You currently have " + this.stakedSighBalance + " SIGH having worth " + value + " USD Staked farming staking rewards for you! " });
+          this.$showSuccessMsg({message: "SIGH UN-STAKING SUCCESS : " + this.formData.sighQuantity + " $SIGH worth " + value + " USD have been successfully un-staked. You currently have " + this.WalletSIGHState.sighStaked + " SIGH having worth " + (Number(this.WalletSIGHState.sighStaked) * (Number(this.SIGH_Price_USD_))).toFixed(4) + " USD Staked farming staking rewards for you! " });
           this.formData.sighQuantity = null;
           await this.refresh_Wallet_SIGH_State(false);        
           // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Un-Staked',Service: 'STAKING'});
