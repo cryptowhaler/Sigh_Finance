@@ -1148,7 +1148,7 @@ const store = new Vuex.Store({
       const priceOracleContract = new state.web3.eth.Contract(IPriceOracleGetter.abi, state.IPriceOracleGetterAddress );
       // console.log(_instrumentAddress);
       let response = await priceOracleContract.methods.getAssetPrice(_instrumentAddress).call();
-      console.log('getInstrumentPrice = ' + response);
+      // console.log('getInstrumentPrice = ' + response);
       return response;
     }
     else {
@@ -2179,7 +2179,7 @@ IToken_getRedirectedBalance: async ({commit,state},{iTokenAddress,_user}) => {
     // console.log(iTokenContract);
     const response = await iTokenContract.methods.getRedirectedBalance(_user).call();
     console.log('IToken_getRedirectedBalance - ' + response);
-    // console.log(response);
+    console.log(response);
     return response;  
   }
   else {

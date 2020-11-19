@@ -633,13 +633,6 @@ nav {
 }
 /* #mobileDropdown button::hover {background: transparent; color: #000} */
 
-#mobileDropdown button::after {
-  content: "\f10e";
-  font-family: Curry-Coin;
-  font-size: 16px;
-  position: absolute;
-  right: 30px;
-}
 
 #mobileDropdown .uk-open {
   width: calc(100% - 40px);
