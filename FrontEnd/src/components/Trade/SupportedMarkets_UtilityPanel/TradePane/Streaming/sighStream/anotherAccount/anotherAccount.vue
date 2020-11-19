@@ -12,44 +12,72 @@ export default {
   data() {
     return {
       selectedInstrument: this.$store.state.currentlySelectedInstrument,
+      selectedInstrumentWalletState: {},
       formData : {
         fromAccount: null,                  // to which SIGH is to be re-directed
         toAccount: null,                  // to which SIGH is to be re-directed
       },
-      currentAdministrator : null,      // SIGH Stream: Administrator Rights Holder
-      accuredSIGH: null,            // The redirected balance is the balance redirected by other accounts to the user,  that is accrueing SIGH for him.
-      instrumentBalances: null,       // accuredSIGHBalance * accuredSIGHBalanceWorth
+      SIGH_Price_ETH_ : null,
+      SIGH_Price_USD_ : null,
+      currentAdministratorFromAccount: null,
+      instrumentBalancesFromAccount: [],
       showLoader: false,
+      showLoaderRefresh: false,
     };
   },
 
   
 
-  created() {
-    this.selectedInstrument = this.$store.state.currentlySelectedInstrument,
-    this. getCurrentStateOfSIGHStream(false);                   // get the address to which the SIGH Stream is currently re-directed            
-    this.changeSelectedInstrument = (selectedInstrument_) => {                 //Changing Selected Instrument
-      this.selectedInstrument = selectedInstrument_.instrument;        
-      console.log('SIGH-STREAM : selected instrument changed - '+ this.selectedInstrument );
-      this. getCurrentStateOfSIGHStream(false);
-    };    
-    ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);    
+  async created() {
+    console.log("IN STREAMING / SIGH_STREAMING / YOUR ACCOUNT (TRADE-PANE) FUNCTION ");
+    this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
+    console.log(this.selectedInstrument);
+    if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+    }
+    console.log(this.selectedInstrumentWalletState);
+    if ( this.$store.state.isNetworkSupported  ) {
+      setInterval(async () => {
+        if (this.$store.state.SIGHContractAddress != '0x0000000000000000000000000000000000000000') {
+          this.SIGH_Price_ETH_ = await this.getInstrumentPrice({_instrumentAddress : this.$store.state.SIGHContractAddress });
+        }
+      },1000);
+    }
+
+    this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
+      console.log("NEW SELECTED INSTRUMENT");
+      this.selectedInstrument = selectedInstrument_.instrument;       // UPDATED SELECTED INSTRUMENT (LOCALLY)
+      console.log(this.selectedInstrument);   
+      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+      console.log(this.selectedInstrumentWalletState);
+    };
+    ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
   },
 
 
-  // computed: {
-  // },
+  computed: {
+    calculatedSIGH_PRICE_USD() {
+        if (this.sighInstrument && this.sighInstrument.priceDecimals) {
+          this.SIGH_Price_USD_ = Number( ( Number(this.SIGH_Price_ETH_) / Math.pow(10,this.sighInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4);
+          return this.SIGH_Price_USD_;
+        }
+      return 0;
+    }
+  },
+
 
   methods: {
-        // BORROW AMOUNT ALSO NEEDS TO BE CHECKED
-    ...mapActions(['IToken_redirectSighStreamOf','IToken_getSighAccured','IToken_getSighStreamAllowances','LendingPoolCore_getUserBasicInstrumentData']),
+
+    ...mapActions(['IToken_redirectSighStreamOf','getInstrumentPrice','refresh_User_Instrument_State','IToken_getSighStreamAllowances','LendingPoolCore_getUserBasicInstrumentData']),
     
 
 
     async redirectSIGHStreamOf() {                           // RE-DIRECT SIGH STREAM
       console.log('Addresses to which SIGH is to be re-directed to = ' + this.formData.toAccount);
       
-      await this. getCurrentStateOfSIGHStream(false);                   // get the address to which the SIGH Stream is currently re-directed            
+      if ( Web3.utils.isAddress(this.formData.toAccount) ) {          
+        await this.getDetailsOfTheFromAccount();          
+      }       
 
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
@@ -58,41 +86,65 @@ export default {
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
         this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
-      else if (Number(this.instrumentBalances[0]) == 0 &&  Number(this.instrumentBalances[1]) == 0  ) {
-        this.$showErrorMsg({message: " The 'From Account' " + this.$store.state.connectedWallet + " doesn't have any supplied or Borrowed " + this.selectedInstrument.symbol + " balance accuring SIGH for it. The account needs to deposit assets (accures $SIGH whenever the asset's price (USD) increases over 24 hrs period) or borrow assets ((accures $SIGH whenever the asset's price (USD) decreases over 24 hrs period) before you can Re-direct its SIGH stream. Contact our support team at contact@sigh.finance in case of any queries! "}); 
-      }
       else if ( !Web3.utils.isAddress(this.formData.toAccount) ) {            // 'ToAccount' provided is not Valid
         this.$showErrorMsg({message: " The Account Address provided is not valid ( check-sum check failed). Check the address again or contact our support team at contact@sigh.finance in case of any queries! "}); 
+      }
+      else if ( this.$store.state.connectedWallet != this.currentAdministratorFromAccount ) {
+        this.$showErrorMsg({message: " The Connected Account " + this.$store.state.connectedWallet  + " is not having administrator priviledges over the 'From' Account, which are currently with " + this.currentAdministratorFromAccount}); 
+      }
+      else if (Number(this.instrumentBalancesFromAccount[0]) == 0 &&  Number(this.instrumentBalancesFromAccount[1]) == 0  ) {
+        this.$showErrorMsg({message: " The 'From Account' " + this.formData.fromAccount + " doesn't have any supplied or Borrowed " + this.selectedInstrument.symbol + " balance accuring SIGH for it. The account needs to deposit assets (accures $SIGH whenever the asset's price (USD) increases over 24 hrs period) or borrow assets ((accures $SIGH whenever the asset's price (USD) decreases over 24 hrs period) before you can Re-direct its SIGH stream. Contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else {                                  // EXECUTE THE TRANSACTION
         this.showLoader = true;
         let response =  await this.IToken_redirectSighStreamOf( { iTokenAddress:  this.selectedInstrument.iTokenAddress, _from: this.formData.fromAccount, _to: this.formData.toAccount } );
         if (response.status) {  
-          await this.getCurrentStateOfSIGHStream(true);
           this.$showSuccessMsg({message: "SIGH STREAM for  "  + this.selectedInstrument.symbol +  " of the account " + this.formData.fromAccount + " has been successfully re-directed to " + this.formData.toAccount   });
+          this.formData.fromAccount = null;
+          this.formData.toAccount = null;
           this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'SIGHRedirectedFrom',Service: 'STREAMING'});
+          await this.refreshCurrentInstrumentWalletState(false);
         }
         else {
           this.$showErrorMsg({message: "SIGH STREAM RE-DIRECTION FAILED : " + response.message  });
           this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
         }
-        this.formData.toAccount = null;
         this.showLoader = false;
       }
     },
 
 
-
-    async  getCurrentStateOfSIGHStream(toDisplay) {
-      console.log(this.selectedInstrument);
-        if (this.$store.getters.connectedWallet && this.selectedInstrument.iTokenAddress) {
-        this.accuredSIGH = await this.IToken_getSighAccured({ iTokenAddress: this.selectedInstrument.iTokenAddress, _user: this.$store.state.connectedWallet});
-        this.currentAdministrator = await this.IToken_getSighStreamAllowances({ iTokenAddress: this.selectedInstrument.iTokenAddress, _user: this.formData.fromAccount   });
-        this.instrumentBalances = await this.LendingPoolCore_getUserBasicInstrumentData({ _instrument: this.selectedInstrument.instrumentAddress, _user: this.formData.fromAccount   });
-        // this.redirectedBalanceWorth = price * this.redirectedBalance;
-        if (toDisplay == true) {
-            this.$showInfoMsg({message: " Accured SIGH: " + this.accuredSIGH });
+    async refreshCurrentInstrumentWalletState(toDisplay) {
+      if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        try {
+          this.showLoaderRefresh = true;          
+          // console.log("refreshCurrentInstrumentWalletState() in DEPOSIT-QUANTITY");
+          let response = await this.refresh_User_Instrument_State({cur_instrument: this.selectedInstrument });
+          // console.log(response);
+          // console.log("getting WalletInstrumentStates MAPPING before UPDATING & COMMITING  in DEPOSIT-QUANTITY");
+          // console.log(this.$store.getters.getWalletInstrumentStates);
+          this.$store.commit("addToWalletInstrumentStates",{instrumentAddress : this.selectedInstrument.instrumentAddress  , walletInstrumentState: response});
+          // console.log("getting WalletInstrumentStates MAPPING after UPDATING & COMMITING  in DEPOSIT-QUANTITY");
+          // console.log(this.$store.getters.getWalletInstrumentStates);
+          this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+          if (toDisplay) {
+            this.$showInfoMsg({message:  this.$store.state.connectedWallet + " : " + this.selectedInstrument.symbol + " Instrument's $SIGH FARM State have been refreshed! " });        
+          }
         }
+        catch(error) {
+          console.log( 'FAILED' );
+        }
+        this.showLoaderRefresh = false;        
+      }
+    },
+
+
+    async  getDetailsOfTheFromAccount() {
+        console.log("CHECK CHECK CHECK");
+        if (this.$store.getters.connectedWallet && this.selectedInstrument.iTokenAddress) {
+        this.currentAdministratorFromAccount = await this.IToken_getSighStreamAllowances({ iTokenAddress: this.selectedInstrument.iTokenAddress, _user: this.formData.fromAccount   });
+        console.log(this.currentAdministratorFromAccount);
+        this.instrumentBalancesFromAccount = await this.LendingPoolCore_getUserBasicInstrumentData({ _instrument: this.selectedInstrument.instrumentAddress, _user: this.formData.fromAccount   });
       }
     } 
 

@@ -1087,9 +1087,12 @@ const store = new Vuex.Store({
         cur_user_instrument_state.originationFee =  response.originationFee ;
         cur_user_instrument_state.variableBorrowIndex =  response.variableBorrowIndex ;      
         cur_user_instrument_state.usageAsCollateralEnabled = response.usageAsCollateralEnabled ;       
-        cur_user_instrument_state.sighSupplierSpeed = response.usageAsCollateralEnabled ;       
-        cur_user_instrument_state.sighBorrowerSpeed = response.usageAsCollateralEnabled ;       
-        cur_user_instrument_state.sighStakingSpeed = response.usageAsCollateralEnabled ;       
+
+        // INSTRUMENT SIGH SPEEDS 
+        let sighSpeeds = await store.dispatch("SIGHDistributionHandler_getInstrumentSpeeds",{instrument_:cur_instrument.instrumentAddress });           
+        cur_user_instrument_state.sighSupplierSpeed =   sighSpeeds.suppliers_Speed ;       
+        cur_user_instrument_state.sighBorrowerSpeed = sighSpeeds.borrowers_Speed ;       
+        cur_user_instrument_state.sighStakingSpeed = sighSpeeds.staking_Speed ;       
 
         // INTEREST STREAM 
         cur_user_instrument_state.redirectedBalance =  await store.dispatch("IToken_getRedirectedBalance",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
@@ -1102,16 +1105,14 @@ const store = new Vuex.Store({
         cur_user_instrument_state.sighStreamAllowance =  await store.dispatch("IToken_getSighStreamAllowances",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ; 
 
         // SIGH SPEEDS FOR THE USER
-        let sighSpeeds = await store.dispatch("SIGHDistributionHandler_getInstrumentSpeeds",{instrument_:cur_instrument.instrumentAddress });           
-
         let globalState = state.supportedInstrumentGlobalStates.get(cur_instrument.instrumentAddress);
         let suppliedSighSpeedForUser = 0;        
         let borrowedSighSpeedForUser = 0;        
         if (globalState.totalLiquidity > 0) {
-          suppliedSighSpeedForUser = ( Number(sighSpeeds.suppliers_Speed) + Number(sighSpeeds.borrowers_Speed) ) * ( Number(cur_user_instrument_state.userDepositedBalance) / Number(globalState.totalLiquidity) );
+          suppliedSighSpeedForUser = ( Number(sighSpeeds.suppliers_Speed) + Number(sighSpeeds.staking_Speed) ) * ( Number(cur_user_instrument_state.userDepositedBalance) / Number(globalState.totalLiquidity) );
         }
         if (globalState.totalBorrows > 0) {
-          borrowedSighSpeedForUser = ( Number(sighSpeeds.borrowers_Speed) + Number(sighSpeeds.borrowers_Speed) ) * ( Number(cur_user_instrument_state.currentBorrowBalance) / Number(globalState.totalBorrows) );
+          borrowedSighSpeedForUser = ( Number(sighSpeeds.borrowers_Speed) + Number(sighSpeeds.staking_Speed) ) * ( Number(cur_user_instrument_state.currentBorrowBalance) / Number(globalState.totalBorrows) );
         }
         cur_user_instrument_state.suppliedSighSpeedForUser = suppliedSighSpeedForUser;
         cur_user_instrument_state.borrowedSighSpeedForUser = borrowedSighSpeedForUser;
@@ -2223,8 +2224,8 @@ IToken_getSighStreamRedirectedTo: async ({commit,state},{iTokenAddress,_user}) =
 IToken_getSighStreamAllowances: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    // console.log(iTokenAddress);
-    // console.log(_user);
+    console.log(iTokenAddress);
+    console.log(_user);
     // console.log(iTokenContract);
     const response = await iTokenContract.methods.getSighStreamAllowances(_user).call();
     console.log('IToken_getSighStreamAllowances ' + response );

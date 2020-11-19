@@ -195,7 +195,9 @@ export default {
     async refresh_Wallet_SIGH_State(toDisplay) {
       if ( this.$store.state.web3 && this.$store.state.isNetworkSupported &&  this.$store.state.SIGHContractAddress  ) {       // Network Currently Connected To Check
         try {
+          if (toDisplay) {
           this.$showInfoMsg({ message: "Initiating re-calculation of current Aggregated $SIGH Yields across your Portfolio ! "});          
+          }
           this.showLoaderRefresh = true;
           this.sighInstrument = this.$store.state.SIGHState;
           console.log("refreshWallet_SIGH_State() in STAKE_SIGH / QUANTITY");

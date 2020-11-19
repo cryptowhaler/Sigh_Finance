@@ -12,49 +12,67 @@ export default {
   data() {
     return {
       selectedInstrument: this.$store.state.currentlySelectedInstrument,
+      selectedInstrumentWalletState: {},
       formData : {
         toAccount: null,                  // to which SIGH is to be re-directed
       },
-      currentAdministrator : null,      // SIGH Stream: Administrator Rights Holder
-      currentlyRedirectedTo : null,       // SIGH currently re-directed to
-      accuredSIGH: null,            // The redirected balance is the balance redirected by other accounts to the user,  that is accrueing SIGH for him.
-      instrumentBalances: null,       // accuredSIGHBalance * accuredSIGHBalanceWorth
-
+      SIGH_Price_ETH_ : null,
+      SIGH_Price_USD_ : null,
       showLoader: false,
+      showLoaderRefresh: false,
     };
   },
 
   
 
-  created() {
-    this.selectedInstrument = this.$store.state.currentlySelectedInstrument,
-    this. getCurrentStateOfSIGHStream(false);                   // get the address to which the SIGH Stream is currently re-directed            
-    this.changeSelectedInstrument = (selectedInstrument_) => {                 //Changing Selected Instrument
-      this.selectedInstrument = selectedInstrument_.instrument;        
-      console.log('SIGH-STREAM : selected instrument changed - '+ this.selectedInstrument );
-      this. getCurrentStateOfSIGHStream(false);
-    };    
-    ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);    
+  async created() {
+    console.log("IN STREAMING / SIGH_STREAMING / YOUR ACCOUNT (TRADE-PANE) FUNCTION ");
+    this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
+    console.log(this.selectedInstrument);
+    if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+    }
+    console.log(this.selectedInstrumentWalletState);
+    if ( this.$store.state.isNetworkSupported  ) {
+      setInterval(async () => {
+        if (this.$store.state.SIGHContractAddress != '0x0000000000000000000000000000000000000000') {
+          this.SIGH_Price_ETH_ = await this.getInstrumentPrice({_instrumentAddress : this.$store.state.SIGHContractAddress });
+        }
+      },1000);
+    }
+
+    this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
+      console.log("NEW SELECTED INSTRUMENT");
+      this.selectedInstrument = selectedInstrument_.instrument;       // UPDATED SELECTED INSTRUMENT (LOCALLY)
+      console.log(this.selectedInstrument);   
+      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+      console.log(this.selectedInstrumentWalletState);
+    };
+    ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
+  },
+
+
+  computed: {
+    calculatedSIGH_PRICE_USD() {
+        if (this.sighInstrument && this.sighInstrument.priceDecimals) {
+          this.SIGH_Price_USD_ = Number( ( Number(this.SIGH_Price_ETH_) / Math.pow(10,this.sighInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4);
+          return this.SIGH_Price_USD_;
+        }
+      return 0;
+    }
   },
 
 
 
-  // computed: {
-  // },
-
-
-
   methods: {
-        // BORROW AMOUNT ALSO NEEDS TO BE CHECKED
-    ...mapActions(['IToken_redirectSighStream','IToken_allowSighRedirectionTo','IToken_claimMySIGH','IToken_getSighAccured','IToken_getSighStreamRedirectedTo','IToken_getSighStreamAllowances','LendingPoolCore_getUserBasicInstrumentData']),
+
+    ...mapActions(['IToken_redirectSighStream','IToken_allowSighRedirectionTo','IToken_claimMySIGH','getInstrumentPrice','refresh_User_Instrument_State']),
     
 
 
-    async redirectSIGHStream() {                           // RE-DIRECT SIGH STREAM
+    async redirectSIGHStream() {       // RE-DIRECT SIGH STREAM
       console.log('Addresses to which SIGH is to be re-directed to = ' + this.formData.toAccount);
       
-      await this. getCurrentStateOfSIGHStream(false);                   // get the address to which the SIGH Stream is currently re-directed            
-
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
         this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
@@ -62,7 +80,7 @@ export default {
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
         this.$showInfoMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
-      else if (Number(this.instrumentBalances[0]) == 0 &&  Number(this.instrumentBalances[1]) == 0  ) {
+      else if (Number(this.selectedInstrumentWalletState.userDepositedBalance ) == 0 &&  Number(this.selectedInstrumentWalletState.currentBorrowBalance ) == 0  ) {
         this.$showErrorMsg({message: " The Connected Account " + this.$store.state.connectedWallet + " doesn't have any supplied or Borrowed " + this.selectedInstrument.symbol + " balance accuring SIGH for itself. You need to deposit assets (accures $SIGH whenever the asset's price (USD) increases over 24 hrs period) or borrow assets ((accures $SIGH whenever the asset's price (USD) decreases over 24 hrs period) before you can Re-direct its SIGH stream. Contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else if ( !Web3.utils.isAddress(this.formData.toAccount) ) {            // 'ToAccount' provided is not Valid
@@ -72,15 +90,15 @@ export default {
         this.showLoader = true;
         let response =  await this.IToken_redirectSighStream( { iTokenAddress:  this.selectedInstrument.iTokenAddress, _to: this.formData.toAccount } );
         if (response.status) {  
-          await this.getCurrentStateOfSIGHStream(true);
           this.$showSuccessMsg({message: "SIGH STREAM for the instrument "  + this.selectedInstrument.symbol +  " has been successfully re-directed to " + this.formData.toAccount + " from the connected Account " +  this.$store.state.connectedWallet  });
+          this.formData.toAccount = null;
+          await this.refreshCurrentInstrumentWalletState(true);
           this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'SIGHRedirected',Service: 'STREAMING'});
         }
         else {
           this.$showErrorMsg({message: "SIGH STREAM RE-DIRECTION FAILED : " + response.message  });
           this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
         }
-        this.formData.toAccount = null;
         this.showLoader = false;
       }
     },
@@ -88,10 +106,8 @@ export default {
 
 
     async allowSIGHRedirectionTo() {                           // RE-DIRECT SIGH STREAM
-      // let price = (this.$store.state.SighInstrumentState.price / Math.pow(10,this.$store.state.SighInstrumentState.priceDecimals)).toFixed(4);
-      console.log('Account to which the administrator priviledges to re-direct SIGH will be transferred = ' + this.formData.toAccount);
 
-      await this. getCurrentStateOfSIGHStream(false);                   // get the address to which the SIGH Stream is currently re-directed            
+      console.log('Account to which the administrator priviledges to re-direct SIGH will be transferred = ' + this.formData.toAccount);
 
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
@@ -100,7 +116,7 @@ export default {
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
         this.$showInfoMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
-      else if ( Number(this.instrumentBalances[0]) == 0 && Number(this.instrumentBalances[1]) == 0   ) {
+      else if (Number(this.selectedInstrumentWalletState.userDepositedBalance ) == 0 &&  Number(this.selectedInstrumentWalletState.currentBorrowBalance ) == 0  ) {
         this.$showErrorMsg({message: " The Connected Account " + this.$store.state.connectedWallet + " doesn't have any supplied or Borrowed " + this.selectedInstrument.symbol + " balance accuring SIGH for itself. You need to deposit assets (accures $SIGH whenever the asset's price (USD) increases over 24 hrs period) or borrow assets ((accures $SIGH whenever the asset's price (USD) decreases over 24 hrs period) before you can Re-direct its SIGH stream. Contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else if ( !Web3.utils.isAddress(this.formData.toAccount) ) {            // 'ToAccount' provided is not Valid
@@ -110,15 +126,15 @@ export default {
         this.showLoader = true;
         let response =  await this.IToken_allowSighRedirectionTo( { iTokenAddress:  this.selectedInstrument.iTokenAddress, _to: this.formData.toAccount } );
         if (response.status) {  
-          await this.getCurrentStateOfSIGHStream(true);
           this.$showSuccessMsg({message: "ADMINISTRATOR PRIVILEDGES to re-direct the SIGH STREAM for the instrument "  + this.selectedInstrument.symbol +  " of the connected Account " +  this.$store.state.connectedWallet + " has been transferred to " + this.formData.toAccount  });
+          this.formData.toAccount = null;
+          await this.refreshCurrentInstrumentWalletState(true);          
           this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'SIGHRidirectionRightsTransferred',Service: 'STREAMING'});
         }
         else {
           this.$showErrorMsg({message: " TRANSFERING ADMINISTRATOR PRIVILEDGES FAILED: " + response.message  });
           this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
         }
-        this.formData.toAccount = null;
         this.showLoader = false;
       }
     },
@@ -127,10 +143,8 @@ export default {
 
 
     async claimMySIGH() {                           // RE-DIRECT SIGH STREAM
-      // let price = (this.$store.state.SighInstrumentState.price / Math.pow(10,this.$store.state.SighInstrumentState.priceDecimals)).toFixed(4);
-      console.log(' Claim SIGH = ');
 
-      await this. getCurrentStateOfSIGHStream(false);                   // get the address to which the SIGH Stream is currently re-directed            
+      console.log(' Claim SIGH = ');
 
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
@@ -139,15 +153,15 @@ export default {
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
         this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
-      else if ( Number(this.instrumentBalances[0]) == 0 && Number(this.instrumentBalances[1]) == 0  && Number(this.accuredSIGH) == 0  ) {
-        this.$showErrorMsg({message: " The Connected Account " + this.$store.state.connectedWallet + " doesn't have any SIGH accured and haven't yet supplied / Borrowed any " + this.selectedInstrument.symbol + " which can farm SIGH to hedge its losses. Contact our support team at contact@sigh.finance in case of any queries! "}); 
-      }
+      // else if ( Number(this.instrumentBalances[0]) == 0 && Number(this.instrumentBalances[1]) == 0  && Number(this.accuredSIGH) == 0  ) {
+      //   this.$showErrorMsg({message: " The Connected Account " + this.$store.state.connectedWallet + " doesn't have any SIGH accured and haven't yet supplied / Borrowed any " + this.selectedInstrument.symbol + " which can farm SIGH to hedge its losses. Contact our support team at contact@sigh.finance in case of any queries! "}); 
+      // }
       else {                                  // EXECUTE THE TRANSACTION
         this.showLoader = true;
         let response =  await this.IToken_claimMySIGH({iTokenAddress : this.selectedInstrument.iTokenAddress });
         if (response.status) {  
-          // await this.getCurrentStateOfSIGHStream(true);
           this.$showSuccessMsg({message: " Farmed $SIGH have been successfully harvested!" });
+          await this.refreshCurrentInstrumentWalletState(true);                    
           this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'SIGHClaimed',Service: 'STREAMING'});
         }
         else {
@@ -162,21 +176,32 @@ export default {
 
 
 
-    async  getCurrentStateOfSIGHStream(toDisplay) {
-      console.log(this.selectedInstrument);
-      if (this.$store.getters.connectedWallet && this.selectedInstrument.iTokenAddress) {
-        this.accuredSIGH = await this.IToken_getSighAccured({ iTokenAddress: this.selectedInstrument.iTokenAddress, _user: this.$store.getters.connectedWallet  });
-        this.currentlyRedirectedTo = await this.IToken_getSighStreamRedirectedTo({iTokenAddress: this.selectedInstrument.iTokenAddress, _user: this.$store.getters.connectedWallet });
-        this.currentAdministrator = await this.IToken_getSighStreamAllowances({ iTokenAddress: this.selectedInstrument.iTokenAddress, _user: this.$store.getters.connectedWallet  });
-        this.instrumentBalances = await this.LendingPoolCore_getUserBasicInstrumentData({ _instrument: this.selectedInstrument.instrumentAddress, _user: this.$store.getters.connectedWallet  });
-        // this.redirectedBalanceWorth = price * this.redirectedBalance;
-        if (toDisplay == true) {
-            this.$showInfoMsg({message: " Accured SIGH : " + this.accuredSIGH });
-            this.$showInfoMsg({message: "Your SIGH Stream currently re-directed to = " + this.currentlyRedirectedTo + ". Your SIGH Stream's administrator right's holder " + this.currentAdministrator });
+    async refreshCurrentInstrumentWalletState(toDisplay) {
+      if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        try {
+          this.showLoaderRefresh = true;          
+          // console.log("refreshCurrentInstrumentWalletState() in DEPOSIT-QUANTITY");
+          let response = await this.refresh_User_Instrument_State({cur_instrument: this.selectedInstrument });
+          // console.log(response);
+          // console.log("getting WalletInstrumentStates MAPPING before UPDATING & COMMITING  in DEPOSIT-QUANTITY");
+          // console.log(this.$store.getters.getWalletInstrumentStates);
+          this.$store.commit("addToWalletInstrumentStates",{instrumentAddress : this.selectedInstrument.instrumentAddress  , walletInstrumentState: response});
+          // console.log("getting WalletInstrumentStates MAPPING after UPDATING & COMMITING  in DEPOSIT-QUANTITY");
+          // console.log(this.$store.getters.getWalletInstrumentStates);
+          this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+          if (toDisplay) {
+            this.$showInfoMsg({message:  this.$store.state.connectedWallet + " : " + this.selectedInstrument.symbol + " Instrument's $SIGH FARM State have been refreshed! " });        
+          }
         }
+        catch(error) {
+          console.log( 'FAILED' );
+        }
+        this.showLoaderRefresh = false;        
       }
     }
+
   },
+
 
 
 

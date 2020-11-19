@@ -17,9 +17,7 @@
     <!-- Tabbing between Deposit/Redeem/Borrow/Repay -->
     <div class="cs-tab-1 uk-position-relative ">
         <tab-bar :mobileDropdown=false marketDropdown="false" :tabs=tabs @tab-change="activeTabChange" />
-        
         <br> <br> <br> <br>
-
         <keep-alive>
             <Deposit  v-if="activeTab === 'Deposit' " />
             <Redeem   v-if="activeTab === 'Redeem' " />

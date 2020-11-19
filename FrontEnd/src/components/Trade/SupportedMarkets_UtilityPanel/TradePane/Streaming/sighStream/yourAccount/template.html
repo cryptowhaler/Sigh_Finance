@@ -1,32 +1,106 @@
 <div class= "yourAccount">
-    <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
+    <div class="f1-form-grid" style="position: relative;">
     </div> 
+
+    <div class="sighStream-yourAccount-form" style="padding-top: 15px;" >
+        <div class="uk-grid uk-grid-small f1-form-grid">
+            <div class="uk-width-1-1">
+                <div class="form-grp">
+                    <div class="form-elm">
+                        <input style="text-align: center;" class="form-ctrl" type="text" placeholder="To Account (Address)" v-model="formData.toAccount">
+                        <span   style='color:antiquewhite; padding-left:10px;'>  TO ACCOUNT :  </span>
+                    </div>
+                </div>
+            </div>
+        </div>
     
-    <div class="uk-grid uk-grid-small f1-form-grid">
-        <div class="uk-width-1-1">
-            <div class="form-grp">
-                <div class="form-elm">
-                    <input style="text-align: right;" class="form-ctrl" type="text" placeholder="To Account (Address)" v-model="formData.toAccount">
-                    <span   style='color:antiquewhite; padding-left:10px;'>  TO ACCOUNT  </span>
+        <div class="uk-grid uk-grid-small f1-form-grid">
+             <!-- Loading image -->        
+            <div v-if="showLoader" class="uk-width-1-1 center">
+                <img src="https://image.ibb.co/dc02hd/30.gif" />
+            </div>
+            <!-- Buttons (Re-Direct SIGH Stream / Transfer Administrator Priviledges) -->
+            <div v-else class="uk-width-1-1" style="margin-bottom: 15px; margin-top: 15px;"  >
+                <div class="center">
+                    <button class="uk-button uk-button-green"  @click="redirectSIGHStream()">Re-Direct SIGH Stream</button>
+                    <button class="uk-button uk-button-green"  @click="allowSIGHRedirectionTo()">Transfer Administrator Priviledges</button>
+                    <button class="uk-button uk-button-green"  @click="claimMySIGH()">Claim SIGH</button>
                 </div>
             </div>
         </div>
     </div>
 
 
-    <!-- Loading image -->
-    
-    <div class="uk-grid uk-grid-small f1-form-grid">
-        <div v-if="showLoader" class="uk-width-1-1 center">
-            <img src="https://image.ibb.co/dc02hd/30.gif" />
-        </div>
-<!-- Buttons (Re-Direct SIGH Stream / Transfer Administrator Priviledges) -->
-        <div v-else class="uk-width-1-1">
-            <div class="center">
-                <button class="uk-button uk-button-green"  @click="redirectSIGHStream()">Re-Direct SIGH Stream</button>
-                <button class="uk-button uk-button-green"  @click="allowSIGHRedirectionTo()">Transfer Administrator Priviledges</button>
-                <button class="uk-button uk-button-green"  @click="claimMySIGH()">Claim SIGH</button>
-            </div>
-        </div>
+    <div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 20px; margin-bottom: 20px;" >
+        <table style="color: white;" >
+            <tr>
+                <td > >   $SIGH Price &nbsp; : &nbsp; {{  calculatedSIGH_PRICE_USD }} USD </td> 
+            </tr>
+            <tr>
+                <td > >   $SIGH Accured &nbsp; : &nbsp; {{  Number(selectedInstrumentWalletState.sighAccured).toFixed(4) }} (  {{  Number(Number(selectedInstrumentWalletState.sighAccured) * Number(SIGH_Price_USD_) ).toFixed(4)  }} USD )   </td> 
+            </tr>
+            <tr>
+                <td> >  {{ selectedInstrument.symbol  }} Deposit Balance &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(4)  }}  </td> 
+            </tr>
+            <tr>
+                <td> >   {{ selectedInstrument.symbol  }} Borrow Balance &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.currentBorrowBalance).toFixed(4)  }}  </td> 
+            </tr>
+
+            <h3 style="font-size: 13px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; ">  $SIGH YIELDS : "{{ this.$store.state.connectedWallet }} : {{ selectedInstrument.symbol }}"   </h3>
+            <tr>
+                <td> >  &nbsp; $SIGH Speed (Supplied Balance) &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.suppliedSighSpeedForUser).toFixed(4) }} % </td> 
+            </tr>
+            <tr>
+                <td> >  &nbsp; $SIGH Speed (Borrowed Balance) &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.borrowedSighSpeedForUser).toFixed(4) }} % </td> 
+            </tr>
+            <tr>
+                <td> >  &nbsp; Total $SIGH Speed &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.SighSpeedForUser).toFixed(4) }} % </td> 
+            </tr>
+            <tr>
+                <td> >  &nbsp; $SIGH Yield  &nbsp; : &nbsp; 0 % </td> 
+            </tr>
+            <tr>
+                <td> >  &nbsp; Streaming To &nbsp; : &nbsp; {{ selectedInstrumentWalletState.sighStreamRedirectedTo }} </td> 
+            </tr>
+            <tr>
+                <td> >  &nbsp; Allowance Holder &nbsp; : &nbsp; {{ selectedInstrumentWalletState.sighStreamAllowance }} </td> 
+            </tr>
+
+            <h3 style="font-size: 13px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> $SIGH STREAMING SPEEDS : {{ selectedInstrument.symbol }} INSTRUMENT  </h3>
+            <tr>
+                <td> >  &nbsp; Average Volatility (30 days) &nbsp; : &nbsp; 0 % </td> 
+            </tr>
+            <tr>
+                <td> >  &nbsp; $SIGH Speed (Staking) &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.sighStakingSpeed).toFixed(4) }} % </td> 
+            </tr>
+            <tr>
+                <td> >  &nbsp; $SIGH Speed (Suppliers) &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.sighSupplierSpeed).toFixed(4) }} % </td> 
+            </tr>
+            <tr>
+                <td> >  &nbsp; $SIGH Speed (Borrowers) &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.sighBorrowerSpeed).toFixed(4) }} % </td> 
+            </tr>
+            <tr>
+                <td> >  &nbsp; $SIGH Yield vs Loss Ratio (Suppliers) &nbsp; : &nbsp; 0 % </td> 
+            </tr>
+            <tr>
+                <td> >  &nbsp; $SIGH Yield vs Loss Ratio (Borrowers) &nbsp; : &nbsp; 0  % </td> 
+            </tr>
+
+        </table>
     </div>
+
+
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <!-- Loading image -->        
+       <div v-if="showLoaderRefresh" class="uk-width-1-1 center">
+           <img src="https://image.ibb.co/dc02hd/30.gif" />
+       </div>
+       <!-- REFRESH BUTTONS -->
+       <div v-else class="uk-width-1-1" style="margin-bottom: 15px; margin-top: 15px;"  >
+            <div class="center">
+                <button class="uk-button uk-button-black"  @click="refreshCurrentInstrumentWalletState(true)">Refresh</button>
+            </div>    
+        </div>    
+    </div>    
+  
 </div>
