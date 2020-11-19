@@ -28,7 +28,7 @@ export default {
 
   data() {
     return {
-      activeTab: 'Balance',
+      activeTab: 'Lending',
       tabs: {
         walletNotConnectedTabs: ['Balance','Lending','Streaming','Stake SIGH'], // ,'Interest Rates'
         walletConnectedTabs: ['Balance','Lending','Streaming','Stake SIGH'],    // ,'Interest Rates'
@@ -66,8 +66,8 @@ export default {
     },
 
     userWalletDisconnectedListener() {
-      this.activeTab = 'Balance';
-      this.tabBarEventBus.$emit('change-active-tab', 'Balance');
+      this.activeTab = 'Lending';
+      this.tabBarEventBus.$emit('change-active-tab', 'Lending');
     },    
 
   },

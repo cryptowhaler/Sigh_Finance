@@ -956,25 +956,76 @@ const store = new Vuex.Store({
 
 
     getWalletSIGHFinanceState: async ({commit,state}) => {
-
       try {
+        // RESETTING WALLET - INSTRUMENT STATES (AS THEY ARE REFRESHED DURING WALLET-SIGH STATE REFRESH)
         console.log("FETCHING USER SESSION : BEGINNING INITIALIZATION ");
-        commit("resetWalletInstrumentStates"); // RESETTING WALLET - INSTRUMENT STATE
+
+        // REFRESSHING AND COMITTITNG THE LATEST WALLET - SIGH STATE
+        let ConnectedWallet_SIGH_State = await store.dispatch("refresh_User_SIGH__State"); 
+        commit("setWalletSIGHState",ConnectedWallet_SIGH_State);
+
+        // REFRESSHING AND COMITTITNG THE USER GLOBAL SIGH FINANCE STATE               
+        let userGlobalState = await store.dispatch("refresh_User_SIGH_Finance_State");
+        commit("setWalletSIGH_FinanceState",userGlobalState);
+        return true;
+      }
+      catch (error) {
+        console.log(error);
+        return false;
+      }
+    }, 
+
+
+
+  refresh_User_SIGH_Finance_State: async({commit,state}) => {
+    if (state.web3 && state.isNetworkSupported && state.connectedWallet) {
+      try {
+        let userGlobalState = {};
+        let userGlobalStateResponse = await store.dispatch("getUserProtocolState", {_user: state.connectedWallet} );
+        userGlobalState.totalLiquidityETH = userGlobalStateResponse.totalLiquidityETH ;
+        userGlobalState.totalLiquidityUSD = await store.dispatch("convertToUSD",{ETHValue: Number(userGlobalState.totalLiquidityETH)}); 
+        userGlobalState.totalCollateralETH = userGlobalStateResponse.totalCollateralETH ;
+        userGlobalState.totalCollateralUSD = await store.dispatch("convertToUSD",{ETHValue: Number(userGlobalState.totalCollateralETH)}); 
+        userGlobalState.totalBorrowsETH = userGlobalStateResponse.totalBorrowsETH ;
+        userGlobalState.totalBorrowsUSD = await store.dispatch("convertToUSD",{ETHValue: Number(userGlobalState.totalBorrowsETH)}); 
+        userGlobalState.totalFeesETH = userGlobalStateResponse.totalFeesETH ;
+        userGlobalState.totalFeesUSD = await store.dispatch("convertToUSD",{ETHValue: Number(userGlobalState.totalFeesETH)}); 
+        userGlobalState.availableBorrowsETH = userGlobalStateResponse.availableBorrowsETH ;
+        userGlobalState.availableBorrowsUSD = await store.dispatch("convertToUSD",{ETHValue: Number(userGlobalState.availableBorrowsETH)}); 
+        userGlobalState.currentLiquidationThreshold = userGlobalStateResponse.currentLiquidationThreshold ;
+        userGlobalState.ltv = userGlobalStateResponse.ltv ;
+        userGlobalState.healthFactor = userGlobalStateResponse.healthFactor ;  
+        return userGlobalState;
+      }
+      catch (error) {
+        console.log("refresh_User_SIGH_Finance_State");
+        console.log(error);
+        return {};
+      }
+    }
+    return {};
+  },
+
+
+  refresh_User_SIGH__State: async({commit,state}) => {
+    if (state.web3 && state.isNetworkSupported && state.connectedWallet) {
+      try {
         let walletSighState = {};
         walletSighState.sighBalance = await store.dispatch("ERC20_balanceOf",{tokenAddress: state.SIGHContractAddress , account: state.connectedWallet});
         walletSighState.sighBalanceWorth = Number(walletSighState.sighBalance) * (Number(state.SIGHState.priceETH) / Math.pow(10,Number(state.SIGHState.priceDecimals))) * (Number(state.ethereumPriceUSD) / Math.pow(10,state.ethPriceDecimals));
 
         walletSighState.sighStaked = await store.dispatch("SIGHStaking_getStakedBalanceForStaker",{ _user: state.connectedWallet});
         walletSighState.sighStakedWorth = Number(walletSighState.sighStaked) * (Number(state.SIGHState.priceETH) / Math.pow(10,Number(state.SIGHState.priceDecimals))) * (Number(state.ethereumPriceUSD) / Math.pow(10,state.ethPriceDecimals));
-        // walletSighState.sighStakingAPY = 
-        // walletSighState.sighStakingAPYWorth = store.dispatch("SIGHStaking_getStakedBalanceForStaker",{ _user: state.connectedWallet});
 
-        console.log(state.supportedInstruments);
+        walletSighState.sighStakingAllowance = await store.dispatch("ERC20_getAllowance",{tokenAddress: state.SIGHContractAddress , owner: state.connectedWallet, spender: state.sighStakingContractAddress });
 
+        walletSighState.sighStakedAPY = 0 ;  //await store.dispatch("SIGHStaking_getStakedBalanceForStaker",{ _user: state.connectedWallet});
+        walletSighState.yourSighStakedAPY =  0;  // Number(walletSighState.sighStaked) * (Number(state.SIGHState.priceETH) / Math.pow(10,Number(state.SIGHState.priceDecimals))) * (Number(state.ethereumPriceUSD) / Math.pow(10,state.ethPriceDecimals));
+
+        commit("resetWalletInstrumentStates"); // RESETTING WALLET - INSTRUMENT STATE
         for (let i=0; i < state.supportedInstruments.length; i++) { 
           let currentUserInstrumentState = await store.dispatch("refresh_User_Instrument_State",{cur_instrument: state.supportedInstruments[i]  }); 
           commit("addToWalletInstrumentStates",{ instrumentAddress: state.supportedInstruments[i].instrumentAddress, walletInstrumentState: currentUserInstrumentState }); 
-
           // Calculating Protocol Level Values by adding across instruments
           walletSighState.totalSighAccured = Number(walletSighState.totalSighAccured) + Number(currentUserInstrumentState.sighAccured) ;
           walletSighState.totalSuppliedSighSpeedForUser = Number(walletSighState.totalSuppliedSighSpeedForUser) + Number(currentUserInstrumentState.suppliedSighSpeedForUser);
@@ -986,19 +1037,20 @@ const store = new Vuex.Store({
         walletSighState.totalSuppliedSighSpeedForUserWorth = await store.dispatch("convertToUSD",{ETHValue: Number(walletSighState.totalSuppliedSighSpeedForUser) * Number(state.SIGHState.priceETH) / Math.pow(10,Number(state.SIGHState.priceDecimals)) }); 
         walletSighState.totalBorrowedSighSpeedForUserWorth = await store.dispatch("convertToUSD",{ETHValue: Number(walletSighState.totalBorrowedSighSpeedForUser) * Number(state.SIGHState.priceETH) / Math.pow(10,Number(state.SIGHState.priceDecimals)) }); 
         walletSighState.totalSighSpeedForUserWorth = await store.dispatch("convertToUSD",{ETHValue: Number(walletSighState.totalSighSpeedForUser) * Number(state.SIGHState.priceETH) / Math.pow(10,Number(state.SIGHState.priceDecimals)) }); 
-      // walletSighState.sighAccuredPerBlock = 
-        // walletSighState.sighAccuredPerBlockWorth = 
-        commit("setWalletSIGHState",walletSighState);
 
-        let userGlobalState = await store.dispatch("refresh_User_SIGH_Finance_State");
-        commit("setWalletSIGH_FinanceState",userGlobalState);
-        return true;
+        walletSighState.marketTotalVolatility = 0;
+        walletSighState.SighYieldsLossRatio = 0;
+        return walletSighState;
       }
       catch (error) {
+        console.log("refresh_User_SIGH__State");
         console.log(error);
-        return false;
+        return {};
       }
-    }, 
+    }
+    return {};
+  },
+
 
 
   refresh_User_Instrument_State: async({commit,state},{cur_instrument}) => {
@@ -1077,38 +1129,7 @@ const store = new Vuex.Store({
       }
     }
     return {};
-
-  },
-
-  refresh_User_SIGH_Finance_State: async({commit,state}) => {
-    if (state.web3 && state.isNetworkSupported && state.connectedWallet) {
-      try {
-        let userGlobalState = {};
-        let userGlobalStateResponse = await store.dispatch("getUserProtocolState", {_user: state.connectedWallet} );
-        userGlobalState.totalLiquidityETH = userGlobalStateResponse.totalLiquidityETH ;
-        userGlobalState.totalLiquidityUSD = await store.dispatch("convertToUSD",{ETHValue: Number(userGlobalState.totalLiquidityETH)}); 
-        userGlobalState.totalCollateralETH = userGlobalStateResponse.totalCollateralETH ;
-        userGlobalState.totalCollateralUSD = await store.dispatch("convertToUSD",{ETHValue: Number(userGlobalState.totalCollateralETH)}); 
-        userGlobalState.totalBorrowsETH = userGlobalStateResponse.totalBorrowsETH ;
-        userGlobalState.totalBorrowsUSD = await store.dispatch("convertToUSD",{ETHValue: Number(userGlobalState.totalBorrowsETH)}); 
-        userGlobalState.totalFeesETH = userGlobalStateResponse.totalFeesETH ;
-        userGlobalState.totalFeesUSD = await store.dispatch("convertToUSD",{ETHValue: Number(userGlobalState.totalFeesETH)}); 
-        userGlobalState.availableBorrowsETH = userGlobalStateResponse.availableBorrowsETH ;
-        userGlobalState.availableBorrowsUSD = await store.dispatch("convertToUSD",{ETHValue: Number(userGlobalState.availableBorrowsETH)}); 
-        userGlobalState.currentLiquidationThreshold = userGlobalStateResponse.currentLiquidationThreshold ;
-        userGlobalState.ltv = userGlobalStateResponse.ltv ;
-        userGlobalState.healthFactor = userGlobalStateResponse.healthFactor ;  
-        return userGlobalState;
-      }
-      catch (error) {
-        console.log("refresh_User_SIGH_Finance_State");
-        console.log(error);
-        return {};
-      }
-    }
-    return {};
-  },
-
+  },  
 
   convertToUSD: ({state},{ETHValue}) => {
     return Number(ETHValue) * (Number(state.ethereumPriceUSD) / Math.pow(10,state.ethPriceDecimals)) ;

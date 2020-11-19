@@ -9,7 +9,7 @@
                 <div class="form-grp">
                     <div class="form-elm">
                         <input style="text-align: center;" class="form-ctrl" type="text" placeholder="Number of tokens" v-model="formData.repayQuantity">
-                        <span style='color:antiquewhite'>  {{ selectedInstrument.symbol  }}  </span>
+                        <span   style='color:antiquewhite; padding-left:10px;'>  {{ selectedInstrument.symbol  }}  </span>
                     </div>
                 </div>
             </div>
@@ -20,7 +20,7 @@
                 <div class="form-grp">
                     <div class="form-elm">
                         <input style="text-align: center;"  class="form-ctrl" type="text" placeholder="Estimated Value " readonly :value="calculatedValue">
-                        <span  style='color:antiquewhite'> USD </span>
+                        <span    style='color:antiquewhite; padding-left:10px;'> USD </span>
                     </div>
                 </div>
             </div>
@@ -31,7 +31,7 @@
                 <div class="form-grp">
                     <div class="form-elm">
                         <input style="text-align: right;"  class="form-ctrl" type="text" placeholder="Address (Optional)" v-model="formData.onBehalfOf">
-                        <span  style='color:antiquewhite'> On Behalf Of </span>
+                        <span    style='color:antiquewhite; padding-left:10px;'> On Behalf Of </span>
                     </div>
                 </div>
             </div>

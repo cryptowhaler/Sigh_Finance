@@ -1,28 +1,25 @@
-<div id="lending-trade-tab" style="padding-left: 30%; padding-top: 3%; position: inherit;"> 
+<div id="lending-trade-tab" style="padding: 24px 24px; position: inherit;"> 
 
     <!-- SELECT INSTRUMENT DROPDOWN -->
     <div class="select-instrument-dropbox uk-position-top-right">
         <div class="form-elm select" style="width: 251px;">
-            <span style='color:cyan; font-size: 13px; font-weight: 400;'>  Select Instrument  </span>
+            <span style='color:cyan; font-size: 13px; font-weight: 400;'>  Select Instrument  : </span>
             <!-- Instrument selected is directly stored in 'this.selectedInstrument' -->
-            <select class="form-ctrl select2-single" @change=updateSelectedInstrument v-model=selectedInstrument>
+            <select class=" select2-single"  style="margin-left: 14px; margin-top: 9px; width: 42%;"   @change=updateSelectedInstrument v-model=selectedInstrument>
                 <!-- Dropdown list of instruments supported by SIGH Finance -->
                 <option v-for="instrument in $store.getters.getSupportedInstruments" :key=instrument.instrumentAddress :value=instrument>
                     {{ instrument.symbol }}
                 </option>
             </select>
-            <span style="color: aliceblue; font-size: 10px; line-height: 15px;" > Instrument Address : {{ $store.state.currentlySelectedInstrument.instrumentAddress }}  </span>
-            <span style="color: aliceblue; font-size: 10px; line-height: 15px;" > IToken Address : {{ $store.state.currentlySelectedInstrument.iTokenAddress }} </span>
         </div>
     </div>
 
-
+    <!-- INTEREST STREAMING -->
     <div class="cs-tab-1 uk-position-relative ">
-        <tab-bar style="padding-top: 24px;" :mobileDropdown=false marketDropdown="false" :tabs=tabs @tab-change="activeTabChange" />
-            
+        <tab-bar :mobileDropdown=false marketDropdown="false" :tabs=tabs @tab-change="activeTabChange" />            
         <keep-alive>
-            <sighStream style="padding-top: 142px;" v-if="activeTab === '$SIGH Stream'" />
-            <interestStream  style="padding-top: 142px; padding-right: 64px;" v-if="activeTab === 'Interest Stream'" />
+            <sighStream v-if="activeTab === '$SIGH Stream'" />
+            <interestStream v-if="activeTab === 'Interest Stream'" />
         </keep-alive>
     </div>
 </div>

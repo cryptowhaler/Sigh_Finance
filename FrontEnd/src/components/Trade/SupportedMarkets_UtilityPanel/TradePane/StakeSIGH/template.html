@@ -1,18 +1,15 @@
-<div id="lending-trade-tab" style="padding-left: 22%; padding-top: 1%; position: inherit;"> 
+<div id="lending-trade-tab" style="padding: 24px 24px; position: inherit;"> 
 
-    <!-- SELECT INSTRUMENT DROPDOWN -->
-    
 
-        <!-- Tabbing between Deposit/Redeem/Borrow/Repay -->
-        <div style="padding-top: 42px;" class="cs-tab-1 uk-position-relative ">
-            <tab-bar :mobileDropdown=false marketDropdown="false" :tabs=tabs @tab-change="activeTabChange" />
-    
+    <!-- Tabbing between STAKE / UNSTAKE -->
+    <div class="cs-tab-1 uk-position-relative ">
+        <tab-bar :mobileDropdown=false marketDropdown="false" :tabs=tabs @tab-change="activeTabChange" />        
+
             <keep-alive>
-                <sighQuantity style="width: 54%;" v-if="activeTab === 'Quantity'" />
-                <sighAmount style="width: 54%;" v-if="activeTab === 'Amount'" />
+                <sighQuantity v-if="activeTab === 'Quantity'" />
+                <sighAmount v-if="activeTab === 'Amount'" />
                 <!-- <infographics v-if="activeTab === 'Analytics'" /> -->
             </keep-alive>
-
-        </div>
+    </div>
     
 </div>

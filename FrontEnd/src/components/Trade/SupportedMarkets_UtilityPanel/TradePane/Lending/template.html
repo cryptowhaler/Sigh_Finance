@@ -3,16 +3,14 @@
 <!-- SELECT INSTRUMENT DROPDOWN -->
     <div class="select-instrument-dropbox uk-position-top-right">
         <div class="form-elm select" style="width: 251px;">
-            <span style='color:cyan; font-size: 13px; font-weight: 400;'>  Select Instrument  </span>
+            <span style='color:cyan; font-size: 13px; font-weight: 400;'>  Select Instrument  : </span>
              <!-- Instrument selected is directly stored in 'this.selectedInstrument' -->
-            <select class="form-ctrl select2-single" @change=updateSelectedInstrument v-model=selectedInstrument>
+            <select class="select2-single" style="margin-left: 14px; margin-top: 9px; width: 42%;" @change=updateSelectedInstrument v-model=selectedInstrument>
                 <!-- Dropdown list of instruments supported by SIGH Finance -->
                 <option v-for="instrument in $store.getters.getSupportedInstruments" :key=instrument.instrumentAddress :value=instrument>
                     {{ instrument.symbol }}
                 </option>
             </select>
-            <!-- <span style="color: aliceblue; font-size: 10px; line-height: 15px;" > {{ $store.state.currentlySelectedInstrument.symbol  }} Address : {{ $store.state.currentlySelectedInstrument.instrumentAddress }}  </span>
-            <span style="color: aliceblue; font-size: 10px; line-height: 15px;" > {{ $store.state.currentlySelectedInstrument.symbol  }}'s IToken Address : {{ $store.state.currentlySelectedInstrument.iTokenAddress }} </span> -->
         </div>
     </div>
 
