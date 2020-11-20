@@ -46,19 +46,6 @@ export default {
   },
 
 
-  computed: {
-    // calculatedSIGH_PRICE_USD() {
-    //     if (this.sighInstrument && this.sighInstrument.priceDecimals) {
-    //       this.SIGH_Price_USD_ = Number( ( Number(this.SIGH_Price_ETH_) / Math.pow(10,this.sighInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4);
-    //         console.log("SIGH STREAM : YOUR ACCOUNT, Price (USD) " + this.SIGH_Price_USD_);
-    //       return this.SIGH_Price_USD_;
-    //     }
-    //   return 0;
-    // }
-  },
-
-
-
   methods: {
 
     ...mapActions(['IToken_redirectSighStream','IToken_allowSighRedirectionTo','IToken_claimMySIGH','getInstrumentPrice','refresh_User_Instrument_State']),
@@ -70,7 +57,7 @@ export default {
             this.intervalActivated = true;
             this.SIGH_Price_ETH_ = await this.getInstrumentPrice({_instrumentAddress : this.$store.state.SIGHContractAddress });
             this.SIGH_Price_USD_ = Number( ( Number(this.SIGH_Price_ETH_) / Math.pow(10,this.sighInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4);
-            console.log("SIGH STREAM : YOUR ACCOUNT, Price (USD) " + this.SIGH_Price_USD_);
+            // console.log("SIGH STREAM : YOUR ACCOUNT, Price (USD) " + this.SIGH_Price_USD_);
           }
         },1000);
       this.sighInstrument = this.$store.state.SIGHState;    

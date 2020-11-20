@@ -48,7 +48,7 @@
     <div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 20px; margin-bottom: 20px;" >
         <table style="color: white;" >
             <tr>
-                <td > >   {{ sighInstrument.symbol  }} Price &nbsp; : &nbsp;{{  calculatedSIGH_PRICE_USD }} USD </td> 
+                <td > >   {{ sighInstrument.symbol  }} Price &nbsp; : &nbsp;{{  SIGH_Price_USD_ }} USD </td> 
             </tr>   
             <tr>                
                 <td > >   {{ sighInstrument.symbol  }} YIELDS (Speed) &nbsp; : &nbsp;{{  Number(WalletSIGHState.totalSighSpeedForUser).toFixed(4) }} ( {{  Number(Number(WalletSIGHState.totalSighSpeedForUser) * (Number(SIGH_Price_USD_)) ).toFixed(4) }} USD )  </td> 

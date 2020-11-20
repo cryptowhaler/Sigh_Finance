@@ -8,6 +8,7 @@ import sighAmount from './amount/SighAmount.vue';
 import infographics from './infographics/infographics.vue';
 
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
+import EventBus, {EventNames,} from '@/eventBuses/default';
 
 export default {
 

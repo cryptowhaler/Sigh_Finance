@@ -1,6 +1,7 @@
 <template src="./template.html"></template>
 
 <script>
+import EventBus, {EventNames,} from '@/eventBuses/default';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import {mapState,mapActions,} from 'vuex';
 import Web3 from 'web3';
@@ -21,6 +22,7 @@ export default {
       SIGH_Price_USD_ : null,
       showLoader: false,
       showLoaderRefresh: false,
+      intervalActivated: false,
     };
   },
   
@@ -28,39 +30,18 @@ export default {
 
   created() {
     console.log("IN STAKE SIGH / QUANTITY (TRADE-PANE) FUNCTION ");
-    this.sighInstrument = this.$store.state.SIGHState;
-    console.log(this.sighInstrument); 
-    if ( this.sighInstrument && this.$store.state.SIGHContractAddress != '0x0000000000000000000000000000000000000000') {
-      this.walletSIGHState = this.$store.state.walletSIGHState;
-    }
-    console.log(this.walletSIGHState);
-    // SIGH's PRICE (IN ETH) POLLING
-    if ( this.$store.state.isNetworkSupported  ) {
-      setInterval(async () => {
-        // console.log("IN SET INTERVAL (STAKE SIGH / QUANTITY)");
-        if (this.$store.state.SIGHContractAddress != '0x0000000000000000000000000000000000000000') {
-          this.SIGH_Price_ETH_ = await this.getInstrumentPrice({_instrumentAddress : this.$store.state.SIGHContractAddress });
-        }
-      },1000);
-    }
-    // ExchangeDataEventBus.$on(EventNames.changeSelectedInstrument, this.changesighInstrument);        
+    this.initiatePriceLoop();    
+    this.refreshThisSession = () => this.loadSessionData(); 
+
+    ExchangeDataEventBus.$on(EventNames.ConnectedWalletSesssionRefreshed, this.refreshThisSession );    
+    ExchangeDataEventBus.$on(EventNames.ConnectedWallet_Instrument_Refreshed, this.refreshThisSession);        
+    ExchangeDataEventBus.$on(EventNames.ConnectedWallet_SIGH_Balances_Refreshed, this.refreshThisSession);        
   },
 
 
 
 
   computed: {
-    calculatedSIGH_PRICE_USD() {
-        console.log('calculatedSIGH_PRICE_USD');
-        if (this.sighInstrument && this.sighInstrument.priceDecimals) {
-          console.log("COMPUTED : SIGH PRICE USD");          
-          this.SIGH_Price_USD_ = Number( ( Number(this.SIGH_Price_ETH_) / Math.pow(10,this.sighInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4);
-          console.log( this.SIGH_Price_USD_ );      
-          return this.SIGH_Price_USD_;
-        }
-      return 0;
-    },
-
     calculatedValue() {
         console.log('calculatedValue');
         if (this.sighInstrument && this.sighInstrument.priceDecimals) {
@@ -77,6 +58,21 @@ export default {
 
     ...mapActions(['SIGHStaking_stake_SIGH','SIGHStaking_unstake_SIGH','ERC20_increaseAllowance','getInstrumentPrice','refresh_User_SIGH__State']),
     
+    async initiatePriceLoop() {
+      if ( this.$store.state.isNetworkSupported  ) {
+        setInterval(async () => {
+          if (this.$store.state.SIGHContractAddress != '0x0000000000000000000000000000000000000000') {
+            this.intervalActivated = true;
+            this.SIGH_Price_ETH_ = await this.getInstrumentPrice({_instrumentAddress : this.$store.state.SIGHContractAddress });
+            this.SIGH_Price_USD_ = Number( ( Number(this.SIGH_Price_ETH_) / Math.pow(10,this.sighInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4);
+            // console.log("SIGH STAKING : QUANTITY, Price (USD) " + this.SIGH_Price_USD_);
+          }
+        },1000);
+      this.sighInstrument = this.$store.state.SIGHState;    
+      this.walletSIGHState = this.$store.state.walletSIGHState;
+      }
+    },
+
 
     async stakeSIGH() {                           //STAKE SIGH (WORKS PROPERLY)
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
@@ -199,17 +195,10 @@ export default {
           this.$showInfoMsg({ message: "Initiating re-calculation of current Aggregated $SIGH Yields across your Portfolio ! "});          
           }
           this.showLoaderRefresh = true;
-          this.sighInstrument = this.$store.state.SIGHState;
-          console.log("refreshWallet_SIGH_State() in STAKE_SIGH / QUANTITY");
           let response = await this.refresh_User_SIGH__State();
-          console.log(" RESPONSE : refreshWallet_SIGH_State() in STAKE_SIGH / QUANTITY");
-          console.log(response);
-          console.log(this.$store.getters.getWalletSIGHState);
           this.$store.commit("setWalletSIGHState",response);
-          console.log(this.$store.getters.getWalletSIGHState);
           this.WalletSIGHState = this.$store.getters.getWalletSIGHState;
-          console.log(" WalletSIGHState : refreshWallet_SIGH_State() in STAKE_SIGH / QUANTITY");
-          console.log(this.WalletSIGHState );
+          ExchangeDataEventBus.$emit(EventNames.ConnectedWallet_SIGH_Balances_Refreshed);    
           if (toDisplay) {
             this.$showInfoMsg({message: "Connected Wallet's $SIGH Balances and Farming Yields have been refreshed! " });        
           }
@@ -222,10 +211,25 @@ export default {
     },
 
 
+    loadSessionData() {
+      if (this.intervalActivated == false) {
+        this.initiatePriceLoop();
+      }
+      if (this.$store.state.SIGHState ) {
+        this.sighInstrument = this.$store.state.SIGHState;    
+        this.walletSIGHState = this.$store.state.walletSIGHState;
+      }
+      console.log("SIGH STAKE : QUANTITY SESSION REFRESHED");
+      console.log(this.sighInstrument);
+      console.log(this.walletSIGHState);
+    }
+
   },
 
   destroyed() {
-    ExchangeDataEventBus.$off(EventNames.changeSelectedInstrument, this.changesighInstrument);    
+    ExchangeDataEventBus.$off(EventNames.ConnectedWalletSesssionRefreshed );    
+    ExchangeDataEventBus.$off(EventNames.ConnectedWallet_Instrument_Refreshed );        
+    ExchangeDataEventBus.$off(EventNames.ConnectedWallet_SIGH_Balances_Refreshed );        
   },
 };
 </script>
