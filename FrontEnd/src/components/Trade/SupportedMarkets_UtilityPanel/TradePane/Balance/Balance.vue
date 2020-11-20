@@ -42,7 +42,7 @@ export default {
   
   mounted() {
     this.refreshThisSession = () => this.loadSessionData();     // DATA LOADED FOR THE SUPPORTED NETWORK
-    this.updateLocallyStoredStatesForInstrument = (instrumentAddress) => this.refreshForInstrument(instrumentAddress);     //INSTRUMENT REFRESHED 
+    this.updateLocallyStoredStatesForInstrument = (instrumentRefreshed) => this.refreshForInstrument(instrumentRefreshed);     //INSTRUMENT REFRESHED 
 
     ExchangeDataEventBus.$on(EventNames.ConnectedWalletSesssionRefreshed, this.refreshThisSession );    
     ExchangeDataEventBus.$on(EventNames.ConnectedWallet_SIGH_Balances_Refreshed, this.refreshThisSession );    
@@ -127,16 +127,22 @@ export default {
 
 
     // REFRESHES STATE FOR A PARTICULAR INSTRUMENT
-    refreshForInstrument(instrumentAddress) {
-      console.log("IN BAALNCES :  " + instrumentAddress );
-      let walletInstrumentStates = this.$store.getters.getSupportedInstruments;
+    refreshForInstrument(instrumentRefreshed) {
+      console.log(instrumentAddress );
+      console.log("IN BAALNCES :  " + instrumentRefreshed.instrumentAddress );
       for (let i=0; i<this.walletInstrumentStatesArray.length; i++) {
-        if (instrumentAddress == this.walletInstrumentStatesArray[i].instrumentAddress ) {
+        if (instrumentRefreshed.instrumentAddress == this.walletInstrumentStatesArray[i].instrumentAddress ) {
           console.log("Updating State for WALLET :INSTRUMENT = " + this.walletInstrumentStatesArray[i].symbol );
-          this.walletInstrumentStatesArray[i] = walletInstrumentStates.get(instrumentAddress);
-          console.log(this.walletInstrumentStatesArray[i]);
+          break;
         }
       }
+      if (i<this.walletInstrumentStatesArray.length) {
+        console.log(this.walletInstrumentStatesArray[i]);
+        console.log(this.$store.state.walletInstrumentStates);
+        // this.walletInstrumentStatesArray[i] = this.$store.state.walletInstrumentStates.get(instrumentRefreshed.instrumentAddress);
+        console.log(this.walletInstrumentStatesArray[i]);
+      }
+
     }
 
 
