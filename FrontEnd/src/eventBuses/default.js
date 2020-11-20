@@ -1,6 +1,8 @@
 import Vue from 'vue';
 export default new Vue();
 export const EventNames = {
+  // INITIATING REFRESH CONNECTION
+  initiateRefreshConnection: 'initiate-Refresh-Connection',
   // WHEN SIGH FINANCE LOADS
   connectedToSupportedNetwork: 'connected-To-Supported-Network',
   // WHEN WALLET IS CONNECTED (getConnectedWalletState() successful call)

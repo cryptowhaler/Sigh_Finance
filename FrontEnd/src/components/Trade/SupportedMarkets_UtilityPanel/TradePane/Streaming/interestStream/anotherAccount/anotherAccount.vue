@@ -66,9 +66,9 @@ export default {
             this.selectedInstrumentPriceETH = await this.getInstrumentPrice({_instrumentAddress : this.selectedInstrument.instrumentAddress });
           }
         },1000);
+        this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
+        this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);        
       }
-      this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
-      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);        
     },
 
 
@@ -145,27 +145,27 @@ export default {
     async  getDetailsOfTheFromAccount() {
         console.log("CHECK CHECK CHECK");
         if (this.$store.getters.connectedWallet && this.selectedInstrument.iTokenAddress) {
-        this.currentAdministratorFromAccount = await this.IToken_getinterestRedirectionAllowances({ iTokenAddress: this.selectedInstrument.iTokenAddress, _user: this.formData.fromAccount   });
-        console.log(this.currentAdministratorFromAccount);
-        this.instrumentBalancesFromAccount = await this.LendingPoolCore_getUserBasicInstrumentData({ _instrument: this.selectedInstrument.instrumentAddress, _user: this.formData.fromAccount   });
+          this.currentAdministratorFromAccount = await this.IToken_getinterestRedirectionAllowances({ iTokenAddress: this.selectedInstrument.iTokenAddress, _user: this.formData.fromAccount   });
+          console.log(this.currentAdministratorFromAccount);
+          this.instrumentBalancesFromAccount = await this.LendingPoolCore_getUserBasicInstrumentData({ _instrument: this.selectedInstrument.instrumentAddress, _user: this.formData.fromAccount   });
       }
     },
 
 
 
     loadSessionData() {
-      if (this.intervalActivated == false) {
-        this.initiatePriceLoop();
+      if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        if (this.intervalActivated == false) {
+          this.initiatePriceLoop();
+        }
+        this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
+        console.log(this.selectedInstrument);
+        if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+          this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+        }
+        console.log(this.selectedInstrumentWalletState);
       }
-      this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
-      console.log(this.selectedInstrument);
-      if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
-        this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
-      }
-      console.log(this.selectedInstrumentWalletState);
     }
-
-
   },
 
 

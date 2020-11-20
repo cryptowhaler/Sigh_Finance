@@ -72,14 +72,14 @@ export default {
       if ( this.$store.state.isNetworkSupported  ) {
         setInterval(async () => {
           console.log("IN SET PRICE : BORROW / QUANTITY");
-          if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+          if (this.selectedInstrument && this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
             this.intervalActivated = true;
             this.selectedInstrumentPriceETH = await this.getInstrumentPrice({_instrumentAddress : this.selectedInstrument.instrumentAddress });
           }
         },1000);
+        this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
+        this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);        
       }
-      this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
-      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);        
     },
 
 
@@ -156,16 +156,18 @@ export default {
 
 
     loadSessionData() {
-      if (this.intervalActivated == false) {
-        this.initiatePriceLoop();
-      }
-      this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
-      console.log(this.selectedInstrument);
-      if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
-        this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
-      }
-      console.log(this.selectedInstrumentWalletState);
-    }    
+      if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {            
+        if (this.intervalActivated == false) {
+          this.initiatePriceLoop();
+        }
+        this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
+        console.log(this.selectedInstrument);
+        if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+          this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+        }
+        console.log(this.selectedInstrumentWalletState);
+      }    
+    }
 
 
   },

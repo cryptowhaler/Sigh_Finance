@@ -30,8 +30,8 @@ export default {
     return {
       activeTab: 'Lending',
       tabs: {
-        walletNotConnectedTabs: ['Balance','Lending','Streaming','Stake SIGH'], // ,'Interest Rates'
-        walletConnectedTabs: ['Balance','Lending','Streaming','Stake SIGH'],    // ,'Interest Rates'
+        walletNotConnectedTabs: ['Lending','Streaming','Stake SIGH','Balance'], // ,'Interest Rates'
+        walletConnectedTabs: ['Lending','Streaming','Stake SIGH','Balance'],    // ,'Interest Rates'
       },
       height: 0,
       tabBarEventBus: new Vue(),

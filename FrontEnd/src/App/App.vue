@@ -79,11 +79,10 @@ export default {
     await this.fetchSessionUserStateData(); 
   },
 
-  mounted() {
+  async mounted() {
     this.walletConnected = body => this.fetchConfigsWalletConnected(body.username);     //Wallet connected 
-    this.WalletDisconnectedListener = body => this.fetchConfigsWalletDisconnected();     //Wallet Disconnected 
+    this.WalletDisconnectedListener = body => this.fetchConfigsWalletDisconnected();     //Wallet Disconnected   
 
-  
     EventBus.$on(EventNames.userWalletConnected, this.walletConnected);           //WHENEVER A USER WALLET IS CONNECTED, WE 
     EventBus.$on(EventNames.userWalletDisconnected, this.WalletDisconnectedListener);           //AUTH
   },

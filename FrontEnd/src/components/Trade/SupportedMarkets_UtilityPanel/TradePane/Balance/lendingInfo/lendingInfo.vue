@@ -74,7 +74,7 @@ export default {
 
 
 
-    async refreshConnectedWalletGlobalStates(toDisplay) {      
+    async refreshConnectedWalletGlobalStates(toDisplay) {   
       try {
         this.showLoader = true;
         let userGlobalState = await this.refresh_User_SIGH_Finance_State();
@@ -97,9 +97,11 @@ export default {
 
     // REFRESHES THE CURRENT SESSION : FROM STORE 
     loadSessionData() {
-      console.log("LOADING WALLET : SIGH FINANCE :LENDING INFO");
-      this.walletLendingProtocolState = this.$store.state.walletSIGH_FinanceState;
-      console.log(this.walletLendingProtocolState);
+      if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        console.log("LOADING WALLET : SIGH FINANCE :LENDING INFO");
+        this.walletLendingProtocolState = this.$store.state.walletSIGH_FinanceState;
+        console.log(this.walletLendingProtocolState);
+      }
     },
 
   },

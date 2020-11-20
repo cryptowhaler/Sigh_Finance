@@ -227,15 +227,17 @@ export default {
 
 
     loadSessionData() {
-      if (this.intervalActivated == false) {
-        this.initiatePriceLoop();
-      }      
-      this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
-      console.log(this.selectedInstrument);
-      if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
-        this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+      if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {      
+        if (this.intervalActivated == false) {
+          this.initiatePriceLoop();
+        }      
+        this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
+        console.log(this.selectedInstrument);
+        if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+          this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+        }
+        console.log(this.selectedInstrumentWalletState);
       }
-      console.log(this.selectedInstrumentWalletState);
     }
 
   },

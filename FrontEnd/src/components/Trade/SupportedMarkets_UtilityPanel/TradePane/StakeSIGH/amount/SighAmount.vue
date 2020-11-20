@@ -30,6 +30,9 @@ export default {
   created() {
     console.log("IN STAKE SIGH / AMOUNT (TRADE-PANE) FUNCTION ");
     this.initiatePriceLoop();    
+  },
+
+  mounted() {
     this.refreshThisSession = () => this.loadSessionData(); 
 
     ExchangeDataEventBus.$on(EventNames.ConnectedWalletSesssionRefreshed, this.refreshThisSession );    
@@ -234,7 +237,8 @@ export default {
         this.initiatePriceLoop();
       }
       if (this.$store.state.SIGHState ) {
-        this.sighInstrument = this.$store.state.SIGHState;    
+        this.sighInstrument = this.$store.state.SIGHState;   
+        this.walletSIGHState = {}; 
         this.walletSIGHState = this.$store.state.walletSIGHState;
       }
       console.log("SIGH STAKE : AMOUNT SESSION REFRESHED");
