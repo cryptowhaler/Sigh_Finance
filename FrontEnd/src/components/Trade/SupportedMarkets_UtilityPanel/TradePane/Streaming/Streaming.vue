@@ -1,6 +1,7 @@
 <template src="./template.html"></template>
 
 <script>
+import EventBus, {EventNames,} from '@/eventBuses/default';
 import TabBar from '@/components/TabBar/TabBar.vue';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 

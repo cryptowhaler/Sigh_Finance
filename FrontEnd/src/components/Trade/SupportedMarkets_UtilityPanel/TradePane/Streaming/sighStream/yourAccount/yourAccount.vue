@@ -1,6 +1,7 @@
 <template src="./template.html"></template>
 
 <script>
+import EventBus, {EventNames,} from '@/eventBuses/default';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import {mapState,mapActions,} from 'vuex';
 import Web3 from 'web3';
@@ -11,6 +12,7 @@ export default {
 
   data() {
     return {
+      sighInstrument: this.$store.state.SIGHState,
       selectedInstrument: this.$store.state.currentlySelectedInstrument,
       selectedInstrumentWalletState: {},
       formData : {
@@ -20,6 +22,7 @@ export default {
       SIGH_Price_USD_ : null,
       showLoader: false,
       showLoaderRefresh: false,
+      intervalActivated: false,
     };
   },
 
@@ -27,39 +30,31 @@ export default {
 
   async created() {
     console.log("IN STREAMING / SIGH_STREAMING / YOUR ACCOUNT (TRADE-PANE) FUNCTION ");
-    this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
-    console.log(this.selectedInstrument);
-    if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
-      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
-    }
-    console.log(this.selectedInstrumentWalletState);
-    if ( this.$store.state.isNetworkSupported  ) {
-      setInterval(async () => {
-        if (this.$store.state.SIGHContractAddress != '0x0000000000000000000000000000000000000000') {
-          this.SIGH_Price_ETH_ = await this.getInstrumentPrice({_instrumentAddress : this.$store.state.SIGHContractAddress });
-        }
-      },1000);
-    }
+    this.initiatePriceLoop();    
+    this.refreshThisSession = () => this.loadSessionData(); 
 
     this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
-      console.log("NEW SELECTED INSTRUMENT");
       this.selectedInstrument = selectedInstrument_.instrument;       // UPDATED SELECTED INSTRUMENT (LOCALLY)
-      console.log(this.selectedInstrument);   
       this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
-      console.log(this.selectedInstrumentWalletState);
+      if (this.intervalActivated == false) {
+        this.initiatePriceLoop();
+      }
     };
+    ExchangeDataEventBus.$on(EventNames.ConnectedWalletSesssionRefreshed, this.refreshThisSession );    
     ExchangeDataEventBus.$on(EventNames.changeSelectedInstrument, this.changeSelectedInstrument);        
+    ExchangeDataEventBus.$on(EventNames.ConnectedWallet_Instrument_Refreshed, this.refreshThisSession);        
   },
 
 
   computed: {
-    calculatedSIGH_PRICE_USD() {
-        if (this.sighInstrument && this.sighInstrument.priceDecimals) {
-          this.SIGH_Price_USD_ = Number( ( Number(this.SIGH_Price_ETH_) / Math.pow(10,this.sighInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4);
-          return this.SIGH_Price_USD_;
-        }
-      return 0;
-    }
+    // calculatedSIGH_PRICE_USD() {
+    //     if (this.sighInstrument && this.sighInstrument.priceDecimals) {
+    //       this.SIGH_Price_USD_ = Number( ( Number(this.SIGH_Price_ETH_) / Math.pow(10,this.sighInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4);
+    //         console.log("SIGH STREAM : YOUR ACCOUNT, Price (USD) " + this.SIGH_Price_USD_);
+    //       return this.SIGH_Price_USD_;
+    //     }
+    //   return 0;
+    // }
   },
 
 
@@ -68,6 +63,21 @@ export default {
 
     ...mapActions(['IToken_redirectSighStream','IToken_allowSighRedirectionTo','IToken_claimMySIGH','getInstrumentPrice','refresh_User_Instrument_State']),
     
+    async initiatePriceLoop() {
+      if ( this.$store.state.isNetworkSupported  ) {
+        setInterval(async () => {
+          if (this.$store.state.SIGHContractAddress != '0x0000000000000000000000000000000000000000') {
+            this.intervalActivated = true;
+            this.SIGH_Price_ETH_ = await this.getInstrumentPrice({_instrumentAddress : this.$store.state.SIGHContractAddress });
+            this.SIGH_Price_USD_ = Number( ( Number(this.SIGH_Price_ETH_) / Math.pow(10,this.sighInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4);
+            console.log("SIGH STREAM : YOUR ACCOUNT, Price (USD) " + this.SIGH_Price_USD_);
+          }
+        },1000);
+      this.sighInstrument = this.$store.state.SIGHState;    
+      this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
+      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);        
+      }
+    },
 
 
     async redirectSIGHStream() {       // RE-DIRECT SIGH STREAM
@@ -180,15 +190,10 @@ export default {
       if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         try {
           this.showLoaderRefresh = true;          
-          // console.log("refreshCurrentInstrumentWalletState() in DEPOSIT-QUANTITY");
           let response = await this.refresh_User_Instrument_State({cur_instrument: this.selectedInstrument });
-          // console.log(response);
-          // console.log("getting WalletInstrumentStates MAPPING before UPDATING & COMMITING  in DEPOSIT-QUANTITY");
-          // console.log(this.$store.getters.getWalletInstrumentStates);
           this.$store.commit("addToWalletInstrumentStates",{instrumentAddress : this.selectedInstrument.instrumentAddress  , walletInstrumentState: response});
-          // console.log("getting WalletInstrumentStates MAPPING after UPDATING & COMMITING  in DEPOSIT-QUANTITY");
-          // console.log(this.$store.getters.getWalletInstrumentStates);
           this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+          ExchangeDataEventBus.$emit(EventNames.ConnectedWallet_Instrument_Refreshed, {'instrumentAddress': this.selectedInstrument.instrumentAddress });    
           if (toDisplay) {
             this.$showInfoMsg({message:  this.$store.state.connectedWallet + " : " + this.selectedInstrument.symbol + " Instrument's $SIGH FARM State have been refreshed! " });        
           }
@@ -198,6 +203,19 @@ export default {
         }
         this.showLoaderRefresh = false;        
       }
+    },
+
+
+    loadSessionData() {
+      if (this.intervalActivated == false) {
+        this.initiatePriceLoop();
+      }
+      this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
+      console.log(this.selectedInstrument);
+      if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+        this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+      }
+      console.log(this.selectedInstrumentWalletState);
     }
 
   },
@@ -208,7 +226,9 @@ export default {
 
 
   destroyed() {
-    ExchangeDataEventBus.$off(EventNames.changeSelectedInstrument, this.changesighInstrument);    
+    ExchangeDataEventBus.$off(EventNames.ConnectedWalletSesssionRefreshed);    
+    ExchangeDataEventBus.$off(EventNames.changeSelectedInstrument );        
+    ExchangeDataEventBus.$off(EventNames.ConnectedWallet_Instrument_Refreshed );        
   },
 
 

@@ -1,6 +1,7 @@
 <template src="./template.html"></template>
 
 <script>
+import EventBus, {EventNames,} from '@/eventBuses/default';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import {mapState,mapActions,} from 'vuex';
 import Web3 from 'web3';
@@ -19,6 +20,7 @@ export default {
       selectedInstrumentPriceETH: null,
       showLoader: false,
       showLoaderRefresh: false,
+      intervalActivated: false,
     };
   },
 
@@ -26,28 +28,21 @@ export default {
 
   async created() {
     console.log("IN STREAMING / INTEREST_STREAMING / YOUR ACCOUNT (TRADE-PANE) FUNCTION ");
-    this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
-    console.log(this.selectedInstrument);
-    if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
-      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
-    }
-    console.log(this.selectedInstrumentWalletState);
-    if ( this.$store.state.isNetworkSupported  ) {
-      setInterval(async () => {
-        if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
-          this.selectedInstrumentPriceETH = await this.getInstrumentPrice({_instrumentAddress : this.selectedInstrument.instrumentAddress });
-        }
-      },1000);
-    }
+    this.initiatePriceLoop();    
+    this.refreshThisSession = () => this.loadSessionData(); 
 
     this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
-      console.log("NEW SELECTED INSTRUMENT : INTEREST STREAM : Your Account");
       this.selectedInstrument = selectedInstrument_.instrument;       // UPDATED SELECTED INSTRUMENT (LOCALLY)
-      console.log(this.selectedInstrument);   
       this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
-      console.log(this.selectedInstrumentWalletState);
+      if (this.intervalActivated == false) {
+        this.initiatePriceLoop();
+      }
     };
+
+
+    ExchangeDataEventBus.$on(EventNames.ConnectedWalletSesssionRefreshed, this.refreshThisSession );    
     ExchangeDataEventBus.$on(EventNames.changeSelectedInstrument, this.changeSelectedInstrument);        
+    ExchangeDataEventBus.$on(EventNames.ConnectedWallet_Instrument_Refreshed, this.refreshThisSession);        
   },
 
 
@@ -56,6 +51,22 @@ export default {
 
     ...mapActions(['IToken_redirectInterestStream','IToken_allowInterestRedirectionTo','IToken_getRedirectedBalance','getInstrumentPrice','refresh_User_Instrument_State']),
     
+
+    async initiatePriceLoop() {
+      if ( this.$store.state.isNetworkSupported  ) {
+        setInterval(async () => {
+          // console.log("IN SET PRICE : INTEREST STREAM / YOUR ACCOUNT");
+          if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+            this.intervalActivated = true;
+            this.selectedInstrumentPriceETH = await this.getInstrumentPrice({_instrumentAddress : this.selectedInstrument.instrumentAddress });
+          }
+        },1000);
+      }
+      this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
+      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);        
+    },
+
+
 
     async redirectInterestStream() {                           // RE-DIRECT INTEREST STREAM
       console.log('Addresses to which it is to be re-directed to = ' + this.formData.toAccount);
@@ -129,15 +140,10 @@ export default {
       if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         try {
           this.showLoaderRefresh = true;          
-          // console.log("refreshCurrentInstrumentWalletState() in INTEREST-YOUR ACCOUNT-QUANTITY");
           let response = await this.refresh_User_Instrument_State({cur_instrument: this.selectedInstrument });
-          // console.log(response);
-          // console.log("getting WalletInstrumentStates MAPPING before UPDATING & COMMITING  in INTEREST-YOUR ACCOUNT-QUANTITY");
-          // console.log(this.$store.getters.getWalletInstrumentStates);
           this.$store.commit("addToWalletInstrumentStates",{instrumentAddress : this.selectedInstrument.instrumentAddress  , walletInstrumentState: response});
-          // console.log("getting WalletInstrumentStates MAPPING after UPDATING & COMMITING  in INTEREST-YOUR ACCOUNT-QUANTITY");
-          // console.log(this.$store.getters.getWalletInstrumentStates);
           this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+          ExchangeDataEventBus.$emit(EventNames.ConnectedWallet_Instrument_Refreshed, {'instrumentAddress': this.selectedInstrument.instrumentAddress });    
           if (toDisplay) {
             this.$showInfoMsg({message:  this.$store.state.connectedWallet + " : " + this.selectedInstrument.symbol + " Instrument's State have been refreshed! " });        
           }
@@ -147,13 +153,31 @@ export default {
         }
         this.showLoaderRefresh = false;        
       }
+    },
+
+
+
+
+    loadSessionData() {
+      if (this.intervalActivated == false) {
+        this.initiatePriceLoop();
+      }
+      this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
+      console.log(this.selectedInstrument);
+      if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+        this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+      }
+      console.log(this.selectedInstrumentWalletState);
     }
+
 
   },
 
 
   destroyed() {
-    ExchangeDataEventBus.$off(EventNames.changeSelectedInstrument, this.changesighInstrument);    
+    ExchangeDataEventBus.$off(EventNames.ConnectedWalletSesssionRefreshed);    
+    ExchangeDataEventBus.$off(EventNames.changeSelectedInstrument );        
+    ExchangeDataEventBus.$off(EventNames.ConnectedWallet_Instrument_Refreshed );        
   },
 };
 </script>
