@@ -64,7 +64,7 @@ export default {
     
 
     async initiatePriceLoop() {
-      if ( this.$store.state.isNetworkSupported  ) {
+      if ( this.$store.state.isNetworkSupported && this.selectedInstrument.instrumentAddress ) {
         setInterval(async () => {
           // console.log("IN SET PRICE : REDEEM / AMOUNT");
           if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {

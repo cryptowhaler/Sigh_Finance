@@ -65,7 +65,7 @@ export default {
     ...mapActions(['IToken_redeem','refresh_User_Instrument_State','getInstrumentPrice']),
     
     async initiatePriceLoop() {
-      if ( this.$store.state.isNetworkSupported  ) {
+      if ( this.$store.state.isNetworkSupported && this.selectedInstrument.instrumentAddress ) {
         setInterval(async () => {
           // console.log("IN SET PRICE : REDEEM / QUANTITY");
           if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {

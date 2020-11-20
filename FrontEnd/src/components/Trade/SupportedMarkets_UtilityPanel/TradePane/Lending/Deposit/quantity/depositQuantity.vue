@@ -69,7 +69,7 @@ export default {
     ...mapActions(['ERC20_mint','LendingPool_deposit','ERC20_increaseAllowance','getInstrumentPrice','refresh_User_Instrument_State']),
     
     async initiatePriceLoop() {
-      if ( this.$store.state.isNetworkSupported  ) {
+      if ( this.$store.state.isNetworkSupported && this.selectedInstrument.instrumentAddress ) {
         setInterval(async () => {
           // console.log("IN SET PRICE : DEPOSIT / QUANTITY");
           if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
