@@ -1,8 +1,8 @@
 <template src="./template.html"></template>
 
 <script>
-import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import EventBus, {EventNames,} from '@/eventBuses/default';
+import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import TabBar from '@/components/TabBar/TabBar.vue';
 import lendingInfo from './lendingInfo/lendingInfo.vue';
 import sighBalance from './sighBalance/sighBalance.vue';
@@ -36,11 +36,17 @@ export default {
   async created() {
     console.log("IN BALANCE (TRADE-PANE) FUNCTION ");
     if (this.$store.state.web3 && this.$store.state.isNetworkSupported && this.$store.state.connectedWallet) {
-      await this.refreshConnectedWalletInstrumentStates(false);
+      this.loadSessionData();
     }
   },
   
   mounted() {
+    this.refreshThisSession = () => this.loadSessionData();     // DATA LOADED FOR THE SUPPORTED NETWORK
+    this.updateLocallyStoredStatesForInstrument = (instrumentAddress) => this.refreshForInstrument(instrumentAddress);     //INSTRUMENT REFRESHED 
+
+    ExchangeDataEventBus.$on(EventNames.ConnectedWalletSesssionRefreshed, this.refreshThisSession );    
+    ExchangeDataEventBus.$on(EventNames.ConnectedWallet_SIGH_Balances_Refreshed, this.refreshThisSession );    
+    ExchangeDataEventBus.$on(EventNames.ConnectedWallet_Instrument_Refreshed, this.updateLocallyStoredStatesForInstrument );    
   },
 
 
@@ -81,16 +87,17 @@ export default {
       this.showLoader = true;
       let instruments = this.$store.getters.getSupportedInstruments;
       console.log(instruments);
-      let  _walletInstrumentStatesArray = [];            
+      // let  _walletInstrumentStatesArray = [];            
       this.$store.commit("setWalletSIGH_FinanceState",{});  // RESET SESSION DATA STORED GLOBAL STATE 
       try {
         for (let i=0; i < instruments.length; i++) { 
             let currentUserInstrumentState = await this.refresh_User_Instrument_State({ cur_instrument: instruments[i] }); 
             console.log(currentUserInstrumentState);
             this.$store.commit("addToWalletInstrumentStates",{ instrumentAddress: instruments[i].instrumentAddress, walletInstrumentState: currentUserInstrumentState }); 
-            _walletInstrumentStatesArray.push(currentUserInstrumentState);
+            // _walletInstrumentStatesArray.push(currentUserInstrumentState);
         }
-        this.walletInstrumentStatesArray = _walletInstrumentStatesArray;
+        // this.walletInstrumentStatesArray = _walletInstrumentStatesArray;
+        this.loadSessionData();
         console.log(this.walletInstrumentStatesArray);
         return true;
       }
@@ -98,7 +105,42 @@ export default {
         console.log(error);
         return false;
       }
+    },
+
+
+
+    // REFRESHES THE CURRENT SESSION : FROM STORE 
+    loadSessionData() {
+      if (this.$store.state.connectedWallet) {
+        console.log("LOADING 'WALLET : INSTRUMENT STATES'  LIST");
+        let localInstruments = [];
+        let instruments = this.$store.getters.getSupportedInstruments;
+        let walletInstrumentStates = this.$store.getters.getWalletInstrumentStates;
+        for (let i=0; i<instruments.length; i++ ) {
+          let currentUserInstrumentState = walletInstrumentStates.get(instruments[i].instrumentAddress);
+          console.log(currentUserInstrumentState);
+          localInstruments.push(currentUserInstrumentState);
+        }
+        this.walletInstrumentStatesArray = localInstruments;
+        console.log(this.walletInstrumentStatesArray);
+      }
+    },
+
+
+
+    // REFRESHES STATE FOR A PARTICULAR INSTRUMENT
+    refreshForInstrument(instrumentAddress) {
+      let walletInstrumentStates = this.$store.getters.getSupportedInstruments;
+      for (let i=0; i<this.walletInstrumentStatesArray.length; i++) {
+        if (instrumentAddress == this.walletInstrumentStatesArray[i].instrumentAddress ) {
+          console.log("Updating State for WALLET :INSTRUMENT = " + this.walletInstrumentStatesArray[i].symbol );
+          this.walletInstrumentStatesArray[i] = walletInstrumentStates.get(instrumentAddress);
+          console.log(this.walletInstrumentStatesArray[i]);
+        }
+      }
     }
+
+
 
   },
 
