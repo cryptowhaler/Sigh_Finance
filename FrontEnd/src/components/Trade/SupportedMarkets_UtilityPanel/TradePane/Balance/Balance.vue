@@ -42,7 +42,7 @@ export default {
   
   mounted() {
     this.refreshThisSession = () => this.loadSessionData();     // DATA LOADED FOR THE SUPPORTED NETWORK
-    this.updateLocallyStoredStatesForInstrument = (instrumentRefreshed) => this.refreshForInstrument(instrumentRefreshed);     //INSTRUMENT REFRESHED 
+    this.updateLocallyStoredStatesForInstrument = (instrumentRefreshed) => this.loadSessionData();     //INSTRUMENT REFRESHED 
 
     ExchangeDataEventBus.$on(EventNames.ConnectedWalletSesssionRefreshed, this.refreshThisSession );    
     ExchangeDataEventBus.$on(EventNames.ConnectedWallet_SIGH_Balances_Refreshed, this.refreshThisSession );    
@@ -128,9 +128,10 @@ export default {
 
     // REFRESHES STATE FOR A PARTICULAR INSTRUMENT
     refreshForInstrument(instrumentRefreshed) {
-      console.log(instrumentAddress );
+      console.log(instrumentRefreshed );
       console.log("IN BAALNCES :  " + instrumentRefreshed.instrumentAddress );
-      for (let i=0; i<this.walletInstrumentStatesArray.length; i++) {
+      let i=0;
+      for ( i=0; i<this.walletInstrumentStatesArray.length; i++) {
         if (instrumentRefreshed.instrumentAddress == this.walletInstrumentStatesArray[i].instrumentAddress ) {
           console.log("Updating State for WALLET :INSTRUMENT = " + this.walletInstrumentStatesArray[i].symbol );
           break;
@@ -139,7 +140,7 @@ export default {
       if (i<this.walletInstrumentStatesArray.length) {
         console.log(this.walletInstrumentStatesArray[i]);
         console.log(this.$store.state.walletInstrumentStates);
-        // this.walletInstrumentStatesArray[i] = this.$store.state.walletInstrumentStates.get(instrumentRefreshed.instrumentAddress);
+        this.walletInstrumentStatesArray[i] = this.$store.state.walletInstrumentStates.get(instrumentRefreshed.instrumentAddress);
         console.log(this.walletInstrumentStatesArray[i]);
       }
 

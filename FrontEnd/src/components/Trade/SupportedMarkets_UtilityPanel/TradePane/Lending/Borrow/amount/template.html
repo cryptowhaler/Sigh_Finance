@@ -122,6 +122,7 @@
     </div>
 
     <div class="center">
-        <button class="uk-button uk-button-black"  @click="refreshCurrentInstrumentWalletState(true)">Refresh</button>
+        <img  v-if="showLoaderRefresh" src="https://image.ibb.co/dc02hd/30.gif" />
+        <button v-else class="uk-button uk-button-black"  @click="refreshCurrentInstrumentWalletState(true)">Refresh</button>
     </div>
 </div>

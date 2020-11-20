@@ -1,6 +1,8 @@
 <template src="./template.html"></template>
 
 <script>
+import EventBus, {EventNames,} from '@/eventBuses/default';
+
 import TabBar from '@/components/TabBar/TabBar.vue';
 import borrowQuantity from './quantity/borrowQuantity.vue';
 import borrowAmount from './amount/borrowAmount.vue';

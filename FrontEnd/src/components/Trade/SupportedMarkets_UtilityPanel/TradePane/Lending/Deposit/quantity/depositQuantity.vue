@@ -28,19 +28,16 @@ export default {
 
   async created() {
     console.log("IN LENDING / DEPOSIT / QUANTITY (TRADE-PANE) FUNCTION ");
+
     this.refreshThisSession = () => this.loadSessionData(); 
 
     this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
-      console.log("NEW SELECTED INSTRUMENT");
       this.selectedInstrument = selectedInstrument_.instrument;       // UPDATED SELECTED INSTRUMENT (LOCALLY)
-      console.log(this.selectedInstrument);   
       this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
-      console.log(this.selectedInstrumentWalletState);
     };
 
     this.updateSelectedInstrument = (instrumentAddress) => {
       if ( this.selectedInstrument.instrumentAddress == instrumentAddress ) {
-        console.log("UPDATING INSTRUMENT : DEPOSIT QUANTITY");
         this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
       }
 
@@ -48,8 +45,11 @@ export default {
 
     ExchangeDataEventBus.$on(EventNames.ConnectedWalletSesssionRefreshed, this.refreshThisSession );    
     ExchangeDataEventBus.$on(EventNames.changeSelectedInstrument, this.changeSelectedInstrument);        
-    ExchangeDataEventBus.$on(EventNames.ConnectedWallet_Instrument_Refreshed, this.updateSelectedInstrument);        
+    ExchangeDataEventBus.$on(EventNames.ConnectedWallet_Instrument_Refreshed, this.refreshThisSession);        
   },
+
+
+
 
 
   computed: {
@@ -61,6 +61,10 @@ export default {
       return 0;
     },
   },
+
+
+
+
 
   methods: {
 
@@ -185,14 +189,8 @@ export default {
       if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         try {
           this.showLoaderRefresh = true;
-          // console.log("refreshCurrentInstrumentWalletState() in DEPOSIT-QUANTITY");
           let response = await this.refresh_User_Instrument_State({cur_instrument: this.selectedInstrument });
-          // console.log(response);
-          // console.log("getting WalletInstrumentStates MAPPING before UPDATING & COMMITING  in DEPOSIT-QUANTITY");
-          // console.log(this.$store.getters.getWalletInstrumentStates);
           this.$store.commit("addToWalletInstrumentStates",{instrumentAddress : this.selectedInstrument.instrumentAddress  , walletInstrumentState: response});
-          // console.log("getting WalletInstrumentStates MAPPING after UPDATING & COMMITING  in DEPOSIT-QUANTITY");
-          // console.log(this.$store.getters.getWalletInstrumentStates);
           this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
           console.log("EMMITING ConnectedWallet_Instrument_Refreshed : " + this.selectedInstrument.instrumentAddress  );
           ExchangeDataEventBus.$emit(EventNames.ConnectedWallet_Instrument_Refreshed, {'instrumentAddress': this.selectedInstrument.instrumentAddress });    
@@ -230,7 +228,9 @@ export default {
   },
 
   destroyed() {
-    ExchangeDataEventBus.$off(EventNames.changeSelectedInstrument, this.changeSelectedInstrument);    
+    ExchangeDataEventBus.$off(EventNames.ConnectedWalletSesssionRefreshed, this.refreshThisSession );    
+    ExchangeDataEventBus.$off(EventNames.changeSelectedInstrument, this.changeSelectedInstrument);        
+    ExchangeDataEventBus.$off(EventNames.ConnectedWallet_Instrument_Refreshed, this.updateSelectedInstrument);        
   },
 };
 </script>
