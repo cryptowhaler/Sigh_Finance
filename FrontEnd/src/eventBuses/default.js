@@ -3,7 +3,10 @@ export default new Vue();
 export const EventNames = {
   // WHEN SIGH FINANCE LOADS
   connectedToSupportedNetwork: 'connected-To-Supported-Network',
-
+  // WHEN WALLET IS CONNECTED (getConnectedWalletState() successful call)
+  ConnectedWalletSesssionRefreshed: 'Connected-Wallet-Sesssion-Refreshed',
+  ConnectedWalletTotalLendingBalancesRefreshed: 'Connected-Wallet-Total-Lending-Balances-Refreshed',  
+  ConnectedWallet_SIGH_Balances_Refreshed: 'Connected-Wallet-SIGH-Balances-Refreshed',
   // INSTRUMENT : STATES RELATED
   instrumentStateUpdated: 'instrument-State-Updated',
   instrumentConfigUpdated: 'instrument-Config-Updated',

@@ -65,10 +65,10 @@ export default {
       }
     },
 
-    userWalletDisconnectedListener() {
-      this.activeTab = 'Lending';
-      this.tabBarEventBus.$emit('change-active-tab', 'Lending');
-    },    
+    // userWalletDisconnectedListener() {
+    //   this.activeTab = 'Lending';
+    //   this.tabBarEventBus.$emit('change-active-tab', 'Lending');
+    // },    
 
   },
 

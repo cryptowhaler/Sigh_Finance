@@ -1,6 +1,7 @@
 <template src="./template.html"></template>
 
 <script>
+import EventBus, { EventNames,} from '@/eventBuses/default';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import {mapState,mapActions,} from 'vuex';
 import Web3 from 'web3';
@@ -12,6 +13,7 @@ export default {
   data() {
     return {
       walletSIGHBalances: {},   // Wallet : SIGH INSTRUMENT State
+      showLoader: false,
     };
   },
   
@@ -19,14 +21,23 @@ export default {
   async created() {
     console.log("IN BALANCE /SIGH-BALANCE (TRADE-PANE) FUNCTION ");
     if (this.$store.state.web3 && this.$store.state.isNetworkSupported && this.$store.state.connectedWallet) {
-        this.walletSIGHBalances = this.$store.getters.getWalletSIGHState;
+      this.loadSessionData();
     }
+  },
+
+
+  mounted() {
+    this.loadSessionData();
+
+    this.refreshThisSession = () => this.loadSessionData();     
+    ExchangeDataEventBus.$on(EventNames.ConnectedWalletSesssionRefreshed, this.refreshThisSession );    
+    ExchangeDataEventBus.$on(EventNames.ConnectedWallet_SIGH_Balances_Refreshed, this.refreshThisSession );    
   },
 
 
   methods: {
 
-    ...mapActions(['getWalletSIGHFinanceState']),
+    ...mapActions(['refresh_User_SIGH__State']),
     
     async refresh() {
       console.log("refreshing User Your SIGH Balances");
@@ -40,17 +51,21 @@ export default {
       else {                                  // EXECUTE THE TRANSACTION
         let response = await this.refreshWalletSessionData(true);
         if (response) {
-          this.$showInfoMsg({message: " Your SIGH Balances refreshed successfully for the account " + this.$store.state.connectedWallet  });
+          this.$showInfoMsg({message: " $SIGH FARM Yields refreshed successfully for the account " + this.$store.state.connectedWallet  });
         }
         else {
-          this.$showErrorMsg({message: " Could not refresh Your SIGH Balances for the account " + this.$store.state.connectedWallet + ". Something went wrong. Contact our team at contact@sigh.finance in case of any queries!"  });
+          this.$showErrorMsg({message: " Could not refresh $SIGH FARM Yields for the account " + this.$store.state.connectedWallet + ". Something went wrong. Contact our team at contact@sigh.finance in case of any queries!"  });
         }
+      this.showLoader = false;
      }
     },
 
     async refreshWalletSessionData(toDisplay) {      
       try {
-        let response = await this.getWalletSIGHFinanceState();
+        this.showLoader = true;
+        let response = await this.refresh_User_SIGH__State();
+        this.$store.commit("setWalletSIGHState",response);
+        ExchangeDataEventBus.$emit(EventNames.ConnectedWallet_SIGH_Balances_Refreshed);            
         this.walletSIGHBalances = this.$store.getters.getWalletSIGHState;
         return true;
       }
@@ -58,12 +73,19 @@ export default {
         console.log(error);
         return false;
       }
+    },
+
+
+    loadSessionData() {
+        this.walletSIGHBalances = this.$store.getters.getWalletSIGHState;
     }
-      
+
 
   },
 
   destroyed() {
+    ExchangeDataEventBus.$off(EventNames.ConnectedWalletSesssionRefreshed );    
+    ExchangeDataEventBus.$off(EventNames.ConnectedWallet_SIGH_Balances_Refreshed );    
   },
 };
 </script>

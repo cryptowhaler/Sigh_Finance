@@ -69,7 +69,8 @@
     
     <!-- Buttons -->
         <div class="center" style=" margin: 0 auto; display: block;" >
-            <button class="uk-button " style="background-color: indianred;"  @click="refresh()">Refresh</button>
+            <img v-if="showLoader" style="width: 11%; padding-right:11px" src="https://image.ibb.co/dc02hd/30.gif" />
+            <button v-else class="uk-button " style="background-color: indianred;"  @click="refresh()">Refresh</button>
             <button class="uk-button " style="background-color: indianred;" @click="toggleTable()">Toggle</button>
         </div>
 </div>

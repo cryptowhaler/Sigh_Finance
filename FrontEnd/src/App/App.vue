@@ -164,6 +164,7 @@ export default {
         let response = await this.getConnectedWalletState();
         if (response) {
           this.$showSuccessMsg({message:"Successfully fetched SIGH Finance Session for the account : " + this.$store.state.connectedWallet });
+          ExchangeDataEventBus.$emit(EventNames.ConnectedWalletSesssionRefreshed);    
         }
         else if (this.$store.state.connectedWallet) {
           this.$showErrorMsg({message:"Failed to fetch SIGH Finance Session for the account : " + this.$store.state.connectedWallet });
@@ -179,6 +180,7 @@ export default {
           let response = await this.getConnectedWalletState();
           if (response) {
             this.$showSuccessMsg({message:"Successfully fetched SIGH Finance Session for the account : " + this.$store.state.connectedWallet });
+            ExchangeDataEventBus.$emit(EventNames.ConnectedWalletSesssionRefreshed);    
           }
           else if (this.$store.state.connectedWallet) {
             this.$showErrorMsg({message:"Failed to fetch SIGH Finance Session for the account : " + this.$store.state.connectedWallet });

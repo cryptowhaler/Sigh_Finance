@@ -29,6 +29,7 @@ export default {
 
       walletInstrumentStatesArray: [],  // Wallet - Instrument States
       displayInUSD: false,
+      showLoader: false,
     };
   },
   
@@ -72,10 +73,12 @@ export default {
         else {
           this.$showErrorMsg({message: " Could not refresh balances for the account " + this.$store.state.connectedWallet + ". Something went wrong. Contact our team at contact@sigh.finance in case of any queries!"  });
         }
+      this.showLoader  = false;       
      }
     },
 
-    async refreshConnectedWalletInstrumentStates(toDisplay) {      
+    async refreshConnectedWalletInstrumentStates(toDisplay) {    
+      this.showLoader = true;
       let instruments = this.$store.getters.getSupportedInstruments;
       console.log(instruments);
       let  _walletInstrumentStatesArray = [];            

@@ -3,6 +3,8 @@ import Vuex from 'vuex';
 // import {dateToDisplayTime,} from '@/utils/utility';
 import Web3 from 'web3';
 import BigNumber from "bignumber.js";
+import EventBus, { EventNames,} from '@/eventBuses/default';
+import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 
 import GlobalAddressesProviderInterface from '@/contracts/IGlobalAddressesProvider.json'; // GlobalAddressesProviderContract Interface
 
@@ -947,8 +949,10 @@ const store = new Vuex.Store({
         // console.log(newBalance_);
         if (account !== state.connectedWallet) {  // ACCOUNT CONNECTED CHANGED. BOTH ACCOUNT AND BALANCE UPDATED 
           commit('updateWallet',{ newWallet: account, newBalance: newBalance_});
-          await store.dispatch("getWalletSIGHFinanceState");
-          // EventBus.$emit(EventNames.userWalletConnected, { username: walletConnected,}); //User has logged in (event)          
+          let response = await store.dispatch("getWalletSIGHFinanceState");
+          if (response) {
+            ExchangeDataEventBus.$emit(EventNames.ConnectedWalletSesssionRefreshed);    
+          }
         } 
         else if (newBalance_ !== state.ethBalance) {    // ONLY BALANCE UPDATED WHEN IT IS CHANGED
           commit('updateBalance',newBalance_);

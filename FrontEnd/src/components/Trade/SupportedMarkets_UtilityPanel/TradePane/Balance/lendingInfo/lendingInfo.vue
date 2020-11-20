@@ -1,6 +1,7 @@
 <template src="./template.html"></template>
 
 <script>
+import EventBus, { EventNames,} from '@/eventBuses/default';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import {mapState,mapActions,} from 'vuex';
 import Web3 from 'web3';
@@ -13,6 +14,7 @@ export default {
     return {
       walletLendingProtocolState: {},   // Wallet : Lending Protocol Global State
       displayInUSD: false,
+      showLoader: false,
     };
   },
   
@@ -20,18 +22,33 @@ export default {
   async created() {
     console.log("IN BALANCE / LENDING-INFO (TRADE-PANE) FUNCTION ");
     if (this.$store.state.web3 && this.$store.state.isNetworkSupported && this.$store.state.connectedWallet) {
-      await this.refreshConnectedWalletGlobalStates(false);
+      this.loadSessionData();
     }
   },
+
+
+    mounted() {
+    this.loadSessionData();
+
+    this.refreshThisSession = () => this.loadSessionData();     
+    ExchangeDataEventBus.$on(EventNames.ConnectedWalletSesssionRefreshed, this.refreshThisSession );    
+    ExchangeDataEventBus.$on(EventNames.ConnectedWalletTotalLendingBalancesRefreshed, this.refreshThisSession );    
+  },
+
+
 
 
   methods: {
 
     ...mapActions(['refresh_User_SIGH_Finance_State']),
     
+
+
     toggleTable() {
       this.displayInUSD = !this.displayInUSD;
     },
+
+
 
     async refresh() {
       console.log("refreshing User GLOBAL Balances");
@@ -50,17 +67,21 @@ export default {
         else {
           this.$showErrorMsg({message: " Could not refresh Global Lending Protocol Balances for the account " + this.$store.state.connectedWallet + ". Something went wrong. Contact our team at contact@sigh.finance in case of any queries!"  });
         }
+        this.showLoader = false;      
      }
     },
 
+
+
+
     async refreshConnectedWalletGlobalStates(toDisplay) {      
-      // this.walletLendingProtocolState = {};               // RESET LOCALLY STORED GLOBAL STATE
-      // this.$store.commit("setWalletSIGH_FinanceState",{});  // RESET SESSION DATA STORED GLOBAL STATE 
       try {
+        this.showLoader = true;
         let userGlobalState = await this.refresh_User_SIGH_Finance_State();
         this.$store.commit("setWalletSIGH_FinanceState",userGlobalState);
         this.walletLendingProtocolState = userGlobalState;   
-        console.log("this.walletLendingProtocolState");            
+        ExchangeDataEventBus.$emit(EventNames.ConnectedWalletTotalLendingBalancesRefreshed);    
+
         console.log(this.walletLendingProtocolState);            
         return true;
       }
@@ -68,13 +89,30 @@ export default {
         console.log(error);
         return false;
       }
-    }
-      
+    },
+
+
+
+
+
+    // REFRESHES THE CURRENT SESSION : FROM STORE 
+    loadSessionData() {
+      console.log("LOADING WALLET : SIGH FINANCE :LENDING INFO");
+      this.walletLendingProtocolState = this.$store.state.walletSIGH_FinanceState;
+      console.log(this.walletLendingProtocolState);
+    },
 
   },
+
+
+
 
   destroyed() {
+    ExchangeDataEventBus.$off(EventNames.ConnectedWalletSesssionRefreshed );    
+    ExchangeDataEventBus.$off(EventNames.ConnectedWalletTotalLendingBalancesRefreshed );    
   },
+
+
 };
 </script>
 

@@ -37,7 +37,8 @@
     <!-- Buttons -->
     <!-- <div class="uk-grid uk-grid-small f1-form-grid">
         <div class="center"> -->
-            <button class="uk-button " style="background-color: indianred; margin: 0 auto; display: block;"  @click="refresh()">Refresh</button>
+            <img v-if="showLoader" style="width: 15%; margin: 0 auto; display: block;" src="https://image.ibb.co/dc02hd/30.gif" />
+            <button v-else class="uk-button " style="background-color: indianred; margin: 0 auto; display: block;"  @click="refresh()">Refresh</button>
         <!-- </div>
     </div> -->
 </div>

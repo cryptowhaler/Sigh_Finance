@@ -160,6 +160,9 @@ export default {
   },
 
   destroyed() {
+    ExchangeDataEventBus.$off(EventNames.connectedToSupportedNetwork  );    
+    ExchangeDataEventBus.$off(EventNames.instrumentGlobalBalancesUpdated );    
+    ExchangeDataEventBus.$off(EventNames.instrument_SIGH_STATES_Updated );    
   },
   
 };
