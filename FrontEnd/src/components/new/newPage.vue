@@ -1142,7 +1142,7 @@ export default {
       this.formData.vegaMarketId = newMarket.Id;
       // console.log(this.formData.vegaMarketId + ' ' + this.formData.vegaMarketName);
     };
-    ExchangeDataEventBus.$on('change-selected-instrument', this.changeVegaMarket);        
+    ExchangeDataEventBus.$on(EventNames.changeSelectedInstrument, this.changeVegaMarket);        
   },
 
   // mounted() {
@@ -1154,7 +1154,7 @@ export default {
 
   destroyed() {
     clearInterval(this.watcher);
-    ExchangeDataEventBus.$off('change-selected-instrument', this.changeVegaMarket);    
+    ExchangeDataEventBus.$off(EventNames.changeSelectedInstrument, this.changeVegaMarket);    
   },
 
 };

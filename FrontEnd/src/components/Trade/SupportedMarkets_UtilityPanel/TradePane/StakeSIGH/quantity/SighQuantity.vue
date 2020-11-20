@@ -43,7 +43,7 @@ export default {
         }
       },1000);
     }
-    // ExchangeDataEventBus.$on('change-selected-instrument', this.changesighInstrument);        
+    // ExchangeDataEventBus.$on(EventNames.changeSelectedInstrument, this.changesighInstrument);        
   },
 
 
@@ -225,7 +225,7 @@ export default {
   },
 
   destroyed() {
-    ExchangeDataEventBus.$off('change-selected-instrument', this.changesighInstrument);    
+    ExchangeDataEventBus.$off(EventNames.changeSelectedInstrument, this.changesighInstrument);    
   },
 };
 </script>

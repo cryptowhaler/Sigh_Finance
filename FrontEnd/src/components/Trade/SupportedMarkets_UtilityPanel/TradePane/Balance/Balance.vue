@@ -94,11 +94,9 @@ export default {
             let currentUserInstrumentState = await this.refresh_User_Instrument_State({ cur_instrument: instruments[i] }); 
             console.log(currentUserInstrumentState);
             this.$store.commit("addToWalletInstrumentStates",{ instrumentAddress: instruments[i].instrumentAddress, walletInstrumentState: currentUserInstrumentState }); 
-            // _walletInstrumentStatesArray.push(currentUserInstrumentState);
+            ExchangeDataEventBus.$emit(EventNames.ConnectedWallet_Instrument_Refreshed, {'instrumentAddress': instruments[i].instrumentAddress });    
         }
-        // this.walletInstrumentStatesArray = _walletInstrumentStatesArray;
         this.loadSessionData();
-        console.log(this.walletInstrumentStatesArray);
         return true;
       }
       catch (error) {
@@ -130,6 +128,7 @@ export default {
 
     // REFRESHES STATE FOR A PARTICULAR INSTRUMENT
     refreshForInstrument(instrumentAddress) {
+      console.log("IN BAALNCES :  " + instrumentAddress );
       let walletInstrumentStates = this.$store.getters.getSupportedInstruments;
       for (let i=0; i<this.walletInstrumentStatesArray.length; i++) {
         if (instrumentAddress == this.walletInstrumentStatesArray[i].instrumentAddress ) {
@@ -146,6 +145,9 @@ export default {
 
 
   destroyed() {
+    ExchangeDataEventBus.$off(EventNames.ConnectedWalletSesssionRefreshed  );    
+    ExchangeDataEventBus.$off(EventNames.ConnectedWallet_SIGH_Balances_Refreshed  );    
+    ExchangeDataEventBus.$off(EventNames.ConnectedWallet_Instrument_Refreshed  );    
   },
 
 

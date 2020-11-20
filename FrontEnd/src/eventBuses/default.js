@@ -8,6 +8,8 @@ export const EventNames = {
   ConnectedWalletTotalLendingBalancesRefreshed: 'Connected-Wallet-Total-Lending-Balances-Refreshed',  
   ConnectedWallet_SIGH_Balances_Refreshed: 'Connected-Wallet-SIGH-Balances-Refreshed',
   ConnectedWallet_Instrument_Refreshed: 'Connected-Wallet-Instrument-Refreshed',
+  // CHANGING SELECTED INSTRUMENT
+  changeSelectedInstrument: 'change-Selected-Instrument',
   // INSTRUMENT : STATES RELATED
   instrumentStateUpdated: 'instrument-State-Updated',
   instrumentConfigUpdated: 'instrument-Config-Updated',

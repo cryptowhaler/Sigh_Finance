@@ -20,6 +20,7 @@ export default {
       },
       selectedInstrumentPriceETH: null,  // PRICE CONSTANTLY UPDATED
       showLoader: false,
+      showLoaderRefresh: false,
     };
 
   },
@@ -49,7 +50,7 @@ export default {
       this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
       console.log(this.selectedInstrumentWalletState);
     };
-    ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
+    ExchangeDataEventBus.$on(EventNames.changeSelectedInstrument, this.changeSelectedInstrument);        
   },
 
 
@@ -184,6 +185,7 @@ export default {
     async refreshCurrentInstrumentWalletState(toDisplay) {
       if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         try {
+          this.showLoaderRefresh = true;
           console.log("refreshCurrentInstrumentWalletState() in DEPOSIT-QUANTITY");
           let response = await this.refresh_User_Instrument_State({cur_instrument: this.selectedInstrument });
           console.log(response);
@@ -201,12 +203,13 @@ export default {
           console.log( 'FAILED' );
         }
       }
+          this.showLoaderRefresh = false;      
     }
 
   },
 
   destroyed() {
-    ExchangeDataEventBus.$off('change-selected-instrument', this.changeSelectedInstrument);    
+    ExchangeDataEventBus.$off(EventNames.changeSelectedInstrument, this.changeSelectedInstrument);    
   },
 };
 </script>

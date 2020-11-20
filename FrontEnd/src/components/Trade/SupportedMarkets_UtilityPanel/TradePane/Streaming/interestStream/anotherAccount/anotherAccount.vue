@@ -51,7 +51,7 @@ export default {
       this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
       console.log(this.selectedInstrumentWalletState);
     };
-    ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
+    ExchangeDataEventBus.$on(EventNames.changeSelectedInstrument, this.changeSelectedInstrument);        
   },
 
 
@@ -152,7 +152,7 @@ export default {
 
 
   destroyed() {
-    ExchangeDataEventBus.$off('change-selected-instrument', this.changesighInstrument);    
+    ExchangeDataEventBus.$off(EventNames.changeSelectedInstrument, this.changesighInstrument);    
   },
 
 

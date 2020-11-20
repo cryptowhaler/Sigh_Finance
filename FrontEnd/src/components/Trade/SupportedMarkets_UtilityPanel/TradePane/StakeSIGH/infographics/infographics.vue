@@ -33,7 +33,7 @@ export default {
     //   console.log(this.selectedInstrument);
     //   this.updateAvailableAllowance();
     // };
-    // ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
+    // ExchangeDataEventBus.$on(EventNames.changeSelectedInstrument, this.changeSelectedInstrument);        
   },
 
 
@@ -53,7 +53,7 @@ export default {
   },
 
   destroyed() {
-    // ExchangeDataEventBus.$off('change-selected-instrument', this.changeSelectedInstrument);    
+    // ExchangeDataEventBus.$off(EventNames.changeSelectedInstrument, this.changeSelectedInstrument);    
   },
 };
 </script>

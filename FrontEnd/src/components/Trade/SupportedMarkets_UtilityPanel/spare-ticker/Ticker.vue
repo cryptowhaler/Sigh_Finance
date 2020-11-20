@@ -72,7 +72,7 @@ export default {
       let selectedMarketTrade = {'Name':ticker.markName,'Id':ticker.markId,'baseName':ticker.baseName,'quoteName':ticker.quoteName,'summary':ticker.summary,};
       // console.log(selectedMarket);
 
-      ExchangeDataEventBus.$emit('change-selected-instrument', selectedMarket);      
+      ExchangeDataEventBus.$emit(EventNames.changeSelectedInstrument, selectedMarket);      
       ExchangeDataEventBus.$emit('change-vega-header', {'Name':ticker.markName,'Summary':ticker.summary,});
       this.$root.$emit('tickerClicked');
     },

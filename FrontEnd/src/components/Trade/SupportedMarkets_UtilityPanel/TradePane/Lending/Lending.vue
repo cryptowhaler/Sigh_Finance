@@ -1,14 +1,15 @@
 <template src="./template.html"></template>
 
 <script>
+import EventBus, {EventNames,} from '@/eventBuses/default';
+import ExchangeDataEventBus from '@/eventBuses/exchangeData';
+
 import TabBar from '@/components/TabBar/TabBar.vue';
 
 import Deposit from './Deposit/Deposit.vue';
 import Redeem from './Redeem/Redeem.vue';
 import Borrow from './Borrow/Borrow.vue';
 import Repay from './Repay/Repay.vue';
-
-import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 
 export default {
 
@@ -45,7 +46,7 @@ export default {
       console.log(this.selectedInstrument);
       this.$store.commit('addLoaderTask', 3, false);    
       this.$store.commit('updateSelectedInstrument',this.selectedInstrument);
-      ExchangeDataEventBus.$emit('change-selected-instrument', {'instrument':this.selectedInstrument });    //TO CHANGE ORDER-BOOK/Supported-Money-Markets
+      ExchangeDataEventBus.$emit(EventNames.changeSelectedInstrument, {'instrument':this.selectedInstrument });    //TO CHANGE ORDER-BOOK/Supported-Money-Markets
     },
   },
 };
