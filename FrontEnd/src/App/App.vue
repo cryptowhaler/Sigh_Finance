@@ -105,16 +105,16 @@ export default {
       let isWeb3loaded = await this.loadWeb3();
 
       if (isWeb3loaded == 'EthereumEnabled') {
-          this.$showSuccessMsg({message:" Welcome to SIGH Finance! Successfully connected to the Ethereum Network's '" + this.$store.getters.networkName });
+          this.$showSuccessMsg({message:" Welcome to SIGH Finance! Successfully connected to the Ethereum Network : " + this.$store.getters.networkName + "! Welcome to SIGH Finance!" });
       }
       if (isWeb3loaded == 'EthereumNotEnabled') {
           this.$showErrorMsg({message:' Welcome to SIGH Finance! Permission to connect your wallet denied. In case you have security concerns or are facing any issues, reach out to our support team at support@sigh.finance. '});
       }
       if (isWeb3loaded == 'BSCConnected') {
-        this.$showSuccessMsg({message:" Welcome to SIGH Finance! Successfully connected to the Binance Smart Chain's '" + this.$store.getters.networkName + "'! Welcome to SIGH Finance!"});
+        this.$showSuccessMsg({message:" Welcome to SIGH Finance! Successfully connected to the Binance Smart Chain : " + this.$store.getters.networkName + "! Welcome to SIGH Finance!"});
       }
       if (isWeb3loaded == 'Web3Connected') {
-        this.$showSuccessMsg({message:" Welcome to SIGH Finance! Successfully connected to the Ethereum Network's '" + this.$store.getters.networkName  + "' (not a Metamask wallet) !"});
+        this.$showSuccessMsg({message:" Welcome to SIGH Finance! Successfully connected to the Ethereum Network's " + this.$store.getters.networkName  + " (not a Metamask wallet) !"});
       }
       if (isWeb3loaded == 'false') {
         this.$showErrorMsg({message:' Welcome to SIGH Finance! No Web3 Object injected into browser. Read-only access. Please install MetaMask browser extension or connect our support team at support@sigh.finance. '});
@@ -123,6 +123,9 @@ export default {
       // FETCHING CONTRACTS AND STATE FOR SIGH FINANCE
       if ( this.$store.getters.isNetworkSupported ) {   
         this.sighFinanceInitialized = await this.fetchSessionSIGHFinanceStateData();
+        if (this.sighFinanceInitialized) {
+          ExchangeDataEventBus.$emit(EventNames.connectedToSupportedNetwork);    
+        }
       }
     },
 

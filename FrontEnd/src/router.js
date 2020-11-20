@@ -40,10 +40,10 @@ const vueRouter = new Router({
 ]});
 
 vueRouter.beforeEach((to, from, next) => {
-  if (to.meta.needLogin && !LocalStorage.isUserLoggedIn()) {
-    EventBus.$emit(EventNames.userSessionExpired);
-    return next(false);
-  }
+  // if (to.meta.needLogin && !LocalStorage.isUserLoggedIn()) {
+  //   EventBus.$emit(EventNames.userSessionExpired);
+  //   return next(false);
+  // }
   document.title = to.meta.pageTitle;
   return next();
 });

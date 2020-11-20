@@ -2,9 +2,10 @@
     <div class="uk-panel">
         <!-- Live markets heading -->
         <h3 class="uk-panel-title uk-text-center" style="padding-bottom: 15px; padding-left: 190px; font-size: 19px !important;">SUPPORTED MONEY MARKETS
-                <button class="uk-button " style="background-color: indianred; margin-left: 170px; "  @click="refresh()">Refresh</button>
+                <img v-if="showLoader" style="width: 7%; margin-left: 170px;" src="https://image.ibb.co/dc02hd/30.gif" />
+                <button v-else class="uk-button " style="background-color: indianred; margin-left: 170px; "  @click="refresh()">Refresh</button>
         </h3>
-    
+        
     </div>
     <!-- v-if="!showLoader" -->
     <template >   
@@ -22,8 +23,9 @@
                             <th class="uk-text-center">Supply APY</th>
                             <th class="uk-text-center">Borrow APY (Stable)</th>
                             <th class="uk-text-center">Borrow APY (Variable)</th>
-                            <th class="uk-text-center"> $SIGH Yield (Suppliers) </th>
-                            <th class="uk-text-center"> $SIGH Yield (Borrowers) </th>
+                            <th class="uk-text-center"> % Volatility </th>
+                            <th class="uk-text-center"> Losses (Avg per Block) </th>
+                            <th class="uk-text-center"> $SIGH Yield (Per Block)  </th>
                         </tr>
                     </thead>
                     <tbody>

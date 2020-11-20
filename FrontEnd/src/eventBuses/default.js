@@ -1,18 +1,14 @@
 import Vue from 'vue';
 export default new Vue();
 export const EventNames = {
-  userLogout: 'user-logout',
-  userSessionExpired: 'user-session-expired',
-  // ledgerUpdated: 'ledger-updated',
-  // orderPlaced: 'orderPlaced',
-  // orderFilled: 'orderFilled',
-  // orderCanceled: 'orderCanceled',
-  // orderPartiallyFilled: 'orderPartiallyFilled',
-  // orderUpdated: 'orderUpdated',
-  notification: 'notification',
-  modalMsg: 'modalMsg',   //Updating msg when logged-in / logged-out
-  userLogoutMAIN: 'user-logout-website-loaded',
-  pubKeyChanged: 'pubKeyChanged', //handles change in selected pubKey
+  // WHEN SIGH FINANCE LOADS
+  connectedToSupportedNetwork: 'connected-To-Supported-Network',
+
+  // INSTRUMENT : STATES RELATED
+  instrumentStateUpdated: 'instrument-State-Updated',
+  instrumentConfigUpdated: 'instrument-Config-Updated',
+  instrumentGlobalBalancesUpdated: 'instrument-Global-Balances-Updated',
+  instrument_SIGH_STATES_Updated: 'instrument-SIGH-STATES-Updated',
   userWalletConnected: 'user-wallet-connected',
   userWalletDisconnected: 'user-wallet-Disconnected',
 

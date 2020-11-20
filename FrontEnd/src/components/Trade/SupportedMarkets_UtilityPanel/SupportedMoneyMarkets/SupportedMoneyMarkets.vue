@@ -1,6 +1,7 @@
 <template src="./template.html"></template>
 
 <script>
+import EventBus, { EventNames,} from '@/eventBuses/default';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import Spinner from '@/components/Spinner/Spinner.vue';
 import gql from 'graphql-tag';
@@ -9,13 +10,17 @@ import {mapState,mapActions,} from 'vuex';
 export default {
   name: 'Supported-Money-Markets',
 
+
   components: {
     Spinner,
   },
 
+
   props: {
     parentHeight: Number,   //communicated to parent
   },
+
+
 
   data() {
     return {
@@ -25,6 +30,9 @@ export default {
     };
   },
 
+
+
+
   watch: {
     parentHeight: function(newVal) {
       let calcHeight = newVal;
@@ -32,11 +40,27 @@ export default {
     },
   },
 
+
+
+
   async created() {
     console.log(" IN Supported-Money-Markets Created Function");
     if (this.$store.state.web3 && this.$store.state.isNetworkSupported) {
-      await this.refreshInstrumentStates();
+      this.loadSessionData();
     }
+  },
+
+
+
+
+
+    mounted() {
+    this.refreshThisSession = () => this.loadSessionData();     // DATA LOADED FOR THE SUPPORTED NETWORK
+    this.updateLocallyStoredStatesForInstrument = (instrumentAddress) => this.refreshForInstrument(instrumentAddress);     //INSTRUMENT REFRESHED 
+
+    ExchangeDataEventBus.$on(EventNames.connectedToSupportedNetwork, this.refreshThisSession );    
+    ExchangeDataEventBus.$on(EventNames.instrumentGlobalBalancesUpdated, this.updateLocallyStoredStatesForInstrument );    
+    ExchangeDataEventBus.$on(EventNames.instrument_SIGH_STATES_Updated, this.updateLocallyStoredStatesForInstrument );    
   },
 
   methods: {
@@ -44,6 +68,7 @@ export default {
     ...mapActions(['LendingPool_getInstruments','refershInstrumentState']),
 
     async refresh() {
+      this.showLoader = true;
       console.log("refreshing INSTRUMENT Global States");
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
@@ -52,15 +77,16 @@ export default {
       else {                                  // EXECUTE THE TRANSACTION
         let response = await this.refreshInstrumentStates(true);
         if (response) {
-          this.$showInfoMsg({message: " Instruments refreshed successfully" });
+          this.$showInfoMsg({message: " SIGH FINANCE : Data refreshed successfully" });
         }
         else {
-          this.$showErrorMsg({message: " Could not refresh Instruments States. Something went wrong. Contact our team at contact@sigh.finance in case of any queries!"  });
+          this.$showErrorMsg({message: " Could not refresh SIGH FINANCE : Session. Something went wrong. Contact our team at contact@sigh.finance in case of any queries!"  });
         }
      }
+      this.showLoader = false;
     },
 
-
+    // REFRESHES INSTRUMENTS BASIC STATE, GLOBAL STATE, CONFIG, SIGH STATES : (API Call)  
     async refreshInstrumentStates() {
       let instrumentAddresses = await this.LendingPool_getInstruments();
       this.$store.commit("resetSupportedInstrumentsArray");
@@ -74,17 +100,21 @@ export default {
     
           console.log(" SUPPORTED INSTRUMENT - " + i + " : BASIC STATE");
           this.$store.commit("addToSupportedInstrumentsArray",data.instrumentState);
+          ExchangeDataEventBus.$emit(EventNames.instrumentStateUpdated, {'instrumentAddress': instrumentAddresses[i]});    
     
           console.log(" SUPPORTED INSTRUMENT - " + i + " : CONFIGURATION");
           this.$store.commit("addToSupportedInstrumentConfigs",{instrumentAddress: instrumentAddresses[i] , instrumentConfig: data.instrumentConfiguration});
+          ExchangeDataEventBus.$emit(EventNames.instrumentConfigUpdated, {'instrumentAddress': instrumentAddresses[i] });    
     
           console.log(" SUPPORTED INSTRUMENT - " + i + " : GLOBAL BALANCES");          // console.log(data.instrumentGlobalBalances);
           this.$store.commit("addToSupportedInstrumentGlobalStates",{instrumentAddress: instrumentAddresses[i] , instrumentGlobalState: data.instrumentGlobalBalances});
+          ExchangeDataEventBus.$emit(EventNames.instrumentGlobalBalancesUpdated, {'instrumentAddress': instrumentAddresses[i] });    
 
           console.log(" SUPPORTED INSTRUMENT - " + i + " : SIGH STATES");          // console.log(data.instrumentGlobalBalances);
           this.$store.commit("addToSupportedInstrumentSIGHStates",{instrumentAddress: instrumentAddresses[i] , instrumentSIGHState: data.instrumentSighState});
+          ExchangeDataEventBus.$emit(EventNames.instrument_SIGH_STATES_Updated, {'instrumentAddress': instrumentAddresses[i]});    
         }
-        this.loadInstrumentData();
+        this.loadSessionData();
         return true;
       }
       catch(error) {
@@ -93,7 +123,9 @@ export default {
       }
     },
 
-    loadInstrumentData() {
+    
+    // REFRESHES THE CURRENT SESSION : FROM STORE 
+    loadSessionData() {
       console.log("LOADING INSTRUMENTS : MONEY MARKETS LIST");
       let localInstruments = [];
       let instruments = this.$store.getters.getSupportedInstruments;
@@ -109,6 +141,20 @@ export default {
       }
       this.instruments = localInstruments;
       console.log(this.instruments);
+    },
+
+    // REFRESHES STATE FOR A PARTICULAR INSTRUMENT
+    refreshForInstrument(instrumentAddress) {
+      let instrumentGlobalStates = this.$store.getters.getsupportedInstrumentGlobalStates;
+      let instrumentSIGHStates = this.$store.getters.getsupportedInstrumentSIGHStates;
+      for (let i=0; i<this.instruments.length; i++) {
+        if (instrumentAddress == this.instruments[i].instrumentAddress ) {
+          console.log("Updating State for instrumnet = " + this.instruments[i].basicData.symbol );
+          console.log(this.instruments[i]);
+          this.instruments[i].globalState = instrumentGlobalStates.get(instrumentAddress);
+          this.instruments[i].sighState = instrumentSIGHStates.get(instrumentAddress);
+        }
+      }
     }
 
   },

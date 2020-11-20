@@ -89,9 +89,8 @@ export default {
   mounted() {
     this.userwalletConnected = () => this.setWallet();
     this.userWalletDisconnectedListener = () => (this.positions = []);
-    EventBus.$on(EventNames.userWalletConnected, this.userwalletConnected);  //GET POSITIONS
-    EventBus.$on(EventNames.userWalletDisconnected, this.userWalletDisconnectedListener); //GO EMPTY AGAIN
-    // EventBus.$on(EventNames.pubKeyChanged,this.userwalletConnected);  //to handle change in pubKey    
+    // EventBus.$on(EventNames.userWalletConnected, this.userwalletConnected);  //GET POSITIONS
+    // EventBus.$on(EventNames.userWalletDisconnected, this.userWalletDisconnectedListener); //GO EMPTY AGAIN
   },
 
   methods: {
@@ -143,7 +142,7 @@ export default {
   destroyed() {
     EventBus.$off(EventNames.userWalletConnected, this.userwalletConnected);
     EventBus.$off(EventNames.userWalletDisconnected, this.userWalletDisconnectedListener);
-    EventBus.$on(EventNames.pubKeyChanged,this.userwalletConnected);  //to handle change in pubKey        
+    // EventBus.$on(EventNames.pubKeyChanged,this.userwalletConnected);  //to handle change in pubKey        
   },
 };
 </script>
