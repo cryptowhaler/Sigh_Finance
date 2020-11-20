@@ -90,6 +90,7 @@ export default {
         this.$showErrorMsg({message: " The Account Address provided is not valid ( check-sum check failed). Check the address again or contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else if ( this.$store.state.connectedWallet != this.currentAdministratorFromAccount ) {
+        console.log(this.currentAdministratorFromAccount);
         this.$showErrorMsg({message: " The Connected Account " + this.$store.state.connectedWallet  + " is not having administrator priviledges over the 'From' Account, which are currently with " + this.currentAdministratorFromAccount}); 
       }
       else if (Number(this.instrumentBalancesFromAccount[0]) == 0 &&  Number(this.instrumentBalancesFromAccount[1]) == 0  ) {

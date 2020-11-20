@@ -9,30 +9,49 @@ export default {
 
   name: 'anotherAccount',
 
+
   data() {
     return {
       selectedInstrument: this.$store.state.currentlySelectedInstrument,
+      selectedInstrumentWalletState: {},
       formData : {
         fromAccount: null,
-        toAccount: null,                  // to which interest is to be re-directed
+        toAccount: null,                  // to which INTEREST / PERMISSIONS are to be re-directed / assigned
       },
-      fromAccountAdministrator : null,      // Interest Stream: Administrator Rights Holder
-      fromAccountRedirectedBalance: null,            // The redirected balance is the balance redirected by other accounts to the user,  that is accrueing interest for him.
-      fromAccountRedirectedBalanceWorth: null,       // fromAccountRedirectedBalance * fromAccountRedirectedBalanceWorth
-      instrumentBalances: [],
+      currentAdministratorFromAccount: null,
+      instrumentBalancesFromAccount: [],
+      selectedInstrumentPriceETH: null,
       showLoader: false,
+      showLoaderRefresh: false,
     };
-  },
+  },  
   
 
-  created() {
-    this. getCurrentStateOfInterestStream(false);                   // get the address to which the Interest Stream is currently re-directed            
-    this.changeSelectedInstrument = (selectedInstrument_) => {                 //Changing Selected Instrument
-      this.selectedInstrument = selectedInstrument_.instrument;        
-      console.log('DEPOSIT : selected instrument changed - '+ this.selectedInstrument );
-      this. getCurrentStateOfInterestStream(true);
-    };    
-    ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);    
+
+  async created() {
+    console.log("IN STREAMING / INTEREST_STREAMING / YOUR ACCOUNT (TRADE-PANE) FUNCTION ");
+    this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
+    console.log(this.selectedInstrument);
+    if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+    }
+    console.log(this.selectedInstrumentWalletState);
+    if ( this.$store.state.isNetworkSupported  ) {
+      setInterval(async () => {
+        if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+          this.selectedInstrumentPriceETH = await this.getInstrumentPrice({_instrumentAddress : this.selectedInstrument.instrumentAddress });
+        }
+      },1000);
+    }
+
+    this.changeSelectedInstrument = (selectedInstrument_) => {       //Changing Selected Instrument
+      console.log("NEW SELECTED INSTRUMENT : INTEREST STREAM : Your Account");
+      this.selectedInstrument = selectedInstrument_.instrument;       // UPDATED SELECTED INSTRUMENT (LOCALLY)
+      console.log(this.selectedInstrument);   
+      this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+      console.log(this.selectedInstrumentWalletState);
+    };
+    ExchangeDataEventBus.$on('change-selected-instrument', this.changeSelectedInstrument);        
   },
 
 
@@ -41,12 +60,16 @@ export default {
 
   methods: {
 
-    ...mapActions(['IToken_redirectInterestStreamOf','IToken_getfromAccountRedirectedBalance','IToken_getinterestRedirectionAllowances','LendingPoolCore_getUserBasicInstrumentData']),
+    ...mapActions(['IToken_redirectInterestStreamOf','getInstrumentPrice','refresh_User_Instrument_State','IToken_getinterestRedirectionAllowances','LendingPoolCore_getUserBasicInstrumentData']),
     
 
     async redirectInterestStreamOf() {                           // RE-DIRECT INTEREST STREAM
       // let price = (this.$store.state.SighInstrumentState.price / Math.pow(10,this.$store.state.SighInstrumentState.priceDecimals)).toFixed(4);
       console.log('Addresses to which it is to be re-directed to = ' + this.formData.toAccount);
+
+      if ( Web3.utils.isAddress(this.formData.toAccount) ) {          
+        await this.getDetailsOfTheFromAccount();          
+      }       
 
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
@@ -61,48 +84,79 @@ export default {
       else if ( !Web3.utils.isAddress(this.formData.toAccount) ) {            // 'ToAccount' provided is not Valid
         this.$showErrorMsg({message: " The 'To Account' Address provided is not valid ( check-sum check failed). Check the address again or contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
-      else if ( this.$store.state.connectedWallet !=  this.fromAccountAdministrator ) {
-        this.$showErrorMsg({message: "The connected Account does not have administrator priviledges over the provided 'From Account'. Administrator privileges over the 'From Account' are currently held by " +  this.fromAccountAdministrator +  " . Contact our support team at contact@sigh.finance in case of any queries! "}); 
+      else if ( this.$store.state.connectedWallet !=  this.currentAdministratorFromAccount ) {
+        this.$showErrorMsg({message: "The connected Account does not have administrator priviledges over the provided 'From Account'. Administrator privileges over the 'From Account' are currently held by " +  this.currentAdministratorFromAccount +  " . Contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
-      else if (Number(this.redirectedBalance) == 0 && Number(this.instrumentBalances[0]) == 0  ) {
-        this.$showErrorMsg({message: " The 'From Account' " + this.$store.state.connectedWallet + " doesn't have any " + this.selectedInstrument.symbol + " balance (redirected or suppplied) accuring Interest for itself.  The 'From Account' needs to have a valid deposted amount before you can Re-direct its interest stream. Contact our support team at contact@sigh.finance in case of any queries! "}); 
+      else if (Number(this.instrumentBalancesFromAccount[0]) == 0 &&  Number(this.instrumentBalancesFromAccount[1]) == 0  ) {
+        this.$showErrorMsg({message: " The 'From Account' " + this.formData.fromAccount + " doesn't have any supplied or Borrowed " + this.selectedInstrument.symbol + " balance accuring Interest for itself. The account needs to deposit assets (accures $SIGH whenever the asset's price (USD) increases over 24 hrs period) or borrow assets ((accures $SIGH whenever the asset's price (USD) decreases over 24 hrs period) before you can Re-direct its SIGH stream. Contact our support team at contact@sigh.finance in case of any queries! "}); 
       }
       else {                                  // EXECUTE THE TRANSACTION
         this.showLoader = true;
         let response =  await this.IToken_redirectInterestStreamOf( { iTokenAddress:  this.selectedInstrument.iTokenAddress,_from : this.formData.fromAccount ,_to: this.formData.toAccount } );
         if (response.status) {  
-          await this.getCurrentStateOfInterestStream(true);
           this.$showSuccessMsg({message: "INTEREST STREAM for the instrument + "  + this.selectedInstrument.symbol +  " has been successfully re-directed from " + this.formData.fromAccount + " to " + this.formData.toAccount  });
+          await this.refreshCurrentInstrumentWalletState(true);
           this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'InterestRedirectedByAdministrator',Service: 'STREAMING'});
+          this.formData.toAccount = null;
         }
         else {
           this.$showErrorMsg({message: "INTEREST STREAM RE-DIRECTION BY ADMINISTRATOR FAILED : " + response.message  });
           this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
         }
-        this.formData.toAccount = null;
         this.showLoader = false;
       }
     },
 
 
-    async  getCurrentStateOfInterestStream(toDisplay) {
-      if ( this.formData.iTokenAddress && Web3.utils.isAddress(this.formData.fromAccount)  )  {
-        this.fromAccountAdministrator = await this.IToken_getinterestRedirectionAllowances({ iTokenAddress: this.formData.iTokenAddress, _user: this.formData.fromAccount  });
-        this.fromAccountRedirectedBalance = await this.IToken_getfromAccountRedirectedBalance({ iTokenAddress: this.selectedInstrument.iTokenAddress, _user: this.formData.fromAccount  });
-        this.instrumentBalances = await this.LendingPoolCore_getUserBasicInstrumentData({ _instrument: this.selectedInstrument.instrumentAddress, _user: this.formData.fromAccount  });
-        let price = (this.selectedInstrument.price / Math.pow(10,this.selectedInstrument.priceDecimals)).toFixed(4);
-        this.fromAccountRedirectedBalanceWorth = price * this.fromAccountRedirectedBalance;
-        if (toDisplay) {
-          this.$showInfoMsg({message: "The deposited " + this.instrumentBalances[0] + " " + this.selectedInstrument.symbol + " and the redirected " + this.redirectedBalance + this.selectedInstrument.symbol + " is currently farming Interest for you!" });
+
+
+    async refreshCurrentInstrumentWalletState(toDisplay) {
+      if ( this.$store.state.web3 && this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        try {
+          this.showLoaderRefresh = true;          
+          // console.log("refreshCurrentInstrumentWalletState() in DEPOSIT-QUANTITY");
+          let response = await this.refresh_User_Instrument_State({cur_instrument: this.selectedInstrument });
+          // console.log(response);
+          // console.log("getting WalletInstrumentStates MAPPING before UPDATING & COMMITING  in DEPOSIT-QUANTITY");
+          // console.log(this.$store.getters.getWalletInstrumentStates);
+          this.$store.commit("addToWalletInstrumentStates",{instrumentAddress : this.selectedInstrument.instrumentAddress  , walletInstrumentState: response});
+          // console.log("getting WalletInstrumentStates MAPPING after UPDATING & COMMITING  in DEPOSIT-QUANTITY");
+          // console.log(this.$store.getters.getWalletInstrumentStates);
+          this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+          if (toDisplay) {
+            this.$showInfoMsg({message:  this.$store.state.connectedWallet + " : " + this.selectedInstrument.symbol + " Instrument's State have been refreshed! " });        
+          }
         }
+        catch(error) {
+          console.log( 'FAILED' );
+        }
+        this.showLoaderRefresh = false;        
       }
-    }
+    },
+
+
+
+
+    async  getDetailsOfTheFromAccount() {
+        console.log("CHECK CHECK CHECK");
+        if (this.$store.getters.connectedWallet && this.selectedInstrument.iTokenAddress) {
+        this.currentAdministratorFromAccount = await this.IToken_getinterestRedirectionAllowances({ iTokenAddress: this.selectedInstrument.iTokenAddress, _user: this.formData.fromAccount   });
+        console.log(this.currentAdministratorFromAccount);
+        this.instrumentBalancesFromAccount = await this.LendingPoolCore_getUserBasicInstrumentData({ _instrument: this.selectedInstrument.instrumentAddress, _user: this.formData.fromAccount   });
+      }
+    } 
+
   },
+
+
 
 
   destroyed() {
     ExchangeDataEventBus.$off('change-selected-instrument', this.changesighInstrument);    
   },
+
+
+
 };
 </script>
 
