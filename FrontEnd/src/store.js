@@ -134,6 +134,9 @@ const store = new Vuex.Store({
     ethPriceDecimals: null,             // Decimals 
     ethereumPriceUSD: null,             // ETH Price in USD
 
+    // BLOCKS REMAINING FOR SIGH SPEED REFRESH
+    blocksRemainingForSIGHSpeedRefresh : null,
+
     username: null, //Added
     websocketStatus: 'Closed',
     loaderCounter: 0,
@@ -296,8 +299,9 @@ const store = new Vuex.Store({
     getSighPrice(state) {
       return state.SIGHState.priceETH;
     }, 
-
-
+    getblocksRemainingForSIGHSpeedRefresh(state) {
+      return state.blocksRemainingForSIGHSpeedRefresh;
+    },
     showLoader(state) {
       return state > 0;
     },
@@ -418,6 +422,10 @@ const store = new Vuex.Store({
     updateETHPrice(state, updatedPrice) {
       state.ethereumPriceUSD = updatedPrice;
       // console.log('In updateETHPrice - ' + state.ethereumPriceUSD);
+    },
+    updateBlocksRemainingForSIGHSpeedRefresh(state,blockRemaining_) {
+      state.blocksRemainingForSIGHSpeedRefresh = blockRemaining_;
+      console.log('In updateBlocksRemainingForSIGHSpeedRefresh - ' + state.blocksRemainingForSIGHSpeedRefresh);
     },
     // SIGH FINANCE
     setSIGHFinanceState(state,sighFinanceState) {
@@ -726,7 +734,7 @@ const store = new Vuex.Store({
         let ethPriceUSD = await store.dispatch("getInstrumentPrice",{_instrumentAddress: state.EthereumPriceOracleAddress}); 
         commit('updateETHPrice',ethPriceUSD);                             // ETH Price 
   
-        store.dispatch('initiatePolling_ETH_Prices');
+        store.dispatch('initiatePolling_ETH_PricesAnd_BlocksRemaining');
         return true;
       }
       catch (error) {
@@ -869,16 +877,21 @@ const store = new Vuex.Store({
 
 
   // [TESTED. WORKING AS EXPECTED] KEEP UPDATING ETH PRICE
-  initiatePolling_ETH_Prices: async ({commit,state}) => {
-    console.log("initiatePolling_ETH_Prices : updating ETH price");
+  initiatePolling_ETH_PricesAnd_BlocksRemaining: async ({commit,state}) => {
+    console.log("initiatePolling_ETH_PricesAnd_BlocksRemaining : updating ETH price");
     setInterval(async () => {
       if (state.EthereumPriceOracleAddress) {
-          let updatedPrice_ = await store.dispatch('getInstrumentPrice', { _instrumentAddress : state.EthereumPriceOracleAddress } );
-          if (updatedPrice_) {
-            commit("updateETHPrice",updatedPrice_);
-            console.log( " ETH - current price is " + updatedPrice_);
-          }
+        let updatedPrice_ = await store.dispatch('getInstrumentPrice', { _instrumentAddress : state.EthereumPriceOracleAddress } );
+        if (updatedPrice_) {
+          commit("updateETHPrice",updatedPrice_);
+          console.log( " ETH - current price is " + updatedPrice_);
         }
+      }
+      if (state.SIGHDistributionHandlerAddress) {
+        let blocksRemaining_ = await store.dispatch('SIGHDistributionHandler_getBlocksRemainingToNextSpeedRefresh');
+        commit("updateBlocksRemainingForSIGHSpeedRefresh",blocksRemaining_);
+        console.log( " BLOCKS REMAINING (SIGH SPEED REFRESH) : " + blocksRemaining_);
+      }
     }, 5000);
   },
 
