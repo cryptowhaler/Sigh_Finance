@@ -54,7 +54,7 @@
                                   <template slot="button-content">
                                       Pending TXs
                                   </template>
-                                    <select class="select2-single" style="margin-top: 9px;" @change=transactionClicked v-model=selectedTransaction>
+                                    <select class="select2-single" style="margin: 9px;" @change=transactionClicked v-model=selectedTransaction>
                                         <option v-for="tx in $store.state.sessionPendingTransactions" :key=tx.hash :value=tx>
                                             <span v-if="tx.amount== null"> {{ tx.function }} </span>
                                             <span v-else> {{ tx.function }} {{tx.amount}} </span>    
@@ -64,11 +64,11 @@
                             </div>                            
 
                             <div class="language-menu-container" v-if="$store.getters.themeMode === 'default'">
-                                <b-nav-item-dropdown >
+                                <b-nav-item-dropdown class="language-menu">
                                   <template slot="button-content">
                                     Failed TXs
                                   </template>
-                                    <select class="select2-single" style=" margin-top: 9px;" @change=transactionClicked v-model=selectedTransaction>
+                                    <select class="select2-single" style=" margin: 9px;" @change=transactionClicked v-model=selectedTransaction>
                                         <option v-for="tx in $store.state.sessionFailedTransactions" :key=tx.hash :value=tx>
                                             <span v-if="tx.amount== null"> {{ tx.function }} </span>
                                             <span v-else> {{ tx.function }} {{tx.amount}} </span>    
@@ -82,7 +82,7 @@
                                     <template slot="button-content">
                                         Successful TXs
                                     </template>
-                                    <select class="select2-single" style="margin-top: 9px;" @change=transactionClicked v-model=selectedTransaction>
+                                    <select class="select2-single" style="margin: 9px;" @change=transactionClicked v-model=selectedTransaction>
                                         <option v-for="tx in $store.state.sessionSuccessfulTransactions" :key=tx.hash :value=tx>
                                             <span v-if="tx.amount== null"> {{ tx.function }} </span>
                                             <span v-else> {{ tx.function }} {{tx.amount}} </span>    

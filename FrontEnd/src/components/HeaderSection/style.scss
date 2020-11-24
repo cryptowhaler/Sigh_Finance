@@ -191,7 +191,7 @@ html.uk-notouch .page-mask {
 }
 
 .navbar a, .navbar span {
-    padding: 16px;
+    padding: 11px;
     font-size: 16px;
     letter-spacing: 1px;
 }
@@ -243,9 +243,8 @@ html.uk-notouch .page-mask {
 
 .dropdown {
     float: right;
-    overflow: hidden;
-    // position: relative;
-    // display: inline-block;
+    position: relative;
+    display: inline-block;
 }
 
 .dropdown .dropbtn {
