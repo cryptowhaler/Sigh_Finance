@@ -1206,6 +1206,21 @@
 						"internalType": "uint256",
 						"name": "staking_speed",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_24HrLosses",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "side",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "percentTotalLoss",
+						"type": "uint256"
 					}
 				],
 				"payable": false,
@@ -1756,10 +1771,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighDistributionHandler/SighDistributionHandler.sol": {
-			"keccak256": "0x24522434ed260f318471755cff3f22845f73f0b2335e83e77b4ecfb062166fad",
+			"keccak256": "0x6add36e1092f84520d54c478125a2eceb1de76ba992fd19b518d36850de4e1f2",
 			"urls": [
-				"bzz-raw://e3b8565106d4950a41d83d124b55cc1d9066c3b5f1bb4f4515ffce1dd45e9302",
-				"dweb:/ipfs/QmZKQVFCB5pCAxYhqmpbzBSKefQZzK4zxng7vH6dkyLKwv"
+				"bzz-raw://ccc0cb7bdb5de0a0a7a59c01ff7b49c22a1731eec951cddada7c1c62d50187f5",
+				"dweb:/ipfs/Qmc4yDbjSqpkCk2nMioqiHPYd9rkSRnQWfeWDeGvPqHdJD"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

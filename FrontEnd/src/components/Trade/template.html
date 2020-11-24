@@ -1,7 +1,13 @@
 <div class='home-page'>
     <div class="flex-col-vertical-bottom top-title">
     <div style = "padding-top: 24px; padding-bottom: 24px; width: 91%; color: white; text-align: center; font-size: 24px; border: 3px solid white;">
-        "SIGH FINANCE is currently in Beta!"                
+        "SIGH FINANCE is currently in Beta!"      
+                            <!-- REFRESH SIGH SPEEDS -->
+                            <div >
+                                <a href="javascript:undefined" style="color: chartreuse;" v-if=" this.$store.state.blocksRemainingForSIGHSpeedRefresh > 0 "><span> Blocks remaining for $SIGH Speed Refresh : {{ this.$store.state.blocksRemainingForSIGHSpeedRefresh }}</span></a>
+                                <a href="javascript:undefined" style="color: chartreuse;" v-else  @click="refresh_SIGH_Speeds" ><span> Refresh SIGH Speeds </span></a>
+                            </div>
+
     </div>
     <customer-support />
     </div>

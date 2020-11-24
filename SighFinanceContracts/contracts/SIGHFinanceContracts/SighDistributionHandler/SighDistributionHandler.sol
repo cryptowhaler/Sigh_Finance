@@ -71,6 +71,9 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         uint256 suppliers_Speed;
         uint256 borrowers_Speed;
         uint256 staking_Speed;
+        uint256 _24HrLosses;
+        string side;
+        uint256 percentTotalLoss;
     }
 
     mapping(address => Instrument_Sigh_Speed) private Instrument_Sigh_Speeds;
@@ -131,7 +134,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
     event SIGHDistributionHandlerInitialized(address addressesProvider, address Sigh_Address, address priceOracle, address lendingPoolCore);
 
-    uint256 constant private SIGH_DISTRIBUTION_REVISION = 0x1;
+    uint256 constant private SIGH_DISTRIBUTION_REVISION = 0x2;
 
     function getRevision() internal pure returns(uint256) {
         return SIGH_DISTRIBUTION_REVISION;
@@ -153,10 +156,6 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         lendingPoolCore = ILendingPoolCore(addressesProvider.getLendingPoolCore());
     }
     
-    // function setPriceOracle(address oracle_) public {   // TO BE REMOVED (FOR TESTING)
-    //     oracle = IPriceOracleGetter( oracle_ );
-    // }
-
     
 // #####################################################################################################################################################
 // ##############        ADDING INSTRUMENTS AND ENABLING / DISABLING SIGH's LOSS MINIMIZING DISTRIBUTION MECHANISM       ###############################
@@ -191,7 +190,10 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         // STATE UPDATED : INITITALIZE INSTRUMENT SPEEDS
         Instrument_Sigh_Speeds[_instrument] = Instrument_Sigh_Speed({ suppliers_Speed: uint(0),
                                                                        borrowers_Speed: uint(0),
-                                                                       staking_Speed: uint(0)
+                                                                       staking_Speed: uint(0),
+                                                                       _24HrLosses: uint(0),
+                                                                       side: 'null' ,
+                                                                       percentTotalLoss: uint(0)
                                                                     } );
 
         // STATE UPDATED : INITIALIZE PRICECYCLES
@@ -342,6 +344,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         uint prevdeltaBlocksForSpeed = deltaBlocksForSpeed;
         deltaBlocksForSpeed = deltaBlocksLimit;                                         // STATE UPDATED
         emit minimumBlocksForSpeedRefreshUpdated( prevdeltaBlocksForSpeed,deltaBlocksForSpeed, getBlockNumber()  );
+        return true;
     }
 
 
@@ -432,6 +435,8 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
                     supplierLosses[i].mantissa = adjustForDecimalsInternal( supplierLoss.mantissa, financial_instruments[_currentInstrument].decimals, oracle.getAssetPriceDecimals(_currentInstrument) );
                     borrowerLosses[i] = Exp({mantissa: 0});
                     ( error, totalLosses) = addExp(totalLosses, supplierLosses[i]);            //  Total loss  += supplier loss
+                    Instrument_Sigh_Speeds[_currentInstrument]._24HrLosses =  supplierLosses[i].mantissa;
+                    Instrument_Sigh_Speeds[_currentInstrument].side = 'Supplier';
                 }
                 else {                                              // i.e the price has increased so we calculate Losses accured by Borrowers of the Instrument
                     // uint totalBorrows = IERC20( financial_instruments[_currentInstrument].iTokenAddress ).totalSupply(); // FOR TESTING
@@ -441,6 +446,8 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
                     borrowerLosses[i].mantissa = adjustForDecimalsInternal( borrowerLoss.mantissa, financial_instruments[_currentInstrument].decimals, oracle.getAssetPriceDecimals(_currentInstrument) );
                     supplierLosses[i] = Exp({mantissa: 0});
                     ( error, totalLosses) = addExp(totalLosses, borrowerLosses[i]);            //  Total loss  += borrower loss
+                    Instrument_Sigh_Speeds[_currentInstrument]._24HrLosses =  supplierLosses[i].mantissa;
+                    Instrument_Sigh_Speeds[_currentInstrument].side = 'Borrower';
                 }
             }
         
@@ -479,6 +486,8 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
                 Instrument_Sigh_Speeds[_currentInstrument].borrowers_Speed = uint(0);                                                               // STATE UPDATE
                 Instrument_Sigh_Speeds[_currentInstrument].suppliers_Speed = uint(0);                                                               // STATE UPDATE
             }
+            Instrument_Sigh_Speeds[_currentInstrument].percentTotalLoss = mul_(100, lossRatio);                                                     // STATE UPDATE
+
 
             emit refreshingSighSpeeds_2( _currentInstrument ,maxSpeed, lossRatio.mantissa, Instrument_Sigh_Speeds[_currentInstrument].suppliers_Speed, Instrument_Sigh_Speeds[_currentInstrument].borrowers_Speed  );
             emit SuppliersSIGHSpeedUpdated(_currentInstrument, prevSpeedSupplier, Instrument_Sigh_Speeds[_currentInstrument].suppliers_Speed, block.number  );
@@ -712,10 +721,14 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
                 ); 
     }
 
-    function getInstrumentSpeeds(address instrument) external view returns (uint suppliers_speed, uint borroweers_speed, uint staking_speed) {
+    function getInstrumentSpeeds(address instrument) external view returns (uint suppliers_speed, uint borroweers_speed, uint staking_speed, uint _24HrLosses, string memory side, uint percentTotalLoss ) {
         return (Instrument_Sigh_Speeds[instrument].suppliers_Speed, 
                 Instrument_Sigh_Speeds[instrument].borrowers_Speed , 
-                Instrument_Sigh_Speeds[instrument].staking_Speed);
+                Instrument_Sigh_Speeds[instrument].staking_Speed,
+                Instrument_Sigh_Speeds[instrument]._24HrLosses,
+                Instrument_Sigh_Speeds[instrument].side,
+                Instrument_Sigh_Speeds[instrument].percentTotalLoss
+                );
     }
 
     function getAllPriceSnapshots(address instrument_ ) external view returns (uint256[24] memory) {

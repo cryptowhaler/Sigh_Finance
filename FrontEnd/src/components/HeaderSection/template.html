@@ -32,11 +32,6 @@
                         </div>
 
                         <div class="navbar">
-                            <!-- REFRESH SIGH SPEEDS -->
-                            <div >
-                                <a href="javascript:undefined" style="color: chartreuse;" v-if=" this.$store.state.blocksRemainingForSIGHSpeedRefresh > 0 "><span>{{ this.$store.state.blocksRemainingForSIGHSpeedRefresh }}</span></a>
-                                <a href="javascript:undefined" style="color: chartreuse;" v-else  @click="refresh_SIGH_Speeds" ><span> Refresh SIGH Speeds </span></a>
-                            </div>
                             <!-- REDIRECTING TO TRADING PAGE -->
                             <router-link to="/Trade" v-bind:class="{ active: $route.path === '/Trade' }">
                                 <span>Trade</span>

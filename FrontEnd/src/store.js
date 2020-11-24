@@ -709,7 +709,7 @@ const store = new Vuex.Store({
   
         // FETCHING "SIGH FINANCE" STATE
         console.log(" SIGH SPEED CONTROLLER (Treasury, Distribution Handler) : STATE FETCHED (SESSION INITIALIALIZATION)");
-        let sighFinanceDetails = await store.dispatch("refresh_Sigh_Finance_State");
+        let sighFinanceDetails = await store.dispatch("refresh_Sigh_Finance_State",{sighDetails: sighDetails});
         commit("setSIGHFinanceState",sighFinanceDetails);
   
         // FETCHING "SUPPRTED INSTRUMENT ADDRESSES" 
@@ -796,7 +796,7 @@ const store = new Vuex.Store({
   },  
 
   // FETCHES SIGH FINANCE STATE ( SIGH SPEED CONTROLLER, TREASURY, DISTRIBUTION HANDLER )
-  refresh_Sigh_Finance_State: async ({commit,state}) => {
+  refresh_Sigh_Finance_State: async ({commit,state},{sighDetails}) => {
     let sighFinanceDetails = {};
     if ( state.web3 && state.isNetworkSupported ) {
       sighFinanceDetails.speedControllerBalance = await store.dispatch("getSIGHSpeedControllerBalance"); 
