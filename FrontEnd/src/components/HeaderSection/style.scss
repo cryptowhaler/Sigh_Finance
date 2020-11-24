@@ -196,6 +196,40 @@ html.uk-notouch .page-mask {
     letter-spacing: 1px;
 }
 
+
+.language-menu-container {
+    margin-left: 20px;
+  }
+
+  .language-menu {
+    margin-left: 0;
+
+    .dropdown-menu {
+      a {
+        $language-item-padding-value: 8px;
+        font-size: 13px;
+        padding-bottom: $language-item-padding-value;
+        padding-left: 15px;
+        padding-top: $language-item-padding-value;
+      }
+    }
+  }
+
+
+  .transaction-box {
+    display: flex;
+    align-items: center;
+
+    img {
+      flex: 45;
+      margin-right: 10px;
+      height: 15px;
+      border-radius: 3px;
+    }
+  }
+
+
+
 .navbar a,
 .navbar div {
     float: left;

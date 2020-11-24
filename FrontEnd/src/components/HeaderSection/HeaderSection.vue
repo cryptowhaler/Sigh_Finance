@@ -16,6 +16,7 @@ export default {
     return {
       isConnected : this.$store.getters.isWalletConnected,
       statusCode: 'Connect Wallet',
+      selectedTransaction: null,
     };
   },
 
@@ -34,6 +35,14 @@ export default {
     async refreshWalletConnected() {
       await this.handleWeb3();   
       await this.fetchSessionUserStateData(); 
+    },
+
+    transactionClicked() {
+      console.log(this.selectedTransaction);
+      if (this.selectedTransaction && this.$store.state.networkId == '42') {
+        window.open('https://kovan.etherscan.io/tx/'  + this.selectedTransaction.hash  , '_blank');
+        window.focus();
+      }
     },
 
 

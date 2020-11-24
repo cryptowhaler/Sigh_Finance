@@ -23,65 +23,80 @@
 
                 <div class="header-market-links uk-clearfix" style="background-color: black;">
 
-                    <!-- ACTUAL HEADER - Displaying exchange logo, Selected pair and live TradePrice -->
                     <div class="header-market-link-group uk-clearfix">
+                        <!-- SIGH FINANCE LOGO -->
                         <div class="header-market-link-label uk-clearfix">
                             <router-link to="/" class="logo">
                                 <img style="float: left; padding-top: 2%; max-width: 49%;" src="./_SIGH_.png" alt="SIGH.FINANCE">
                             </router-link>
                         </div>
-                        <!-- <div class="header-market-link-label">{{ $store.getters.formattedSelectedExchange }}</div>  -->
 
-                        <!-- <div class="header-market-link uk-clearfix" v-if="$store.getters.isLoggedIn"   >
-                            <div class="price-title">{{$store.state.selectedVegaMarketSummary}}</div> -->
-
-                            <!-- <div class="price-title">{{ $store.state.selectedPair }}</div> -->
-                            <!-- <div class="price">
-                                <span>{{Math.abs($store.state.liveTradePrice) }}</span>
-                                <label>{{$store.state.selectedVegaMarketquoteName}}</label> -->
-                                <!-- <label>{{ $store.state.selectedVegaMarketName.substring(4,7) }}</label> -->
-                                <!-- <label>{{ $store.state.selectedVegaMarketName.split('V')[1] }}</label> -->
-                            <!-- </div>
-                        </div> -->
-                        <!-- </div> -->
-
-                        <!-- Navigation Bar -->
-                        <!-- <div class="header-market-link-group uk-clearfix"> -->
                         <div class="navbar">
-                            
+                            <!-- REFRESH SIGH SPEEDS -->
                             <div >
                                 <a href="javascript:undefined" style="color: chartreuse;" v-if=" this.$store.state.blocksRemainingForSIGHSpeedRefresh > 0 "><span>{{ this.$store.state.blocksRemainingForSIGHSpeedRefresh }}</span></a>
                                 <a href="javascript:undefined" style="color: chartreuse;" v-else  @click="refresh_SIGH_Speeds" ><span> Refresh SIGH Speeds </span></a>
                             </div>
-
+                            <!-- REDIRECTING TO TRADING PAGE -->
                             <router-link to="/Trade" v-bind:class="{ active: $route.path === '/Trade' }">
                                 <span>Trade</span>
                             </router-link>
-
+                            <!-- CONTACT FORM POP-UP -->
                             <div>
                                 <a href="javascript:undefined" @click="showContactModal"><span>Contact</span></a> 
                             </div>
-
                             <!-- DROPDOWN TEMPLATE -->
-                            <!-- <div class="dropdown" v-if="$store.getters.isLoggedIn && $store.getters.themeMode === 'default'">
-                                <button class="dropbtn"> Funds  <i class="fa fa-caret-down"></i></button>
-                                <div class="dropdown-content">
-                                    <a href="javascript:undefined" @click="showDepositModal"><span>Deposit</span></a>
-                                    <a href="javascript:undefined" @click="showWithdrawlModal"><span>Withdraw</span></a>                                    
-                                </div>
-                            </div>  -->
- 
 
-                             <!-- <div id="statusDiv" style="color:var(--primary-text-color);">
-                                <span class="dot" :class='serverStatusCode'>
-                                </span>&nbsp;&nbsp;&nbsp;&nbsp;{{ getServerStatus() }}
-                            </div> -->
+
+
+                            <div class="language-menu-container" v-if="$store.getters.themeMode === 'default'">
+                                <b-nav-item-dropdown class="language-menu" right>
+                                  <template slot="button-content">
+                                      Pending TXs
+                                  </template>
+                                    <select class="select2-single" style="margin-top: 9px;" @change=transactionClicked v-model=selectedTransaction>
+                                        <option v-for="tx in $store.state.sessionPendingTransactions" :key=tx.hash :value=tx>
+                                            <span v-if="tx.amount== null"> {{ tx.function }} </span>
+                                            <span v-else> {{ tx.function }} {{tx.amount}} </span>    
+                                        </option>
+                                    </select>
+                                </b-nav-item-dropdown>
+                            </div>                            
+
+                            <div class="language-menu-container" v-if="$store.getters.themeMode === 'default'">
+                                <b-nav-item-dropdown >
+                                  <template slot="button-content">
+                                    Failed TXs
+                                  </template>
+                                    <select class="select2-single" style=" margin-top: 9px;" @change=transactionClicked v-model=selectedTransaction>
+                                        <option v-for="tx in $store.state.sessionFailedTransactions" :key=tx.hash :value=tx>
+                                            <span v-if="tx.amount== null"> {{ tx.function }} </span>
+                                            <span v-else> {{ tx.function }} {{tx.amount}} </span>    
+                                        </option>
+                                    </select>
+                                </b-nav-item-dropdown>
+                            </div>                            
+                            
+                            <div class="language-menu-container" v-if="$store.getters.themeMode === 'default'">
+                                <b-nav-item-dropdown class="language-menu" right>
+                                    <template slot="button-content">
+                                        Successful TXs
+                                    </template>
+                                    <select class="select2-single" style="margin-top: 9px;" @change=transactionClicked v-model=selectedTransaction>
+                                        <option v-for="tx in $store.state.sessionSuccessfulTransactions" :key=tx.hash :value=tx>
+                                            <span v-if="tx.amount== null"> {{ tx.function }} </span>
+                                            <span v-else> {{ tx.function }} {{tx.amount}} </span>    
+                                        </option>
+                                    </select>
+                                </b-nav-item-dropdown>
+                            </div>                            
+
+                            
+
+
 
                              <div class="col-auto pr-lg-0">
                                 <div class="header-social-icon d-none d-md-inline-block">
-                                    <!-- <a href="https://www.facebook.com/block42.network/" title="Facebook" target="_blank">
-                                        <i class="fab fa-facebook-f" aria-hidden="true"></i>
-                                    </a> -->
                                     <a href="https://twitter.com/SighFinance" title="Twitter" target="_blank">
                                         <i class="fab fa-twitter">  </i>
                                     </a>
@@ -94,6 +109,9 @@
                                 </div>
                             </div>
         
+
+
+
                             <div >
                                 <a href="javascript:undefined" style="color: chartreuse;" v-if=" $store.getters.themeMode === 'default' " @click="refreshWalletConnected()"><span>{{ getServerStatus }}</span></a>
                             </div>

@@ -535,19 +535,23 @@ const store = new Vuex.Store({
     // TRANSACTIONS HISTORY
     setSessionPendingTransactions(state,pendingTransactions) {
       state.sessionPendingTransactions = pendingTransactions;
-      console.log("In setSessionPendingTransactions " + state.sessionPendingTransactions);
+      console.log("In setSessionPendingTransactions ");
+      console.log(state.sessionPendingTransactions);
     },
     addToSessionPendingTransactions(state,newTransaction) {
       state.sessionPendingTransactions.unshift(newTransaction);
-      console.log("In addToSessionPendingTransactions " + newTransaction);
+      console.log("In addToSessionPendingTransactions ");
+      console.log(newTransaction);
     },
-    addToSessionSuccessfulTransactions() {
+    addToSessionSuccessfulTransactions(state,newTransaction) {
       state.sessionSuccessfulTransactions.unshift(newTransaction);
-      console.log("In addToSessionSuccessfulTransactions " + newTransaction);
+      console.log("In addToSessionSuccessfulTransactions ");
+      console.log(newTransaction);
     },
-    addToSessionFailedTransactions() {
+    addToSessionFailedTransactions(state,newTransaction) {
       state.sessionFailedTransactions.unshift(newTransaction) ;
-      console.log("In addToSessionFailedTransactions " + newTransaction);
+      console.log("In addToSessionFailedTransactions ");
+      console.log(newTransaction);
     },
 
 
@@ -910,18 +914,21 @@ const store = new Vuex.Store({
       // POLLING TRANSACTION STATES
       if (Web3.utils.isAddress(state.connectedWallet)) {
         let newPendingTxs = [];
-        _pendingTransactions = state.sessionPendingTransactions;
+        let _pendingTransactions = state.sessionPendingTransactions;
         for (let i=0; i<_pendingTransactions.length; i++) {
-          let tx = Web3.eth.getTransactionReceipt(_pendingTransactions[i]);
+          let tx =  await state.web3.eth.getTransactionReceipt(_pendingTransactions[i].hash);
+          console.log(tx);
           if (tx == null) {
+            console.log("tx.status == null");
             newPendingTxs.push(_pendingTransactions[i]);
           }
           else {
-            console.log(tx);
             if (tx.status == 1) {
+              console.log("tx.status == 1");
               commit('addToSessionSuccessfulTransactions',_pendingTransactions[i] );
             }
-            else {
+            else if (tx.status != 1) {
+              console.log("tx.status != 1");
               commit('addToSessionFailedTransactions',_pendingTransactions[i] );
             }
           }
