@@ -41,7 +41,7 @@ export default {
     };
 
     ExchangeDataEventBus.$on(EventNames.ConnectedWalletSesssionRefreshed, this.refreshThisSession );    
-    ExchangeDataEventBus.$on(EventNames.changeSelectedInstrument, this.changeSelectedInstrument);        
+    ExchangeDataEventBus.$on(EventNames.changeSelectedInstrument, this.refreshThisSession);        
     ExchangeDataEventBus.$on(EventNames.ConnectedWallet_Instrument_Refreshed, this.refreshThisSession);        
   },
 
