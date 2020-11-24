@@ -190,7 +190,7 @@ export default {
         this.showLoader = true;
         console.log('SIGH Quantity to be Approved - ' + quantity);
         console.log('SIGH Quantity Worth - ' + value);
-        let response = await this.ERC20_increaseAllowance( { tokenAddress: this.$store.state.SIGHContractAddress , spender: this.$store.getters.sighStakingContractAddress , addedValue:  parseInt(quantity) } );
+        let response = await this.ERC20_increaseAllowance( { tokenAddress: this.$store.state.SIGHContractAddress , spender: this.$store.getters.sighStakingContractAddress , addedValue:  parseInt(quantity)  , symbol : 'SIGH'  } );
         if (response.status) { 
           this.showLoader = false;
           this.formData.sighValue = null;

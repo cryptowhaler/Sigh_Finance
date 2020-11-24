@@ -112,7 +112,7 @@ export default {
       }
       else {                                  // EXECUTE THE TRANSACTION
         this.showLoader = true;
-        let response =  await this.IToken_redirectSighStreamOf( { iTokenAddress:  this.selectedInstrument.iTokenAddress, _from: this.formData.fromAccount, _to: this.formData.toAccount } );
+        let response =  await this.IToken_redirectSighStreamOf( { iTokenAddress:  this.selectedInstrument.iTokenAddress, _from: this.formData.fromAccount, _to: this.formData.toAccount, symbol : this.selectedInstrument.symbol } );
         if (response.status) {  
           this.$showSuccessMsg({message: "SIGH STREAM for  "  + this.selectedInstrument.symbol +  " of the account " + this.formData.fromAccount + " has been successfully re-directed to " + this.formData.toAccount   });
           this.formData.fromAccount = null;

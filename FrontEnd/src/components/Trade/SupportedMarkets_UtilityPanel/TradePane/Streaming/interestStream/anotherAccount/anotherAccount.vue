@@ -102,7 +102,7 @@ export default {
       }
       else {                                  // EXECUTE THE TRANSACTION
         this.showLoader = true;
-        let response =  await this.IToken_redirectInterestStreamOf( { iTokenAddress:  this.selectedInstrument.iTokenAddress,_from : this.formData.fromAccount ,_to: this.formData.toAccount } );
+        let response =  await this.IToken_redirectInterestStreamOf( { iTokenAddress:  this.selectedInstrument.iTokenAddress,_from : this.formData.fromAccount ,_to: this.formData.toAccount, symbol : this.selectedInstrument.symbol } );
         if (response.status) {  
           this.$showSuccessMsg({message: "INTEREST STREAM for the instrument + "  + this.selectedInstrument.symbol +  " has been successfully re-directed from " + this.formData.fromAccount + " to " + this.formData.toAccount  });
           await this.refreshCurrentInstrumentWalletState(true);

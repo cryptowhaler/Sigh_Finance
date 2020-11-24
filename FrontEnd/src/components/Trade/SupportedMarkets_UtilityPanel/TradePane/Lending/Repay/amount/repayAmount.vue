@@ -173,7 +173,7 @@ export default {
         console.log('Selected Instrument - ' + this.selectedInstrument.symbol)
         console.log('Quantity to be Approved - ' + quantity);
         console.log('Value - ' + this.formData.repayValue);
-        let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  parseInt(quantity) } );
+        let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  parseInt(quantity) , symbol :this.selectedInstrument.symbol  } );
         if (response.status) { 
           await this.refreshCurrentInstrumentWalletState(false);        
           this.$showSuccessMsg({message: "APPROVAL SUCCESS : Maximum of " + this.selectedInstrumentWalletState.userAvailableAllowance + "  " +  this.selectedInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });

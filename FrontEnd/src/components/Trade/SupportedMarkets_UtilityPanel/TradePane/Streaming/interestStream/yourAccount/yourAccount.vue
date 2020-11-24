@@ -86,7 +86,7 @@ export default {
       }
       else {                                  // EXECUTE THE TRANSACTION
         this.showLoader = true;
-        let response =  await this.IToken_redirectInterestStream( { iTokenAddress:  this.selectedInstrument.iTokenAddress, _to: this.formData.toAccount } );
+        let response =  await this.IToken_redirectInterestStream( { iTokenAddress:  this.selectedInstrument.iTokenAddress, _to: this.formData.toAccount, symbol : this.selectedInstrument.symbol } );
         if (response.status) {  
           this.$showSuccessMsg({message: "INTEREST STREAM for the instrument + "  + this.selectedInstrument.symbol +  " have been successfully re-directed to " + this.formData.toAccount + " from the connected Account " +  this.$store.state.connectedWallet  });
           this.formData.toAccount = null;
@@ -119,7 +119,7 @@ export default {
       }
       else {                                  // EXECUTE THE TRANSACTION
         this.showLoader = true;
-        let response =  await this.IToken_allowInterestRedirectionTo( { iTokenAddress:  this.selectedInstrument.iTokenAddress, _to: this.formData.toAccount } );
+        let response =  await this.IToken_allowInterestRedirectionTo( { iTokenAddress:  this.selectedInstrument.iTokenAddress, _to: this.formData.toAccount, symbol : this.selectedInstrument.symbol } );
         if (response.status) {  
           this.$showSuccessMsg({message: "ADMINISTRATOR PRIVILEDGES to re-direct the INTEREST STREAM for the instrument + "  + this.selectedInstrument.symbol +  " of the connected Account " +  this.$store.state.connectedWallet + " has been transferred to " + this.formData.toAccount  });
           this.formData.toAccount = null;

@@ -128,7 +128,10 @@ const store = new Vuex.Store({
 
     currentlySelectedInstrument : {symbol:'WBTC',instrumentAddress: '0x0000000000000000000000000000000000000000' , name: 'Wrapped Bitcoin', symbol: 'WBTC', decimals: 18, iTokenAddress: '0x0000000000000000000000000000000000000000' , priceDecimals: 8, price: 0 },  // Currently Selected Instrument
 
-    sessionTransactions : [],
+    // TRANSACTIONS HISTORY FOR THE CURRENT SESSION
+    sessionPendingTransactions : [],
+    sessionSuccessfulTransactions : [],
+    sessionFailedTransactions : [],
     
     // ETH PRICE 
     ethPriceDecimals: null,             // Decimals 
@@ -302,6 +305,18 @@ const store = new Vuex.Store({
     getblocksRemainingForSIGHSpeedRefresh(state) {
       return state.blocksRemainingForSIGHSpeedRefresh;
     },
+    // TRAANSACTION HISTORY
+    getSessionPendingTransactions() {
+      return state.sessionPendingTransactions;
+    },
+    getSessionSuccessfulTransactions() {
+      return state.sessionSuccessfulTransactions;
+    },
+    getSessionFailedTransactions() {
+      return state.sessionFailedTransactions;
+    },
+
+
     showLoader(state) {
       return state > 0;
     },
@@ -517,32 +532,26 @@ const store = new Vuex.Store({
       state.currentlySelectedInstrument = selectedInstrument_;
       console.log("In updateSelectedInstrument " + state.currentlySelectedInstrument);
     },
-    addTransactionDetails(state,{status,Hash,Utility,Service}) {
-      let obj = {};
-      obj.status = status;
-      obj.hash = Hash;
-      obj.utility = Utility;
-      obj.service = Service;
-      state.sessionTransactions.push(obj);
-      console.log(obj);
-      console.log('Transaction history stored');
+    // TRANSACTIONS HISTORY
+    setSessionPendingTransactions(state,pendingTransactions) {
+      state.sessionPendingTransactions = pendingTransactions;
+      console.log("In setSessionPendingTransactions " + state.sessionPendingTransactions);
+    },
+    addToSessionPendingTransactions(state,newTransaction) {
+      state.sessionPendingTransactions.unshift(newTransaction);
+      console.log("In addToSessionPendingTransactions " + newTransaction);
+    },
+    addToSessionSuccessfulTransactions() {
+      state.sessionSuccessfulTransactions.unshift(newTransaction);
+      console.log("In addToSessionSuccessfulTransactions " + newTransaction);
+    },
+    addToSessionFailedTransactions() {
+      state.sessionFailedTransactions.unshift(newTransaction) ;
+      console.log("In addToSessionFailedTransactions " + newTransaction);
     },
 
 
-    addLoaderTask(state, count, cancellable = false) {
-      // // console.log(count);
-      state.loaderCounter += count;
-      state.loaderCancellable = cancellable;
-    },
-    removeLoaderTask(state, count) {
-      // // console.log(count);
-      if (state.loaderCounter > 0) {
-        state.loaderCounter -= count;
-        state.loaderCancellable = false;
-      } else if (state.loaderCounter < 0) {
-        state.loaderCounter = 0;
-      }
-    },
+
     toggleSidebar(state) {    //Disables/Enables page scroll when side-bar is loaded (mobile)
       if (!state.sidebarOpen) {
         document.body.classList.add('no-scroll');
@@ -839,6 +848,7 @@ const store = new Vuex.Store({
       instrumentConfiguration.borrowingEnabled = instrumentConfig.borrowingEnabled;
       instrumentConfiguration.stableBorrowRateEnabled = instrumentConfig.stableBorrowRateEnabled;
       instrumentConfiguration.isActive = instrumentConfig.isActive;
+      instrumentConfiguration.symbol = instrumentState.symbol;
   
       // INSTRUMENT GLOBAL BALANCES   
       let instrumentGlobalState = await store.dispatch("LendingPool_getInstrumentData",{_instrumentAddress:instrumentAddress });           
@@ -856,6 +866,7 @@ const store = new Vuex.Store({
       instrumentGlobalBalances.utilizationRate = instrumentGlobalState.utilizationRate;
       instrumentGlobalBalances.liquidityIndex = instrumentGlobalState.liquidityIndex;
       instrumentGlobalBalances.variableBorrowIndex = instrumentGlobalState.variableBorrowIndex;  
+      instrumentGlobalBalances.symbol = instrumentState.symbol;
 
       // INSTRUMENT - SIGH STATE         
       let curInstrumentSIGHState = await store.dispatch("SIGHDistributionHandler_getInstrumentData",{instrument_:instrumentAddress });           
@@ -868,6 +879,8 @@ const store = new Vuex.Store({
       instrumentSighState.suppliers_Speed = curInstrumentSIGHState.suppliers_Speed;
       instrumentSighState.borrowers_Speed = curInstrumentSIGHState.borrowers_Speed;
       instrumentSighState.staking_Speed = curInstrumentSIGHState.staking_Speed;
+      instrumentSighState.symbol = instrumentState.symbol;
+      
     }
     // console.log(instrumentState);
     // console.log(instrumentConfiguration);
@@ -880,6 +893,7 @@ const store = new Vuex.Store({
   initiatePolling_ETH_PricesAnd_BlocksRemaining: async ({commit,state}) => {
     console.log("initiatePolling_ETH_PricesAnd_BlocksRemaining : updating ETH price");
     setInterval(async () => {
+      // POLLING ETH/USD PRICE
       if (state.EthereumPriceOracleAddress) {
         let updatedPrice_ = await store.dispatch('getInstrumentPrice', { _instrumentAddress : state.EthereumPriceOracleAddress } );
         if (updatedPrice_) {
@@ -887,10 +901,32 @@ const store = new Vuex.Store({
           console.log( " ETH - current price is " + updatedPrice_);
         }
       }
+      // POLLING BLOCKS REMAINING TO REFRESH $SIGH SPEEDS
       if (state.SIGHDistributionHandlerAddress) {
         let blocksRemaining_ = await store.dispatch('SIGHDistributionHandler_getBlocksRemainingToNextSpeedRefresh');
         commit("updateBlocksRemainingForSIGHSpeedRefresh",blocksRemaining_);
         console.log( " BLOCKS REMAINING (SIGH SPEED REFRESH) : " + blocksRemaining_);
+      }
+      // POLLING TRANSACTION STATES
+      if (Web3.utils.isAddress(state.connectedWallet)) {
+        let newPendingTxs = [];
+        _pendingTransactions = state.sessionPendingTransactions;
+        for (let i=0; i<_pendingTransactions.length; i++) {
+          let tx = Web3.eth.getTransactionReceipt(_pendingTransactions[i]);
+          if (tx == null) {
+            newPendingTxs.push(_pendingTransactions[i]);
+          }
+          else {
+            console.log(tx);
+            if (tx.status == 1) {
+              commit('addToSessionSuccessfulTransactions',_pendingTransactions[i] );
+            }
+            else {
+              commit('addToSessionFailedTransactions',_pendingTransactions[i] );
+            }
+          }
+        }
+        commit('setSessionPendingTransactions',newPendingTxs);
       }
     }, 5000);
   },
@@ -1241,7 +1277,10 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       if (state.web3 && state.SIGHSpeedControllerAddress && state.SIGHSpeedControllerAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighSpeedControllerContract = new state.web3.eth.Contract(SighSpeedController.abi, state.SIGHSpeedControllerAddress );
         console.log(sighSpeedControllerContract);
-        sighSpeedControllerContract.methods.drip().send({from: state.connectedWallet})
+        sighSpeedControllerContract.methods.drip().send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+          let transaction = {hash : hash, function : '$SIGH Controller : Drip' , amount : null  }; 
+          commit('addToSessionPendingTransactions',transaction);
+        })  
         .then(receipt => { 
           console.log(receipt);
           return receipt;
@@ -1330,7 +1369,10 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
         console.log(sighDistributionHandlerContract);
-        sighDistributionHandlerContract.methods.refreshSIGHSpeeds().send({from: state.connectedWallet})
+        sighDistributionHandlerContract.methods.refreshSIGHSpeeds().send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+          let transaction = {hash : hash, function : '$SIGH Speeds : Refresh' , amount : null  }; 
+          commit('addToSessionPendingTransactions',transaction);
+        })  
         .then(receipt => { 
           console.log(receipt);
           return receipt;
@@ -1427,7 +1469,10 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       if (state.web3 && state.SIGHTreasuryContractAddress && state.SIGHTreasuryContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighTreasuryContract = new state.web3.eth.Contract(SighTreasuryInterface.abi, state.SIGHTreasuryContractAddress );
         console.log(sighTreasuryContract);
-        sighTreasuryContract.methods.burnSIGHTokens().send({from: state.connectedWallet})
+        sighTreasuryContract.methods.burnSIGHTokens().send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+          let transaction = {hash : hash, function : 'SIGH Treasury : Burn' , amount : null  }; 
+          commit('addToSessionPendingTransactions',transaction);
+        })  
         .then(receipt => { 
           console.log(receipt);
           return receipt;
@@ -1447,7 +1492,10 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       if (state.web3 && state.SIGHTreasuryContractAddress && state.SIGHTreasuryContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighTreasuryContract = new state.web3.eth.Contract(SighTreasuryInterface.abi, state.SIGHTreasuryContractAddress );
         console.log(sighTreasuryContract);
-        sighTreasuryContract.methods.drip().send({from: state.connectedWallet})
+        sighTreasuryContract.methods.drip().send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+          let transaction = {hash : hash, function : 'SIGH Treasury : Drip' , amount : null  }; 
+          commit('addToSessionPendingTransactions',transaction);
+        })  
         .then(receipt => { 
           console.log(receipt);
           return receipt;
@@ -1468,7 +1516,10 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       if (state.web3 && state.SIGHTreasuryContractAddress && state.SIGHTreasuryContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighTreasuryContract = new state.web3.eth.Contract(SighTreasuryInterface.abi, state.SIGHTreasuryContractAddress );
         console.log(sighTreasuryContract);
-        sighTreasuryContract.methods.updateInstrumentBalance(instrument_address).send({from: state.connectedWallet})
+        sighTreasuryContract.methods.updateInstrumentBalance(instrument_address).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+          let transaction = {hash : hash, function : '$SIGH Treasury : Update Balance' , amount : null  }; 
+          commit('addToSessionPendingTransactions',transaction);
+        })  
         .then(receipt => { 
           console.log(receipt);
           return receipt;
@@ -1497,8 +1548,11 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       if (state.web3 && state.sighStakingContractAddress && state.sighStakingContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighStakingContract = new state.web3.eth.Contract(SighStakingInterface.abi, state.sighStakingContractAddress );
         console.log(sighStakingContract);
-        try {             // console.log('Making transaction (in store)');
-          const response = await sighStakingContract.methods.stake_SIGH(amountToBeStaked).send({from: state.connectedWallet});
+        try {            
+          const response = await sighStakingContract.methods.stake_SIGH(amountToBeStaked).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+            let transaction = {hash : hash, function : '$SIGH Staking', amount : amountToBeStaked + ' SIGH'  }; 
+            commit('addToSessionPendingTransactions',transaction);
+          });
           console.log(response);
           return response;
         }
@@ -1518,7 +1572,10 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
         const sighStakingContract = new state.web3.eth.Contract(SighStakingInterface.abi, state.sighStakingContractAddress );
         console.log(sighStakingContract);        
         try {             // console.log('Making transaction (in store)');
-          const response = await sighStakingContract.methods.unstake_SIGH(amountToBeUNStaked).send({from: state.connectedWallet});
+          const response = await sighStakingContract.methods.unstake_SIGH(amountToBeUNStaked).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+            let transaction = {hash : hash, function : '$SIGH Un-Staking', amount : amountToBeUNStaked + ' SIGH'  }; 
+            commit('addToSessionPendingTransactions',transaction);
+          });
           console.log(response);
           return response;
         }
@@ -1538,7 +1595,10 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
         const sighStakingContract = new state.web3.eth.Contract(SighStakingInterface.abi, state.sighStakingContractAddress );
         console.log(sighStakingContract);        
         try {             // console.log('Making transaction (in store)');
-          const response = await sighStakingContract.methods.claimAllAccumulatedInstruments().send({from: state.connectedWallet});
+          const response = await sighStakingContract.methods.claimAllAccumulatedInstruments().send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+            let transaction = {hash : hash, function : '$SIGH Staking : Claim Rewards', amount : null  }; 
+            commit('addToSessionPendingTransactions',transaction);
+          });
           console.log(response);
           return response;
         }
@@ -1558,7 +1618,10 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
         const sighStakingContract = new state.web3.eth.Contract(SighStakingInterface.abi, state.sighStakingContractAddress );
         console.log(sighStakingContract);
         try {             // console.log('Making transaction (in store)');
-          const response = await sighStakingContract.methods.claimAccumulatedInstrument(instrumentToBeClaimed).send({from: state.connectedWallet});
+          const response = await sighStakingContract.methods.claimAccumulatedInstrument(instrumentToBeClaimed).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+            let transaction = {hash : hash, function : '$SIGH Staking : Claim Reward' , amount : null  }; 
+            commit('addToSessionPendingTransactions',transaction);
+          });
           console.log(response);
           return response;
         }
@@ -1578,7 +1641,10 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
         const sighStakingContract = new state.web3.eth.Contract(SighStakingInterface.abi, state.sighStakingContractAddress );
         console.log(sighStakingContract);        
         try {             // console.log('Making transaction (in store)');
-          const response = await sighStakingContract.methods.updateBalance(instrument).send({from: state.connectedWallet});
+          const response = await sighStakingContract.methods.updateBalance(instrument).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+            let transaction = {hash : hash, function : '$SIGH Staking : Update Balance' , amount : null  }; 
+            commit('addToSessionPendingTransactions',transaction);
+          });
           console.log(response);
           return response;
         }
@@ -1622,18 +1688,16 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     LendingPool_deposit: async ({commit,state},{_instrument,_amount,_referralCode}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-        console.log(lendingPoolContract);
         try {
-          // console.log('Making transaction (in store)');
-          // let quantityInBigNumber = new BigNumber(this._amount);
-          // quantityInBigNumber.shiftedBy(state.supportedInstrumentConfigs.get(_instrument).decimals);
-          // console.log('Quantity To Deposit (Big Number)' + quantityInBigNumber);
-          const response = await lendingPoolContract.methods.deposit(_instrument,_amount,_referralCode).send({from: state.connectedWallet});
+          let symbol = state.supportedInstrumentGlobalStates.get(_instrument).symbol;
+          const response = await lendingPoolContract.methods.deposit(_instrument,_amount,_referralCode).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+            let transaction = {hash : hash, function : 'DEPOSIT' , amount : _amount + ' ' + symbol}; 
+            commit('addToSessionPendingTransactions',transaction);
+          });
           console.log(response);
           return response;
           }
           catch(error) {
-            // console.log('Making transaction (in store - catch)');
             console.log(error);
             return error;
           }
@@ -1645,18 +1709,18 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     },
 
     LendingPool_borrow: async ({commit,state},{_instrument,_amount,_interestRateMode,_referralCode}) => {
-      console.log(_instrument);     
-      console.log(_amount);     
-      console.log(_interestRateMode);     
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-        console.log(lendingPoolContract);
-        try {             // console.log('Making transaction (in store)');
-          const response = await lendingPoolContract.methods.borrow(_instrument,_amount,_interestRateMode,_referralCode).send({from: state.connectedWallet});
+        try {            
+          let symbol = state.supportedInstrumentGlobalStates.get(_instrument).symbol;          
+          const response = await lendingPoolContract.methods.borrow(_instrument,_amount,_interestRateMode,_referralCode).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+            let transaction = {hash : hash, function : 'BORROW' , amount : _amount + ' ' + symbol}; 
+            commit('addToSessionPendingTransactions',transaction);
+          });
           console.log(response);
           return response;
         }
-        catch(error) {    // console.log('Making transaction (in store - catch)');            
+        catch(error) {               
           console.log(error);
           return error;
         }
@@ -1670,15 +1734,16 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     LendingPool_repay: async ({commit,state},{_instrument,_amount,_onBehalfOf}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-        // console.log(lendingPoolContract);
         try {
-          // console.log('Making transaction (in store)');
-          const response = await lendingPoolContract.methods.repay(_instrument,_amount,_onBehalfOf).send({from: state.connectedWallet});
+          let symbol = state.supportedInstrumentGlobalStates.get(_instrument).symbol;                    
+          const response = await lendingPoolContract.methods.repay(_instrument,_amount,_onBehalfOf).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+            let transaction = {hash : hash, function : 'REPAY' , amount : _amount + ' ' + symbol}; 
+            commit('addToSessionPendingTransactions',transaction);
+          });
           console.log(response);
           return response;
           }
         catch(error) {
-            // console.log('Making transaction (in store - catch)');
             console.log(error);
             return error;
         }
@@ -1692,15 +1757,16 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     LendingPool_swapBorrowRateMode: async ({commit,state},{_instrument}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-        console.log(lendingPoolContract);
         try {
-          // console.log('Making transaction (in store)');
-          const response = await lendingPoolContract.methods.swapBorrowRateMode(_instrument).send({from: state.connectedWallet});
+          let symbol = state.supportedInstrumentGlobalStates.get(_instrument).symbol;                    
+          const response = await lendingPoolContract.methods.swapBorrowRateMode(_instrument).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+            let transaction = {hash : hash, function : 'Swap Borrow Rate Mode : ' + symbol , amount : null}; 
+            commit('addToSessionPendingTransactions',transaction);
+          });
           console.log(response);
           return response;
           }
           catch(error) {
-            // console.log('Making transaction (in store - catch)');
             console.log(error);
             return error;
           }
@@ -1714,15 +1780,16 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     LendingPool_rebalanceStableBorrowRate: async ({commit,state},{_instrument,_user}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-        console.log(lendingPoolContract);
         try {
-          // console.log('Making transaction (in store)');
-          const response = await lendingPoolContract.methods.rebalanceStableBorrowRate(_instrument,_user).send({from: state.connectedWallet});
+          let symbol = state.supportedInstrumentGlobalStates.get(_instrument).symbol;                    
+          const response = await lendingPoolContract.methods.rebalanceStableBorrowRate(_instrument,_user).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+            let transaction = {hash : hash, function : 'Rebalance Stable borrow Rate :' + symbol, amount : null}; 
+            commit('addToSessionPendingTransactions',transaction);
+          });
           console.log(response);
           return response;
           }
           catch(error) {
-            // console.log('Making transaction (in store - catch)');
             console.log(error);
             return error;
           }
@@ -1736,15 +1803,16 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     LendingPool_setUserUseInstrumentAsCollateral: async ({commit,state},{_instrument,_useAsCollateral}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-        console.log(lendingPoolContract);
         try {
-          // console.log('Making transaction (in store)');
-          const response = await lendingPoolContract.methods.setUserUseInstrumentAsCollateral(_instrument,_useAsCollateral).send({from: state.connectedWallet});
+          let symbol = state.supportedInstrumentGlobalStates.get(_instrument).symbol;                    
+          const response = await lendingPoolContract.methods.setUserUseInstrumentAsCollateral(_instrument,_useAsCollateral).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+            let transaction = {hash : hash, function : 'Use As Collateral : ' + symbol , amount : null}; 
+            commit('addToSessionPendingTransactions',transaction);
+          });
           console.log(response);
           return response;
           }
           catch(error) {
-            // console.log('Making transaction (in store - catch)');
             console.log(error);
             return error;
           }
@@ -1758,15 +1826,16 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     LendingPool_liquidationCall: async ({commit,state},{_collateral,_instrument,_user,_purchaseAmount,_receiveIToken}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-        console.log(lendingPoolContract);
         try {
-          // console.log('Making transaction (in store)');
-          const response = await lendingPoolContract.methods.liquidationCall(_collateral,_instrument,_user,_purchaseAmount,_receiveIToken).send({from: state.connectedWallet});
+          const response = await lendingPoolContract.methods.liquidationCall(_collateral,_instrument,_user,_purchaseAmount,_receiveIToken).send({from: state.connectedWallet})
+                          .on('transactionHash',function(hash) {
+                              let transaction = {hash : hash, function : 'Liquidation Call' , amount : null}; 
+                              commit('addToSessionPendingTransactions',transaction);
+                          });
           console.log(response);
           return response;
           }
           catch(error) {
-            // console.log('Making transaction (in store - catch)');
             console.log(error);
             return error;
           }
@@ -1777,27 +1846,28 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       }
     },
 
-    LendingPool_flashLoan: async ({commit,state},{_receiver,_instrument,_user,_amount,_params}) => {
-      if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
-        const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-        console.log(lendingPoolContract);
-        try {
-          // console.log('Making transaction (in store)');
-          const response = await lendingPoolContract.methods.flashLoan(_instrument,_useAsCollateral).send({from: state.connectedWallet});
-          console.log(response);
-          return response;
-          }
-          catch(error) {
-            // console.log('Making transaction (in store - catch)');
-            console.log(error);
-            return error;
-          }
-      }
-      else {
-        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + getters.networkName);
-        return "SIGH Finance (Lending Pool Contract) is currently not been deployed on ";
-      }
-    },
+    // LendingPool_flashLoan: async ({commit,state},{_receiver,_instrument,_user,_amount,_params}) => {
+    //   if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+    //     const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+    //     try {
+    //       const response = await lendingPoolContract.methods.flashLoan(_instrument,_useAsCollateral).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+    //         let transaction = {hash : hash, function : 'FLASH LOAN' , amount : null}; 
+    //         commit('addToSessionPendingTransactions',transaction);
+    //       });
+    //       console.log(response);
+    //       return response;
+    //       }
+    //       catch(error) {
+    //         // console.log('Making transaction (in store - catch)');
+    //         console.log(error);
+    //         return error;
+    //       }
+    //   }
+    //   else {
+    //     console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + getters.networkName);
+    //     return "SIGH Finance (Lending Pool Contract) is currently not been deployed on ";
+    //   }
+    // },
 
     LendingPool_getInstruments: async ({commit,state}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
@@ -1962,12 +2032,14 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
 // ############ ITOKEN Functions --- getSighStreamAllowances() VIEW FUNCTION 
 // ######################################################
 
-IToken_redeem: async ({commit,state},{iTokenAddress,_amount}) => {
+IToken_redeem: async ({commit,state},{iTokenAddress,_amount,symbol}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    console.log(iTokenContract);
     try {
-      const response = await iTokenContract.methods.redeem(_amount).send({from: state.connectedWallet});
+      const response = await iTokenContract.methods.redeem(_amount).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : 'REDEEM' , amount : _amount + ' ' + symbol}; 
+        commit('addToSessionPendingTransactions',transaction);
+        });
       console.log(response);
       return response;  
     }
@@ -1982,13 +2054,15 @@ IToken_redeem: async ({commit,state},{iTokenAddress,_amount}) => {
   }
 },
 
-IToken_redirectInterestStream: async ({commit,state},{iTokenAddress,_to}) => {
+IToken_redirectInterestStream: async ({commit,state},{iTokenAddress,_to, symbol}) => {
   // Instrument Not supported on the connected Network
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    console.log(iTokenContract);
     try {
-      const response = await iTokenContract.methods.redirectInterestStream(_to).send({from: state.connectedWallet});
+      const response = await iTokenContract.methods.redirectInterestStream(_to).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : ' Interest Stream Re-direction : ' + symbol , amount : null}; 
+        commit('addToSessionPendingTransactions',transaction);
+        });
       console.log(response);
       return response;  
     }
@@ -2003,13 +2077,37 @@ IToken_redirectInterestStream: async ({commit,state},{iTokenAddress,_to}) => {
   }
 },
 
-IToken_allowInterestRedirectionTo: async ({commit,state},{iTokenAddress,_to}) => {
-  // Instrument Not supported on the connected Network
+IToken_allowInterestRedirectionTo: async ({commit,state},{iTokenAddress,_to,symbol}) => {
+  if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
+    try {
+      const response = await iTokenContract.methods.allowInterestRedirectionTo(_to).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : symbol + ' Interest Stream Allowance', amount : null}; 
+        commit('addToSessionPendingTransactions',transaction);
+        });
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+  else {
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
+    return "This particular Instrument is currently not supported by SIGH Finance on ";
+  }
+},
+
+IToken_redirectInterestStreamOf: async ({commit,state},{iTokenAddress,_from,_to, symbol}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
     try {
-      const response = await iTokenContract.methods.allowInterestRedirectionTo(_to).send({from: state.connectedWallet});
+      const response = await iTokenContract.methods.redirectInterestStreamOf(_from,_to).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : symbol + ' Interest Stream Re-direction (OF)' , amount : null}; 
+        commit('addToSessionPendingTransactions',transaction);
+        });
       console.log(response);
       return response;  
     }
@@ -2024,12 +2122,15 @@ IToken_allowInterestRedirectionTo: async ({commit,state},{iTokenAddress,_to}) =>
   }
 },
 
-IToken_redirectInterestStreamOf: async ({commit,state},{iTokenAddress,_from,_to}) => {
+IToken_redirectSighStream: async ({commit,state},{iTokenAddress,_to,symbol}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
     try {
-      const response = await iTokenContract.methods.redirectInterestStreamOf(_from,_to).send({from: state.connectedWallet});
+      const response = await iTokenContract.methods.redirectSighStream(_to).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : symbol + ' $SIGH Stream Re-direction' , amount : null}; 
+        commit('addToSessionPendingTransactions',transaction);
+        });
       console.log(response);
       return response;  
     }
@@ -2044,12 +2145,15 @@ IToken_redirectInterestStreamOf: async ({commit,state},{iTokenAddress,_from,_to}
   }
 },
 
-IToken_redirectSighStream: async ({commit,state},{iTokenAddress,_to}) => {
+IToken_redirectSighStreamOf: async ({commit,state},{iTokenAddress,_from,_to,symbol}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
     try {
-      const response = await iTokenContract.methods.redirectSighStream(_to).send({from: state.connectedWallet});
+      const response = await iTokenContract.methods.redirectSighStreamOf(_from,_to).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : symbol + ' $SIGH Stream Re-direction (OF)' , amount : null}; 
+        commit('addToSessionPendingTransactions',transaction);
+        });
       console.log(response);
       return response;  
     }
@@ -2064,32 +2168,15 @@ IToken_redirectSighStream: async ({commit,state},{iTokenAddress,_to}) => {
   }
 },
 
-IToken_redirectSighStreamOf: async ({commit,state},{iTokenAddress,_from,_to}) => {
-  if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
-    const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    console.log(iTokenContract);
-    try {
-      const response = await iTokenContract.methods.redirectSighStreamOf(_from,_to).send({from: state.connectedWallet});
-      console.log(response);
-      return response;  
-    }
-    catch (error) {
-      console.log(error);
-      return error;
-    }
-  }
-  else {
-    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
-    return "This particular Instrument is currently not supported by SIGH Finance on ";
-  }
-},
-
-IToken_allowSighRedirectionTo: async ({commit,state},{iTokenAddress,_to}) => {
+IToken_allowSighRedirectionTo: async ({commit,state},{iTokenAddress,_to,symbol}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     // console.log(iTokenContract);
     try {
-      const response = await iTokenContract.methods.allowSighRedirectionTo(_to).send({from: state.connectedWallet});
+      const response = await iTokenContract.methods.allowSighRedirectionTo(_to).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : symbol + ' $SIGH Stream Allowance' , amount : null}; 
+        commit('addToSessionPendingTransactions',transaction);
+        });
       console.log(response);
       return response;  
     }
@@ -2104,12 +2191,15 @@ IToken_allowSighRedirectionTo: async ({commit,state},{iTokenAddress,_to}) => {
   }
 },
 
-IToken_claimMySIGH: async ({commit,state},{iTokenAddress}) => {
+IToken_claimMySIGH: async ({commit,state},{iTokenAddress,symbol}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     // console.log(iTokenContract);
     try {
-      const response = await iTokenContract.methods.claimMySIGH().send({from: state.connectedWallet});
+      const response = await iTokenContract.methods.claimMySIGH().send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : symbol + ' Claim $SIGH' , amount : null}; 
+        commit('addToSessionPendingTransactions',transaction);
+        });
       console.log(response);
       return response;  
     }
@@ -2268,17 +2358,14 @@ IToken_getSighStreamAllowances: async ({commit,state},{iTokenAddress,_user}) => 
 // ############ ERC20 Standard Functions --- balanceOf() VIEW FUNCTION 
 // ######################################################
 
-ERC20_approve: async ({commit,state},{tokenAddress,spender,amount }) => {
+ERC20_approve: async ({commit,state},{tokenAddress,spender,amount,symbol }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
-    console.log(erc20Contract);
     try {
-      // let quantityInBigNumber = new BigNumber(amount);
-      // console.log(quantityInBigNumber);
-      // console.log(state.supportedInstrumentConfigs.get(tokenAddress).decimals);
-      // quantityInBigNumber.shiftedBy(Number(state.supportedInstrumentConfigs.get(tokenAddress).decimals));
-      // console.log('Quantity To Deposit (Big Number)' + quantityInBigNumber);
-      const response = await erc20Contract.methods.approve(spender,amount).send({from: state.connectedWallet});
+      const response = await erc20Contract.methods.approve(spender,amount).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : ' APPROVE' , amount : amount + ' ' + symbol}; 
+        commit('addToSessionPendingTransactions',transaction);
+        });
       console.log(response);
       return response;  
     }
@@ -2293,12 +2380,14 @@ ERC20_approve: async ({commit,state},{tokenAddress,spender,amount }) => {
   }
 },
 
-ERC20_mint: async ({commit,state},{tokenAddress,quantity }) => {
+ERC20_mint: async ({commit,state},{tokenAddress,quantity, symbol }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(MintableERC20.abi, tokenAddress );
-    console.log(erc20Contract);
     try {
-      const response = await erc20Contract.methods.mint(quantity).send({from: state.connectedWallet});
+      const response = await erc20Contract.methods.mint(quantity).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : ' MINT' , amount : quantity + ' ' + symbol}; 
+        commit('addToSessionPendingTransactions',transaction);
+        });
       console.log(response);
       return response;  
     }
@@ -2314,12 +2403,14 @@ ERC20_mint: async ({commit,state},{tokenAddress,quantity }) => {
 },
 
 
-ERC20_transfer: async ({commit,state},{tokenAddress,recepient,amount }) => {
+ERC20_transfer: async ({commit,state},{tokenAddress,recepient,amount,symbol }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
-    console.log(erc20Contract);
     try {
-      const response = await erc20Contract.methods.transfer(recepient,amount).send({from: state.connectedWallet});
+      const response = await erc20Contract.methods.transfer(recepient,amount).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : ' TRANSFER' , amount : amount + ' ' + symbol}; 
+        commit('addToSessionPendingTransactions',transaction);
+        });
       console.log(response);
       return response;  
     }
@@ -2334,12 +2425,14 @@ ERC20_transfer: async ({commit,state},{tokenAddress,recepient,amount }) => {
   }
 },
 
-ERC20_transferFrom: async ({commit,state},{tokenAddress,sender,recepient,amount }) => {
+ERC20_transferFrom: async ({commit,state},{tokenAddress,sender,recepient,amount,symbol }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
-    console.log(erc20Contract);
     try {
-      const response = await erc20Contract.methods.transferFrom(sender,recepient,amount).send({from: state.connectedWallet});
+      const response = await erc20Contract.methods.transferFrom(sender,recepient,amount).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : ' TRANSFER FROM' , amount : amount + ' ' + symbol}; 
+        commit('addToSessionPendingTransactions',transaction);
+        });
       console.log(response);
       return response;  
     }
@@ -2354,12 +2447,15 @@ ERC20_transferFrom: async ({commit,state},{tokenAddress,sender,recepient,amount 
   }
 },
 
-ERC20_increaseAllowance: async ({commit,state},{tokenAddress,spender,addedValue }) => {
+ERC20_increaseAllowance: async ({commit,state},{tokenAddress,spender,addedValue,symbol }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     console.log(erc20Contract);
     try {
-      const response = await erc20Contract.methods.increaseAllowance(spender,addedValue).send({from: state.connectedWallet})
+      const response = await erc20Contract.methods.increaseAllowance(spender,addedValue).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : ' INCREASE ALLOWANCE' , amount : addedValue + ' ' + symbol}; 
+        commit('addToSessionPendingTransactions',transaction);
+        });
       console.log(response);
       return response;  
     }
@@ -2374,12 +2470,15 @@ ERC20_increaseAllowance: async ({commit,state},{tokenAddress,spender,addedValue 
   }
 },
 
-ERC20_decreaseAllowance: async ({commit,state},{tokenAddress,spender,subtractedValue }) => {
+ERC20_decreaseAllowance: async ({commit,state},{tokenAddress,spender,subtractedValue,symbol }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     console.log(erc20Contract);
     try {
-      const response = await erc20Contract.methods.decreaseAllowance(spender,subtractedValue).send({from: state.connectedWallet})
+      const response = await erc20Contract.methods.decreaseAllowance(spender,subtractedValue).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : ' DECREASE ALLOWANCE' , amount : subtractedValue + ' ' + symbol}; 
+        commit('addToSessionPendingTransactions',transaction);
+        });
       console.log(response);
       return response;  
     }
@@ -2494,7 +2593,10 @@ SIGH_mintCoins: async ({commit,state}) => {
   if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
     const sighContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
     // console.log(sighContract);
-    sighContract.methods.mintCoins().send({from: state.connectedWallet})
+    sighContract.methods.mintCoins().send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+      let transaction = {hash : hash, function : ' MINT SIGH' , amount : null}; 
+      commit('addToSessionPendingTransactions',transaction);
+      })
     .then(receipt => { 
       console.log(receipt);
       return receipt;

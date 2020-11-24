@@ -44,7 +44,6 @@ export default {
     
     updateSelectedInstrument() {        // Selecting an Instrument from dropdown
       console.log(this.selectedInstrument);
-      this.$store.commit('addLoaderTask', 3, false);    
       this.$store.commit('updateSelectedInstrument',this.selectedInstrument);
       ExchangeDataEventBus.$emit(EventNames.changeSelectedInstrument, {'instrument':this.selectedInstrument });    //TO CHANGE ORDER-BOOK/Supported-Money-Markets
     },

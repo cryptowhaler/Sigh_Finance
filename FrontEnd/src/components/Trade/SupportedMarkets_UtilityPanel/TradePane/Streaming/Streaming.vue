@@ -37,7 +37,6 @@ export default {
     // Selecting an Instrument from dropdown
     updateSelectedInstrument() {
       console.log(this.selectedInstrument);
-      this.$store.commit('addLoaderTask', 3, false);    
       this.$store.commit('updateSelectedInstrument',this.selectedInstrument);
       ExchangeDataEventBus.$emit(EventNames.changeSelectedInstrument, {'instrument':this.selectedInstrument });    
     }

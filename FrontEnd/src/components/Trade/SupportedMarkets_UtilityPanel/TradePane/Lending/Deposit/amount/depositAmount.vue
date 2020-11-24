@@ -148,7 +148,7 @@ export default {
         console.log('Deposit (Mint) Value - ' + this.formData.depositValue);
         console.log('Deposit Quantity - ' + quantity);
         this.showLoader = true;
-        let response = await this.ERC20_mint({tokenAddress: this.selectedInstrument.instrumentAddress , quantity: parseInt(quantity) });
+        let response = await this.ERC20_mint({tokenAddress: this.selectedInstrument.instrumentAddress , quantity: parseInt(quantity), symbol: this.selectedInstrument.symbol  });
         if (response.status) {      
           this.$showSuccessMsg({message: "DEPOSIT (MINT) SUCCESS : " + quantity + "  " +  this.selectedInstrument.symbol +  " worth " + this.formData.depositValue + " USD was successfully minted for testing. Gas used = " + response.gasUsed });
           await this.refreshCurrentInstrumentWalletState(false);         // UPDATE THE STATE OF THE SELECTED INSTRUMENT
@@ -182,7 +182,7 @@ export default {
         console.log('Selected Instrument - ' + this.selectedInstrument.symbol)
         console.log('Amount to be Approved - ' + this.formData.depositValue);
         console.log('Quantity - ' + quantity);
-        let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  parseInt(quantity) } );
+        let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  parseInt(quantity) , symbol :this.selectedInstrument.symbol } );
         if (response.status) { 
           await this.refreshCurrentInstrumentWalletState(false);        
           this.$showSuccessMsg({message: "APPROVAL SUCCESS : Maximum of " + this.selectedInstrumentWalletState.userAvailableAllowance + "  " +  this.selectedInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });

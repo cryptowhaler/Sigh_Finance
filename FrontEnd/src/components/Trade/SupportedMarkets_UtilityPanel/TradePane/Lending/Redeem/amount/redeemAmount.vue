@@ -101,7 +101,7 @@ export default {
         console.log('Redeem Quantity - ' + quantity );
         console.log('Redeem Value - ' + this.formData.redeemValue);
         this.showLoader = true;
-        let response =  await this.IToken_redeem( { iTokenAddress: this.selectedInstrument.iTokenAddress , _amount:  parseInt(quantity) } );
+        let response =  await this.IToken_redeem( { iTokenAddress: this.selectedInstrument.iTokenAddress , _amount:  parseInt(quantity), symbol: this.selectedInstrument.symbol } );
         if (response.status) {      
           this.$showSuccessMsg({message: "REDEEM SUCCESS : " + quantity + "  " +  this.selectedInstrument.symbol +  " worth " +  this.formData.redeemValue + " USD have been successfully redeemed from SIGH Finance. Gas used = " + response.gasUsed });
           this.$showInfoMsg({message: " $SIGH FARMS Look forward to serving you again!"});
