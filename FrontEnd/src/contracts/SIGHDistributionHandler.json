@@ -1293,7 +1293,7 @@
           "type": "address"
         }
       ],
-      "name": "getInstrumentSighMechansimStates",
+      "name": "getInstrumentSpeeds",
       "outputs": [
         {
           "internalType": "uint256",

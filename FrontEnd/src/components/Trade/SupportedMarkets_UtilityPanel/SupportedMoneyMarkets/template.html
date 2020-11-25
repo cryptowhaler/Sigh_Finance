@@ -1,52 +1,7 @@
 <div class="livemarkets noHorizontal" style="padding: 11px 0 15px">
-    <div class="uk-panel">
-        <!-- Live markets heading -->
-        <h3 class="uk-panel-title uk-text-center" style="padding-bottom: 15px; padding-left: 190px; font-size: 19px !important;">SUPPORTED MONEY MARKETS
-                <img v-if="showLoader" style="width: 7%; margin-left: 170px;" src="https://image.ibb.co/dc02hd/30.gif" />
-                <button v-else class="uk-button " style="background-color: indianred; margin-left: 170px; "  @click="refresh()">Refresh</button>
-        </h3>
-        
-    </div>
-    <!-- v-if="!showLoader" -->
-    <template >   
-        <div class="noShow noHorizontal"> 
-            <!-- <div id="hello" data-simplebar data-simplebar-auto-hide="uk-text-center" > -->
-                <!-- :style="{ height: tableHeight } -->
-                <table >
-                    <thead class="uk-visible">
-                        <!-- live instruments Bar heading -->
-                        <tr>
-                            <th class="uk-text-center">Instrument</th>
-                            <th class="uk-text-center">Total Supply</th>
-                            <th class="uk-text-center">Total Borrow</th>
-                            <th class="uk-text-center">Utilization Rate</th>
-                            <th class="uk-text-center">Supply APY</th>
-                            <th class="uk-text-center">Borrow APY (Stable)</th>
-                            <th class="uk-text-center">Borrow APY (Variable)</th>
-                            <th class="uk-text-center"> % Volatility </th>
-                            <th class="uk-text-center"> Losses (Avg per Block) </th>
-                            <th class="uk-text-center"> $SIGH Yield (Per Block)  </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- live instruments content -->
-                        <tr v-for="instrument in instruments">
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.basicData.symbol }}</td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" > {{ instrument.globalState.totalLiquidity }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ instrument.globalState.totalBorrows }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ instrument.globalState.utilizationRate }} </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ instrument.globalState.liquidityRate  }} % </td>
-                            <td class="uk-text-center c-red" style="line-height: 4;" >{{ instrument.globalState.averageStableBorrowRate  }} % </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.globalState.variableBorrowRate  }} %  </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(instrument.sighState.suppliers_Speed) + Number(instrument.sighState.staking_Speed)  }} </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(instrument.sighState.borrowers_Speed) + Number(instrument.sighState.staking_Speed)  }}  </td>
-                            <!-- <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(Number(instrument.sighAccuredInCurrentCycle)/10000000).toFixed(2) }} </td> -->
-                        </tr>
-                    </tbody>
-                </table>
-            <!-- </div> -->
-        </div>
-    </template>
 
+    <MoneyMarketGlobalStates/>
+    <MoneyMarketConfigs/>
 
+    
 </div>

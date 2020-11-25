@@ -718,6 +718,7 @@ const store = new Vuex.Store({
   
         // FETCHING "SUPPRTED INSTRUMENT" STATES  : STATE, GLOBAL BALANCES, CONFIG
         for (let i=0; i<supportedInstrumentAddresses.length; i++) {
+
           let data = await store.dispatch('refershInstrumentState',{instrumentAddress: supportedInstrumentAddresses[i] });
           console.log(" SUPPORTED INSTRUMENT - " + i + " : STATE FETCHED (SESSION INITIALIALIZATION)");
           console.log(data);
@@ -838,7 +839,6 @@ const store = new Vuex.Store({
       instrumentState.instrumentAddress = instrumentAddress;
       instrumentState.name = await store.dispatch("ERC20_name",{tokenAddress: instrumentAddress}); 
       instrumentState.symbol =  await store.dispatch("ERC20_symbol",{tokenAddress: instrumentAddress}); 
-      instrumentState.decimals =  await store.dispatch("ERC20_decimals",{tokenAddress: instrumentAddress}); 
       instrumentState.priceETH = await store.dispatch("getInstrumentPrice",{_instrumentAddress: instrumentAddress}); 
       instrumentState.priceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: instrumentAddress}); 
   
@@ -1461,6 +1461,7 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
         // console.log(sighDistributionHandlerContract);
+        // let response = await sighDistributionHandlerContract.methods.getInstrumentSpeeds(instrument_).call();
         let response = await sighDistributionHandlerContract.methods.getInstrumentSighMechansimStates(instrument_).call();
         console.log("sighDistributionHandler INSTRUMENT Data = " );
         console.log(response);                

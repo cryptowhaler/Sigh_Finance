@@ -1,0 +1,49 @@
+<div>
+
+    <div class="uk-panel">
+        <!-- Live markets heading -->
+        <h3 class="uk-panel-title uk-text-center" style="padding-bottom: 15px; padding-left: 190px; font-size: 19px !important;">SUPPORTED MONEY MARKETS : CONFIGURATION
+                <img v-if="showLoader" style="width: 7%; margin-left: 170px;" src="https://image.ibb.co/dc02hd/30.gif" />
+                <button v-else class="uk-button " style="background-color: indianred; margin-left: 170px; "  @click="refresh()">Refresh</button>
+        </h3>
+        
+    </div>
+    
+    <!-- v-if="!showLoader" -->
+    <template >   
+        <div class="noShow noHorizontal"> 
+            <!-- <div id="hello" data-simplebar data-simplebar-auto-hide="uk-text-center" > -->
+                <!-- :style="{ height: tableHeight } -->
+                <table >
+                    <thead class="uk-visible">
+                        <!-- live instruments Bar heading -->
+                        <tr>
+                            <th class="uk-text-center">Instrument</th>
+                            <th class="uk-text-center">Is Active</th>
+                            <th class="uk-text-center">Borrowing Enabled</th>
+                            <th class="uk-text-center">Stable Borrow Enabled</th>
+                            <th class="uk-text-center">Usage as Collateral Enabled</th>
+                            <th class="uk-text-center">Liquidation Threshold</th>
+                            <th class="uk-text-center">Liquidation Bonus</th>
+                            <th class="uk-text-center"> LTV </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- live instruments content -->
+                        <tr v-for="instrument in instruments">
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.basicData.symbol }}</td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" > {{ instrument.config.isActive }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ instrument.config.borrowingEnabled }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ instrument.config.stableBorrowRateEnabled }} </td>
+                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ instrument.config.usageAsCollateralEnabled  }} % </td>
+                            <td class="uk-text-center c-red" style="line-height: 4;" >{{ instrument.config.liquidationThreshold  }} % </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.config.liquidationBonus  }} %  </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.config.ltv  }} %  </td>
+                        </tr>
+                    </tbody>
+                </table>
+            <!-- </div> -->
+        </div>
+    </template>
+    
+</div>

@@ -134,7 +134,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
     event SIGHDistributionHandlerInitialized(address addressesProvider, address Sigh_Address, address priceOracle, address lendingPoolCore);
 
-    uint256 constant private SIGH_DISTRIBUTION_REVISION = 0x3;
+    uint256 constant private SIGH_DISTRIBUTION_REVISION = 0x5;
 
     function getRevision() internal pure returns(uint256) {
         return SIGH_DISTRIBUTION_REVISION;
@@ -321,7 +321,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
      */    
     function SpeedUpperCheckSwitch( bool isActivated, uint profitPercentage ) external onlySighFinanceConfigurator returns (bool) {     // 
         require( profitPercentage > 0.01e18, 'The new Profit Percentage must be greater than 0.01e18 (1%) ');
-        require( profitPercentage <= 2e18, 'The new Supplier Ratio must be less than 2e18 (200%)');
+        require( profitPercentage <= 1e18, 'The new Supplier Ratio must be less than 1e18 (100%)');
         refreshSIGHSpeeds();
     
         upperCheckProfitPercentage = Exp({ mantissa : profitPercentage });              // STATE UPDATED
@@ -372,7 +372,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
     event maxSpeedCheck(uint SIGH);
     event blockNumberForSnapshotUpdated(uint224 curClock, uint deltaBlocks_, uint blockNumberForPriceSnapshots, uint blocknumber );    
-    event MaxSpeedUsedWhenRefreshingPriceSnapshots(uint SIGHSpeed, uint max_valueDistributionLimit,  uint profitPotentialPerBlock, uint sigh_speed_used  );
+    event MaxSpeedUsedWhenRefreshingPriceSnapshots(uint SIGHSpeed, uint sigh_speed_used, uint sighPrice, uint max_valueDistributionLimit, uint totalLossesPerBlockAverage, uint profitPotentialPerBlock, uint lossesPlusProfitPotentialPerBlock  );
     /**
      * @notice Recalculate and update SIGH speeds for all Supported SIGH markets
      * 1. Instrument indexes for all instruments updated
@@ -502,21 +502,21 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     // returns the currently maximum possible SIGH Distribution speed. Called only when upper check is activated
     function calculateMaxSighSpeedInternal( uint totalLossesPerBlockAverage ) internal returns (uint) {
             uint sigh_speed_used = SIGHSpeed;
-            uint current_Sigh_Price = oracle.getAssetPrice( address(Sigh_Address) );
-            require ( current_Sigh_Price.mantissa > 0, "calculateMaxSighSpeedInternal : Oracle returned Invalid Price" );
-            ERC20Detailed instrumentContract = ERC20Detailed(Sigh_Address);
-            uint sighDecimals = instrumentContract.decimals();
-   
+            uint current_Sigh_Price = oracle.getAssetPrice( address(Sigh_Address) );   
             uint max_valueDistributionLimit = mul_( current_Sigh_Price, SIGHSpeed );   // MAX Value that can be distributed per block
-            uint max_valueDistributionLimitDecimalAdjusted = adjustForDecimalsInternal( max_valueDistributionLimit, sighDecimals, oracle.getAssetPriceDecimals(Sigh_Address)  );   // MAX Value that can be distributed per block (Decimals Adjusted)
-            uint profitPotentialPerBlock = mul_(totalLossesPerBlockAverage, upperCheckProfitPercentage ); // (a * b)/1e18 [b is in Exp Scale]
 
-            // We reduce the effective SIGH Speed if value ($SIGH) that can be distributed is greater than the desired limit
-            if ( max_valueDistributionLimitDecimalAdjusted >  profitPotentialPerBlock ) {
-                sigh_speed_used = div_( max_valueDistributionLimit, current_Sigh_Price, "Max Speed division gave error" );
+            uint profitPotentialPerBlock = mul_(totalLossesPerBlockAverage, upperCheckProfitPercentage ); // (a * b)/1e18 [b is in Exp Scale]
+            uint lossesPlusProfitPotentialPerBlock = add_( totalLossesPerBlockAverage,profitPotentialPerBlock,"Potential losses addition gave overflow" );
+
+            if ( current_Sigh_Price == 0 || max_valueDistributionLimit <=  lossesPlusProfitPotentialPerBlock ) {
+                emit MaxSpeedUsedWhenRefreshingPriceSnapshots(SIGHSpeed, sigh_speed_used, current_Sigh_Price, max_valueDistributionLimit, totalLossesPerBlockAverage, profitPotentialPerBlock,  lossesPlusProfitPotentialPerBlock);
+                return sigh_speed_used;
             }
-            emit MaxSpeedUsedWhenRefreshingPriceSnapshots(SIGHSpeed, max_valueDistributionLimitDecimalAdjusted, profitPotentialPerBlock, sigh_speed_used  );
-            return sigh_speed_used;
+            else {
+                sigh_speed_used = div_( lossesPlusProfitPotentialPerBlock, current_Sigh_Price, "Max Speed division gave error" );
+                emit MaxSpeedUsedWhenRefreshingPriceSnapshots(SIGHSpeed, sigh_speed_used, current_Sigh_Price,max_valueDistributionLimit, totalLossesPerBlockAverage, profitPotentialPerBlock, lossesPlusProfitPotentialPerBlock  );
+                return sigh_speed_used;
+            }
     }
 
     // Updates the Current CLock (global variable tracking the current hour )
@@ -561,7 +561,6 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     // #####################################################################################################################################
 
     event SIGHSupplyIndexUpdated(address instrument, uint sighAccured, uint ratioMantissa, uint newIndexMantissa,  uint blockNum );
-    event SIGHBorrowIndexUpdated(address instrument, uint sighAccured, uint ratioMantissa, uint newIndexMantissa,  uint blockNum );
 
     /**
      * @notice Accrue SIGH to the Instrument by updating the supply index
@@ -599,6 +598,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     }
 
 
+    event SIGHBorrowIndexUpdated(address instrument, uint sighAccured, uint ratioMantissa, uint newIndexMantissa,  uint blockNum );
 
     /**
      * @notice Accrue SIGH to the market by updating the borrow index
