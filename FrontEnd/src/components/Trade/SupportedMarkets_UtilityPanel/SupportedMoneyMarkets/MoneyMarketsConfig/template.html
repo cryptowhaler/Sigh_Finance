@@ -23,9 +23,9 @@
                             <th class="uk-text-center">Borrowing Enabled</th>
                             <th class="uk-text-center">Stable Borrow Enabled</th>
                             <th class="uk-text-center">Usage as Collateral Enabled</th>
+                            <th class="uk-text-center"> LTV </th>
                             <th class="uk-text-center">Liquidation Threshold</th>
                             <th class="uk-text-center">Liquidation Bonus</th>
-                            <th class="uk-text-center"> LTV </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,10 +35,10 @@
                             <td class="uk-text-center c-white" style="line-height: 4;" > {{ instrument.config.isActive }} </td>
                             <td class="uk-text-center c-white" style="line-height: 4;"  > {{ instrument.config.borrowingEnabled }} </td>
                             <td class="uk-text-center c-white" style="line-height: 4;"  > {{ instrument.config.stableBorrowRateEnabled }} </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ instrument.config.usageAsCollateralEnabled  }} % </td>
+                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ instrument.config.usageAsCollateralEnabled  }}</td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.config.ltv  }} %  </td>
                             <td class="uk-text-center c-red" style="line-height: 4;" >{{ instrument.config.liquidationThreshold  }} % </td>
                             <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.config.liquidationBonus  }} %  </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.config.ltv  }} %  </td>
                         </tr>
                     </tbody>
                 </table>
