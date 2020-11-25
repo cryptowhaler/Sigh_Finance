@@ -367,12 +367,12 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         return false;
     }
 
-    event refreshingSighSpeeds_1( address _Instrument, string side , uint _24HrVolatility , uint totalLosses   );
-    event refreshingSighSpeeds_2( address _Instrument, uint maxSpeed, uint supplierSpeed, uint borrowerSpeed, uint percentTotalVolatility );
+    event calculatingInstrumentVolatility( address _Instrument, string side , uint _24HrVolatility , uint totalLosses   );
+    event refreshingSighSpeeds( address _Instrument, uint maxSpeed, uint supplierSpeed, uint borrowerSpeed, uint percentTotalVolatility );
 
     event maxSpeedCheck(uint SIGH);
     event blockNumberForSnapshotUpdated(uint224 curClock, uint deltaBlocks_, uint blockNumberForPriceSnapshots, uint blocknumber );    
-    event MaxSpeedUsedWhenRefreshingPriceSnapshots(uint SIGHSpeed, uint sigh_speed_used, uint sighPrice, uint max_valueDistributionLimit, uint totalLossesPerBlockAverage, uint profitPotentialPerBlock, uint lossesPlusProfitPotentialPerBlock  );
+    event MaxSIGHSpeedCalculated(uint SIGHSpeed, uint current_Sigh_Price, uint totalVolatilityPerBlockAverage, uint maxVolatilityToAddress, uint max_valueDistributionLimitDecimalsAdjusted, uint sigh_speed_used );
     /**
      * @notice Recalculate and update SIGH speeds for all Supported SIGH markets
      * 1. Instrument indexes for all instruments updated
@@ -417,6 +417,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
             if ( !financial_instruments[_currentInstrument].isSIGHMechanismActivated || instrumentPriceCycles[_currentInstrument].initializationCounter != uint32(24) ) {     // if LOSS MINIMIZNG MECHANISM IS NOT ACTIVATED FOR THIS INSTRUMENT
                 supplierLosses[i] = Exp({mantissa: 0});
                 borrowerLosses[i] = Exp({mantissa: 0});
+                Instrument_Sigh_Mechansim_States[_currentInstrument].side = 'inactive';
                 //    Newly Sighed Instrument needs to reach 24 (priceSnapshots need to be taken) before it can be assigned a Sigh Speed based on LOSSES   
                 if (instrumentPriceCycles[_currentInstrument].initializationCounter < uint32(24) ) {
                     instrumentPriceCycles[_currentInstrument].initializationCounter = uint32(add_(instrumentPriceCycles[_currentInstrument].initializationCounter , uint32(1) , 'Price Counter addition failed.'));  // STATE UPDATE : INITIALIZATION COUNTER UPDATED
@@ -427,7 +428,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
                     uint totalUnderlyingLiquidity = lendingPoolCore.getInstrumentTotalLiquidity( _currentInstrument ); // Total amount supplied 
                     (MathError error, Exp memory lossPerInstrument) = subExp( previousPrice , currentPrice );       
                     ( MathError error2, Exp memory supplierLoss ) = mulScalar( lossPerInstrument, totalUnderlyingLiquidity );
-                    supplierLosses[i].mantissa = adjustForDecimalsInternal( supplierLoss.mantissa, financial_instruments[_currentInstrument].decimals, oracle.getAssetPriceDecimals(_currentInstrument) );
+                    supplierLosses[i].mantissa = adjustForDecimalsInternal(supplierLoss.mantissa, financial_instruments[_currentInstrument].decimals , oracle.getAssetPriceDecimals(_currentInstrument) );
                     borrowerLosses[i] = Exp({mantissa: 0});
                     ( error, totalLosses) = addExp(totalLosses, supplierLosses[i]);            //  Total loss  += supplier loss
                     Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatility =  supplierLosses[i].mantissa;
@@ -437,15 +438,14 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
                     uint totalBorrows = lendingPoolCore.getInstrumentTotalBorrows( _currentInstrument ); // Total amount supplied 
                     (MathError error, Exp memory lossPerInstrument) = subExp( currentPrice, previousPrice );       
                     ( MathError error2, Exp memory borrowerLoss ) = mulScalar( lossPerInstrument, totalBorrows );
-                    borrowerLosses[i].mantissa = adjustForDecimalsInternal( borrowerLoss.mantissa, financial_instruments[_currentInstrument].decimals, oracle.getAssetPriceDecimals(_currentInstrument) );
+                    borrowerLosses[i].mantissa = adjustForDecimalsInternal(borrowerLoss.mantissa , financial_instruments[_currentInstrument].decimals , oracle.getAssetPriceDecimals(_currentInstrument) );
                     supplierLosses[i] = Exp({mantissa: 0});
                     ( error, totalLosses) = addExp(totalLosses, borrowerLosses[i]);            //  Total loss  += borrower loss
                     Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatility =  borrowerLosses[i].mantissa;
                     Instrument_Sigh_Mechansim_States[_currentInstrument].side = 'Borrower';
                 }
             }
-        
-            emit refreshingSighSpeeds_1( _currentInstrument, Instrument_Sigh_Mechansim_States[_currentInstrument].side , Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatility, totalLosses.mantissa );
+            emit calculatingInstrumentVolatility( _currentInstrument, Instrument_Sigh_Mechansim_States[_currentInstrument].side , Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatility, totalLosses.mantissa );
         }
         
         uint maxSpeed = SIGHSpeed;
@@ -481,7 +481,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
             }
             Instrument_Sigh_Mechansim_States[_currentInstrument].percentTotalVolatility = mul_(100, lossRatio);                                              // STATE UPDATE
 
-            emit refreshingSighSpeeds_2( _currentInstrument ,maxSpeed, Instrument_Sigh_Mechansim_States[_currentInstrument].suppliers_Speed, Instrument_Sigh_Mechansim_States[_currentInstrument].borrowers_Speed, Instrument_Sigh_Mechansim_States[_currentInstrument].percentTotalVolatility  );
+            emit refreshingSighSpeeds( _currentInstrument ,maxSpeed, Instrument_Sigh_Mechansim_States[_currentInstrument].suppliers_Speed, Instrument_Sigh_Mechansim_States[_currentInstrument].borrowers_Speed, Instrument_Sigh_Mechansim_States[_currentInstrument].percentTotalVolatility  );
         }
 
         require(updateCurrentClockInternal(), "Updating CLock Failed");                         // Updates the Clock    
@@ -501,54 +501,45 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
     // returns the currently maximum possible SIGH Distribution speed. Called only when upper check is activated
     function calculateMaxSighSpeedInternal( uint totalLossesPerBlockAverage ) internal returns (uint) {
-            uint sigh_speed_used = SIGHSpeed;
-            uint current_Sigh_Price = oracle.getAssetPrice( address(Sigh_Address) );   
-            uint max_valueDistributionLimit = mul_( current_Sigh_Price, SIGHSpeed );   // MAX Value that can be distributed per block
+        uint sigh_speed_used = SIGHSpeed;
+        uint current_Sigh_Price = oracle.getAssetPrice( address(Sigh_Address) );   
+        ERC20Detailed sighContract = ERC20Detailed(address(Sigh_Address));
+        uint priceDecimals = oracle.getAssetPriceDecimals(address(Sigh_Address));
+        uint sighDecimals =  sighContract.decimals();
 
-            uint profitPotentialPerBlock = mul_(totalLossesPerBlockAverage, upperCheckProfitPercentage ); // (a * b)/1e18 [b is in Exp Scale]
-            uint lossesPlusProfitPotentialPerBlock = add_( totalLossesPerBlockAverage,profitPotentialPerBlock,"Potential losses addition gave overflow" );
+        // MAX Value that can be distributed per block through SIGH Distribution
+        uint max_valueDistributionLimit = mul_( current_Sigh_Price, SIGHSpeed );   
+        uint max_valueDistributionLimitDecimalsAdjusted = adjustForDecimalsInternal( max_valueDistributionLimit,sighDecimals , priceDecimals  );
 
-            if ( current_Sigh_Price == 0 || max_valueDistributionLimit <=  lossesPlusProfitPotentialPerBlock ) {
-                emit MaxSpeedUsedWhenRefreshingPriceSnapshots(SIGHSpeed, sigh_speed_used, current_Sigh_Price, max_valueDistributionLimit, totalLossesPerBlockAverage, profitPotentialPerBlock,  lossesPlusProfitPotentialPerBlock);
-                return sigh_speed_used;
-            }
-            else {
-                sigh_speed_used = div_( lossesPlusProfitPotentialPerBlock, current_Sigh_Price, "Max Speed division gave error" );
-                emit MaxSpeedUsedWhenRefreshingPriceSnapshots(SIGHSpeed, sigh_speed_used, current_Sigh_Price,max_valueDistributionLimit, totalLossesPerBlockAverage, profitPotentialPerBlock, lossesPlusProfitPotentialPerBlock  );
-                return sigh_speed_used;
-            }
+        // MAX Volatility that is allowed to be covered through SIGH Distribution
+        uint maxVolatilityToAddress = mul_(totalLossesPerBlockAverage, upperCheckProfitPercentage ); // (a * b)/1e18 [b is in Exp Scale]
+
+        if ( max_valueDistributionLimitDecimalsAdjusted >  maxVolatilityToAddress ) {
+            uint maxVolatilityToAddress_SIGHdecimalsMul = mul_( maxVolatilityToAddress, uint(10**(sighDecimals)), "Max Volatility : SIGH Decimals multiplication gave error" );
+            uint maxVolatilityToAddress_PricedecimalsMul = mul_( maxVolatilityToAddress_SIGHdecimalsMul, uint(10**(priceDecimals)), "Max Volatility : Price Decimals multiplication gave error" );
+            uint maxVolatilityToAddress_DecimalsDiv = div_( maxVolatilityToAddress_PricedecimalsMul, uint(10**9), "Max Volatility : Decimals division gave error" );
+            sigh_speed_used = div_( maxVolatilityToAddress_DecimalsDiv, current_Sigh_Price, "Max Speed division gave error" );
+        }
+        emit MaxSIGHSpeedCalculated(SIGHSpeed, current_Sigh_Price, , totalLossesPerBlockAverage, maxVolatilityToAddress, max_valueDistributionLimitDecimalsAdjusted, sigh_speed_used  );
+        return sigh_speed_used;
     }
 
     // Updates the Current CLock (global variable tracking the current hour )
     function updateCurrentClockInternal() internal returns (bool) {
-        if (curClock == 23) {
-            curClock = 0;               // Global clock Updated
-        }
-        else {
-            curClock = uint224(add_(curClock,1,"curClock : Addition Failed"));
-        }
-        // emit ClockUpdated(curClock, getBlockNumber() );
+        curClock = curClock == 23 ? 0 : uint224(add_(curClock,1,"curClock : Addition Failed"));
         return true;
     }
     
-    event decimalsAdjustment(uint lossAmount,uint instrumentDecimals,uint priceDecimals, uint totalDecimals, uint correctionNumber, uint correctedLossAmount );
+    event decimalsAdjustment(uint lossAmount,uint instrumentDecimals,uint priceDecimals, uint correctedLossAmount );
 
-    function adjustForDecimalsInternal(uint lossAmount, uint instrumentDecimals, uint priceDecimals) internal returns (uint) {
-        uint totalDecimals = add_(instrumentDecimals,priceDecimals,"Decimals addition overflow");
-        uint correctionNumber;
-        uint correctedLossAmount;
-        if (totalDecimals >= 24) {
-         uint extraDecimals = sub_(totalDecimals,24,"Decimals subtraction (extraDecimals) underflow");  
-         correctionNumber = 10**extraDecimals;
-         correctedLossAmount = div_(lossAmount,correctionNumber,"Loss Amount Division to adjust for decimals failed");
-        }
-        else {
-         uint neededDecimals = sub_(24,totalDecimals,"Decimals subtraction (neededDecimals) underflow");  
-         correctionNumber = 10**neededDecimals;
-         correctedLossAmount = mul_(lossAmount,correctionNumber,"Loss Amount Multiplication to adjust for decimals failed");
-        }
-        emit decimalsAdjustment( lossAmount,instrumentDecimals,priceDecimals,totalDecimals,correctionNumber,correctedLossAmount );
-        return correctedLossAmount;
+    function adjustForDecimalsInternal(uint _amount, uint instrumentDecimals, uint priceDecimals) internal returns (uint) {
+        require(instrumentDecimals > 0, "Instrument Decimals cannot be Zero");
+        require(priceDecimals > 0, "Oracle returned invalid price Decimals");
+        uint adjused_Amount = mul_(_amount,uint(10**9),'Loss Amount multiplication Adjustment overflow');
+        uint instrumentDecimalsCorrected = div_( adjused_Amount,uint(10**instrumentDecimals),'Instrument Decimals correction underflow');
+        uint priceDecimalsCorrected = div_( instrumentDecimalsCorrected,uint(10**priceDecimals),'Price Decimals correction underflow');
+        emit decimalsAdjustment( _amount,instrumentDecimals,priceDecimals,priceDecimalsCorrected );
+        return priceDecimalsCorrected;
     }
 
 
