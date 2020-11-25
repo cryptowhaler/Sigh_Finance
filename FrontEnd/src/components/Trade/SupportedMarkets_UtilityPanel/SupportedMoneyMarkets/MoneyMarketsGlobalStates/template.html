@@ -25,8 +25,8 @@
                             <th class="uk-text-center">Supply APY</th>
                             <th class="uk-text-center">Borrow APY (Stable)</th>
                             <th class="uk-text-center">Borrow APY (Variable)</th>
-                            <th class="uk-text-center"> % Volatility </th>
                             <th class="uk-text-center"> Losses (Avg per Block) </th>
+                            <th class="uk-text-center"> % Volatility </th>
                             <th class="uk-text-center"> $SIGH Yield (Per Block)  </th>
                         </tr>
                     </thead>
@@ -40,8 +40,10 @@
                             <td class="uk-text-center c-green" style="line-height: 4;" >{{ instrument.globalState.liquidityRate  }} % </td>
                             <td class="uk-text-center c-red" style="line-height: 4;" >{{ instrument.globalState.averageStableBorrowRate  }} % </td>
                             <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.globalState.variableBorrowRate  }} %  </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(instrument.sighState.suppliers_Speed) + Number(instrument.sighState.staking_Speed)  }} </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(instrument.sighState.borrowers_Speed) + Number(instrument.sighState.staking_Speed)  }}  </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.sighState.losses_24_hrs  }}   </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.sighState.percentageTotalVolatility  }} %  </td>
+                            <td v-if="instrument.sighState.side == 'Supplier' " class="uk-text-center c-green" style="line-height: 4;" >{{ Number(instrument.sighState.suppliers_Speed) + Number(instrument.sighState.staking_Speed)  }} </td>
+                            <td v-else class="uk-text-center c-green" style="line-height: 4;" >{{ Number(instrument.sighState.borrowers_Speed) + Number(instrument.sighState.staking_Speed)  }}  </td>
                             <!-- <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(Number(instrument.sighAccuredInCurrentCycle)/10000000).toFixed(2) }} </td> -->
                         </tr>
                     </tbody>

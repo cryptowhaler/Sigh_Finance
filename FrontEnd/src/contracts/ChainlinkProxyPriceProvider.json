@@ -249,7 +249,7 @@
         "id": 3227,
         "nodeType": "ImportDirective",
         "scope": 3583,
-        "sourceUnit": 29948,
+        "sourceUnit": 29945,
         "src": "25:58:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -260,7 +260,7 @@
         "id": 3228,
         "nodeType": "ImportDirective",
         "scope": 3583,
-        "sourceUnit": 5114,
+        "sourceUnit": 5120,
         "src": "84:46:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -282,7 +282,7 @@
         "id": 3230,
         "nodeType": "ImportDirective",
         "scope": 3583,
-        "sourceUnit": 13997,
+        "sourceUnit": 14053,
         "src": "184:40:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -296,10 +296,10 @@
               "id": 3231,
               "name": "IPriceOracleGetter",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 5113,
+              "referencedDeclaration": 5119,
               "src": "585:18:5",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                 "typeString": "contract IPriceOracleGetter"
               }
             },
@@ -309,7 +309,7 @@
           }
         ],
         "contractDependencies": [
-          5113
+          5119
         ],
         "contractKind": "contract",
         "documentation": "@title ChainlinkProxyPriceProvider\n @author Aave, SIGH Finance\n @notice Proxy smart contract to get the price of an asset from a price source, with Chainlink Aggregator smart contracts as primary option\n - If the returned price by a Chainlink aggregator is <= 0, the call is forwarded to a fallbackOracle",
@@ -317,7 +317,7 @@
         "id": 3582,
         "linearizedBaseContracts": [
           3582,
-          5113
+          5119
         ],
         "name": "ChainlinkProxyPriceProvider",
         "nodeType": "ContractDefinition",
@@ -332,7 +332,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29947",
+              "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29944",
               "typeString": "contract IGlobalAddressesProvider"
             },
             "typeName": {
@@ -340,10 +340,10 @@
               "id": 3233,
               "name": "IGlobalAddressesProvider",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 29947,
+              "referencedDeclaration": 29944,
               "src": "611:24:5",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29947",
+                "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29944",
                 "typeString": "contract IGlobalAddressesProvider"
               }
             },
@@ -407,7 +407,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+              "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
               "typeString": "contract IPriceOracleGetter"
             },
             "typeName": {
@@ -415,10 +415,10 @@
               "id": 3239,
               "name": "IPriceOracleGetter",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 5113,
+              "referencedDeclaration": 5119,
               "src": "745:18:5",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                 "typeString": "contract IPriceOracleGetter"
               }
             },
@@ -568,7 +568,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 31814,
+                            "referencedDeclaration": 31811,
                             "src": "986:3:5",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -605,7 +605,7 @@
                               "referencedDeclaration": 3234,
                               "src": "1000:23:5",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29947",
+                                "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29944",
                                 "typeString": "contract IGlobalAddressesProvider"
                               }
                             },
@@ -616,7 +616,7 @@
                             "lValueRequested": false,
                             "memberName": "getLendingPoolManager",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 29765,
+                            "referencedDeclaration": 29762,
                             "src": "1000:45:5",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -677,10 +677,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        31817,
-                        31818
+                        31814,
+                        31815
                       ],
-                      "referencedDeclaration": 31818,
+                      "referencedDeclaration": 31815,
                       "src": "978:7:5",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -748,7 +748,7 @@
                       "referencedDeclaration": 3234,
                       "src": "1294:23:5",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29947",
+                        "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29944",
                         "typeString": "contract IGlobalAddressesProvider"
                       }
                     },
@@ -782,10 +782,10 @@
                         "name": "IGlobalAddressesProvider",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 29947,
+                        "referencedDeclaration": 29944,
                         "src": "1320:24:5",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_IGlobalAddressesProvider_$29947_$",
+                          "typeIdentifier": "t_type$_t_contract$_IGlobalAddressesProvider_$29944_$",
                           "typeString": "type(contract IGlobalAddressesProvider)"
                         }
                       },
@@ -799,13 +799,13 @@
                       "nodeType": "FunctionCall",
                       "src": "1320:50:5",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29947",
+                        "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29944",
                         "typeString": "contract IGlobalAddressesProvider"
                       }
                     },
                     "src": "1294:76:5",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29947",
+                      "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29944",
                       "typeString": "contract IGlobalAddressesProvider"
                     }
                   },
@@ -1902,10 +1902,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        31817,
-                        31818
+                        31814,
+                        31815
                       ],
-                      "referencedDeclaration": 31818,
+                      "referencedDeclaration": 31815,
                       "src": "2923:7:5",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -2504,7 +2504,7 @@
                       "referencedDeclaration": 3240,
                       "src": "3418:14:5",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                        "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                         "typeString": "contract IPriceOracleGetter"
                       }
                     },
@@ -2538,10 +2538,10 @@
                         "name": "IPriceOracleGetter",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5113,
+                        "referencedDeclaration": 5119,
                         "src": "3435:18:5",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_IPriceOracleGetter_$5113_$",
+                          "typeIdentifier": "t_type$_t_contract$_IPriceOracleGetter_$5119_$",
                           "typeString": "type(contract IPriceOracleGetter)"
                         }
                       },
@@ -2555,13 +2555,13 @@
                       "nodeType": "FunctionCall",
                       "src": "3435:35:5",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                        "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                         "typeString": "contract IPriceOracleGetter"
                       }
                     },
                     "src": "3418:52:5",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                      "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                       "typeString": "contract IPriceOracleGetter"
                     }
                   },
@@ -2800,10 +2800,10 @@
                           "name": "EthAddressLib",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 13996,
+                          "referencedDeclaration": 14052,
                           "src": "3871:13:5",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_EthAddressLib_$13996_$",
+                            "typeIdentifier": "t_type$_t_contract$_EthAddressLib_$14052_$",
                             "typeString": "type(library EthAddressLib)"
                           }
                         },
@@ -2814,7 +2814,7 @@
                         "lValueRequested": false,
                         "memberName": "ethAddress",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 13995,
+                        "referencedDeclaration": 14051,
                         "src": "3871:24:5",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_internal_pure$__$returns$_t_address_$",
@@ -3189,7 +3189,7 @@
                                               "referencedDeclaration": 3240,
                                               "src": "4456:14:5",
                                               "typeDescriptions": {
-                                                "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                                                "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                                                 "typeString": "contract IPriceOracleGetter"
                                               }
                                             }
@@ -3197,7 +3197,7 @@
                                           "expression": {
                                             "argumentTypes": [
                                               {
-                                                "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                                                "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                                                 "typeString": "contract IPriceOracleGetter"
                                               }
                                             ],
@@ -3205,10 +3205,10 @@
                                             "name": "IPriceOracleGetter",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
-                                            "referencedDeclaration": 5113,
+                                            "referencedDeclaration": 5119,
                                             "src": "4437:18:5",
                                             "typeDescriptions": {
-                                              "typeIdentifier": "t_type$_t_contract$_IPriceOracleGetter_$5113_$",
+                                              "typeIdentifier": "t_type$_t_contract$_IPriceOracleGetter_$5119_$",
                                               "typeString": "type(contract IPriceOracleGetter)"
                                             }
                                           },
@@ -3222,7 +3222,7 @@
                                           "nodeType": "FunctionCall",
                                           "src": "4437:34:5",
                                           "typeDescriptions": {
-                                            "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                                            "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                                             "typeString": "contract IPriceOracleGetter"
                                           }
                                         },
@@ -3233,7 +3233,7 @@
                                         "lValueRequested": false,
                                         "memberName": "getAssetPrice",
                                         "nodeType": "MemberAccess",
-                                        "referencedDeclaration": 5105,
+                                        "referencedDeclaration": 5111,
                                         "src": "4437:48:5",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_uint256_$",
@@ -3376,7 +3376,7 @@
                                         "referencedDeclaration": 3240,
                                         "src": "4136:14:5",
                                         "typeDescriptions": {
-                                          "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                                          "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                                           "typeString": "contract IPriceOracleGetter"
                                         }
                                       }
@@ -3384,7 +3384,7 @@
                                     "expression": {
                                       "argumentTypes": [
                                         {
-                                          "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                                          "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                                           "typeString": "contract IPriceOracleGetter"
                                         }
                                       ],
@@ -3392,10 +3392,10 @@
                                       "name": "IPriceOracleGetter",
                                       "nodeType": "Identifier",
                                       "overloadedDeclarations": [],
-                                      "referencedDeclaration": 5113,
+                                      "referencedDeclaration": 5119,
                                       "src": "4117:18:5",
                                       "typeDescriptions": {
-                                        "typeIdentifier": "t_type$_t_contract$_IPriceOracleGetter_$5113_$",
+                                        "typeIdentifier": "t_type$_t_contract$_IPriceOracleGetter_$5119_$",
                                         "typeString": "type(contract IPriceOracleGetter)"
                                       }
                                     },
@@ -3409,7 +3409,7 @@
                                     "nodeType": "FunctionCall",
                                     "src": "4117:34:5",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                                      "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                                       "typeString": "contract IPriceOracleGetter"
                                     }
                                   },
@@ -3420,7 +3420,7 @@
                                   "lValueRequested": false,
                                   "memberName": "getAssetPrice",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 5105,
+                                  "referencedDeclaration": 5111,
                                   "src": "4117:48:5",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_uint256_$",
@@ -3565,7 +3565,7 @@
             "scope": 3582,
             "src": "3714:828:5",
             "stateMutability": "view",
-            "superFunction": 5105,
+            "superFunction": 5111,
             "visibility": "public"
           },
           {
@@ -3868,7 +3868,7 @@
             "scope": 3582,
             "src": "4552:244:5",
             "stateMutability": "view",
-            "superFunction": 5112,
+            "superFunction": 5118,
             "visibility": "external"
           },
           {
@@ -4619,7 +4619,7 @@
                         "referencedDeclaration": 3240,
                         "src": "5731:14:5",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                          "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                           "typeString": "contract IPriceOracleGetter"
                         }
                       }
@@ -4627,7 +4627,7 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                          "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                           "typeString": "contract IPriceOracleGetter"
                         }
                       ],
@@ -4752,7 +4752,7 @@
         "id": 3227,
         "nodeType": "ImportDirective",
         "scope": 3583,
-        "sourceUnit": 29948,
+        "sourceUnit": 29945,
         "src": "25:58:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -4763,7 +4763,7 @@
         "id": 3228,
         "nodeType": "ImportDirective",
         "scope": 3583,
-        "sourceUnit": 5114,
+        "sourceUnit": 5120,
         "src": "84:46:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -4785,7 +4785,7 @@
         "id": 3230,
         "nodeType": "ImportDirective",
         "scope": 3583,
-        "sourceUnit": 13997,
+        "sourceUnit": 14053,
         "src": "184:40:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -4799,10 +4799,10 @@
               "id": 3231,
               "name": "IPriceOracleGetter",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 5113,
+              "referencedDeclaration": 5119,
               "src": "585:18:5",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                 "typeString": "contract IPriceOracleGetter"
               }
             },
@@ -4812,7 +4812,7 @@
           }
         ],
         "contractDependencies": [
-          5113
+          5119
         ],
         "contractKind": "contract",
         "documentation": "@title ChainlinkProxyPriceProvider\n @author Aave, SIGH Finance\n @notice Proxy smart contract to get the price of an asset from a price source, with Chainlink Aggregator smart contracts as primary option\n - If the returned price by a Chainlink aggregator is <= 0, the call is forwarded to a fallbackOracle",
@@ -4820,7 +4820,7 @@
         "id": 3582,
         "linearizedBaseContracts": [
           3582,
-          5113
+          5119
         ],
         "name": "ChainlinkProxyPriceProvider",
         "nodeType": "ContractDefinition",
@@ -4835,7 +4835,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29947",
+              "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29944",
               "typeString": "contract IGlobalAddressesProvider"
             },
             "typeName": {
@@ -4843,10 +4843,10 @@
               "id": 3233,
               "name": "IGlobalAddressesProvider",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 29947,
+              "referencedDeclaration": 29944,
               "src": "611:24:5",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29947",
+                "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29944",
                 "typeString": "contract IGlobalAddressesProvider"
               }
             },
@@ -4910,7 +4910,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+              "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
               "typeString": "contract IPriceOracleGetter"
             },
             "typeName": {
@@ -4918,10 +4918,10 @@
               "id": 3239,
               "name": "IPriceOracleGetter",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 5113,
+              "referencedDeclaration": 5119,
               "src": "745:18:5",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                 "typeString": "contract IPriceOracleGetter"
               }
             },
@@ -5071,7 +5071,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 31814,
+                            "referencedDeclaration": 31811,
                             "src": "986:3:5",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -5108,7 +5108,7 @@
                               "referencedDeclaration": 3234,
                               "src": "1000:23:5",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29947",
+                                "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29944",
                                 "typeString": "contract IGlobalAddressesProvider"
                               }
                             },
@@ -5119,7 +5119,7 @@
                             "lValueRequested": false,
                             "memberName": "getLendingPoolManager",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 29765,
+                            "referencedDeclaration": 29762,
                             "src": "1000:45:5",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -5180,10 +5180,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        31817,
-                        31818
+                        31814,
+                        31815
                       ],
-                      "referencedDeclaration": 31818,
+                      "referencedDeclaration": 31815,
                       "src": "978:7:5",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -5251,7 +5251,7 @@
                       "referencedDeclaration": 3234,
                       "src": "1294:23:5",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29947",
+                        "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29944",
                         "typeString": "contract IGlobalAddressesProvider"
                       }
                     },
@@ -5285,10 +5285,10 @@
                         "name": "IGlobalAddressesProvider",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 29947,
+                        "referencedDeclaration": 29944,
                         "src": "1320:24:5",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_IGlobalAddressesProvider_$29947_$",
+                          "typeIdentifier": "t_type$_t_contract$_IGlobalAddressesProvider_$29944_$",
                           "typeString": "type(contract IGlobalAddressesProvider)"
                         }
                       },
@@ -5302,13 +5302,13 @@
                       "nodeType": "FunctionCall",
                       "src": "1320:50:5",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29947",
+                        "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29944",
                         "typeString": "contract IGlobalAddressesProvider"
                       }
                     },
                     "src": "1294:76:5",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29947",
+                      "typeIdentifier": "t_contract$_IGlobalAddressesProvider_$29944",
                       "typeString": "contract IGlobalAddressesProvider"
                     }
                   },
@@ -6405,10 +6405,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        31817,
-                        31818
+                        31814,
+                        31815
                       ],
-                      "referencedDeclaration": 31818,
+                      "referencedDeclaration": 31815,
                       "src": "2923:7:5",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -7007,7 +7007,7 @@
                       "referencedDeclaration": 3240,
                       "src": "3418:14:5",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                        "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                         "typeString": "contract IPriceOracleGetter"
                       }
                     },
@@ -7041,10 +7041,10 @@
                         "name": "IPriceOracleGetter",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5113,
+                        "referencedDeclaration": 5119,
                         "src": "3435:18:5",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_IPriceOracleGetter_$5113_$",
+                          "typeIdentifier": "t_type$_t_contract$_IPriceOracleGetter_$5119_$",
                           "typeString": "type(contract IPriceOracleGetter)"
                         }
                       },
@@ -7058,13 +7058,13 @@
                       "nodeType": "FunctionCall",
                       "src": "3435:35:5",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                        "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                         "typeString": "contract IPriceOracleGetter"
                       }
                     },
                     "src": "3418:52:5",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                      "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                       "typeString": "contract IPriceOracleGetter"
                     }
                   },
@@ -7303,10 +7303,10 @@
                           "name": "EthAddressLib",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 13996,
+                          "referencedDeclaration": 14052,
                           "src": "3871:13:5",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_EthAddressLib_$13996_$",
+                            "typeIdentifier": "t_type$_t_contract$_EthAddressLib_$14052_$",
                             "typeString": "type(library EthAddressLib)"
                           }
                         },
@@ -7317,7 +7317,7 @@
                         "lValueRequested": false,
                         "memberName": "ethAddress",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 13995,
+                        "referencedDeclaration": 14051,
                         "src": "3871:24:5",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_internal_pure$__$returns$_t_address_$",
@@ -7692,7 +7692,7 @@
                                               "referencedDeclaration": 3240,
                                               "src": "4456:14:5",
                                               "typeDescriptions": {
-                                                "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                                                "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                                                 "typeString": "contract IPriceOracleGetter"
                                               }
                                             }
@@ -7700,7 +7700,7 @@
                                           "expression": {
                                             "argumentTypes": [
                                               {
-                                                "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                                                "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                                                 "typeString": "contract IPriceOracleGetter"
                                               }
                                             ],
@@ -7708,10 +7708,10 @@
                                             "name": "IPriceOracleGetter",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
-                                            "referencedDeclaration": 5113,
+                                            "referencedDeclaration": 5119,
                                             "src": "4437:18:5",
                                             "typeDescriptions": {
-                                              "typeIdentifier": "t_type$_t_contract$_IPriceOracleGetter_$5113_$",
+                                              "typeIdentifier": "t_type$_t_contract$_IPriceOracleGetter_$5119_$",
                                               "typeString": "type(contract IPriceOracleGetter)"
                                             }
                                           },
@@ -7725,7 +7725,7 @@
                                           "nodeType": "FunctionCall",
                                           "src": "4437:34:5",
                                           "typeDescriptions": {
-                                            "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                                            "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                                             "typeString": "contract IPriceOracleGetter"
                                           }
                                         },
@@ -7736,7 +7736,7 @@
                                         "lValueRequested": false,
                                         "memberName": "getAssetPrice",
                                         "nodeType": "MemberAccess",
-                                        "referencedDeclaration": 5105,
+                                        "referencedDeclaration": 5111,
                                         "src": "4437:48:5",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_uint256_$",
@@ -7879,7 +7879,7 @@
                                         "referencedDeclaration": 3240,
                                         "src": "4136:14:5",
                                         "typeDescriptions": {
-                                          "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                                          "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                                           "typeString": "contract IPriceOracleGetter"
                                         }
                                       }
@@ -7887,7 +7887,7 @@
                                     "expression": {
                                       "argumentTypes": [
                                         {
-                                          "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                                          "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                                           "typeString": "contract IPriceOracleGetter"
                                         }
                                       ],
@@ -7895,10 +7895,10 @@
                                       "name": "IPriceOracleGetter",
                                       "nodeType": "Identifier",
                                       "overloadedDeclarations": [],
-                                      "referencedDeclaration": 5113,
+                                      "referencedDeclaration": 5119,
                                       "src": "4117:18:5",
                                       "typeDescriptions": {
-                                        "typeIdentifier": "t_type$_t_contract$_IPriceOracleGetter_$5113_$",
+                                        "typeIdentifier": "t_type$_t_contract$_IPriceOracleGetter_$5119_$",
                                         "typeString": "type(contract IPriceOracleGetter)"
                                       }
                                     },
@@ -7912,7 +7912,7 @@
                                     "nodeType": "FunctionCall",
                                     "src": "4117:34:5",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                                      "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                                       "typeString": "contract IPriceOracleGetter"
                                     }
                                   },
@@ -7923,7 +7923,7 @@
                                   "lValueRequested": false,
                                   "memberName": "getAssetPrice",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 5105,
+                                  "referencedDeclaration": 5111,
                                   "src": "4117:48:5",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_uint256_$",
@@ -8068,7 +8068,7 @@
             "scope": 3582,
             "src": "3714:828:5",
             "stateMutability": "view",
-            "superFunction": 5105,
+            "superFunction": 5111,
             "visibility": "public"
           },
           {
@@ -8371,7 +8371,7 @@
             "scope": 3582,
             "src": "4552:244:5",
             "stateMutability": "view",
-            "superFunction": 5112,
+            "superFunction": 5118,
             "visibility": "external"
           },
           {
@@ -9122,7 +9122,7 @@
                         "referencedDeclaration": 3240,
                         "src": "5731:14:5",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                          "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                           "typeString": "contract IPriceOracleGetter"
                         }
                       }
@@ -9130,7 +9130,7 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_IPriceOracleGetter_$5113",
+                          "typeIdentifier": "t_contract$_IPriceOracleGetter_$5119",
                           "typeString": "contract IPriceOracleGetter"
                         }
                       ],
@@ -9234,7 +9234,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-11-16T00:51:24.260Z",
+  "updatedAt": "2020-11-25T13:25:43.123Z",
   "devdoc": {
     "author": "Aave, SIGH Finance",
     "methods": {

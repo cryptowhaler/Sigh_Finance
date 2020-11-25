@@ -101,7 +101,7 @@
         "id": 3585,
         "nodeType": "ImportDirective",
         "scope": 3655,
-        "sourceUnit": 30538,
+        "sourceUnit": 30535,
         "src": "26:70:6",
         "symbolAliases": [],
         "unitAlias": ""
@@ -123,7 +123,7 @@
         "id": 3587,
         "nodeType": "ImportDirective",
         "scope": 3655,
-        "sourceUnit": 5030,
+        "sourceUnit": 5036,
         "src": "125:58:6",
         "symbolAliases": [],
         "unitAlias": ""
@@ -137,10 +137,10 @@
               "id": 3588,
               "name": "ILendingPoolParametersProvider",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 5029,
+              "referencedDeclaration": 5035,
               "src": "423:30:6",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ILendingPoolParametersProvider_$5029",
+                "typeIdentifier": "t_contract$_ILendingPoolParametersProvider_$5035",
                 "typeString": "contract ILendingPoolParametersProvider"
               }
             },
@@ -155,10 +155,10 @@
               "id": 3590,
               "name": "VersionedInitializable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 30537,
+              "referencedDeclaration": 30534,
               "src": "455:22:6",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_VersionedInitializable_$30537",
+                "typeIdentifier": "t_contract$_VersionedInitializable_$30534",
                 "typeString": "contract VersionedInitializable"
               }
             },
@@ -168,8 +168,8 @@
           }
         ],
         "contractDependencies": [
-          5029,
-          30537
+          5035,
+          30534
         ],
         "contractKind": "contract",
         "documentation": "@title LendingPoolParametersProvider (Taken from Aave, Modified by SIGH Finance)\n@author Aave, SIGH Finance\n@notice stores the configuration parameters of the Lending Pool contract*",
@@ -177,8 +177,8 @@
         "id": 3654,
         "linearizedBaseContracts": [
           3654,
-          30537,
-          5029
+          30534,
+          5035
         ],
         "name": "LendingPoolParametersProvider",
         "nodeType": "ContractDefinition",
@@ -528,7 +528,7 @@
             "scope": 3654,
             "src": "909:100:6",
             "stateMutability": "pure",
-            "superFunction": 30518,
+            "superFunction": 30515,
             "visibility": "internal"
           },
           {
@@ -552,7 +552,7 @@
                   "name": "initializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 30513,
+                  "referencedDeclaration": 30510,
                   "src": "1247:11:6",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -687,7 +687,7 @@
             "scope": 3654,
             "src": "1471:137:6",
             "stateMutability": "pure",
-            "superFunction": 5016,
+            "superFunction": 5022,
             "visibility": "external"
           },
           {
@@ -766,7 +766,7 @@
             "scope": 3654,
             "src": "1772:118:6",
             "stateMutability": "pure",
-            "superFunction": 5021,
+            "superFunction": 5027,
             "visibility": "external"
           },
           {
@@ -901,7 +901,7 @@
             "scope": 3654,
             "src": "2005:144:6",
             "stateMutability": "pure",
-            "superFunction": 5028,
+            "superFunction": 5034,
             "visibility": "external"
           }
         ],
@@ -938,7 +938,7 @@
         "id": 3585,
         "nodeType": "ImportDirective",
         "scope": 3655,
-        "sourceUnit": 30538,
+        "sourceUnit": 30535,
         "src": "26:70:6",
         "symbolAliases": [],
         "unitAlias": ""
@@ -960,7 +960,7 @@
         "id": 3587,
         "nodeType": "ImportDirective",
         "scope": 3655,
-        "sourceUnit": 5030,
+        "sourceUnit": 5036,
         "src": "125:58:6",
         "symbolAliases": [],
         "unitAlias": ""
@@ -974,10 +974,10 @@
               "id": 3588,
               "name": "ILendingPoolParametersProvider",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 5029,
+              "referencedDeclaration": 5035,
               "src": "423:30:6",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ILendingPoolParametersProvider_$5029",
+                "typeIdentifier": "t_contract$_ILendingPoolParametersProvider_$5035",
                 "typeString": "contract ILendingPoolParametersProvider"
               }
             },
@@ -992,10 +992,10 @@
               "id": 3590,
               "name": "VersionedInitializable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 30537,
+              "referencedDeclaration": 30534,
               "src": "455:22:6",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_VersionedInitializable_$30537",
+                "typeIdentifier": "t_contract$_VersionedInitializable_$30534",
                 "typeString": "contract VersionedInitializable"
               }
             },
@@ -1005,8 +1005,8 @@
           }
         ],
         "contractDependencies": [
-          5029,
-          30537
+          5035,
+          30534
         ],
         "contractKind": "contract",
         "documentation": "@title LendingPoolParametersProvider (Taken from Aave, Modified by SIGH Finance)\n@author Aave, SIGH Finance\n@notice stores the configuration parameters of the Lending Pool contract*",
@@ -1014,8 +1014,8 @@
         "id": 3654,
         "linearizedBaseContracts": [
           3654,
-          30537,
-          5029
+          30534,
+          5035
         ],
         "name": "LendingPoolParametersProvider",
         "nodeType": "ContractDefinition",
@@ -1365,7 +1365,7 @@
             "scope": 3654,
             "src": "909:100:6",
             "stateMutability": "pure",
-            "superFunction": 30518,
+            "superFunction": 30515,
             "visibility": "internal"
           },
           {
@@ -1389,7 +1389,7 @@
                   "name": "initializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 30513,
+                  "referencedDeclaration": 30510,
                   "src": "1247:11:6",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -1524,7 +1524,7 @@
             "scope": 3654,
             "src": "1471:137:6",
             "stateMutability": "pure",
-            "superFunction": 5016,
+            "superFunction": 5022,
             "visibility": "external"
           },
           {
@@ -1603,7 +1603,7 @@
             "scope": 3654,
             "src": "1772:118:6",
             "stateMutability": "pure",
-            "superFunction": 5021,
+            "superFunction": 5027,
             "visibility": "external"
           },
           {
@@ -1738,7 +1738,7 @@
             "scope": 3654,
             "src": "2005:144:6",
             "stateMutability": "pure",
-            "superFunction": 5028,
+            "superFunction": 5034,
             "visibility": "external"
           }
         ],
@@ -1754,7 +1754,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-11-16T00:51:24.270Z",
+  "updatedAt": "2020-11-25T13:25:43.137Z",
   "devdoc": {
     "author": "Aave, SIGH Finance",
     "methods": {

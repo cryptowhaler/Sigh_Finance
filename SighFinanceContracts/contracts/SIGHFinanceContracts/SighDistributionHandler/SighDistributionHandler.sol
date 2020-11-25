@@ -687,7 +687,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
                 ); 
     }
 
-    function getInstrumentSighMechansimStates(address instrument) external view returns (uint suppliers_speed, uint borroweers_speed, uint staking_speed, uint _24HrVolatility, string memory side, uint percentTotalVolatility ) {
+    function getInstrumentSighMechansimStates(address instrument) external view returns (uint suppliers_speed, uint borrowers_speed, uint staking_speed, uint _24HrVolatility, string memory side, uint percentTotalVolatility ) {
         return (Instrument_Sigh_Mechansim_States[instrument].suppliers_Speed, 
                 Instrument_Sigh_Mechansim_States[instrument].borrowers_Speed , 
                 Instrument_Sigh_Mechansim_States[instrument].staking_Speed,

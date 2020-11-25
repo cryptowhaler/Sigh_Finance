@@ -122,7 +122,7 @@
         "id": 3690,
         "nodeType": "ImportDirective",
         "scope": 3751,
-        "sourceUnit": 30538,
+        "sourceUnit": 30535,
         "src": "25:70:8",
         "symbolAliases": [],
         "unitAlias": ""
@@ -144,7 +144,7 @@
         "id": 3692,
         "nodeType": "ImportDirective",
         "scope": 3751,
-        "sourceUnit": 14241,
+        "sourceUnit": 14297,
         "src": "137:37:8",
         "symbolAliases": [],
         "unitAlias": ""
@@ -176,10 +176,10 @@
               "id": 3695,
               "name": "VersionedInitializable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 30537,
+              "referencedDeclaration": 30534,
               "src": "352:22:8",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_VersionedInitializable_$30537",
+                "typeIdentifier": "t_contract$_VersionedInitializable_$30534",
                 "typeString": "contract VersionedInitializable"
               }
             },
@@ -190,7 +190,7 @@
         ],
         "contractDependencies": [
           3972,
-          30537
+          30534
         ],
         "contractKind": "contract",
         "documentation": "@title FeeProvider contract\n@notice Implements calculation for the fees applied by the protocol\n@author Aave, SIGH Finance*",
@@ -198,7 +198,7 @@
         "id": 3750,
         "linearizedBaseContracts": [
           3750,
-          30537,
+          30534,
           3972
         ],
         "name": "FeeProvider",
@@ -211,10 +211,10 @@
               "id": 3697,
               "name": "WadRayMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 14240,
+              "referencedDeclaration": 14296,
               "src": "388:10:8",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_WadRayMath_$14240",
+                "typeIdentifier": "t_contract$_WadRayMath_$14296",
                 "typeString": "library WadRayMath"
               }
             },
@@ -376,7 +376,7 @@
             "scope": 3750,
             "src": "695:99:8",
             "stateMutability": "pure",
-            "superFunction": 30518,
+            "superFunction": 30515,
             "visibility": "internal"
           },
           {
@@ -489,7 +489,7 @@
                   "name": "initializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 30513,
+                  "referencedDeclaration": 30510,
                   "src": "1013:11:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -599,7 +599,7 @@
                       "lValueRequested": false,
                       "memberName": "wadMul",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 14074,
+                      "referencedDeclaration": 14130,
                       "src": "2276:14:8",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -846,7 +846,7 @@
         "id": 3690,
         "nodeType": "ImportDirective",
         "scope": 3751,
-        "sourceUnit": 30538,
+        "sourceUnit": 30535,
         "src": "25:70:8",
         "symbolAliases": [],
         "unitAlias": ""
@@ -868,7 +868,7 @@
         "id": 3692,
         "nodeType": "ImportDirective",
         "scope": 3751,
-        "sourceUnit": 14241,
+        "sourceUnit": 14297,
         "src": "137:37:8",
         "symbolAliases": [],
         "unitAlias": ""
@@ -900,10 +900,10 @@
               "id": 3695,
               "name": "VersionedInitializable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 30537,
+              "referencedDeclaration": 30534,
               "src": "352:22:8",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_VersionedInitializable_$30537",
+                "typeIdentifier": "t_contract$_VersionedInitializable_$30534",
                 "typeString": "contract VersionedInitializable"
               }
             },
@@ -914,7 +914,7 @@
         ],
         "contractDependencies": [
           3972,
-          30537
+          30534
         ],
         "contractKind": "contract",
         "documentation": "@title FeeProvider contract\n@notice Implements calculation for the fees applied by the protocol\n@author Aave, SIGH Finance*",
@@ -922,7 +922,7 @@
         "id": 3750,
         "linearizedBaseContracts": [
           3750,
-          30537,
+          30534,
           3972
         ],
         "name": "FeeProvider",
@@ -935,10 +935,10 @@
               "id": 3697,
               "name": "WadRayMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 14240,
+              "referencedDeclaration": 14296,
               "src": "388:10:8",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_WadRayMath_$14240",
+                "typeIdentifier": "t_contract$_WadRayMath_$14296",
                 "typeString": "library WadRayMath"
               }
             },
@@ -1100,7 +1100,7 @@
             "scope": 3750,
             "src": "695:99:8",
             "stateMutability": "pure",
-            "superFunction": 30518,
+            "superFunction": 30515,
             "visibility": "internal"
           },
           {
@@ -1213,7 +1213,7 @@
                   "name": "initializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 30513,
+                  "referencedDeclaration": 30510,
                   "src": "1013:11:8",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -1323,7 +1323,7 @@
                       "lValueRequested": false,
                       "memberName": "wadMul",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 14074,
+                      "referencedDeclaration": 14130,
                       "src": "2276:14:8",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -1549,7 +1549,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-11-16T00:51:24.273Z",
+  "updatedAt": "2020-11-25T13:25:43.153Z",
   "devdoc": {
     "author": "Aave, SIGH Finance*",
     "methods": {

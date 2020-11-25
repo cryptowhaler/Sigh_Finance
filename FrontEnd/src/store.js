@@ -877,15 +877,14 @@ const store = new Vuex.Store({
       instrumentSighState.isSIGHMechanismActivated = curInstrumentSIGHState.isSIGHMechanismActivated;
       instrumentSighState.borrowindex = curInstrumentSIGHState.borrowindex;
       instrumentSighState.supplyindex = curInstrumentSIGHState.supplyindex;
-      curInstrumentSIGHState = await store.dispatch("SIGHDistributionHandler_getInstrumentSighMechansimStates",{instrument_:instrumentAddress });           
+      curInstrumentSIGHState = await store.dispatch("SIGHDistributionHandler_getInstrumentSighMechansimStates",{instrument_:instrumentAddress });  
       instrumentSighState.percentageTotalVolatility = curInstrumentSIGHState.percentTotalVolatility;
       instrumentSighState.losses_24_hrs = curInstrumentSIGHState._24HrVolatility;
       instrumentSighState.side = curInstrumentSIGHState.side;
-      instrumentSighState.suppliers_Speed = curInstrumentSIGHState.suppliers_Speed;
-      instrumentSighState.borrowers_Speed = curInstrumentSIGHState.borrowers_Speed;
-      instrumentSighState.staking_Speed = curInstrumentSIGHState.staking_Speed;
-      instrumentSighState.symbol = instrumentState.symbol;
-      
+      instrumentSighState.suppliers_Speed = curInstrumentSIGHState.suppliers_speed;
+      instrumentSighState.borrowers_Speed = curInstrumentSIGHState.borroweers_speed;
+      instrumentSighState.staking_Speed = curInstrumentSIGHState.staking_speed;
+      instrumentSighState.symbol = instrumentState.symbol;      
     }
     // console.log(instrumentState);
     // console.log(instrumentConfiguration);
