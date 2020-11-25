@@ -122,25 +122,6 @@
 				"inputs": [
 					{
 						"indexed": false,
-						"internalType": "uint32",
-						"name": "initializationCounter",
-						"type": "uint32"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint224",
-						"name": "curClock",
-						"type": "uint224"
-					}
-				],
-				"name": "InstrumentCounterUpdated",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
 						"internalType": "address",
 						"name": "_instrument",
 						"type": "address"
@@ -340,6 +321,43 @@
 					{
 						"indexed": false,
 						"internalType": "address",
+						"name": "instrument",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "sighAccured",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "ratioMantissa",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newIndexMantissa",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNum",
+						"type": "uint256"
+					}
+				],
+				"name": "SIGHBorrowIndexUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
 						"name": "addressesProvider",
 						"type": "address"
 					},
@@ -363,6 +381,43 @@
 					}
 				],
 				"name": "SIGHDistributionHandlerInitialized",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "instrument",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "sighAccured",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "ratioMantissa",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newIndexMantissa",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNum",
+						"type": "uint256"
+					}
+				],
+				"name": "SIGHSupplyIndexUpdated",
 				"type": "event"
 			},
 			{
@@ -464,13 +519,13 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "blockNumbersForPriceSnapshots",
+						"name": "deltaBlocks_",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "deltaBlocks_",
+						"name": "blockNumberForPriceSnapshots",
 						"type": "uint256"
 					},
 					{
@@ -570,19 +625,19 @@
 					{
 						"indexed": false,
 						"internalType": "address",
-						"name": "market",
+						"name": "_Instrument",
 						"type": "address"
 					},
 					{
 						"indexed": false,
-						"internalType": "uint256",
-						"name": "supplierLoss",
-						"type": "uint256"
+						"internalType": "string",
+						"name": "side",
+						"type": "string"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "borrowerLoss",
+						"name": "_24HrVolatility",
 						"type": "uint256"
 					},
 					{
@@ -601,19 +656,13 @@
 					{
 						"indexed": false,
 						"internalType": "address",
-						"name": "market",
+						"name": "_Instrument",
 						"type": "address"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
 						"name": "maxSpeed",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "lossRatio",
 						"type": "uint256"
 					},
 					{
@@ -627,219 +676,15 @@
 						"internalType": "uint256",
 						"name": "borrowerSpeed",
 						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "percentTotalVolatility",
+						"type": "uint256"
 					}
 				],
 				"name": "refreshingSighSpeeds_2",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "market",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "speed",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "currentIndex",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "prevBlock",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "curBlock",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "deltaBlocks",
-						"type": "uint256"
-					}
-				],
-				"name": "updateSIGHBorrowIndex_test1",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "market",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "borrowAmount",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "sigh_Accrued",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "ratio",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "index",
-						"type": "uint256"
-					}
-				],
-				"name": "updateSIGHBorrowIndex_test2",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "market",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "newIndex",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "blockNum",
-						"type": "uint256"
-					}
-				],
-				"name": "updateSIGHBorrowIndex_test3",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "market",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "speed",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "currentIndex",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "prevBlock",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "curBlock",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "deltaBlocks",
-						"type": "uint256"
-					}
-				],
-				"name": "updateSIGHSupplyIndex_test1",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "market",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "supplyTokens",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "sigh_Accrued",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "ratio",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "index",
-						"type": "uint256"
-					}
-				],
-				"name": "updateSIGHSupplyIndex_test2",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "market",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "newIndex",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "blockNum",
-						"type": "uint256"
-					}
-				],
-				"name": "updateSIGHSupplyIndex_test3",
 				"type": "event"
 			},
 			{
@@ -1209,7 +1054,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_24HrLosses",
+						"name": "_24HrVolatility",
 						"type": "uint256"
 					},
 					{
@@ -1219,7 +1064,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "percentTotalLoss",
+						"name": "percentTotalVolatility",
 						"type": "uint256"
 					}
 				],
@@ -1771,10 +1616,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighDistributionHandler/SighDistributionHandler.sol": {
-			"keccak256": "0x6add36e1092f84520d54c478125a2eceb1de76ba992fd19b518d36850de4e1f2",
+			"keccak256": "0x6b31c22f7df003b4ae4b0db0c38a4b079d7725a0521869bddfb3bc1a1d295d47",
 			"urls": [
-				"bzz-raw://ccc0cb7bdb5de0a0a7a59c01ff7b49c22a1731eec951cddada7c1c62d50187f5",
-				"dweb:/ipfs/Qmc4yDbjSqpkCk2nMioqiHPYd9rkSRnQWfeWDeGvPqHdJD"
+				"bzz-raw://c5c4fab47ff6f71b24881003495132626208b4781d906a885c715c21d5bf14cb",
+				"dweb:/ipfs/QmZ38frkafzLQojaD9WPYnL36Lg1Rx13ymn7BfQrSYAHo6"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

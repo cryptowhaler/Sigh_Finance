@@ -67,16 +67,16 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
     uint private SIGHSpeed;
 
-    struct Instrument_Sigh_Speed {
+    struct Instrument_Sigh_Mechansim_State {
         uint256 suppliers_Speed;
         uint256 borrowers_Speed;
         uint256 staking_Speed;
-        uint256 _24HrLosses;
+        uint256 _24HrVolatility;
         string side;
-        uint256 percentTotalLoss;
+        uint256 percentTotalVolatility;
     }
 
-    mapping(address => Instrument_Sigh_Speed) private Instrument_Sigh_Speeds;
+    mapping(address => Instrument_Sigh_Mechansim_State) private Instrument_Sigh_Mechansim_States;
     uint256 private deltaBlocksForSpeed = 1; // 60 * 60 
     uint256 private prevSpeedRefreshBlock;
 
@@ -88,9 +88,9 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     event InstrumentAdded (address instrumentAddress_, string name, uint decimals , address iTokenAddress, uint blockNumber); 
     event InstrumentRemoved(address _instrument, address _iTokenAddress, string name, uint blockNumber); 
 
-    event InstrumentSIGHed(address instrumentAddress_, string name, bool isSighed, uint blockNumber);    /// @notice Emitted when market isCoverDripsMechanismActivated status is changed
+    event InstrumentSIGHed(address instrumentAddress_, string name, bool isSighed, uint blockNumber);    /// Emitted when market isSIGHMechanismActivated status is changed
 
-    event NewSIGHSpeed(uint oldSIGHSpeed, uint newSIGHSpeed, uint blockNumber_);     /// @notice Emitted when SIGH rate is changed
+    event NewSIGHSpeed(uint oldSIGHSpeed, uint newSIGHSpeed, uint blockNumber_);     /// Emitted when SIGH speed is changed
     event StakingSpeedUpdated(address instrumentAddress_ , uint prevStakingSpeed, uint new_staking_Speed, uint blockNumber );
     event SuppliersSIGHSpeedUpdated(address instrument, uint prevSpeed, uint newSpeed, uint blockNumber);  /// @notice Emitted when a new SIGH speed is calculated for an Instrument
     event BorrowersSIGHSpeedUpdated(address instrument, uint prevSpeed, uint newSpeed, uint blockNumber);  /// @notice Emitted when a new SIGH speed is calculated for an Instrument
@@ -134,7 +134,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
     event SIGHDistributionHandlerInitialized(address addressesProvider, address Sigh_Address, address priceOracle, address lendingPoolCore);
 
-    uint256 constant private SIGH_DISTRIBUTION_REVISION = 0x2;
+    uint256 constant private SIGH_DISTRIBUTION_REVISION = 0x3;
 
     function getRevision() internal pure returns(uint256) {
         return SIGH_DISTRIBUTION_REVISION;
@@ -188,12 +188,12 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
                                                                 borrowlastupdatedblock : getBlockNumber()
                                                                 } );
         // STATE UPDATED : INITITALIZE INSTRUMENT SPEEDS
-        Instrument_Sigh_Speeds[_instrument] = Instrument_Sigh_Speed({ suppliers_Speed: uint(0),
+        Instrument_Sigh_Mechansim_States[_instrument] = Instrument_Sigh_Mechansim_State({ suppliers_Speed: uint(0),
                                                                        borrowers_Speed: uint(0),
                                                                        staking_Speed: uint(0),
-                                                                       _24HrLosses: uint(0),
+                                                                       _24HrVolatility: uint(0),
                                                                        side: 'null' ,
-                                                                       percentTotalLoss: uint(0)
+                                                                       percentTotalVolatility: uint(0)
                                                                     } );
 
         // STATE UPDATED : INITIALIZE PRICECYCLES
@@ -229,7 +229,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         
         string memory name = financial_instruments[_instrument].name;
         delete financial_instruments[_instrument];
-        delete Instrument_Sigh_Speeds[_instrument];
+        delete Instrument_Sigh_Mechansim_States[_instrument];
         delete instrumentPriceCycles[_instrument];
 
         emit InstrumentRemoved(_instrument, _iTokenAddress, name, block.number); 
@@ -305,10 +305,10 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     function updateStakingSpeedForAnInstrument(address instrument_, uint newStakingSpeed) external onlySighFinanceConfigurator returns (bool) {     // 
         require(financial_instruments[instrument_].isListed ,"Instrument not supported.");
         
-        uint prevStakingSpeed = Instrument_Sigh_Speeds[instrument_].staking_Speed;
-        Instrument_Sigh_Speeds[instrument_].staking_Speed = newStakingSpeed;                    // STATE UPDATED
+        uint prevStakingSpeed = Instrument_Sigh_Mechansim_States[instrument_].staking_Speed;
+        Instrument_Sigh_Mechansim_States[instrument_].staking_Speed = newStakingSpeed;                    // STATE UPDATED
 
-        emit StakingSpeedUpdated(instrument_, prevStakingSpeed, Instrument_Sigh_Speeds[instrument_].staking_Speed, getBlockNumber() );
+        emit StakingSpeedUpdated(instrument_, prevStakingSpeed, Instrument_Sigh_Mechansim_States[instrument_].staking_Speed, getBlockNumber() );
         return true;
         
     }
@@ -367,13 +367,11 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         return false;
     }
 
-
-    event InstrumentCounterUpdated( uint32 initializationCounter, uint224 curClock);
-    event refreshingSighSpeeds_1( address market,uint supplierLoss, uint borrowerLoss , uint totalLosses   );
-    event refreshingSighSpeeds_2( address market, uint maxSpeed, uint lossRatio, uint supplierSpeed, uint borrowerSpeed );
+    event refreshingSighSpeeds_1( address _Instrument, string side , uint _24HrVolatility , uint totalLosses   );
+    event refreshingSighSpeeds_2( address _Instrument, uint maxSpeed, uint supplierSpeed, uint borrowerSpeed, uint percentTotalVolatility );
 
     event maxSpeedCheck(uint SIGH);
-    event blockNumberForSnapshotUpdated(uint224 curClock, uint blockNumbersForPriceSnapshots, uint deltaBlocks_,uint blocknumber );    
+    event blockNumberForSnapshotUpdated(uint224 curClock, uint deltaBlocks_, uint blockNumberForPriceSnapshots, uint blocknumber );    
     event MaxSpeedUsedWhenRefreshingPriceSnapshots(uint SIGHSpeed, uint sigh_speed_used, uint sighPrice, uint max_valueDistributionLimit, uint totalLossesPerBlockAverage, uint profitPotentialPerBlock, uint lossesPlusProfitPotentialPerBlock  );
     /**
      * @notice Recalculate and update SIGH speeds for all Supported SIGH markets
@@ -389,8 +387,8 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     function refreshSIGHSpeedsInternal() internal {
         address[] memory all_Instruments_ = all_Instruments;
         uint deltaBlocks_ = sub_(block.number , blockNumbersForPriceSnapshots_[curClock], "DeltaBlocks resulted in Underflow");       // Delta Blocks over past 24 hours
+        emit blockNumberForSnapshotUpdated(curClock , deltaBlocks_,  blockNumbersForPriceSnapshots_[curClock], block.number );
         blockNumbersForPriceSnapshots_[curClock] = block.number;                                                                    // STATE UPDATE : Block Number for the priceSnapshot Updated
-        emit blockNumberForSnapshotUpdated(curClock , blockNumbersForPriceSnapshots_[curClock], deltaBlocks_, block.number );
 
         require(updatedInstrumentIndexesInternal(), "Updating Instrument Indexes Failed");       //  accure the indexes 
 
@@ -410,48 +408,44 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
             address _currentInstrument = all_Instruments_[i];       // Current Instrument
             
-            Exp memory previousPrice = Exp({ mantissa: instrumentPriceCycles[_currentInstrument].recordedPriceSnapshot[curClock] });   // 24hr old price snapshot
+            Exp memory previousPrice = Exp({ mantissa: instrumentPriceCycles[_currentInstrument].recordedPriceSnapshot[curClock] });            // 24hr old price snapshot
             Exp memory currentPrice = Exp({ mantissa: oracle.getAssetPrice( _currentInstrument ) });                                            // current price from the oracle
             require ( currentPrice.mantissa > 0, "refreshSIGHSpeedsInternal : Oracle returned Invalid Price" );
-            instrumentPriceCycles[_currentInstrument].recordedPriceSnapshot[curClock] =  uint256(currentPrice.mantissa); //  STATE UPDATED : PRICE SNAPSHOT TAKEN         , 'Assigning current price failed. Price overflows uint224.' );
+            instrumentPriceCycles[_currentInstrument].recordedPriceSnapshot[curClock] =  uint256(currentPrice.mantissa); //  STATE UPDATED : PRICE SNAPSHOT TAKEN        
             emit PriceSnapped(_currentInstrument, previousPrice.mantissa, instrumentPriceCycles[_currentInstrument].recordedPriceSnapshot[curClock], curClock );
 
             if ( !financial_instruments[_currentInstrument].isSIGHMechanismActivated || instrumentPriceCycles[_currentInstrument].initializationCounter != uint32(24) ) {     // if LOSS MINIMIZNG MECHANISM IS NOT ACTIVATED FOR THIS INSTRUMENT
                 supplierLosses[i] = Exp({mantissa: 0});
                 borrowerLosses[i] = Exp({mantissa: 0});
-                                                        //    Newly Sighed Instrument needs to reach 24 (priceSnapshots need to be taken) before it can be assigned a Sigh Speed based on LOSSES   
+                //    Newly Sighed Instrument needs to reach 24 (priceSnapshots need to be taken) before it can be assigned a Sigh Speed based on LOSSES   
                 if (instrumentPriceCycles[_currentInstrument].initializationCounter < uint32(24) ) {
-                    uint32 prevCounter = instrumentPriceCycles[_currentInstrument].initializationCounter;
-                    instrumentPriceCycles[_currentInstrument].initializationCounter = uint32(add_(prevCounter,uint32(1),'Price Counter addition failed.'));             // STATE UPDATE : INITIALIZATION COUNTER UPDATED
-                    emit InstrumentCounterUpdated( instrumentPriceCycles[_currentInstrument].initializationCounter, curClock);
+                    instrumentPriceCycles[_currentInstrument].initializationCounter = uint32(add_(instrumentPriceCycles[_currentInstrument].initializationCounter , uint32(1) , 'Price Counter addition failed.'));  // STATE UPDATE : INITIALIZATION COUNTER UPDATED
                 }
             }
             else {
-                if ( greaterThanExp(previousPrice , currentPrice) ) {  // i.e the price has decreased so we calculate Losses accured by Suppliers of the Instrument
-                    // uint totalUnderlyingLiquidity = IERC20( financial_instruments[_currentInstrument].iTokenAddress ).totalSupply(); // FOR TESTING
+                if ( greaterThanExp(previousPrice , currentPrice) ) {   // i.e the price has decreased so we calculate Losses accured by Suppliers of the Instrument
                     uint totalUnderlyingLiquidity = lendingPoolCore.getInstrumentTotalLiquidity( _currentInstrument ); // Total amount supplied 
                     (MathError error, Exp memory lossPerInstrument) = subExp( previousPrice , currentPrice );       
                     ( MathError error2, Exp memory supplierLoss ) = mulScalar( lossPerInstrument, totalUnderlyingLiquidity );
                     supplierLosses[i].mantissa = adjustForDecimalsInternal( supplierLoss.mantissa, financial_instruments[_currentInstrument].decimals, oracle.getAssetPriceDecimals(_currentInstrument) );
                     borrowerLosses[i] = Exp({mantissa: 0});
                     ( error, totalLosses) = addExp(totalLosses, supplierLosses[i]);            //  Total loss  += supplier loss
-                    Instrument_Sigh_Speeds[_currentInstrument]._24HrLosses =  supplierLosses[i].mantissa;
-                    Instrument_Sigh_Speeds[_currentInstrument].side = 'Supplier';
+                    Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatility =  supplierLosses[i].mantissa;
+                    Instrument_Sigh_Mechansim_States[_currentInstrument].side = 'Supplier';
                 }
                 else {                                              // i.e the price has increased so we calculate Losses accured by Borrowers of the Instrument
-                    // uint totalBorrows = IERC20( financial_instruments[_currentInstrument].iTokenAddress ).totalSupply(); // FOR TESTING
                     uint totalBorrows = lendingPoolCore.getInstrumentTotalBorrows( _currentInstrument ); // Total amount supplied 
                     (MathError error, Exp memory lossPerInstrument) = subExp( currentPrice, previousPrice );       
                     ( MathError error2, Exp memory borrowerLoss ) = mulScalar( lossPerInstrument, totalBorrows );
                     borrowerLosses[i].mantissa = adjustForDecimalsInternal( borrowerLoss.mantissa, financial_instruments[_currentInstrument].decimals, oracle.getAssetPriceDecimals(_currentInstrument) );
                     supplierLosses[i] = Exp({mantissa: 0});
                     ( error, totalLosses) = addExp(totalLosses, borrowerLosses[i]);            //  Total loss  += borrower loss
-                    Instrument_Sigh_Speeds[_currentInstrument]._24HrLosses =  supplierLosses[i].mantissa;
-                    Instrument_Sigh_Speeds[_currentInstrument].side = 'Borrower';
+                    Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatility =  borrowerLosses[i].mantissa;
+                    Instrument_Sigh_Mechansim_States[_currentInstrument].side = 'Borrower';
                 }
             }
         
-            emit refreshingSighSpeeds_1( _currentInstrument, supplierLosses[i].mantissa , borrowerLosses[i].mantissa , totalLosses.mantissa );
+            emit refreshingSighSpeeds_1( _currentInstrument, Instrument_Sigh_Mechansim_States[_currentInstrument].side , Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatility, totalLosses.mantissa );
         }
         
         uint maxSpeed = SIGHSpeed;
@@ -464,34 +458,30 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         for (uint i=0 ; i < all_Instruments_.length ; i++) {
 
             address _currentInstrument = all_Instruments_[i];       // Current Instrument
-            
-            uint prevSpeedSupplier =  Instrument_Sigh_Speeds[_currentInstrument].suppliers_Speed ;
-            uint prevSpeedBorrower =  Instrument_Sigh_Speeds[_currentInstrument].borrowers_Speed ;
+            uint prevSpeedSupplier =  Instrument_Sigh_Mechansim_States[_currentInstrument].suppliers_Speed ;
+            uint prevSpeedBorrower =  Instrument_Sigh_Mechansim_States[_currentInstrument].borrowers_Speed ;
 
             Exp memory lossRatio;
             MathError error;
             if (totalLosses.mantissa > 0) {
                 if (supplierLosses[i].mantissa > 0 ) {
                     ( error, lossRatio) = divExp(supplierLosses[i], totalLosses);
-                    Instrument_Sigh_Speeds[_currentInstrument].suppliers_Speed = mul_(maxSpeed, lossRatio);                                         // STATE UPDATE
-                    Instrument_Sigh_Speeds[_currentInstrument].borrowers_Speed = uint(0);                                                           // STATE UPDATE
+                    Instrument_Sigh_Mechansim_States[_currentInstrument].suppliers_Speed = mul_(maxSpeed, lossRatio);                                         // STATE UPDATE
+                    Instrument_Sigh_Mechansim_States[_currentInstrument].borrowers_Speed = uint(0);                                                           // STATE UPDATE
                 } 
                 else {
                     ( error, lossRatio) = divExp(borrowerLosses[i], totalLosses);
-                    Instrument_Sigh_Speeds[_currentInstrument].borrowers_Speed = mul_(maxSpeed, lossRatio);                                         // STATE UPDATE
-                    Instrument_Sigh_Speeds[_currentInstrument].suppliers_Speed = uint(0);                                                           // STATE UPDATE
+                    Instrument_Sigh_Mechansim_States[_currentInstrument].borrowers_Speed = mul_(maxSpeed, lossRatio);                                         // STATE UPDATE
+                    Instrument_Sigh_Mechansim_States[_currentInstrument].suppliers_Speed = uint(0);                                                           // STATE UPDATE
                 }
             } 
             else {
-                Instrument_Sigh_Speeds[_currentInstrument].borrowers_Speed = uint(0);                                                               // STATE UPDATE
-                Instrument_Sigh_Speeds[_currentInstrument].suppliers_Speed = uint(0);                                                               // STATE UPDATE
+                Instrument_Sigh_Mechansim_States[_currentInstrument].borrowers_Speed = uint(0);                                                               // STATE UPDATE
+                Instrument_Sigh_Mechansim_States[_currentInstrument].suppliers_Speed = uint(0);                                                               // STATE UPDATE
             }
-            Instrument_Sigh_Speeds[_currentInstrument].percentTotalLoss = mul_(100, lossRatio);                                                     // STATE UPDATE
+            Instrument_Sigh_Mechansim_States[_currentInstrument].percentTotalVolatility = mul_(100, lossRatio);                                              // STATE UPDATE
 
-
-            emit refreshingSighSpeeds_2( _currentInstrument ,maxSpeed, lossRatio.mantissa, Instrument_Sigh_Speeds[_currentInstrument].suppliers_Speed, Instrument_Sigh_Speeds[_currentInstrument].borrowers_Speed  );
-            emit SuppliersSIGHSpeedUpdated(_currentInstrument, prevSpeedSupplier, Instrument_Sigh_Speeds[_currentInstrument].suppliers_Speed, block.number  );
-            emit BorrowersSIGHSpeedUpdated(_currentInstrument, prevSpeedBorrower, Instrument_Sigh_Speeds[_currentInstrument].borrowers_Speed, block.number  );
+            emit refreshingSighSpeeds_2( _currentInstrument ,maxSpeed, Instrument_Sigh_Mechansim_States[_currentInstrument].suppliers_Speed, Instrument_Sigh_Mechansim_States[_currentInstrument].borrowers_Speed, Instrument_Sigh_Mechansim_States[_currentInstrument].percentTotalVolatility  );
         }
 
         require(updateCurrentClockInternal(), "Updating CLock Failed");                         // Updates the Clock    
@@ -537,7 +527,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         else {
             curClock = uint224(add_(curClock,1,"curClock : Addition Failed"));
         }
-        emit ClockUpdated(curClock, getBlockNumber() );
+        // emit ClockUpdated(curClock, getBlockNumber() );
         return true;
     }
     
@@ -570,15 +560,13 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     // ################ --> updateSIGHBorrowIndexInternal() : Internal function with actual implementation #################################
     // #####################################################################################################################################
 
-    event updateSIGHSupplyIndex_test1(address market,uint speed,uint currentIndex,  uint prevBlock, uint curBlock, uint deltaBlocks );
-    event updateSIGHSupplyIndex_test2(address market,uint supplyTokens, uint sigh_Accrued, uint ratio, uint index );
-    event updateSIGHSupplyIndex_test3(address market  , uint newIndex, uint blockNum );
+    event SIGHSupplyIndexUpdated(address instrument, uint sighAccured, uint ratioMantissa, uint newIndexMantissa,  uint blockNum );
 
     /**
      * @notice Accrue SIGH to the Instrument by updating the supply index
      * @param currentInstrument The Instrument whose supply index to update
      */
-    function updateSIGHSupplyIndex(address currentInstrument) external  returns (bool) { // onlyLendingPoolCore    // Called on each Deposit, Redeem and Liquidation (collateral)
+    function updateSIGHSupplyIndex(address currentInstrument) external onlyLendingPoolCore returns (bool) { //     // Called on each Deposit, Redeem and Liquidation (collateral)
         require(financial_instruments[currentInstrument].isListed ,"Instrument not supported.");
         require(updateSIGHSupplyIndexInternal( currentInstrument ), "Updating Sigh Supply Indexes operation failed" );
         return true;
@@ -591,46 +579,35 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         }
 
         SIGHInstrument storage instrumentState = financial_instruments[currentInstrument];
-        uint supplySpeed = add_(Instrument_Sigh_Speeds[currentInstrument].suppliers_Speed, Instrument_Sigh_Speeds[currentInstrument].staking_Speed,"Supplier speed addition with staking speed overflow" );
+        uint supplySpeed = add_(Instrument_Sigh_Mechansim_States[currentInstrument].suppliers_Speed, Instrument_Sigh_Mechansim_States[currentInstrument].staking_Speed,"Supplier speed addition with staking speed overflow" );
         uint blockNumber = getBlockNumber();
-        uint prevIndex = instrumentState.supplyindex;
         uint deltaBlocks = sub_(blockNumber, uint( instrumentState.supplylastupdatedblock ), 'updateSIGHSupplyIndex : Block Subtraction Underflow');    // Delta Blocks 
-        emit updateSIGHSupplyIndex_test1(currentInstrument, supplySpeed, prevIndex, instrumentState.supplylastupdatedblock, blockNumber, deltaBlocks );
         
         if (deltaBlocks > 0 && supplySpeed > 0) {       // In case SIGH would have accured
             uint sigh_Accrued = mul_(deltaBlocks, supplySpeed);                                                                         // SIGH Accured
-            // uint totalUnderlyingLiquidity = IERC20( financial_instruments[currentInstrument].iTokenAddress ).totalSupply(); // FOR TESTING
             uint totalUnderlyingLiquidity = lendingPoolCore.getInstrumentTotalLiquidity( currentInstrument );                           // Total amount supplied 
-            Double memory ratio = totalUnderlyingLiquidity > 0 ? fraction(sigh_Accrued, totalUnderlyingLiquidity) : Double({mantissa: 0});                      // SIGH Accured per Supplied Instrument Token
+            Double memory ratio = totalUnderlyingLiquidity > 0 ? fraction(sigh_Accrued, totalUnderlyingLiquidity) : Double({mantissa: 0});    // SIGH Accured per Supplied Instrument Token
             Double memory newIndex = add_(Double({mantissa: instrumentState.supplyindex}), ratio);                                      // Updated Index
-            emit updateSIGHSupplyIndex_test2( currentInstrument, totalUnderlyingLiquidity, sigh_Accrued, ratio.mantissa , newIndex.mantissa );  
+            emit SIGHSupplyIndexUpdated( currentInstrument, sigh_Accrued, ratio.mantissa , newIndex.mantissa, blockNumber );  
 
-            instrumentState.supplyindex = newIndex.mantissa;                                                                            // STATE UPDATE: New Index Committed to Storage 
-            instrumentState.supplylastupdatedblock = blockNumber;                                                                        // STATE UPDATE: Block number updated
+            instrumentState.supplyindex = newIndex.mantissa;       // STATE UPDATE: New Index Committed to Storage 
         } 
-        else {         // When no Sigh is accured. Block number updated
-            instrumentState.supplylastupdatedblock = blockNumber ;                                                                           // STATE UPDATE: Block number updated
-        }
-
-        SIGHInstrument memory newInstrumentState = financial_instruments[currentInstrument];
-        emit updateSIGHSupplyIndex_test3( currentInstrument, newInstrumentState.supplyindex, newInstrumentState.supplylastupdatedblock  );
+        
+        instrumentState.supplylastupdatedblock = blockNumber ;     // STATE UPDATE: Block number updated        
         return true;
     }
 
 
-    event updateSIGHBorrowIndex_test1(address market,uint speed,uint currentIndex,  uint prevBlock, uint curBlock, uint deltaBlocks );
-    event updateSIGHBorrowIndex_test2(address market,uint borrowAmount, uint sigh_Accrued, uint ratio, uint index );
-    event updateSIGHBorrowIndex_test3(address market, uint newIndex, uint blockNum );
+    event SIGHBorrowIndexUpdated(address instrument, uint sighAccured, uint ratioMantissa, uint newIndexMantissa,  uint blockNum );
 
     /**
      * @notice Accrue SIGH to the market by updating the borrow index
      * @param currentInstrument The market whose borrow index to update
      */
-    function updateSIGHBorrowIndex(address currentInstrument) external  returns (bool) {  // onlyLendingPoolCore    // Called during Borrow, repay, SwapRate, Rebalance, Liquidation
+    function updateSIGHBorrowIndex(address currentInstrument) external  onlyLendingPoolCore returns (bool) {  //     // Called during Borrow, repay, SwapRate, Rebalance, Liquidation
         require(financial_instruments[currentInstrument].isListed ,"Instrument not supported.");
         require( updateSIGHBorrowIndexInternal(currentInstrument), "Updating Sigh Borrow Indexes operation failed" ) ;
         return true;
-
     }
 
     function updateSIGHBorrowIndexInternal(address currentInstrument) internal returns(bool) {
@@ -639,34 +616,23 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
             return true;
         }
 
-        // Exp memory marketBorrowIndex = Exp({mantissa: lendingPoolCore.getInstrumentVariableBorrowsCumulativeIndex( currentInstrument )});   // GETTING BORROW INDEX. TO BE VERIFIED
-        
         SIGHInstrument storage instrumentState = financial_instruments[currentInstrument];
-        uint borrowSpeed = add_(Instrument_Sigh_Speeds[currentInstrument].borrowers_Speed, Instrument_Sigh_Speeds[currentInstrument].staking_Speed,"Supplier speed addition with staking speed overflow" );
+        uint borrowSpeed = add_(Instrument_Sigh_Mechansim_States[currentInstrument].borrowers_Speed, Instrument_Sigh_Mechansim_States[currentInstrument].staking_Speed, "Supplier speed addition with staking speed overflow" );
         uint blockNumber = getBlockNumber();
-        uint prevIndex = instrumentState.borrowindex;
         uint deltaBlocks = sub_(blockNumber, uint(instrumentState.borrowlastupdatedblock), 'updateSIGHBorrowIndex : Block Subtraction Underflow');         // DELTA BLOCKS
-        emit updateSIGHBorrowIndex_test1(currentInstrument, borrowSpeed, prevIndex, instrumentState.borrowlastupdatedblock, blockNumber, deltaBlocks );
         
-        if (deltaBlocks > 0 && borrowSpeed > 0) {        // In case SIGH would have accured
+        if (deltaBlocks > 0 && borrowSpeed > 0) {       // In case SIGH would have accured
             uint sigh_Accrued = mul_(deltaBlocks, borrowSpeed);                             // SIGH ACCURED = DELTA BLOCKS x SIGH SPEED (BORROWERS)
             // TO BE VALIDATED
-            // uint totalBorrows = IERC20( financial_instruments[currentInstrument].iTokenAddress ).totalSupply(); // FOR TESTING
             uint totalBorrows =  lendingPoolCore.getInstrumentTotalBorrows(currentInstrument);
-            // uint borrowAmount = div_(totalBorrows, marketBorrowIndex);      // TO BE VALIDATED
             Double memory ratio = totalBorrows > 0 ? fraction(sigh_Accrued, totalBorrows) : Double({mantissa: 0});      // SIGH Accured per Borrowed Instrument Token
             Double memory newIndex = add_(Double({mantissa: instrumentState.borrowindex}), ratio);                      // New Index
-            emit updateSIGHBorrowIndex_test2( currentInstrument, totalBorrows, sigh_Accrued, ratio.mantissa , newIndex.mantissa );
+            emit SIGHBorrowIndexUpdated( currentInstrument, sigh_Accrued, ratio.mantissa , newIndex.mantissa, blockNumber );
 
-            instrumentState.borrowindex = newIndex.mantissa ;                                                                   // STATE UPDATE: New Index Committed to Storage 
-            instrumentState.borrowlastupdatedblock = blockNumber;                                                               // STATE UPDATE: Block number updated
+            instrumentState.borrowindex = newIndex.mantissa ;  // STATE UPDATE: New Index Committed to Storage 
         } 
-        else {                 // When no SIGH is accured
-            instrumentState.borrowlastupdatedblock = blockNumber;                                                               // STATE UPDATE: Block number updated
-        }
-        
-        SIGHInstrument memory newBorrowState = financial_instruments[currentInstrument];
-        emit updateSIGHBorrowIndex_test3( currentInstrument, newBorrowState.borrowindex, newBorrowState.borrowlastupdatedblock  );
+
+        instrumentState.borrowlastupdatedblock = blockNumber;   // STATE UPDATE: Block number updated        
         return true;
     }
 
@@ -721,13 +687,13 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
                 ); 
     }
 
-    function getInstrumentSpeeds(address instrument) external view returns (uint suppliers_speed, uint borroweers_speed, uint staking_speed, uint _24HrLosses, string memory side, uint percentTotalLoss ) {
-        return (Instrument_Sigh_Speeds[instrument].suppliers_Speed, 
-                Instrument_Sigh_Speeds[instrument].borrowers_Speed , 
-                Instrument_Sigh_Speeds[instrument].staking_Speed,
-                Instrument_Sigh_Speeds[instrument]._24HrLosses,
-                Instrument_Sigh_Speeds[instrument].side,
-                Instrument_Sigh_Speeds[instrument].percentTotalLoss
+    function getInstrumentSpeeds(address instrument) external view returns (uint suppliers_speed, uint borroweers_speed, uint staking_speed, uint _24HrVolatility, string memory side, uint percentTotalVolatility ) {
+        return (Instrument_Sigh_Mechansim_States[instrument].suppliers_Speed, 
+                Instrument_Sigh_Mechansim_States[instrument].borrowers_Speed , 
+                Instrument_Sigh_Mechansim_States[instrument].staking_Speed,
+                Instrument_Sigh_Mechansim_States[instrument]._24HrVolatility,
+                Instrument_Sigh_Mechansim_States[instrument].side,
+                Instrument_Sigh_Mechansim_States[instrument].percentTotalVolatility
                 );
     }
 
