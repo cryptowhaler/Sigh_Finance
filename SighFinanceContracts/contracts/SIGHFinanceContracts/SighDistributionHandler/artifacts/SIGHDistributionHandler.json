@@ -65,7 +65,7 @@
 				"getDeltaBlocksForSpeed()": "1131",
 				"getInstrumentBorrowIndex(address)": "2195",
 				"getInstrumentData(address)": "infinite",
-				"getInstrumentSpeeds(address)": "infinite",
+				"getInstrumentSighMechansimStates(address)": "infinite",
 				"getInstrumentSupplyIndex(address)": "2193",
 				"getPrevSpeedRefreshBlock()": "1132",
 				"getSIGHBalance()": "infinite",
@@ -115,7 +115,7 @@
 			"getDeltaBlocksForSpeed()": "be36810a",
 			"getInstrumentBorrowIndex(address)": "10fa61e6",
 			"getInstrumentData(address)": "4dc54a38",
-			"getInstrumentSpeeds(address)": "3e5eee46",
+			"getInstrumentSighMechansimStates(address)": "3e5eee46",
 			"getInstrumentSupplyIndex(address)": "9a717b24",
 			"getPrevSpeedRefreshBlock()": "3e955265",
 			"getSIGHBalance()": "c6a6bfb1",
@@ -1168,7 +1168,7 @@
 					"type": "address"
 				}
 			],
-			"name": "getInstrumentSpeeds",
+			"name": "getInstrumentSighMechansimStates",
 			"outputs": [
 				{
 					"internalType": "uint256",

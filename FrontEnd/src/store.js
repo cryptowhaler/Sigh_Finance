@@ -877,9 +877,10 @@ const store = new Vuex.Store({
       instrumentSighState.isSIGHMechanismActivated = curInstrumentSIGHState.isSIGHMechanismActivated;
       instrumentSighState.borrowindex = curInstrumentSIGHState.borrowindex;
       instrumentSighState.supplyindex = curInstrumentSIGHState.supplyindex;
-      curInstrumentSIGHState = await store.dispatch("SIGHDistributionHandler_getInstrumentSpeeds",{instrument_:instrumentAddress });           
-      instrumentSighState.percentageTotalVolatility = curInstrumentSIGHState.percentageTotalVolatility;
-      instrumentSighState.losses_24_hrs = curInstrumentSIGHState.losses_24_hrs;
+      curInstrumentSIGHState = await store.dispatch("SIGHDistributionHandler_getInstrumentSighMechansimStates",{instrument_:instrumentAddress });           
+      instrumentSighState.percentageTotalVolatility = curInstrumentSIGHState.percentTotalVolatility;
+      instrumentSighState.losses_24_hrs = curInstrumentSIGHState._24HrVolatility;
+      instrumentSighState.side = curInstrumentSIGHState.side;
       instrumentSighState.suppliers_Speed = curInstrumentSIGHState.suppliers_Speed;
       instrumentSighState.borrowers_Speed = curInstrumentSIGHState.borrowers_Speed;
       instrumentSighState.staking_Speed = curInstrumentSIGHState.staking_Speed;
@@ -1151,10 +1152,14 @@ const store = new Vuex.Store({
         cur_user_instrument_state.usageAsCollateralEnabled = response.usageAsCollateralEnabled ;       
 
         // INSTRUMENT SIGH SPEEDS 
-        let sighSpeeds = await store.dispatch("SIGHDistributionHandler_getInstrumentSpeeds",{instrument_:cur_instrument.instrumentAddress });           
+        let sighSpeeds = await store.dispatch("SIGHDistributionHandler_getInstrumentSighMechansimStates",{instrument_:cur_instrument.instrumentAddress });           
         cur_user_instrument_state.sighSupplierSpeed =   sighSpeeds.suppliers_Speed ;       
         cur_user_instrument_state.sighBorrowerSpeed = sighSpeeds.borrowers_Speed ;       
         cur_user_instrument_state.sighStakingSpeed = sighSpeeds.staking_Speed ;       
+        cur_user_instrument_state.percentageTotalVolatility = sighSpeeds.percentTotalVolatility;
+        cur_user_instrument_state.losses_24_hrs = sighSpeeds._24HrVolatility;
+        cur_user_instrument_state.side = sighSpeeds.side;
+  
 
         // INTEREST STREAM 
         cur_user_instrument_state.redirectedBalance =  await store.dispatch("IToken_getRedirectedBalance",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
@@ -1452,11 +1457,11 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       }
     },    
 
-    SIGHDistributionHandler_getInstrumentSpeeds: async ({commit,state},{instrument_}) => {
+    SIGHDistributionHandler_getInstrumentSighMechansimStates: async ({commit,state},{instrument_}) => {
       if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
         // console.log(sighDistributionHandlerContract);
-        let response = await sighDistributionHandlerContract.methods.getInstrumentSpeeds(instrument_).call();
+        let response = await sighDistributionHandlerContract.methods.getInstrumentSighMechansimStates(instrument_).call();
         console.log("sighDistributionHandler INSTRUMENT Data = " );
         console.log(response);                
         return response;            
