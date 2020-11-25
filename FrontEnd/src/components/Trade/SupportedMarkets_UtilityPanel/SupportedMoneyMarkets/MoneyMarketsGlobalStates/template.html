@@ -36,7 +36,7 @@
                             <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.basicData.symbol }}</td>
                             <td class="uk-text-center c-white" style="line-height: 4;" > {{ instrument.globalState.totalLiquidity }} </td>
                             <td class="uk-text-center c-white" style="line-height: 4;"  > {{ instrument.globalState.totalBorrows }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ instrument.globalState.utilizationRate }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ Number(Number(instrument.globalState.utilizationRate)/(10**25)).toFixed(2) }} % </td>
                             <td class="uk-text-center c-green" style="line-height: 4;" >{{ instrument.globalState.liquidityRate  }} % </td>
                             <td class="uk-text-center c-red" style="line-height: 4;" >{{ instrument.globalState.averageStableBorrowRate  }} % </td>
                             <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.globalState.variableBorrowRate  }} %  </td>
