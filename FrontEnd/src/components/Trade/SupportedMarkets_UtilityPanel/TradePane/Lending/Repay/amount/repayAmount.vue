@@ -66,7 +66,7 @@ export default {
     async initiatePriceLoop() {
       if ( this.$store.state.isNetworkSupported && this.selectedInstrument.instrumentAddress ) {
         setInterval(async () => {
-          console.log("IN SET PRICE : REPAY / AMOUNT");
+          // console.log("IN SET PRICE : REPAY / AMOUNT");
           if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
             this.intervalActivated = true;
             this.selectedInstrumentPriceETH = await this.getInstrumentPrice({_instrumentAddress : this.selectedInstrument.instrumentAddress });
