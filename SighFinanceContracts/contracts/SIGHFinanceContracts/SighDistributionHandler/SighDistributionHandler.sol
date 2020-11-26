@@ -134,7 +134,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
     event SIGHDistributionHandlerInitialized(address addressesProvider, address Sigh_Address, address priceOracle, address lendingPoolCore);
 
-    uint256 constant private SIGH_DISTRIBUTION_REVISION = 0x5;
+    uint256 constant private SIGH_DISTRIBUTION_REVISION = 0x9;
 
     function getRevision() internal pure returns(uint256) {
         return SIGH_DISTRIBUTION_REVISION;
@@ -321,17 +321,21 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
      */    
     function SpeedUpperCheckSwitch( bool isActivated, uint profitPercentage ) external onlySighFinanceConfigurator returns (bool) {     // 
         require( profitPercentage > 0.01e18, 'The new Profit Percentage must be greater than 0.01e18 (1%) ');
-        require( profitPercentage <= 1e18, 'The new Supplier Ratio must be less than 1e18 (100%)');
+        require( profitPercentage <= 2e18, 'The new Supplier Ratio must be less than 2e18 (200%)');
         refreshSIGHSpeeds();
     
-        upperCheckProfitPercentage = Exp({ mantissa : profitPercentage });              // STATE UPDATED
         
         if (!isActivated) {
             isSpeedUpperCheckAllowed = false;                                           // STATE UPDATED
+            upperCheckProfitPercentage = Exp({ mantissa : 0 });              // STATE UPDATED
+        }
+        else {
+            isSpeedUpperCheckAllowed = true;                                                // STATE UPDATED
+            upperCheckProfitPercentage = Exp({ mantissa : profitPercentage });              // STATE UPDATED
         }
 
-        isSpeedUpperCheckAllowed = true;                                                // STATE UPDATED
         emit SpeedUpperCheckSwitched(isSpeedUpperCheckAllowed, upperCheckProfitPercentage.mantissa, getBlockNumber() );
+        return true;
     }
 
     /**
@@ -372,7 +376,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
     event maxSpeedCheck(uint SIGH);
     event blockNumberForSnapshotUpdated(uint224 curClock, uint deltaBlocks_, uint blockNumberForPriceSnapshots, uint blocknumber );    
-    event MaxSIGHSpeedCalculated(uint SIGHSpeed, uint current_Sigh_Price, uint totalVolatilityPerBlockAverage, uint maxVolatilityToAddress, uint max_valueDistributionLimitDecimalsAdjusted, uint sigh_speed_used );
+    event MaxSIGHSpeedCalculated(uint _SIGHSpeed, uint current_Sigh_Price, uint totalVolatilityPerBlockAverage, uint deltaBlocks, uint maxVolatilityToAddress, uint max_valueDistributionLimitDecimalsAdjusted, uint sigh_speed_used );
     /**
      * @notice Recalculate and update SIGH speeds for all Supported SIGH markets
      * 1. Instrument indexes for all instruments updated
@@ -451,7 +455,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         uint maxSpeed = SIGHSpeed;
         if (isSpeedUpperCheckAllowed) {                     // SIGH SPEED BASED ON UPPER CHECK AND ADDITIONAL PROFIT POTENTIAL
             (MathError error, Exp memory totalLossPerBlock) = divScalar(totalLosses,deltaBlocks_);   // Total Loss per Block
-            maxSpeed = calculateMaxSighSpeedInternal( totalLossPerBlock.mantissa ); 
+            maxSpeed = calculateMaxSighSpeedInternal( totalLossPerBlock.mantissa, deltaBlocks_ ); 
         }
 
         // ###### Updates the Speed (loss driven) for the Supported Markets ######
@@ -500,7 +504,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     }
 
     // returns the currently maximum possible SIGH Distribution speed. Called only when upper check is activated
-    function calculateMaxSighSpeedInternal( uint totalLossesPerBlockAverage ) internal returns (uint) {
+    function calculateMaxSighSpeedInternal( uint totalLossesPerBlockAverage, uint deltaBlocks ) internal returns (uint) {
         uint sigh_speed_used = SIGHSpeed;
         uint current_Sigh_Price = oracle.getAssetPrice( address(Sigh_Address) );   
         ERC20Detailed sighContract = ERC20Detailed(address(Sigh_Address));
@@ -517,10 +521,10 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         if ( max_valueDistributionLimitDecimalsAdjusted >  maxVolatilityToAddress ) {
             uint maxVolatilityToAddress_SIGHdecimalsMul = mul_( maxVolatilityToAddress, uint(10**(sighDecimals)), "Max Volatility : SIGH Decimals multiplication gave error" );
             uint maxVolatilityToAddress_PricedecimalsMul = mul_( maxVolatilityToAddress_SIGHdecimalsMul, uint(10**(priceDecimals)), "Max Volatility : Price Decimals multiplication gave error" );
-            uint maxVolatilityToAddress_DecimalsDiv = div_( maxVolatilityToAddress_PricedecimalsMul, uint(10**9), "Max Volatility : Decimals division gave error" );
+            uint maxVolatilityToAddress_DecimalsDiv = div_( maxVolatilityToAddress_PricedecimalsMul, uint(10**18), "Max Volatility : Decimals division gave error" );
             sigh_speed_used = div_( maxVolatilityToAddress_DecimalsDiv, current_Sigh_Price, "Max Speed division gave error" );
         }
-        emit MaxSIGHSpeedCalculated(SIGHSpeed, current_Sigh_Price, , totalLossesPerBlockAverage, maxVolatilityToAddress, max_valueDistributionLimitDecimalsAdjusted, sigh_speed_used  );
+        emit MaxSIGHSpeedCalculated(SIGHSpeed, current_Sigh_Price, totalLossesPerBlockAverage, deltaBlocks, maxVolatilityToAddress, max_valueDistributionLimitDecimalsAdjusted, sigh_speed_used  );
         return sigh_speed_used;
     }
 
@@ -535,7 +539,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     function adjustForDecimalsInternal(uint _amount, uint instrumentDecimals, uint priceDecimals) internal returns (uint) {
         require(instrumentDecimals > 0, "Instrument Decimals cannot be Zero");
         require(priceDecimals > 0, "Oracle returned invalid price Decimals");
-        uint adjused_Amount = mul_(_amount,uint(10**9),'Loss Amount multiplication Adjustment overflow');
+        uint adjused_Amount = mul_(_amount,uint(10**18),'Loss Amount multiplication Adjustment overflow');
         uint instrumentDecimalsCorrected = div_( adjused_Amount,uint(10**instrumentDecimals),'Instrument Decimals correction underflow');
         uint priceDecimalsCorrected = div_( instrumentDecimalsCorrected,uint(10**priceDecimals),'Price Decimals correction underflow');
         emit decimalsAdjustment( _amount,instrumentDecimals,priceDecimals,priceDecimalsCorrected );

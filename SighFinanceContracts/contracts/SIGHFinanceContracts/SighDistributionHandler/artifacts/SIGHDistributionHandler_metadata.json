@@ -185,7 +185,37 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "SIGHSpeed",
+						"name": "_SIGHSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "current_Sigh_Price",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalVolatilityPerBlockAverage",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "deltaBlocks",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "maxVolatilityToAddress",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "max_valueDistributionLimitDecimalsAdjusted",
 						"type": "uint256"
 					},
 					{
@@ -193,39 +223,9 @@
 						"internalType": "uint256",
 						"name": "sigh_speed_used",
 						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "sighPrice",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "max_valueDistributionLimit",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "totalLossesPerBlockAverage",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "profitPotentialPerBlock",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "lossesPlusProfitPotentialPerBlock",
-						"type": "uint256"
 					}
 				],
-				"name": "MaxSpeedUsedWhenRefreshingPriceSnapshots",
+				"name": "MaxSIGHSpeedCalculated",
 				"type": "event"
 			},
 			{
@@ -543,6 +543,37 @@
 				"inputs": [
 					{
 						"indexed": false,
+						"internalType": "address",
+						"name": "_Instrument",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "side",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_24HrVolatility",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalLosses",
+						"type": "uint256"
+					}
+				],
+				"name": "calculatingInstrumentVolatility",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
 						"internalType": "uint256",
 						"name": "lossAmount",
 						"type": "uint256"
@@ -557,18 +588,6 @@
 						"indexed": false,
 						"internalType": "uint256",
 						"name": "priceDecimals",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "totalDecimals",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "correctionNumber",
 						"type": "uint256"
 					},
 					{
@@ -630,37 +649,6 @@
 					},
 					{
 						"indexed": false,
-						"internalType": "string",
-						"name": "side",
-						"type": "string"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "_24HrVolatility",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "totalLosses",
-						"type": "uint256"
-					}
-				],
-				"name": "refreshingSighSpeeds_1",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "_Instrument",
-						"type": "address"
-					},
-					{
-						"indexed": false,
 						"internalType": "uint256",
 						"name": "maxSpeed",
 						"type": "uint256"
@@ -684,7 +672,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "refreshingSighSpeeds_2",
+				"name": "refreshingSighSpeeds",
 				"type": "event"
 			},
 			{
@@ -1044,7 +1032,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "borroweers_speed",
+						"name": "borrowers_speed",
 						"type": "uint256"
 					},
 					{
@@ -1616,10 +1604,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighDistributionHandler/SighDistributionHandler.sol": {
-			"keccak256": "0x38b3ad4e3faad8e29ab2193f37790117e57ebc4e0dfc4750465eee5cd536d993",
+			"keccak256": "0x3d973f23012a6dfa7225c5c6e55e51667cce6c0763238ba0d1eca1c80f789589",
 			"urls": [
-				"bzz-raw://3946a01bd519767db87b171f9038cc6e7b5f89336b54709d2dc01fe5fb8edae7",
-				"dweb:/ipfs/QmUZpn2NzzQV2mxzUoBBw3VGeikXVTpYaTZXuPB1a4Ca4k"
+				"bzz-raw://20cd58796f3d5643bda8e0f6a7f82c59d89766f7c7f6543f765a2bf8acb9665e",
+				"dweb:/ipfs/QmZCUe62GEUPMievTrMWy7z3rHCESNSLTik6EPNEicxord"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

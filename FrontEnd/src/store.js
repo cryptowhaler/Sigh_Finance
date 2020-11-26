@@ -879,11 +879,14 @@ const store = new Vuex.Store({
       instrumentSighState.supplyindex = curInstrumentSIGHState.supplyindex;
       curInstrumentSIGHState = await store.dispatch("SIGHDistributionHandler_getInstrumentSighMechansimStates",{instrument_:instrumentAddress });  
       instrumentSighState.percentageTotalVolatility = curInstrumentSIGHState.percentTotalVolatility;
-      instrumentSighState.losses_24_hrs = curInstrumentSIGHState._24HrVolatility;
+      instrumentSighState.losses_24_hrs_ETH = Number(curInstrumentSIGHState._24HrVolatility) / (10**18);
+      instrumentSighState.losses_24_hrs_USD = await store.dispatch("convertToUSD",{ETHValue: instrumentSighState.losses_24_hrs_ETH }); 
       instrumentSighState.side = curInstrumentSIGHState.side;
       instrumentSighState.suppliers_Speed = curInstrumentSIGHState.suppliers_speed;
       instrumentSighState.borrowers_Speed = curInstrumentSIGHState.borroweers_speed;
       instrumentSighState.staking_Speed = curInstrumentSIGHState.staking_speed;
+      instrumentSighState.totalsighYieldSpeed =  (Number(instrumentSighState.suppliers_Speed) + Number(instrumentSighState.borrowers_Speed) + Number(instrumentSighState.staking_Speed)) / Math.pow(10,18)  ;
+      instrumentSighState.totalsighYield_ETH = Number(instrumentSighState.totalsighYieldSpeed) * Number(state.SIGHState.priceETH) / Math.pow(10,state.SIGHState.priceDecimals);
       instrumentSighState.symbol = instrumentState.symbol;      
     }
     // console.log(instrumentState);
@@ -1156,10 +1159,12 @@ const store = new Vuex.Store({
         cur_user_instrument_state.sighBorrowerSpeed = sighSpeeds.borrowers_Speed ;       
         cur_user_instrument_state.sighStakingSpeed = sighSpeeds.staking_Speed ;       
         cur_user_instrument_state.percentageTotalVolatility = sighSpeeds.percentTotalVolatility;
-        cur_user_instrument_state.losses_24_hrs = sighSpeeds._24HrVolatility;
+        cur_user_instrument_state.losses_24_hrs_ETH = Number(sighSpeeds._24HrVolatility) / (10**18);
+        cur_user_instrument_state.losses_24_hrs_USD = await store.dispatch("convertToUSD",{ETHValue: cur_user_instrument_state.losses_24_hrs_ETH });   
+        cur_user_instrument_state.totalsighYieldSpeed = (Number(cur_user_instrument_state.sighSupplierSpeed) + Number(cur_user_instrument_state.sighBorrowerSpeed) + Number(cur_user_instrument_state.sighStakingSpeed)) / Math.pow(10,18)  ;
+        cur_user_instrument_state.totalsighYield_ETH = Number(cur_user_instrument_state.totalsighYieldSpeed) * Number(state.SIGHState.priceETH) / Math.pow(10,state.SIGHState.priceDecimals);
         cur_user_instrument_state.side = sighSpeeds.side;
   
-
         // INTEREST STREAM 
         cur_user_instrument_state.redirectedBalance =  await store.dispatch("IToken_getRedirectedBalance",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
         cur_user_instrument_state.interestRedirectionAllowance =  await store.dispatch("IToken_getinterestRedirectionAllowances",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
