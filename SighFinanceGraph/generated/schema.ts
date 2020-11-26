@@ -12,7 +12,7 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class Sightroller extends Entity {
+export class SIGH_Instrument extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -20,167 +20,17 @@ export class Sightroller extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id !== null, "Cannot save Sightroller entity without an ID");
+    assert(id !== null, "Cannot save SIGH_Instrument entity without an ID");
     assert(
       id.kind == ValueKind.STRING,
-      "Cannot save Sightroller entity with non-string ID. " +
+      "Cannot save SIGH_Instrument entity with non-string ID. " +
         'Considering using .toHex() to convert the "id" to a string.'
     );
-    store.set("Sightroller", id.toString(), this);
+    store.set("SIGH_Instrument", id.toString(), this);
   }
 
-  static load(id: string): Sightroller | null {
-    return store.get("Sightroller", id) as Sightroller | null;
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get priceOracle(): Bytes | null {
-    let value = this.get("priceOracle");
-    if (value === null) {
-      return null;
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set priceOracle(value: Bytes | null) {
-    if (value === null) {
-      this.unset("priceOracle");
-    } else {
-      this.set("priceOracle", Value.fromBytes(value as Bytes));
-    }
-  }
-
-  get closeFactor(): BigInt | null {
-    let value = this.get("closeFactor");
-    if (value === null) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set closeFactor(value: BigInt | null) {
-    if (value === null) {
-      this.unset("closeFactor");
-    } else {
-      this.set("closeFactor", Value.fromBigInt(value as BigInt));
-    }
-  }
-
-  get liquidationIncentive(): BigInt | null {
-    let value = this.get("liquidationIncentive");
-    if (value === null) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set liquidationIncentive(value: BigInt | null) {
-    if (value === null) {
-      this.unset("liquidationIncentive");
-    } else {
-      this.set("liquidationIncentive", Value.fromBigInt(value as BigInt));
-    }
-  }
-
-  get maxAssets(): BigInt | null {
-    let value = this.get("maxAssets");
-    if (value === null) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set maxAssets(value: BigInt | null) {
-    if (value === null) {
-      this.unset("maxAssets");
-    } else {
-      this.set("maxAssets", Value.fromBigInt(value as BigInt));
-    }
-  }
-
-  get pauseGuardian(): Bytes | null {
-    let value = this.get("pauseGuardian");
-    if (value === null) {
-      return null;
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set pauseGuardian(value: Bytes | null) {
-    if (value === null) {
-      this.unset("pauseGuardian");
-    } else {
-      this.set("pauseGuardian", Value.fromBytes(value as Bytes));
-    }
-  }
-
-  get gsighRate(): BigInt | null {
-    let value = this.get("gsighRate");
-    if (value === null) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set gsighRate(value: BigInt | null) {
-    if (value === null) {
-      this.unset("gsighRate");
-    } else {
-      this.set("gsighRate", Value.fromBigInt(value as BigInt));
-    }
-  }
-
-  get sighRate(): BigInt | null {
-    let value = this.get("sighRate");
-    if (value === null) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set sighRate(value: BigInt | null) {
-    if (value === null) {
-      this.unset("sighRate");
-    } else {
-      this.set("sighRate", Value.fromBigInt(value as BigInt));
-    }
-  }
-}
-
-export class Market extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id !== null, "Cannot save Market entity without an ID");
-    assert(
-      id.kind == ValueKind.STRING,
-      "Cannot save Market entity with non-string ID. " +
-        'Considering using .toHex() to convert the "id" to a string.'
-    );
-    store.set("Market", id.toString(), this);
-  }
-
-  static load(id: string): Market | null {
-    return store.get("Market", id) as Market | null;
+  static load(id: string): SIGH_Instrument | null {
+    return store.get("SIGH_Instrument", id) as SIGH_Instrument | null;
   }
 
   get id(): string {
@@ -201,589 +51,13 @@ export class Market extends Entity {
     this.set("symbol", Value.fromString(value));
   }
 
-  get name(): string {
-    let value = this.get("name");
-    return value.toString();
-  }
-
-  set name(value: string) {
-    this.set("name", Value.fromString(value));
-  }
-
-  get cash(): BigDecimal {
-    let value = this.get("cash");
-    return value.toBigDecimal();
-  }
-
-  set cash(value: BigDecimal) {
-    this.set("cash", Value.fromBigDecimal(value));
-  }
-
-  get exchangeRate(): BigDecimal {
-    let value = this.get("exchangeRate");
-    return value.toBigDecimal();
-  }
-
-  set exchangeRate(value: BigDecimal) {
-    this.set("exchangeRate", Value.fromBigDecimal(value));
-  }
-
-  get underlyingAddress(): Bytes {
-    let value = this.get("underlyingAddress");
-    return value.toBytes();
-  }
-
-  set underlyingAddress(value: Bytes) {
-    this.set("underlyingAddress", Value.fromBytes(value));
-  }
-
-  get underlyingName(): string {
-    let value = this.get("underlyingName");
-    return value.toString();
-  }
-
-  set underlyingName(value: string) {
-    this.set("underlyingName", Value.fromString(value));
-  }
-
-  get underlyingPrice(): BigDecimal {
-    let value = this.get("underlyingPrice");
-    return value.toBigDecimal();
-  }
-
-  set underlyingPrice(value: BigDecimal) {
-    this.set("underlyingPrice", Value.fromBigDecimal(value));
-  }
-
-  get underlyingSymbol(): string {
-    let value = this.get("underlyingSymbol");
-    return value.toString();
-  }
-
-  set underlyingSymbol(value: string) {
-    this.set("underlyingSymbol", Value.fromString(value));
-  }
-
-  get underlyingPriceUSD(): BigDecimal {
-    let value = this.get("underlyingPriceUSD");
-    return value.toBigDecimal();
-  }
-
-  set underlyingPriceUSD(value: BigDecimal) {
-    this.set("underlyingPriceUSD", Value.fromBigDecimal(value));
-  }
-
-  get underlyingDecimals(): i32 {
-    let value = this.get("underlyingDecimals");
-    return value.toI32();
-  }
-
-  set underlyingDecimals(value: i32) {
-    this.set("underlyingDecimals", Value.fromI32(value));
-  }
-
-  get totalSupply(): BigDecimal {
-    let value = this.get("totalSupply");
-    return value.toBigDecimal();
-  }
-
-  set totalSupply(value: BigDecimal) {
-    this.set("totalSupply", Value.fromBigDecimal(value));
-  }
-
-  get totalBorrows(): BigDecimal {
-    let value = this.get("totalBorrows");
-    return value.toBigDecimal();
-  }
-
-  set totalBorrows(value: BigDecimal) {
-    this.set("totalBorrows", Value.fromBigDecimal(value));
-  }
-
-  get reserves(): BigDecimal {
-    let value = this.get("reserves");
-    return value.toBigDecimal();
-  }
-
-  set reserves(value: BigDecimal) {
-    this.set("reserves", Value.fromBigDecimal(value));
-  }
-
-  get borrowRate(): BigDecimal {
-    let value = this.get("borrowRate");
-    return value.toBigDecimal();
-  }
-
-  set borrowRate(value: BigDecimal) {
-    this.set("borrowRate", Value.fromBigDecimal(value));
-  }
-
-  get supplyRate(): BigDecimal {
-    let value = this.get("supplyRate");
-    return value.toBigDecimal();
-  }
-
-  set supplyRate(value: BigDecimal) {
-    this.set("supplyRate", Value.fromBigDecimal(value));
-  }
-
-  get collateralFactor(): BigDecimal {
-    let value = this.get("collateralFactor");
-    return value.toBigDecimal();
-  }
-
-  set collateralFactor(value: BigDecimal) {
-    this.set("collateralFactor", Value.fromBigDecimal(value));
-  }
-
-  get numberOfBorrowers(): i32 {
-    let value = this.get("numberOfBorrowers");
-    return value.toI32();
-  }
-
-  set numberOfBorrowers(value: i32) {
-    this.set("numberOfBorrowers", Value.fromI32(value));
-  }
-
-  get numberOfSuppliers(): i32 {
-    let value = this.get("numberOfSuppliers");
-    return value.toI32();
-  }
-
-  set numberOfSuppliers(value: i32) {
-    this.set("numberOfSuppliers", Value.fromI32(value));
-  }
-
-  get interestRateModelAddress(): Bytes {
-    let value = this.get("interestRateModelAddress");
-    return value.toBytes();
-  }
-
-  set interestRateModelAddress(value: Bytes) {
-    this.set("interestRateModelAddress", Value.fromBytes(value));
-  }
-
-  get accrualBlockNumber(): i32 {
-    let value = this.get("accrualBlockNumber");
-    return value.toI32();
-  }
-
-  set accrualBlockNumber(value: i32) {
-    this.set("accrualBlockNumber", Value.fromI32(value));
-  }
-
-  get blockTimestamp(): i32 {
-    let value = this.get("blockTimestamp");
-    return value.toI32();
-  }
-
-  set blockTimestamp(value: i32) {
-    this.set("blockTimestamp", Value.fromI32(value));
-  }
-
-  get borrowIndex(): BigDecimal {
-    let value = this.get("borrowIndex");
-    return value.toBigDecimal();
-  }
-
-  set borrowIndex(value: BigDecimal) {
-    this.set("borrowIndex", Value.fromBigDecimal(value));
-  }
-
-  get reserveFactor(): BigInt {
-    let value = this.get("reserveFactor");
+  get decimals(): BigInt {
+    let value = this.get("decimals");
     return value.toBigInt();
   }
 
-  set reserveFactor(value: BigInt) {
-    this.set("reserveFactor", Value.fromBigInt(value));
-  }
-
-  get gsighSpeed(): BigInt {
-    let value = this.get("gsighSpeed");
-    return value.toBigInt();
-  }
-
-  set gsighSpeed(value: BigInt) {
-    this.set("gsighSpeed", Value.fromBigInt(value));
-  }
-
-  get totalGsighDistributedToSuppliers(): BigInt {
-    let value = this.get("totalGsighDistributedToSuppliers");
-    return value.toBigInt();
-  }
-
-  set totalGsighDistributedToSuppliers(value: BigInt) {
-    this.set("totalGsighDistributedToSuppliers", Value.fromBigInt(value));
-  }
-
-  get totalGsighDistributedToBorrowers(): BigInt {
-    let value = this.get("totalGsighDistributedToBorrowers");
-    return value.toBigInt();
-  }
-
-  set totalGsighDistributedToBorrowers(value: BigInt) {
-    this.set("totalGsighDistributedToBorrowers", Value.fromBigInt(value));
-  }
-
-  get pendingAdmin(): Bytes {
-    let value = this.get("pendingAdmin");
-    return value.toBytes();
-  }
-
-  set pendingAdmin(value: Bytes) {
-    this.set("pendingAdmin", Value.fromBytes(value));
-  }
-
-  get admin(): Bytes {
-    let value = this.get("admin");
-    return value.toBytes();
-  }
-
-  set admin(value: Bytes) {
-    this.set("admin", Value.fromBytes(value));
-  }
-
-  get sightroller(): Bytes {
-    let value = this.get("sightroller");
-    return value.toBytes();
-  }
-
-  set sightroller(value: Bytes) {
-    this.set("sightroller", Value.fromBytes(value));
-  }
-
-  get sighSpeed(): BigInt {
-    let value = this.get("sighSpeed");
-    return value.toBigInt();
-  }
-
-  set sighSpeed(value: BigInt) {
-    this.set("sighSpeed", Value.fromBigInt(value));
-  }
-
-  get blockNumberWhenSpeedWasUpdated(): i32 {
-    let value = this.get("blockNumberWhenSpeedWasUpdated");
-    return value.toI32();
-  }
-
-  set blockNumberWhenSpeedWasUpdated(value: i32) {
-    this.set("blockNumberWhenSpeedWasUpdated", Value.fromI32(value));
-  }
-
-  get savePriceSnapshot(): BigInt {
-    let value = this.get("savePriceSnapshot");
-    return value.toBigInt();
-  }
-
-  set savePriceSnapshot(value: BigInt) {
-    this.set("savePriceSnapshot", Value.fromBigInt(value));
-  }
-
-  get sighAccuredInCurrentCycle(): BigInt {
-    let value = this.get("sighAccuredInCurrentCycle");
-    return value.toBigInt();
-  }
-
-  set sighAccuredInCurrentCycle(value: BigInt) {
-    this.set("sighAccuredInCurrentCycle", Value.fromBigInt(value));
-  }
-}
-
-export class Account extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id !== null, "Cannot save Account entity without an ID");
-    assert(
-      id.kind == ValueKind.STRING,
-      "Cannot save Account entity with non-string ID. " +
-        'Considering using .toHex() to convert the "id" to a string.'
-    );
-    store.set("Account", id.toString(), this);
-  }
-
-  static load(id: string): Account | null {
-    return store.get("Account", id) as Account | null;
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get tokens(): Array<string> {
-    let value = this.get("tokens");
-    return value.toStringArray();
-  }
-
-  set tokens(value: Array<string>) {
-    this.set("tokens", Value.fromStringArray(value));
-  }
-
-  get countLiquidated(): i32 {
-    let value = this.get("countLiquidated");
-    return value.toI32();
-  }
-
-  set countLiquidated(value: i32) {
-    this.set("countLiquidated", Value.fromI32(value));
-  }
-
-  get countLiquidator(): i32 {
-    let value = this.get("countLiquidator");
-    return value.toI32();
-  }
-
-  set countLiquidator(value: i32) {
-    this.set("countLiquidator", Value.fromI32(value));
-  }
-
-  get hasBorrowed(): boolean {
-    let value = this.get("hasBorrowed");
-    return value.toBoolean();
-  }
-
-  set hasBorrowed(value: boolean) {
-    this.set("hasBorrowed", Value.fromBoolean(value));
-  }
-}
-
-export class UserAccount_IndividualMarketStats extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(
-      id !== null,
-      "Cannot save UserAccount_IndividualMarketStats entity without an ID"
-    );
-    assert(
-      id.kind == ValueKind.STRING,
-      "Cannot save UserAccount_IndividualMarketStats entity with non-string ID. " +
-        'Considering using .toHex() to convert the "id" to a string.'
-    );
-    store.set("UserAccount_IndividualMarketStats", id.toString(), this);
-  }
-
-  static load(id: string): UserAccount_IndividualMarketStats | null {
-    return store.get(
-      "UserAccount_IndividualMarketStats",
-      id
-    ) as UserAccount_IndividualMarketStats | null;
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get market(): string {
-    let value = this.get("market");
-    return value.toString();
-  }
-
-  set market(value: string) {
-    this.set("market", Value.fromString(value));
-  }
-
-  get symbol(): string {
-    let value = this.get("symbol");
-    return value.toString();
-  }
-
-  set symbol(value: string) {
-    this.set("symbol", Value.fromString(value));
-  }
-
-  get account(): string {
-    let value = this.get("account");
-    return value.toString();
-  }
-
-  set account(value: string) {
-    this.set("account", Value.fromString(value));
-  }
-
-  get transactionHashes(): Array<Bytes> {
-    let value = this.get("transactionHashes");
-    return value.toBytesArray();
-  }
-
-  set transactionHashes(value: Array<Bytes>) {
-    this.set("transactionHashes", Value.fromBytesArray(value));
-  }
-
-  get transactionTimes(): Array<i32> {
-    let value = this.get("transactionTimes");
-    return value.toI32Array();
-  }
-
-  set transactionTimes(value: Array<i32>) {
-    this.set("transactionTimes", Value.fromI32Array(value));
-  }
-
-  get accrualBlockNumber(): i32 {
-    let value = this.get("accrualBlockNumber");
-    return value.toI32();
-  }
-
-  set accrualBlockNumber(value: i32) {
-    this.set("accrualBlockNumber", Value.fromI32(value));
-  }
-
-  get enteredMarket(): boolean {
-    let value = this.get("enteredMarket");
-    return value.toBoolean();
-  }
-
-  set enteredMarket(value: boolean) {
-    this.set("enteredMarket", Value.fromBoolean(value));
-  }
-
-  get cTokenBalance(): BigDecimal {
-    let value = this.get("cTokenBalance");
-    return value.toBigDecimal();
-  }
-
-  set cTokenBalance(value: BigDecimal) {
-    this.set("cTokenBalance", Value.fromBigDecimal(value));
-  }
-
-  get totalUnderlyingSupplied(): BigDecimal {
-    let value = this.get("totalUnderlyingSupplied");
-    return value.toBigDecimal();
-  }
-
-  set totalUnderlyingSupplied(value: BigDecimal) {
-    this.set("totalUnderlyingSupplied", Value.fromBigDecimal(value));
-  }
-
-  get totalUnderlyingRedeemed(): BigDecimal {
-    let value = this.get("totalUnderlyingRedeemed");
-    return value.toBigDecimal();
-  }
-
-  set totalUnderlyingRedeemed(value: BigDecimal) {
-    this.set("totalUnderlyingRedeemed", Value.fromBigDecimal(value));
-  }
-
-  get accountBorrowIndex(): BigDecimal {
-    let value = this.get("accountBorrowIndex");
-    return value.toBigDecimal();
-  }
-
-  set accountBorrowIndex(value: BigDecimal) {
-    this.set("accountBorrowIndex", Value.fromBigDecimal(value));
-  }
-
-  get totalUnderlyingBorrowed(): BigDecimal {
-    let value = this.get("totalUnderlyingBorrowed");
-    return value.toBigDecimal();
-  }
-
-  set totalUnderlyingBorrowed(value: BigDecimal) {
-    this.set("totalUnderlyingBorrowed", Value.fromBigDecimal(value));
-  }
-
-  get totalUnderlyingRepaid(): BigDecimal {
-    let value = this.get("totalUnderlyingRepaid");
-    return value.toBigDecimal();
-  }
-
-  set totalUnderlyingRepaid(value: BigDecimal) {
-    this.set("totalUnderlyingRepaid", Value.fromBigDecimal(value));
-  }
-
-  get storedBorrowBalance(): BigDecimal {
-    let value = this.get("storedBorrowBalance");
-    return value.toBigDecimal();
-  }
-
-  set storedBorrowBalance(value: BigDecimal) {
-    this.set("storedBorrowBalance", Value.fromBigDecimal(value));
-  }
-}
-
-export class SIGH extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id !== null, "Cannot save SIGH entity without an ID");
-    assert(
-      id.kind == ValueKind.STRING,
-      "Cannot save SIGH entity with non-string ID. " +
-        'Considering using .toHex() to convert the "id" to a string.'
-    );
-    store.set("SIGH", id.toString(), this);
-  }
-
-  static load(id: string): SIGH | null {
-    return store.get("SIGH", id) as SIGH | null;
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get currentCycle(): BigInt {
-    let value = this.get("currentCycle");
-    return value.toBigInt();
-  }
-
-  set currentCycle(value: BigInt) {
-    this.set("currentCycle", Value.fromBigInt(value));
-  }
-
-  get currentEra(): BigInt {
-    let value = this.get("currentEra");
-    return value.toBigInt();
-  }
-
-  set currentEra(value: BigInt) {
-    this.set("currentEra", Value.fromBigInt(value));
-  }
-
-  get Recentminter(): Bytes {
-    let value = this.get("Recentminter");
-    return value.toBytes();
-  }
-
-  set Recentminter(value: Bytes) {
-    this.set("Recentminter", Value.fromBytes(value));
-  }
-
-  get RecentCoinsMinted(): BigInt {
-    let value = this.get("RecentCoinsMinted");
-    return value.toBigInt();
-  }
-
-  set RecentCoinsMinted(value: BigInt) {
-    this.set("RecentCoinsMinted", Value.fromBigInt(value));
+  set decimals(value: BigInt) {
+    this.set("decimals", Value.fromBigInt(value));
   }
 
   get totalSupply(): BigInt {
@@ -795,21 +69,304 @@ export class SIGH extends Entity {
     this.set("totalSupply", Value.fromBigInt(value));
   }
 
-  get blockNumberWhenCoinsMinted(): BigInt {
-    let value = this.get("blockNumberWhenCoinsMinted");
+  get totalSupplyETH(): BigDecimal {
+    let value = this.get("totalSupplyETH");
+    return value.toBigDecimal();
+  }
+
+  set totalSupplyETH(value: BigDecimal) {
+    this.set("totalSupplyETH", Value.fromBigDecimal(value));
+  }
+
+  get recentSIGHBurnt(): BigInt {
+    let value = this.get("recentSIGHBurnt");
     return value.toBigInt();
   }
 
-  set blockNumberWhenCoinsMinted(value: BigInt) {
-    this.set("blockNumberWhenCoinsMinted", Value.fromBigInt(value));
+  set recentSIGHBurnt(value: BigInt) {
+    this.set("recentSIGHBurnt", Value.fromBigInt(value));
   }
 
-  get Reservoir(): Bytes {
-    let value = this.get("Reservoir");
+  get recentSIGHBurntETH(): BigDecimal {
+    let value = this.get("recentSIGHBurntETH");
+    return value.toBigDecimal();
+  }
+
+  set recentSIGHBurntETH(value: BigDecimal) {
+    this.set("recentSIGHBurntETH", Value.fromBigDecimal(value));
+  }
+
+  get totalSIGHBurnt(): BigInt {
+    let value = this.get("totalSIGHBurnt");
+    return value.toBigInt();
+  }
+
+  set totalSIGHBurnt(value: BigInt) {
+    this.set("totalSIGHBurnt", Value.fromBigInt(value));
+  }
+
+  get totalSIGHBurntETH(): BigDecimal {
+    let value = this.get("totalSIGHBurntETH");
+    return value.toBigDecimal();
+  }
+
+  set totalSIGHBurntETH(value: BigDecimal) {
+    this.set("totalSIGHBurntETH", Value.fromBigDecimal(value));
+  }
+
+  get currentCycle(): BigInt {
+    let value = this.get("currentCycle");
+    return value.toBigInt();
+  }
+
+  set currentCycle(value: BigInt) {
+    this.set("currentCycle", Value.fromBigInt(value));
+  }
+
+  get currentSchedule(): BigInt {
+    let value = this.get("currentSchedule");
+    return value.toBigInt();
+  }
+
+  set currentSchedule(value: BigInt) {
+    this.set("currentSchedule", Value.fromBigInt(value));
+  }
+
+  get currentInflation(): BigDecimal {
+    let value = this.get("currentInflation");
+    return value.toBigDecimal();
+  }
+
+  set currentInflation(value: BigDecimal) {
+    this.set("currentInflation", Value.fromBigDecimal(value));
+  }
+
+  get currentMintSpeed(): BigInt {
+    let value = this.get("currentMintSpeed");
+    return value.toBigInt();
+  }
+
+  set currentMintSpeed(value: BigInt) {
+    this.set("currentMintSpeed", Value.fromBigInt(value));
+  }
+
+  get currentMintSpeedETH(): BigDecimal {
+    let value = this.get("currentMintSpeedETH");
+    return value.toBigDecimal();
+  }
+
+  set currentMintSpeedETH(value: BigDecimal) {
+    this.set("currentMintSpeedETH", Value.fromBigDecimal(value));
+  }
+
+  get currentBurnSpeed(): BigInt {
+    let value = this.get("currentBurnSpeed");
+    return value.toBigInt();
+  }
+
+  set currentBurnSpeed(value: BigInt) {
+    this.set("currentBurnSpeed", Value.fromBigInt(value));
+  }
+
+  get currentBurnSpeedETH(): BigDecimal {
+    let value = this.get("currentBurnSpeedETH");
+    return value.toBigDecimal();
+  }
+
+  set currentBurnSpeedETH(value: BigDecimal) {
+    this.set("currentBurnSpeedETH", Value.fromBigDecimal(value));
+  }
+
+  get treasury(): Bytes {
+    let value = this.get("treasury");
     return value.toBytes();
   }
 
-  set Reservoir(value: Bytes) {
-    this.set("Reservoir", Value.fromBytes(value));
+  set treasury(value: Bytes) {
+    this.set("treasury", Value.fromBytes(value));
+  }
+
+  get speedController(): Bytes {
+    let value = this.get("speedController");
+    return value.toBytes();
+  }
+
+  set speedController(value: Bytes) {
+    this.set("speedController", Value.fromBytes(value));
+  }
+
+  get mintSnapshots(): Array<string> {
+    let value = this.get("mintSnapshots");
+    return value.toStringArray();
+  }
+
+  set mintSnapshots(value: Array<string>) {
+    this.set("mintSnapshots", Value.fromStringArray(value));
+  }
+}
+
+export class MintSnapshot extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save MintSnapshot entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save MintSnapshot entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("MintSnapshot", id.toString(), this);
+  }
+
+  static load(id: string): MintSnapshot | null {
+    return store.get("MintSnapshot", id) as MintSnapshot | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get cycle(): string {
+    let value = this.get("cycle");
+    return value.toString();
+  }
+
+  set cycle(value: string) {
+    this.set("cycle", Value.fromString(value));
+  }
+
+  get schedule(): BigInt {
+    let value = this.get("schedule");
+    return value.toBigInt();
+  }
+
+  set schedule(value: BigInt) {
+    this.set("schedule", Value.fromBigInt(value));
+  }
+
+  get inflationRate(): BigDecimal {
+    let value = this.get("inflationRate");
+    return value.toBigDecimal();
+  }
+
+  set inflationRate(value: BigDecimal) {
+    this.set("inflationRate", Value.fromBigDecimal(value));
+  }
+
+  get mintedAmount(): BigInt {
+    let value = this.get("mintedAmount");
+    return value.toBigInt();
+  }
+
+  set mintedAmount(value: BigInt) {
+    this.set("mintedAmount", Value.fromBigInt(value));
+  }
+
+  get mintedAmountETH(): BigDecimal {
+    let value = this.get("mintedAmountETH");
+    return value.toBigDecimal();
+  }
+
+  set mintedAmountETH(value: BigDecimal) {
+    this.set("mintedAmountETH", Value.fromBigDecimal(value));
+  }
+
+  get totalSupply(): BigInt {
+    let value = this.get("totalSupply");
+    return value.toBigInt();
+  }
+
+  set totalSupply(value: BigInt) {
+    this.set("totalSupply", Value.fromBigInt(value));
+  }
+
+  get totalSupplyETH(): BigDecimal {
+    let value = this.get("totalSupplyETH");
+    return value.toBigDecimal();
+  }
+
+  set totalSupplyETH(value: BigDecimal) {
+    this.set("totalSupplyETH", Value.fromBigDecimal(value));
+  }
+
+  get mintSpeed(): BigInt {
+    let value = this.get("mintSpeed");
+    return value.toBigInt();
+  }
+
+  set mintSpeed(value: BigInt) {
+    this.set("mintSpeed", Value.fromBigInt(value));
+  }
+
+  get mintSpeedETH(): BigDecimal {
+    let value = this.get("mintSpeedETH");
+    return value.toBigDecimal();
+  }
+
+  set mintSpeedETH(value: BigDecimal) {
+    this.set("mintSpeedETH", Value.fromBigDecimal(value));
+  }
+
+  get burnSpeed(): BigInt {
+    let value = this.get("burnSpeed");
+    return value.toBigInt();
+  }
+
+  set burnSpeed(value: BigInt) {
+    this.set("burnSpeed", Value.fromBigInt(value));
+  }
+
+  get burnSpeedETH(): BigDecimal {
+    let value = this.get("burnSpeedETH");
+    return value.toBigDecimal();
+  }
+
+  set burnSpeedETH(value: BigDecimal) {
+    this.set("burnSpeedETH", Value.fromBigDecimal(value));
+  }
+
+  get totalSighBurnt(): BigInt {
+    let value = this.get("totalSighBurnt");
+    return value.toBigInt();
+  }
+
+  set totalSighBurnt(value: BigInt) {
+    this.set("totalSighBurnt", Value.fromBigInt(value));
+  }
+
+  get totalSighBurntETH(): BigDecimal {
+    let value = this.get("totalSighBurntETH");
+    return value.toBigDecimal();
+  }
+
+  set totalSighBurntETH(value: BigDecimal) {
+    this.set("totalSighBurntETH", Value.fromBigDecimal(value));
+  }
+
+  get minter(): Bytes {
+    let value = this.get("minter");
+    return value.toBytes();
+  }
+
+  set minter(value: Bytes) {
+    this.set("minter", Value.fromBytes(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    return value.toBigInt();
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
   }
 }

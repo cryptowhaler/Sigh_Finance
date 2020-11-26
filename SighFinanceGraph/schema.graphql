@@ -1,7 +1,7 @@
-type SIGH @entity {
+type SIGH_Instrument @entity {
     "ID is contract address"
     id: ID!
-    symbol: Bytes!
+    symbol: String!
     decimals: BigInt!
     totalSupply: BigInt!
     totalSupplyETH: BigDecimal!
@@ -18,12 +18,12 @@ type SIGH @entity {
     currentBurnSpeedETH: BigDecimal!
     treasury: Bytes!
     speedController: Bytes!
-    mintSnapshots: [MintSnapshot!]! @derivedFrom(field:"sigh")
+    mintSnapshots: [MintSnapshot!]! @derivedFrom(field:"cycle")
 }
 
 type MintSnapshot @entity {
-    cycle: ID!
-    sigh: SIGH!
+    id: ID!
+    cycle: SIGH_Instrument! 
     schedule: BigInt!
     inflationRate: BigDecimal!
     mintedAmount: BigInt!
@@ -37,7 +37,7 @@ type MintSnapshot @entity {
     totalSighBurnt: BigInt!
     totalSighBurntETH: BigDecimal!
     minter: Bytes!
-    blockNumber: BigDecimal!
+    blockNumber: BigInt!
 }
 
 

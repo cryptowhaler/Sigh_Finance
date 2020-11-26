@@ -25,7 +25,7 @@ dataSources:
       eventHandlers:
         - event: MintingInitialized(address,address,uint256)
           handler: handleMintingInitialized
-        - event: SIGHMinted( address, uint256, uint256, uint256, uint256, uint256, uint256, uint256)
+        - event: SIGHMinted(address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleSIGHMinted
         - event: SIGHBurned(uint256,uint256,uint256,uint256)
           handler: handleSIGHBurned
