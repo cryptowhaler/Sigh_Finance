@@ -49,7 +49,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['IToken_redirectInterestStream','IToken_allowInterestRedirectionTo','IToken_getRedirectedBalance','getInstrumentPrice','refresh_User_Instrument_State']),
+    ...mapActions(['IToken_redirectInterestStream','IToken_allowInterestRedirectionTo','getInstrumentPrice','refresh_User_Instrument_State']),
     
 
     async initiatePriceLoop() {

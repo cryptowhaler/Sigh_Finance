@@ -105,20 +105,18 @@ export default {
         console.log('Stake Quantity - ' + quantity );
         console.log('Stake Value - ' + this.formData.sighValue);
 
-        let response =  await this.SIGHStaking_stake_SIGH( { amountToBeStaked:  parseInt(quantity) } );
+        let response =  await this.SIGHStaking_stake_SIGH( { amountToBeStaked:  quantity } );
         if (response.status) {  
           this.showLoader = false;
           console.log("BEFORE SUCCESS MESSAGE");
           console.log(response);
-          this.$showSuccessMsg({message: "SIGH STAKING SUCCESS : " + quantity + "  $SIGH worth " + this.formData.sighValue + " USD have been successfully staked. You currently have " + this.WalletSIGHState.sighStaked + " SIGH having worth " + (Number(this.WalletSIGHState.sighStaked) * (Number(this.SIGH_Price_USD_))).toFixed(4) + " USD Staked farming staking rewards for you. Enjoy farming SIGH Staking rewards!"  });
+          this.$showSuccessMsg({message: "SIGH STAKING SUCCESS : " + Number(quantity).toFixed(4) + "  $SIGH worth " + this.formData.sighValue + " USD have been successfully staked. You currently have " + this.WalletSIGHState.sighStaked + " SIGH having worth " + (Number(this.WalletSIGHState.sighStaked) * (Number(this.SIGH_Price_USD_))).toFixed(4) + " USD Staked farming staking rewards for you. Enjoy farming SIGH Staking rewards!"  });
           this.formData.sighValue = null;
           await this.refresh_Wallet_SIGH_State(false);        
-          // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Staked',Service: 'STAKING'});
         }
         else {
           this.$showErrorMsg({message: "SIGH STAKING  FAILED : " + response.message  });
           this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-          // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
         }
         this.formData.sighValue = null;
         this.showLoader = false;
@@ -151,18 +149,16 @@ export default {
         console.log('UN-Stake Quantity - ' + quantity);
         console.log('UN-Stake Value - ' + this.formData.sighValue);
 
-        let response =  await this.SIGHStaking_unstake_SIGH( { amountToBeUNStaked:  parseInt(quantity) } );
+        let response =  await this.SIGHStaking_unstake_SIGH( { amountToBeUNStaked:  quantity } );
         if (response.status) { 
           this.showLoader = false;
-          this.$showSuccessMsg({message: "SIGH UN-STAKING SUCCESS : " + quantity + "  $SIGH worth " + this.formData.sighValue + " USD have been successfully un-staked. You currently have " +  this.WalletSIGHState.sighStaked  + " SIGH having worth " + (Number(this.WalletSIGHState.sighStaked) * (Number(this.SIGH_Price_USD_))).toFixed(4) + " USD Staked farming staking rewards for you! " });
+          this.$showSuccessMsg({message: "SIGH UN-STAKING SUCCESS : " + Number(quantity).toFixed(4) + "  $SIGH worth " + this.formData.sighValue + " USD have been successfully un-staked. You currently have " +  this.WalletSIGHState.sighStaked  + " SIGH having worth " + (Number(this.WalletSIGHState.sighStaked) * (Number(this.SIGH_Price_USD_))).toFixed(4) + " USD Staked farming staking rewards for you! " });
           this.formData.sighValue = null;
           await this.refresh_Wallet_SIGH_State(false);        
-          // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Un-Staked',Service: 'STAKING'});
         }
         else {
           this.$showErrorMsg({message: "SIGH UN-STAKING FAILED : " + response.message  });
           this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-            // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
           }
           this.showLoader = false;      
         }
@@ -190,11 +186,11 @@ export default {
         this.showLoader = true;
         console.log('SIGH Quantity to be Approved - ' + quantity);
         console.log('SIGH Quantity Worth - ' + value);
-        let response = await this.ERC20_increaseAllowance( { tokenAddress: this.$store.state.SIGHContractAddress , spender: this.$store.getters.sighStakingContractAddress , addedValue:  parseInt(quantity)  , symbol : 'SIGH'  } );
+        let response = await this.ERC20_increaseAllowance( { tokenAddress: this.$store.state.SIGHContractAddress , spender: this.$store.getters.sighStakingContractAddress , addedValue:  quantity  , symbol : 'SIGH', decimals: 18  } );
         if (response.status) { 
           this.showLoader = false;
           this.formData.sighValue = null;
-          this.$showSuccessMsg({message: "APPROVAL SUCCESS : Allowance Added = " + quantity +  " SIGH. Maximum of " + this.WalletSIGHState.sighStakingAllowance + "  SIGH can now be staked to farm Staking Rewards!"  });
+          this.$showSuccessMsg({message: "APPROVAL SUCCESS : Allowance Added = " + Number(quantity).toFixed(4) +  " SIGH. Maximum of " + this.WalletSIGHState.sighStakingAllowance + "  SIGH can now be staked to farm Staking Rewards!"  });
           await this.refresh_Wallet_SIGH_State(false);        
           // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});      
         }

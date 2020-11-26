@@ -69,7 +69,6 @@ export default {
             this.intervalActivated = true;
             this.SIGH_Price_ETH_ = await this.getInstrumentPrice({_instrumentAddress : this.$store.state.SIGHContractAddress });
             this.SIGH_Price_USD_ = Number( ( Number(this.SIGH_Price_ETH_) / Math.pow(10,this.sighInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4);
-            // console.log("SIGH STAKING : QUANTITY, Price (USD) " + this.SIGH_Price_USD_);
           }
         },1000);
       this.sighInstrument = this.$store.state.SIGHState;    
@@ -107,12 +106,10 @@ export default {
           this.$showSuccessMsg({message: "SIGH STAKING SUCCESS : " + this.formData.sighQuantity + "  $SIGH worth " + value + " USD have been successfully staked. You currently have " + this.WalletSIGHState.sighStaked + " SIGH having worth " + (Number(this.WalletSIGHState.sighStaked) * (Number(this.SIGH_Price_USD_))).toFixed(4) + " USD Staked farming staking rewards for you. Enjoy farming SIGH Staking rewards!"  });
           this.formData.sighQuantity = null;
           await this.refresh_Wallet_SIGH_State(false);        
-          // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Staked',Service: 'STAKING'});
         }
         else {
           this.$showErrorMsg({message: "SIGH STAKING  FAILED : " + response.message  });
           this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-          // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
         }
         this.formData.sighQuantity = null;
         this.showLoader = false;
@@ -173,7 +170,7 @@ export default {
         console.log(this.sighInstrument);
         console.log('SIGH Quantity to be Approved - ' + this.formData.sighQuantity);
         console.log('SIGH Quantity Worth - ' + value);
-        let response = await this.ERC20_increaseAllowance( { tokenAddress: this.$store.state.SIGHContractAddress , spender: this.$store.getters.sighStakingContractAddress , addedValue:  this.formData.sighQuantity  , symbol :'SIGH'  } );
+        let response = await this.ERC20_increaseAllowance( { tokenAddress: this.$store.state.SIGHContractAddress , spender: this.$store.getters.sighStakingContractAddress , addedValue:  this.formData.sighQuantity  , symbol :'SIGH' , decimals: 18  } );
         if (response.status) { 
           this.showLoader = false;
           this.formData.sighQuantity = null;

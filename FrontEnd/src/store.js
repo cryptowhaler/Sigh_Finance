@@ -1167,7 +1167,7 @@ const store = new Vuex.Store({
         cur_user_instrument_state.side = sighSpeeds.side;
   
         // INTEREST STREAM 
-        cur_user_instrument_state.redirectedBalance =  await store.dispatch("IToken_getRedirectedBalance",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
+        cur_user_instrument_state.redirectedBalance =  await store.dispatch("IToken_getRedirectedBalance",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet, decimals: cur_user_instrument_state.decimals }) ;
         cur_user_instrument_state.interestRedirectionAllowance =  await store.dispatch("IToken_getinterestRedirectionAllowances",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
         cur_user_instrument_state.interestRedirectionAddress =  await store.dispatch("IToken_getInterestRedirectionAddress",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
 
@@ -1252,7 +1252,6 @@ getUserProtocolState: async ({commit,state},{_user}) => {
   if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
     const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
     console.log('getUserProtocolState');
-    console.log(_user);
     let response = await lendingPoolContract.methods.getUserAccountData(_user).call();
     console.log(response);
     return response;å
@@ -1267,8 +1266,6 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
   if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
     const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
     console.log('getUserInstrumentState');
-    console.log(_instrumentAddress);
-    console.log(_user);
     try {
       let response = await lendingPoolContract.methods.getUserInstrumentData(_instrumentAddress,_user).call();
       console.log(response);
@@ -1313,14 +1310,15 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       }
     },
 
+    // DECIMAL ADJUSTED
     getSIGHSpeedControllerBalance: async ({commit,state}) => {
       if (state.web3 && state.SIGHSpeedControllerAddress && state.SIGHSpeedControllerAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighSpeedControllerContract = new state.web3.eth.Contract(SighSpeedController.abi, state.SIGHSpeedControllerAddress );
-        // console.log(sighSpeedControllerContract);
         try {
           let response = await sighSpeedControllerContract.methods.getSIGHBalance().call();
-          // console.log("getSIGHSpeedControllerBalance" + response);
-          return response;
+          let balance = BigNumber(response);
+          balance = balance.shiftedBy(-18);
+          return balance;
           }
         catch(error) {
           console.log(error);
@@ -1336,10 +1334,8 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     getSIGHSpeedControllerSupportedProtocols: async ({commit,state}) => {
       if (state.web3 && state.SIGHSpeedControllerAddress && state.SIGHSpeedControllerAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighSpeedControllerContract = new state.web3.eth.Contract(SighSpeedController.abi, state.SIGHSpeedControllerAddress );
-        // console.log(sighSpeedControllerContract);
         try {
           let response = await sighSpeedControllerContract.methods.getSupportedProtocols().call();
-          // console.log('getSIGHSpeedControllerSupportedProtocols');
           // console.log(response);
           return response;
           }
@@ -1357,7 +1353,6 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     getSIGHSpeedControllerSupportedProtocolState: async ({commit,state},{protocolAddress}) => {
       if (state.web3 && state.SIGHSpeedControllerAddress && state.SIGHSpeedControllerAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighSpeedControllerContract = new state.web3.eth.Contract(SighSpeedController.abi, state.SIGHSpeedControllerAddress );
-        // console.log(sighSpeedControllerContract);
         try {
           let response = await sighSpeedControllerContract.methods.getSupportedProtocolState(protocolAddress).call();
           // console.log('getSIGHSpeedControllerSupportedProtocolState');
@@ -1465,8 +1460,6 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     SIGHDistributionHandler_getInstrumentSighMechansimStates: async ({commit,state},{instrument_}) => {
       if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
-        // console.log(sighDistributionHandlerContract);
-        // let response = await sighDistributionHandlerContract.methods.getInstrumentSpeeds(instrument_).call();
         let response = await sighDistributionHandlerContract.methods.getInstrumentSighMechansimStates(instrument_).call();
         console.log("sighDistributionHandler INSTRUMENT Data = " );
         console.log(response);                
@@ -1562,13 +1555,17 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
 // ############ SIGH Staking --- getStakedBalanceForStaker() VIEW FUNCTION ############
 // ######################################################
 
+    // DECIMAL ADJUSTED
     SIGHStaking_stake_SIGH: async ({commit,state},{amountToBeStaked}) => {
       if (state.web3 && state.sighStakingContractAddress && state.sighStakingContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighStakingContract = new state.web3.eth.Contract(SighStakingInterface.abi, state.sighStakingContractAddress );
         console.log(sighStakingContract);
-        try {            
-          const response = await sighStakingContract.methods.stake_SIGH(amountToBeStaked).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
-            let transaction = {hash : hash, function : '$SIGH Staking', amount : amountToBeStaked + ' SIGH'  }; 
+        try {   
+          let quantity_ = new BigNumber(Number(amountToBeStaked));
+          quantity_ = quantity_.shiftedBy(18).toFixed(0);
+          console.log(symbol + " SIGH Being staked (BIG NUMBER, i.e Wei) = " + quantity_ );    
+          const response = await sighStakingContract.methods.stake_SIGH(quantity_).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+            let transaction = {hash : hash, function : '$SIGH Staking', amount : Number(amountToBeStaked).toFixed(4) + ' SIGH'  }; 
             commit('addToSessionPendingTransactions',transaction);
           });
           console.log(response);
@@ -1585,13 +1582,17 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       }
     },
 
+    // DECIMAL ADJUSTED    
     SIGHStaking_unstake_SIGH: async ({commit,state},{amountToBeUNStaked}) => {
       if (state.web3 && state.sighStakingContractAddress && state.sighStakingContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighStakingContract = new state.web3.eth.Contract(SighStakingInterface.abi, state.sighStakingContractAddress );
         console.log(sighStakingContract);        
-        try {             // console.log('Making transaction (in store)');
-          const response = await sighStakingContract.methods.unstake_SIGH(amountToBeUNStaked).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
-            let transaction = {hash : hash, function : '$SIGH Un-Staking', amount : amountToBeUNStaked + ' SIGH'  }; 
+        try { 
+          let quantity_ = new BigNumber(Number(amountToBeUNStaked));
+          quantity_ = quantity_.shiftedBy(18).toFixed(0);
+          console.log(symbol + " SIGH Being UNstaked (BIG NUMBER, i.e Wei) = " + quantity_ );              
+          const response = await sighStakingContract.methods.unstake_SIGH(quantity_).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+            let transaction = {hash : hash, function : '$SIGH Un-Staking', amount : Number(amountToBeUNStaked).toFixed(4) + ' SIGH'  }; 
             commit('addToSessionPendingTransactions',transaction);
           });
           console.log(response);
@@ -1612,7 +1613,7 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       if (state.web3 && state.sighStakingContractAddress && state.sighStakingContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighStakingContract = new state.web3.eth.Contract(SighStakingInterface.abi, state.sighStakingContractAddress );
         console.log(sighStakingContract);        
-        try {             // console.log('Making transaction (in store)');
+        try {         
           const response = await sighStakingContract.methods.claimAllAccumulatedInstruments().send({from: state.connectedWallet}).on('transactionHash',function(hash) {
             let transaction = {hash : hash, function : '$SIGH Staking : Claim Rewards', amount : null  }; 
             commit('addToSessionPendingTransactions',transaction);
@@ -1620,7 +1621,7 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
           console.log(response);
           return response;
         }
-        catch(error) {    // console.log('Making transaction (in store - catch)');            
+        catch(error) {           
           console.log(error);
           return error;
         }
@@ -1635,7 +1636,7 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       if (state.web3 && state.sighStakingContractAddress && state.sighStakingContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighStakingContract = new state.web3.eth.Contract(SighStakingInterface.abi, state.sighStakingContractAddress );
         console.log(sighStakingContract);
-        try {             // console.log('Making transaction (in store)');
+        try {       
           const response = await sighStakingContract.methods.claimAccumulatedInstrument(instrumentToBeClaimed).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
             let transaction = {hash : hash, function : '$SIGH Staking : Claim Reward' , amount : null  }; 
             commit('addToSessionPendingTransactions',transaction);
@@ -1643,7 +1644,7 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
           console.log(response);
           return response;
         }
-        catch(error) {    // console.log('Making transaction (in store - catch)');            
+        catch(error) {        
           console.log(error);
           return error;
         }
@@ -1677,13 +1678,17 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       }
     },
 
+    // DECIMAL ADJUSTED
     SIGHStaking_getStakedBalanceForStaker: async ({commit,state},{_user}) => {
       if (state.web3 && state.sighStakingContractAddress && state.sighStakingContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighStakingContract = new state.web3.eth.Contract(SighStakingInterface.abi, state.sighStakingContractAddress );
         // console.log(sighStakingContract);
         const response = await sighStakingContract.methods.getStakedBalanceForStaker(_user).call();
         console.log('SIGH Staked Balance = ' + response);
-        return response;
+        let stakedBalance = BigNumber(response);
+        stakedBalance = stakedBalance.shiftedBy(-18);
+        console.log('SIGH Staked Balance (Decimal Adjusted) = ' + stakedBalance);
+        return stakedBalance;
       }
       else {
         console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -1702,7 +1707,7 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
 // ############ Lending Pool --- flashLoan() [FLASH LOAN (total fee = protocol fee + fee distributed among depositors)] FUNCTION 
 // ######################################################
 
-    // INTEGRATED. FUNCTIONING AS EXPECTED
+    // DECIMAL ADJUSTED
     LendingPool_deposit: async ({commit,state},{_instrument,_amount,_referralCode, symbol, decimals }) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
@@ -1728,6 +1733,7 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       }
     },
 
+    // DECIMAL ADJUSTED
     LendingPool_borrow: async ({commit,state},{_instrument,_amount,_interestRateMode,_referralCode, symbol, decimals}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
@@ -1753,6 +1759,7 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       }
     },
 
+    // DECIMAL ADJUSTED
     LendingPool_repay: async ({commit,state},{_instrument,_amount,_onBehalfOf,symbol,decimals}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
@@ -1896,7 +1903,6 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     LendingPool_getInstruments: async ({commit,state}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-        // console.log(lendingPoolContract);
         try {
           const response = await lendingPoolContract.methods.getInstruments().call();
           // console.log("LendingPool_getInstruments");
@@ -1904,7 +1910,6 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
           return response;
           }
           catch(error) {
-            // console.log('Making transaction (in store - catch)');
             console.log(error);
             return error;
           }
@@ -1918,15 +1923,11 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     LendingPool_getInstrumentConfigurationData: async ({commit,state},{_instrumentAddress}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-        // console.log(lendingPoolContract);
         try {
           const response = await lendingPoolContract.methods.getInstrumentConfigurationData(_instrumentAddress).call();
-          // console.log('LendingPool_getInstrumentConfigurationData');
-          // console.log(response);
           return response;
           }
           catch(error) {
-            // console.log('Making transaction (in store - catch)');
             console.log(error);
             return error;
           }
@@ -1940,15 +1941,11 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     LendingPool_getInstrumentData: async ({commit,state},{_instrumentAddress}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-        // console.log(lendingPoolContract);
         try {
           const response = await lendingPoolContract.methods.getInstrumentData(_instrumentAddress).call();
-          // console.log('LendingPool_getInstrumentData');
-          // console.log(response);
           return response;
           }
           catch(error) {
-            // console.log('Making transaction (in store - catch)');
             console.log(error);
             return error;
           }
@@ -1962,14 +1959,12 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     LendingPool_getUserAccountData: async ({commit,state},{_user}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-        console.log(lendingPoolContract);
         try {
           const response = await lendingPoolContract.methods.getUserAccountData(_user).call();
           console.log(response);
           return response;
           }
           catch(error) {
-            // console.log('Making transaction (in store - catch)');
             console.log(error);
             return error;
           }
@@ -1983,14 +1978,12 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     LendingPool_getUserInstrumentData: async ({commit,state},{_instrument, _user}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-        console.log(lendingPoolContract);
         try {
           const response = await lendingPoolContract.methods.getUserInstrumentData(_instrument, _user).call();
           console.log(response);
           return response;
           }
           catch(error) {
-            // console.log('Making transaction (in store - catch)');
             console.log(error);
             return error;
           }
@@ -2004,7 +1997,6 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     LendingPoolCore_getUserBorrowBalances: async ({commit,state},{_instrument,_user}) => {
       if (state.web3 && state.LendingPoolCoreContractAddress && state.LendingPoolCoreContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolCoreContract = new state.web3.eth.Contract(LendingPoolCore.abi, state.LendingPoolCoreContractAddress );
-        console.log(lendingPoolCoreContract);
         const response = await lendingPoolCoreContract.methods.getUserBorrowBalances(_instrument,_user).call();
         console.log(response);
         return response;
@@ -2019,9 +2011,6 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       if (state.web3 && state.LendingPoolCoreContractAddress && state.LendingPoolCoreContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolCoreContract = new state.web3.eth.Contract(LendingPoolCore.abi, state.LendingPoolCoreContractAddress );
         console.log('LendingPoolCore_getUserBasicInstrumentData');
-        console.log(_instrument);
-        console.log(_user);
-        console.log(lendingPoolCoreContract);
         const response = await lendingPoolCoreContract.methods.getUserBasicInstrumentData(_instrument,_user).call();
         console.log(response);
         return response;
@@ -2056,6 +2045,7 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
 // ############ ITOKEN Functions --- getSighStreamAllowances() VIEW FUNCTION 
 // ######################################################
 
+// DECIMAL ADJUSTED
 IToken_redeem: async ({commit,state},{iTokenAddress,_amount,symbol, decimals}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
@@ -2255,13 +2245,16 @@ IToken_isTransferAllowed: async ({commit,state},{iTokenAddress,_user,_amount}) =
   }
 },
 
-IToken_principalBalanceOf: async ({commit,state},{iTokenAddress,_user}) => {
+// DECIMAL ADJUSTED
+IToken_principalBalanceOf: async ({commit,state},{iTokenAddress,_user, decimals}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    // console.log(iTokenContract);
     const response = await iTokenContract.methods.principalBalanceOf(_user).call();
     console.log("IToken_principalBalanceOf " + response);
-    return response;  
+    let principalBalance = BigNumber(response);
+    principalBalance = principalBalance.shiftedBy((-1) * Number(decimals));
+    console.log('IToken_principalBalanceOf (DECIMAL ADJUSTED) ' + principalBalance);
+    return principalBalance;  
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -2272,10 +2265,8 @@ IToken_principalBalanceOf: async ({commit,state},{iTokenAddress,_user}) => {
 IToken_getInterestRedirectionAddress: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    // console.log(iTokenContract);
     const response = await iTokenContract.methods.getInterestRedirectionAddress(_user).call();
     console.log('IToken_getInterestRedirectionAddress ' + response);
-    // console.log(response);
     return response;  
   }
   else {
@@ -2289,11 +2280,9 @@ IToken_getInterestRedirectionAddress: async ({commit,state},{iTokenAddress,_user
 IToken_getinterestRedirectionAllowances: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    // console.log(iTokenContract);
     try {
       const response = await iTokenContract.methods.interestRedirectionAllowances(_user).call();
       console.log('IToken_getinterestRedirectionAllowances - ' + response);
-      // console.log(response);
       return response;  
     }
     catch (error) {
@@ -2308,15 +2297,16 @@ IToken_getinterestRedirectionAllowances: async ({commit,state},{iTokenAddress,_u
 },
 
 
-
-IToken_getRedirectedBalance: async ({commit,state},{iTokenAddress,_user}) => {
+// DECIMAL ADJUSTED
+IToken_getRedirectedBalance: async ({commit,state},{iTokenAddress,_user, decimals}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    // console.log(iTokenContract);
     const response = await iTokenContract.methods.getRedirectedBalance(_user).call();
     console.log('IToken_getRedirectedBalance - ' + response);
-    console.log(response);
-    return response;  
+    let redirectedBalance = BigNumber(response);
+    redirectedBalance = redirectedBalance.shiftedBy((-1) * Number(decimals));
+    console.log('IToken_getRedirectedBalance (DECIMAL ADJUSTED) ' + redirectedBalance);
+    return redirectedBalance;  
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -2324,16 +2314,16 @@ IToken_getRedirectedBalance: async ({commit,state},{iTokenAddress,_user}) => {
   }
 },
 
+// DECIMAL ADJUSTED
 IToken_getSighAccured: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    // console.log(iTokenAddress);
-    // console.log(_user);
-    // console.log(iTokenContract);
     const response = await iTokenContract.methods.getRedirectedBalance(_user).call();
     console.log('IToken_getSighAccured ' + response);
-    // console.log(response);
-    return response;
+    let sighAccured = BigNumber(response);
+    sighAccured = sighAccured.shiftedBy(-18);
+    console.log('IToken_getSighAccured (DECIMAL ADJUSTED) ' + sighAccured);
+    return sighAccured;
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
@@ -2344,9 +2334,6 @@ IToken_getSighAccured: async ({commit,state},{iTokenAddress,_user}) => {
 IToken_getSighStreamRedirectedTo: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    // console.log(iTokenAddress);
-    // console.log(_user);
-    // console.log(iTokenContract);
     const response = await iTokenContract.methods.getSighStreamRedirectedTo(_user).call();
     console.log('IToken_getSighStreamRedirectedTo ' + response);
     return response;
@@ -2360,12 +2347,8 @@ IToken_getSighStreamRedirectedTo: async ({commit,state},{iTokenAddress,_user}) =
 IToken_getSighStreamAllowances: async ({commit,state},{iTokenAddress,_user}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
-    console.log(iTokenAddress);
-    console.log(_user);
-    // console.log(iTokenContract);
     const response = await iTokenContract.methods.getSighStreamAllowances(_user).call();
     console.log('IToken_getSighStreamAllowances ' + response );
-    // console.log(response);
     return response;
   }
   else {
@@ -2385,6 +2368,7 @@ IToken_getSighStreamAllowances: async ({commit,state},{iTokenAddress,_user}) => 
 // ############ ERC20 Standard Functions --- balanceOf() VIEW FUNCTION 
 // ######################################################
 
+// Decimals Adjusted
 ERC20_approve: async ({commit,state},{tokenAddress,spender,quantity,symbol, decimals }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
@@ -2393,7 +2377,7 @@ ERC20_approve: async ({commit,state},{tokenAddress,spender,quantity,symbol, deci
       quantity_ = quantity_.shiftedBy(Number(decimals)).toFixed(0);
       console.log(symbol + " Being Approved (BIG NUMBER, i.e Wei) = " + quantity_ );
       const response = await erc20Contract.methods.approve(spender,quantity_).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
-        let transaction = {hash : hash, function : ' APPROVE' , amount : quantity_ + ' ' + symbol}; 
+        let transaction = {hash : hash, function : ' APPROVE' , amount : Number(quantity).toFixed(4) + ' ' + symbol}; 
         commit('addToSessionPendingTransactions',transaction);
         });
       console.log(response);
@@ -2410,6 +2394,7 @@ ERC20_approve: async ({commit,state},{tokenAddress,spender,quantity,symbol, deci
   }
 },
 
+// Decimals Adjusted
 ERC20_mint: async ({commit,state},{tokenAddress,quantity,symbol, decimals }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(MintableERC20.abi, tokenAddress );
@@ -2435,12 +2420,15 @@ ERC20_mint: async ({commit,state},{tokenAddress,quantity,symbol, decimals }) => 
   }
 },
 
-
-ERC20_transfer: async ({commit,state},{tokenAddress,recepient,amount,symbol }) => {
+// Decimals Adjusted
+ERC20_transfer: async ({commit,state},{tokenAddress,recepient,amount,symbol,decimals }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     try {
-      const response = await erc20Contract.methods.transfer(recepient,amount).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+      let quantity_ = new BigNumber(Number(amount));
+      quantity_ = quantity_.shiftedBy(Number(decimals)).toFixed(0);
+      console.log(symbol + " Transfer (BIG NUMBER, i.e Wei) = " + quantity_ );
+      const response = await erc20Contract.methods.transfer(recepient,quantity_).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
         let transaction = {hash : hash, function : ' TRANSFER' , amount : amount + ' ' + symbol}; 
         commit('addToSessionPendingTransactions',transaction);
         });
@@ -2458,11 +2446,15 @@ ERC20_transfer: async ({commit,state},{tokenAddress,recepient,amount,symbol }) =
   }
 },
 
-ERC20_transferFrom: async ({commit,state},{tokenAddress,sender,recepient,amount,symbol }) => {
+// Decimals Adjusted
+ERC20_transferFrom: async ({commit,state},{tokenAddress,sender,recepient,amount,symbol,decimals }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     try {
-      const response = await erc20Contract.methods.transferFrom(sender,recepient,amount).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+      let quantity_ = new BigNumber(Number(amount));
+      quantity_ = quantity_.shiftedBy(Number(decimals)).toFixed(0);
+      console.log(symbol + " Transfer From (BIG NUMBER, i.e Wei) = " + quantity_ );
+      const response = await erc20Contract.methods.transferFrom(sender,recepient,quantity_).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
         let transaction = {hash : hash, function : ' TRANSFER FROM' , amount : amount + ' ' + symbol}; 
         commit('addToSessionPendingTransactions',transaction);
         });
@@ -2480,6 +2472,7 @@ ERC20_transferFrom: async ({commit,state},{tokenAddress,sender,recepient,amount,
   }
 },
 
+// Decimals Adjusted
 ERC20_increaseAllowance: async ({commit,state},{tokenAddress,spender,addedValue,symbol, decimals }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
@@ -2488,7 +2481,7 @@ ERC20_increaseAllowance: async ({commit,state},{tokenAddress,spender,addedValue,
       let quantity_ = new BigNumber(Number(addedValue));
       quantity_ = quantity_.shiftedBy(Number(decimals)).toFixed(0);
       console.log(symbol + " Increase Allowance (BIG NUMBER, i.e Wei) = " + quantity_ );
-      const response = await erc20Contract.methods.increaseAllowance(spender,addedValue).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+      const response = await erc20Contract.methods.increaseAllowance(spender,quantity_).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
         let transaction = {hash : hash, function : ' INCREASE ALLOWANCE' , amount : Number(addedValue).toFixed(4) + ' ' + symbol}; 
         commit('addToSessionPendingTransactions',transaction);
         });
@@ -2506,13 +2499,17 @@ ERC20_increaseAllowance: async ({commit,state},{tokenAddress,spender,addedValue,
   }
 },
 
-ERC20_decreaseAllowance: async ({commit,state},{tokenAddress,spender,subtractedValue,symbol }) => {
+// Decimals Adjusted
+ERC20_decreaseAllowance: async ({commit,state},{tokenAddress,spender,subtractedValue,symbol, decimals }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     console.log(erc20Contract);
     try {
-      const response = await erc20Contract.methods.decreaseAllowance(spender,subtractedValue).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
-        let transaction = {hash : hash, function : ' DECREASE ALLOWANCE' , amount : subtractedValue + ' ' + symbol}; 
+      let quantity_ = new BigNumber(Number(subtractedValue));
+      quantity_ = quantity_.shiftedBy(Number(decimals)).toFixed(0);
+      console.log(symbol + " Decrease Allowance (BIG NUMBER, i.e Wei) = " + quantity_ );
+      const response = await erc20Contract.methods.decreaseAllowance(spender,quantity_).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : ' DECREASE ALLOWANCE' , amount : Number(subtractedValue).toFixed(4) + ' ' + symbol}; 
         commit('addToSessionPendingTransactions',transaction);
         });
       console.log(response);
@@ -2529,19 +2526,18 @@ ERC20_decreaseAllowance: async ({commit,state},{tokenAddress,spender,subtractedV
   }
 },
 
+
+// Decimals Adjusted
 ERC20_getAllowance: async ({commit,getters,state},{tokenAddress,owner,spender }) => {
-  console.log(tokenAddress);
-  console.log(owner);
-  console.log(spender);
   if (state.web3 && owner && spender && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
+    let decimals = await store.dispatch("ERC20_decimals",{tokenAddress: tokenAddress}); 
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
-    // console.log(erc20Contract);
     const response = await erc20Contract.methods.allowance(owner,spender).call();
-    // console.log(response);
-    // let quantityInBigNumber = new BigNumber(response);
-    // quantityInBigNumber.shiftedBy( -1 * Number(state.supportedInstrumentConfigs.get(tokenAddress).decimals));
     console.log('Current allowance (value returned) - ' + response);
-    return response;
+    let allowance = BigNumber(response);
+    allowance = allowance.shiftedBy((-1)*Number(decimals)).toNumber();
+    console.log('Current allowance (value returned) Decimals Adjusted - ' + allowance);
+    return allowance;
   }
   else {
     console.log("This ERC20 Contract has currently not been deployed on " + getters.networkName);
@@ -2549,14 +2545,17 @@ ERC20_getAllowance: async ({commit,getters,state},{tokenAddress,owner,spender })
   }
 },
 
+// Decimals Adjusted
 ERC20_balanceOf: async ({commit,state},{tokenAddress,account }) => {
   if (state.web3 && account && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
-    // console.log(erc20Contract);
-    // console.log('Balance Of Call');
+    let decimals = await store.dispatch("ERC20_decimals",{tokenAddress: tokenAddress}); 
     const response = await erc20Contract.methods.balanceOf(account).call();
-    console.log(tokenAddress + ' Balance ' + response);
-    return response;
+    console.log('Current Balance (value returned) - ' + response);
+    let balance = BigNumber(response);
+    balance = balance.shiftedBy((-1)*Number(decimals)).toNumber();
+    console.log('Current Balance (value returned) Decimals Adjusted - ' + balance);
+    return balance;
   }
   else {
     console.log("This ERC20 Contract has currently not been deployed on " + getters.networkName);
@@ -2564,13 +2563,17 @@ ERC20_balanceOf: async ({commit,state},{tokenAddress,account }) => {
   }
 },
 
+// Decimals Adjusted
 ERC20_totalSupply: async ({commit,state},{tokenAddress}) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
-    console.log(erc20Contract);
+    let decimals = await store.dispatch("ERC20_decimals",{tokenAddress: tokenAddress}); 
     const response = await erc20Contract.methods.totalSupply().call();
-    console.log(response);
-    return response;
+    console.log('Total Supply (value returned) - ' + response);
+    let supply = BigNumber(response);
+    supply = supply.shiftedBy((-1)*Number(decimals)).toNumber();
+    console.log('Total Supply (value returned) Decimals Adjusted - ' + supply);
+    return supply;
   }
   else {
     console.log("This ERC20 Contract has currently not been deployed on " + getters.networkName);
@@ -2581,9 +2584,7 @@ ERC20_totalSupply: async ({commit,state},{tokenAddress}) => {
 ERC20_name: async ({commit,state},{tokenAddress}) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20Detailed.abi, tokenAddress );
-    // console.log(erc20Contract);
     const response = await erc20Contract.methods.name().call();
-    // console.log("ERC20_name " + response);
     return response;
   }
   else {
@@ -2595,9 +2596,7 @@ ERC20_name: async ({commit,state},{tokenAddress}) => {
 ERC20_symbol: async ({commit,state},{tokenAddress}) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20Detailed.abi, tokenAddress );
-    // console.log(erc20Contract);
     const response = await erc20Contract.methods.symbol().call();
-    // console.log("ERC20_symbol " + response);
     return response;
   }
   else {
@@ -2609,9 +2608,7 @@ ERC20_symbol: async ({commit,state},{tokenAddress}) => {
 ERC20_decimals: async ({commit,state},{tokenAddress}) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20Detailed.abi, tokenAddress );
-    // console.log(erc20Contract);
     const response = await erc20Contract.methods.decimals().call();
-    // console.log("ERC20_decimals " + response);
     return response;
   }
   else {
@@ -2628,7 +2625,6 @@ ERC20_decimals: async ({commit,state},{tokenAddress}) => {
 SIGH_mintCoins: async ({commit,state}) => {
   if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
     const sighContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
-    // console.log(sighContract);
     sighContract.methods.mintCoins().send({from: state.connectedWallet}).on('transactionHash',function(hash) {
       let transaction = {hash : hash, function : ' MINT SIGH' , amount : null}; 
       commit('addToSessionPendingTransactions',transaction);
@@ -2647,6 +2643,37 @@ SIGH_mintCoins: async ({commit,state}) => {
     return "SIGH Finance (SIGH Instrument Contract) is currently not been deployed on ";
   }
 },
+
+// Decimals Adjusted
+getTotalSighBurnt: async ({commit,state}) => {
+  if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const sighInstrumentContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
+    let response = await sighInstrumentContract.methods.getTotalSighBurnt().call();
+    let sighBurnt = BigNumber(response);
+    sighBurnt = sighBurnt.shiftedBy( -18 );
+    return sighBurnt;
+  }
+  else {
+    console.log('getTotalSighBurnt() function in store.js. Protocol not supported on connected blockchain network');
+    return null;
+  }
+},
+
+// Decimals Adjusted
+getCurrentMintSpeed: async ({commit,state}) => {
+  if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const sighInstrumentContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
+    let response = await sighInstrumentContract.methods.getCurrentMintSpeed().call();
+    let mintSpeed = BigNumber(response);
+    mintSpeed = mintSpeed.shiftedBy( -18 );
+    return mintSpeed;
+  }
+  else {
+    console.log('getCurrentMintSpeed() function in store.js. Protocol not supported on connected blockchain network');
+    return null;
+  }
+},  
+
 getCurrentCycle: async ({commit,state}) => {
   if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
     const sighInstrumentContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
@@ -2659,6 +2686,7 @@ getCurrentCycle: async ({commit,state}) => {
     return null;
   }
 },
+
 getMintSnapshotForCycle: async ({commit,state},{cycle}) => {
   if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
     // console.log('SIGH getMintSnapshotForCycle');
@@ -2672,6 +2700,7 @@ getMintSnapshotForCycle: async ({commit,state},{cycle}) => {
     return null;
   }
 },
+
 getLatestMintSnapshot: async ({commit,state}) => {
   if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
     const sighInstrumentContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
@@ -2685,18 +2714,7 @@ getLatestMintSnapshot: async ({commit,state}) => {
     return null;
   }
 },
-getTotalSighBurnt: async ({commit,state}) => {
-  if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
-    const sighInstrumentContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
-    let response = await sighInstrumentContract.methods.getTotalSighBurnt().call();
-    // console.log('getTotalSighBurnt = ' + response);
-    return response;
-  }
-  else {
-    console.log('getTotalSighBurnt() function in store.js. Protocol not supported on connected blockchain network');
-    return null;
-  }
-},
+
 getBlocksRemainingToMint: async ({commit,state}) => {
   if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
     const sighInstrumentContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
@@ -2709,23 +2727,11 @@ getBlocksRemainingToMint: async ({commit,state}) => {
     return null;
   }
 },
-getCurrentMintSpeed: async ({commit,state}) => {
-  if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
-    const sighInstrumentContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
-    let response = await sighInstrumentContract.methods.getCurrentMintSpeed().call();
-    // console.log('getCurrentMintSpeed = ' + response);
-    return response;
-  }
-  else {
-    console.log('getCurrentMintSpeed() function in store.js. Protocol not supported on connected blockchain network');
-    return null;
-  }
-},  
+
 getSIGHInstrumentTreasury: async ({commit,state}) => {
   if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
     const sighInstrumentContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
     let response = await sighInstrumentContract.methods.getTreasury().call();
-    // console.log('getSIGHInstrumentTreasury ' + response );
     return response;
   }
   else {
@@ -2733,11 +2739,11 @@ getSIGHInstrumentTreasury: async ({commit,state}) => {
     return null;
   }
 },  
+
 getSighInstrumentSpeedController: async ({commit,state}) => {
   if (state.web3 && state.SIGHContractAddress && state.SIGHContractAddress!= "0x0000000000000000000000000000000000000000" ) {
     const sighInstrumentContract = new state.web3.eth.Contract(SIGHInstrument.abi, state.SIGHContractAddress );
     let response = await sighInstrumentContract.methods.getSpeedController().call();
-    // console.log('getSighInstrumentSpeedController ' + response );
     return response;
   }
   else {

@@ -173,11 +173,11 @@ export default {
       }       
       else {       // WHEN ABOVE CONDITIONS ARE MET SO THE TRANSACTION GOES THROUGH
         this.showLoader = true;
-        let quantity =  ( Number(this.formData.depositValue) / ( ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) )).toFixed(4) ;
+        let quantity =  Number(this.formData.depositValue) / ( ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) )  ;
         console.log('Selected Instrument - ' + this.selectedInstrument.symbol)
         console.log('Amount to be Approved - ' + this.formData.depositValue);
         console.log('Quantity - ' + quantity);
-        let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  parseInt(quantity) , symbol: this.selectedInstrument.symbol, decimals: this.selectedInstrument.decimals });
+        let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  quantity , symbol: this.selectedInstrument.symbol, decimals: this.selectedInstrument.decimals });
         if (response.status) { 
           await this.refreshCurrentInstrumentWalletState(false);                  
           this.$showSuccessMsg({message: "APPROVAL SUCCESS : Maximum of " + this.selectedInstrumentWalletState.userAvailableAllowance + "  " +  this.selectedInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });
