@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 // import {dateToDisplayTime,} from '@/utils/utility';
 import Web3 from 'web3';
-import BigNumber from "bignumber.js";
+import BigNumber from 'bignumber.js';
 import EventBus, { EventNames,} from '@/eventBuses/default';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 
@@ -839,6 +839,7 @@ const store = new Vuex.Store({
       instrumentState.instrumentAddress = instrumentAddress;
       instrumentState.name = await store.dispatch("ERC20_name",{tokenAddress: instrumentAddress}); 
       instrumentState.symbol =  await store.dispatch("ERC20_symbol",{tokenAddress: instrumentAddress}); 
+      instrumentState.decimals =  await store.dispatch("ERC20_decimals",{tokenAddress: instrumentAddress}); 
       instrumentState.priceETH = await store.dispatch("getInstrumentPrice",{_instrumentAddress: instrumentAddress}); 
       instrumentState.priceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: instrumentAddress}); 
   
@@ -1702,13 +1703,15 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
 // ######################################################
 
     // INTEGRATED. FUNCTIONING AS EXPECTED
-    LendingPool_deposit: async ({commit,state},{_instrument,_amount,_referralCode}) => {
+    LendingPool_deposit: async ({commit,state},{_instrument,_amount,_referralCode, symbol, decimals }) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
         try {
-          let symbol = state.supportedInstrumentGlobalStates.get(_instrument).symbol;
-          const response = await lendingPoolContract.methods.deposit(_instrument,_amount,_referralCode).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
-            let transaction = {hash : hash, function : 'DEPOSIT' , amount : _amount + ' ' + symbol}; 
+          let quantity_ = new BigNumber(Number(_amount));
+          quantity_ = quantity_.shiftedBy(Number(decimals)).toFixed(0);
+          console.log(symbol + " Being Deposited (BIG NUMBER, i.e Wei) = " + quantity_ );    
+          const response = await lendingPoolContract.methods.deposit(_instrument ,quantity_ ,_referralCode).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+            let transaction = {hash : hash, function : 'DEPOSIT' , amount : Number(_amount).toFixed(4) + ' ' + symbol}; 
             commit('addToSessionPendingTransactions',transaction);
           });
           console.log(response);
@@ -1725,13 +1728,15 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       }
     },
 
-    LendingPool_borrow: async ({commit,state},{_instrument,_amount,_interestRateMode,_referralCode}) => {
+    LendingPool_borrow: async ({commit,state},{_instrument,_amount,_interestRateMode,_referralCode, symbol, decimals}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-        try {            
-          let symbol = state.supportedInstrumentGlobalStates.get(_instrument).symbol;          
-          const response = await lendingPoolContract.methods.borrow(_instrument,_amount,_interestRateMode,_referralCode).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
-            let transaction = {hash : hash, function : 'BORROW' , amount : _amount + ' ' + symbol}; 
+        try {  
+          let quantity_ = new BigNumber(Number(_amount));
+          quantity_ = quantity_.shiftedBy(Number(decimals)).toFixed(0);
+          console.log(symbol + " Being Borrowed (BIG NUMBER, i.e Wei) = " + quantity_ );    
+          const response = await lendingPoolContract.methods.borrow(_instrument, quantity_, _interestRateMode,_referralCode).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+            let transaction = {hash : hash, function : 'BORROW' , amount : Number(_amount).toFixed(4) + ' ' + symbol}; 
             commit('addToSessionPendingTransactions',transaction);
           });
           console.log(response);
@@ -1748,13 +1753,15 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       }
     },
 
-    LendingPool_repay: async ({commit,state},{_instrument,_amount,_onBehalfOf}) => {
+    LendingPool_repay: async ({commit,state},{_instrument,_amount,_onBehalfOf,symbol,decimals}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
         try {
-          let symbol = state.supportedInstrumentGlobalStates.get(_instrument).symbol;                    
-          const response = await lendingPoolContract.methods.repay(_instrument,_amount,_onBehalfOf).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
-            let transaction = {hash : hash, function : 'REPAY' , amount : _amount + ' ' + symbol}; 
+          let quantity_ = new BigNumber(Number(_amount));
+          quantity_ = quantity_.shiftedBy(Number(decimals)).toFixed(0);
+          console.log(symbol + " Being Repaid (BIG NUMBER, i.e Wei) = " + quantity_ );    
+          const response = await lendingPoolContract.methods.repay(_instrument,quantity_,_onBehalfOf).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+            let transaction = {hash : hash, function : 'REPAY' , amount : Number(_amount).toFixed(4) + ' ' + symbol}; 
             commit('addToSessionPendingTransactions',transaction);
           });
           console.log(response);
@@ -2049,12 +2056,15 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
 // ############ ITOKEN Functions --- getSighStreamAllowances() VIEW FUNCTION 
 // ######################################################
 
-IToken_redeem: async ({commit,state},{iTokenAddress,_amount,symbol}) => {
+IToken_redeem: async ({commit,state},{iTokenAddress,_amount,symbol, decimals}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     try {
-      const response = await iTokenContract.methods.redeem(_amount).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
-        let transaction = {hash : hash, function : 'REDEEM' , amount : _amount + ' ' + symbol}; 
+      let quantity_ = new BigNumber(Number(_amount));
+      quantity_ = quantity_.shiftedBy(Number(decimals)).toFixed(0);
+      console.log(symbol + " Being Redeemed (BIG NUMBER, i.e Wei) = " + quantity_ );    
+      const response = await iTokenContract.methods.redeem(quantity_).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : 'REDEEM' , amount : Number(_amount).toFixed(4) + ' ' + symbol}; 
         commit('addToSessionPendingTransactions',transaction);
         });
       console.log(response);
@@ -2375,12 +2385,15 @@ IToken_getSighStreamAllowances: async ({commit,state},{iTokenAddress,_user}) => 
 // ############ ERC20 Standard Functions --- balanceOf() VIEW FUNCTION 
 // ######################################################
 
-ERC20_approve: async ({commit,state},{tokenAddress,spender,amount,symbol }) => {
+ERC20_approve: async ({commit,state},{tokenAddress,spender,quantity,symbol, decimals }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     try {
-      const response = await erc20Contract.methods.approve(spender,amount).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
-        let transaction = {hash : hash, function : ' APPROVE' , amount : amount + ' ' + symbol}; 
+      let quantity_ = new BigNumber(Number(quantity));
+      quantity_ = quantity_.shiftedBy(Number(decimals)).toFixed(0);
+      console.log(symbol + " Being Approved (BIG NUMBER, i.e Wei) = " + quantity_ );
+      const response = await erc20Contract.methods.approve(spender,quantity_).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : ' APPROVE' , amount : quantity_ + ' ' + symbol}; 
         commit('addToSessionPendingTransactions',transaction);
         });
       console.log(response);
@@ -2397,11 +2410,14 @@ ERC20_approve: async ({commit,state},{tokenAddress,spender,amount,symbol }) => {
   }
 },
 
-ERC20_mint: async ({commit,state},{tokenAddress,quantity, symbol }) => {
+ERC20_mint: async ({commit,state},{tokenAddress,quantity,symbol, decimals }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(MintableERC20.abi, tokenAddress );
     try {
-      const response = await erc20Contract.methods.mint(quantity).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+      let quantity_ = new BigNumber(Number(quantity));
+      quantity_ = quantity_.shiftedBy(Number(decimals)).toFixed(0);
+      console.log(symbol + " Being Minted (BIG NUMBER, i.e Wei) = " + quantity_ );
+      const response = await erc20Contract.methods.mint(quantity_).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
         let transaction = {hash : hash, function : ' MINT' , amount : quantity + ' ' + symbol}; 
         commit('addToSessionPendingTransactions',transaction);
         });
@@ -2464,13 +2480,16 @@ ERC20_transferFrom: async ({commit,state},{tokenAddress,sender,recepient,amount,
   }
 },
 
-ERC20_increaseAllowance: async ({commit,state},{tokenAddress,spender,addedValue,symbol }) => {
+ERC20_increaseAllowance: async ({commit,state},{tokenAddress,spender,addedValue,symbol, decimals }) => {
   if (state.web3 && tokenAddress && tokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const erc20Contract = new state.web3.eth.Contract(ERC20.abi, tokenAddress );
     console.log(erc20Contract);
     try {
+      let quantity_ = new BigNumber(Number(addedValue));
+      quantity_ = quantity_.shiftedBy(Number(decimals)).toFixed(0);
+      console.log(symbol + " Increase Allowance (BIG NUMBER, i.e Wei) = " + quantity_ );
       const response = await erc20Contract.methods.increaseAllowance(spender,addedValue).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
-        let transaction = {hash : hash, function : ' INCREASE ALLOWANCE' , amount : addedValue + ' ' + symbol}; 
+        let transaction = {hash : hash, function : ' INCREASE ALLOWANCE' , amount : Number(addedValue).toFixed(4) + ' ' + symbol}; 
         commit('addToSessionPendingTransactions',transaction);
         });
       console.log(response);

@@ -142,10 +142,12 @@ export default {
       else {
         let value =  (Number(this.formData.depositQuantity) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ;
         console.log('Selected Instrument - ' + this.selectedInstrument.symbol);
+        console.log(this.selectedInstrument);
         console.log('Deposit (Mint) Quantity - ' + this.formData.depositQuantity);
         console.log('Deposit Value - ' + value);
+        console.log('Decimals- ' + this.selectedInstrument.decimals);
         this.showLoader = true;
-        let response = await this.ERC20_mint({tokenAddress: this.selectedInstrument.instrumentAddress , quantity: this.formData.depositQuantity, symbol: this.selectedInstrument.symbol  });
+        let response = await this.ERC20_mint({tokenAddress: this.selectedInstrument.instrumentAddress , quantity: this.formData.depositQuantity, symbol: this.selectedInstrument.symbol, decimals: this.selectedInstrument.decimals  });
         if (response.status) {      
           this.$showSuccessMsg({message: "DEPOSIT (MINT) SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully minted for testing. Gas used = " + response.gasUsed });
           await this.refreshCurrentInstrumentWalletState(false);         // UPDATE THE STATE OF THE SELECTED INSTRUMENT

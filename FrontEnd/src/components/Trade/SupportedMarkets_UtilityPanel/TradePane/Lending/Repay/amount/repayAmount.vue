@@ -81,7 +81,7 @@ export default {
     async repay() {   //REPAY
       let quantity = null;
       if (this.$store.state.isNetworkSupported && this.selectedInstrument.priceDecimals && this.$store.state.ethereumPriceUSD ) {
-        quantity =  (Number(this.formData.repayValue) / ( ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ) ).toFixed(4) ;
+        quantity = Number(this.formData.repayValue) / ( ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ) ;
       }
 
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
@@ -116,9 +116,9 @@ export default {
           else {
             console.log('ON BEHALF OF  - ' +  this.formData.onBehalfOf);
             this.showLoader = true;      
-            let response =  await this.LendingPool_repay( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  parseInt(quantity), _onBehalfOf: this.formData.onBehalfOf } );
+            let response =  await this.LendingPool_repay( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  quantity, _onBehalfOf: this.formData.onBehalfOf , symbol: this.selectedInstrument.symbol, decimals: this.selectedInstrument.decimals });
             if (response.status) {      
-              this.$showSuccessMsg({message: "REPAY SUCCESS : " + quantity + "  " +  this.selectedInstrument.symbol +  " worth " + this.formData.repayValue + " USD have been successfully repayed to SIGH Finance for the Account + " + this.formData.onBehalfOf +  ". Gas used = " + response.gasUsed });
+              this.$showSuccessMsg({message: "REPAY SUCCESS : " + Number(quantity).toFixed(4) + "  " +  this.selectedInstrument.symbol +  " worth " + this.formData.repayValue + " USD have been successfully repayed to SIGH Finance for the Account + " + this.formData.onBehalfOf +  ". Gas used = " + response.gasUsed });
               this.$showInfoMsg({message: " $SIGH FARMS look forward to serving you again!"});
               await this.refreshCurrentInstrumentWalletState(false);
               this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Repay',Service: 'LENDING'});
@@ -139,9 +139,9 @@ export default {
           }
           else {
             this.showLoader = true;      
-            let response =  await this.LendingPool_repay( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  parseInt(quantity), _onBehalfOf: this.$store.state.connectedWallet  } );
+            let response =  await this.LendingPool_repay( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  quantity, _onBehalfOf: this.$store.state.connectedWallet , symbol: this.selectedInstrument.symbol, decimals: this.selectedInstrument.decimals });
             if (response.status) {      
-              this.$showSuccessMsg({message: "REPAY SUCCESS : " + quantity + "  " +  this.selectedInstrument.symbol +  " worth " + this.formData.repayValue  + " USD have been successfully repayed to SIGH Finance! Gas used = " + response.gasUsed });
+              this.$showSuccessMsg({message: "REPAY SUCCESS : " + Number(quantity).toFixed(4) + "  " +  this.selectedInstrument.symbol +  " worth " + this.formData.repayValue  + " USD have been successfully repayed to SIGH Finance! Gas used = " + response.gasUsed });
               this.$showInfoMsg({message: " $SIGH FARMS look forward to serving you again!"});
               await this.refreshCurrentInstrumentWalletState(false);
               this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Repay',Service: 'LENDING'});
@@ -173,7 +173,7 @@ export default {
         console.log('Selected Instrument - ' + this.selectedInstrument.symbol)
         console.log('Quantity to be Approved - ' + quantity);
         console.log('Value - ' + this.formData.repayValue);
-        let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  parseInt(quantity) , symbol :this.selectedInstrument.symbol  } );
+        let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  quantity, symbol :this.selectedInstrument.symbol  } );
         if (response.status) { 
           await this.refreshCurrentInstrumentWalletState(false);        
           this.$showSuccessMsg({message: "APPROVAL SUCCESS : Maximum of " + this.selectedInstrumentWalletState.userAvailableAllowance + "  " +  this.selectedInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });

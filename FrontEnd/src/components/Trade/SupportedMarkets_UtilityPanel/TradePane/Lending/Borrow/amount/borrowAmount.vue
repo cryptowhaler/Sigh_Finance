@@ -84,7 +84,7 @@ export default {
     async borrow() {   //BORROW --> TO BE CHECKED
       let quantity = null;
       if (this.$store.state.isNetworkSupported && this.selectedInstrument.priceDecimals && this.$store.state.ethereumPriceUSD ) {
-        quantity =  (Number(this.formData.borrowValue) / ( ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ) ).toFixed(4) ;
+        quantity =  Number(this.formData.borrowValue) / ( ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) )  ;
       }
 
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
@@ -114,9 +114,9 @@ export default {
 
           this.showLoader = true;        
           let interestRateMode = this.formData.interestRateMode == 'Stable' ? 0 : 1;      
-          let response =  await this.LendingPool_borrow( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  parseInt(quantity), _interestRateMode: interestRateMode, _referralCode: 0 } );
+          let response =  await this.LendingPool_borrow( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  quantity, _interestRateMode: interestRateMode, _referralCode: 0 , symbol: this.selectedInstrument.symbol, decimals: this.selectedInstrument.decimals });
           if (response.status) {      
-            this.$showSuccessMsg({message: "BORROW SUCCESS : " + quantity+ "  " +  this.selectedInstrument.symbol +  " worth " + this.formData.borrowValue + " USD have been successfully borrowed from SIGH Finance. Gas used = " + response.gasUsed });
+            this.$showSuccessMsg({message: "BORROW SUCCESS : " + Number(quantity).toFixed(4) + "  " +  this.selectedInstrument.symbol +  " worth " + this.formData.borrowValue + " USD have been successfully borrowed from SIGH Finance. Gas used = " + response.gasUsed });
             this.$showInfoMsg({message: "ThankYou for choosing $SIGH Farms! We look forward to serving your again!"});
             await this.refreshCurrentInstrumentWalletState(false);
             this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Borrow',Service: 'LENDING'});

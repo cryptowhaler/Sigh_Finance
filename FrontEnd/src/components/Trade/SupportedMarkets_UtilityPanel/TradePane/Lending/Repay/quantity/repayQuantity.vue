@@ -122,7 +122,7 @@ export default {
           else {
             console.log('ON BEHALF OF  - ' +  this.formData.onBehalfOf);
             this.showLoader = true;      
-            let response =  await this.LendingPool_repay( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.repayQuantity, _onBehalfOf: this.formData.onBehalfOf } );
+            let response =  await this.LendingPool_repay( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.repayQuantity, _onBehalfOf: this.formData.onBehalfOf , symbol: this.selectedInstrument.symbol, decimals: this.selectedInstrument.decimals });
             if (response.status) {      
               this.$showSuccessMsg({message: "REPAY SUCCESS : " + this.formData.repayQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully repayed to SIGH Finance for the Account + " + this.formData.onBehalfOf +  ". Gas used = " + response.gasUsed });
               this.$showInfoMsg({message: " $SIGH FARMS look forward to serving you again!"});
@@ -145,7 +145,7 @@ export default {
           }
           else {
             this.showLoader = true;      
-            let response =  await this.LendingPool_repay( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.repayQuantity, _onBehalfOf: this.$store.state.connectedWallet  } );
+            let response =  await this.LendingPool_repay( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.repayQuantity, _onBehalfOf: this.$store.state.connectedWallet , symbol: this.selectedInstrument.symbol, decimals: this.selectedInstrument.decimals });
             if (response.status) {      
               this.$showSuccessMsg({message: "REPAY SUCCESS : " + this.formData.repayQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully repayed to SIGH Finance! Gas used = " + response.gasUsed });
               this.$showInfoMsg({message: " $SIGH FARMS look forward to serving you again!"});

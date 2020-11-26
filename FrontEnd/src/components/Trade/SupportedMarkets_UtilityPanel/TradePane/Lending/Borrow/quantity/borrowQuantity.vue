@@ -114,7 +114,7 @@ export default {
 
           this.showLoader = true;        
           let interestRateMode = this.formData.interestRateMode == 'Stable' ? 0 : 1;      
-          let response =  await this.LendingPool_borrow( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.borrowQuantity, _interestRateMode: interestRateMode, _referralCode: 0 } );
+          let response =  await this.LendingPool_borrow( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.borrowQuantity, _interestRateMode: interestRateMode, _referralCode: 0, symbol: this.selectedInstrument.symbol, decimals: this.selectedInstrument.decimals });
           if (response.status) {      
             this.$showSuccessMsg({message: "BORROW SUCCESS : " + this.formData.borrowQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully borrowed from SIGH Finance. Gas used = " + response.gasUsed });
             this.$showInfoMsg({message: "ThankYou for choosing $SIGH Farms! We look forward to serving your capital requirements again!"});
