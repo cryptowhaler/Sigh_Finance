@@ -22,7 +22,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
 
     struct mintSnapshot {
         uint cycle;
-        uint era;
+        uint schedule;
         uint inflationRate;
         uint mintedAmount;
         uint mintSpeed;
@@ -37,32 +37,32 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
     uint256 public constant FINAL_CYCLE = 77; // 10 years (3650 days) + 60 days
 
     uint256 private Current_Cycle; 
-    uint256 private Current_Era;
+    uint256 private Current_Schedule;
     uint256 private currentDivisibilityFactor = 100;
 
     bool private mintingActivated = false;
     uint256 private previousMintBlock;
 
-    struct Era {
+    struct Schedule {
         uint256 startCycle;
         uint256 endCycle;
         uint256 divisibilityFactor;
     }
 
-    Era[11] private _eras;
+    Schedule[11] private _schedules;
 
-    event NewEra(uint newEra, uint blockNumber, uint timeStamp );
-
+    event NewSchedule(uint newSchedule, uint blockNumber, uint timeStamp );
     event MintingInitialized(address speedController, address treasury, uint256 blockNumber);
-    event SIGHMinted( address minter, uint256 cycle, uint256 Era, uint inflationRate, uint256 amountMinted, uint mintSpeed, uint256 current_supply, uint256 block_number);
+    event SIGHMinted( address minter, uint256 cycle, uint256 Schedule, uint inflationRate, uint256 amountMinted, uint mintSpeed, uint256 current_supply, uint256 block_number);
     event SIGHBurned( uint256 burntAmount, uint256 totalBurnedAmount, uint256 currentSupply, uint blockNumber);
 
     // constructing  
     constructor () public {
         _owner = _msgSender();
         _mint(_owner,INITIAL_SUPPLY);
-        mintSnapshot  memory currentMintSnapshot = mintSnapshot({ cycle:Current_Cycle, era:Current_Era, inflationRate: uint(0), mintedAmount:INITIAL_SUPPLY, mintSpeed:uint(0), newTotalSupply:totalSupply(), minter: msg.sender, blockNumber: block.number });
+        mintSnapshot  memory currentMintSnapshot = mintSnapshot({ cycle:Current_Cycle, schedule:Current_Schedule, inflationRate: uint(0), mintedAmount:INITIAL_SUPPLY, mintSpeed:uint(0), newTotalSupply:totalSupply(), minter: msg.sender, blockNumber: block.number });
         mintSnapshots.push(currentMintSnapshot);                                                    // MINT SNAPSHOT ADDED TO THE ARRAY
+        emit SIGHMinted(currentMintSnapshot.minter, currentMintSnapshot.cycle, currentMintSnapshot.schedule, currentMintSnapshot.inflationRate, currentMintSnapshot.mintedAmount, currentMintSnapshot.mintSpeed, currentMintSnapshot.newTotalSupply,currentMintSnapshot.blockNumber );
     }
 
     // ################################################
@@ -73,42 +73,42 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
         require(_msgSender() == _owner,"Mining can only be initialized by the owner." );
         require(newSpeedController != address(0), "Not a valid Speed Controller address");
         require(_treasury != address(0), "Not a valid Treasury address");
-        // require(!mintingActivated, "Minting can only be initialized once" );
+        require(!mintingActivated, "Minting can only be initialized once" );
 
         SpeedController = newSpeedController;
         treasury = _treasury;
-        _initEras();
+        _initSchedules();
         
         emit MintingInitialized(SpeedController, treasury, block.number );
         mintingActivated = true;
     }
 
-    function _initEras() private {
-        _eras[0] = Era(1, 6, 100 );        // 96 days
-        _eras[1] = Era(7, 13, 200 );       // 1 year
-        _eras[2] = Era(14, 20, 400 );      // 1 year
-        _eras[3] = Era(21, 27, 800 );       // 1 year
-        _eras[4] = Era(28, 34, 1600 );     // 1 year
-        _eras[5] = Era(35, 41, 3200 );      // 1 year   
-        _eras[6] = Era(42, 48, 6400 );       // 1 year
-        _eras[7] = Era(49, 55, 12800 );        // 1 year
-        _eras[8] = Era(56, 62, 25600 );        // 1 year
-        _eras[9] = Era(63, 69, 51200 );        // 1 year
-        _eras[10] = Era(70, 77, 102400 );       // 1 year
+    function _initSchedules() private {
+        _schedules[0] = Schedule(1, 6, 100 );        // 96 days
+        _schedules[1] = Schedule(7, 13, 200 );       // 1 year
+        _schedules[2] = Schedule(14, 20, 400 );      // 1 year
+        _schedules[3] = Schedule(21, 27, 800 );       // 1 year
+        _schedules[4] = Schedule(28, 34, 1600 );     // 1 year
+        _schedules[5] = Schedule(35, 41, 3200 );      // 1 year   
+        _schedules[6] = Schedule(42, 48, 6400 );       // 1 year
+        _schedules[7] = Schedule(49, 55, 12800 );        // 1 year
+        _schedules[8] = Schedule(56, 62, 25600 );        // 1 year
+        _schedules[9] = Schedule(63, 69, 51200 );        // 1 year
+        _schedules[10] = Schedule(70, 77, 102400 );       // 1 year
     }
 
-    // function _initEras() private {
-    //     _eras[0] = Era(1, 96, 100 );        // 96 days
-    //     _eras[1] = Era(97, 462, 200 );       // 1 year
-    //     _eras[2] = Era(463, 828, 400 );      // 1 year
-    //     _eras[3] = Era(829, 1194, 800 );       // 1 year
-    //     _eras[4] = Era(1195, 1560, 1600 );     // 1 year
-    //     _eras[5] = Era(1561, 1926, 3200 );      // 1 year   
-    //     _eras[6] = Era(1927, 2292, 6400 );       // 1 year
-    //     _eras[7] = Era(2293, 2658, 12800 );        // 1 year
-    //     _eras[8] = Era(2659, 3024, 25600 );        // 1 year
-    //     _eras[9] = Era(3025, 3390, 51200 );        // 1 year
-    //     _eras[10] = Era(3391, 3756, 102400 );       // 1 year
+    // function _initSchedules() private {
+    //     _schedules[0] = Schedule(1, 96, 100 );        // 96 days
+    //     _schedules[1] = Schedule(97, 462, 200 );       // 1 year
+    //     _schedules[2] = Schedule(463, 828, 400 );      // 1 year
+    //     _schedules[3] = Schedule(829, 1194, 800 );       // 1 year
+    //     _schedules[4] = Schedule(1195, 1560, 1600 );     // 1 year
+    //     _schedules[5] = Schedule(1561, 1926, 3200 );      // 1 year   
+    //     _schedules[6] = Schedule(1927, 2292, 6400 );       // 1 year
+    //     _schedules[7] = Schedule(2293, 2658, 12800 );        // 1 year
+    //     _schedules[8] = Schedule(2659, 3024, 25600 );        // 1 year
+    //     _schedules[9] = Schedule(3025, 3390, 51200 );        // 1 year
+    //     _schedules[10] = Schedule(3391, 3756, 102400 );       // 1 year
     // }
 
 
@@ -130,14 +130,10 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
 
     function isMintingPossible() internal returns (bool) {
         if ( mintingActivated && Current_Cycle <= 77 && _getElapsedBlocks(block.number, previousMintBlock) > CYCLE_BLOCKS ) {
-            uint newCycle = add(Current_Cycle,uint256(1),'Overflow');
-            Current_Cycle = newCycle;                                                    // CURRENT CYCLE IS UPDATED 
-            // emit NewCycle(prevCycle, Current_Cycle, block.number, now);
+            Current_Cycle = add(Current_Cycle,uint256(1),'Overflow');
             return true;
         }
-        else {
-            return false;
-        }
+        return false;
     }
 
     function mintCoins() external returns (bool) {
@@ -150,16 +146,16 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
 
     function mintNewCoins() internal returns (bool) {
 
-        if ( Current_Era < _CalculateCurrentEra() ) {
-            Current_Era = add(Current_Era,uint256(1),"NEW ERA : Addition gave error");
-            currentDivisibilityFactor = _eras[Current_Era].divisibilityFactor;
-            emit NewEra(Current_Era, block.number, now);
+        if ( Current_Schedule < _CalculateCurrentSchedule() ) {
+            Current_Schedule = add(Current_Schedule,uint256(1),"NEW Schedule : Addition gave error");
+            currentDivisibilityFactor = _schedules[Current_Schedule].divisibilityFactor;
+            emit NewSchedule(Current_Schedule, block.number, now);
         }
 
         uint currentSupply = totalSupply();
         uint256 newCoins = currentSupply.div(currentDivisibilityFactor);                // Calculate the number of new tokens to be minted.
         uint newmintSpeed = newCoins.div(CYCLE_BLOCKS);                                         // mint speed, i.e tokens minted per block rate for this cycle
-        mintSnapshot  memory currentMintSnapshot = mintSnapshot({ cycle:Current_Cycle, era:Current_Era, inflationRate: currentDivisibilityFactor, mintedAmount:newCoins, mintSpeed:newmintSpeed, newTotalSupply:totalSupply(), minter: msg.sender, blockNumber: block.number });
+        mintSnapshot  memory currentMintSnapshot = mintSnapshot({ cycle:Current_Cycle, schedule:Current_Schedule, inflationRate: currentDivisibilityFactor, mintedAmount:newCoins, mintSpeed:newmintSpeed, newTotalSupply:totalSupply(), minter: msg.sender, blockNumber: block.number });
 
         if (newCoins > prize_amount) {
             newCoins = newCoins.sub(prize_amount);
@@ -176,7 +172,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
 
         previousMintBlock = block.number;        
 
-        emit SIGHMinted(currentMintSnapshot.minter, currentMintSnapshot.cycle, currentMintSnapshot.era, currentMintSnapshot.inflationRate, currentMintSnapshot.mintedAmount, currentMintSnapshot.mintSpeed, currentMintSnapshot.newTotalSupply,currentMintSnapshot.blockNumber );
+        emit SIGHMinted(currentMintSnapshot.minter, currentMintSnapshot.cycle, currentMintSnapshot.schedule, currentMintSnapshot.inflationRate, currentMintSnapshot.mintedAmount, currentMintSnapshot.mintSpeed, currentMintSnapshot.newTotalSupply,currentMintSnapshot.blockNumber );
         return true;        
     }
 
@@ -185,17 +181,17 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
         return deltaBlocks;
     }
 
-    function _CalculateCurrentEra() internal view returns (uint256) {
+    function _CalculateCurrentSchedule() internal view returns (uint256) {
 
         if (Current_Cycle <= 7 && Current_Cycle >= 0 ) {
             return uint256(0);
         }
 
-        uint256 C_Era_sub = sub(Current_Cycle,uint256(7),'ERA: Subtraction gave error');
-        uint256 _newEra = div(C_Era_sub,uint256(7),"ERA : Division gave error");
+        uint256 C_Schedule_sub = sub(Current_Cycle,uint256(7),'Schedule: Subtraction gave error');
+        uint256 _newSchedule = div(C_Schedule_sub,uint256(7),"Schedule : Division gave error");
 
-        if (_newEra <= 9 ) {
-            return uint256(_newEra.add(1) );
+        if (_newSchedule <= 9 ) {
+            return uint256(_newSchedule.add(1) );
         }
 
         return uint256(11);
@@ -206,10 +202,9 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
     // ################################################
     
     function burn(uint amount) external returns (bool) {
-        require( msg.sender == treasury,"Only Treasury can burn SIGH Tokens");
-        _burn(treasury,amount) ;
-        uint total_amount_burnt = add(totalAmountBurnt , amount, 'burn : Total Number of tokens burnt gave addition overflow');
-        totalAmountBurnt = total_amount_burnt;
+        // require( msg.sender == treasury,"Only Treasury can burn SIGH Tokens");
+        _burn(treasury, amount) ;
+        totalAmountBurnt = add(totalAmountBurnt , amount, 'burn : Total Number of tokens burnt gave addition overflow');
         emit SIGHBurned( amount, totalAmountBurnt, totalSupply(), block.number );
         return true;
     }    
@@ -225,8 +220,8 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
         return mintingActivated;
     }
 
-   function getCurrentEra() public view returns (uint256) {
-        return Current_Era;
+   function getCurrentSchedule() public view returns (uint256) {
+        return Current_Schedule;
     }
 
    function getCurrentCycle() public view returns (uint256) {
@@ -255,8 +250,8 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
     }
 
 
-    function getMintSnapshotForCycle(uint cycleNumber) public view returns (uint era,uint inflationRate, uint mintedAmount,uint mintSpeed, uint newTotalSupply,address minter, uint blockNumber ) {
-        return ( mintSnapshots[cycleNumber].era,
+    function getMintSnapshotForCycle(uint cycleNumber) public view returns (uint schedule,uint inflationRate, uint mintedAmount,uint mintSpeed, uint newTotalSupply,address minter, uint blockNumber ) {
+        return ( mintSnapshots[cycleNumber].schedule,
                  mintSnapshots[cycleNumber].inflationRate,
                  mintSnapshots[cycleNumber].mintedAmount,
                  mintSnapshots[cycleNumber].mintSpeed,
@@ -266,10 +261,10 @@ contract SIGH is ERC20, ERC20Detailed('SIGH Instrument : A free distributor of f
                  );
     }
     
-    function getLatestMintSnapshot() public view returns (uint cycle, uint era,uint inflationRate, uint mintedAmount,uint mintSpeed, uint newTotalSupply,address minter, uint blockNumber ) {
+    function getLatestMintSnapshot() public view returns (uint cycle, uint schedule,uint inflationRate, uint mintedAmount,uint mintSpeed, uint newTotalSupply,address minter, uint blockNumber ) {
         uint len = mintSnapshots.length;
         return ( len, 
-                 mintSnapshots[len - 1].era,
+                 mintSnapshots[len - 1].schedule,
                  mintSnapshots[len - 1].inflationRate,
                  mintSnapshots[len - 1].mintedAmount,
                  mintSnapshots[len - 1].mintSpeed,

@@ -1,5 +1,5 @@
 specVersion: 0.0.2
-description: SIGH Finance is part of an R&D initiative to develop engineered liquidity mining driven incentive models driven by A.I models on the Blockchain Infrastructure 
+description: SIGH Finance is a money-market protocol designed as an incentive model to off-set volatility of the supported instruments on a 24 hr basis. 
 repository : https://github.com/cryptowhaler/Sigh_Finance/SighFinanceGraph
 schema:
   file: ./schema.graphql
@@ -9,7 +9,7 @@ dataSources:
     name: SIGH
     network: kovan
     source:
-      address: "0x76Ff68033ef96ee0727f85eA1f979B1b0FD4C75b"
+      address: "0x190f17888c7Ae32af3E677Fb7e752c74c5f24595"
       abi: SIGH
       startBlock: 21040723
     mapping:
@@ -23,82 +23,80 @@ dataSources:
       - name: SIGH
         file: ./abis/SIGH.json
       eventHandlers:
-        - event: SIGHMinted(uint256,uint256,address,uint256,uint256,uint256,uint256)
+        - event: MintingInitialized(address,address,uint256)
+          handler: handleMintingInitialized
+        - event: SIGHMinted( address, uint256, uint256, uint256, uint256, uint256, uint256, uint256)
           handler: handleSIGHMinted
-        - event: SIGHBurned(address,uint256,uint256,uint256)
+        - event: SIGHBurned(uint256,uint256,uint256,uint256)
           handler: handleSIGHBurned
-        - event: ReservoirChanged(address,address,uint256)
-          handler: handleReservoirChanged
-        - event: NewCycle(uint256,uint256,uint256,uint256)
-          handler: handleNewCycle
-        - event: NewEra(uint256,uint256,uint256,uint256)
-          handler: handleNewEra
+        - event: NewSchedule(uint256,uint256,uint256)
+          handler: handleNewSchedule
 
-  - kind: ethereum/contract
-    name: SIGH_SpeedController
-    network: kovan
-    source:
-      address: "0x9748692378cD832db750009BEF7Ea3f6862f9fD9"
-      abi: SIGHSpeedController
-      startBlock: 21040723
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: ./src/mapping/SIGHSpeedController.ts
-      entities:
-        - SIGHSpeedController
-      abis:
-      - name: SIGHSpeedController
-        file: ./abis/SIGHSpeedController.json
-      eventHandlers:
-        - event: DistributionInitialized(address,address)
-          handler: handleDistributionInitialized
-        - event: ProtocolDistributionSpeedChanged(uint256,uint256)
-          handler: handleProtocolDistributionSpeedChanged
-        - event: TreasuryDistributionSpeedChanged(uint256,uint256)
-          handler: handleTreasuryDistributionSpeedChanged        
-        - event: DrippedToProtocol(uint256,uint256,uint256)
-          handler: handleDrippedToProtocol         
-        - event: DrippedToTreasury(uint256,uint256,uint256)
-          handler: handleDrippedToTreasury         
+  # - kind: ethereum/contract
+  #   name: SIGH_SpeedController
+  #   network: kovan
+  #   source:
+  #     address: "0x9748692378cD832db750009BEF7Ea3f6862f9fD9"
+  #     abi: SIGHSpeedController
+  #     startBlock: 21040723
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.4
+  #     language: wasm/assemblyscript
+  #     file: ./src/mapping/SIGHSpeedController.ts
+  #     entities:
+  #       - SIGHSpeedController
+  #     abis:
+  #     - name: SIGHSpeedController
+  #       file: ./abis/SIGHSpeedController.json
+  #     eventHandlers:
+  #       - event: DistributionInitialized(address,address)
+  #         handler: handleDistributionInitialized
+  #       - event: ProtocolDistributionSpeedChanged(uint256,uint256)
+  #         handler: handleProtocolDistributionSpeedChanged
+  #       - event: TreasuryDistributionSpeedChanged(uint256,uint256)
+  #         handler: handleTreasuryDistributionSpeedChanged        
+  #       - event: DrippedToProtocol(uint256,uint256,uint256)
+  #         handler: handleDrippedToProtocol         
+  #       - event: DrippedToTreasury(uint256,uint256,uint256)
+  #         handler: handleDrippedToTreasury         
 
-  - kind: ethereum/contract
-    name: SIGH_Treasury
-    network: kovan
-    source:
-      address: "0x9748692378cD832db750009BEF7Ea3f6862f9fD9"
-      abi: SIGHTreasury
-      startBlock: 21040723
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: ./src/mapping/sighTreasury.ts
-      entities:
-        - SIGHTreasury
-      abis:
-      - name: SIGHTreasury
-        file: ./abis/SIGHTreasury.json
-      eventHandlers:
-        - event: tokenBeingDistributedChanged(address,address,uint256)
-          handler: handletokenBeingDistributedChanged
-        - event: DripAllowedChanged(bool,bool,uint256)
-          handler: handleDripAllowedChanged
-        - event: DripSpeedChanged(uint256,uint256,uint256)
-          handler: handleDripSpeedChanged
-        - event: AmountDripped(address,uint256,uint256,uint256,uint256)
-          handler: handleAmountDripped               
-        - event: maxTransferAmountUpdated(uint256,uint256)
-          handler: handlemaxTransferAmountUpdated              
-        - event: SIGHTransferred(address,uint256,uint256,uint256)
-          handler: handleSIGHTransferred         
-        - event: TokensBought(address,string,uint256,uint256)
-          handler: handleTokensBought             
-        - event: TokensSold(address,string,uint256,uint256)
-          handler: handleTokensSold    
-        - event: SIGH_Burned(address,uint256,uint256,uint256,uint256)
-          handler: handleSIGH_Burned  
+  # - kind: ethereum/contract
+  #   name: SIGH_Treasury
+  #   network: kovan
+  #   source:
+  #     address: "0x9748692378cD832db750009BEF7Ea3f6862f9fD9"
+  #     abi: SIGHTreasury
+  #     startBlock: 21040723
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.4
+  #     language: wasm/assemblyscript
+  #     file: ./src/mapping/sighTreasury.ts
+  #     entities:
+  #       - SIGHTreasury
+  #     abis:
+  #     - name: SIGHTreasury
+  #       file: ./abis/SIGHTreasury.json
+  #     eventHandlers:
+  #       - event: tokenBeingDistributedChanged(address,address,uint256)
+  #         handler: handletokenBeingDistributedChanged
+  #       - event: DripAllowedChanged(bool,bool,uint256)
+  #         handler: handleDripAllowedChanged
+  #       - event: DripSpeedChanged(uint256,uint256,uint256)
+  #         handler: handleDripSpeedChanged
+  #       - event: AmountDripped(address,uint256,uint256,uint256,uint256)
+  #         handler: handleAmountDripped               
+  #       - event: maxTransferAmountUpdated(uint256,uint256)
+  #         handler: handlemaxTransferAmountUpdated              
+  #       - event: SIGHTransferred(address,uint256,uint256,uint256)
+  #         handler: handleSIGHTransferred         
+  #       - event: TokensBought(address,string,uint256,uint256)
+  #         handler: handleTokensBought             
+  #       - event: TokensSold(address,string,uint256,uint256)
+  #         handler: handleTokensSold    
+  #       - event: SIGH_Burned(address,uint256,uint256,uint256,uint256)
+  #         handler: handleSIGH_Burned  
           
           
   # - kind: ethereum/contract

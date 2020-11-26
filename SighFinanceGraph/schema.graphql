@@ -1,260 +1,287 @@
-# Sightroller global variables
-type Sightroller @entity {
-    "ID is set to 1"
-    id: ID!
-    "Address of price oracle the Sightroller uses, NewPriceOracle event "
-    priceOracle: Bytes
-    "Factor used to determine repayAmount for liquidating, NewCloseFactor event"
-    closeFactor: BigInt
-    "The percent bonus liquidators get for liquidating, NewLiquidationIncentive event"
-    liquidationIncentive: BigInt
-    "Max assets a single user can enter, NewMaxAssets event"
-    maxAssets: BigInt
-    "NewPauseGuardian event"
-    pauseGuardian: Bytes
-    "NewGsighRate event"
-    gsighRate: BigInt
-
-    sighRate: BigInt
-}
-
-
-
-
-
-
-# Supported Markets
-type Market @entity { 
-    "CToken address"
-    id: ID!
-    symbol: String!
-    name: String!
-    "The cToken contract balance of underlying asset"
-    cash: BigDecimal!
-    "Exchange rate of tokens / cTokens"
-    exchangeRate:  BigDecimal!
-
-    underlyingAddress: Bytes!
-    underlyingName: String!
-    "Underlying price of token in ETH (ex. 0.007 DAI)"
-    underlyingPrice: BigDecimal!
-    underlyingSymbol: String!
-    "Underlying token price in USD"
-    underlyingPriceUSD: BigDecimal!
-    "Underlying token decimal length"
-    underlyingDecimals: Int!
-
-    "CToken supply. CTokens have 8 decimals"
-    totalSupply: BigDecimal!
-
-    "Borrows (amount) in the market"
-    totalBorrows: BigDecimal!
-
-    "Reserves stored in the contract"
-    reserves: BigDecimal!
-
-    "Yearly borrow rate. With 2102400 blocks per year"
-    borrowRate: BigDecimal!
-
-    "Yearly supply rate. With 2104400 blocks per year"
-    supplyRate: BigDecimal!
-
-    "Collateral factor determining how much one can borrow"
-    collateralFactor: BigDecimal!
-
-    "Number of borrowers active in the market"
-    numberOfBorrowers: Int!
-
-    "Number of suppliers active in the market"
-    numberOfSuppliers: Int!
-
-    "Address of the interest rate model"
-    interestRateModelAddress: Bytes!
-
-    # Fields that are not in compounds api
-
-    "Block the market is updated to"
-    accrualBlockNumber: Int!
-
-    "Timestamp the market was most recently updated"
-    blockTimestamp: Int!
-
-    "The history of the markets borrow index return (Think S&P 500)"
-    borrowIndex: BigDecimal!
-
-    "The factor determining interest that goes to reserves"
-    reserveFactor: BigInt!
-
-    "Gsigh Distribution Speed, GsighSpeedUpdated event "
-    gsighSpeed: BigInt!
-
-    "DistributedSupplierGsigh event"
-    totalGsighDistributedToSuppliers: BigInt!
-
-    "DistributedBorrowerGsigh event"
-    totalGsighDistributedToBorrowers: BigInt!
-
-    "NewPendingAdmin event"
-    pendingAdmin: Bytes!
-
-    "NewAdmin event"
-    admin: Bytes!    
-
-    "NewSightroller event"
-    sightroller: Bytes!    
-
-    "SIGH Distribution Speed, SIGHSpeedUpdated event "
-    sighSpeed: BigInt!
-
-    blockNumberWhenSpeedWasUpdated: Int!
-
-    savePriceSnapshot: BigInt!
-
-    sighAccuredInCurrentCycle: BigInt!
-
-}
-
-
-
-
-
-
-# Users within the protocol
-type Account @entity {
-    "User wallet address"
-    id: ID!
-    "Array of markets user is in"
-    tokens: [UserAccount_IndividualMarketStats!]! @derivedFrom(field: "account")
-    "how many times user has been liquidated"
-    countLiquidated: Int!
-    "how many times user has liquidated others"
-    countLiquidator: Int!
-    "True if user has ever borrowed"
-    hasBorrowed: Boolean!
-
-    # The following values are added by the JS Wrapper, and must be calculated with the most up
-    # to date values based on the block delta for market.exchangeRate and market.borrowIndex
-    # They do not need to be in the schema, but they will show up in the explorer playground
-
-    # "If less than 1, the account can be liquidated
-    # health: BigDecimal!
-    # "Total assets supplied by user"
-    # totalBorrowValueInEth: BigDecimal!
-    # "Total assets borrowed from user"
-    # totalCollateralValueInEth: BigDecimal!
-}
-
-
-
-
-
-
-# Stats for an accounts borrow and supply of an asset
-type UserAccount_IndividualMarketStats @entity {
-    "Concatenation of CToken address and user address"
-    id: ID!
-    "Relation to market"
-    market: Market!
-    "Symbol of the cToken"
-    symbol: String!
-    "Relation to user"
-    account: Account!
-    "Hashes of all user transactions"
-    transactionHashes: [Bytes!]!
-    "Times of all user transactions"
-    transactionTimes: [Int!]!
-    "Block number this asset was updated at in the contract"
-    accrualBlockNumber: Int!
-    "True if user is entered, false if they are exited"
-    enteredMarket: Boolean!
-    "CToken balance of the user"
-    cTokenBalance: BigDecimal!
-    "Total amount of underlying supplied"
-    totalUnderlyingSupplied: BigDecimal!
-    "Total amount of underling redeemed"
-    totalUnderlyingRedeemed: BigDecimal!
-    "The value of the borrow index upon users last interaction"
-    accountBorrowIndex: BigDecimal!
-    "Total amount underlying borrowed, exclusive of interest"
-    totalUnderlyingBorrowed: BigDecimal!
-    "Total amount underlying repaid"
-    totalUnderlyingRepaid: BigDecimal!
-    "Current borrow balance stored in contract (exclusive of interest since accrualBlockNumber)"
-    storedBorrowBalance: BigDecimal!
-
-    # The following values are added by the JS Wrapper, and must be calculated with the most up
-    # to date values based on the block delta for market.exchangeRate and market.borrowIndex
-    # They do not need to be in the schema, but they will show up in the explorer playground
-
-    # supplyBalanceUnderlying: BigDecimal!
-    # FORMULA: supplyBalanceUnderlying = cTokenBalance * market.exchangeRate
-
-    # lifetimeSupplyInterestAccrued: BigDecimal!
-    # FORMULA: lifetimeSupplyInterestAccrued = supplyBalanceUnderlying - totalUnderlyingSupplied + totalUnderlyingRedeemed
-
-    # borrowBalanceUnderlying: BigDecimal!
-    # FORMULA: borrowBalanceUnderlying = storedBorrowBalance * market.borrowIndex / accountBorrowIndex
-
-    # lifetimeBorrowInterestAccrued: BigDecimal!
-    # FORMULA: lifetimeBorrowInterestAccrued = borrowBalanceUnderlying - totalUnderlyingBorrowed + totalUnderlyingRepaid
-}
-
-
-
-
 type SIGH @entity {
     "ID is contract address"
     id: ID!
     symbol: Bytes!
     decimals: BigInt!
-    Reservoir: Bytes!
     totalSupply: BigInt!
-    currentInflation: BigDecimal!
-    RecentSIGHMinted: BigInt!
-    blockNumberWhenCoinsMinted: BigInt!
-    Recentminter: Bytes!
+    totalSupplyETH: BigDecimal!
+    recentSIGHBurnt: BigInt!
+    recentSIGHBurntETH: BigDecimal!
+    totalSIGHBurnt: BigInt!
+    totalSIGHBurntETH: BigDecimal!
     currentCycle: BigInt!
-    currentEra: BigInt!
-    totalBurntSIGH: BigInt!
-    recentlyBurntSIGH: BigInt!
+    currentSchedule: BigInt!
+    currentInflation: BigDecimal!
+    currentMintSpeed: BigInt!
+    currentMintSpeedETH: BigDecimal!
+    currentBurnSpeed: BigInt!
+    currentBurnSpeedETH: BigDecimal!
+    treasury: Bytes!
+    speedController: Bytes!
+    mintSnapshots: [MintSnapshot!]! @derivedFrom(field:"sigh")
+}
+
+type MintSnapshot @entity {
+    cycle: ID!
+    sigh: SIGH!
+    schedule: BigInt!
+    inflationRate: BigDecimal!
+    mintedAmount: BigInt!
+    mintedAmountETH: BigDecimal!
+    totalSupply: BigInt!
+    totalSupplyETH: BigDecimal!
+    mintSpeed: BigInt!
+    mintSpeedETH: BigDecimal!
+    burnSpeed: BigInt!
+    burnSpeedETH: BigDecimal!
+    totalSighBurnt: BigInt!
+    totalSighBurntETH: BigDecimal!
+    minter: Bytes!
+    blockNumber: BigDecimal!
 }
 
 
-type SIGHSpeedController @entity {
-    "ID is contract address"
-    id: ID!
-    ProtocolAddress: Bytes!
-    TreasuryAddress: Bytes!
-    ProtocolDistributionSpeed: BigInt!
-    TreasuryDistributionSpeed: BigInt!
-    recentlyDrippedToProtocol: BigInt!
-    totalAmountDrippedToProtocol: BigInt!
-    recentlyDrippedToTreasury: BigInt!
-    totalAmountDrippedToTreasury: BigInt!
-    totalAmountDripped: BigInt!
-    ReservoirBalance: BigInt!
-}
+# type SIGHSpeedController @entity {
+#     "ID is contract address"
+#     id: ID!
+#     ProtocolAddress: Bytes!
+#     TreasuryAddress: Bytes!
+#     ProtocolDistributionSpeed: BigInt!
+#     TreasuryDistributionSpeed: BigInt!
+#     recentlyDrippedToProtocol: BigInt!
+#     totalAmountDrippedToProtocol: BigInt!
+#     recentlyDrippedToTreasury: BigInt!
+#     totalAmountDrippedToTreasury: BigInt!
+#     totalAmountDripped: BigInt!
+#     ReservoirBalance: BigInt!
+# }
 
-type SIGHTreasury @entity {
-    "ID is contract address"
-    id: ID!
-    sightroller_address: Bytes!
-    sigh_token: Bytes!
+# type SIGHTreasury @entity {
+#     "ID is contract address"
+#     id: ID!
+#     sightroller_address: Bytes!
+#     sigh_token: Bytes!
 
-    tokenBeingDripped: Bytes!
-    DripSpeed: BigInt!
-    isDripAllowed: Boolean!
+#     tokenBeingDripped: Bytes!
+#     DripSpeed: BigInt!
+#     isDripAllowed: Boolean!
 
-    maxTransferAmount: BigInt!
+#     maxTransferAmount: BigInt!
 
-    recentlySIGHBurned: BigInt!
-    totalSIGHBurned: BigInt!
-}
+#     recentlySIGHBurned: BigInt!
+#     totalSIGHBurned: BigInt!
+# }
 
-type TokenBalancesData @entity {
-    "Token Address is the ID"
-    id: ID!
-    symbol: String!
-    balance: BigInt!
-    totalDripped: BigInt!
-}
+# # Sightroller global variables
+# type Sightroller @entity {
+#     "ID is set to 1"
+#     id: ID!
+#     "Address of price oracle the Sightroller uses, NewPriceOracle event "
+#     priceOracle: Bytes
+#     "Factor used to determine repayAmount for liquidating, NewCloseFactor event"
+#     closeFactor: BigInt
+#     "The percent bonus liquidators get for liquidating, NewLiquidationIncentive event"
+#     liquidationIncentive: BigInt
+#     "Max assets a single user can enter, NewMaxAssets event"
+#     maxAssets: BigInt
+#     "NewPauseGuardian event"
+#     pauseGuardian: Bytes
+#     "NewGsighRate event"
+#     gsighRate: BigInt
+
+#     sighRate: BigInt
+# }
+
+
+
+
+
+
+# # Supported Markets
+# type Market @entity { 
+#     "CToken address"
+#     id: ID!
+#     symbol: String!
+#     name: String!
+#     "The cToken contract balance of underlying asset"
+#     cash: BigDecimal!
+#     "Exchange rate of tokens / cTokens"
+#     exchangeRate:  BigDecimal!
+
+#     underlyingAddress: Bytes!
+#     underlyingName: String!
+#     "Underlying price of token in ETH (ex. 0.007 DAI)"
+#     underlyingPrice: BigDecimal!
+#     underlyingSymbol: String!
+#     "Underlying token price in USD"
+#     underlyingPriceUSD: BigDecimal!
+#     "Underlying token decimal length"
+#     underlyingDecimals: Int!
+
+#     "CToken supply. CTokens have 8 decimals"
+#     totalSupply: BigDecimal!
+
+#     "Borrows (amount) in the market"
+#     totalBorrows: BigDecimal!
+
+#     "Reserves stored in the contract"
+#     reserves: BigDecimal!
+
+#     "Yearly borrow rate. With 2102400 blocks per year"
+#     borrowRate: BigDecimal!
+
+#     "Yearly supply rate. With 2104400 blocks per year"
+#     supplyRate: BigDecimal!
+
+#     "Collateral factor determining how much one can borrow"
+#     collateralFactor: BigDecimal!
+
+#     "Number of borrowers active in the market"
+#     numberOfBorrowers: Int!
+
+#     "Number of suppliers active in the market"
+#     numberOfSuppliers: Int!
+
+#     "Address of the interest rate model"
+#     interestRateModelAddress: Bytes!
+
+#     # Fields that are not in compounds api
+
+#     "Block the market is updated to"
+#     accrualBlockNumber: Int!
+
+#     "Timestamp the market was most recently updated"
+#     blockTimestamp: Int!
+
+#     "The history of the markets borrow index return (Think S&P 500)"
+#     borrowIndex: BigDecimal!
+
+#     "The factor determining interest that goes to reserves"
+#     reserveFactor: BigInt!
+
+#     "Gsigh Distribution Speed, GsighSpeedUpdated event "
+#     gsighSpeed: BigInt!
+
+#     "DistributedSupplierGsigh event"
+#     totalGsighDistributedToSuppliers: BigInt!
+
+#     "DistributedBorrowerGsigh event"
+#     totalGsighDistributedToBorrowers: BigInt!
+
+#     "NewPendingAdmin event"
+#     pendingAdmin: Bytes!
+
+#     "NewAdmin event"
+#     admin: Bytes!    
+
+#     "NewSightroller event"
+#     sightroller: Bytes!    
+
+#     "SIGH Distribution Speed, SIGHSpeedUpdated event "
+#     sighSpeed: BigInt!
+
+#     blockNumberWhenSpeedWasUpdated: Int!
+
+#     savePriceSnapshot: BigInt!
+
+#     sighAccuredInCurrentCycle: BigInt!
+
+# }
+
+
+
+
+
+
+# # Users within the protocol
+# type Account @entity {
+#     "User wallet address"
+#     id: ID!
+#     "Array of markets user is in"
+#     tokens: [UserAccount_IndividualMarketStats!]! @derivedFrom(field: "account")
+#     "how many times user has been liquidated"
+#     countLiquidated: Int!
+#     "how many times user has liquidated others"
+#     countLiquidator: Int!
+#     "True if user has ever borrowed"
+#     hasBorrowed: Boolean!
+
+#     # The following values are added by the JS Wrapper, and must be calculated with the most up
+#     # to date values based on the block delta for market.exchangeRate and market.borrowIndex
+#     # They do not need to be in the schema, but they will show up in the explorer playground
+
+#     # "If less than 1, the account can be liquidated
+#     # health: BigDecimal!
+#     # "Total assets supplied by user"
+#     # totalBorrowValueInEth: BigDecimal!
+#     # "Total assets borrowed from user"
+#     # totalCollateralValueInEth: BigDecimal!
+# }
+
+
+
+
+
+
+# # Stats for an accounts borrow and supply of an asset
+# type UserAccount_IndividualMarketStats @entity {
+#     "Concatenation of CToken address and user address"
+#     id: ID!
+#     "Relation to market"
+#     market: Market!
+#     "Symbol of the cToken"
+#     symbol: String!
+#     "Relation to user"
+#     account: Account!
+#     "Hashes of all user transactions"
+#     transactionHashes: [Bytes!]!
+#     "Times of all user transactions"
+#     transactionTimes: [Int!]!
+#     "Block number this asset was updated at in the contract"
+#     accrualBlockNumber: Int!
+#     "True if user is entered, false if they are exited"
+#     enteredMarket: Boolean!
+#     "CToken balance of the user"
+#     cTokenBalance: BigDecimal!
+#     "Total amount of underlying supplied"
+#     totalUnderlyingSupplied: BigDecimal!
+#     "Total amount of underling redeemed"
+#     totalUnderlyingRedeemed: BigDecimal!
+#     "The value of the borrow index upon users last interaction"
+#     accountBorrowIndex: BigDecimal!
+#     "Total amount underlying borrowed, exclusive of interest"
+#     totalUnderlyingBorrowed: BigDecimal!
+#     "Total amount underlying repaid"
+#     totalUnderlyingRepaid: BigDecimal!
+#     "Current borrow balance stored in contract (exclusive of interest since accrualBlockNumber)"
+#     storedBorrowBalance: BigDecimal!
+
+#     # The following values are added by the JS Wrapper, and must be calculated with the most up
+#     # to date values based on the block delta for market.exchangeRate and market.borrowIndex
+#     # They do not need to be in the schema, but they will show up in the explorer playground
+
+#     # supplyBalanceUnderlying: BigDecimal!
+#     # FORMULA: supplyBalanceUnderlying = cTokenBalance * market.exchangeRate
+
+#     # lifetimeSupplyInterestAccrued: BigDecimal!
+#     # FORMULA: lifetimeSupplyInterestAccrued = supplyBalanceUnderlying - totalUnderlyingSupplied + totalUnderlyingRedeemed
+
+#     # borrowBalanceUnderlying: BigDecimal!
+#     # FORMULA: borrowBalanceUnderlying = storedBorrowBalance * market.borrowIndex / accountBorrowIndex
+
+#     # lifetimeBorrowInterestAccrued: BigDecimal!
+#     # FORMULA: lifetimeBorrowInterestAccrued = borrowBalanceUnderlying - totalUnderlyingBorrowed + totalUnderlyingRepaid
+# }
+
+
+
+
+
+
+# type TokenBalancesData @entity {
+#     "Token Address is the ID"
+#     id: ID!
+#     symbol: String!
+#     balance: BigInt!
+#     totalDripped: BigInt!
+# }
