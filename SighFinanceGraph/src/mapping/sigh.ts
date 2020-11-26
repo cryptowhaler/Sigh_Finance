@@ -99,6 +99,15 @@ export function handleNewSchedule(event: NewSchedule): void {
 }
 
 
+export function handleTransfer(event: Transfer): void {
+  // let sighID = event.address.toHexString()
+  // let sigh_state = SIGH_Instrument.load(sighID)
+
+  // let contract = SIGH.bind(Address.fromString(event.address.toHexString()))
+
+  // sigh_state.save()
+}
+
 
 
 // ############################################
@@ -125,6 +134,8 @@ export function createSIGH(addressID: string): SIGH_Instrument {
   sigh_token_contract.currentMintSpeedETH = new BigDecimal(0.0)
   sigh_token_contract.currentBurnSpeed = new BigInt(0)
   sigh_token_contract.currentBurnSpeedETH = new BigDecimal(0)
+
+  sigh_token_contract.oracle = Address.fromString('0x0000000000000000000000000000000000000000',) 
 
   sigh_token_contract.save()
   return sigh_token_contract as SIGH_Instrument

@@ -19,6 +19,7 @@ type SIGH_Instrument @entity {
     treasury: Bytes!
     speedController: Bytes!
     mintSnapshots: [MintSnapshot!]! @derivedFrom(field:"cycle")
+    oracle: Bytes!
 }
 
 type MintSnapshot @entity {
@@ -40,6 +41,31 @@ type MintSnapshot @entity {
     blockNumber: BigInt!
 }
 
+type Instrument @entity {
+    id: ID!
+    decimals: BigInt!
+    
+    totalLiquidity_WEI: BigInt!
+    totalLiquidity: BigDecimal!
+    availableLiquidity_WEI: BigInt!
+    availableLiquidity: BigDecimal!
+
+
+    supplyInterestRate: BigInt!
+    supplyInterestRatePercent: BigDecimal!
+    stableBorrowInterestRate: BigInt!
+    stableBorrowInterestPercent: BigDecimal!
+    variableBorrowInterestRate: BigInt!
+    variableBorrowInterestPercent: BigDecimal!
+
+    supplyIndex: BigInt!
+    variableBorrowIndex: BigInt!
+
+    lifeTimeDeposits_WEI: BigInt!
+    lifeTimeDeposits: BigDecimal!
+
+    timeStamp: BigInt!
+}
 
 # type SIGHSpeedController @entity {
 #     "ID is contract address"

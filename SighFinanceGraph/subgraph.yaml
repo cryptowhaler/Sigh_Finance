@@ -31,6 +31,73 @@ dataSources:
           handler: handleSIGHBurned
         - event: NewSchedule(uint256,uint256,uint256)
           handler: handleNewSchedule
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+
+
+  - kind: ethereum/contract
+    name: Lending_Pool_Core
+    network: kovan
+    source:
+      address: "  "
+      abi: LendingPoolCore
+      startBlock: 21040723
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping/LendingPoolCore.ts
+      entities:
+        - Instruments
+      abis:
+      - name: LendingPoolCore
+        file: ./abis/LendingPoolCore.json
+      eventHandlers:
+        - event: InstrumentUpdated(address, uint256, uint256, uint256, uint256, uint256  )
+          handler: handleInstrumentUpdated
+
+
+  - kind: ethereum/contract
+    name: Lending_Pool
+    network: kovan
+    source:
+      address: "  "
+      abi: LendingPool
+      startBlock: 21040723
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping/LendingPool.ts
+      entities:
+        - Instruments
+      abis:
+      - name: LendingPool
+        file: ./abis/LendingPool.json
+      eventHandlers:
+        - event: Deposit( address , address , uint256 , uint16 , uint256 );
+          handler: handleDeposit
+        - event: RedeemUnderlying(address , address , uint256 , uint256 );
+          handler: handleRedeemUnderlying
+        - event: Borrow( address , address , uint256, uint256, uint256, uint256, uint256, uint16, uint256);
+          handler: handleBorrow
+        - event: Repay( address, address, address, uint256, uint256, uint256, uint256);
+          handler: handleRepay
+        - event: Swap( address, address, uint256, uint256, uint256, uint256);
+          handler: handleSwap
+        - event: InstrumentUsedAsCollateralEnabled(address, address);
+          handler: handleInstrumentUsedAsCollateralEnabled
+        - event: InstrumentUsedAsCollateralDisabled(address, address);
+          handler: handleInstrumentUsedAsCollateralDisabled
+        - event: RebalanceStableBorrowRate( address, address, uint256, uint256, uint256);
+          handler: handleRebalanceStableBorrowRate
+        - event: FlashLoan( address, address, uint256, uint256, uint256, uint256);
+          handler: handleFlashLoan
+        - event: OriginationFeeLiquidated( address, address, address, uint256, uint256, uint256);
+          handler: handleOriginationFeeLiquidated
+        - event: LiquidationCall( address, address, address, uint256, uint256, uint256, address, bool, uint256);
+          handler: handleLiquidationCall
+
 
   # - kind: ethereum/contract
   #   name: SIGH_SpeedController

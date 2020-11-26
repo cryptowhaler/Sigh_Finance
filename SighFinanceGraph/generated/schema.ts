@@ -203,6 +203,15 @@ export class SIGH_Instrument extends Entity {
   set mintSnapshots(value: Array<string>) {
     this.set("mintSnapshots", Value.fromStringArray(value));
   }
+
+  get oracle(): Bytes {
+    let value = this.get("oracle");
+    return value.toBytes();
+  }
+
+  set oracle(value: Bytes) {
+    this.set("oracle", Value.fromBytes(value));
+  }
 }
 
 export class MintSnapshot extends Entity {
