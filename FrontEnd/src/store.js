@@ -1380,19 +1380,18 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     SIGHDistributionHandler_refreshSighSpeeds: async ({commit,state}) => {
       if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
-        console.log(sighDistributionHandlerContract);
-        sighDistributionHandlerContract.methods.refreshSIGHSpeeds().send({from: state.connectedWallet}).on('transactionHash',function(hash) {
-          let transaction = {hash : hash, function : '$SIGH Speeds : Refresh' , amount : null  }; 
-          commit('addToSessionPendingTransactions',transaction);
-        })  
-        .then(receipt => { 
-          console.log(receipt);
-          return receipt;
-          })
-        .catch(error => {
+        try {
+          let response = await sighDistributionHandlerContract.methods.refreshSIGHSpeeds().send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+            let transaction = {hash : hash, function : '$SIGH Speeds : Refresh' , amount : null  }; 
+            commit('addToSessionPendingTransactions',transaction);
+            console.log(response);
+            return response;
+          });  
+        }
+        catch(error) {
           console.log(error);
           return error;
-        })
+        } 
       }
       else {
         console.log("SIGH Finance (SIGH Distribution Handler Contract) is currently not been deployed on " + getters.networkName);
@@ -1400,13 +1399,16 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       }
     },
 
+    // DECIMAL ADJUSTED
     SIGHDistributionHandler_getSIGHBalance: async ({commit,state}) => {
       if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
-        // console.log(sighDistributionHandlerContract);
         let response = await sighDistributionHandlerContract.methods.getSIGHBalance().call();
-        console.log("sighDistributionHandler SIGH Balance = " + response );        
-        return response;            
+        console.log("sighDistributionHandler SIGH Balance = " + response );   
+        let balance = BigNumber(response);
+        balance = balance.shiftedBy(-18);
+        console.log("sighDistributionHandler SIGH Balance  (Decimal Adjusted) = " + balance );   
+        return balance;            
       }
       else {
         console.log("SIGH Finance (SIGH Distribution Handler Contract) is currently not been deployed on " + getters.networkName);
@@ -1417,10 +1419,12 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     SIGHDistributionHandler_getSIGHSpeed: async ({commit,state}) => {
       if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
         const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
-        // console.log(sighDistributionHandlerContract);
         let response = await sighDistributionHandlerContract.methods.getSIGHSpeed().call();
         console.log("sighDistributionHandler SIGH Speed = " + response );        
-        return response;            
+        let sighSpeed = BigNumber(response);
+        sighSpeed = sighSpeed.shiftedBy(-18);
+        console.log("sighDistributionHandler SIGH Speed (Decimal Adjusted) = " + sighSpeed );        
+        return sighSpeed;            
       }
       else {
         console.log("SIGH Finance (SIGH Distribution Handler Contract) is currently not been deployed on " + getters.networkName);

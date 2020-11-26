@@ -321,7 +321,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
      */    
     function SpeedUpperCheckSwitch( bool isActivated, uint profitPercentage ) external onlySighFinanceConfigurator returns (bool) {     // 
         require( profitPercentage > 0.01e18, 'The new Profit Percentage must be greater than 0.01e18 (1%) ');
-        require( profitPercentage <= 2e18, 'The new Supplier Ratio must be less than 2e18 (200%)');
+        require( profitPercentage <= 10e18, 'The new Supplier Ratio must be less than 10e18 (10x)');
         refreshSIGHSpeeds();
     
         
