@@ -3,21 +3,26 @@ type SIGH_Instrument @entity {
     id: ID!
     symbol: String!
     decimals: BigInt!
-    totalSupply: BigInt!
-    totalSupplyETH: BigDecimal!
-    recentSIGHBurnt: BigInt!
-    recentSIGHBurntETH: BigDecimal!
-    totalSIGHBurnt: BigInt!
-    totalSIGHBurntETH: BigDecimal!
+    treasury: Bytes!
+    speedController: Bytes!
+
+    totalSupply_WEI: BigInt!
+    totalSupply: BigDecimal!
+
+    recentSIGHBurnt_WEI: BigInt!
+    recentSIGHBurnt: BigDecimal!
+    totalSIGHBurnt_WEI: BigInt!
+    totalSIGHBurnt: BigDecimal!
+
     currentCycle: BigInt!
     currentSchedule: BigInt!
     currentInflation: BigDecimal!
-    currentMintSpeed: BigInt!
-    currentMintSpeedETH: BigDecimal!
-    currentBurnSpeed: BigInt!
-    currentBurnSpeedETH: BigDecimal!
-    treasury: Bytes!
-    speedController: Bytes!
+
+    currentMintSpeed_WEI: BigInt!
+    currentMintSpeed: BigDecimal!
+    currentBurnSpeed_WEI: BigInt!
+    currentBurnSpeed: BigDecimal!
+
     mintSnapshots: [MintSnapshot!]! @derivedFrom(field:"instrument_sigh")
     oracle: Bytes!
 }
@@ -27,16 +32,16 @@ type MintSnapshot @entity {
     instrument_sigh: SIGH_Instrument! 
     schedule: BigInt!
     inflationRate: BigDecimal!
-    mintedAmount: BigInt!
-    mintedAmountETH: BigDecimal!
-    totalSupply: BigInt!
-    totalSupplyETH: BigDecimal!
-    mintSpeed: BigInt!
-    mintSpeedETH: BigDecimal!
-    burnSpeed: BigInt!
-    burnSpeedETH: BigDecimal!
-    totalSighBurnt: BigInt!
-    totalSighBurntETH: BigDecimal!
+    mintedAmount_WEI: BigInt!
+    mintedAmount: BigDecimal!
+    totalSupply_WEI: BigInt!
+    totalSupply: BigDecimal!
+    mintSpeed_WEI: BigInt!
+    mintSpeed: BigDecimal!
+    burnSpeed_WEI: BigInt!
+    burnSpeed: BigDecimal!
+    totalSighBurnt_WEI: BigInt!
+    totalSighBurnt: BigDecimal!
     minter: Bytes!
     blockNumber: BigInt!
 }

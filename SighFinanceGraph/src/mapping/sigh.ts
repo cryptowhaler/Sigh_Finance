@@ -18,29 +18,29 @@ export function handleSIGHMinted(event: SIGHMinted): void {
   let contract = SIGH.bind(Address.fromString(event.address.toHexString()))
   sigh_state.currentSchedule = contract.getCurrentSchedule()
   sigh_state.currentInflation = BigDecimal. fromString('1').div(contract.getCurrentInflationRate().toBigDecimal())
-  sigh_state.currentMintSpeed = contract.getCurrentMintSpeed()
-  sigh_state.currentMintSpeedETH =  sigh_state.currentMintSpeed.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
+  sigh_state.currentMintSpeed_WEI = contract.getCurrentMintSpeed()
+  sigh_state.currentMintSpeed =  sigh_state.currentMintSpeed_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
 
   let mint_snapshot = new MintSnapshot(event.params.cycle.toHexString())
   mint_snapshot.instrument_sigh = sighID
   mint_snapshot.minter = event.params.minter
   mint_snapshot.schedule = event.params.Schedule
   mint_snapshot.inflationRate = BigInt.fromI32(1).toBigDecimal().div( event.params.inflationRate.toBigDecimal() )
-  mint_snapshot.mintedAmount = event.params.amountMinted
-  mint_snapshot.mintedAmountETH = mint_snapshot.mintedAmount.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
-  mint_snapshot.totalSupply = event.params.current_supply
-  mint_snapshot.totalSupplyETH = mint_snapshot.totalSupply.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
-  mint_snapshot.mintSpeed = event.params.mintSpeed
-  mint_snapshot.mintSpeedETH = mint_snapshot.mintSpeed.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
-  mint_snapshot.burnSpeed = sigh_state.currentBurnSpeed
-  mint_snapshot.burnSpeedETH = sigh_state.currentBurnSpeedETH
-  mint_snapshot.totalSighBurnt = sigh_state.totalSIGHBurnt
-  mint_snapshot.totalSighBurntETH = sigh_state.totalSIGHBurntETH
+  mint_snapshot.mintedAmount_WEI = event.params.amountMinted
+  mint_snapshot.mintedAmount  = mint_snapshot.mintedAmount_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
+  mint_snapshot.totalSupply_WEI = event.params.current_supply
+  mint_snapshot.totalSupply  = mint_snapshot.totalSupply_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
+  mint_snapshot.mintSpeed_WEI = event.params.mintSpeed
+  mint_snapshot.mintSpeed  = mint_snapshot.mintSpeed_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
+  mint_snapshot.burnSpeed_WEI = sigh_state.currentBurnSpeed_WEI
+  mint_snapshot.burnSpeed  = sigh_state.currentBurnSpeed
+  mint_snapshot.totalSighBurnt_WEI = sigh_state.totalSIGHBurnt_WEI
+  mint_snapshot.totalSighBurnt  = sigh_state.totalSIGHBurnt 
   mint_snapshot.blockNumber = event.params.block_number
   mint_snapshot.save();
 
-  sigh_state.totalSupply = mint_snapshot.totalSupply
-  sigh_state.totalSupplyETH = mint_snapshot.totalSupplyETH
+  sigh_state.totalSupply_WEI = mint_snapshot.totalSupply_WEI
+  sigh_state.totalSupply  = mint_snapshot.totalSupply
 
   sigh_state.save()
 }
@@ -69,19 +69,19 @@ export function handleSIGHBurned(event: SIGHBurned): void {
   let sighID = event.address.toHexString()
   let sigh_state = SIGH_Instrument.load(sighID)
 
-  sigh_state.recentSIGHBurnt = event.params.burntAmount
-  sigh_state.totalSIGHBurntETH = sigh_state.recentSIGHBurnt.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
+  sigh_state.recentSIGHBurnt_WEI = event.params.burntAmount
+  sigh_state.recentSIGHBurnt = sigh_state.recentSIGHBurnt_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
 
-  sigh_state.totalSIGHBurnt = event.params.totalBurnedAmount
-  sigh_state.totalSIGHBurntETH = sigh_state.totalSIGHBurnt.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
+  sigh_state.totalSIGHBurnt_WEI = event.params.totalBurnedAmount
+  sigh_state.totalSIGHBurnt = sigh_state.totalSIGHBurnt_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
 
-  sigh_state.totalSupply = event.params.currentSupply
-  sigh_state.totalSupplyETH = sigh_state.totalSupply.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
+  sigh_state.totalSupply_WEI = event.params.currentSupply
+  sigh_state.totalSupply = sigh_state.totalSupply_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
 
   let contract = SIGH.bind(Address.fromString(event.address.toHexString()))
 
-  sigh_state.currentMintSpeed = contract.getCurrentMintSpeed()
-  sigh_state.currentMintSpeedETH =  sigh_state.currentMintSpeed.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
+  sigh_state.currentMintSpeed_WEI = contract.getCurrentMintSpeed()
+  sigh_state.currentMintSpeed =  sigh_state.currentMintSpeed_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
   sigh_state.save()
 }
 
@@ -94,8 +94,8 @@ export function handleNewSchedule(event: NewSchedule): void {
   sigh_state.currentSchedule = event.params.newSchedule
 
   let contract = SIGH.bind(Address.fromString(event.address.toHexString()))
-  sigh_state.currentMintSpeed = contract.getCurrentMintSpeed()
-  sigh_state.currentMintSpeedETH =  sigh_state.currentMintSpeed.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
+  sigh_state.currentMintSpeed_WEI = contract.getCurrentMintSpeed()
+  sigh_state.currentMintSpeed =  sigh_state.currentMintSpeed_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
 
   sigh_state.save()
 }
@@ -123,19 +123,23 @@ export function createSIGH(addressID: string): SIGH_Instrument {
   sigh_token_contract.treasury = Address.fromString('0x0000000000000000000000000000000000000000',)
   sigh_token_contract.speedController = Address.fromString('0x0000000000000000000000000000000000000000',)
 
-  sigh_token_contract.totalSupply = new BigInt(0)
-  sigh_token_contract.totalSupplyETH = BigDecimal. fromString('0')
-  sigh_token_contract.totalSIGHBurnt = new BigInt(0)
-  sigh_token_contract.totalSIGHBurntETH = BigDecimal. fromString('0')
+  sigh_token_contract.totalSupply_WEI = new BigInt(0)
+  sigh_token_contract.totalSupply = BigDecimal.fromString('0')
+
+  sigh_token_contract.recentSIGHBurnt_WEI = new BigInt(0)
+  sigh_token_contract.recentSIGHBurnt = BigDecimal.fromString('0')
+
+  sigh_token_contract.totalSIGHBurnt_WEI = new BigInt(0)
+  sigh_token_contract.totalSIGHBurnt = BigDecimal.fromString('0')
 
   sigh_token_contract.currentCycle = new BigInt(0)
   sigh_token_contract.currentSchedule = new BigInt(0)
-  sigh_token_contract.currentInflation = BigDecimal. fromString('0')
+  sigh_token_contract.currentInflation = BigDecimal.fromString('0')
 
-  sigh_token_contract.currentMintSpeed = new BigInt(0)
-  sigh_token_contract.currentMintSpeedETH = BigDecimal. fromString('0')
-  sigh_token_contract.currentBurnSpeed = new BigInt(0)
-  sigh_token_contract.currentBurnSpeedETH = BigDecimal. fromString('0')
+  sigh_token_contract.currentMintSpeed_WEI = new BigInt(0)
+  sigh_token_contract.currentMintSpeed = BigDecimal.fromString('0')
+  sigh_token_contract.currentBurnSpeed_WEI = new BigInt(0)
+  sigh_token_contract.currentBurnSpeed = BigDecimal.fromString('0')
 
   sigh_token_contract.oracle = Address.fromString('0x0000000000000000000000000000000000000000',) 
 

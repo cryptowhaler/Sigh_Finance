@@ -60,58 +60,76 @@ export class SIGH_Instrument extends Entity {
     this.set("decimals", Value.fromBigInt(value));
   }
 
-  get totalSupply(): BigInt {
+  get treasury(): Bytes {
+    let value = this.get("treasury");
+    return value.toBytes();
+  }
+
+  set treasury(value: Bytes) {
+    this.set("treasury", Value.fromBytes(value));
+  }
+
+  get speedController(): Bytes {
+    let value = this.get("speedController");
+    return value.toBytes();
+  }
+
+  set speedController(value: Bytes) {
+    this.set("speedController", Value.fromBytes(value));
+  }
+
+  get totalSupply_WEI(): BigInt {
+    let value = this.get("totalSupply_WEI");
+    return value.toBigInt();
+  }
+
+  set totalSupply_WEI(value: BigInt) {
+    this.set("totalSupply_WEI", Value.fromBigInt(value));
+  }
+
+  get totalSupply(): BigDecimal {
     let value = this.get("totalSupply");
-    return value.toBigInt();
-  }
-
-  set totalSupply(value: BigInt) {
-    this.set("totalSupply", Value.fromBigInt(value));
-  }
-
-  get totalSupplyETH(): BigDecimal {
-    let value = this.get("totalSupplyETH");
     return value.toBigDecimal();
   }
 
-  set totalSupplyETH(value: BigDecimal) {
-    this.set("totalSupplyETH", Value.fromBigDecimal(value));
+  set totalSupply(value: BigDecimal) {
+    this.set("totalSupply", Value.fromBigDecimal(value));
   }
 
-  get recentSIGHBurnt(): BigInt {
+  get recentSIGHBurnt_WEI(): BigInt {
+    let value = this.get("recentSIGHBurnt_WEI");
+    return value.toBigInt();
+  }
+
+  set recentSIGHBurnt_WEI(value: BigInt) {
+    this.set("recentSIGHBurnt_WEI", Value.fromBigInt(value));
+  }
+
+  get recentSIGHBurnt(): BigDecimal {
     let value = this.get("recentSIGHBurnt");
-    return value.toBigInt();
-  }
-
-  set recentSIGHBurnt(value: BigInt) {
-    this.set("recentSIGHBurnt", Value.fromBigInt(value));
-  }
-
-  get recentSIGHBurntETH(): BigDecimal {
-    let value = this.get("recentSIGHBurntETH");
     return value.toBigDecimal();
   }
 
-  set recentSIGHBurntETH(value: BigDecimal) {
-    this.set("recentSIGHBurntETH", Value.fromBigDecimal(value));
+  set recentSIGHBurnt(value: BigDecimal) {
+    this.set("recentSIGHBurnt", Value.fromBigDecimal(value));
   }
 
-  get totalSIGHBurnt(): BigInt {
+  get totalSIGHBurnt_WEI(): BigInt {
+    let value = this.get("totalSIGHBurnt_WEI");
+    return value.toBigInt();
+  }
+
+  set totalSIGHBurnt_WEI(value: BigInt) {
+    this.set("totalSIGHBurnt_WEI", Value.fromBigInt(value));
+  }
+
+  get totalSIGHBurnt(): BigDecimal {
     let value = this.get("totalSIGHBurnt");
-    return value.toBigInt();
-  }
-
-  set totalSIGHBurnt(value: BigInt) {
-    this.set("totalSIGHBurnt", Value.fromBigInt(value));
-  }
-
-  get totalSIGHBurntETH(): BigDecimal {
-    let value = this.get("totalSIGHBurntETH");
     return value.toBigDecimal();
   }
 
-  set totalSIGHBurntETH(value: BigDecimal) {
-    this.set("totalSIGHBurntETH", Value.fromBigDecimal(value));
+  set totalSIGHBurnt(value: BigDecimal) {
+    this.set("totalSIGHBurnt", Value.fromBigDecimal(value));
   }
 
   get currentCycle(): BigInt {
@@ -141,58 +159,40 @@ export class SIGH_Instrument extends Entity {
     this.set("currentInflation", Value.fromBigDecimal(value));
   }
 
-  get currentMintSpeed(): BigInt {
+  get currentMintSpeed_WEI(): BigInt {
+    let value = this.get("currentMintSpeed_WEI");
+    return value.toBigInt();
+  }
+
+  set currentMintSpeed_WEI(value: BigInt) {
+    this.set("currentMintSpeed_WEI", Value.fromBigInt(value));
+  }
+
+  get currentMintSpeed(): BigDecimal {
     let value = this.get("currentMintSpeed");
-    return value.toBigInt();
-  }
-
-  set currentMintSpeed(value: BigInt) {
-    this.set("currentMintSpeed", Value.fromBigInt(value));
-  }
-
-  get currentMintSpeedETH(): BigDecimal {
-    let value = this.get("currentMintSpeedETH");
     return value.toBigDecimal();
   }
 
-  set currentMintSpeedETH(value: BigDecimal) {
-    this.set("currentMintSpeedETH", Value.fromBigDecimal(value));
+  set currentMintSpeed(value: BigDecimal) {
+    this.set("currentMintSpeed", Value.fromBigDecimal(value));
   }
 
-  get currentBurnSpeed(): BigInt {
+  get currentBurnSpeed_WEI(): BigInt {
+    let value = this.get("currentBurnSpeed_WEI");
+    return value.toBigInt();
+  }
+
+  set currentBurnSpeed_WEI(value: BigInt) {
+    this.set("currentBurnSpeed_WEI", Value.fromBigInt(value));
+  }
+
+  get currentBurnSpeed(): BigDecimal {
     let value = this.get("currentBurnSpeed");
-    return value.toBigInt();
-  }
-
-  set currentBurnSpeed(value: BigInt) {
-    this.set("currentBurnSpeed", Value.fromBigInt(value));
-  }
-
-  get currentBurnSpeedETH(): BigDecimal {
-    let value = this.get("currentBurnSpeedETH");
     return value.toBigDecimal();
   }
 
-  set currentBurnSpeedETH(value: BigDecimal) {
-    this.set("currentBurnSpeedETH", Value.fromBigDecimal(value));
-  }
-
-  get treasury(): Bytes {
-    let value = this.get("treasury");
-    return value.toBytes();
-  }
-
-  set treasury(value: Bytes) {
-    this.set("treasury", Value.fromBytes(value));
-  }
-
-  get speedController(): Bytes {
-    let value = this.get("speedController");
-    return value.toBytes();
-  }
-
-  set speedController(value: Bytes) {
-    this.set("speedController", Value.fromBytes(value));
+  set currentBurnSpeed(value: BigDecimal) {
+    this.set("currentBurnSpeed", Value.fromBigDecimal(value));
   }
 
   get mintSnapshots(): Array<string> {
@@ -271,94 +271,94 @@ export class MintSnapshot extends Entity {
     this.set("inflationRate", Value.fromBigDecimal(value));
   }
 
-  get mintedAmount(): BigInt {
+  get mintedAmount_WEI(): BigInt {
+    let value = this.get("mintedAmount_WEI");
+    return value.toBigInt();
+  }
+
+  set mintedAmount_WEI(value: BigInt) {
+    this.set("mintedAmount_WEI", Value.fromBigInt(value));
+  }
+
+  get mintedAmount(): BigDecimal {
     let value = this.get("mintedAmount");
-    return value.toBigInt();
-  }
-
-  set mintedAmount(value: BigInt) {
-    this.set("mintedAmount", Value.fromBigInt(value));
-  }
-
-  get mintedAmountETH(): BigDecimal {
-    let value = this.get("mintedAmountETH");
     return value.toBigDecimal();
   }
 
-  set mintedAmountETH(value: BigDecimal) {
-    this.set("mintedAmountETH", Value.fromBigDecimal(value));
+  set mintedAmount(value: BigDecimal) {
+    this.set("mintedAmount", Value.fromBigDecimal(value));
   }
 
-  get totalSupply(): BigInt {
+  get totalSupply_WEI(): BigInt {
+    let value = this.get("totalSupply_WEI");
+    return value.toBigInt();
+  }
+
+  set totalSupply_WEI(value: BigInt) {
+    this.set("totalSupply_WEI", Value.fromBigInt(value));
+  }
+
+  get totalSupply(): BigDecimal {
     let value = this.get("totalSupply");
-    return value.toBigInt();
-  }
-
-  set totalSupply(value: BigInt) {
-    this.set("totalSupply", Value.fromBigInt(value));
-  }
-
-  get totalSupplyETH(): BigDecimal {
-    let value = this.get("totalSupplyETH");
     return value.toBigDecimal();
   }
 
-  set totalSupplyETH(value: BigDecimal) {
-    this.set("totalSupplyETH", Value.fromBigDecimal(value));
+  set totalSupply(value: BigDecimal) {
+    this.set("totalSupply", Value.fromBigDecimal(value));
   }
 
-  get mintSpeed(): BigInt {
+  get mintSpeed_WEI(): BigInt {
+    let value = this.get("mintSpeed_WEI");
+    return value.toBigInt();
+  }
+
+  set mintSpeed_WEI(value: BigInt) {
+    this.set("mintSpeed_WEI", Value.fromBigInt(value));
+  }
+
+  get mintSpeed(): BigDecimal {
     let value = this.get("mintSpeed");
-    return value.toBigInt();
-  }
-
-  set mintSpeed(value: BigInt) {
-    this.set("mintSpeed", Value.fromBigInt(value));
-  }
-
-  get mintSpeedETH(): BigDecimal {
-    let value = this.get("mintSpeedETH");
     return value.toBigDecimal();
   }
 
-  set mintSpeedETH(value: BigDecimal) {
-    this.set("mintSpeedETH", Value.fromBigDecimal(value));
+  set mintSpeed(value: BigDecimal) {
+    this.set("mintSpeed", Value.fromBigDecimal(value));
   }
 
-  get burnSpeed(): BigInt {
+  get burnSpeed_WEI(): BigInt {
+    let value = this.get("burnSpeed_WEI");
+    return value.toBigInt();
+  }
+
+  set burnSpeed_WEI(value: BigInt) {
+    this.set("burnSpeed_WEI", Value.fromBigInt(value));
+  }
+
+  get burnSpeed(): BigDecimal {
     let value = this.get("burnSpeed");
-    return value.toBigInt();
-  }
-
-  set burnSpeed(value: BigInt) {
-    this.set("burnSpeed", Value.fromBigInt(value));
-  }
-
-  get burnSpeedETH(): BigDecimal {
-    let value = this.get("burnSpeedETH");
     return value.toBigDecimal();
   }
 
-  set burnSpeedETH(value: BigDecimal) {
-    this.set("burnSpeedETH", Value.fromBigDecimal(value));
+  set burnSpeed(value: BigDecimal) {
+    this.set("burnSpeed", Value.fromBigDecimal(value));
   }
 
-  get totalSighBurnt(): BigInt {
+  get totalSighBurnt_WEI(): BigInt {
+    let value = this.get("totalSighBurnt_WEI");
+    return value.toBigInt();
+  }
+
+  set totalSighBurnt_WEI(value: BigInt) {
+    this.set("totalSighBurnt_WEI", Value.fromBigInt(value));
+  }
+
+  get totalSighBurnt(): BigDecimal {
     let value = this.get("totalSighBurnt");
-    return value.toBigInt();
-  }
-
-  set totalSighBurnt(value: BigInt) {
-    this.set("totalSighBurnt", Value.fromBigInt(value));
-  }
-
-  get totalSighBurntETH(): BigDecimal {
-    let value = this.get("totalSighBurntETH");
     return value.toBigDecimal();
   }
 
-  set totalSighBurntETH(value: BigDecimal) {
-    this.set("totalSighBurntETH", Value.fromBigDecimal(value));
+  set totalSighBurnt(value: BigDecimal) {
+    this.set("totalSighBurnt", Value.fromBigDecimal(value));
   }
 
   get minter(): Bytes {
