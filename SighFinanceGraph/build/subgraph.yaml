@@ -1,257 +1,15 @@
 specVersion: 0.0.2
-description: SIGH Finance is part of an R&D initiative to develop engineered liquidity
-  mining driven incentive models driven by A.I models on the Blockchain Infrastructure
+description: SIGH Finance is a money-market protocol designed as an incentive model to
+  off-set volatility of the supported instruments on a 24 hr basis.
 repository: https://github.com/cryptowhaler/Sigh_Finance/SighFinanceGraph
 schema:
   file: schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: Sightroller
-    network: kovan
-    source:
-      address: "0xD1541249De91AddfDAC9125d44c67b418E5b31F3"
-      abi: Sightroller
-      startBlock: 21054146
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: Sightroller/Sightroller.wasm
-      entities:
-        - Sightroller
-        - Market
-        - UserAccount_IndividualMarketStats
-      abis:
-        - name: Sightroller
-          file: Sightroller/abis/Sightroller.json
-      eventHandlers:
-        - event: NewCloseFactor(uint256,uint256)
-          handler: handleNewCloseFactor
-        - event: NewLiquidationIncentive(uint256,uint256)
-          handler: handleNewLiquidationIncentive
-        - event: NewMaxAssets(uint256,uint256)
-          handler: handleNewMaxAssets
-        - event: NewPriceOracle(address,address)
-          handler: handleNewPriceOracle
-        - event: NewPauseGuardian(address,address)
-          handler: handleNewPauseGuardian
-        - event: MarketEntered(address,address)
-          handler: handleMarketEntered
-        - event: MarketExited(address,address)
-          handler: handleMarketExited
-        - event: NewCollateralFactor(address,uint256,uint256)
-          handler: handleNewCollateralFactor
-        - event: SIGHSpeedUpdated(address,uint256)
-          handler: handleSIGHSpeedUpdated
-        - event: NewSIGHRate(uint256,uint256)
-          handler: handleNewSIGHRate
-        - event: PriceSnapped(address,uint256,uint256,uint256)
-          handler: handlePriceSnapped
-  - kind: ethereum/contract
-    name: link
-    network: kovan
-    source:
-      address: "0x754A614b8a5a63CbeEb38193F6D12861C876148B"
-      abi: cToken
-      startBlock: 21057715
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: link/link.wasm
-      entities:
-        - User
-        - Market
-        - CTokenInfo
-      abis:
-        - name: cToken
-          file: link/abis/ctoken.json
-        - name: PriceOracle
-          file: link/abis/PriceOracle.json
-        - name: cERC20
-          file: link/abis/cERC20.json
-        - name: EIP20Interface
-          file: link/abis/EIP20Interface.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
-        - event: AccrueInterest(uint256,uint256,uint256,uint256)
-          handler: handleAccrueInterest
-        - event: Borrow(address,uint256,uint256,uint256)
-          handler: handleBorrow
-        - event: RepayBorrow(address,address,uint256,uint256,uint256)
-          handler: handleRepayBorrow
-        - event: LiquidateBorrow(address,address,uint256,address,uint256)
-          handler: handleLiquidateBorrow
-        - event: NewPendingAdmin(address,address)
-          handler: handleNewPendingAdmin
-        - event: NewAdmin(address,address)
-          handler: handleNewAdmin
-        - event: NewSightroller(address,address)
-          handler: handleNewSightroller
-        - event: NewMarketInterestRateModel(address,address)
-          handler: handleNewMarketInterestRateModel
-        - event: NewReserveFactor(uint256,uint256)
-          handler: handleNewReserveFactor
-        - event: Mint(address,uint256,uint256)
-          handler: handleMint
-        - event: Redeem(address,uint256,uint256)
-          handler: handleRedeem
-  - kind: ethereum/contract
-    name: S-SIGH
-    network: kovan
-    source:
-      address: "0x2414607d3ef95f4730758e7316ad100B9A5084A1"
-      abi: cToken
-      startBlock: 21057715
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: link/link.wasm
-      entities:
-        - User
-        - Market
-        - CTokenInfo
-      abis:
-        - name: cToken
-          file: S-SIGH/abis/ctoken.json
-        - name: PriceOracle
-          file: S-SIGH/abis/PriceOracle.json
-        - name: cERC20
-          file: S-SIGH/abis/cERC20.json
-        - name: EIP20Interface
-          file: S-SIGH/abis/EIP20Interface.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
-        - event: AccrueInterest(uint256,uint256,uint256,uint256)
-          handler: handleAccrueInterest
-        - event: Borrow(address,uint256,uint256,uint256)
-          handler: handleBorrow
-        - event: RepayBorrow(address,address,uint256,uint256,uint256)
-          handler: handleRepayBorrow
-        - event: LiquidateBorrow(address,address,uint256,address,uint256)
-          handler: handleLiquidateBorrow
-        - event: NewPendingAdmin(address,address)
-          handler: handleNewPendingAdmin
-        - event: NewAdmin(address,address)
-          handler: handleNewAdmin
-        - event: NewSightroller(address,address)
-          handler: handleNewSightroller
-        - event: NewMarketInterestRateModel(address,address)
-          handler: handleNewMarketInterestRateModel
-        - event: NewReserveFactor(uint256,uint256)
-          handler: handleNewReserveFactor
-        - event: Mint(address,uint256,uint256)
-          handler: handleMint
-        - event: Redeem(address,uint256,uint256)
-          handler: handleRedeem
-  - kind: ethereum/contract
-    name: S-GSIGH
-    network: kovan
-    source:
-      address: "0x0Cf1f1b6D6695cd26f32c1831c08B4Ab32506284"
-      abi: cToken
-      startBlock: 21057715
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: link/link.wasm
-      entities:
-        - User
-        - Market
-        - CTokenInfo
-      abis:
-        - name: cToken
-          file: S-GSIGH/abis/ctoken.json
-        - name: PriceOracle
-          file: S-GSIGH/abis/PriceOracle.json
-        - name: cERC20
-          file: S-GSIGH/abis/cERC20.json
-        - name: EIP20Interface
-          file: S-GSIGH/abis/EIP20Interface.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
-        - event: AccrueInterest(uint256,uint256,uint256,uint256)
-          handler: handleAccrueInterest
-        - event: Borrow(address,uint256,uint256,uint256)
-          handler: handleBorrow
-        - event: RepayBorrow(address,address,uint256,uint256,uint256)
-          handler: handleRepayBorrow
-        - event: LiquidateBorrow(address,address,uint256,address,uint256)
-          handler: handleLiquidateBorrow
-        - event: NewPendingAdmin(address,address)
-          handler: handleNewPendingAdmin
-        - event: NewAdmin(address,address)
-          handler: handleNewAdmin
-        - event: NewSightroller(address,address)
-          handler: handleNewSightroller
-        - event: NewMarketInterestRateModel(address,address)
-          handler: handleNewMarketInterestRateModel
-        - event: NewReserveFactor(uint256,uint256)
-          handler: handleNewReserveFactor
-        - event: Mint(address,uint256,uint256)
-          handler: handleMint
-        - event: Redeem(address,uint256,uint256)
-          handler: handleRedeem
-  - kind: ethereum/contract
-    name: S-LINK
-    network: kovan
-    source:
-      address: "0x65ad52edA20c7De3FA80e8Cd8Ae79f31888E980C"
-      abi: cToken
-      startBlock: 21057715
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: link/link.wasm
-      entities:
-        - User
-        - Market
-        - CTokenInfo
-      abis:
-        - name: cToken
-          file: S-LINK/abis/ctoken.json
-        - name: PriceOracle
-          file: S-LINK/abis/PriceOracle.json
-        - name: cERC20
-          file: S-LINK/abis/cERC20.json
-        - name: EIP20Interface
-          file: S-LINK/abis/EIP20Interface.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
-        - event: AccrueInterest(uint256,uint256,uint256,uint256)
-          handler: handleAccrueInterest
-        - event: Borrow(address,uint256,uint256,uint256)
-          handler: handleBorrow
-        - event: RepayBorrow(address,address,uint256,uint256,uint256)
-          handler: handleRepayBorrow
-        - event: LiquidateBorrow(address,address,uint256,address,uint256)
-          handler: handleLiquidateBorrow
-        - event: NewPendingAdmin(address,address)
-          handler: handleNewPendingAdmin
-        - event: NewAdmin(address,address)
-          handler: handleNewAdmin
-        - event: NewSightroller(address,address)
-          handler: handleNewSightroller
-        - event: NewMarketInterestRateModel(address,address)
-          handler: handleNewMarketInterestRateModel
-        - event: NewReserveFactor(uint256,uint256)
-          handler: handleNewReserveFactor
-        - event: Mint(address,uint256,uint256)
-          handler: handleMint
-        - event: Redeem(address,uint256,uint256)
-          handler: handleRedeem
-  - kind: ethereum/contract
     name: SIGH
     network: kovan
     source:
-      address: "0x76Ff68033ef96ee0727f85eA1f979B1b0FD4C75b"
+      address: "0x190f17888c7Ae32af3E677Fb7e752c74c5f24595"
       abi: SIGH
       startBlock: 21040723
     mapping:
@@ -264,8 +22,140 @@ dataSources:
       abis:
         - name: SIGH
           file: SIGH/abis/SIGH.json
+        - name: PriceOracleGetter
+          file: SIGH/abis/PriceOracleGetter.json
+        - name: ERC20Detailed
+          file: SIGH/abis/ERC20Detailed.json
       eventHandlers:
-        - event: coinsMinted(uint256,uint256,address,uint256,uint256,uint256,uint256)
-          handler: handleCoinsMinted
-        - event: ReservoirChanged(address,address,uint256)
-          handler: handleReservoirChanged
+        - event: MintingInitialized(address,address,uint256)
+          handler: handleMintingInitialized
+        - event: SIGHMinted(address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
+          handler: handleSIGHMinted
+        - event: SIGHBurned(uint256,uint256,uint256,uint256)
+          handler: handleSIGHBurned
+        - event: NewSchedule(uint256,uint256,uint256)
+          handler: handleNewSchedule
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: Lending_Pool_Core
+    network: kovan
+    source:
+      address: "0x190f17888c7Ae32af3E677Fb7e752c74c5f24595"
+      abi: LendingPoolCore
+      startBlock: 21040723
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: Lending_Pool_Core/Lending_Pool_Core.wasm
+      entities:
+        - Instruments
+      abis:
+        - name: LendingPoolCore
+          file: Lending_Pool_Core/abis/LendingPoolCore.json
+        - name: PriceOracleGetter
+          file: Lending_Pool_Core/abis/PriceOracleGetter.json
+        - name: ERC20Detailed
+          file: Lending_Pool_Core/abis/ERC20Detailed.json
+      eventHandlers:
+        - event: InstrumentUpdated(indexed address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleInstrumentUpdated
+  - kind: ethereum/contract
+    name: Lending_Pool
+    network: kovan
+    source:
+      address: "0x190f17888c7Ae32af3E677Fb7e752c74c5f24595"
+      abi: LendingPool
+      startBlock: 21040723
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: Lending_Pool/Lending_Pool.wasm
+      entities:
+        - Instruments
+      abis:
+        - name: LendingPool
+          file: Lending_Pool/abis/LendingPool.json
+        - name: PriceOracleGetter
+          file: Lending_Pool/abis/PriceOracleGetter.json
+        - name: ERC20Detailed
+          file: Lending_Pool/abis/ERC20Detailed.json
+      eventHandlers:
+        - event: Deposit(indexed address,indexed address,uint256,uint16,uint256)
+          handler: handleDeposit
+        - event: RedeemUnderlying(indexed address,indexed address,uint256,uint256)
+          handler: handleRedeemUnderlying
+        - event: Borrow(indexed address,indexed
+            address,uint256,uint256,uint256,uint256,uint256,uint16,uint256)
+          handler: handleBorrow
+        - event: Repay(indexed address,indexed address,indexed
+            address,uint256,uint256,uint256,uint256)
+          handler: handleRepay
+        - event: Swap(indexed address,indexed address,uint256,uint256,uint256,uint256)
+          handler: handleSwap
+        - event: InstrumentUsedAsCollateralEnabled(indexed address,indexed address)
+          handler: handleInstrumentUsedAsCollateralEnabled
+        - event: InstrumentUsedAsCollateralDisabled(indexed address,indexed address)
+          handler: handleInstrumentUsedAsCollateralDisabled
+        - event: RebalanceStableBorrowRate(indexed address,indexed address,uint256,uint256,uint256)
+          handler: handleRebalanceStableBorrowRate
+        - event: FlashLoan(indexed address,indexed address,uint256,uint256,uint256,uint256)
+          handler: handleFlashLoan
+        - event: OriginationFeeLiquidated(indexed address,indexed address,indexed
+            address,uint256,uint256,uint256)
+          handler: handleOriginationFeeLiquidated
+        - event: LiquidationCall(indexed address,indexed address,indexed
+            address,uint256,uint256,uint256,address,bool,uint256)
+          handler: handleLiquidationCall
+  - kind: ethereum/contract
+    name: Lending_Pool_Configurator
+    network: kovan
+    source:
+      address: "0x190f17888c7Ae32af3E677Fb7e752c74c5f24595"
+      abi: LendingPoolConfigurator
+      startBlock: 21040723
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: Lending_Pool_Configurator/Lending_Pool_Configurator.wasm
+      entities:
+        - Instruments
+      abis:
+        - name: LendingPoolConfigurator
+          file: Lending_Pool_Configurator/abis/LendingPoolConfigurator.json
+        - name: PriceOracleGetter
+          file: Lending_Pool_Configurator/abis/PriceOracleGetter.json
+        - name: ERC20Detailed
+          file: Lending_Pool_Configurator/abis/ERC20Detailed.json
+      eventHandlers:
+        - event: InstrumentInitialized(indexed address,indexed address,address)
+          handler: handleInstrumentInitialized
+        - event: InstrumentRemoved(indexed address)
+          handler: handleInstrumentRemoved
+        - event: BorrowingEnabledOnInstrument(indexed address)
+          handler: handleBorrowingEnabledOnInstrument
+        - event: BorrowingDisabledOnInstrument(indexed address)
+          handler: handleBorrowingDisabledOnInstrument
+        - event: InstrumentEnabledAsCollateral(indexed address,uint256,uint256,uint256)
+          handler: handleInstrumentEnabledAsCollateral
+        - event: InstrumentDisabledAsCollateral(indexed address)
+          handler: handleInstrumentDisabledAsCollateral
+        - event: StableRateOnInstrumentSwitched(indexed address,bool)
+          handler: handleStableRateOnInstrumentSwitched
+        - event: InstrumentActivated(indexed address)
+          handler: handleInstrumentActivated
+        - event: InstrumentDeactivated(indexed address)
+          handler: handleInstrumentDeactivated
+        - event: InstrumentFreezeSwitched(indexed address,bool)
+          handler: handleInstrumentFreezeSwitched
+        - event: InstrumentLiquidationThresholdChanged(address,uint256)
+          handler: handleInstrumentLiquidationThresholdChanged
+        - event: InstrumentLiquidationBonusChanged(address,uint256)
+          handler: handleInstrumentLiquidationBonusChanged
+        - event: InstrumentInterestRateStrategyChanged(address,address)
+          handler: handleInstrumentInterestRateStrategyChanged
+        - event: InstrumentBaseLtvChanged(address,uint256)
+          handler: handleInstrumentBaseLtvChanged

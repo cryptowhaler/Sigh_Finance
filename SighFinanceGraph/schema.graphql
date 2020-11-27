@@ -18,13 +18,13 @@ type SIGH_Instrument @entity {
     currentBurnSpeedETH: BigDecimal!
     treasury: Bytes!
     speedController: Bytes!
-    mintSnapshots: [MintSnapshot!]! @derivedFrom(field:"cycle")
+    mintSnapshots: [MintSnapshot!]! @derivedFrom(field:"instrument_sigh")
     oracle: Bytes!
 }
 
 type MintSnapshot @entity {
     id: ID!
-    cycle: SIGH_Instrument! 
+    instrument_sigh: SIGH_Instrument! 
     schedule: BigInt!
     inflationRate: BigDecimal!
     mintedAmount: BigInt!
@@ -53,7 +53,7 @@ type Instrument @entity {
     iTokenAddress: Bytes!
     interestRateStrategyAddress: Bytes!
     oracle: Bytes!
-    
+
     name: String!
     symbol: String!
     underlyingInstrumentName: String!

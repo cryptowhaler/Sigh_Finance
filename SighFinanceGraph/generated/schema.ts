@@ -244,13 +244,13 @@ export class MintSnapshot extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get cycle(): string {
-    let value = this.get("cycle");
+  get instrument_sigh(): string {
+    let value = this.get("instrument_sigh");
     return value.toString();
   }
 
-  set cycle(value: string) {
-    this.set("cycle", Value.fromString(value));
+  set instrument_sigh(value: string) {
+    this.set("instrument_sigh", Value.fromString(value));
   }
 
   get schedule(): BigInt {
