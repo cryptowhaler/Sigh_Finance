@@ -18,5 +18,6 @@ export function handleInstrumentUpdated(event: InstrumentUpdated): void {
     instrumentState.supplyIndex = event.params.liquidityIndex
     instrumentState.variableBorrowIndex = event.params.variableBorrowIndex
 
+    instrumentState.timeStamp = event.params._timestamp
     instrumentState.save()
 }

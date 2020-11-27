@@ -35,7 +35,7 @@ contract LendingPoolConfigurator is VersionedInitializable {
     * @param _instrument the address of the instrument
     * @param _stableRateEnabled true if stable rate borrowing is enabled, false otherwise
     **/
-    event BorrowingEnabledOnInstrument(address _instrument, bool _stableRateEnabled);
+    event BorrowingEnabledOnInstrument(address indexed _instrument);
     event BorrowingDisabledOnInstrument(address indexed _instrument);      // emitted when borrowing is disabled on a instrument
 
     /**
@@ -112,7 +112,7 @@ contract LendingPoolConfigurator is VersionedInitializable {
 
 // ###################################################################################################
 // ####### FUNCTIONS WHICH INTERACT WITH LENDINGPOOLCORE CONTRACT ####################################
-// ####### --> removeLastAddedInstrument() : REMOVE INSTRUMENT    #####################################
+// ####### --> removeInstrument() : REMOVE INSTRUMENT    #####################################
 // ####### --> enableBorrowingOnInstrument()   :   BORROWING RELATED  #################################
 // ####### --> disableBorrowingOnInstrument()  :   BORROWING RELATED  #################################
 // ####### --> enableInstrumentAsCollateral()    :   COLLATERAL RELATED  ##############################
@@ -131,15 +131,12 @@ contract LendingPoolConfigurator is VersionedInitializable {
 // ####### --> refreshLendingPoolCoreConfiguration()   :   REFRESH THE ADDRESS OF CORE  ###############
 // ###################################################################################################
 
-    // /**
-    // * @dev removes the last added instrument in the list of the instruments
-    // * @param _instrumentToRemove the address of the instrument
-    // **/
-    // function removeLastAddedInstrument( address _instrumentToRemove) external onlyLendingPoolManager {
-    //     ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
-    //     core.removeLastAddedInstrument(_instrumentToRemove);
-    //     emit InstrumentRemoved(_instrumentToRemove);
-    // }
+    function removeInstrument( address _instrument ) external onlyLendingPoolManager {
+
+        IToken iTokenInstance = new IToken( address(globalAddressesProvider), _instrument, decimals, iTokenName, iTokenSymbol ); // DEPLOYS A NEW ITOKEN CONTRACT
+        require(core.removeInstrument( _instrument ),"Failed to remove instrument" );
+        emit InstrumentRemoved( _instrument );
+    }
 
     /**
     * @dev activates/deactivates a _instrument
@@ -166,8 +163,8 @@ contract LendingPoolConfigurator is VersionedInitializable {
     function instrumentBorrowingSwitch(address _instrument, bool borrowRateSwitch) external onlyLendingPoolManager {
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
         if (borrowRateSwitch) {
-            core.enableBorrowingOnInstrument(_instrument, borrowRateSwitch);
-            emit BorrowingEnabledOnInstrument(_instrument, borrowRateSwitch);
+            core.enableBorrowingOnInstrument(_instrument);
+            emit BorrowingEnabledOnInstrument(_instrument);
         }
         else {
             core.disableBorrowingOnInstrument(_instrument);

@@ -41,9 +41,35 @@ type MintSnapshot @entity {
     blockNumber: BigInt!
 }
 
+
+
+
+
+
 type Instrument @entity {
     id: ID!
+
+    instrumentAddress: Bytes!
+    iTokenAddress: Bytes!
+    interestRateStrategyAddress: Bytes!
+    oracle: Bytes!
+    
+    name: String!
+    symbol: String!
+    underlyingInstrumentName: String!
+    underlyingInstrumentSymbol: String!
+
     decimals: BigInt!
+
+    isActive: Boolean!
+    isFreezed: Boolean!
+    borrowingEnabled: Boolean!
+    usageAsCollateralEnabled: Boolean!
+    isStableBorrowRateEnabled: Boolean!
+
+    baseLTVasCollateral: BigInt!
+    liquidationThreshold: BigInt!
+    liquidationBonus: BigInt!
 
     priceETH_WEI: BigInt! 
     priceETHDecimals: BigInt! 
@@ -52,9 +78,13 @@ type Instrument @entity {
     priceUSD_WEI: BigInt! 
     priceUSD: BigDecimal! 
 
-    borrowFee_WEI: BigInt! 
-    borrowFee: BigDecimal! 
 
+
+    borrowFeeDue_WEI: BigInt! 
+    borrowFeeDue: BigDecimal! 
+
+    borrowFeeEarned_WEI: BigInt! 
+    borrowFeeEarned: BigDecimal! 
 
     "totalLiquidity_WEI : Present tokenized instrument quantity deposited in SIGH Finance's Lending Pool in WEI (not adjusted by decimal)"    
     totalLiquidity_WEI: BigInt!
@@ -133,8 +163,64 @@ type Instrument @entity {
     lifeTimeBorrows:  BigDecimal!
 
 
+
+
+
+
+
+
+    isSIGHMechanismActivated: Boolean!
+
+    SIGH_Supply_Index: BigInt!
+    SIGH_Supply_Index_lastUpdatedBlock: BigInt!
+
+    SIGH_Borrow_Index: BigInt!
+    SIGH_Borrow_Index_lastUpdatedBlock: BigInt!
+
+    present_24HrWindow_InstrumentOpeningPriceETH: BigDecimal!
+    present_24HrWindow_InstrumentOpeningPriceUSD: BigDecimal!
+
+    present_24HrWindow_InstrumentClosingPriceETH: BigDecimal!
+    present_24HrWindow_InstrumentClosingPriceUSD: BigDecimal!
+
+    present_24HrWindow_DeltaBlocks: BigInt!
+    present_24HrVolatility_ETH: BigDecimal!
+    present_24HrVolatility_USD: BigDecimal!
+    present_percentTotalVolatility: BigDecimal!
+    present_TotalVolatility_ETH: BigDecimal!
+    present_TotalVolatility_USD: BigDecimal!
+
+    present_SIGH_Distribution_Side: String!
+
+    present_24HrWindow_SIGH_OpeningPrice_ETH: BigDecimal! 
+    present_24HrWindow_SIGH_OpeningPrice_USD: BigDecimal! 
+
+    present_SIGH_Suppliers_Speed_WEI: BigInt!
+    present_SIGH_Suppliers_Speed: BigDecimal!
+    present_SIGH_Borrowers_Speed_WEI: BigInt!
+    present_SIGH_Borrowers_Speed: BigDecimal!
+    present_SIGH_Staking_Speed_WEI: BigInt!
+    present_SIGH_Staking_Speed: BigDecimal!
+
+    present_SIGH_DistributionValuePerBlock_ETH: BigDecimal!
+    present_SIGH_DistributionValuePerBlock_USD: BigDecimal!
+
+    present_VolatilityAddressedPerBlock: BigDecimal!
+
+    SIGH_Distribution_History: [SIGH_Distribution!]! @derivedFrom(field:"index")
+
     timeStamp: BigInt!
 }
+
+
+
+type SIGH_Distribution @entity {
+    id: ID!
+    index: Instrument! 
+    fromBlockNumber: BigInt!
+    toBlockNumber: BigInt!
+}
+
 
 # type SIGHSpeedController @entity {
 #     "ID is contract address"

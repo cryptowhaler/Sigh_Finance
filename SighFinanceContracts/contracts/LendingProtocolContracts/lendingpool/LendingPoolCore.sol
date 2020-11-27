@@ -1205,26 +1205,39 @@ contract LendingPoolCore is VersionedInitializable {
     * @dev removes the last added instrument in the instrumentsList array
     * @param _instrumentToRemove the address of the instrument
     **/
-    function removeLastAddedInstrument(address _instrumentToRemove) external onlyLendingPoolConfigurator {
+    function removeInstrument(address _instrumentToRemove) external onlyLendingPoolConfigurator {
 
         address lastInstrument = instrumentsList[instrumentsList.length-1];
-        require(lastInstrument == _instrumentToRemove, "Instrument being removed is different than the Instrument requested");
         //as we can't check if totalLiquidity is 0 (since the instrument added might not be an ERC20) we at least check that there is nothing borrowed
-        require(getInstrumentTotalBorrows(lastInstrument) == 0, "Cannot remove an Instrument with liquidity deposited");
+        require(getInstrumentTotalBorrows(_instrumentToRemove) == 0, "Cannot remove an Instrument with open Borrows");
+        require(getInstrumentTotalLiquidity(_instrumentToRemove) == 0, "Cannot remove an Instrument with non-zero Liquidity");
 
-        reserves[lastInstrument].isActive = false;
-        reserves[lastInstrument].iTokenAddress = address(0);
-        reserves[lastInstrument].decimals = 0;
-        reserves[lastInstrument].lastLiquidityCumulativeIndex = 0;
-        reserves[lastInstrument].lastVariableBorrowCumulativeIndex = 0;
-        reserves[lastInstrument].borrowingEnabled = false;
-        reserves[lastInstrument].usageAsCollateralEnabled = false;
-        reserves[lastInstrument].baseLTVasCollateral = 0;
-        reserves[lastInstrument].liquidationThreshold = 0;
-        reserves[lastInstrument].liquidationBonus = 0;
-        reserves[lastInstrument].interestRateStrategyAddress = address(0);
+        reserves[_instrumentToRemove].isActive = false;
+        reserves[_instrumentToRemove].borrowingEnabled = false;
+        reserves[_instrumentToRemove].usageAsCollateralEnabled = false;
+        reserves[_instrumentToRemove].interestRateStrategyAddress = address(0);
+        reserves[_instrumentToRemove].iTokenAddress = address(0);
+        reserves[_instrumentToRemove].decimals = 0;
+        reserves[_instrumentToRemove].lastLiquidityCumulativeIndex = 0;
+        reserves[_instrumentToRemove].lastVariableBorrowCumulativeIndex = 0;
+        reserves[_instrumentToRemove].baseLTVasCollateral = 0;
+        reserves[_instrumentToRemove].liquidationThreshold = 0;
+        reserves[_instrumentToRemove].liquidationBonus = 0;
 
-        instrumentsList.pop();
+        uint index = 0;
+        uint length_ = instrumentsList.length;
+        for (uint i = 0 ; i < length_ ; i++) {
+            if (instrumentsList[i] == _instrumentToRemove) {
+                index = i;
+                break;
+            }
+        }
+        instrumentsList[index] = instrumentsList[length_ - 1];
+        instrumentsList.length--;
+        uint newLen = length_ - 1;
+        require(instrumentsList.length == newLen,"Instrument not properly removed from the list of instruments supported by SIGH Finance's Lending Protocol");
+        require(sighMechanism.removeInstrument(_instrumentToRemove ),"Instrument not properly removed from the list of instruments supported by SIGH FINANCE's SIGH Mechanism");
+        return true;
     }
 
     /**
@@ -1241,8 +1254,8 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _instrument the address of the instrument
     * @param _stableBorrowRateEnabled true if the stable rate needs to be enabled, false otherwise
     **/
-    function enableBorrowingOnInstrument(address _instrument, bool _stableBorrowRateEnabled)  external onlyLendingPoolConfigurator {
-        reserves[_instrument].enableBorrowing(_stableBorrowRateEnabled);
+    function enableBorrowingOnInstrument(address _instrument)  external onlyLendingPoolConfigurator {
+        reserves[_instrument].enableBorrowing();
     }
 
     /**

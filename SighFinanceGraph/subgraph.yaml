@@ -57,6 +57,7 @@ dataSources:
           handler: handleInstrumentUpdated
 
 
+
   - kind: ethereum/contract
     name: Lending_Pool
     network: kovan
@@ -98,6 +99,53 @@ dataSources:
         - event: LiquidationCall( address, address, address, uint256, uint256, uint256, address, bool, uint256);
           handler: handleLiquidationCall
 
+
+  - kind: ethereum/contract
+    name: Lending_Pool_Configurator
+    network: kovan
+    source:
+      address: "  "
+      abi: LendingPoolConfigurator
+      startBlock: 21040723
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping/LendingPoolConfigurator.ts
+      entities:
+        - Instruments
+      abis:
+      - name: LendingPoolConfigurator
+        file: ./abis/LendingPoolConfigurator.json
+      eventHandlers:
+        - event: InstrumentInitialized(address, address, address)
+          handler: handleInstrumentInitialized
+        - event: InstrumentRemoved(address)
+          handler: handleInstrumentRemoved
+        - event: BorrowingEnabledOnInstrument(address)
+          handler: handleBorrowingEnabledOnInstrument
+        - event: BorrowingDisabledOnInstrument(address)
+          handler: handleBorrowingDisabledOnInstrument
+        - event: InstrumentEnabledAsCollateral(address, uint256, uint256, uint256)
+          handler: handleInstrumentEnabledAsCollateral
+        - event: InstrumentDisabledAsCollateral(address)
+          handler: handleInstrumentDisabledAsCollateral
+        - event: StableRateOnInstrumentSwitched(address, bool)
+          handler: handleStableRateOnInstrumentSwitched
+        - event: InstrumentActivated(address)
+          handler: handleInstrumentActivated
+        - event: InstrumentDeactivated(address)
+          handler: handleInstrumentDeactivated
+        - event: InstrumentFreezeSwitched(address, bool )
+          handler: handleInstrumentFreezeSwitched
+        - event: InstrumentLiquidationThresholdChanged(address, uint256 )
+          handler: handleInstrumentLiquidationThresholdChanged
+        - event: InstrumentLiquidationBonusChanged(address, uint256)
+          handler: handleInstrumentLiquidationBonusChanged
+        - event: InstrumentInterestRateStrategyChanged(address, address)
+          handler: handleInstrumentInterestRateStrategyChanged
+        - event: InstrumentBaseLtvChanged(address, uint256)
+          handler: handleInstrumentBaseLtvChanged
 
   # - kind: ethereum/contract
   #   name: SIGH_SpeedController

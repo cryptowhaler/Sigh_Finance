@@ -86,7 +86,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     // ####################################
 
     event InstrumentAdded (address instrumentAddress_, string name, uint decimals , address iTokenAddress, uint blockNumber); 
-    event InstrumentRemoved(address _instrument, address _iTokenAddress, string name, uint blockNumber); 
+    event InstrumentRemoved(address _instrument, uint blockNumber); 
 
     event InstrumentSIGHed(address instrumentAddress_, string name, bool isSighed, uint blockNumber);    /// Emitted when market isSIGHMechanismActivated status is changed
 
@@ -170,10 +170,10 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     * @param _iTokenAddress the address of the overlying iToken contract
     * @param _decimals the number of decimals of the underlying asset
     **/
-    function addInstrument( address _instrument, address _iTokenAddress, uint256 _decimals ) external returns (bool) { // onlyLendingPoolCore
+    function addInstrument( address _instrument, address _iTokenAddress, uint256 _decimals ) external onlyLendingPoolCore returns (bool) {
         require(!financial_instruments[_instrument].isListed ,"Instrument already supported.");
 
-        all_Instruments.push(_instrument); // ADD THE MARKET TO THE LIST OF SUPPORTED MARKETS
+        all_Instruments.push(_instrument); // ADD THE INSTRUMENT TO THE LIST OF SUPPORTED INSTRUMENTS
         ERC20Detailed instrumentContract = ERC20Detailed(_iTokenAddress);
 
         // STATE UPDATED : INITIALIZE INNSTRUMENT DATA
@@ -188,11 +188,12 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
                                                                 borrowlastupdatedblock : getBlockNumber()
                                                                 } );
         // STATE UPDATED : INITITALIZE INSTRUMENT SPEEDS
-        Instrument_Sigh_Mechansim_States[_instrument] = Instrument_Sigh_Mechansim_State({ suppliers_Speed: uint(0),
+        Instrument_Sigh_Mechansim_States[_instrument] = Instrument_Sigh_Mechansim_State({ 
+                                                                       suppliers_Speed: uint(0),
                                                                        borrowers_Speed: uint(0),
                                                                        staking_Speed: uint(0),
                                                                        _24HrVolatility: uint(0),
-                                                                       side: 'null' ,
+                                                                       side: 'inactive' ,
                                                                        percentTotalVolatility: uint(0)
                                                                     } );
 
@@ -211,8 +212,9 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     * @param _instrument the instrument object
     * @param _iTokenAddress the address of the overlying iToken contract
     **/
-    function removeInstrument( address _instrument, address _iTokenAddress ) external  returns (bool) {   // onlyLendingPoolCore
+    function removeInstrument( address _instrument ) external onlyLendingPoolCore returns (bool) {   // 
         require(financial_instruments[_instrument].isListed ,"Instrument already supported.");
+        require(updatedInstrumentIndexesInternal(), "Updating Instrument Indexes Failed");       //  accure the indexes 
 
         uint index = 0;
         uint length_ = all_Instruments.length;
@@ -232,7 +234,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         delete Instrument_Sigh_Mechansim_States[_instrument];
         delete instrumentPriceCycles[_instrument];
 
-        emit InstrumentRemoved(_instrument, _iTokenAddress, name, block.number); 
+        emit InstrumentRemoved(_instrument, block.number); 
         return true;
     }
 
