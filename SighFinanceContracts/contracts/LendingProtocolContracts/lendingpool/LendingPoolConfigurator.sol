@@ -33,7 +33,6 @@ contract LendingPoolConfigurator is VersionedInitializable {
     /**
     * @dev emitted when borrowing is enabled on a instrument
     * @param _instrument the address of the instrument
-    * @param _stableRateEnabled true if stable rate borrowing is enabled, false otherwise
     **/
     event BorrowingEnabledOnInstrument(address indexed _instrument);
     event BorrowingDisabledOnInstrument(address indexed _instrument);      // emitted when borrowing is disabled on a instrument
@@ -132,8 +131,7 @@ contract LendingPoolConfigurator is VersionedInitializable {
 // ###################################################################################################
 
     function removeInstrument( address _instrument ) external onlyLendingPoolManager {
-
-        IToken iTokenInstance = new IToken( address(globalAddressesProvider), _instrument, decimals, iTokenName, iTokenSymbol ); // DEPLOYS A NEW ITOKEN CONTRACT
+        ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
         require(core.removeInstrument( _instrument ),"Failed to remove instrument" );
         emit InstrumentRemoved( _instrument );
     }

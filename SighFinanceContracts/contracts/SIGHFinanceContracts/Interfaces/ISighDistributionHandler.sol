@@ -12,6 +12,8 @@ interface ISighDistributionHandler {
     function refreshConfig() external;
     
     function addInstrument( address _instrument, address _iTokenAddress, uint256 _decimals ) external returns (bool);   // onlyLendingPoolCore
+    function removeInstrument( address _instrument ) external returns (bool);   // 
+
     function Instrument_SIGHed(address instrument_) external  returns (bool);                                           // onlySighFinanceConfigurator
     function Instrument_UNSIGHed(address instrument_) external returns (bool);                                          //onlySighFinanceConfigurator
 

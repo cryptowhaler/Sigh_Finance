@@ -39,7 +39,7 @@ dataSources:
     name: Lending_Pool_Core
     network: kovan
     source:
-      address: "  "
+      address: "0x190f17888c7Ae32af3E677Fb7e752c74c5f24595"
       abi: LendingPoolCore
       startBlock: 21040723
     mapping:
@@ -53,7 +53,7 @@ dataSources:
       - name: LendingPoolCore
         file: ./abis/LendingPoolCore.json
       eventHandlers:
-        - event: InstrumentUpdated(address, uint256, uint256, uint256, uint256, uint256  )
+        - event: InstrumentUpdated(indexed address,uint256,uint256,uint256,uint256,uint256)
           handler: handleInstrumentUpdated
 
 
@@ -62,7 +62,7 @@ dataSources:
     name: Lending_Pool
     network: kovan
     source:
-      address: "  "
+      address: "0x190f17888c7Ae32af3E677Fb7e752c74c5f24595"
       abi: LendingPool
       startBlock: 21040723
     mapping:
@@ -76,27 +76,27 @@ dataSources:
       - name: LendingPool
         file: ./abis/LendingPool.json
       eventHandlers:
-        - event: Deposit( address , address , uint256 , uint16 , uint256 );
+        - event: Deposit(indexed address,indexed address,uint256,uint16,uint256)
           handler: handleDeposit
-        - event: RedeemUnderlying(address , address , uint256 , uint256 );
+        - event: RedeemUnderlying(indexed address,indexed address,uint256,uint256)
           handler: handleRedeemUnderlying
-        - event: Borrow( address , address , uint256, uint256, uint256, uint256, uint256, uint16, uint256);
+        - event: Borrow(indexed address,indexed address,uint256,uint256,uint256,uint256,uint256,uint16,uint256)
           handler: handleBorrow
-        - event: Repay( address, address, address, uint256, uint256, uint256, uint256);
+        - event: Repay(indexed address,indexed address,indexed address,uint256,uint256,uint256,uint256)
           handler: handleRepay
-        - event: Swap( address, address, uint256, uint256, uint256, uint256);
+        - event: Swap(indexed address,indexed address,uint256,uint256,uint256,uint256)
           handler: handleSwap
-        - event: InstrumentUsedAsCollateralEnabled(address, address);
+        - event: InstrumentUsedAsCollateralEnabled(indexed address,indexed address)
           handler: handleInstrumentUsedAsCollateralEnabled
-        - event: InstrumentUsedAsCollateralDisabled(address, address);
+        - event: InstrumentUsedAsCollateralDisabled(indexed address,indexed address)
           handler: handleInstrumentUsedAsCollateralDisabled
-        - event: RebalanceStableBorrowRate( address, address, uint256, uint256, uint256);
+        - event: RebalanceStableBorrowRate(indexed address,indexed address,uint256,uint256,uint256)
           handler: handleRebalanceStableBorrowRate
-        - event: FlashLoan( address, address, uint256, uint256, uint256, uint256);
+        - event: FlashLoan(indexed address,indexed address,uint256,uint256,uint256,uint256)
           handler: handleFlashLoan
-        - event: OriginationFeeLiquidated( address, address, address, uint256, uint256, uint256);
+        - event: OriginationFeeLiquidated(indexed address,indexed address,indexed address,uint256,uint256,uint256)
           handler: handleOriginationFeeLiquidated
-        - event: LiquidationCall( address, address, address, uint256, uint256, uint256, address, bool, uint256);
+        - event: LiquidationCall(indexed address,indexed address,indexed address,uint256,uint256,uint256,address,bool,uint256)
           handler: handleLiquidationCall
 
 
@@ -104,7 +104,7 @@ dataSources:
     name: Lending_Pool_Configurator
     network: kovan
     source:
-      address: "  "
+      address: "0x190f17888c7Ae32af3E677Fb7e752c74c5f24595"
       abi: LendingPoolConfigurator
       startBlock: 21040723
     mapping:
@@ -118,33 +118,33 @@ dataSources:
       - name: LendingPoolConfigurator
         file: ./abis/LendingPoolConfigurator.json
       eventHandlers:
-        - event: InstrumentInitialized(address, address, address)
+        - event: InstrumentInitialized(indexed address,indexed address,address)
           handler: handleInstrumentInitialized
-        - event: InstrumentRemoved(address)
+        - event: InstrumentRemoved(indexed address)
           handler: handleInstrumentRemoved
-        - event: BorrowingEnabledOnInstrument(address)
+        - event: BorrowingEnabledOnInstrument(indexed address)
           handler: handleBorrowingEnabledOnInstrument
-        - event: BorrowingDisabledOnInstrument(address)
+        - event: BorrowingDisabledOnInstrument(indexed address)
           handler: handleBorrowingDisabledOnInstrument
-        - event: InstrumentEnabledAsCollateral(address, uint256, uint256, uint256)
+        - event: InstrumentEnabledAsCollateral(indexed address,uint256,uint256,uint256)
           handler: handleInstrumentEnabledAsCollateral
-        - event: InstrumentDisabledAsCollateral(address)
+        - event: InstrumentDisabledAsCollateral(indexed address)
           handler: handleInstrumentDisabledAsCollateral
-        - event: StableRateOnInstrumentSwitched(address, bool)
+        - event: StableRateOnInstrumentSwitched(indexed address,bool)
           handler: handleStableRateOnInstrumentSwitched
-        - event: InstrumentActivated(address)
+        - event: InstrumentActivated(indexed address)
           handler: handleInstrumentActivated
-        - event: InstrumentDeactivated(address)
+        - event: InstrumentDeactivated(indexed address)
           handler: handleInstrumentDeactivated
-        - event: InstrumentFreezeSwitched(address, bool )
+        - event: InstrumentFreezeSwitched(indexed address,bool)
           handler: handleInstrumentFreezeSwitched
-        - event: InstrumentLiquidationThresholdChanged(address, uint256 )
+        - event: InstrumentLiquidationThresholdChanged(address,uint256)
           handler: handleInstrumentLiquidationThresholdChanged
-        - event: InstrumentLiquidationBonusChanged(address, uint256)
+        - event: InstrumentLiquidationBonusChanged(address,uint256)
           handler: handleInstrumentLiquidationBonusChanged
-        - event: InstrumentInterestRateStrategyChanged(address, address)
+        - event: InstrumentInterestRateStrategyChanged(address,address)
           handler: handleInstrumentInterestRateStrategyChanged
-        - event: InstrumentBaseLtvChanged(address, uint256)
+        - event: InstrumentBaseLtvChanged(address,uint256)
           handler: handleInstrumentBaseLtvChanged
 
   # - kind: ethereum/contract

@@ -53,7 +53,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
     * @param _referral the referral number of the action
     * @param _timestamp the timestamp of the action
     **/
-    event Deposit( address indexed _instrument, address indexed _user, uint256 _amount, uint16 indexed _referral, uint256 _timestamp);
+    event Deposit( address indexed _instrument, address indexed _user, uint256 _amount, uint16 _referral, uint256 _timestamp);
 
     /**
     * @dev emitted during a redeem action.
@@ -76,7 +76,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
     * @param _referral the referral number of the action
     * @param _timestamp the timestamp of the action
     **/
-    event Borrow( address indexed _instrument, address indexed _user, uint256 _amount, uint256 _borrowRateMode, uint256 _borrowRate, uint256 _originationFee, uint256 _borrowBalanceIncrease, uint16 indexed _referral, uint256 _timestamp);
+    event Borrow( address indexed _instrument, address indexed _user, uint256 _amount, uint256 _borrowRateMode, uint256 _borrowRate, uint256 _originationFee, uint256 _borrowBalanceIncrease, uint16 _referral, uint256 _timestamp);
 
     /**
     * @dev emitted on repay

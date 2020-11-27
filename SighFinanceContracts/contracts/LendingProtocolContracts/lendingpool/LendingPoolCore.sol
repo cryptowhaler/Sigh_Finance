@@ -1205,7 +1205,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @dev removes the last added instrument in the instrumentsList array
     * @param _instrumentToRemove the address of the instrument
     **/
-    function removeInstrument(address _instrumentToRemove) external onlyLendingPoolConfigurator {
+    function removeInstrument(address _instrumentToRemove) external onlyLendingPoolConfigurator returns (bool) {
 
         address lastInstrument = instrumentsList[instrumentsList.length-1];
         //as we can't check if totalLiquidity is 0 (since the instrument added might not be an ERC20) we at least check that there is nothing borrowed
@@ -1252,7 +1252,6 @@ contract LendingPoolCore is VersionedInitializable {
     /**
     * @dev enables borrowing on a instrument. Also sets the stable rate borrowing
     * @param _instrument the address of the instrument
-    * @param _stableBorrowRateEnabled true if the stable rate needs to be enabled, false otherwise
     **/
     function enableBorrowingOnInstrument(address _instrument)  external onlyLendingPoolConfigurator {
         reserves[_instrument].enableBorrowing();

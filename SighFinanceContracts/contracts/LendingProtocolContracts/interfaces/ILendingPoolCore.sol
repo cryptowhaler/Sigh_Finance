@@ -163,11 +163,11 @@ interface ILendingPoolCore {
     function refreshConfiguration() external ;
 
     function initInstrument( address _instrument, address _iTokenAddress,  uint256 _decimals, address _interestRateStrategyAddress ) external;
-    function removeLastAddedInstrument(address _instrumentToRemove) external;
+    function removeInstrument(address _instrumentToRemove) external  returns (bool) ;
   
     function setInstrumentInterestRateStrategyAddress(address _instrument, address _rateStrategyAddress) external;
 
-    function enableBorrowingOnInstrument(address _instrument, bool _stableBorrowRateEnabled)  external ;
+    function enableBorrowingOnInstrument(address _instrument)  external ;
     function disableBorrowingOnInstrument(address _instrument) external ;
 
     function enableInstrumentAsCollateral( address _instrument, uint256 _baseLTVasCollateral, uint256 _liquidationThreshold, uint256 _liquidationBonus ) external ;

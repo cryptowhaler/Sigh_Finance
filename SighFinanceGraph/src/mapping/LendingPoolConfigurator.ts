@@ -6,7 +6,7 @@ import { InstrumentInitialized,InstrumentRemoved, BorrowingEnabledOnInstrument, 
     InstrumentBaseLtvChanged} from "../../generated/LendingPoolConfigurator/LendingPoolConfigurator"
 import { Instrument } from "../../generated/schema"
 import { ERC20Detailed } from '../../abis/ERC20Detailed'
-import { priceOracle } from '../../abis/priceOracle'
+import { PriceOracleGetter } from '../../abis/PriceOracleGetter'
 
 
 
@@ -281,7 +281,7 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.liquidationThreshold = new BigInt(0)
     instrument_state_initialized.liquidationBonus = new BigInt(0)
 
-    let oracleContract = priceOracle.bind( Address.fromString('0x0000000000000000000000000000000000000000') )
+    let oracleContract = PriceOracleGetter.bind( Address.fromString('0x0000000000000000000000000000000000000000') )
     instrument_state_initialized.priceETH_WEI = oracleContract.getAssetPrice(Address.fromHexString(addressID))
     instrument_state_initialized.priceETHDecimals = oracleContract.getAssetPriceDecimals(Address.fromHexString(addressID))
 

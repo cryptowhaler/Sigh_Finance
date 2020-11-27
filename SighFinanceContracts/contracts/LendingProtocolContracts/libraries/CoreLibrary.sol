@@ -99,7 +99,6 @@ library CoreLibrary {
     /**
     * @dev enables borrowing on a instrument
     * @param _instrument the instrument object
-    * @param _stableBorrowRateEnabled true if the stable borrow rate must be enabled by default, false otherwise
     **/
     function enableBorrowing(InstrumentData storage _instrument) external {
         require(_instrument.borrowingEnabled == false, "Instrument is already enabled");

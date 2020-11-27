@@ -210,7 +210,6 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     /**
     * @dev removes an instrument - Called by LendingPool Core when an instrument is removed from the Lending Protocol
     * @param _instrument the instrument object
-    * @param _iTokenAddress the address of the overlying iToken contract
     **/
     function removeInstrument( address _instrument ) external onlyLendingPoolCore returns (bool) {   // 
         require(financial_instruments[_instrument].isListed ,"Instrument already supported.");

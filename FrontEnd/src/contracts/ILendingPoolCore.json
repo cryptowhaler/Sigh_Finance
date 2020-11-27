@@ -1337,8 +1337,14 @@
           "type": "address"
         }
       ],
-      "name": "removeLastAddedInstrument",
-      "outputs": [],
+      "name": "removeInstrument",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
@@ -1370,11 +1376,6 @@
           "internalType": "address",
           "name": "_instrument",
           "type": "address"
-        },
-        {
-          "internalType": "bool",
-          "name": "_stableBorrowRateEnabled",
-          "type": "bool"
         }
       ],
       "name": "enableBorrowingOnInstrument",
@@ -1614,12 +1615,12 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"activateInstrument\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"deactivateInstrument\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"disableBorrowingOnInstrument\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"disableInstrumentAsCollateral\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"disableInstrumentStableBorrowRate\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_stableBorrowRateEnabled\",\"type\":\"bool\"}],\"name\":\"enableBorrowingOnInstrument\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_baseLTVasCollateral\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_liquidationThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_liquidationBonus\",\"type\":\"uint256\"}],\"name\":\"enableInstrumentAsCollateral\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"enableInstrumentStableBorrowRate\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"freezeInstrument\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentAvailableLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentConfiguration\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentCurrentAverageStableBorrowRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentCurrentLiquidityRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentCurrentStableBorrowRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentCurrentVariableBorrowRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentDecimals\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentITokenAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentInterestRateStrategyAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentIsActive\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentIsFreezed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentIsStableBorrowRateEnabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentLastUpdate\",\"outputs\":[{\"internalType\":\"uint40\",\"name\":\"timestamp\",\"type\":\"uint40\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentLiquidationBonus\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentLiquidationThreshold\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentLiquidityCumulativeIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentNormalizedIncome\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentTotalBorrows\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentTotalBorrowsStable\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentTotalBorrowsVariable\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentTotalLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentUtilizationRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentVariableBorrowsCumulativeIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getInstruments\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserBasicInstrumentData\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserBorrowBalances\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserCurrentBorrowRateMode\",\"outputs\":[{\"internalType\":\"enum CoreLibrary.InterestRateMode\",\"name\":\"\",\"type\":\"uint8\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserCurrentStableBorrowRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserLastUpdate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserOriginationFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserUnderlyingAssetBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserVariableBorrowCumulativeIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_iTokenAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_decimals\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_interestRateStrategyAddress\",\"type\":\"address\"}],\"name\":\"initInstrument\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"isInstrumentBorrowingEnabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"isInstrumentUsageAsCollateralEnabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"isUserAllowedToBorrowAtStable\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"isUserUseInstrumentAsCollateralEnabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_destination\",\"type\":\"address\"}],\"name\":\"liquidateFee\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"refreshConfiguration\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrumentToRemove\",\"type\":\"address\"}],\"name\":\"removeLastAddedInstrument\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_ltv\",\"type\":\"uint256\"}],\"name\":\"setInstrumentBaseLTVasCollateral\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_decimals\",\"type\":\"uint256\"}],\"name\":\"setInstrumentDecimals\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_rateStrategyAddress\",\"type\":\"address\"}],\"name\":\"setInstrumentInterestRateStrategyAddress\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_bonus\",\"type\":\"uint256\"}],\"name\":\"setInstrumentLiquidationBonus\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_threshold\",\"type\":\"uint256\"}],\"name\":\"setInstrumentLiquidationThreshold\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_useAsCollateral\",\"type\":\"bool\"}],\"name\":\"setUserUseInstrumentAsCollateral\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_destination\",\"type\":\"address\"}],\"name\":\"transferToFeeCollectionAddress\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address payable\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"transferToReserve\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address payable\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"transferToUser\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"unfreezeInstrument\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amountBorrowed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_borrowFee\",\"type\":\"uint256\"},{\"internalType\":\"enum CoreLibrary.InterestRateMode\",\"name\":\"_rateMode\",\"type\":\"uint8\"}],\"name\":\"updateStateOnBorrow\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"_isFirstDeposit\",\"type\":\"bool\"}],\"name\":\"updateStateOnDeposit\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_availableLiquidityBefore\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_income\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_protocolFee\",\"type\":\"uint256\"}],\"name\":\"updateStateOnFlashLoan\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_principalInstrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_collateralInstrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amountToLiquidate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_collateralToLiquidate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_feeLiquidated\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_liquidatedCollateralForFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_balanceIncrease\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"_liquidatorReceivesIToken\",\"type\":\"bool\"}],\"name\":\"updateStateOnLiquidation\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_balanceIncrease\",\"type\":\"uint256\"}],\"name\":\"updateStateOnRebalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amountRedeemed\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"_userRedeemedEverything\",\"type\":\"bool\"}],\"name\":\"updateStateOnRedeem\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_paybackAmountMinusFees\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_originationFeeRepaid\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_balanceIncrease\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"_repaidWholeLoan\",\"type\":\"bool\"}],\"name\":\"updateStateOnRepay\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_principalBorrowBalance\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_compoundedBorrowBalance\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_balanceIncrease\",\"type\":\"uint256\"},{\"internalType\":\"enum CoreLibrary.InterestRateMode\",\"name\":\"_currentRateMode\",\"type\":\"uint8\"}],\"name\":\"updateStateOnSwapRate\",\"outputs\":[{\"internalType\":\"enum CoreLibrary.InterestRateMode\",\"name\":\"\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{\"liquidateFee(address,uint256,address)\":{\"details\":\"transfers the fees to the fees collection address in the case of liquidation\",\"params\":{\"_amount\":\"the amount being transferred\",\"_destination\":\"the fee receiver address*\",\"_token\":\"the address of the token being transferred\"}},\"updateStateOnLiquidation(address,address,address,uint256,uint256,uint256,uint256,uint256,bool)\":{\"details\":\"updates the state of the core as a consequence of a liquidation action.\",\"params\":{\"_amountToLiquidate\":\"the amount being repaid by the liquidator\",\"_balanceIncrease\":\"the accrued interest on the borrowed amount\",\"_collateralInstrument\":\"the address of the collateral instrument that is being liquidated\",\"_collateralToLiquidate\":\"the amount of collateral being liquidated\",\"_feeLiquidated\":\"the amount of origination fee being liquidated\",\"_liquidatedCollateralForFee\":\"the amount of collateral equivalent to the origination fee + bonus\",\"_liquidatorReceivesIToken\":\"true if the liquidator will receive iTokens, false otherwise*\",\"_principalInstrument\":\"the address of the principal instrument that is being repaid\",\"_user\":\"the address of the borrower\"}}}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol\":\"ILendingPoolCore\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol\":{\"keccak256\":\"0x2533a4a88d2aaa0b0609a3eadefb5108a0140100720c0b0536510f79620868bc\",\"urls\":[\"bzz-raw://2bb5d3236bbd96e09eb7ac13104bfe7f861dc32c247a9693af77575ddaeaf444\",\"dweb:/ipfs/QmfDHvaiYi3zfcpSeTqKe5AstuxMErgEGVkwsR2dFs6pne\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol\":{\"keccak256\":\"0x1b3f4e9a62042178a0b4c6dbde1dadec6b9c40d6ea8731226351273183f9c027\",\"urls\":[\"bzz-raw://d4b9a10a8658bba25f7cd644becfa036ade3db810033da8ac665163a81a81ad7\",\"dweb:/ipfs/QmbUhQGUHL8z7e1aAVe4gtncU26TFCYr38aZqVNTttgt7D\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/libraries/WadRayMath.sol\":{\"keccak256\":\"0xdecb27b23892c48ef8ff2e63de656c06b1abd745f6bd0e8f91f203d32cf00cd7\",\"urls\":[\"bzz-raw://1c57032f9ee17dddf672e68d5142011c06f5b8b2379f3c9f63ab77232ffd86e1\",\"dweb:/ipfs/QmeZie4G7caYQsuFbaVqt3YRnrr2s42VAgVHeW1WAq3BRh\"]},\"openzeppelin-solidity/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x7f293e2ee29a32416531a0bf3da9972358887c45ec1836642ec8e700cc152ba0\",\"urls\":[\"bzz-raw://e6ca40872864cb64a2dcc1b4f0be6a3cfc406f363e045fa7991f9f22f6257a63\",\"dweb:/ipfs/QmdsPdEayCcUa1fg3YTbhTPn3GTcjfNYZqnwf9EDC3QGpp\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"activateInstrument\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"deactivateInstrument\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"disableBorrowingOnInstrument\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"disableInstrumentAsCollateral\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"disableInstrumentStableBorrowRate\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"enableBorrowingOnInstrument\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_baseLTVasCollateral\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_liquidationThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_liquidationBonus\",\"type\":\"uint256\"}],\"name\":\"enableInstrumentAsCollateral\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"enableInstrumentStableBorrowRate\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"freezeInstrument\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentAvailableLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentConfiguration\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentCurrentAverageStableBorrowRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentCurrentLiquidityRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentCurrentStableBorrowRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentCurrentVariableBorrowRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentDecimals\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentITokenAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentInterestRateStrategyAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentIsActive\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentIsFreezed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentIsStableBorrowRateEnabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentLastUpdate\",\"outputs\":[{\"internalType\":\"uint40\",\"name\":\"timestamp\",\"type\":\"uint40\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentLiquidationBonus\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentLiquidationThreshold\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentLiquidityCumulativeIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentNormalizedIncome\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentTotalBorrows\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentTotalBorrowsStable\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentTotalBorrowsVariable\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentTotalLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentUtilizationRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"getInstrumentVariableBorrowsCumulativeIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getInstruments\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserBasicInstrumentData\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserBorrowBalances\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserCurrentBorrowRateMode\",\"outputs\":[{\"internalType\":\"enum CoreLibrary.InterestRateMode\",\"name\":\"\",\"type\":\"uint8\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserCurrentStableBorrowRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserLastUpdate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserOriginationFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserUnderlyingAssetBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"getUserVariableBorrowCumulativeIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_iTokenAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_decimals\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_interestRateStrategyAddress\",\"type\":\"address\"}],\"name\":\"initInstrument\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"isInstrumentBorrowingEnabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"isInstrumentUsageAsCollateralEnabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"isUserAllowedToBorrowAtStable\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"}],\"name\":\"isUserUseInstrumentAsCollateralEnabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_destination\",\"type\":\"address\"}],\"name\":\"liquidateFee\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"refreshConfiguration\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrumentToRemove\",\"type\":\"address\"}],\"name\":\"removeInstrument\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_ltv\",\"type\":\"uint256\"}],\"name\":\"setInstrumentBaseLTVasCollateral\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_decimals\",\"type\":\"uint256\"}],\"name\":\"setInstrumentDecimals\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_rateStrategyAddress\",\"type\":\"address\"}],\"name\":\"setInstrumentInterestRateStrategyAddress\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_bonus\",\"type\":\"uint256\"}],\"name\":\"setInstrumentLiquidationBonus\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_threshold\",\"type\":\"uint256\"}],\"name\":\"setInstrumentLiquidationThreshold\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_useAsCollateral\",\"type\":\"bool\"}],\"name\":\"setUserUseInstrumentAsCollateral\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_destination\",\"type\":\"address\"}],\"name\":\"transferToFeeCollectionAddress\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address payable\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"transferToReserve\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address payable\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"transferToUser\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"}],\"name\":\"unfreezeInstrument\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amountBorrowed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_borrowFee\",\"type\":\"uint256\"},{\"internalType\":\"enum CoreLibrary.InterestRateMode\",\"name\":\"_rateMode\",\"type\":\"uint8\"}],\"name\":\"updateStateOnBorrow\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"_isFirstDeposit\",\"type\":\"bool\"}],\"name\":\"updateStateOnDeposit\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_availableLiquidityBefore\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_income\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_protocolFee\",\"type\":\"uint256\"}],\"name\":\"updateStateOnFlashLoan\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_principalInstrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_collateralInstrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amountToLiquidate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_collateralToLiquidate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_feeLiquidated\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_liquidatedCollateralForFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_balanceIncrease\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"_liquidatorReceivesIToken\",\"type\":\"bool\"}],\"name\":\"updateStateOnLiquidation\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_balanceIncrease\",\"type\":\"uint256\"}],\"name\":\"updateStateOnRebalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amountRedeemed\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"_userRedeemedEverything\",\"type\":\"bool\"}],\"name\":\"updateStateOnRedeem\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_paybackAmountMinusFees\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_originationFeeRepaid\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_balanceIncrease\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"_repaidWholeLoan\",\"type\":\"bool\"}],\"name\":\"updateStateOnRepay\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_instrument\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_principalBorrowBalance\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_compoundedBorrowBalance\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_balanceIncrease\",\"type\":\"uint256\"},{\"internalType\":\"enum CoreLibrary.InterestRateMode\",\"name\":\"_currentRateMode\",\"type\":\"uint8\"}],\"name\":\"updateStateOnSwapRate\",\"outputs\":[{\"internalType\":\"enum CoreLibrary.InterestRateMode\",\"name\":\"\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{\"liquidateFee(address,uint256,address)\":{\"details\":\"transfers the fees to the fees collection address in the case of liquidation\",\"params\":{\"_amount\":\"the amount being transferred\",\"_destination\":\"the fee receiver address*\",\"_token\":\"the address of the token being transferred\"}},\"updateStateOnLiquidation(address,address,address,uint256,uint256,uint256,uint256,uint256,bool)\":{\"details\":\"updates the state of the core as a consequence of a liquidation action.\",\"params\":{\"_amountToLiquidate\":\"the amount being repaid by the liquidator\",\"_balanceIncrease\":\"the accrued interest on the borrowed amount\",\"_collateralInstrument\":\"the address of the collateral instrument that is being liquidated\",\"_collateralToLiquidate\":\"the amount of collateral being liquidated\",\"_feeLiquidated\":\"the amount of origination fee being liquidated\",\"_liquidatedCollateralForFee\":\"the amount of collateral equivalent to the origination fee + bonus\",\"_liquidatorReceivesIToken\":\"true if the liquidator will receive iTokens, false otherwise*\",\"_principalInstrument\":\"the address of the principal instrument that is being repaid\",\"_user\":\"the address of the borrower\"}}}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol\":\"ILendingPoolCore\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol\":{\"keccak256\":\"0x2aee154889e26c21e268b6b18646d88a9b9113ff789f7be12aa12b764ae1898a\",\"urls\":[\"bzz-raw://b42112137dcabf248f4e9efbe0330c7d46048c4c1da8186ef4de4e850b5f6799\",\"dweb:/ipfs/QmZCXWYb4PBGpWJJEzX25XAiVkLvhW9TxVxLFksqJYzTTr\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol\":{\"keccak256\":\"0x5ac06f62f0ceaeb15e94b0961de7e4cf6db8d77ca2c879e55772e4bf386428b3\",\"urls\":[\"bzz-raw://fcf92275bf98d7c775ad72003a9a34879b039f6d126de59b85fe3a3c67f12a6b\",\"dweb:/ipfs/QmWXH6H95TiidAP1BWYPEkJ9rYzNKuGnyj7ZSzTj5f8wSm\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/libraries/WadRayMath.sol\":{\"keccak256\":\"0xdecb27b23892c48ef8ff2e63de656c06b1abd745f6bd0e8f91f203d32cf00cd7\",\"urls\":[\"bzz-raw://1c57032f9ee17dddf672e68d5142011c06f5b8b2379f3c9f63ab77232ffd86e1\",\"dweb:/ipfs/QmeZie4G7caYQsuFbaVqt3YRnrr2s42VAgVHeW1WAq3BRh\"]},\"openzeppelin-solidity/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x7f293e2ee29a32416531a0bf3da9972358887c45ec1836642ec8e700cc152ba0\",\"urls\":[\"bzz-raw://e6ca40872864cb64a2dcc1b4f0be6a3cfc406f363e045fa7991f9f22f6257a63\",\"dweb:/ipfs/QmdsPdEayCcUa1fg3YTbhTPn3GTcjfNYZqnwf9EDC3QGpp\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.5.0;\n\nimport \"../libraries/CoreLibrary.sol\";\n\ninterface ILendingPoolCore {\n\n\n    function updateStateOnDeposit( address _instrument, address _user, uint256 _amount, bool _isFirstDeposit) external;\n    function transferToReserve(address _instrument, address payable _user, uint256 _amount) external  payable;\n\n// ####################################################################\n// ###### CALLED BY REDEEMUNDERLYING() FROM LENDINGPOOL CONTRACT ######\n// ####################################################################\n\n\n    function updateStateOnRedeem( address _instrument, address _user, uint256 _amountRedeemed,  bool _userRedeemedEverything) external;\n    function transferToUser(address _instrument, address payable _user, uint256 _amount) external;\n\n// #########################################################################################################################\n// ###### CALLED BY BORROW() FROM LENDINGPOOL CONTRACT - alongwith the internal functions that only this function uses #####\n// #########################################################################################################################\n\n    function updateStateOnBorrow( address _instrument, address _user, uint256 _amountBorrowed, uint256 _borrowFee,  CoreLibrary.InterestRateMode _rateMode ) external returns (uint256, uint256);\n\n// ########################################################################################################################\n// ###### CALLED BY REPAY() FROM LENDINGPOOL CONTRACT - alongwith the internal functions that only this function uses #####\n// ########################################################################################################################\n\n    function updateStateOnRepay(  address _instrument,  address _user, uint256 _paybackAmountMinusFees,  uint256 _originationFeeRepaid,  uint256 _balanceIncrease,  bool _repaidWholeLoan ) external;\n\n// #####################################################################################################################################\n// ###### CALLED BY SWAPBORROWRATEMODE() FROM LENDINGPOOL CONTRACT - alongwith the internal functions that only this function uses #####\n// #####################################################################################################################################\n\n\n    function updateStateOnSwapRate(  address _instrument, address _user, uint256 _principalBorrowBalance, uint256 _compoundedBorrowBalance, uint256 _balanceIncrease, CoreLibrary.InterestRateMode _currentRateMode ) external returns (CoreLibrary.InterestRateMode, uint256);\n\n\n// #########################################################################################################################################\n// ###### CALLED BY UPDATESTATEONREBALANCE() FROM LENDINGPOOL CONTRACT - alongwith the internal functions that only this function uses #####\n// #########################################################################################################################################\n\n    function updateStateOnRebalance(address _instrument, address _user, uint256 _balanceIncrease) external returns (uint256)  ;\n\n\n// #########################################################################################################################################\n// ###### CALLED BY SETUSERUSEINSTRUMENTASCOLLATERAL() FROM LENDINGPOOL CONTRACT (also some internal calls from this contract )        #####\n// #########################################################################################################################################\n\n    function setUserUseInstrumentAsCollateral(address _instrument, address _user, bool _useAsCollateral) external ;\n\n// ################################################################### \n// ###### CALLED BY FLASHLOAN() FROM LENDINGPOOL CONTRACT        #####\n// ################################################################### \n\n    function updateStateOnFlashLoan( address _instrument, uint256 _availableLiquidityBefore, uint256 _income,  uint256 _protocolFee ) external ;\n\n// ############################################################################################################################################################################ \n// ###### CALLED BY LIQUIDATIONCALL() FROM LENDINGPOOL CONTRACT  (call is delegated to LendingPoolLiquidationManager.sol where the actual implementation is present)      #####\n// ############################################################################################################################################################################\n\n    /**\n    * @dev updates the state of the core as a consequence of a liquidation action.\n    * @param _principalInstrument the address of the principal instrument that is being repaid\n    * @param _collateralInstrument the address of the collateral instrument that is being liquidated\n    * @param _user the address of the borrower\n    * @param _amountToLiquidate the amount being repaid by the liquidator\n    * @param _collateralToLiquidate the amount of collateral being liquidated\n    * @param _feeLiquidated the amount of origination fee being liquidated\n    * @param _liquidatedCollateralForFee the amount of collateral equivalent to the origination fee + bonus\n    * @param _balanceIncrease the accrued interest on the borrowed amount\n    * @param _liquidatorReceivesIToken true if the liquidator will receive iTokens, false otherwise\n    **/\n    function updateStateOnLiquidation( address _principalInstrument, address _collateralInstrument, address _user, uint256 _amountToLiquidate, uint256 _collateralToLiquidate, uint256 _feeLiquidated, uint256 _liquidatedCollateralForFee, uint256 _balanceIncrease, bool _liquidatorReceivesIToken ) external ;\n\n\n// #################################################################################################################################### \n// ###### CALLED BY LIQUIDATIONCALL() IN LENDINGPOOL CONTRACT (delegated to LendingPoolLiquidationManager.sol which calls) ############\n// ################################################################### ################################################################\n\n    /**\n    * @dev transfers the fees to the fees collection address in the case of liquidation\n    * @param _token the address of the token being transferred\n    * @param _amount the amount being transferred\n    * @param _destination the fee receiver address\n    **/\n    function liquidateFee( address _token, uint256 _amount, address _destination ) external payable ;\n    \n// ############################################################################################################## \n// ###### CALLED BY REPAY() IN LENDINGPOOL CONTRACT : transfers the fee to TokenDistributor Contract ############\n// ################################################################### ########################################## \n\n    function transferToFeeCollectionAddress( address _token, address _user, uint256 _amount, address _destination ) external payable ;\n\n// #################################################################\n// ################     PUBLIC VIEW FUNCTIONS       ################\n// #################################################################\n\n    function getUserUnderlyingAssetBalance(address _instrument, address _user) external view returns (uint256) ;\n\n    function getInstrumentInterestRateStrategyAddress(address _instrument) external view returns (address);\n    function getInstrumentITokenAddress(address _instrument) external view returns (address);\n\n    function getInstrumentAvailableLiquidity(address _instrument) external view returns (uint256);\n    function getInstrumentTotalLiquidity(address _instrument) external view returns (uint256);\n\n    function getInstrumentTotalBorrows(address _instrument) external view returns (uint256) ;\n\n    function getInstrumentCurrentStableBorrowRate(address _instrument) external view returns (uint256) ;\n    function getInstrumentUtilizationRate(address _instrument) external view returns (uint256) ;\n\n    function getUserCurrentBorrowRateMode(address _instrument, address _user) external view returns (CoreLibrary.InterestRateMode) ;\n    function getUserBorrowBalances(address _instrument, address _user) external view returns (uint256, uint256, uint256) ;\n\n// ###################################################################\n// ################     EXTERNAL VIEW FUNCTIONS       ################\n// ###################################################################\n\n    function getUserBasicInstrumentData(address _instrument, address _user) external view returns (uint256, uint256, uint256, bool);\n\n    function isUserAllowedToBorrowAtStable(address _instrument, address _user, uint256 _amount) external view returns (bool);\n\n    function getInstrumentNormalizedIncome(address _instrument) external view returns (uint256) ;\n\n    function getInstrumentTotalBorrowsStable(address _instrument) external view returns (uint256) ;\n    function getInstrumentTotalBorrowsVariable(address _instrument) external view returns (uint256) ;\n\n    function getInstrumentLiquidationThreshold(address _instrument) external view returns (uint256) ;\n    function getInstrumentLiquidationBonus(address _instrument) external view returns (uint256) ;\n\n    function getInstrumentCurrentVariableBorrowRate(address _instrument) external view returns (uint256) ;\n    function getInstrumentCurrentAverageStableBorrowRate(address _instrument) external view returns (uint256) ;\n\n    function getInstrumentCurrentLiquidityRate(address _instrument) external view returns (uint256);\n\n    function getInstrumentLiquidityCumulativeIndex(address _instrument) external view returns (uint256) ;\n    function getInstrumentVariableBorrowsCumulativeIndex(address _instrument) external view returns (uint256) ;\n\n    function getInstrumentConfiguration(address _instrument) external  view returns (uint256, uint256, uint256, bool) ;\n\n    function getInstrumentDecimals(address _instrument) external view returns (uint256) ;\n\n    function isInstrumentBorrowingEnabled(address _instrument) external view returns (bool);\n    function isInstrumentUsageAsCollateralEnabled(address _instrument) external view returns (bool) ;\n    function getInstrumentIsStableBorrowRateEnabled(address _instrument) external view returns (bool);\n    function getInstrumentIsActive(address _instrument) external view returns (bool) ;\n    function getInstrumentIsFreezed(address _instrument) external view returns (bool) ;\n    function getInstrumentLastUpdate(address _instrument) external view returns (uint40 timestamp) ;\n\n    function getInstruments() external view returns (address[] memory) ;\n\n    function isUserUseInstrumentAsCollateralEnabled(address _instrument, address _user) external view returns (bool) ;\n    function getUserOriginationFee(address _instrument, address _user) external view returns (uint256) ;\n    function getUserCurrentStableBorrowRate(address _instrument, address _user) external  view returns (uint256) ;\n    function getUserVariableBorrowCumulativeIndex(address _instrument, address _user)  external view returns (uint256) ;\n    function getUserLastUpdate(address _instrument, address _user) external view returns (uint256 timestamp) ;\n\n\n// ##############################################################################################\n// ################     FUNCTION CALLS BY LENDINGPOOLCONFIGURATOR CONTRACT       ################\n// ##############################################################################################\n\n    function refreshConfiguration() external ;\n\n    function initInstrument( address _instrument, address _iTokenAddress,  uint256 _decimals, address _interestRateStrategyAddress ) external;\n    function removeLastAddedInstrument(address _instrumentToRemove) external;\n  \n    function setInstrumentInterestRateStrategyAddress(address _instrument, address _rateStrategyAddress) external;\n\n    function enableBorrowingOnInstrument(address _instrument, bool _stableBorrowRateEnabled)  external ;\n    function disableBorrowingOnInstrument(address _instrument) external ;\n\n    function enableInstrumentAsCollateral( address _instrument, uint256 _baseLTVasCollateral, uint256 _liquidationThreshold, uint256 _liquidationBonus ) external ;\n    function disableInstrumentAsCollateral(address _instrument) external ;\n\n    function enableInstrumentStableBorrowRate(address _instrument) external ;\n    function disableInstrumentStableBorrowRate(address _instrument) external ;\n\n    function activateInstrument(address _instrument) external ;\n    function deactivateInstrument(address _instrument) external ;\n\n    function freezeInstrument(address _instrument) external ;\n    function unfreezeInstrument(address _instrument) external ;\n\n    function setInstrumentBaseLTVasCollateral(address _instrument, uint256 _ltv) external ;\n    function setInstrumentLiquidationThreshold(address _instrument, uint256 _threshold) external ;\n    function setInstrumentLiquidationBonus(address _instrument, uint256 _bonus) external  ;\n    function setInstrumentDecimals(address _instrument, uint256 _decimals) external ;\n\n}",
+  "source": "pragma solidity ^0.5.0;\n\nimport \"../libraries/CoreLibrary.sol\";\n\ninterface ILendingPoolCore {\n\n\n    function updateStateOnDeposit( address _instrument, address _user, uint256 _amount, bool _isFirstDeposit) external;\n    function transferToReserve(address _instrument, address payable _user, uint256 _amount) external  payable;\n\n// ####################################################################\n// ###### CALLED BY REDEEMUNDERLYING() FROM LENDINGPOOL CONTRACT ######\n// ####################################################################\n\n\n    function updateStateOnRedeem( address _instrument, address _user, uint256 _amountRedeemed,  bool _userRedeemedEverything) external;\n    function transferToUser(address _instrument, address payable _user, uint256 _amount) external;\n\n// #########################################################################################################################\n// ###### CALLED BY BORROW() FROM LENDINGPOOL CONTRACT - alongwith the internal functions that only this function uses #####\n// #########################################################################################################################\n\n    function updateStateOnBorrow( address _instrument, address _user, uint256 _amountBorrowed, uint256 _borrowFee,  CoreLibrary.InterestRateMode _rateMode ) external returns (uint256, uint256);\n\n// ########################################################################################################################\n// ###### CALLED BY REPAY() FROM LENDINGPOOL CONTRACT - alongwith the internal functions that only this function uses #####\n// ########################################################################################################################\n\n    function updateStateOnRepay(  address _instrument,  address _user, uint256 _paybackAmountMinusFees,  uint256 _originationFeeRepaid,  uint256 _balanceIncrease,  bool _repaidWholeLoan ) external;\n\n// #####################################################################################################################################\n// ###### CALLED BY SWAPBORROWRATEMODE() FROM LENDINGPOOL CONTRACT - alongwith the internal functions that only this function uses #####\n// #####################################################################################################################################\n\n\n    function updateStateOnSwapRate(  address _instrument, address _user, uint256 _principalBorrowBalance, uint256 _compoundedBorrowBalance, uint256 _balanceIncrease, CoreLibrary.InterestRateMode _currentRateMode ) external returns (CoreLibrary.InterestRateMode, uint256);\n\n\n// #########################################################################################################################################\n// ###### CALLED BY UPDATESTATEONREBALANCE() FROM LENDINGPOOL CONTRACT - alongwith the internal functions that only this function uses #####\n// #########################################################################################################################################\n\n    function updateStateOnRebalance(address _instrument, address _user, uint256 _balanceIncrease) external returns (uint256)  ;\n\n\n// #########################################################################################################################################\n// ###### CALLED BY SETUSERUSEINSTRUMENTASCOLLATERAL() FROM LENDINGPOOL CONTRACT (also some internal calls from this contract )        #####\n// #########################################################################################################################################\n\n    function setUserUseInstrumentAsCollateral(address _instrument, address _user, bool _useAsCollateral) external ;\n\n// ################################################################### \n// ###### CALLED BY FLASHLOAN() FROM LENDINGPOOL CONTRACT        #####\n// ################################################################### \n\n    function updateStateOnFlashLoan( address _instrument, uint256 _availableLiquidityBefore, uint256 _income,  uint256 _protocolFee ) external ;\n\n// ############################################################################################################################################################################ \n// ###### CALLED BY LIQUIDATIONCALL() FROM LENDINGPOOL CONTRACT  (call is delegated to LendingPoolLiquidationManager.sol where the actual implementation is present)      #####\n// ############################################################################################################################################################################\n\n    /**\n    * @dev updates the state of the core as a consequence of a liquidation action.\n    * @param _principalInstrument the address of the principal instrument that is being repaid\n    * @param _collateralInstrument the address of the collateral instrument that is being liquidated\n    * @param _user the address of the borrower\n    * @param _amountToLiquidate the amount being repaid by the liquidator\n    * @param _collateralToLiquidate the amount of collateral being liquidated\n    * @param _feeLiquidated the amount of origination fee being liquidated\n    * @param _liquidatedCollateralForFee the amount of collateral equivalent to the origination fee + bonus\n    * @param _balanceIncrease the accrued interest on the borrowed amount\n    * @param _liquidatorReceivesIToken true if the liquidator will receive iTokens, false otherwise\n    **/\n    function updateStateOnLiquidation( address _principalInstrument, address _collateralInstrument, address _user, uint256 _amountToLiquidate, uint256 _collateralToLiquidate, uint256 _feeLiquidated, uint256 _liquidatedCollateralForFee, uint256 _balanceIncrease, bool _liquidatorReceivesIToken ) external ;\n\n\n// #################################################################################################################################### \n// ###### CALLED BY LIQUIDATIONCALL() IN LENDINGPOOL CONTRACT (delegated to LendingPoolLiquidationManager.sol which calls) ############\n// ################################################################### ################################################################\n\n    /**\n    * @dev transfers the fees to the fees collection address in the case of liquidation\n    * @param _token the address of the token being transferred\n    * @param _amount the amount being transferred\n    * @param _destination the fee receiver address\n    **/\n    function liquidateFee( address _token, uint256 _amount, address _destination ) external payable ;\n    \n// ############################################################################################################## \n// ###### CALLED BY REPAY() IN LENDINGPOOL CONTRACT : transfers the fee to TokenDistributor Contract ############\n// ################################################################### ########################################## \n\n    function transferToFeeCollectionAddress( address _token, address _user, uint256 _amount, address _destination ) external payable ;\n\n// #################################################################\n// ################     PUBLIC VIEW FUNCTIONS       ################\n// #################################################################\n\n    function getUserUnderlyingAssetBalance(address _instrument, address _user) external view returns (uint256) ;\n\n    function getInstrumentInterestRateStrategyAddress(address _instrument) external view returns (address);\n    function getInstrumentITokenAddress(address _instrument) external view returns (address);\n\n    function getInstrumentAvailableLiquidity(address _instrument) external view returns (uint256);\n    function getInstrumentTotalLiquidity(address _instrument) external view returns (uint256);\n\n    function getInstrumentTotalBorrows(address _instrument) external view returns (uint256) ;\n\n    function getInstrumentCurrentStableBorrowRate(address _instrument) external view returns (uint256) ;\n    function getInstrumentUtilizationRate(address _instrument) external view returns (uint256) ;\n\n    function getUserCurrentBorrowRateMode(address _instrument, address _user) external view returns (CoreLibrary.InterestRateMode) ;\n    function getUserBorrowBalances(address _instrument, address _user) external view returns (uint256, uint256, uint256) ;\n\n// ###################################################################\n// ################     EXTERNAL VIEW FUNCTIONS       ################\n// ###################################################################\n\n    function getUserBasicInstrumentData(address _instrument, address _user) external view returns (uint256, uint256, uint256, bool);\n\n    function isUserAllowedToBorrowAtStable(address _instrument, address _user, uint256 _amount) external view returns (bool);\n\n    function getInstrumentNormalizedIncome(address _instrument) external view returns (uint256) ;\n\n    function getInstrumentTotalBorrowsStable(address _instrument) external view returns (uint256) ;\n    function getInstrumentTotalBorrowsVariable(address _instrument) external view returns (uint256) ;\n\n    function getInstrumentLiquidationThreshold(address _instrument) external view returns (uint256) ;\n    function getInstrumentLiquidationBonus(address _instrument) external view returns (uint256) ;\n\n    function getInstrumentCurrentVariableBorrowRate(address _instrument) external view returns (uint256) ;\n    function getInstrumentCurrentAverageStableBorrowRate(address _instrument) external view returns (uint256) ;\n\n    function getInstrumentCurrentLiquidityRate(address _instrument) external view returns (uint256);\n\n    function getInstrumentLiquidityCumulativeIndex(address _instrument) external view returns (uint256) ;\n    function getInstrumentVariableBorrowsCumulativeIndex(address _instrument) external view returns (uint256) ;\n\n    function getInstrumentConfiguration(address _instrument) external  view returns (uint256, uint256, uint256, bool) ;\n\n    function getInstrumentDecimals(address _instrument) external view returns (uint256) ;\n\n    function isInstrumentBorrowingEnabled(address _instrument) external view returns (bool);\n    function isInstrumentUsageAsCollateralEnabled(address _instrument) external view returns (bool) ;\n    function getInstrumentIsStableBorrowRateEnabled(address _instrument) external view returns (bool);\n    function getInstrumentIsActive(address _instrument) external view returns (bool) ;\n    function getInstrumentIsFreezed(address _instrument) external view returns (bool) ;\n    function getInstrumentLastUpdate(address _instrument) external view returns (uint40 timestamp) ;\n\n    function getInstruments() external view returns (address[] memory) ;\n\n    function isUserUseInstrumentAsCollateralEnabled(address _instrument, address _user) external view returns (bool) ;\n    function getUserOriginationFee(address _instrument, address _user) external view returns (uint256) ;\n    function getUserCurrentStableBorrowRate(address _instrument, address _user) external  view returns (uint256) ;\n    function getUserVariableBorrowCumulativeIndex(address _instrument, address _user)  external view returns (uint256) ;\n    function getUserLastUpdate(address _instrument, address _user) external view returns (uint256 timestamp) ;\n\n\n// ##############################################################################################\n// ################     FUNCTION CALLS BY LENDINGPOOLCONFIGURATOR CONTRACT       ################\n// ##############################################################################################\n\n    function refreshConfiguration() external ;\n\n    function initInstrument( address _instrument, address _iTokenAddress,  uint256 _decimals, address _interestRateStrategyAddress ) external;\n    function removeInstrument(address _instrumentToRemove) external  returns (bool) ;\n  \n    function setInstrumentInterestRateStrategyAddress(address _instrument, address _rateStrategyAddress) external;\n\n    function enableBorrowingOnInstrument(address _instrument)  external ;\n    function disableBorrowingOnInstrument(address _instrument) external ;\n\n    function enableInstrumentAsCollateral( address _instrument, uint256 _baseLTVasCollateral, uint256 _liquidationThreshold, uint256 _liquidationBonus ) external ;\n    function disableInstrumentAsCollateral(address _instrument) external ;\n\n    function enableInstrumentStableBorrowRate(address _instrument) external ;\n    function disableInstrumentStableBorrowRate(address _instrument) external ;\n\n    function activateInstrument(address _instrument) external ;\n    function deactivateInstrument(address _instrument) external ;\n\n    function freezeInstrument(address _instrument) external ;\n    function unfreezeInstrument(address _instrument) external ;\n\n    function setInstrumentBaseLTVasCollateral(address _instrument, uint256 _ltv) external ;\n    function setInstrumentLiquidationThreshold(address _instrument, uint256 _threshold) external ;\n    function setInstrumentLiquidationBonus(address _instrument, uint256 _bonus) external  ;\n    function setInstrumentDecimals(address _instrument, uint256 _decimals) external ;\n\n}",
   "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol",
   "ast": {
     "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol",
@@ -1648,7 +1649,7 @@
         "id": 4293,
         "nodeType": "ImportDirective",
         "scope": 4859,
-        "sourceUnit": 14042,
+        "sourceUnit": 14126,
         "src": "25:38:15",
         "symbolAliases": [],
         "unitAlias": ""
@@ -2279,7 +2280,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_enum$_InterestRateMode_$13294",
+                    "typeIdentifier": "t_enum$_InterestRateMode_$13386",
                     "typeString": "enum CoreLibrary.InterestRateMode"
                   },
                   "typeName": {
@@ -2287,10 +2288,10 @@
                     "id": 4342,
                     "name": "CoreLibrary.InterestRateMode",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 13294,
+                    "referencedDeclaration": 13386,
                     "src": "1274:28:15",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_InterestRateMode_$13294",
+                      "typeIdentifier": "t_enum$_InterestRateMode_$13386",
                       "typeString": "enum CoreLibrary.InterestRateMode"
                     }
                   },
@@ -2706,7 +2707,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_enum$_InterestRateMode_$13294",
+                    "typeIdentifier": "t_enum$_InterestRateMode_$13386",
                     "typeString": "enum CoreLibrary.InterestRateMode"
                   },
                   "typeName": {
@@ -2714,10 +2715,10 @@
                     "id": 4376,
                     "name": "CoreLibrary.InterestRateMode",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 13294,
+                    "referencedDeclaration": 13386,
                     "src": "2504:28:15",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_InterestRateMode_$13294",
+                      "typeIdentifier": "t_enum$_InterestRateMode_$13386",
                       "typeString": "enum CoreLibrary.InterestRateMode"
                     }
                   },
@@ -2741,7 +2742,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_enum$_InterestRateMode_$13294",
+                    "typeIdentifier": "t_enum$_InterestRateMode_$13386",
                     "typeString": "enum CoreLibrary.InterestRateMode"
                   },
                   "typeName": {
@@ -2749,10 +2750,10 @@
                     "id": 4379,
                     "name": "CoreLibrary.InterestRateMode",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 13294,
+                    "referencedDeclaration": 13386,
                     "src": "2570:28:15",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_InterestRateMode_$13294",
+                      "typeIdentifier": "t_enum$_InterestRateMode_$13386",
                       "typeString": "enum CoreLibrary.InterestRateMode"
                     }
                   },
@@ -4447,7 +4448,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_enum$_InterestRateMode_$13294",
+                    "typeIdentifier": "t_enum$_InterestRateMode_$13386",
                     "typeString": "enum CoreLibrary.InterestRateMode"
                   },
                   "typeName": {
@@ -4455,10 +4456,10 @@
                     "id": 4520,
                     "name": "CoreLibrary.InterestRateMode",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 13294,
+                    "referencedDeclaration": 13386,
                     "src": "8143:28:15",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_InterestRateMode_$13294",
+                      "typeIdentifier": "t_enum$_InterestRateMode_$13386",
                       "typeString": "enum CoreLibrary.InterestRateMode"
                     }
                   },
@@ -7286,11 +7287,11 @@
           {
             "body": null,
             "documentation": null,
-            "id": 4764,
+            "id": 4766,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "removeLastAddedInstrument",
+            "name": "removeInstrument",
             "nodeType": "FunctionDefinition",
             "parameters": {
               "id": 4762,
@@ -7301,8 +7302,8 @@
                   "id": 4761,
                   "name": "_instrumentToRemove",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4764,
-                  "src": "11777:27:15",
+                  "scope": 4766,
+                  "src": "11768:27:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -7313,7 +7314,7 @@
                     "id": 4760,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "11777:7:15",
+                    "src": "11768:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -7324,16 +7325,43 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "11776:29:15"
+              "src": "11767:29:15"
             },
             "returnParameters": {
-              "id": 4763,
+              "id": 4765,
               "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "11814:0:15"
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4764,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4766,
+                  "src": "11816:4:15",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4763,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "11816:4:15",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "11815:6:15"
             },
             "scope": 4858,
-            "src": "11742:73:15",
+            "src": "11742:81:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -7341,23 +7369,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 4771,
+            "id": 4773,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setInstrumentInterestRateStrategyAddress",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 4769,
+              "id": 4771,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 4766,
+                  "id": 4768,
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4771,
-                  "src": "11873:19:15",
+                  "scope": 4773,
+                  "src": "11881:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -7365,10 +7393,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 4765,
+                    "id": 4767,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "11873:7:15",
+                    "src": "11881:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -7380,11 +7408,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 4768,
+                  "id": 4770,
                   "name": "_rateStrategyAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4771,
-                  "src": "11894:28:15",
+                  "scope": 4773,
+                  "src": "11902:28:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -7392,10 +7420,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 4767,
+                    "id": 4769,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "11894:7:15",
+                    "src": "11902:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -7406,16 +7434,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "11872:51:15"
+              "src": "11880:51:15"
             },
             "returnParameters": {
-              "id": 4770,
+              "id": 4772,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "11932:0:15"
+              "src": "11940:0:15"
             },
             "scope": 4858,
-            "src": "11823:110:15",
+            "src": "11831:110:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -7435,11 +7463,11 @@
               "parameters": [
                 {
                   "constant": false,
-                  "id": 4773,
+                  "id": 4775,
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4778,
-                  "src": "11976:19:15",
+                  "src": "11984:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -7447,10 +7475,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 4772,
+                    "id": 4774,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "11976:7:15",
+                    "src": "11984:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -7459,44 +7487,18 @@
                   },
                   "value": null,
                   "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 4775,
-                  "name": "_stableBorrowRateEnabled",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 4778,
-                  "src": "11997:29:15",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bool",
-                    "typeString": "bool"
-                  },
-                  "typeName": {
-                    "id": 4774,
-                    "name": "bool",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "11997:4:15",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bool",
-                      "typeString": "bool"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
                 }
               ],
-              "src": "11975:52:15"
+              "src": "11983:21:15"
             },
             "returnParameters": {
               "id": 4777,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12038:0:15"
+              "src": "12015:0:15"
             },
             "scope": 4858,
-            "src": "11939:100:15",
+            "src": "11947:69:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -7520,7 +7522,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4783,
-                  "src": "12082:19:15",
+                  "src": "12059:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -7531,7 +7533,7 @@
                     "id": 4779,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12082:7:15",
+                    "src": "12059:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -7542,16 +7544,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12081:21:15"
+              "src": "12058:21:15"
             },
             "returnParameters": {
               "id": 4782,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12112:0:15"
+              "src": "12089:0:15"
             },
             "scope": 4858,
-            "src": "12044:69:15",
+            "src": "12021:69:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -7575,7 +7577,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4794,
-                  "src": "12158:19:15",
+                  "src": "12135:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -7586,7 +7588,7 @@
                     "id": 4784,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12158:7:15",
+                    "src": "12135:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -7602,7 +7604,7 @@
                   "name": "_baseLTVasCollateral",
                   "nodeType": "VariableDeclaration",
                   "scope": 4794,
-                  "src": "12179:28:15",
+                  "src": "12156:28:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -7613,7 +7615,7 @@
                     "id": 4786,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12179:7:15",
+                    "src": "12156:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -7628,7 +7630,7 @@
                   "name": "_liquidationThreshold",
                   "nodeType": "VariableDeclaration",
                   "scope": 4794,
-                  "src": "12209:29:15",
+                  "src": "12186:29:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -7639,7 +7641,7 @@
                     "id": 4788,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12209:7:15",
+                    "src": "12186:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -7654,7 +7656,7 @@
                   "name": "_liquidationBonus",
                   "nodeType": "VariableDeclaration",
                   "scope": 4794,
-                  "src": "12240:25:15",
+                  "src": "12217:25:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -7665,7 +7667,7 @@
                     "id": 4790,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12240:7:15",
+                    "src": "12217:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -7675,16 +7677,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12156:111:15"
+              "src": "12133:111:15"
             },
             "returnParameters": {
               "id": 4793,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12277:0:15"
+              "src": "12254:0:15"
             },
             "scope": 4858,
-            "src": "12119:159:15",
+            "src": "12096:159:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -7708,7 +7710,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4799,
-                  "src": "12322:19:15",
+                  "src": "12299:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -7719,7 +7721,7 @@
                     "id": 4795,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12322:7:15",
+                    "src": "12299:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -7730,16 +7732,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12321:21:15"
+              "src": "12298:21:15"
             },
             "returnParameters": {
               "id": 4798,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12352:0:15"
+              "src": "12329:0:15"
             },
             "scope": 4858,
-            "src": "12283:70:15",
+            "src": "12260:70:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -7763,7 +7765,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4804,
-                  "src": "12401:19:15",
+                  "src": "12378:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -7774,7 +7776,7 @@
                     "id": 4800,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12401:7:15",
+                    "src": "12378:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -7785,16 +7787,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12400:21:15"
+              "src": "12377:21:15"
             },
             "returnParameters": {
               "id": 4803,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12431:0:15"
+              "src": "12408:0:15"
             },
             "scope": 4858,
-            "src": "12359:73:15",
+            "src": "12336:73:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -7818,7 +7820,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4809,
-                  "src": "12480:19:15",
+                  "src": "12457:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -7829,7 +7831,7 @@
                     "id": 4805,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12480:7:15",
+                    "src": "12457:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -7840,16 +7842,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12479:21:15"
+              "src": "12456:21:15"
             },
             "returnParameters": {
               "id": 4808,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12510:0:15"
+              "src": "12487:0:15"
             },
             "scope": 4858,
-            "src": "12437:74:15",
+            "src": "12414:74:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -7873,7 +7875,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4814,
-                  "src": "12545:19:15",
+                  "src": "12522:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -7884,7 +7886,7 @@
                     "id": 4810,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12545:7:15",
+                    "src": "12522:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -7895,16 +7897,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12544:21:15"
+              "src": "12521:21:15"
             },
             "returnParameters": {
               "id": 4813,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12575:0:15"
+              "src": "12552:0:15"
             },
             "scope": 4858,
-            "src": "12517:59:15",
+            "src": "12494:59:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -7928,7 +7930,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4819,
-                  "src": "12611:19:15",
+                  "src": "12588:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -7939,7 +7941,7 @@
                     "id": 4815,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12611:7:15",
+                    "src": "12588:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -7950,16 +7952,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12610:21:15"
+              "src": "12587:21:15"
             },
             "returnParameters": {
               "id": 4818,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12641:0:15"
+              "src": "12618:0:15"
             },
             "scope": 4858,
-            "src": "12581:61:15",
+            "src": "12558:61:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -7983,7 +7985,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4824,
-                  "src": "12674:19:15",
+                  "src": "12651:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -7994,7 +7996,7 @@
                     "id": 4820,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12674:7:15",
+                    "src": "12651:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -8005,16 +8007,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12673:21:15"
+              "src": "12650:21:15"
             },
             "returnParameters": {
               "id": 4823,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12704:0:15"
+              "src": "12681:0:15"
             },
             "scope": 4858,
-            "src": "12648:57:15",
+            "src": "12625:57:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -8038,7 +8040,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4829,
-                  "src": "12738:19:15",
+                  "src": "12715:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -8049,7 +8051,7 @@
                     "id": 4825,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12738:7:15",
+                    "src": "12715:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -8060,16 +8062,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12737:21:15"
+              "src": "12714:21:15"
             },
             "returnParameters": {
               "id": 4828,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12768:0:15"
+              "src": "12745:0:15"
             },
             "scope": 4858,
-            "src": "12710:59:15",
+            "src": "12687:59:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -8093,7 +8095,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4836,
-                  "src": "12817:19:15",
+                  "src": "12794:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -8104,7 +8106,7 @@
                     "id": 4830,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12817:7:15",
+                    "src": "12794:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -8120,7 +8122,7 @@
                   "name": "_ltv",
                   "nodeType": "VariableDeclaration",
                   "scope": 4836,
-                  "src": "12838:12:15",
+                  "src": "12815:12:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -8131,7 +8133,7 @@
                     "id": 4832,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12838:7:15",
+                    "src": "12815:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -8141,16 +8143,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12816:35:15"
+              "src": "12793:35:15"
             },
             "returnParameters": {
               "id": 4835,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12861:0:15"
+              "src": "12838:0:15"
             },
             "scope": 4858,
-            "src": "12775:87:15",
+            "src": "12752:87:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -8174,7 +8176,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4843,
-                  "src": "12910:19:15",
+                  "src": "12887:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -8185,7 +8187,7 @@
                     "id": 4837,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12910:7:15",
+                    "src": "12887:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -8201,7 +8203,7 @@
                   "name": "_threshold",
                   "nodeType": "VariableDeclaration",
                   "scope": 4843,
-                  "src": "12931:18:15",
+                  "src": "12908:18:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -8212,7 +8214,7 @@
                     "id": 4839,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12931:7:15",
+                    "src": "12908:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -8222,16 +8224,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12909:41:15"
+              "src": "12886:41:15"
             },
             "returnParameters": {
               "id": 4842,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12960:0:15"
+              "src": "12937:0:15"
             },
             "scope": 4858,
-            "src": "12867:94:15",
+            "src": "12844:94:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -8255,7 +8257,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4850,
-                  "src": "13005:19:15",
+                  "src": "12982:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -8266,7 +8268,7 @@
                     "id": 4844,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "13005:7:15",
+                    "src": "12982:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -8282,7 +8284,7 @@
                   "name": "_bonus",
                   "nodeType": "VariableDeclaration",
                   "scope": 4850,
-                  "src": "13026:14:15",
+                  "src": "13003:14:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -8293,7 +8295,7 @@
                     "id": 4846,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "13026:7:15",
+                    "src": "13003:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -8303,16 +8305,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "13004:37:15"
+              "src": "12981:37:15"
             },
             "returnParameters": {
               "id": 4849,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "13052:0:15"
+              "src": "13029:0:15"
             },
             "scope": 4858,
-            "src": "12966:87:15",
+            "src": "12943:87:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -8336,7 +8338,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4857,
-                  "src": "13089:19:15",
+                  "src": "13066:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -8347,7 +8349,7 @@
                     "id": 4851,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "13089:7:15",
+                    "src": "13066:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -8363,7 +8365,7 @@
                   "name": "_decimals",
                   "nodeType": "VariableDeclaration",
                   "scope": 4857,
-                  "src": "13110:17:15",
+                  "src": "13087:17:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -8374,7 +8376,7 @@
                     "id": 4853,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "13110:7:15",
+                    "src": "13087:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -8384,26 +8386,26 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "13088:40:15"
+              "src": "13065:40:15"
             },
             "returnParameters": {
               "id": 4856,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "13138:0:15"
+              "src": "13115:0:15"
             },
             "scope": 4858,
-            "src": "13058:81:15",
+            "src": "13035:81:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
         "scope": 4859,
-        "src": "65:13077:15"
+        "src": "65:13054:15"
       }
     ],
-    "src": "0:13142:15"
+    "src": "0:13119:15"
   },
   "legacyAST": {
     "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol",
@@ -8432,7 +8434,7 @@
         "id": 4293,
         "nodeType": "ImportDirective",
         "scope": 4859,
-        "sourceUnit": 14042,
+        "sourceUnit": 14126,
         "src": "25:38:15",
         "symbolAliases": [],
         "unitAlias": ""
@@ -9063,7 +9065,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_enum$_InterestRateMode_$13294",
+                    "typeIdentifier": "t_enum$_InterestRateMode_$13386",
                     "typeString": "enum CoreLibrary.InterestRateMode"
                   },
                   "typeName": {
@@ -9071,10 +9073,10 @@
                     "id": 4342,
                     "name": "CoreLibrary.InterestRateMode",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 13294,
+                    "referencedDeclaration": 13386,
                     "src": "1274:28:15",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_InterestRateMode_$13294",
+                      "typeIdentifier": "t_enum$_InterestRateMode_$13386",
                       "typeString": "enum CoreLibrary.InterestRateMode"
                     }
                   },
@@ -9490,7 +9492,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_enum$_InterestRateMode_$13294",
+                    "typeIdentifier": "t_enum$_InterestRateMode_$13386",
                     "typeString": "enum CoreLibrary.InterestRateMode"
                   },
                   "typeName": {
@@ -9498,10 +9500,10 @@
                     "id": 4376,
                     "name": "CoreLibrary.InterestRateMode",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 13294,
+                    "referencedDeclaration": 13386,
                     "src": "2504:28:15",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_InterestRateMode_$13294",
+                      "typeIdentifier": "t_enum$_InterestRateMode_$13386",
                       "typeString": "enum CoreLibrary.InterestRateMode"
                     }
                   },
@@ -9525,7 +9527,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_enum$_InterestRateMode_$13294",
+                    "typeIdentifier": "t_enum$_InterestRateMode_$13386",
                     "typeString": "enum CoreLibrary.InterestRateMode"
                   },
                   "typeName": {
@@ -9533,10 +9535,10 @@
                     "id": 4379,
                     "name": "CoreLibrary.InterestRateMode",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 13294,
+                    "referencedDeclaration": 13386,
                     "src": "2570:28:15",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_InterestRateMode_$13294",
+                      "typeIdentifier": "t_enum$_InterestRateMode_$13386",
                       "typeString": "enum CoreLibrary.InterestRateMode"
                     }
                   },
@@ -11231,7 +11233,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_enum$_InterestRateMode_$13294",
+                    "typeIdentifier": "t_enum$_InterestRateMode_$13386",
                     "typeString": "enum CoreLibrary.InterestRateMode"
                   },
                   "typeName": {
@@ -11239,10 +11241,10 @@
                     "id": 4520,
                     "name": "CoreLibrary.InterestRateMode",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 13294,
+                    "referencedDeclaration": 13386,
                     "src": "8143:28:15",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_InterestRateMode_$13294",
+                      "typeIdentifier": "t_enum$_InterestRateMode_$13386",
                       "typeString": "enum CoreLibrary.InterestRateMode"
                     }
                   },
@@ -14070,11 +14072,11 @@
           {
             "body": null,
             "documentation": null,
-            "id": 4764,
+            "id": 4766,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "removeLastAddedInstrument",
+            "name": "removeInstrument",
             "nodeType": "FunctionDefinition",
             "parameters": {
               "id": 4762,
@@ -14085,8 +14087,8 @@
                   "id": 4761,
                   "name": "_instrumentToRemove",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4764,
-                  "src": "11777:27:15",
+                  "scope": 4766,
+                  "src": "11768:27:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14097,7 +14099,7 @@
                     "id": 4760,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "11777:7:15",
+                    "src": "11768:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -14108,16 +14110,43 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "11776:29:15"
+              "src": "11767:29:15"
             },
             "returnParameters": {
-              "id": 4763,
+              "id": 4765,
               "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "11814:0:15"
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4764,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4766,
+                  "src": "11816:4:15",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4763,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "11816:4:15",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "11815:6:15"
             },
             "scope": 4858,
-            "src": "11742:73:15",
+            "src": "11742:81:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -14125,23 +14154,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 4771,
+            "id": 4773,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setInstrumentInterestRateStrategyAddress",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 4769,
+              "id": 4771,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 4766,
+                  "id": 4768,
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4771,
-                  "src": "11873:19:15",
+                  "scope": 4773,
+                  "src": "11881:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14149,10 +14178,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 4765,
+                    "id": 4767,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "11873:7:15",
+                    "src": "11881:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -14164,11 +14193,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 4768,
+                  "id": 4770,
                   "name": "_rateStrategyAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4771,
-                  "src": "11894:28:15",
+                  "scope": 4773,
+                  "src": "11902:28:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14176,10 +14205,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 4767,
+                    "id": 4769,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "11894:7:15",
+                    "src": "11902:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -14190,16 +14219,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "11872:51:15"
+              "src": "11880:51:15"
             },
             "returnParameters": {
-              "id": 4770,
+              "id": 4772,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "11932:0:15"
+              "src": "11940:0:15"
             },
             "scope": 4858,
-            "src": "11823:110:15",
+            "src": "11831:110:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -14219,11 +14248,11 @@
               "parameters": [
                 {
                   "constant": false,
-                  "id": 4773,
+                  "id": 4775,
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4778,
-                  "src": "11976:19:15",
+                  "src": "11984:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14231,10 +14260,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 4772,
+                    "id": 4774,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "11976:7:15",
+                    "src": "11984:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -14243,44 +14272,18 @@
                   },
                   "value": null,
                   "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 4775,
-                  "name": "_stableBorrowRateEnabled",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 4778,
-                  "src": "11997:29:15",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bool",
-                    "typeString": "bool"
-                  },
-                  "typeName": {
-                    "id": 4774,
-                    "name": "bool",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "11997:4:15",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bool",
-                      "typeString": "bool"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
                 }
               ],
-              "src": "11975:52:15"
+              "src": "11983:21:15"
             },
             "returnParameters": {
               "id": 4777,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12038:0:15"
+              "src": "12015:0:15"
             },
             "scope": 4858,
-            "src": "11939:100:15",
+            "src": "11947:69:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -14304,7 +14307,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4783,
-                  "src": "12082:19:15",
+                  "src": "12059:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14315,7 +14318,7 @@
                     "id": 4779,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12082:7:15",
+                    "src": "12059:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -14326,16 +14329,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12081:21:15"
+              "src": "12058:21:15"
             },
             "returnParameters": {
               "id": 4782,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12112:0:15"
+              "src": "12089:0:15"
             },
             "scope": 4858,
-            "src": "12044:69:15",
+            "src": "12021:69:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -14359,7 +14362,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4794,
-                  "src": "12158:19:15",
+                  "src": "12135:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14370,7 +14373,7 @@
                     "id": 4784,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12158:7:15",
+                    "src": "12135:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -14386,7 +14389,7 @@
                   "name": "_baseLTVasCollateral",
                   "nodeType": "VariableDeclaration",
                   "scope": 4794,
-                  "src": "12179:28:15",
+                  "src": "12156:28:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14397,7 +14400,7 @@
                     "id": 4786,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12179:7:15",
+                    "src": "12156:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -14412,7 +14415,7 @@
                   "name": "_liquidationThreshold",
                   "nodeType": "VariableDeclaration",
                   "scope": 4794,
-                  "src": "12209:29:15",
+                  "src": "12186:29:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14423,7 +14426,7 @@
                     "id": 4788,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12209:7:15",
+                    "src": "12186:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -14438,7 +14441,7 @@
                   "name": "_liquidationBonus",
                   "nodeType": "VariableDeclaration",
                   "scope": 4794,
-                  "src": "12240:25:15",
+                  "src": "12217:25:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14449,7 +14452,7 @@
                     "id": 4790,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12240:7:15",
+                    "src": "12217:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -14459,16 +14462,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12156:111:15"
+              "src": "12133:111:15"
             },
             "returnParameters": {
               "id": 4793,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12277:0:15"
+              "src": "12254:0:15"
             },
             "scope": 4858,
-            "src": "12119:159:15",
+            "src": "12096:159:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -14492,7 +14495,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4799,
-                  "src": "12322:19:15",
+                  "src": "12299:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14503,7 +14506,7 @@
                     "id": 4795,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12322:7:15",
+                    "src": "12299:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -14514,16 +14517,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12321:21:15"
+              "src": "12298:21:15"
             },
             "returnParameters": {
               "id": 4798,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12352:0:15"
+              "src": "12329:0:15"
             },
             "scope": 4858,
-            "src": "12283:70:15",
+            "src": "12260:70:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -14547,7 +14550,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4804,
-                  "src": "12401:19:15",
+                  "src": "12378:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14558,7 +14561,7 @@
                     "id": 4800,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12401:7:15",
+                    "src": "12378:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -14569,16 +14572,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12400:21:15"
+              "src": "12377:21:15"
             },
             "returnParameters": {
               "id": 4803,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12431:0:15"
+              "src": "12408:0:15"
             },
             "scope": 4858,
-            "src": "12359:73:15",
+            "src": "12336:73:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -14602,7 +14605,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4809,
-                  "src": "12480:19:15",
+                  "src": "12457:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14613,7 +14616,7 @@
                     "id": 4805,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12480:7:15",
+                    "src": "12457:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -14624,16 +14627,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12479:21:15"
+              "src": "12456:21:15"
             },
             "returnParameters": {
               "id": 4808,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12510:0:15"
+              "src": "12487:0:15"
             },
             "scope": 4858,
-            "src": "12437:74:15",
+            "src": "12414:74:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -14657,7 +14660,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4814,
-                  "src": "12545:19:15",
+                  "src": "12522:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14668,7 +14671,7 @@
                     "id": 4810,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12545:7:15",
+                    "src": "12522:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -14679,16 +14682,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12544:21:15"
+              "src": "12521:21:15"
             },
             "returnParameters": {
               "id": 4813,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12575:0:15"
+              "src": "12552:0:15"
             },
             "scope": 4858,
-            "src": "12517:59:15",
+            "src": "12494:59:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -14712,7 +14715,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4819,
-                  "src": "12611:19:15",
+                  "src": "12588:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14723,7 +14726,7 @@
                     "id": 4815,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12611:7:15",
+                    "src": "12588:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -14734,16 +14737,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12610:21:15"
+              "src": "12587:21:15"
             },
             "returnParameters": {
               "id": 4818,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12641:0:15"
+              "src": "12618:0:15"
             },
             "scope": 4858,
-            "src": "12581:61:15",
+            "src": "12558:61:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -14767,7 +14770,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4824,
-                  "src": "12674:19:15",
+                  "src": "12651:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14778,7 +14781,7 @@
                     "id": 4820,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12674:7:15",
+                    "src": "12651:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -14789,16 +14792,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12673:21:15"
+              "src": "12650:21:15"
             },
             "returnParameters": {
               "id": 4823,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12704:0:15"
+              "src": "12681:0:15"
             },
             "scope": 4858,
-            "src": "12648:57:15",
+            "src": "12625:57:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -14822,7 +14825,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4829,
-                  "src": "12738:19:15",
+                  "src": "12715:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14833,7 +14836,7 @@
                     "id": 4825,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12738:7:15",
+                    "src": "12715:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -14844,16 +14847,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12737:21:15"
+              "src": "12714:21:15"
             },
             "returnParameters": {
               "id": 4828,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12768:0:15"
+              "src": "12745:0:15"
             },
             "scope": 4858,
-            "src": "12710:59:15",
+            "src": "12687:59:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -14877,7 +14880,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4836,
-                  "src": "12817:19:15",
+                  "src": "12794:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14888,7 +14891,7 @@
                     "id": 4830,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12817:7:15",
+                    "src": "12794:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -14904,7 +14907,7 @@
                   "name": "_ltv",
                   "nodeType": "VariableDeclaration",
                   "scope": 4836,
-                  "src": "12838:12:15",
+                  "src": "12815:12:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14915,7 +14918,7 @@
                     "id": 4832,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12838:7:15",
+                    "src": "12815:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -14925,16 +14928,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12816:35:15"
+              "src": "12793:35:15"
             },
             "returnParameters": {
               "id": 4835,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12861:0:15"
+              "src": "12838:0:15"
             },
             "scope": 4858,
-            "src": "12775:87:15",
+            "src": "12752:87:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -14958,7 +14961,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4843,
-                  "src": "12910:19:15",
+                  "src": "12887:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14969,7 +14972,7 @@
                     "id": 4837,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12910:7:15",
+                    "src": "12887:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -14985,7 +14988,7 @@
                   "name": "_threshold",
                   "nodeType": "VariableDeclaration",
                   "scope": 4843,
-                  "src": "12931:18:15",
+                  "src": "12908:18:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -14996,7 +14999,7 @@
                     "id": 4839,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "12931:7:15",
+                    "src": "12908:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -15006,16 +15009,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "12909:41:15"
+              "src": "12886:41:15"
             },
             "returnParameters": {
               "id": 4842,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "12960:0:15"
+              "src": "12937:0:15"
             },
             "scope": 4858,
-            "src": "12867:94:15",
+            "src": "12844:94:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -15039,7 +15042,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4850,
-                  "src": "13005:19:15",
+                  "src": "12982:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -15050,7 +15053,7 @@
                     "id": 4844,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "13005:7:15",
+                    "src": "12982:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -15066,7 +15069,7 @@
                   "name": "_bonus",
                   "nodeType": "VariableDeclaration",
                   "scope": 4850,
-                  "src": "13026:14:15",
+                  "src": "13003:14:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -15077,7 +15080,7 @@
                     "id": 4846,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "13026:7:15",
+                    "src": "13003:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -15087,16 +15090,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "13004:37:15"
+              "src": "12981:37:15"
             },
             "returnParameters": {
               "id": 4849,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "13052:0:15"
+              "src": "13029:0:15"
             },
             "scope": 4858,
-            "src": "12966:87:15",
+            "src": "12943:87:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -15120,7 +15123,7 @@
                   "name": "_instrument",
                   "nodeType": "VariableDeclaration",
                   "scope": 4857,
-                  "src": "13089:19:15",
+                  "src": "13066:19:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -15131,7 +15134,7 @@
                     "id": 4851,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "13089:7:15",
+                    "src": "13066:7:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -15147,7 +15150,7 @@
                   "name": "_decimals",
                   "nodeType": "VariableDeclaration",
                   "scope": 4857,
-                  "src": "13110:17:15",
+                  "src": "13087:17:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -15158,7 +15161,7 @@
                     "id": 4853,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "13110:7:15",
+                    "src": "13087:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -15168,26 +15171,26 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "13088:40:15"
+              "src": "13065:40:15"
             },
             "returnParameters": {
               "id": 4856,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "13138:0:15"
+              "src": "13115:0:15"
             },
             "scope": 4858,
-            "src": "13058:81:15",
+            "src": "13035:81:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
         "scope": 4859,
-        "src": "65:13077:15"
+        "src": "65:13054:15"
       }
     ],
-    "src": "0:13142:15"
+    "src": "0:13119:15"
   },
   "compiler": {
     "name": "solc",
@@ -15195,7 +15198,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-11-25T13:25:43.169Z",
+  "updatedAt": "2020-11-27T07:30:41.685Z",
   "devdoc": {
     "methods": {
       "liquidateFee(address,uint256,address)": {
