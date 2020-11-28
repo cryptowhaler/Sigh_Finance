@@ -3,15 +3,17 @@ import { Deposit, RedeemUnderlying, Borrow, Repay, Swap, InstrumentUsedAsCollate
  , InstrumentUsedAsCollateralDisabled , RebalanceStableBorrowRate, 
  FlashLoan, OriginationFeeLiquidated , LiquidationCall } from "../../generated/Lending_Pool/LendingPool"
 import { Instrument } from "../../generated/schema"
-
+import {updatePrice } from "./LendingPoolConfigurator"
 
 // event Deposit( address indexed _instrument, address indexed _user, uint256 _amount, uint16 indexed _referral, uint256 _timestamp);
 // ADDS To lifeTimeDeposits, totalLiquidity, availableLiquidity
 export function handleDeposit(event: Deposit): void {
+    log.info('LENDING-POOL : handleDeposit',[])                                
     let instrumentId = event.params._instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
 
-    let decimalAdj = BigInt.fromI32(10).pow(instrumentState.decimals as u8).toBigDecimal()
+    let decimalAdj = BigInt.fromI32(10).pow(instrumentState.decimals.toI32() as u8).toBigDecimal()
+    log.info('LENDING-POOL : handleDeposit : decimalAdj - {}',[decimalAdj.toString()])                                
 
     instrumentState.lifeTimeDeposits_WEI = instrumentState.lifeTimeDeposits_WEI.plus(event.params._amount)
     instrumentState.lifeTimeDeposits = instrumentState.lifeTimeDeposits_WEI.toBigDecimal().div(decimalAdj)
@@ -24,6 +26,8 @@ export function handleDeposit(event: Deposit): void {
 
     instrumentState.timeStamp = event.params._timestamp
     instrumentState.save()
+
+    updatePrice(instrumentId)
 }
 
 
@@ -33,7 +37,7 @@ export function handleRedeemUnderlying(event: RedeemUnderlying): void {
     let instrumentId = event.params._instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
 
-    let decimalAdj = BigInt.fromI32(10).pow(instrumentState.decimals as u8).toBigDecimal()
+    let decimalAdj = BigInt.fromI32(10).pow(instrumentState.decimals.toI32() as u8).toBigDecimal()
 
     instrumentState.totalLiquidity_WEI = instrumentState.totalLiquidity_WEI.minus(event.params._amount)
     instrumentState.totalLiquidity = instrumentState.totalLiquidity_WEI.toBigDecimal().div(decimalAdj)
@@ -53,7 +57,7 @@ export function handleBorrow(event: Borrow): void {
     let instrumentId = event.params._instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
 
-    let decimalAdj = BigInt.fromI32(10).pow(instrumentState.decimals as u8).toBigDecimal()
+    let decimalAdj = BigInt.fromI32(10).pow(instrumentState.decimals.toI32() as u8).toBigDecimal()
 
     // LIFE-TIME BORROWS
     instrumentState.lifeTimeBorrows_WEI = instrumentState.lifeTimeBorrows_WEI.plus(event.params._amount)
@@ -116,7 +120,7 @@ export function handleRepay(event: Repay): void {
     let instrumentId = event.params._instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
 
-    let decimalAdj = BigInt.fromI32(10).pow(instrumentState.decimals as u8).toBigDecimal()
+    let decimalAdj = BigInt.fromI32(10).pow(instrumentState.decimals.toI32() as u8).toBigDecimal()
 
     // AVAILABLE LIQUIDITY
     instrumentState.availableLiquidity_WEI = instrumentState.availableLiquidity_WEI.plus(event.params._amountMinusFees)

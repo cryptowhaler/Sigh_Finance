@@ -9,7 +9,7 @@ import { ERC20Detailed } from '../../generated/Lending_Pool_Configurator/ERC20De
 import { PriceOracleGetter } from '../../generated/Lending_Pool_Configurator/PriceOracleGetter'
 
 
-
+// Works as Expected : Instrument's price Oracle should be initialized before initializing instrument itself
 export function handleInstrumentInitialized(event: InstrumentInitialized): void {
     log.info('LENDINGPOOLCONFIGURATOR : handleInstrumentInitialized',[])
     let instrumentId = event.params._instrument.toHexString()
@@ -17,24 +17,24 @@ export function handleInstrumentInitialized(event: InstrumentInitialized): void 
     if (instrumentState == null) {
         instrumentState = createInstrument(instrumentId)
     }
-    log.info('handleInstrumentInitialized : msg 1',[])
+    // log.info('handleInstrumentInitialized : msg 1',[])
     instrumentState.instrumentAddress = event.params._instrument
     instrumentState.iTokenAddress = event.params._iToken
     instrumentState.interestRateStrategyAddress = event.params._interestRateStrategyAddress
     instrumentState.isActive = true
     instrumentState.isFreezed = false
 
-    log.info('handleInstrumentInitialized : msg 2',[])
+    // log.info('handleInstrumentInitialized : msg 2',[])
     let instrumentContract = ERC20Detailed.bind(Address.fromString(instrumentId))
     instrumentState.underlyingInstrumentName = instrumentContract.name()
     instrumentState.underlyingInstrumentSymbol = instrumentContract.symbol()
     instrumentState.decimals = BigInt.fromI32( instrumentContract.decimals() ) 
 
-    log.info('handleInstrumentInitialized : msg 3',[])
+    // log.info('handleInstrumentInitialized : msg 3',[])
     let iTokenContract = ERC20Detailed.bind(event.params._iToken)
     instrumentState.name = iTokenContract.name()
     instrumentState.symbol =  iTokenContract.symbol()
-    log.info('handleInstrumentInitialized : msg 4',[])
+    // log.info('handleInstrumentInitialized : msg 4',[])
 
     instrumentState.supplyIndex = BigInt.fromI32(10).pow(27 as u8)                  // RAY = 1e27 (initialized in CoreLibrary's init() )
     instrumentState.variableBorrowIndex = BigInt.fromI32(10).pow(27  as u8)         // RAY = 1e27 (initialized in CoreLibrary's init() )
@@ -45,7 +45,7 @@ export function handleInstrumentInitialized(event: InstrumentInitialized): void 
 }
 
 
-
+// Works as Expected 
 export function handleBorrowingEnabledOnInstrument(event: BorrowingEnabledOnInstrument): void {
     log.info('LENDINGPOOLCONFIGURATOR : handleBorrowingEnabledOnInstrument',[])
     let instrumentId = event.params._instrument.toHexString()
@@ -60,7 +60,7 @@ export function handleBorrowingEnabledOnInstrument(event: BorrowingEnabledOnInst
 }
 
 
-
+// Works as Expected 
 export function handleBorrowingDisabledOnInstrument(event: BorrowingDisabledOnInstrument): void {
     log.info('LENDINGPOOLCONFIGURATOR : handleBorrowingDisabledOnInstrument',[])
     let instrumentId = event.params._instrument.toHexString()
@@ -256,7 +256,7 @@ export function handleInstrumentRemoved(event: InstrumentRemoved): void {
 
 
 
-function updatePrice( ID: string ) : void {
+export function updatePrice( ID: string ) : void {
     let instrument_state = Instrument.load(ID)
   
     let oracleAddress = instrument_state.oracle as Address
@@ -302,7 +302,13 @@ function updatePrice( ID: string ) : void {
     instrument_state.totalPrincipalVariableBorrowsETH = instrument_state.totalPrincipalVariableBorrows.times(instrument_state.priceETH)
     instrument_state.totalPrincipalVariableBorrowsUSD = instrument_state.totalPrincipalVariableBorrows.times(instrument_state.priceUSD)
 
+    // CURRENT TOTAL EARNINGS OF SUPPLIERS (LIIQUIDITY PROVIDERS) THROUGH STABLE INTEREST RATES
+    instrument_state.totalSupplierEarningsETH = instrument_state.totalSupplierEarnings.times(instrument_state.priceETH)
+    instrument_state.totalSupplierEarningsUSD = instrument_state.totalSupplierEarnings.times(instrument_state.priceUSD)
 
+    // LIFE-TIME DEPOSITS MADE IN THE LENDING PROTOCOL
+    instrument_state.lifeTimeDepositsETH = instrument_state.lifeTimeDeposits.times(instrument_state.priceUSD)
+    instrument_state.lifeTimeDepositsUSD = instrument_state.lifeTimeDeposits.times(instrument_state.priceUSD)
 
 
     instrument_state.save()
@@ -401,9 +407,13 @@ export function createInstrument(addressID: string): Instrument {
 
     instrument_state_initialized.totalSupplierEarnings_WEI = new BigInt(0)
     instrument_state_initialized.totalSupplierEarnings = BigDecimal.fromString('0')
+    instrument_state_initialized.totalSupplierEarningsETH = BigDecimal.fromString('0')
+    instrument_state_initialized.totalSupplierEarningsUSD = BigDecimal.fromString('0')
 
     instrument_state_initialized.lifeTimeDeposits_WEI = new BigInt(0)
     instrument_state_initialized.lifeTimeDeposits = BigDecimal.fromString('0')
+    instrument_state_initialized.lifeTimeDepositsETH = BigDecimal.fromString('0')
+    instrument_state_initialized.lifeTimeDepositsUSD = BigDecimal.fromString('0')
 
     instrument_state_initialized.lifeTimeBorrows_WEI = new BigInt(0)
     instrument_state_initialized.lifeTimeBorrows = BigDecimal.fromString('0')

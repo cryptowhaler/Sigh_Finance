@@ -108,7 +108,7 @@ export default {
         console.log('Deposit Quantity - ' + this.formData.depositQuantity);
         console.log('Deposit Value - ' + value);
 
-        let response =  await this.LendingPool_deposit( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.depositQuantity, _referralCode: this.formData.enteredReferralCode } );
+        let response =  await this.LendingPool_deposit( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.depositQuantity, _referralCode: this.formData.enteredReferralCode, symbol: this.selectedInstrument.symbol, decimals: this.selectedInstrument.decimals  });
         if (response.status) {      
           this.$showSuccessMsg({message: "DEPOSIT SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD have been successfully deposited to SIGH Finance. Enjoy your $SIGH farm yields." });
           this.$showInfoMsg({message: " Interest & $SIGH bearing ITokens (ERC20) are issued as debt against the deposits made in the SIGH Finance Protocol on a 1:1 basis. You can read more about it at medium.com/SighFinance" });
@@ -179,7 +179,7 @@ export default {
         console.log('Selected Instrument - ' + this.selectedInstrument.symbol)
         console.log('Quantity to be Approved - ' + this.formData.depositQuantity);
         console.log('Value - ' + value);
-        let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  this.formData.depositQuantity , symbol :this.selectedInstrument.symbol  } );
+        let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  this.formData.depositQuantity , symbol :this.selectedInstrument.symbol, decimals: this.selectedInstrument.decimals  } );
         if (response.status) { 
           await this.refreshCurrentInstrumentWalletState(false);        
           this.$showSuccessMsg({message: "APPROVAL SUCCESS : Maximum of " + this.selectedInstrumentWalletState.userAvailableAllowance + "  " +  this.selectedInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });

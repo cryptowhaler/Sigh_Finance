@@ -171,6 +171,8 @@ type Instrument @entity {
     totalSupplierEarnings_WEI: BigInt!
     "totalSupplierEarnings : Present tokenized Instrument Quantity Earned as Supplier Earnings ( through Supply Interest Rates ) (Adjusted by decimal)"    
     totalSupplierEarnings: BigDecimal!
+    totalSupplierEarningsETH: BigDecimal!
+    totalSupplierEarningsUSD: BigDecimal!
 
     "supplyIndex : Index for Accuring instrument quantity as Supply Interest"    
     supplyIndex: BigInt!
@@ -178,6 +180,8 @@ type Instrument @entity {
 
     lifeTimeDeposits_WEI: BigInt!
     lifeTimeDeposits: BigDecimal!
+    lifeTimeDepositsETH: BigDecimal!
+    lifeTimeDepositsUSD: BigDecimal!
 
     lifeTimeBorrows_WEI:  BigInt!
     lifeTimeBorrows:  BigDecimal!

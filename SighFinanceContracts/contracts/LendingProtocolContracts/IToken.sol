@@ -408,7 +408,9 @@ contract IToken is ERC20, ERC20Detailed {
 
         uint256 previousPrincipalBalance = super.balanceOf(_user);                                         // Current IToken Balance
         uint256 balanceIncrease = balanceOf(_user).sub(previousPrincipalBalance);                          //calculate the accrued interest since the last accumulation
-        _mint(_user, balanceIncrease);                                                                     //mints an amount of tokens equivalent to the amount accumulated
+        if (balanceIncrease > 0) {
+            _mint(_user, balanceIncrease);                                                                     //mints an amount of tokens equivalent to the amount accumulated
+        }
         uint256 index = userIndexes[_user] = core.getInstrumentNormalizedIncome(underlyingInstrumentAddress);      //updates the user index
         return ( previousPrincipalBalance, previousPrincipalBalance.add(balanceIncrease), balanceIncrease, index);
     }
@@ -496,13 +498,12 @@ contract IToken is ERC20, ERC20Detailed {
             return 0;
         }
 
-        //if the _user is not redirecting the interest to anybody, accrues the interest for himself
+        // current balance = prev balance + interest on (prev balance + redirected balance)
         if(interestRedirectionAddresses[_user] == address(0)){
-            //accruing for himself means that both the principal balance and the redirected balance partecipate in the interest
-            return calculateCumulatedBalanceInternal(   _user, currentPrincipalBalance.add(redirectedBalance)   ).sub(redirectedBalance);
+            return calculateCumulatedBalanceInternal(_user, currentPrincipalBalance.add(redirectedBalance) ).sub(redirectedBalance);
         }
-        else { //if the user redirected the interest, then only the redirected balance generates interest. In that case, the interest generated
-            //by the redirected balance is added to the current principal balance.
+        // current balance = prev balance + interest on (redirected balance)
+        else { 
             return currentPrincipalBalance.add( calculateCumulatedBalanceInternal( _user, redirectedBalance ).sub(redirectedBalance) );
         }
     }
@@ -613,7 +614,9 @@ contract IToken is ERC20, ERC20Detailed {
 
         if (deltaIndex.mantissa > 0) {
             uint supplierSighDelta = mul_(supplierTokens, deltaIndex);                                      // Supplier Delta = Balance * Double(DeltaIndex)/DoubleScale
-            accureSigh(supplier, supplierSighDelta );        // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the Supplier or the address to which SIGH is being redirected to 
+            if (supplierSighDelta > 0) {
+                accureSigh(supplier, supplierSighDelta );        // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the Supplier or the address to which SIGH is being redirected to 
+            }
         }
     }
 
@@ -655,12 +658,13 @@ contract IToken is ERC20, ERC20Detailed {
 
             emit distributeBorrower_SIGH_test4(BorrowerIndexes[borrower], deltaIndex.mantissa, marketBorrowIndex.mantissa , borrowBalance, borrowerAmount, borrowerSIGHDelta );
 
-            accureSigh( borrower,borrowerSIGHDelta );            // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the BORROWER or the address to which SIGH is being redirected to 
+            if (borrowerSIGHDelta > 0 ) {
+                accureSigh( borrower,borrowerSIGHDelta );            // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the BORROWER or the address to which SIGH is being redirected to 
+            }
         // }
     }
 
-    event SighAccured_(address user, address sighAccuredTo, uint AccuredSighBalance );
-    event SighAccured(address user, address sighAccuredTo, uint AccuredSighBalance );
+    event SighAccured(address user, address sighAccuredTo, uint recentSIGHAccured  , uint AccuredSighBalance );
 
     /**
      * @notice Accured SIGH amount is added to the ACCURED_SIGH_BALANCES of the Supplier/Borrower or the address to which SIGH is being redirected to.
@@ -677,12 +681,11 @@ contract IToken is ERC20, ERC20Detailed {
             sighAccuredTo = sighRedirectionAddresses[user];
             AccuredSighBalances[sighAccuredTo] = AccuredSighBalances[sighAccuredTo].add(accuredSighAmount);   // Accured SIGH added to the redirected user's sigh balance            
         }
-        emit SighAccured_( user , sighAccuredTo, accuredSighAmount );
+        emit SighAccured( user , sighAccuredTo, accuredSighAmount, AccuredSighBalances[sighAccuredTo] );
 
         if ( AccuredSighBalances[sighAccuredTo] > sigh_Transfer_Threshold ) {   // SIGH is Transferred is SIGH_ACCURED_BALANCE > 1e18 SIGH
             transferSigh( user, sighAccuredTo );
         }
-        emit SighAccured( user, sighAccuredTo, AccuredSighBalances[sighAccuredTo] );
     }
 
     /**

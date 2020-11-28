@@ -564,6 +564,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         uint blockNumber = getBlockNumber();
         uint deltaBlocks = sub_(blockNumber, uint( instrumentState.supplylastupdatedblock ), 'updateSIGHSupplyIndex : Block Subtraction Underflow');    // Delta Blocks 
         
+        // WE UPDATE INDEX ONLY IF $SIGH IS ACCURING
         if (deltaBlocks > 0 && supplySpeed > 0) {       // In case SIGH would have accured
             uint sigh_Accrued = mul_(deltaBlocks, supplySpeed);                                                                         // SIGH Accured
             uint totalUnderlyingLiquidity = lendingPoolCore.getInstrumentTotalLiquidity( currentInstrument );                           // Total amount supplied 

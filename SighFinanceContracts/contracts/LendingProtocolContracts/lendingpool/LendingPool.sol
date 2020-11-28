@@ -325,7 +325,8 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
     * @param _amount the amount to be borrowed
     * @param _interestRateMode the interest rate mode at which the user wants to borrow. Can be 0 (STABLE) or 1 (VARIABLE)
     **/
-    function borrow(address _instrument,uint256 _amount,uint256 _interestRateMode,uint16 _referralCode) external nonReentrant onlyActiveInstrument(_instrument)
+    function borrow(address _instrument,uint256 _amount,uint256 _interestRateMode,uint16 _referralCode) external nonReentrant 
+        onlyActiveInstrument(_instrument)
         onlyUnfreezedInstrument(_instrument)
         onlyAmountGreaterThanZero(_amount)
     {
@@ -394,7 +395,9 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
         uint256 originationFee;
     }
 
-    function repay(address _instrument, uint256 _amount, address payable _onBehalfOf) external payable nonReentrant onlyActiveInstrument(_instrument) onlyAmountGreaterThanZero(_amount) {
+    function repay(address _instrument, uint256 _amount, address payable _onBehalfOf) external payable nonReentrant 
+    onlyActiveInstrument(_instrument) 
+    onlyAmountGreaterThanZero(_amount) {
         
         RepayLocalVars memory vars;     // Usage of a memory struct of vars to avoid "Stack too deep" errors due to local variables
         ( vars.principalBorrowBalance, vars.compoundedBorrowBalance, vars.borrowBalanceIncrease ) = core.getUserBorrowBalances(_instrument, _onBehalfOf);
@@ -446,7 +449,9 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
     * @dev borrowers can user this function to swap between stable and variable borrow rate modes.
     * @param _instrument the address of the instrument on which the user borrowed
     **/
-    function swapBorrowRateMode(address _instrument) external nonReentrant onlyActiveInstrument(_instrument) onlyUnfreezedInstrument(_instrument) {
+    function swapBorrowRateMode(address _instrument) external nonReentrant 
+    onlyActiveInstrument(_instrument) 
+    onlyUnfreezedInstrument(_instrument) {
         (uint256 principalBorrowBalance, uint256 compoundedBorrowBalance, uint256 borrowBalanceIncrease) = core.getUserBorrowBalances(_instrument, msg.sender);
 
         require( compoundedBorrowBalance > 0,"User does not have a borrow in progress on this instrument");
@@ -474,7 +479,8 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
     * @param _instrument the address of the instrument
     * @param _user the address of the user to be rebalanced
     **/
-    function rebalanceStableBorrowRate(address _instrument, address _user) external nonReentrant onlyActiveInstrument(_instrument) {
+    function rebalanceStableBorrowRate(address _instrument, address _user) external nonReentrant 
+    onlyActiveInstrument(_instrument) {
         (, uint256 compoundedBalance, uint256 borrowBalanceIncrease) = core.getUserBorrowBalances(_instrument, _user);
 
         //step 1: user must be borrowing on _instrument at a stable rate
@@ -512,7 +518,8 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
     * @param _instrument the address of the instrument
     * @param _useAsCollateral true if the user wants to user the deposit as collateral, false otherwise.
     **/
-    function setUserUseInstrumentAsCollateral(address _instrument, bool _useAsCollateral) external nonReentrant onlyActiveInstrument(_instrument)  onlyUnfreezedInstrument(_instrument) {
+    function setUserUseInstrumentAsCollateral(address _instrument, bool _useAsCollateral) external nonReentrant 
+    onlyActiveInstrument(_instrument)  onlyUnfreezedInstrument(_instrument) {
        
         uint256 underlyingBalance = core.getUserUnderlyingAssetBalance(_instrument, msg.sender);
 

@@ -1138,12 +1138,12 @@ const store = new Vuex.Store({
         let response = await store.dispatch('getUserInstrumentState',{_instrumentAddress:cur_instrument.instrumentAddress , _user: state.connectedWallet });
         console.log("Calling ERC20_getAllowance while updating Wallet - Instrument state in function refresh_User_Instrument_State in store.js ");
         cur_user_instrument_state.userAvailableAllowance = await store.dispatch("ERC20_getAllowance",{tokenAddress: cur_instrument.instrumentAddress , owner: state.connectedWallet, spender: state.LendingPoolCoreContractAddress });
-        cur_user_instrument_state.userAvailableAllowanceWorth = await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.userAvailableAllowance) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) }); 
-        cur_user_instrument_state.userDepositedBalance = response.currentITokenBalance;
+        cur_user_instrument_state.userAvailableAllowanceWorth = await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.userAvailableAllowance) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) });     
+        cur_user_instrument_state.userDepositedBalance = BigNumber(response.currentITokenBalance).shiftedBy((-1)*Number(cur_instrument.decimals)).toNumber() ;
         cur_user_instrument_state.userDepositedBalanceWorth = await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.userDepositedBalance) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) }); 
-        cur_user_instrument_state.principalBorrowBalance = response.principalBorrowBalance;
+        cur_user_instrument_state.principalBorrowBalance =  BigNumber(response.principalBorrowBalance).shiftedBy((-1)*Number(cur_instrument.decimals)).toNumber() ; 
         cur_user_instrument_state.principalBorrowBalanceWorth = await  store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.principalBorrowBalance) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) });
-        cur_user_instrument_state.currentBorrowBalance = response.currentBorrowBalance;
+        cur_user_instrument_state.currentBorrowBalance =   BigNumber(response.currentBorrowBalance).shiftedBy((-1)*Number(cur_instrument.decimals)).toNumber()  ;
         cur_user_instrument_state.currentBorrowBalanceWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.currentBorrowBalance) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) }); 
 
         // Additional Parameters (APYs, fee, SIGH Yield etc etc)

@@ -1043,6 +1043,24 @@ export class Instrument extends Entity {
     this.set("totalSupplierEarnings", Value.fromBigDecimal(value));
   }
 
+  get totalSupplierEarningsETH(): BigDecimal {
+    let value = this.get("totalSupplierEarningsETH");
+    return value.toBigDecimal();
+  }
+
+  set totalSupplierEarningsETH(value: BigDecimal) {
+    this.set("totalSupplierEarningsETH", Value.fromBigDecimal(value));
+  }
+
+  get totalSupplierEarningsUSD(): BigDecimal {
+    let value = this.get("totalSupplierEarningsUSD");
+    return value.toBigDecimal();
+  }
+
+  set totalSupplierEarningsUSD(value: BigDecimal) {
+    this.set("totalSupplierEarningsUSD", Value.fromBigDecimal(value));
+  }
+
   get supplyIndex(): BigInt {
     let value = this.get("supplyIndex");
     return value.toBigInt();
@@ -1068,6 +1086,24 @@ export class Instrument extends Entity {
 
   set lifeTimeDeposits(value: BigDecimal) {
     this.set("lifeTimeDeposits", Value.fromBigDecimal(value));
+  }
+
+  get lifeTimeDepositsETH(): BigDecimal {
+    let value = this.get("lifeTimeDepositsETH");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeDepositsETH(value: BigDecimal) {
+    this.set("lifeTimeDepositsETH", Value.fromBigDecimal(value));
+  }
+
+  get lifeTimeDepositsUSD(): BigDecimal {
+    let value = this.get("lifeTimeDepositsUSD");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeDepositsUSD(value: BigDecimal) {
+    this.set("lifeTimeDepositsUSD", Value.fromBigDecimal(value));
   }
 
   get lifeTimeBorrows_WEI(): BigInt {
