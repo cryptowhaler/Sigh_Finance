@@ -72,8 +72,8 @@ const store = new Vuex.Store({
 // ############ PROTOCOL CONTRACT ADDRESSES  ############
 // ######################################################
     
-    GlobalAddressesProviderContractKovan: "0x745e43654860a51A1666185171D800bcbCF56145",
-    ethereumPriceOracleAddressKovan: "0xa077B3b82c7205eE5bCA46C553520F65e516eF5A",
+    GlobalAddressesProviderContractKovan: "0x68C9D1C920f4A0D7A27052f6c79dE851518532a4",
+    ethereumPriceOracleAddressKovan: "0x1b563766d835b49C5A7D9f5a0893d28e35746818",
     GlobalAddressesProviderContractMainNet: null,
     ethereumPriceOracleAddressMainNet: "",
     GlobalAddressesProviderContractBSCTestnet: null,

@@ -379,10 +379,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/mocks/tokens/MockWBTC.sol": {
-			"keccak256": "0x0332ddd8d89e1a8ce90b5a6821d02cb6b60c0ba5cbe0c96e918c6ba2cf9c08ab",
+			"keccak256": "0x17811443532437ea5227b4cd291ea9ade251178fae8aff0da78cb78f8ca434ac",
 			"urls": [
-				"bzz-raw://3b2c9ff53e640dfb71bc90ef5b3410eea2b3e1cb39470262b6bb841bdedd2dc6",
-				"dweb:/ipfs/QmevhuTPBU8evzGpRs5nUqVpZH4LNqboktz6UWH8gJrMss"
+				"bzz-raw://a6796001d09adfcd088f21330fb03e764704d5acf3bf696d50cd9f3fd2e54c6a",
+				"dweb:/ipfs/QmUFvPJ61XSTDYu5Vz9j849adyWMYmoSZZxGWcv9531GAS"
 			]
 		},
 		"openzeppelin-solidity/contracts/GSN/Context.sol": {
