@@ -42,6 +42,15 @@ export class SIGH_Instrument extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get address(): Bytes {
+    let value = this.get("address");
+    return value.toBytes();
+  }
+
+  set address(value: Bytes) {
+    this.set("address", Value.fromBytes(value));
+  }
+
   get symbol(): string {
     let value = this.get("symbol");
     return value.toString();
@@ -58,6 +67,24 @@ export class SIGH_Instrument extends Entity {
 
   set decimals(value: BigInt) {
     this.set("decimals", Value.fromBigInt(value));
+  }
+
+  get priceETH(): BigDecimal {
+    let value = this.get("priceETH");
+    return value.toBigDecimal();
+  }
+
+  set priceETH(value: BigDecimal) {
+    this.set("priceETH", Value.fromBigDecimal(value));
+  }
+
+  get priceUSD(): BigDecimal {
+    let value = this.get("priceUSD");
+    return value.toBigDecimal();
+  }
+
+  set priceUSD(value: BigDecimal) {
+    this.set("priceUSD", Value.fromBigDecimal(value));
   }
 
   get treasury(): Bytes {

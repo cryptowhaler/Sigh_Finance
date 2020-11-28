@@ -130,11 +130,11 @@ contract LendingPoolConfigurator is VersionedInitializable {
 // ####### --> refreshLendingPoolCoreConfiguration()   :   REFRESH THE ADDRESS OF CORE  ###############
 // ###################################################################################################
 
-    function removeInstrument( address _instrument ) external onlyLendingPoolManager {
-        ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
-        require(core.removeInstrument( _instrument ),"Failed to remove instrument" );
-        emit InstrumentRemoved( _instrument );
-    }
+    // function removeInstrument( address _instrument ) external onlyLendingPoolManager {
+    //     ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
+    //     require(core.removeInstrument( _instrument ),"Failed to remove instrument" );
+    //     emit InstrumentRemoved( _instrument );
+    // }
 
     /**
     * @dev activates/deactivates a _instrument

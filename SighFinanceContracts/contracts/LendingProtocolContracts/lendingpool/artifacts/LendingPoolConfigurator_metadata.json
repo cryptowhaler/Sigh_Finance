@@ -22,16 +22,10 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": false,
+						"indexed": true,
 						"internalType": "address",
 						"name": "_instrument",
 						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "bool",
-						"name": "_stableRateEnabled",
-						"type": "bool"
 					}
 				],
 				"name": "BorrowingEnabledOnInstrument",
@@ -671,10 +665,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
-			"keccak256": "0x2533a4a88d2aaa0b0609a3eadefb5108a0140100720c0b0536510f79620868bc",
+			"keccak256": "0x2aee154889e26c21e268b6b18646d88a9b9113ff789f7be12aa12b764ae1898a",
 			"urls": [
-				"bzz-raw://2bb5d3236bbd96e09eb7ac13104bfe7f861dc32c247a9693af77575ddaeaf444",
-				"dweb:/ipfs/QmfDHvaiYi3zfcpSeTqKe5AstuxMErgEGVkwsR2dFs6pne"
+				"bzz-raw://b42112137dcabf248f4e9efbe0330c7d46048c4c1da8186ef4de4e850b5f6799",
+				"dweb:/ipfs/QmZCXWYb4PBGpWJJEzX25XAiVkLvhW9TxVxLFksqJYzTTr"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolDataProvider.sol": {
@@ -685,17 +679,17 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolConfigurator.sol": {
-			"keccak256": "0x63a7cca864425b12f1c16c9c93907b5ad065b71ae25838005963c59b01aaa4eb",
+			"keccak256": "0xdd911701f0cd0c9b5955562609bb4645bded252e4e0f33c8a99b4dbb26dab6a1",
 			"urls": [
-				"bzz-raw://f351d1e66e32f73576527bd75b62e42e5dc19d90bdc7276ee31d7a5f2073fdef",
-				"dweb:/ipfs/QmTyBfVLfjfCqxHfmUi6bwzcW2n5bfF1JauwjuSJ1ecfq3"
+				"bzz-raw://43d961ebb5023d5124c14e43516c97b0194b52e25aa2e405fb4c8611fcdc8434",
+				"dweb:/ipfs/QmcxhruR4mgXgCWK1JfJrt2xG9yzqSYnM79uS5kqQ79ruz"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
-			"keccak256": "0x1b3f4e9a62042178a0b4c6dbde1dadec6b9c40d6ea8731226351273183f9c027",
+			"keccak256": "0x5ac06f62f0ceaeb15e94b0961de7e4cf6db8d77ca2c879e55772e4bf386428b3",
 			"urls": [
-				"bzz-raw://d4b9a10a8658bba25f7cd644becfa036ade3db810033da8ac665163a81a81ad7",
-				"dweb:/ipfs/QmbUhQGUHL8z7e1aAVe4gtncU26TFCYr38aZqVNTttgt7D"
+				"bzz-raw://fcf92275bf98d7c775ad72003a9a34879b039f6d126de59b85fe3a3c67f12a6b",
+				"dweb:/ipfs/QmWXH6H95TiidAP1BWYPEkJ9rYzNKuGnyj7ZSzTj5f8wSm"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/WadRayMath.sol": {
@@ -706,10 +700,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0x9d0aa9c01420096ea2fb48c683d5d993a89263e515cc42f1740240f76831307c",
+			"keccak256": "0x00e23698d82f3478a2f13c42ee2dba44103625ada5502656d70e3ef639ad48cd",
 			"urls": [
-				"bzz-raw://8c2543f98e68df1145f3e60d02976ec91576a391acf1608cfb8150713c208384",
-				"dweb:/ipfs/QmZY3f13oqGSK2MUZPJ4oQCxMpeGnHyEZTMUkC2ajWFars"
+				"bzz-raw://2aef56131f9c98e40ad9a13abbcefbb2bd254ffd887006f3e3b1b8358adc3ac9",
+				"dweb:/ipfs/QmerbiWKbh35yoyDVMPLrMxvJ4aoGcVzTroGA3qB8r6d8y"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/VersionedInitializable.sol": {

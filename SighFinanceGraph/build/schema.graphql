@@ -1,8 +1,11 @@
 type SIGH_Instrument @entity {
     "ID is contract address"
     id: ID!
+    address: Bytes!
     symbol: String!
     decimals: BigInt!
+    priceETH: BigDecimal!
+    priceUSD: BigDecimal!
     treasury: Bytes!
     speedController: Bytes!
 
