@@ -47,6 +47,7 @@ export function handleRedeemUnderlying(event: RedeemUnderlying): void {
 
     instrumentState.timeStamp = event.params._timestamp
     instrumentState.save()    
+    updatePrice(instrumentId)
 }
 
 
@@ -112,6 +113,7 @@ export function handleBorrow(event: Borrow): void {
 
     instrumentState.timeStamp = event.params._timestamp
     instrumentState.save()    
+    updatePrice(instrumentId)
 }
 
 
@@ -143,7 +145,8 @@ export function handleRepay(event: Repay): void {
     // event.params._amount._borrowBalanceIncrease --> Increase in BorrowBalance of the user due to accuring Interest
 
     instrumentState.timeStamp = event.params._timestamp
-    instrumentState.save()    
+    instrumentState.save()   
+    updatePrice(instrumentId) 
 }
 
 export function handleSwap(event: Swap): void {
