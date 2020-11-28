@@ -169,7 +169,7 @@ dataSources:
     name: Sigh_Distribution_Handler
     network: kovan
     source:
-      address: "0xF4c1c67C44b4795F60533B594A190bcF5C8808A2"
+      address: "0x05a5105D411004F224143bA88DD6D87eB6B56d80"
       abi: SIGHDistributionHandler
       startBlock: 22305514
     mapping:

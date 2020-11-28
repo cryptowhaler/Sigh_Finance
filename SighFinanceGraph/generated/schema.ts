@@ -509,6 +509,24 @@ export class Instrument extends Entity {
     this.set("oracle", Value.fromBytes(value));
   }
 
+  get priceETH(): BigDecimal {
+    let value = this.get("priceETH");
+    return value.toBigDecimal();
+  }
+
+  set priceETH(value: BigDecimal) {
+    this.set("priceETH", Value.fromBigDecimal(value));
+  }
+
+  get priceUSD(): BigDecimal {
+    let value = this.get("priceUSD");
+    return value.toBigDecimal();
+  }
+
+  set priceUSD(value: BigDecimal) {
+    this.set("priceUSD", Value.fromBigDecimal(value));
+  }
+
   get name(): string {
     let value = this.get("name");
     return value.toString();
@@ -626,51 +644,6 @@ export class Instrument extends Entity {
     this.set("liquidationBonus", Value.fromBigInt(value));
   }
 
-  get priceETH_WEI(): BigInt {
-    let value = this.get("priceETH_WEI");
-    return value.toBigInt();
-  }
-
-  set priceETH_WEI(value: BigInt) {
-    this.set("priceETH_WEI", Value.fromBigInt(value));
-  }
-
-  get priceETHDecimals(): BigInt {
-    let value = this.get("priceETHDecimals");
-    return value.toBigInt();
-  }
-
-  set priceETHDecimals(value: BigInt) {
-    this.set("priceETHDecimals", Value.fromBigInt(value));
-  }
-
-  get priceETH(): BigDecimal {
-    let value = this.get("priceETH");
-    return value.toBigDecimal();
-  }
-
-  set priceETH(value: BigDecimal) {
-    this.set("priceETH", Value.fromBigDecimal(value));
-  }
-
-  get priceUSD_WEI(): BigInt {
-    let value = this.get("priceUSD_WEI");
-    return value.toBigInt();
-  }
-
-  set priceUSD_WEI(value: BigInt) {
-    this.set("priceUSD_WEI", Value.fromBigInt(value));
-  }
-
-  get priceUSD(): BigDecimal {
-    let value = this.get("priceUSD");
-    return value.toBigDecimal();
-  }
-
-  set priceUSD(value: BigDecimal) {
-    this.set("priceUSD", Value.fromBigDecimal(value));
-  }
-
   get borrowFeeDue_WEI(): BigInt {
     let value = this.get("borrowFeeDue_WEI");
     return value.toBigInt();
@@ -687,6 +660,24 @@ export class Instrument extends Entity {
 
   set borrowFeeDue(value: BigDecimal) {
     this.set("borrowFeeDue", Value.fromBigDecimal(value));
+  }
+
+  get borrowFeeDueETH(): BigDecimal {
+    let value = this.get("borrowFeeDueETH");
+    return value.toBigDecimal();
+  }
+
+  set borrowFeeDueETH(value: BigDecimal) {
+    this.set("borrowFeeDueETH", Value.fromBigDecimal(value));
+  }
+
+  get borrowFeeDueUSD(): BigDecimal {
+    let value = this.get("borrowFeeDueUSD");
+    return value.toBigDecimal();
+  }
+
+  set borrowFeeDueUSD(value: BigDecimal) {
+    this.set("borrowFeeDueUSD", Value.fromBigDecimal(value));
   }
 
   get borrowFeeEarned_WEI(): BigInt {
@@ -707,6 +698,24 @@ export class Instrument extends Entity {
     this.set("borrowFeeEarned", Value.fromBigDecimal(value));
   }
 
+  get borrowFeeEarnedETH(): BigDecimal {
+    let value = this.get("borrowFeeEarnedETH");
+    return value.toBigDecimal();
+  }
+
+  set borrowFeeEarnedETH(value: BigDecimal) {
+    this.set("borrowFeeEarnedETH", Value.fromBigDecimal(value));
+  }
+
+  get borrowFeeEarnedUSD(): BigDecimal {
+    let value = this.get("borrowFeeEarnedUSD");
+    return value.toBigDecimal();
+  }
+
+  set borrowFeeEarnedUSD(value: BigDecimal) {
+    this.set("borrowFeeEarnedUSD", Value.fromBigDecimal(value));
+  }
+
   get totalLiquidity_WEI(): BigInt {
     let value = this.get("totalLiquidity_WEI");
     return value.toBigInt();
@@ -723,6 +732,24 @@ export class Instrument extends Entity {
 
   set totalLiquidity(value: BigDecimal) {
     this.set("totalLiquidity", Value.fromBigDecimal(value));
+  }
+
+  get totalLiquidityETH(): BigDecimal {
+    let value = this.get("totalLiquidityETH");
+    return value.toBigDecimal();
+  }
+
+  set totalLiquidityETH(value: BigDecimal) {
+    this.set("totalLiquidityETH", Value.fromBigDecimal(value));
+  }
+
+  get totalLiquidityUSD(): BigDecimal {
+    let value = this.get("totalLiquidityUSD");
+    return value.toBigDecimal();
+  }
+
+  set totalLiquidityUSD(value: BigDecimal) {
+    this.set("totalLiquidityUSD", Value.fromBigDecimal(value));
   }
 
   get availableLiquidity_WEI(): BigInt {
@@ -743,6 +770,24 @@ export class Instrument extends Entity {
     this.set("availableLiquidity", Value.fromBigDecimal(value));
   }
 
+  get availableLiquidityETH(): BigDecimal {
+    let value = this.get("availableLiquidityETH");
+    return value.toBigDecimal();
+  }
+
+  set availableLiquidityETH(value: BigDecimal) {
+    this.set("availableLiquidityETH", Value.fromBigDecimal(value));
+  }
+
+  get availableLiquidityUSD(): BigDecimal {
+    let value = this.get("availableLiquidityUSD");
+    return value.toBigDecimal();
+  }
+
+  set availableLiquidityUSD(value: BigDecimal) {
+    this.set("availableLiquidityUSD", Value.fromBigDecimal(value));
+  }
+
   get totalPrincipalBorrows_WEI(): BigInt {
     let value = this.get("totalPrincipalBorrows_WEI");
     return value.toBigInt();
@@ -759,6 +804,24 @@ export class Instrument extends Entity {
 
   set totalPrincipalBorrows(value: BigDecimal) {
     this.set("totalPrincipalBorrows", Value.fromBigDecimal(value));
+  }
+
+  get totalPrincipalBorrowsETH(): BigDecimal {
+    let value = this.get("totalPrincipalBorrowsETH");
+    return value.toBigDecimal();
+  }
+
+  set totalPrincipalBorrowsETH(value: BigDecimal) {
+    this.set("totalPrincipalBorrowsETH", Value.fromBigDecimal(value));
+  }
+
+  get totalPrincipalBorrowsUSD(): BigDecimal {
+    let value = this.get("totalPrincipalBorrowsUSD");
+    return value.toBigDecimal();
+  }
+
+  set totalPrincipalBorrowsUSD(value: BigDecimal) {
+    this.set("totalPrincipalBorrowsUSD", Value.fromBigDecimal(value));
   }
 
   get totalPrincipalStableBorrows_WEI(): BigInt {
@@ -779,6 +842,24 @@ export class Instrument extends Entity {
     this.set("totalPrincipalStableBorrows", Value.fromBigDecimal(value));
   }
 
+  get totalPrincipalStableBorrowsETH(): BigDecimal {
+    let value = this.get("totalPrincipalStableBorrowsETH");
+    return value.toBigDecimal();
+  }
+
+  set totalPrincipalStableBorrowsETH(value: BigDecimal) {
+    this.set("totalPrincipalStableBorrowsETH", Value.fromBigDecimal(value));
+  }
+
+  get totalPrincipalStableBorrowsUSD(): BigDecimal {
+    let value = this.get("totalPrincipalStableBorrowsUSD");
+    return value.toBigDecimal();
+  }
+
+  set totalPrincipalStableBorrowsUSD(value: BigDecimal) {
+    this.set("totalPrincipalStableBorrowsUSD", Value.fromBigDecimal(value));
+  }
+
   get totalPrincipalVariableBorrows_WEI(): BigInt {
     let value = this.get("totalPrincipalVariableBorrows_WEI");
     return value.toBigInt();
@@ -795,6 +876,24 @@ export class Instrument extends Entity {
 
   set totalPrincipalVariableBorrows(value: BigDecimal) {
     this.set("totalPrincipalVariableBorrows", Value.fromBigDecimal(value));
+  }
+
+  get totalPrincipalVariableBorrowsETH(): BigDecimal {
+    let value = this.get("totalPrincipalVariableBorrowsETH");
+    return value.toBigDecimal();
+  }
+
+  set totalPrincipalVariableBorrowsETH(value: BigDecimal) {
+    this.set("totalPrincipalVariableBorrowsETH", Value.fromBigDecimal(value));
+  }
+
+  get totalPrincipalVariableBorrowsUSD(): BigDecimal {
+    let value = this.get("totalPrincipalVariableBorrowsUSD");
+    return value.toBigDecimal();
+  }
+
+  set totalPrincipalVariableBorrowsUSD(value: BigDecimal) {
+    this.set("totalPrincipalVariableBorrowsUSD", Value.fromBigDecimal(value));
   }
 
   get totalCompoundedEarnings_WEI(): BigInt {
@@ -989,6 +1088,15 @@ export class Instrument extends Entity {
     this.set("lifeTimeBorrows", Value.fromBigDecimal(value));
   }
 
+  get isListedWithSIGH_Mechanism(): boolean {
+    let value = this.get("isListedWithSIGH_Mechanism");
+    return value.toBoolean();
+  }
+
+  set isListedWithSIGH_Mechanism(value: boolean) {
+    this.set("isListedWithSIGH_Mechanism", Value.fromBoolean(value));
+  }
+
   get isSIGHMechanismActivated(): boolean {
     let value = this.get("isSIGHMechanismActivated");
     return value.toBoolean();
@@ -1080,6 +1188,15 @@ export class Instrument extends Entity {
       "present_24HrWindow_InstrumentClosingPriceUSD",
       Value.fromBigDecimal(value)
     );
+  }
+
+  get present_24HrWindow_MaxSIGHSpeed(): BigDecimal {
+    let value = this.get("present_24HrWindow_MaxSIGHSpeed");
+    return value.toBigDecimal();
+  }
+
+  set present_24HrWindow_MaxSIGHSpeed(value: BigDecimal) {
+    this.set("present_24HrWindow_MaxSIGHSpeed", Value.fromBigDecimal(value));
   }
 
   get present_24HrWindow_DeltaBlocks(): BigInt {
@@ -1308,13 +1425,13 @@ export class SIGH_Distribution extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get index(): string {
-    let value = this.get("index");
+  get instrumentAddress(): string {
+    let value = this.get("instrumentAddress");
     return value.toString();
   }
 
-  set index(value: string) {
-    this.set("index", Value.fromString(value));
+  set instrumentAddress(value: string) {
+    this.set("instrumentAddress", Value.fromString(value));
   }
 
   get fromBlockNumber(): BigInt {
@@ -1333,5 +1450,68 @@ export class SIGH_Distribution extends Entity {
 
   set toBlockNumber(value: BigInt) {
     this.set("toBlockNumber", Value.fromBigInt(value));
+  }
+
+  get distribution_Side(): string {
+    let value = this.get("distribution_Side");
+    return value.toString();
+  }
+
+  set distribution_Side(value: string) {
+    this.set("distribution_Side", Value.fromString(value));
+  }
+
+  get suppliers_Speed_WEI(): BigInt {
+    let value = this.get("suppliers_Speed_WEI");
+    return value.toBigInt();
+  }
+
+  set suppliers_Speed_WEI(value: BigInt) {
+    this.set("suppliers_Speed_WEI", Value.fromBigInt(value));
+  }
+
+  get suppliers_Speed(): BigDecimal {
+    let value = this.get("suppliers_Speed");
+    return value.toBigDecimal();
+  }
+
+  set suppliers_Speed(value: BigDecimal) {
+    this.set("suppliers_Speed", Value.fromBigDecimal(value));
+  }
+
+  get borrowers_Speed_WEI(): BigInt {
+    let value = this.get("borrowers_Speed_WEI");
+    return value.toBigInt();
+  }
+
+  set borrowers_Speed_WEI(value: BigInt) {
+    this.set("borrowers_Speed_WEI", Value.fromBigInt(value));
+  }
+
+  get borrowers_Speed(): BigDecimal {
+    let value = this.get("borrowers_Speed");
+    return value.toBigDecimal();
+  }
+
+  set borrowers_Speed(value: BigDecimal) {
+    this.set("borrowers_Speed", Value.fromBigDecimal(value));
+  }
+
+  get staking_Speed_WEI(): BigInt {
+    let value = this.get("staking_Speed_WEI");
+    return value.toBigInt();
+  }
+
+  set staking_Speed_WEI(value: BigInt) {
+    this.set("staking_Speed_WEI", Value.fromBigInt(value));
+  }
+
+  get staking_Speed(): BigDecimal {
+    let value = this.get("staking_Speed");
+    return value.toBigDecimal();
+  }
+
+  set staking_Speed(value: BigDecimal) {
+    this.set("staking_Speed", Value.fromBigDecimal(value));
   }
 }

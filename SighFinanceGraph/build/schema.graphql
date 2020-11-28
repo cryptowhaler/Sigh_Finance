@@ -66,11 +66,13 @@ type Instrument @entity {
     interestRateStrategyAddress: Bytes!
     oracle: Bytes!
 
+    priceETH: BigDecimal! 
+    priceUSD: BigDecimal! 
+
     name: String!
     symbol: String!
     underlyingInstrumentName: String!
     underlyingInstrumentSymbol: String!
-
     decimals: BigInt!
 
     isActive: Boolean!
@@ -83,45 +85,51 @@ type Instrument @entity {
     liquidationThreshold: BigInt!
     liquidationBonus: BigInt!
 
-    priceETH_WEI: BigInt! 
-    priceETHDecimals: BigInt! 
-    priceETH: BigDecimal! 
-
-    priceUSD_WEI: BigInt! 
-    priceUSD: BigDecimal! 
-
-
 
     borrowFeeDue_WEI: BigInt! 
     borrowFeeDue: BigDecimal! 
+    borrowFeeDueETH: BigDecimal!
+    borrowFeeDueUSD: BigDecimal!
 
     borrowFeeEarned_WEI: BigInt! 
     borrowFeeEarned: BigDecimal! 
+    borrowFeeEarnedETH: BigDecimal!
+    borrowFeeEarnedUSD: BigDecimal!
 
     "totalLiquidity_WEI : Present tokenized instrument quantity deposited in SIGH Finance's Lending Pool in WEI (not adjusted by decimal)"    
     totalLiquidity_WEI: BigInt!
     "totalLiquidity : Present tokenized instrument quantity deposited in SIGH Finance's Lending Pool. (Adjusted by decimal)"    
     totalLiquidity: BigDecimal!
+    totalLiquidityETH: BigDecimal!
+    totalLiquidityUSD: BigDecimal!
 
     "availableLiquidity_WEI : totalLiquidity_WEI - totalPrincipalBorrows_WEI, present tokenized instrument quantity available with SIGH Finance's Lending Pool for borrowing. (not adjusted by decimal)"    
     availableLiquidity_WEI: BigInt!
     "availableLiquidity : totalLiquidity - totalPrincipalBorrows, present tokenized instrument quantity available with SIGH Finance's Lending Pool for borrowing. (Adjusted by decimal)"    
     availableLiquidity: BigDecimal!
+    availableLiquidityETH: BigDecimal!
+    availableLiquidityUSD: BigDecimal!
 
     "totalPrincipalBorrows_WEI : totalPrincipalStableBorrows_WEI + totalPrincipalVariableBorrows_WEI, present tokenized instrument's total Principal borrowed quantity taken from SIGH Finance's Lending Pool. (not adjusted by decimal)"    
     totalPrincipalBorrows_WEI: BigInt!
     "totalPrincipalBorrows : totalPrincipalStableBorrows + totalPrincipalVariableBorrows, present tokenized instrument's total Principal borrowed quantity taken from SIGH Finance's Lending Pool. (Adjusted by decimal)"    
     totalPrincipalBorrows: BigDecimal!
+    totalPrincipalBorrowsETH: BigDecimal!
+    totalPrincipalBorrowsUSD: BigDecimal!
 
     "totalPrincipalStableBorrows_WEI :  present tokenized instrument's total Principal borrowed quantity taken at Stable Interest Rate from SIGH Finance's Lending Pool. (not adjusted by decimal)"    
     totalPrincipalStableBorrows_WEI: BigInt!
     "totalPrincipalStableBorrows :  present tokenized instrument's total Principal borrowed quantity taken at Stable Interest Rate from SIGH Finance's Lending Pool. (Adjusted by decimal)"    
     totalPrincipalStableBorrows: BigDecimal!
+    totalPrincipalStableBorrowsETH: BigDecimal!
+    totalPrincipalStableBorrowsUSD: BigDecimal!
 
     "totalPrincipalVariableBorrows_WEI :  present tokenized instrument's total Principal borrowed quantity taken at Variable Interest Rate from SIGH Finance's Lending Pool. (not adjusted by decimal)"    
     totalPrincipalVariableBorrows_WEI: BigInt!
     "totalPrincipalVariableBorrows :  present tokenized instrument's total Principal borrowed quantity taken at Variable Interest Rate from SIGH Finance's Lending Pool. (Adjusted by decimal)"    
     totalPrincipalVariableBorrows: BigDecimal!
+    totalPrincipalVariableBorrowsETH: BigDecimal!
+    totalPrincipalVariableBorrowsUSD: BigDecimal!
 
 
 
@@ -180,7 +188,7 @@ type Instrument @entity {
 
 
 
-
+    isListedWithSIGH_Mechanism: Boolean!
     isSIGHMechanismActivated: Boolean!
 
     SIGH_Supply_Index: BigInt!
@@ -195,6 +203,7 @@ type Instrument @entity {
     present_24HrWindow_InstrumentClosingPriceETH: BigDecimal!
     present_24HrWindow_InstrumentClosingPriceUSD: BigDecimal!
 
+    present_24HrWindow_MaxSIGHSpeed: BigDecimal!
     present_24HrWindow_DeltaBlocks: BigInt!
     present_24HrVolatility_ETH: BigDecimal!
     present_24HrVolatility_USD: BigDecimal!
@@ -219,7 +228,7 @@ type Instrument @entity {
 
     present_VolatilityAddressedPerBlock: BigDecimal!
 
-    SIGH_Distribution_History: [SIGH_Distribution!]! @derivedFrom(field:"index")
+    SIGH_Distribution_History: [SIGH_Distribution!]! @derivedFrom(field:"instrumentAddress")
 
     timeStamp: BigInt!
 }
@@ -228,9 +237,17 @@ type Instrument @entity {
 
 type SIGH_Distribution @entity {
     id: ID!
-    index: Instrument! 
+    instrumentAddress: Instrument! 
     fromBlockNumber: BigInt!
     toBlockNumber: BigInt!
+    distribution_Side: String!
+    suppliers_Speed_WEI: BigInt!
+    suppliers_Speed: BigDecimal!
+    borrowers_Speed_WEI: BigInt!
+    borrowers_Speed: BigDecimal!
+    staking_Speed_WEI: BigInt!
+    staking_Speed: BigDecimal!    
+
 }
 
 

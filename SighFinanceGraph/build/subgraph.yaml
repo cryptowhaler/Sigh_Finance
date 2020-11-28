@@ -41,7 +41,7 @@ dataSources:
     name: Lending_Pool_Core
     network: kovan
     source:
-      address: "0x190f17888c7Ae32af3E677Fb7e752c74c5f24595"
+      address: "0x50A9bA0386cA7020de60B251Fafa0992db860401"
       abi: LendingPoolCore
       startBlock: 22305514
     mapping:
@@ -65,7 +65,7 @@ dataSources:
     name: Lending_Pool
     network: kovan
     source:
-      address: "0x190f17888c7Ae32af3E677Fb7e752c74c5f24595"
+      address: "0xf58D599D44da62a85ADE3026B074b60692e0A5eA"
       abi: LendingPool
       startBlock: 22305514
     mapping:
@@ -113,7 +113,7 @@ dataSources:
     name: Lending_Pool_Configurator
     network: kovan
     source:
-      address: "0x190f17888c7Ae32af3E677Fb7e752c74c5f24595"
+      address: "0xF4c1c67C44b4795F60533B594A190bcF5C8808A2"
       abi: LendingPoolConfigurator
       startBlock: 22305514
     mapping:
@@ -159,3 +159,51 @@ dataSources:
           handler: handleInstrumentInterestRateStrategyChanged
         - event: InstrumentBaseLtvChanged(address,uint256)
           handler: handleInstrumentBaseLtvChanged
+  - kind: ethereum/contract
+    name: Sigh_Distribution_Handler
+    network: kovan
+    source:
+      address: "0x05a5105D411004F224143bA88DD6D87eB6B56d80"
+      abi: SIGHDistributionHandler
+      startBlock: 22305514
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: Sigh_Distribution_Handler/Sigh_Distribution_Handler.wasm
+      entities:
+        - Instruments
+      abis:
+        - name: SIGHDistributionHandler
+          file: Sigh_Distribution_Handler/abis/SIGHDistributionHandler.json
+        - name: PriceOracleGetter
+          file: Sigh_Distribution_Handler/abis/PriceOracleGetter.json
+        - name: ERC20Detailed
+          file: Sigh_Distribution_Handler/abis/ERC20Detailed.json
+      eventHandlers:
+        - event: InstrumentAdded(address,address,uint256,uint256)
+          handler: handleInstrumentAdded
+        - event: InstrumentRemoved(address,uint256)
+          handler: handleInstrumentRemoved
+        - event: InstrumentSIGHed(address,bool,uint256)
+          handler: handleInstrumentSIGHed
+        - event: SIGHSpeedUpdated(uint256,uint256,uint256)
+          handler: handleSIGHSpeedUpdated
+        - event: StakingSpeedUpdated(address,uint256,uint256,uint256)
+          handler: handleStakingSpeedUpdated
+        - event: SpeedUpperCheckSwitched(bool,uint256,uint256)
+          handler: handleSpeedUpperCheckSwitched
+        - event: minimumBlocksForSpeedRefreshUpdated(uint256,uint256,uint256)
+          handler: handleMinimumBlocksForSpeedRefreshUpdated
+        - event: PriceSnapped(address,uint256,uint256,uint256,uint256,uint256)
+          handler: handlePriceSnapped
+        - event: MaxSIGHSpeedCalculated(uint256,uint256,uint256,uint256,uint256,uint256,uint256)
+          handler: handleMaxSIGHSpeedCalculated
+        - event: refreshingSighSpeeds(address,uint256,string,uint256,uint256,uint256,uint256,uint256)
+          handler: handleRefreshingSighSpeeds
+        - event: SIGHSupplyIndexUpdated(address,uint256,uint256,uint256,uint256)
+          handler: handleSIGHSupplyIndexUpdated
+        - event: SIGHBorrowIndexUpdated(address,uint256,uint256,uint256,uint256)
+          handler: handleSIGHBorrowIndexUpdated
+        - event: AccuredSIGHTransferredToTheUser(address,address,uint256)
+          handler: handleAccuredSIGHTransferredToTheUser

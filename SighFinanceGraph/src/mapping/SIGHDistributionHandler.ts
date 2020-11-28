@@ -8,16 +8,42 @@ import { Instrument } from "../../generated/schema"
 export function handleInstrumentAdded(event: InstrumentAdded): void {
     let instrumentId = event.params.instrumentAddress_.toHexString()
     let instrumentState = Instrument.load(instrumentId)
+    instrumentState.isListedWithSIGH_Mechanism = true
+    instrumentState.isSIGHMechanismActivated = false
+    instrumentState.SIGH_Supply_Index = BigInt.fromI32(10).pow(new BigInt(36) as u8)  
+    instrumentState.SIGH_Supply_Index_lastUpdatedBlock = event.block.number
+    instrumentState.SIGH_Borrow_Index = BigInt.fromI32(10).pow(new BigInt(36) as u8)  
+    instrumentState.SIGH_Borrow_Index_lastUpdatedBlock =  event.block.number
+
+    instrumentState.present_SIGH_Distribution_Side = 'inActive'
+    instrumentState.present_SIGH_Suppliers_Speed_WEI = BigInt.fromI32(0)
+    instrumentState.present_SIGH_Suppliers_Speed = BigInt.fromI32(0).toBigDecimal()
+    instrumentState.present_SIGH_Borrowers_Speed_WEI = BigInt.fromI32(0)
+    instrumentState.present_SIGH_Borrowers_Speed = BigInt.fromI32(0).toBigDecimal()
+    instrumentState.present_SIGH_Staking_Speed_WEI = BigInt.fromI32(0)
+    instrumentState.present_SIGH_Staking_Speed = BigInt.fromI32(0).toBigDecimal()
+
+    instrumentState.present_SIGH_DistributionValuePerBlock_ETH = BigInt.fromI32(0).toBigDecimal()
+    instrumentState.present_SIGH_DistributionValuePerBlock_USD = BigInt.fromI32(0).toBigDecimal()
+    
+    instrumentState.present_VolatilityAddressedPerBlock = BigInt.fromI32(0).toBigDecimal()
+    instrumentState.save()
+
 }
 
 export function handleInstrumentRemoved(event: InstrumentRemoved): void {
     let instrumentId = event.params._instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
+    instrumentState.isListedWithSIGH_Mechanism = false
+    instrumentState.isSIGHMechanismActivated = false
+    instrumentState.save()
 }
 
 export function handleInstrumentSIGHed(event: InstrumentSIGHed): void {
     let instrumentId = event.params.instrumentAddress_.toHexString()
     let instrumentState = Instrument.load(instrumentId)
+    instrumentState.isSIGHMechanismActivated = true
+    instrumentState.save()
 }
 
 export function handleSIGHSpeedUpdated(event: SIGHSpeedUpdated): void {
@@ -26,6 +52,9 @@ export function handleSIGHSpeedUpdated(event: SIGHSpeedUpdated): void {
 export function handleStakingSpeedUpdated(event: StakingSpeedUpdated): void {
     let instrumentId = event.params.instrumentAddress_.toHexString()
     let instrumentState = Instrument.load(instrumentId)
+    instrumentState.present_SIGH_Staking_Speed_WEI = event.params.new_staking_Speed
+    instrumentState.present_SIGH_Staking_Speed = instrumentState.present_SIGH_Staking_Speed_WEI.divDecimal( (BigInt.fromI32(10).pow(instrumentState.decimals as u8).toBigDecimal()) )
+    instrumentState.save()
 }
 
 export function handleSpeedUpperCheckSwitched(event: SpeedUpperCheckSwitched): void {
@@ -39,8 +68,8 @@ export function handleMinimumBlocksForSpeedRefreshUpdated(event: minimumBlocksFo
 }
 
 export function handlePriceSnapped(event: PriceSnapped): void {
-    let instrumentId = event.params.instrument.toHexString()
-    let instrumentState = Instrument.load(instrumentId)
+    // let instrumentId = event.params.instrument.toHexString()
+    // let instrumentState = Instrument.load(instrumentId)
 }
 
 export function handleMaxSIGHSpeedCalculated(event: MaxSIGHSpeedCalculated): void {
@@ -51,20 +80,38 @@ export function handleMaxSIGHSpeedCalculated(event: MaxSIGHSpeedCalculated): voi
 export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
     let instrumentId = event.params._Instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
+    instrumentState.present_SIGH_Suppliers_Speed_WEI = event.params.supplierSpeed
+    instrumentState.present_SIGH_Suppliers_Speed = instrumentState.present_SIGH_Suppliers_Speed_WEI.divDecimal( (BigInt.fromI32(10).pow(instrumentState.decimals as u8).toBigDecimal()) )
+    instrumentState.present_SIGH_Borrowers_Speed_WEI = event.params.borrowerSpeed
+    instrumentState.present_SIGH_Borrowers_Speed = instrumentState.present_SIGH_Borrowers_Speed_WEI.divDecimal( (BigInt.fromI32(10).pow(instrumentState.decimals as u8).toBigDecimal()) )
+
+    instrumentState.present_24HrVolatility_ETH = event.params._24HrVolatility.toBigDecimal()
+    instrumentState.present_percentTotalVolatility = event.params.percentTotalVolatility.toBigDecimal().div(BigDecimal.fromString('10000'))
+    instrumentState.present_TotalVolatility_ETH = event.params.totalLosses.toBigDecimal()
+    instrumentState.present_24HrWindow_MaxSIGHSpeed = event.params.maxSpeed.toBigDecimal()
+    instrumentState.present_SIGH_Distribution_Side = event.params.side
+
+    instrumentState.save()
 }
 
 export function handleSIGHSupplyIndexUpdated(event: SIGHSupplyIndexUpdated): void {
     let instrumentId = event.params.instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
+    instrumentState.SIGH_Supply_Index = event.params.newIndexMantissa
+    instrumentState.SIGH_Supply_Index_lastUpdatedBlock = event.params.blockNum
+    instrumentState.save()
 }
 
 export function handleSIGHBorrowIndexUpdated(event: SIGHBorrowIndexUpdated): void {
     let instrumentId = event.params.instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
+    instrumentState.SIGH_Borrow_Index = event.params.newIndexMantissa
+    instrumentState.SIGH_Borrow_Index_lastUpdatedBlock = event.params.blockNum
+    instrumentState.save()
 }
 
 export function handleAccuredSIGHTransferredToTheUser(event: AccuredSIGHTransferredToTheUser): void {
     let instrumentId = event.params.instrument.toHexString()
-    let instrumentState = Instrument.load(instrumentId)
+    // let instrumentState = Instrument.load(instrumentId)
 }
 
