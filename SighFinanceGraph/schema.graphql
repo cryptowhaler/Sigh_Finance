@@ -1,7 +1,9 @@
 type SIGH_Instrument @entity {
     "ID is contract address"
     id: ID!
+    creationBlockNumber: BigInt!
     address: Bytes!
+    name: String!
     symbol: String!
     decimals: BigInt!
     priceETH: BigDecimal!
@@ -32,6 +34,8 @@ type SIGH_Instrument @entity {
 
 type MintSnapshot @entity {
     id: ID!
+    priceETH: BigDecimal!
+    priceUSD: BigDecimal!
     instrument_sigh: SIGH_Instrument! 
     schedule: BigInt!
     inflationRate: BigDecimal!

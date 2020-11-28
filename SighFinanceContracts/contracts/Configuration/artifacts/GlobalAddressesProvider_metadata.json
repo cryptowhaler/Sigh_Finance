@@ -872,7 +872,7 @@
 						"type": "address"
 					}
 				],
-				"name": "setSIGHStakingImpl",
+				"name": "setSIGHStaking",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -996,7 +996,7 @@
 						"_SIGHSpeedController": "the SIGH Speed Controller implementation*"
 					}
 				},
-				"setSIGHStakingImpl(address)": {
+				"setSIGHStaking(address)": {
 					"details": "updates the address of the SIGH Distribution Handler Contract (Manages the SIGH Speeds)",
 					"params": {
 						"_SIGHStaking": "the new lending pool liquidation manager address*"
@@ -1023,7 +1023,7 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
@@ -1037,17 +1037,17 @@
 			]
 		},
 		"localhost/contracts/Configuration/GlobalAddressesProvider.sol": {
-			"keccak256": "0x5310631fce62fd0b130b3dd17ea42fdaf15e669ff38d3215883033ba3ab130c7",
+			"keccak256": "0x7bcc04af3342681228371dca3aa6f0dfb2d3e7ba13ae28ff6547fc3f1d30d3b4",
 			"urls": [
-				"bzz-raw://cd78074a70018b3dd57649c93702cb85758151b7e153750903484eeb89d2587a",
-				"dweb:/ipfs/QmWFoi9YgJVuaBThwVMLE9hYjrZtZhsYN8fNj59sCsi4kr"
+				"bzz-raw://fef78d95c89d5467df1d6cbc122b40d3ddde414de0e5a3ea2a878485eb0e9642",
+				"dweb:/ipfs/QmSkP9rA6WG34hHqNQC8B2g8dpnPZQJp71td6GVpN8zrxP"
 			]
 		},
 		"localhost/contracts/Configuration/IGlobalAddressesProvider.sol": {
-			"keccak256": "0x3cac9f73a1e6cbd9bdd703519a1a43bd8215f284910dda0807440d01193178b3",
+			"keccak256": "0xefeb61dea52cfa0dcc34ea94d1f402389f598cf8ba238a7a6473cced72d2b73d",
 			"urls": [
-				"bzz-raw://e33089eb2c49cbc820f1aeb05e48d041a22838681769dfca9fdae797ee37f26f",
-				"dweb:/ipfs/QmNRwngcxxRd5LkNKTDm68kgrQ3K2aYvxFVVDF3Sm8RcYH"
+				"bzz-raw://a8e77e69d2855a84c0f1ab2e833ecb6656f46512ac4583e2ea7c8c5aa800f655",
+				"dweb:/ipfs/Qme7SjV9Ax6nPoirbgg8WBQ2UxTQESUC6KbDNSwcrzVyp9"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

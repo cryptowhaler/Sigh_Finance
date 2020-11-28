@@ -42,6 +42,15 @@ export class SIGH_Instrument extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get creationBlockNumber(): BigInt {
+    let value = this.get("creationBlockNumber");
+    return value.toBigInt();
+  }
+
+  set creationBlockNumber(value: BigInt) {
+    this.set("creationBlockNumber", Value.fromBigInt(value));
+  }
+
   get address(): Bytes {
     let value = this.get("address");
     return value.toBytes();
@@ -49,6 +58,15 @@ export class SIGH_Instrument extends Entity {
 
   set address(value: Bytes) {
     this.set("address", Value.fromBytes(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    return value.toString();
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
   }
 
   get symbol(): string {
@@ -269,6 +287,24 @@ export class MintSnapshot extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get priceETH(): BigDecimal {
+    let value = this.get("priceETH");
+    return value.toBigDecimal();
+  }
+
+  set priceETH(value: BigDecimal) {
+    this.set("priceETH", Value.fromBigDecimal(value));
+  }
+
+  get priceUSD(): BigDecimal {
+    let value = this.get("priceUSD");
+    return value.toBigDecimal();
+  }
+
+  set priceUSD(value: BigDecimal) {
+    this.set("priceUSD", Value.fromBigDecimal(value));
   }
 
   get instrument_sigh(): string {

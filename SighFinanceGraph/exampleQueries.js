@@ -29,3 +29,25 @@
 //       oracle 
 //     }
 //   }
+
+
+
+// {
+//     mintSnapshots(first: 5) {
+//       id
+//       schedule
+//       inflationRate
+//       mintedAmount_WEI
+//       mintedAmount
+//       totalSupply_WEI
+//       totalSupply
+//       mintSpeed_WEI
+//       mintSpeed
+//       burnSpeed_WEI
+//       burnSpeed
+//       totalSighBurnt_WEI
+//       totalSighBurnt
+//       minter
+//       blockNumber
+//     }
+//   }

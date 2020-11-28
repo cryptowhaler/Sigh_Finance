@@ -85,7 +85,7 @@ interface IGlobalAddressesProvider  {
     function setSIGHMechanismHandlerImpl(address _SIGHDistributionHandler) external;             //  ADDED FOR SIGH FINANCE 
 
     function getSIGHStaking() external view returns (address);                      //  ADDED FOR SIGH FINANCE 
-    function setSIGHStakingImpl(address _SIGHDistributionHandler) external;             //  ADDED FOR SIGH FINANCE 
+    function setSIGHStaking(address _SIGHDistributionHandler) external;             //  ADDED FOR SIGH FINANCE 
 
 // #######################################################
 // ####___________ PRICE ORACLE CONTRACT _____________####

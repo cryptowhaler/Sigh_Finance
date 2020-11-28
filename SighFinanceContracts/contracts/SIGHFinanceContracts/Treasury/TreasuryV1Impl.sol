@@ -133,7 +133,7 @@ contract Treasury is VersionedInitializable   {
 
 // ################################################################################################################ 
 // ###########   BURN SIGH TOKENS  ################################################################################
-// ###########   1. changeSIGHBurnAllowed() : Activates / Deactivates SIGH Burn (onlySighFinanceConfigurator) #####
+// ###########   1. switchSIGHBurnAllowed() : Activates / Deactivates SIGH Burn (onlySighFinanceConfigurator) #####
 // ###########   2. updateSIGHBurnSpeed() : Updates the SIGH Burn Speed (onlySighFinanceConfigurator) #############
 // ###########   3. burnSIGHTokens() : Public Function. Allows anyone to burn SIGH Tokens. ########################
 // ################################################################################################################

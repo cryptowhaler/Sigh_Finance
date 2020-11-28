@@ -1205,40 +1205,39 @@ contract LendingPoolCore is VersionedInitializable {
     * @dev removes the last added instrument in the instrumentsList array
     * @param _instrumentToRemove the address of the instrument
     **/
-    function removeInstrument(address _instrumentToRemove) external onlyLendingPoolConfigurator returns (bool) {
+    // function removeInstrument(address _instrumentToRemove) external onlyLendingPoolConfigurator returns (bool) {
 
-        address lastInstrument = instrumentsList[instrumentsList.length-1];
-        //as we can't check if totalLiquidity is 0 (since the instrument added might not be an ERC20) we at least check that there is nothing borrowed
-        require(getInstrumentTotalBorrows(_instrumentToRemove) == 0, "Cannot remove an Instrument with open Borrows");
-        require(getInstrumentTotalLiquidity(_instrumentToRemove) == 0, "Cannot remove an Instrument with non-zero Liquidity");
+    //     //as we can't check if totalLiquidity is 0 (since the instrument added might not be an ERC20) we at least check that there is nothing borrowed
+    //     require(getInstrumentTotalBorrows(_instrumentToRemove) == 0, "Cannot remove an Instrument with open Borrows");
+    //     require(getInstrumentTotalLiquidity(_instrumentToRemove) == 0, "Cannot remove an Instrument with non-zero Liquidity");
 
-        reserves[_instrumentToRemove].isActive = false;
-        reserves[_instrumentToRemove].borrowingEnabled = false;
-        reserves[_instrumentToRemove].usageAsCollateralEnabled = false;
-        reserves[_instrumentToRemove].interestRateStrategyAddress = address(0);
-        reserves[_instrumentToRemove].iTokenAddress = address(0);
-        reserves[_instrumentToRemove].decimals = 0;
-        reserves[_instrumentToRemove].lastLiquidityCumulativeIndex = 0;
-        reserves[_instrumentToRemove].lastVariableBorrowCumulativeIndex = 0;
-        reserves[_instrumentToRemove].baseLTVasCollateral = 0;
-        reserves[_instrumentToRemove].liquidationThreshold = 0;
-        reserves[_instrumentToRemove].liquidationBonus = 0;
+    //     delete reserves[_instrumentToRemove];
+    //     // reserves[_instrumentToRemove].borrowingEnabled = false;
+    //     // reserves[_instrumentToRemove].usageAsCollateralEnabled = false;
+    //     // reserves[_instrumentToRemove].interestRateStrategyAddress = address(0);
+    //     // reserves[_instrumentToRemove].iTokenAddress = address(0);
+    //     // reserves[_instrumentToRemove].decimals = 0;
+    //     // reserves[_instrumentToRemove].lastLiquidityCumulativeIndex = 0;
+    //     // reserves[_instrumentToRemove].lastVariableBorrowCumulativeIndex = 0;
+    //     // reserves[_instrumentToRemove].baseLTVasCollateral = 0;
+    //     // reserves[_instrumentToRemove].liquidationThreshold = 0;
+    //     // reserves[_instrumentToRemove].liquidationBonus = 0;
 
-        uint index = 0;
-        uint length_ = instrumentsList.length;
-        for (uint i = 0 ; i < length_ ; i++) {
-            if (instrumentsList[i] == _instrumentToRemove) {
-                index = i;
-                break;
-            }
-        }
-        instrumentsList[index] = instrumentsList[length_ - 1];
-        instrumentsList.length--;
-        uint newLen = length_ - 1;
-        require(instrumentsList.length == newLen,"Instrument not properly removed from the list of instruments supported by SIGH Finance's Lending Protocol");
-        require(sighMechanism.removeInstrument(_instrumentToRemove ),"Instrument not properly removed from the list of instruments supported by SIGH FINANCE's SIGH Mechanism");
-        return true;
-    }
+    //     uint index = 0;
+    //     uint length_ = instrumentsList.length;
+    //     for (uint i = 0 ; i < length_ ; i++) {
+    //         if (instrumentsList[i] == _instrumentToRemove) {
+    //             index = i;
+    //             break;
+    //         }
+    //     }
+    //     instrumentsList[index] = instrumentsList[length_ - 1];
+    //     instrumentsList.length--;
+    //     uint newLen = length_ - 1;
+    //     require(instrumentsList.length == newLen,"Instrument not properly removed from the list of instruments supported by SIGH Finance's Lending Protocol");
+    //     require(sighMechanism.removeInstrument(_instrumentToRemove ),"Instrument not properly removed from the list of instruments supported by SIGH FINANCE's SIGH Mechanism");
+    //     return true;
+    // }
 
     /**
     * @dev updates the address of the interest rate strategy contract

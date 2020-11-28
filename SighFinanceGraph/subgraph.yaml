@@ -9,7 +9,7 @@ dataSources:
     name: SIGH
     network: kovan
     source:
-      address: "0xE55Fe5943fc1e666e7D6D7ede0749740f5D41408"
+      address: "0xF56E9e83Ad39cF32F15c603404C05b02DB986e5E"
       abi: SIGH
       startBlock: 22305514
     mapping:
@@ -40,129 +40,129 @@ dataSources:
           
 
 
-  # - kind: ethereum/contract
-  #   name: Lending_Pool_Core
-  #   network: kovan
-  #   source:
-  #     address: "0x190f17888c7Ae32af3E677Fb7e752c74c5f24595"
-  #     abi: LendingPoolCore
-  #     startBlock: 22305514
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.4
-  #     language: wasm/assemblyscript
-  #     file: ./src/mapping/LendingPoolCore.ts
-  #     entities:
-  #       - Instruments
-  #     abis:
-  #     - name: LendingPoolCore
-  #       file: ./abis/LendingPoolCore.json
-  #     - name: PriceOracleGetter
-  #       file: ./abis/PriceOracleGetter.json
-  #     - name: ERC20Detailed
-  #       file: ./abis/ERC20Detailed.json
-  #     eventHandlers:
-  #       - event: InstrumentUpdated(indexed address,uint256,uint256,uint256,uint256,uint256)
-  #         handler: handleInstrumentUpdated
+  - kind: ethereum/contract
+    name: Lending_Pool_Core
+    network: kovan
+    source:
+      address: "0x190f17888c7Ae32af3E677Fb7e752c74c5f24595"
+      abi: LendingPoolCore
+      startBlock: 22305514
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping/LendingPoolCore.ts
+      entities:
+        - Instruments
+      abis:
+      - name: LendingPoolCore
+        file: ./abis/LendingPoolCore.json
+      - name: PriceOracleGetter
+        file: ./abis/PriceOracleGetter.json
+      - name: ERC20Detailed
+        file: ./abis/ERC20Detailed.json
+      eventHandlers:
+        - event: InstrumentUpdated(indexed address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleInstrumentUpdated
 
 
 
-  # - kind: ethereum/contract
-  #   name: Lending_Pool
-  #   network: kovan
-  #   source:
-  #     address: "0x190f17888c7Ae32af3E677Fb7e752c74c5f24595"
-  #     abi: LendingPool
-  #     startBlock: 22305514
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.4
-  #     language: wasm/assemblyscript
-  #     file: ./src/mapping/LendingPool.ts
-  #     entities:
-  #       - Instruments
-  #     abis:
-  #     - name: LendingPool
-  #       file: ./abis/LendingPool.json
-  #     - name: PriceOracleGetter
-  #       file: ./abis/PriceOracleGetter.json
-  #     - name: ERC20Detailed
-  #       file: ./abis/ERC20Detailed.json
-  #     eventHandlers:
-  #       - event: Deposit(indexed address,indexed address,uint256,uint16,uint256)
-  #         handler: handleDeposit
-  #       - event: RedeemUnderlying(indexed address,indexed address,uint256,uint256)
-  #         handler: handleRedeemUnderlying
-  #       - event: Borrow(indexed address,indexed address,uint256,uint256,uint256,uint256,uint256,uint16,uint256)
-  #         handler: handleBorrow
-  #       - event: Repay(indexed address,indexed address,indexed address,uint256,uint256,uint256,uint256)
-  #         handler: handleRepay
-  #       - event: Swap(indexed address,indexed address,uint256,uint256,uint256,uint256)
-  #         handler: handleSwap
-  #       - event: InstrumentUsedAsCollateralEnabled(indexed address,indexed address)
-  #         handler: handleInstrumentUsedAsCollateralEnabled
-  #       - event: InstrumentUsedAsCollateralDisabled(indexed address,indexed address)
-  #         handler: handleInstrumentUsedAsCollateralDisabled
-  #       - event: RebalanceStableBorrowRate(indexed address,indexed address,uint256,uint256,uint256)
-  #         handler: handleRebalanceStableBorrowRate
-  #       - event: FlashLoan(indexed address,indexed address,uint256,uint256,uint256,uint256)
-  #         handler: handleFlashLoan
-  #       - event: OriginationFeeLiquidated(indexed address,indexed address,indexed address,uint256,uint256,uint256)
-  #         handler: handleOriginationFeeLiquidated
-  #       - event: LiquidationCall(indexed address,indexed address,indexed address,uint256,uint256,uint256,address,bool,uint256)
-  #         handler: handleLiquidationCall
+  - kind: ethereum/contract
+    name: Lending_Pool
+    network: kovan
+    source:
+      address: "0x190f17888c7Ae32af3E677Fb7e752c74c5f24595"
+      abi: LendingPool
+      startBlock: 22305514
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping/LendingPool.ts
+      entities:
+        - Instruments
+      abis:
+      - name: LendingPool
+        file: ./abis/LendingPool.json
+      - name: PriceOracleGetter
+        file: ./abis/PriceOracleGetter.json
+      - name: ERC20Detailed
+        file: ./abis/ERC20Detailed.json
+      eventHandlers:
+        - event: Deposit(indexed address,indexed address,uint256,uint16,uint256)
+          handler: handleDeposit
+        - event: RedeemUnderlying(indexed address,indexed address,uint256,uint256)
+          handler: handleRedeemUnderlying
+        - event: Borrow(indexed address,indexed address,uint256,uint256,uint256,uint256,uint256,uint16,uint256)
+          handler: handleBorrow
+        - event: Repay(indexed address,indexed address,indexed address,uint256,uint256,uint256,uint256)
+          handler: handleRepay
+        - event: Swap(indexed address,indexed address,uint256,uint256,uint256,uint256)
+          handler: handleSwap
+        - event: InstrumentUsedAsCollateralEnabled(indexed address,indexed address)
+          handler: handleInstrumentUsedAsCollateralEnabled
+        - event: InstrumentUsedAsCollateralDisabled(indexed address,indexed address)
+          handler: handleInstrumentUsedAsCollateralDisabled
+        - event: RebalanceStableBorrowRate(indexed address,indexed address,uint256,uint256,uint256)
+          handler: handleRebalanceStableBorrowRate
+        - event: FlashLoan(indexed address,indexed address,uint256,uint256,uint256,uint256)
+          handler: handleFlashLoan
+        - event: OriginationFeeLiquidated(indexed address,indexed address,indexed address,uint256,uint256,uint256)
+          handler: handleOriginationFeeLiquidated
+        - event: LiquidationCall(indexed address,indexed address,indexed address,uint256,uint256,uint256,address,bool,uint256)
+          handler: handleLiquidationCall
 
 
-  # - kind: ethereum/contract
-  #   name: Lending_Pool_Configurator
-  #   network: kovan
-  #   source:
-  #     address: "0x190f17888c7Ae32af3E677Fb7e752c74c5f24595"
-  #     abi: LendingPoolConfigurator
-  #     startBlock: 22305514
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.4
-  #     language: wasm/assemblyscript
-  #     file: ./src/mapping/LendingPoolConfigurator.ts
-  #     entities:
-  #       - Instruments
-  #     abis:
-  #     - name: LendingPoolConfigurator
-  #       file: ./abis/LendingPoolConfigurator.json
-  #     - name: PriceOracleGetter
-  #       file: ./abis/PriceOracleGetter.json
-  #     - name: ERC20Detailed
-  #       file: ./abis/ERC20Detailed.json
-  #     eventHandlers:
-  #       - event: InstrumentInitialized(indexed address,indexed address,address)
-  #         handler: handleInstrumentInitialized
-  #       - event: InstrumentRemoved(indexed address)
-  #         handler: handleInstrumentRemoved
-  #       - event: BorrowingEnabledOnInstrument(indexed address)
-  #         handler: handleBorrowingEnabledOnInstrument
-  #       - event: BorrowingDisabledOnInstrument(indexed address)
-  #         handler: handleBorrowingDisabledOnInstrument
-  #       - event: InstrumentEnabledAsCollateral(indexed address,uint256,uint256,uint256)
-  #         handler: handleInstrumentEnabledAsCollateral
-  #       - event: InstrumentDisabledAsCollateral(indexed address)
-  #         handler: handleInstrumentDisabledAsCollateral
-  #       - event: StableRateOnInstrumentSwitched(indexed address,bool)
-  #         handler: handleStableRateOnInstrumentSwitched
-  #       - event: InstrumentActivated(indexed address)
-  #         handler: handleInstrumentActivated
-  #       - event: InstrumentDeactivated(indexed address)
-  #         handler: handleInstrumentDeactivated
-  #       - event: InstrumentFreezeSwitched(indexed address,bool)
-  #         handler: handleInstrumentFreezeSwitched
-  #       - event: InstrumentLiquidationThresholdChanged(address,uint256)
-  #         handler: handleInstrumentLiquidationThresholdChanged
-  #       - event: InstrumentLiquidationBonusChanged(address,uint256)
-  #         handler: handleInstrumentLiquidationBonusChanged
-  #       - event: InstrumentInterestRateStrategyChanged(address,address)
-  #         handler: handleInstrumentInterestRateStrategyChanged
-  #       - event: InstrumentBaseLtvChanged(address,uint256)
-  #         handler: handleInstrumentBaseLtvChanged
+  - kind: ethereum/contract
+    name: Lending_Pool_Configurator
+    network: kovan
+    source:
+      address: "0x190f17888c7Ae32af3E677Fb7e752c74c5f24595"
+      abi: LendingPoolConfigurator
+      startBlock: 22305514
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping/LendingPoolConfigurator.ts
+      entities:
+        - Instruments
+      abis:
+      - name: LendingPoolConfigurator
+        file: ./abis/LendingPoolConfigurator.json
+      - name: PriceOracleGetter
+        file: ./abis/PriceOracleGetter.json
+      - name: ERC20Detailed
+        file: ./abis/ERC20Detailed.json
+      eventHandlers:
+        - event: InstrumentInitialized(indexed address,indexed address,address)
+          handler: handleInstrumentInitialized
+        - event: InstrumentRemoved(indexed address)
+          handler: handleInstrumentRemoved
+        - event: BorrowingEnabledOnInstrument(indexed address)
+          handler: handleBorrowingEnabledOnInstrument
+        - event: BorrowingDisabledOnInstrument(indexed address)
+          handler: handleBorrowingDisabledOnInstrument
+        - event: InstrumentEnabledAsCollateral(indexed address,uint256,uint256,uint256)
+          handler: handleInstrumentEnabledAsCollateral
+        - event: InstrumentDisabledAsCollateral(indexed address)
+          handler: handleInstrumentDisabledAsCollateral
+        - event: StableRateOnInstrumentSwitched(indexed address,bool)
+          handler: handleStableRateOnInstrumentSwitched
+        - event: InstrumentActivated(indexed address)
+          handler: handleInstrumentActivated
+        - event: InstrumentDeactivated(indexed address)
+          handler: handleInstrumentDeactivated
+        - event: InstrumentFreezeSwitched(indexed address,bool)
+          handler: handleInstrumentFreezeSwitched
+        - event: InstrumentLiquidationThresholdChanged(address,uint256)
+          handler: handleInstrumentLiquidationThresholdChanged
+        - event: InstrumentLiquidationBonusChanged(address,uint256)
+          handler: handleInstrumentLiquidationBonusChanged
+        - event: InstrumentInterestRateStrategyChanged(address,address)
+          handler: handleInstrumentInterestRateStrategyChanged
+        - event: InstrumentBaseLtvChanged(address,uint256)
+          handler: handleInstrumentBaseLtvChanged
 
 
 

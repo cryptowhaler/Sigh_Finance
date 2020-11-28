@@ -8,26 +8,23 @@ import { PriceOracleGetter } from '../../generated/SIGH/PriceOracleGetter'
 
 
 export function handleSIGHMinted(event: SIGHMinted): void {
-  log.info('handleSIGHMinted : 1st',[])
   let sighID = event.address.toHexString()
   let sigh_state = SIGH_Instrument.load(sighID)
 
   if (sigh_state == null) {
     sigh_state = createSIGH(sighID)
+    sigh_state.creationBlockNumber = event.block.number
   }
-  log.info('handleSIGHMinted : 2 - sigh_state.address : {}',[sigh_state.address.toHexString()])
-
   sigh_state.address = Address.fromString(sighID)
-
-  log.info('handleSIGHMinted : 3 - sigh_state.address : {}',[sigh_state.address.toHexString()])
 
   sigh_state.currentCycle = event.params.cycle
   let contract = SIGH.bind(Address.fromString(event.address.toHexString()))
   sigh_state.currentSchedule = contract.getCurrentSchedule()
+
   if ( contract.getCurrentInflationRate().toBigDecimal() > BigDecimal.fromString('1') ) {
-    log.info('Inside the if condition',[])
     sigh_state.currentInflation = BigDecimal.fromString('1').div(contract.getCurrentInflationRate().toBigDecimal())
   } 
+
   sigh_state.currentMintSpeed_WEI = contract.getCurrentMintSpeed()
   sigh_state.currentMintSpeed =  sigh_state.currentMintSpeed_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
 
@@ -53,16 +50,21 @@ export function handleSIGHMinted(event: SIGHMinted): void {
   mint_snapshot.totalSighBurnt_WEI = sigh_state.totalSIGHBurnt_WEI
   mint_snapshot.totalSighBurnt  = sigh_state.totalSIGHBurnt 
   mint_snapshot.blockNumber = event.params.block_number
-  mint_snapshot.save();
 
   sigh_state.totalSupply_WEI = mint_snapshot.totalSupply_WEI
   sigh_state.totalSupply  = mint_snapshot.totalSupply
-
   sigh_state.save()
 
-  if (event.block.number >  BigInt.fromI32(22307212) ) {
+  if (event.block.number >  BigInt.fromI32(22315212) ) {
     updateSIGHPrice(sighID)
   }
+
+  mint_snapshot.priceETH = sigh_state.priceETH
+  mint_snapshot.priceUSD = sigh_state.priceUSD
+  mint_snapshot.save();
+
+
+
 }
 
 
@@ -74,13 +76,13 @@ export function handleMintingInitialized(event: MintingInitialized): void {
   let sigh_state = SIGH_Instrument.load(sighID)
   if (sigh_state == null) {
     sigh_state = createSIGH(sighID)
+    sigh_state.creationBlockNumber = event.block.number
   }
   sigh_state.treasury = event.params.treasury
   sigh_state.speedController = event.params.speedController
-
   sigh_state.save()
 
-  if (event.block.number >  BigInt.fromI32(22307212) ) {
+  if (event.block.number >  BigInt.fromI32(22315212) ) {
     updateSIGHPrice(sighID)
   }
 }
@@ -107,7 +109,7 @@ export function handleSIGHBurned(event: SIGHBurned): void {
   sigh_state.currentMintSpeed =  sigh_state.currentMintSpeed_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
   sigh_state.save()
 
-  if (event.block.number >  BigInt.fromI32(22307212) ) {
+  if (event.block.number >  BigInt.fromI32(22315212) ) {
     updateSIGHPrice(sighID)
   }
 }
@@ -126,24 +128,24 @@ export function handleNewSchedule(event: NewSchedule): void {
 
   sigh_state.save()
 
-  if (event.block.number >  BigInt.fromI32(22307212) ) {
+  if (event.block.number >  BigInt.fromI32(22315212) ) {
     updateSIGHPrice(sighID)
   }
 }
 
 
 export function handleTransfer(event: Transfer): void {
-  log.info('handleTransfer : 1st',[])
   let sighID = event.address.toHexString()
   let sigh_state = SIGH_Instrument.load(sighID)
 
   if (sigh_state == null) {
     sigh_state = createSIGH(sighID)
+    sigh_state.creationBlockNumber = event.block.number    
   }
   sigh_state.address = Address.fromString(sighID)
   sigh_state.save()
 
-  if (event.block.number >  BigInt.fromI32(22307212) ) {
+  if (event.block.number >  BigInt.fromI32(22315212) ) {
     updateSIGHPrice(sighID)
   }
 }
@@ -162,8 +164,8 @@ function updateSIGHPrice( ID: string ) : void {
   sigh_state.priceETH = priceInETH.div( BigInt.fromI32(10).pow(priceInETH_Decimals as u8).toBigDecimal() ) 
 
   // GETTING ETH PRICE IN USD
-  let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x514b7b5E0703a373D686Eb5429C117EBe925EdE6')).toBigDecimal()
-  let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x514b7b5E0703a373D686Eb5429C117EBe925EdE6'))
+  let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x1b563766d835b49C5A7D9f5a0893d28e35746818')).toBigDecimal()
+  let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x1b563766d835b49C5A7D9f5a0893d28e35746818'))
   let ETHPriceInUSD = ETH_PriceInUSD.div(  BigInt.fromI32(10).pow(ETH_PriceInUSDDecimals as u8).toBigDecimal() )
   sigh_state.priceUSD = sigh_state.priceETH.times(ETHPriceInUSD)
 
@@ -179,12 +181,15 @@ function updateSIGHPrice( ID: string ) : void {
 export function createSIGH(addressID: string): SIGH_Instrument {
   let sigh_token_contract = new SIGH_Instrument(addressID)
   log.info('createSIGH : 1st',[])
+  let contract = ERC20Detailed.bind(Address.fromString(addressID))
+  sigh_token_contract.name = contract.name()
+
   sigh_token_contract.address = Address.fromString('0x0000000000000000000000000000000000000000',)
   sigh_token_contract.symbol = 'SIGH'
   sigh_token_contract.decimals = BigInt.fromI32(18)
   sigh_token_contract.treasury = Address.fromString('0x0000000000000000000000000000000000000000',)
   sigh_token_contract.speedController = Address.fromString('0x0000000000000000000000000000000000000000',)
-
+  sigh_token_contract.creationBlockNumber =  new BigInt(0)
   sigh_token_contract.totalSupply_WEI = new BigInt(0)
   sigh_token_contract.totalSupply = BigDecimal.fromString('0')
 
@@ -206,7 +211,7 @@ export function createSIGH(addressID: string): SIGH_Instrument {
   sigh_token_contract.priceETH = BigDecimal.fromString('0')
   sigh_token_contract.priceUSD = BigDecimal.fromString('0')
 
-  sigh_token_contract.oracle = Address.fromString('0xC8A6BCb348De7844BDd83632CEd39aDa8Fd8155b',) 
+  sigh_token_contract.oracle = Address.fromString('0xdFDE2BCB133A2E6d6e6889D1b27a0c4857BED3A1',) 
 
   sigh_token_contract.save()
   return sigh_token_contract as SIGH_Instrument

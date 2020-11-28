@@ -442,8 +442,8 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
     * @dev updates the address of the SIGH Distribution Handler Contract (Manages the SIGH Speeds)
     * @param _SIGHStaking the new lending pool liquidation manager address
     **/
-    function setSIGHStakingImpl(address _SIGHStaking) external onlySIGHFinanceManager  { 
-        updateImplInternal(SIGH_STAKING, _SIGHStaking);
+    function setSIGHStaking(address _SIGHStaking) external onlySIGHFinanceManager  { 
+        _setAddress(SIGH_STAKING, _SIGHStaking);
         emit SIGHStakingImplUpdated(_SIGHStaking);
     }
 

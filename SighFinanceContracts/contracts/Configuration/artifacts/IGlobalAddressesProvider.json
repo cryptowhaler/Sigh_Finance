@@ -80,7 +80,7 @@
 			"setSIGHFinanceConfiguratorImpl(address)": "832b705a",
 			"setSIGHMechanismHandlerImpl(address)": "f425474d",
 			"setSIGHSpeedController(address)": "d557d56d",
-			"setSIGHStakingImpl(address)": "b42020c5",
+			"setSIGHStaking(address)": "343c1596",
 			"setSIGHTreasuryImpl(address)": "c5b3f337"
 		}
 	},
@@ -622,7 +622,7 @@
 					"type": "address"
 				}
 			],
-			"name": "setSIGHStakingImpl",
+			"name": "setSIGHStaking",
 			"outputs": [],
 			"payable": false,
 			"stateMutability": "nonpayable",
