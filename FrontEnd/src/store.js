@@ -1150,7 +1150,8 @@ const store = new Vuex.Store({
         cur_user_instrument_state.borrowRateMode =  response.borrowRateMode ;
         cur_user_instrument_state.borrowRate =  response.borrowRate ;
         cur_user_instrument_state.liquidityRate =  response.liquidityRate ;
-        cur_user_instrument_state.originationFee =  response.originationFee ;
+        cur_user_instrument_state.originationFee =  BigNumber(response.originationFee).shiftedBy((-1)*Number(cur_instrument.decimals)).toNumber() ;
+        cur_user_instrument_state.originationFeeWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.originationFee) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,Number(cur_instrument.priceDecimals)) });     
         cur_user_instrument_state.variableBorrowIndex =  response.variableBorrowIndex ;      
         cur_user_instrument_state.usageAsCollateralEnabled = response.usageAsCollateralEnabled ;       
 
@@ -1253,15 +1254,18 @@ getUserProtocolState: async ({commit,state},{_user}) => {
     const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
     console.log('getUserProtocolState');
     let response = await lendingPoolContract.methods.getUserAccountData(_user).call();
-    response.totalLiquidityETH = BigNumber(response.totalLiquidityETH).shiftedBy(-18);
-    response.totalCollateralETH = BigNumber(response.totalCollateralETH).shiftedBy(-18);
-    response.totalBorrowsETH = BigNumber(response.totalBorrowsETH).shiftedBy(-18);
-    response.totalFeesETH = BigNumber(response.totalFeesETH).shiftedBy(-18);
-    response.availableBorrowsETH = BigNumber(response.availableBorrowsETH).shiftedBy(-18);
-    console.log(response);
-    // response.currentLiquidationThreshold = response.currentLiquidationThreshold ;
-    // response.ltv = response.ltv ;
-    // response.healthFactor = response.healthFactor ;  
+    // SINCE THE PRICE-ORACLE IS RETURNING ALL ETH PRICES SHIFTED RIGHT BY 18 DECIMALS, WE RECTIFY THAT
+    if (Number(response.totalLiquidityETH)) {
+      response.totalLiquidityETH = BigNumber(response.totalLiquidityETH).shiftedBy(-18);
+      response.totalCollateralETH = BigNumber(response.totalCollateralETH).shiftedBy(-18);
+      response.totalBorrowsETH = BigNumber(response.totalBorrowsETH).shiftedBy(-18);
+      response.totalFeesETH = BigNumber(response.totalFeesETH).shiftedBy(-18);
+      response.availableBorrowsETH = BigNumber(response.availableBorrowsETH).shiftedBy(-18);
+      console.log(response);
+      // response.currentLiquidationThreshold = response.currentLiquidationThreshold ;
+      // response.ltv = response.ltv ;
+      response.healthFactor = BigNumber(response.healthFactor).shiftedBy(-18);    
+    }
 
     return response;
   }
@@ -1278,6 +1282,10 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
     try {
       let response = await lendingPoolContract.methods.getUserInstrumentData(_instrumentAddress,_user).call();
       console.log(response);
+      if (Number(response.liquidityRate) > 0 || Number(response.borrowRate) > 0 ) {
+        response.borrowRate = BigNumber(Number(response.borrowRate)).shiftedBy(-25);
+        response.liquidityRate = BigNumber(Number(response.liquidityRate)).shiftedBy(-25);
+      }
       return response;
     }
     catch (error) {
@@ -1988,24 +1996,24 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => {
       }
     },
 
-    LendingPool_getUserInstrumentData: async ({commit,state},{_instrument, _user}) => {
-      if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
-        const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
-        try {
-          const response = await lendingPoolContract.methods.getUserInstrumentData(_instrument, _user).call();
-          console.log(response);
-          return response;
-          }
-          catch(error) {
-            console.log(error);
-            return error;
-          }
-      }
-      else {
-        console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + getters.networkName);
-        return "SIGH Finance (Lending Pool Contract) is currently not been deployed on ";
-      }
-    },    
+    // LendingPool_getUserInstrumentData: async ({commit,state},{_instrument, _user}) => {
+    //   if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
+    //     const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
+    //     try {
+    //       const response = await lendingPoolContract.methods.getUserInstrumentData(_instrument, _user).call();
+    //       console.log(response);
+    //       return response;
+    //       }
+    //       catch(error) {
+    //         console.log(error);
+    //         return error;
+    //       }
+    //   }
+    //   else {
+    //     console.log("SIGH Finance (Lending Pool Contract) is currently not been deployed on " + getters.networkName);
+    //     return "SIGH Finance (Lending Pool Contract) is currently not been deployed on ";
+    //   }
+    // },    
     
     LendingPoolCore_getUserBorrowBalances: async ({commit,state},{_instrument,_user}) => {
       if (state.web3 && state.LendingPoolCoreContractAddress && state.LendingPoolCoreContractAddress!= "0x0000000000000000000000000000000000000000" ) {
@@ -2769,6 +2777,19 @@ getSighInstrumentSpeedController: async ({commit,state}) => {
 // #########################################
 // ############ UTILITY ACTIONS ############
 // #########################################
+
+  getBalanceString: ({commit,state},{number}) => {
+    if ( Number(number) > 1000000 ) {
+      let inMil = (Number(number) / 1000000).toFixed(2);
+      return inMil.toString() + ' M';
+    } 
+    if ( Number(number) > 1000 ) {
+      let inK = (Number(number) / 1000).toFixed(3);
+      return inK.toString() + ' K';
+    } 
+    return number;
+  },
+
 
   getRevertReason: async ({commit,state},{txhash,blockNumber}) => {
 

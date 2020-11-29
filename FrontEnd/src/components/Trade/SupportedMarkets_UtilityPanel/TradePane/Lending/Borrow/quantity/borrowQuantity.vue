@@ -24,6 +24,7 @@ export default {
       showLoader: false,
       showLoaderRefresh: false,
       intervalActivated: false,
+      displayInString: true,
     };
   },
   
@@ -67,6 +68,9 @@ export default {
 
     ...mapActions(['LendingPool_borrow','getInstrumentPrice','refresh_User_Instrument_State']),
     
+    toggle() {
+      this.displayInString = !this.displayInString;
+    },
 
     async initiatePriceLoop() {
       if ( this.$store.state.isNetworkSupported && this.selectedInstrument.instrumentAddress ) {
@@ -113,7 +117,7 @@ export default {
           console.log('Borrow Value - ' + value);
 
           this.showLoader = true;        
-          let interestRateMode = this.formData.interestRateMode == 'Stable' ? 0 : 1;      
+          let interestRateMode = this.formData.interestRateMode == 'Stable' ? 1 : 2;      
           let response =  await this.LendingPool_borrow( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.borrowQuantity, _interestRateMode: interestRateMode, _referralCode: 0, symbol: this.selectedInstrument.symbol, decimals: this.selectedInstrument.decimals });
           if (response.status) {      
             this.$showSuccessMsg({message: "BORROW SUCCESS : " + this.formData.borrowQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully borrowed from SIGH Finance. Gas used = " + response.gasUsed });
@@ -166,7 +170,20 @@ export default {
         }
         console.log(this.selectedInstrumentWalletState);
       }    
-    }
+    },
+
+
+    getBalanceString(number)  {
+      if ( Number(number) >= 1000000 ) {
+        let inMil = (Number(number) / 1000000).toFixed(2);
+        return inMil.toString() + ' M';
+      } 
+      if ( Number(number) >= 1000 ) {
+        let inK = (Number(number) / 1000).toFixed(3);
+        return inK.toString() + ' K';
+      } 
+      return Number(number).toFixed(2);
+    },       
 
 
   },

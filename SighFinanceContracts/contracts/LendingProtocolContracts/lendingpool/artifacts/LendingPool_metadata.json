@@ -1239,10 +1239,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPool.sol": {
-			"keccak256": "0x71362febd7b4301be5d733ebd0e8186e27b329398854b5e958b6ae63cef34ef0",
+			"keccak256": "0x34b95c9a476927a14309481ffbe8726f8cc894f9371e868b2917aa27beb880c4",
 			"urls": [
-				"bzz-raw://6800f696c4d5880dfcef078e9d2b245251bd0a65085adf80a4b128025f5cd6a1",
-				"dweb:/ipfs/QmfJ6qxuXg6BNjWokp8AZ8igvYD47VupgfAHxMhdSsVs9T"
+				"bzz-raw://2508e4b49583ad09a234dc6ba823675a4fb192bb02f668be5f3f0d4b03108d7d",
+				"dweb:/ipfs/QmbKWuLJjce68hVWCrbcv5pXzBH4fHbXh6RYjUj4a1f142"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolLiquidationManager.sol": {

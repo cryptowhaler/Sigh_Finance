@@ -13,7 +13,8 @@ export default {
   data() {
     return {
       walletLendingProtocolState: {},   // Wallet : Lending Protocol Global State
-      displayInUSD: false,
+      displayInUSD: true,
+      displayInString: true,
       showLoader: false,
     };
   },
@@ -48,7 +49,9 @@ export default {
       this.displayInUSD = !this.displayInUSD;
     },
 
-
+    toggleTableString() {
+      this.displayInString = !this.displayInString;
+    },
 
     async refresh() {
       console.log("refreshing User GLOBAL Balances");
@@ -103,6 +106,18 @@ export default {
         console.log(this.walletLendingProtocolState);
       }
     },
+
+    getBalanceString(number)  {
+      if ( Number(number) > 1000000 ) {
+        let inMil = (Number(number) / 1000000).toFixed(2);
+        return inMil.toString() + ' M';
+      } 
+      if ( Number(number) > 1000 ) {
+        let inK = (Number(number) / 1000).toFixed(3);
+        return inK.toString() + ' K';
+      } 
+      return number;
+    },    
 
   },
 

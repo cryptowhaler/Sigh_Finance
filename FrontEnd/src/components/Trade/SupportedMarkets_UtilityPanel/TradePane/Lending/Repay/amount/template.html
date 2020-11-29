@@ -82,10 +82,10 @@
                 <td> >   {{ selectedInstrument.symbol  }} Compounded Borrowed &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.currentBorrowBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.currentBorrowBalanceWorth).toFixed(4)  }} USD ) </td> 
             </tr>
             <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Origination Fee &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.originationFee).toFixed(4)  }} </td> 
+                <td> >   {{ selectedInstrument.symbol  }} Origination Fee &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.originationFee).toFixed(4)  }}  ( {{ Number(selectedInstrumentWalletState.originationFeeWorth).toFixed(4)  }} USD ) </td> 
             </tr>
             <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Borrow Type &nbsp; : &nbsp;{{ selectedInstrumentWalletState.borrowRateMode }}</td> 
+                <td> >   {{ selectedInstrument.symbol  }} Borrow Type &nbsp; : &nbsp;{{ selectedInstrumentWalletState.borrowRateMode == 1 ? 'Stable' : 'Variable' }}</td> 
             </tr>
             <tr>
                 <td> >   {{ selectedInstrument.symbol  }} Enabled As Collateral &nbsp; : &nbsp;{{ selectedInstrumentWalletState.usageAsCollateralEnabled }}</td> 

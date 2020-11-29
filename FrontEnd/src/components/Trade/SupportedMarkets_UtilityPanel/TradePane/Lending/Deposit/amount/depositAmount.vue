@@ -23,6 +23,7 @@ export default {
       showLoader: false,
       showLoaderRefresh: false,
       intervalActivated: false,
+      displayInString: true,
     };
 
   },
@@ -64,6 +65,11 @@ export default {
 
     ...mapActions(['ERC20_mint','LendingPool_deposit','ERC20_increaseAllowance','getInstrumentPrice','refresh_User_Instrument_State']),
     
+    toggle() {
+      this.displayInString = !this.displayInString;
+    },
+
+
     async initiatePriceLoop() {
       if ( this.$store.state.isNetworkSupported && this.selectedInstrument.instrumentAddress ) {
         setInterval(async () => {
@@ -226,7 +232,22 @@ export default {
         }
         console.log(this.selectedInstrumentWalletState);
       }
-    }
+    },
+
+
+    getBalanceString(number)  {
+      if ( Number(number) >= 1000000 ) {
+        let inMil = (Number(number) / 1000000).toFixed(2);
+        return inMil.toString() + ' M';
+      } 
+      if ( Number(number) >= 1000 ) {
+        let inK = (Number(number) / 1000).toFixed(3);
+        return inK.toString() + ' K';
+      } 
+      return Number(number).toFixed(2);
+    },  
+
+
   },
 
   destroyed() {
