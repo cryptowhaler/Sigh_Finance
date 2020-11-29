@@ -1253,8 +1253,17 @@ getUserProtocolState: async ({commit,state},{_user}) => {
     const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
     console.log('getUserProtocolState');
     let response = await lendingPoolContract.methods.getUserAccountData(_user).call();
+    response.totalLiquidityETH = BigNumber(response.totalLiquidityETH).shiftedBy(-18);
+    response.totalCollateralETH = BigNumber(response.totalCollateralETH).shiftedBy(-18);
+    response.totalBorrowsETH = BigNumber(response.totalBorrowsETH).shiftedBy(-18);
+    response.totalFeesETH = BigNumber(response.totalFeesETH).shiftedBy(-18);
+    response.availableBorrowsETH = BigNumber(response.availableBorrowsETH).shiftedBy(-18);
     console.log(response);
-    return response;å
+    // response.currentLiquidationThreshold = response.currentLiquidationThreshold ;
+    // response.ltv = response.ltv ;
+    // response.healthFactor = response.healthFactor ;  
+
+    return response;
   }
   else {
     console.log('getUserProtocolState() function in store.js. Protocol not supported on connected blockchain network');

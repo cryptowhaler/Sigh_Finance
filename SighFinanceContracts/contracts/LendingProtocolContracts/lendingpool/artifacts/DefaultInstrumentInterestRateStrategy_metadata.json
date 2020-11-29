@@ -415,10 +415,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/DefaultInstrumentInterestRateStrategy.sol": {
-			"keccak256": "0xd31b7c1905482103722bfbbd470eb77acad6c910cdc2518ad8bd3f8313228d68",
+			"keccak256": "0xa564f85d5185cde1ef7f50e2c324164b8caac1b52e2b120cba700413a2bbab0c",
 			"urls": [
-				"bzz-raw://e13a1cbae43d1a3ed0792c7bb1ea096eedf1ce8fb57ae68e3ac38196e3257241",
-				"dweb:/ipfs/QmdxzqYofvTN1bMg1ZwGkZGDqgvEwKcQPAs9udnp4arxmP"
+				"bzz-raw://24d24df8aeed77544830bd8f071b247e8aecad5b0feba74d3f4196222de39b76",
+				"dweb:/ipfs/QmcZbYeMwgvMG64a4jEFNeCJADkNJUCKMhssA18bMYSww4"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/WadRayMath.sol": {

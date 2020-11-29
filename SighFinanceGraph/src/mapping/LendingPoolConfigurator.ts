@@ -44,8 +44,27 @@ export function handleInstrumentInitialized(event: InstrumentInitialized): void 
 
 }
 
+// WORKS AS EXPECTED
+export function handleInstrumentEnabledAsCollateral(event: InstrumentEnabledAsCollateral): void {
+    log.info('LENDINGPOOLCONFIGURATOR : handleInstrumentEnabledAsCollateral',[])
+    let instrumentId = event.params._instrument.toHexString()
+    let instrumentState = Instrument.load(instrumentId)
+    if (instrumentState == null) {
+        instrumentState = createInstrument(instrumentId)
+    }
+    instrumentState.usageAsCollateralEnabled = true
+    instrumentState.baseLTVasCollateral = event.params._ltv 
+    instrumentState.liquidationThreshold = event.params._liquidationThreshold 
+    instrumentState.liquidationBonus = event.params._liquidationBonus 
 
-// Works as Expected 
+    instrumentState.save()
+    updatePrice(instrumentId)    
+}
+
+
+
+
+// WORKS AS EXPECTED
 export function handleBorrowingEnabledOnInstrument(event: BorrowingEnabledOnInstrument): void {
     log.info('LENDINGPOOLCONFIGURATOR : handleBorrowingEnabledOnInstrument',[])
     let instrumentId = event.params._instrument.toHexString()
@@ -74,21 +93,6 @@ export function handleBorrowingDisabledOnInstrument(event: BorrowingDisabledOnIn
     updatePrice(instrumentId)    
 }
 
-export function handleInstrumentEnabledAsCollateral(event: InstrumentEnabledAsCollateral): void {
-    log.info('LENDINGPOOLCONFIGURATOR : handleInstrumentEnabledAsCollateral',[])
-    let instrumentId = event.params._instrument.toHexString()
-    let instrumentState = Instrument.load(instrumentId)
-    if (instrumentState == null) {
-        instrumentState = createInstrument(instrumentId)
-    }
-    instrumentState.usageAsCollateralEnabled = true
-    instrumentState.baseLTVasCollateral = event.params._ltv 
-    instrumentState.liquidationThreshold = event.params._liquidationThreshold 
-    instrumentState.liquidationBonus = event.params._liquidationBonus 
-
-    instrumentState.save()
-    updatePrice(instrumentId)    
-}
 
 export function handleInstrumentDisabledAsCollateral(event: InstrumentDisabledAsCollateral): void {
     log.info('LENDINGPOOLCONFIGURATOR : handleInstrumentDisabledAsCollateral',[])
@@ -261,9 +265,11 @@ export function updatePrice( ID: string ) : void {
   
     let oracleAddress = instrument_state.oracle as Address
     let oracleContract = PriceOracleGetter.bind( oracleAddress )
+    log.info('updatePrice: oracleAddress {} ',[oracleAddress.toHexString()])
   
     // GETTING INSTRUMENT PRICE IN ETH
     let instrumentAddress = instrument_state.instrumentAddress as Address
+    log.info('updatePrice: instrumentAddress {} ',[instrumentAddress.toHexString()])
     let priceInETH = oracleContract.getAssetPrice( instrumentAddress ).toBigDecimal() 
     let priceInETH_Decimals = oracleContract.getAssetPriceDecimals( instrumentAddress )
     instrument_state.priceETH = priceInETH.div( BigInt.fromI32(10).pow(priceInETH_Decimals as u8).toBigDecimal() ) 

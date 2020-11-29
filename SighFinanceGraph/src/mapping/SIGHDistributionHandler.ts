@@ -3,32 +3,31 @@ import { InstrumentAdded, InstrumentRemoved, InstrumentSIGHed, SIGHSpeedUpdated,
  , minimumBlocksForSpeedRefreshUpdated , PriceSnapped, SIGHBorrowIndexUpdated, AccuredSIGHTransferredToTheUser,
  MaxSIGHSpeedCalculated, refreshingSighSpeeds , SIGHSupplyIndexUpdated } from "../../generated/Sigh_Distribution_Handler/SIGHDistributionHandler"
 import { Instrument } from "../../generated/schema"
+import { createInstrument,updatePrice } from "./LendingPoolConfigurator"
 
 
 export function handleInstrumentAdded(event: InstrumentAdded): void {
-    let instrumentId = event.params.instrumentAddress_.toHexString()
+    log.info('handleInstrumentAdded: 1st ',[])
+    let instrumentId = event.params.instrumentAddress_.toHexString()    
     let instrumentState = Instrument.load(instrumentId)
+    if (instrumentState == null) {
+        log.info('handleInstrumentAdded: createInstrument ',[])
+        instrumentState = createInstrument(instrumentId)
+    }
+    log.info('handleInstrumentAdded: instrumentId {} ',[instrumentId])
+    log.info('handleInstrumentAdded: instrumentId  {} ',[instrumentId.toString()])
     instrumentState.isListedWithSIGH_Mechanism = true
     instrumentState.isSIGHMechanismActivated = false
-    instrumentState.SIGH_Supply_Index = BigInt.fromI32(10).pow(new BigInt(36) as u8)  
+    log.info('handleInstrumentAdded: 3st ',[])
+    instrumentState.SIGH_Supply_Index = BigInt.fromI32(10).pow(36 as u8)  
     instrumentState.SIGH_Supply_Index_lastUpdatedBlock = event.block.number
-    instrumentState.SIGH_Borrow_Index = BigInt.fromI32(10).pow(new BigInt(36) as u8)  
+    log.info('handleInstrumentAdded: 4st ',[])
+    instrumentState.SIGH_Borrow_Index = BigInt.fromI32(10).pow(36 as u8)  
     instrumentState.SIGH_Borrow_Index_lastUpdatedBlock =  event.block.number
+    log.info('handleInstrumentAdded: 5st ',[])
 
     instrumentState.present_SIGH_Distribution_Side = 'inActive'
-    instrumentState.present_SIGH_Suppliers_Speed_WEI = BigInt.fromI32(0)
-    instrumentState.present_SIGH_Suppliers_Speed = BigInt.fromI32(0).toBigDecimal()
-    instrumentState.present_SIGH_Borrowers_Speed_WEI = BigInt.fromI32(0)
-    instrumentState.present_SIGH_Borrowers_Speed = BigInt.fromI32(0).toBigDecimal()
-    instrumentState.present_SIGH_Staking_Speed_WEI = BigInt.fromI32(0)
-    instrumentState.present_SIGH_Staking_Speed = BigInt.fromI32(0).toBigDecimal()
-
-    instrumentState.present_SIGH_DistributionValuePerBlock_ETH = BigInt.fromI32(0).toBigDecimal()
-    instrumentState.present_SIGH_DistributionValuePerBlock_USD = BigInt.fromI32(0).toBigDecimal()
-    
-    instrumentState.present_VolatilityAddressedPerBlock = BigInt.fromI32(0).toBigDecimal()
     instrumentState.save()
-
 }
 
 export function handleInstrumentRemoved(event: InstrumentRemoved): void {
