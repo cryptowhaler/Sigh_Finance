@@ -98,8 +98,8 @@ contract LendingPoolConfigurator is VersionedInitializable {
     function initInstrument( address _instrument, address _interestRateStrategyAddress ) external onlyLendingPoolManager {
         ERC20Detailed asset = ERC20Detailed(_instrument);
 
-        string memory iTokenName = string(abi.encodePacked("SIGH's supported Instrument - ", asset.name()));
-        string memory iTokenSymbol = string(abi.encodePacked("i", asset.symbol()));
+        string memory iTokenName = string(abi.encodePacked(" Yield Farming Instrument - ", asset.name()));
+        string memory iTokenSymbol = string(abi.encodePacked("I-", asset.symbol()));
         uint8 decimals = uint8(asset.decimals());
 
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());

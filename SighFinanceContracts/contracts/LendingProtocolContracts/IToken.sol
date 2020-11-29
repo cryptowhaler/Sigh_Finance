@@ -179,8 +179,8 @@ contract IToken is ERC20, ERC20Detailed {
      * @param _amount the amount of tokens to mint
      */
     function mintOnDeposit(address _account, uint256 _amount) external onlyLendingPool {
-        accure_Supplier_SIGH(_account);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR DEPOSITOR)
-        (, , uint256 balanceIncrease, uint256 index) = cumulateBalanceInternal(_account);       //calculates new interest generated and mints the ITokens (based on interest)
+        (, uint256 currentBalance, uint256 balanceIncrease, uint256 index) = cumulateBalanceInternal(_account);       //calculates new interest generated and mints the ITokens (based on interest)
+        accure_Supplier_SIGH(_account,currentBalance);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR DEPOSITOR)
 
          //if the user is redirecting his interest towards someone else, we update the redirected balance of the redirection address by adding the accrued interest and the amount deposited
         updateRedirectedBalanceOfRedirectionAddressInternal(_account, balanceIncrease.add(_amount), 0);
@@ -217,7 +217,7 @@ contract IToken is ERC20, ERC20Detailed {
         require(isTransferAllowed(msg.sender, amountToRedeem), "Transfer cannot be allowed.");       //check that the user is allowed to redeem the amount
 
         pool.redeemUnderlying( underlyingInstrumentAddress, msg.sender, amountToRedeem, currentBalance.sub(amountToRedeem) );   // executes redeem of the underlying asset
-        accure_Supplier_SIGH(msg.sender);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR REDEEMER)
+        accure_Supplier_SIGH(msg.sender,currentBalance );                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR REDEEMER)
 
         //if the user is redirecting his interest towards someone else,
         //we update the redirected balance of the redirection address by adding the accrued interest, and removing the amount to redeem
@@ -250,8 +250,8 @@ contract IToken is ERC20, ERC20Detailed {
      * @param _value the amount to burn
      **/
     function burnOnLiquidation(address _account, uint256 _value) external onlyLendingPool {
-        accure_Supplier_SIGH(_account);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR REDEEMER)
         (,uint256 accountBalance,uint256 balanceIncrease,uint256 index) = cumulateBalanceInternal(_account);    //cumulates the balance of the user being liquidated
+        accure_Supplier_SIGH(_account,accountBalance);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR REDEEMER)
 
         //adds the accrued interest and substracts the burned amount to the redirected balance
         updateRedirectedBalanceOfRedirectionAddressInternal(_account, balanceIncrease, _value);
@@ -298,12 +298,12 @@ contract IToken is ERC20, ERC20Detailed {
     **/
     function executeTransferInternal( address _from, address _to,  uint256 _value) internal {
         require(_value > 0, "Transferred amount needs to be greater than zero");
-        accure_Supplier_SIGH(_from);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR From Account)
-        accure_Supplier_SIGH(_to);                                                            // ADDED BY SIGH FINANCE (ACCURS SIGH FOR To Account)
-        
         (, uint256 fromBalance, uint256 fromBalanceIncrease, uint256 fromIndex ) = cumulateBalanceInternal(_from);   //cumulate the balance of the sender
-        (, , uint256 toBalanceIncrease, uint256 toIndex ) = cumulateBalanceInternal(_to);       //cumulate the balance of the receiver
+        (, uint256 toBalance, uint256 toBalanceIncrease, uint256 toIndex ) = cumulateBalanceInternal(_to);       //cumulate the balance of the receiver
 
+        accure_Supplier_SIGH(_from,fromBalance);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR From Account)
+        accure_Supplier_SIGH(_to,toBalance);                                                            // ADDED BY SIGH FINANCE (ACCURS SIGH FOR To Account)
+        
         //if the sender is redirecting his interest towards someone else, adds to the redirected balance the accrued interest and removes the amount being transferred
         updateRedirectedBalanceOfRedirectionAddressInternal(_from, fromBalanceIncrease, _value);
         //if the receiver is redirecting his interest towards someone else, adds to the redirected balance the accrued interest and the amount being transferred
@@ -580,7 +580,7 @@ contract IToken is ERC20, ERC20Detailed {
     }
 
     function claimSighInternal(address user) internal {
-        accure_Supplier_SIGH(user);
+        accure_Supplier_SIGH(user, balanceOf(user) );
         accure_Borrower_SIGH_Internal(user);
         if (AccuredSighBalances[user] > 0) {
             transferSigh(user, user);
@@ -591,7 +591,7 @@ contract IToken is ERC20, ERC20Detailed {
     // Supply Index tracks the SIGH Accured per Instrument. Supplier Index tracks the Sigh Accured by the Supplier per Instrument
     // Delta Index = Supply Index - Supplier Index
     // SIGH Accured by Supplier = Supplier's Instrument Balance * Delta Index
-    function accure_Supplier_SIGH( address supplier ) internal {
+    function accure_Supplier_SIGH( address supplier, uint256 currentBalance ) internal {
         uint supplyIndex = sighDistributionHandlerContract.getInstrumentSupplyIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHDistributionHandler Contract
         require(supplyIndex > 0, "SIGH Distribution Handler returned invalid supply Index for the instrument");
 
@@ -603,11 +603,10 @@ contract IToken is ERC20, ERC20Detailed {
             userIndex.mantissa = instrumentIndex.mantissa; // sighInitialIndex;
         }
 
-        uint supplierTokens = super.balanceOf(supplier);                                                // Current Supplier IToken (1:1 mapping with instrument) Balance
         Double memory deltaIndex = sub_(instrumentIndex, userIndex);                                // , 'Distribute Supplier SIGH : supplyIndex Subtraction Underflow'
 
-        if ( deltaIndex.mantissa > 0 && supplierTokens > 0 ) {
-            uint supplierSighDelta = mul_(supplierTokens, deltaIndex);                                      // Supplier Delta = Balance * Double(DeltaIndex)/DoubleScale
+        if ( deltaIndex.mantissa > 0 && currentBalance > 0 ) {
+            uint supplierSighDelta = mul_(currentBalance, deltaIndex);                                      // Supplier Delta = Balance * Double(DeltaIndex)/DoubleScale
             accureSigh(supplier, supplierSighDelta );        // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the Supplier or the address to which SIGH is being redirected to 
         }
     }
@@ -752,7 +751,7 @@ contract IToken is ERC20, ERC20Detailed {
         }
 
         if (currentRedirectionAddress != address(0)) {      // If the SIGH stream is currently redirected, we transfer the amount to that address before changing it
-            accure_Supplier_SIGH(_from);
+            accure_Supplier_SIGH(_from, balanceOf(_from) );
             accure_Borrower_SIGH_Internal(_from);
         }
         

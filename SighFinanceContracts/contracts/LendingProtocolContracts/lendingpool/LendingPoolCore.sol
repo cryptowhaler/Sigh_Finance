@@ -699,7 +699,7 @@ contract LendingPoolCore is VersionedInitializable {
 // #################################################################
 
     /**
-    * @dev gets the underlying asset balance of a user based on the corresponding iToken balance.
+    * @dev gets the underlying asset balance (including the interest accured) of a user based on the corresponding iToken balance.
     * @param _instrument the instrument address
     * @param _user the user address
     * @return the underlying deposit balance of the user

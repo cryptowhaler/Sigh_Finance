@@ -567,8 +567,8 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         // WE UPDATE INDEX ONLY IF $SIGH IS ACCURING
         if (deltaBlocks > 0 && supplySpeed > 0) {       // In case SIGH would have accured
             uint sigh_Accrued = mul_(deltaBlocks, supplySpeed);                                                                         // SIGH Accured
-            uint totalUnderlyingLiquidity = lendingPoolCore.getInstrumentTotalLiquidity( currentInstrument );                           // Total amount supplied 
-            Double memory ratio = totalUnderlyingLiquidity > 0 ? fraction(sigh_Accrued, totalUnderlyingLiquidity) : Double({mantissa: 0});    // SIGH Accured per Supplied Instrument Token
+            uint totalCompoundedLiquidity = IERC20(financial_instruments[currentInstrument].iTokenAddress).totalSupply();                           // Total amount supplied 
+            Double memory ratio = totalUnderlyingLiquidity > 0 ? fraction(sigh_Accrued, totalCompoundedLiquidity) : Double({mantissa: 0});    // SIGH Accured per Supplied Instrument Token
             Double memory newIndex = add_(Double({mantissa: instrumentState.supplyindex}), ratio);                                      // Updated Index
             emit SIGHSupplyIndexUpdated( currentInstrument, sigh_Accrued, ratio.mantissa , newIndex.mantissa, blockNumber );  
 

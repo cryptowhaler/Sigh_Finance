@@ -135,7 +135,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
         uint256 currentLiquidationThreshold;
         uint256 instrumentLiquidationThreshold;
         uint256 amountToDecreaseETH;
-        uint256 collateralBalancefterDecrease;
+        uint256 collateralBalancefterDecreaseETH;
         uint256 liquidationThresholdAfterDecrease;
         uint256 healthFactorAfterDecrease;
         bool instrumentUsageAsCollateralEnabled;
@@ -165,15 +165,15 @@ contract LendingPoolDataProvider is VersionedInitializable {
 
         IPriceOracleGetter oracle = IPriceOracleGetter(addressesProvider.getPriceOracle());
         vars.amountToDecreaseETH = oracle.getAssetPrice(_instrument).mul(_amount).div( 10 ** vars.decimals );
-        vars.collateralBalancefterDecrease = vars.collateralBalanceETH.sub(  vars.amountToDecreaseETH );
+        vars.collateralBalancefterDecreaseETH = vars.collateralBalanceETH.sub(  vars.amountToDecreaseETH );
 
         
-        if (vars.collateralBalancefterDecrease == 0) {      //if there is a borrow, there can't be 0 collateral
+        if (vars.collateralBalancefterDecreaseETH == 0) {      //if there is a borrow, there can't be 0 collateral
             return false;
         }
 
-        vars.liquidationThresholdAfterDecrease = vars.collateralBalanceETH.mul(vars.currentLiquidationThreshold).sub(vars.amountToDecreaseETH.mul(vars.instrumentLiquidationThreshold)).div(vars.collateralBalancefterDecrease);
-        uint256 healthFactorAfterDecrease = calculateHealthFactorFromBalancesInternal( vars.collateralBalancefterDecrease, vars.borrowBalanceETH, vars.totalFeesETH, vars.liquidationThresholdAfterDecrease );
+        vars.liquidationThresholdAfterDecrease = vars.collateralBalanceETH.mul(vars.currentLiquidationThreshold).sub(vars.amountToDecreaseETH.mul(vars.instrumentLiquidationThreshold)).div(vars.collateralBalancefterDecreaseETH);
+        uint256 healthFactorAfterDecrease = calculateHealthFactorFromBalancesInternal( vars.collateralBalancefterDecreaseETH, vars.borrowBalanceETH, vars.totalFeesETH, vars.liquidationThresholdAfterDecrease );
 
         return healthFactorAfterDecrease > HEALTH_FACTOR_LIQUIDATION_THRESHOLD;
     }
