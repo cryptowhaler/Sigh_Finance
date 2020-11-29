@@ -150,7 +150,7 @@
                 <td> >   {{ selectedInstrument.symbol  }} Compounded Borrowed &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.currentBorrowBalance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.currentBorrowBalanceWorth).toFixed(4))  }} USD ) </td> 
             </tr>
             <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Origination Fee &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.originationFee).toFixed(4))  }} </td> 
+                <td> >   {{ selectedInstrument.symbol  }} Origination Fee &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.originationFee).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.originationFeeWorth).toFixed(4))  }} USD ) </td> 
             </tr>
             <tr>
                 <td> >   {{ selectedInstrument.symbol  }} Borrow Type &nbsp; : &nbsp;{{ selectedInstrumentWalletState.borrowRateMode == 1 ? 'Stable' : 'Variable' }}</td> 

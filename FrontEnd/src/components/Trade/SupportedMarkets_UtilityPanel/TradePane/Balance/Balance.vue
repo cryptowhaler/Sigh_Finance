@@ -144,9 +144,19 @@ export default {
         console.log(this.walletInstrumentStatesArray[i]);
       }
 
-    }
+    },
 
-
+    getBalanceString(number)  {
+      if ( Number(number) > 1000000 ) {
+        let inMil = (Number(number) / 1000000).toFixed(2);
+        return inMil.toString() + ' M';
+      } 
+      if ( Number(number) > 1000 ) {
+        let inK = (Number(number) / 1000).toFixed(3);
+        return inK.toString() + ' K';
+      } 
+      return number;
+    },        
 
   },
 

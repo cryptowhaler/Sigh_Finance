@@ -109,6 +109,7 @@
         </table>
 
 
+
         <table v-if="displayInString" style="color: white;" >
             <tr>
                 <td > >   {{ selectedInstrument.symbol  }} Price &nbsp; : &nbsp;{{  ( ( Number(selectedInstrumentPriceETH) / Math.pow(10,selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) }} USD   </td> 
@@ -137,7 +138,7 @@
                 <td> >   {{ selectedInstrument.symbol  }} Compounded Borrowed &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.currentBorrowBalance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.currentBorrowBalanceWorth).toFixed(4))  }} USD ) </td> 
             </tr>
             <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Origination Fee &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.originationFee).toFixed(4))  }}  ( {{ getBalanceString(Number(selectedInstrumentWalletState.originationFee).toFixed(4))  }} USD ) </td> 
+                <td> >   {{ selectedInstrument.symbol  }} Origination Fee &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.originationFee).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.originationFeeWorth).toFixed(4))  }} USD ) </td> 
             </tr>
             <tr>
                 <td> >   {{ selectedInstrument.symbol  }} Borrow Type &nbsp; : &nbsp;{{ selectedInstrumentWalletState.borrowRateMode == 1 ? 'Stable' : 'Variable' }}</td> 
@@ -167,12 +168,8 @@
         </table>
 
 
-
-
-
     </div>
 
-    <!-- <span style="color: aliceblue; font-size: 11px; line-height: 15px;" > Current APY :  </span> -->
     <div class="center">
         <img  v-if="showLoaderRefresh" src="https://image.ibb.co/dc02hd/30.gif" />
         <button v-else class="uk-button uk-button-black"  @click="refreshCurrentInstrumentWalletState(true)">Refresh</button>

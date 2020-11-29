@@ -17,8 +17,8 @@
             <tbody>
             <tr v-if="!displayInUSD" v-for="userInstrumentBalance in walletInstrumentStatesArray ">
                 <td class="uk-text-center c-white" style="line-height: 4;" >{{ userInstrumentBalance.symbol }}</td>
-                <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.userDepositedBalance).toFixed(2) }} </td>
-                <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.currentBorrowBalance).toFixed(2) }} </td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ getBalanceString(Number(userInstrumentBalance.userDepositedBalance).toFixed(2)) }} </td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ getBalanceString(Number(userInstrumentBalance.currentBorrowBalance).toFixed(2)) }} </td>
                 <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.liquidityRate).toFixed(2)  }}</td>
                 <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.borrowRate).toFixed(2) }}</td>
                 <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.SighSpeedForUser).toFixed(2) }}</td>
@@ -26,8 +26,8 @@
             </tr>
             <tr v-if="displayInUSD" v-for="userInstrumentBalance in walletInstrumentStatesArray ">
                 <td class="uk-text-center c-white" style="line-height: 4;" >{{ userInstrumentBalance.symbol }}</td>
-                <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.userDepositedBalanceWorth).toFixed(2) }} USD</td>
-                <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.currentBorrowBalanceWorth).toFixed(2) }} USD</td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ getBalanceString(Number(userInstrumentBalance.userDepositedBalanceWorth).toFixed(2)) }} USD</td>
+                <td class="uk-text-center c-white" style="line-height: 4;" >{{ getBalanceString(Number(userInstrumentBalance.currentBorrowBalanceWorth).toFixed(2)) }} USD</td>
                 <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.liquidityRate).toFixed(2)  }}</td>
                 <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.borrowRate).toFixed(2) }}</td>
                 <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.SighSpeedForUser).toFixed(2) }}</td>

@@ -90,6 +90,9 @@
                 <tr>
                     <td> >  &nbsp; Available Borrows &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.availableBorrowsUSD).toFixed(4) }} USD </td> 
                 </tr>
+                <tr>
+                    <td> >  &nbsp; Borrowing Fee &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalFeesUSD).toFixed(4) }} USD </td> 
+                </tr>
                 <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 14px; "> Parameters </h3>
                 <tr>
                     <td>>  &nbsp; Liquidation Threshold &nbsp; : &nbsp; {{ walletLendingProtocolState.currentLiquidationThreshold }} </td> 
