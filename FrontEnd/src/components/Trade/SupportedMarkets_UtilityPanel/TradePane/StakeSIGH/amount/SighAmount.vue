@@ -192,12 +192,10 @@ export default {
           this.formData.sighValue = null;
           this.$showSuccessMsg({message: "APPROVAL SUCCESS : Allowance Added = " + Number(quantity).toFixed(4) +  " SIGH. Maximum of " + this.WalletSIGHState.sighStakingAllowance + "  SIGH can now be staked to farm Staking Rewards!"  });
           await this.refresh_Wallet_SIGH_State(false);        
-          // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});      
         }
         else {
           this.$showErrorMsg({message: "APPROVAL FAILED : " + response.message  }); 
           this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-          // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});              
         }
         this.showLoader = false;
       }

@@ -141,12 +141,10 @@ export default {
           this.$showSuccessMsg({message: "SIGH UN-STAKING SUCCESS : " + this.formData.sighQuantity + " $SIGH worth " + value + " USD have been successfully un-staked. You currently have " + this.WalletSIGHState.sighStaked + " SIGH having worth " + (Number(this.WalletSIGHState.sighStaked) * (Number(this.SIGH_Price_USD_))).toFixed(4) + " USD Staked farming staking rewards for you! " });
           this.formData.sighQuantity = null;
           await this.refresh_Wallet_SIGH_State(false);        
-          // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Un-Staked',Service: 'STAKING'});
         }
         else {
           this.$showErrorMsg({message: "SIGH UN-STAKING FAILED : " + response.message  });
           this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-            // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
           }
           this.showLoader = false;      
         }
@@ -176,12 +174,10 @@ export default {
           this.formData.sighQuantity = null;
           this.$showSuccessMsg({message: "APPROVAL SUCCESS : Allowance Added = " + this.formData.sighQuantity +  " SIGH. Maximum of " + this.WalletSIGHState.sighStakingAllowance + "  SIGH can now be staked to farm Staking Rewards!"  });
           await this.refresh_Wallet_SIGH_State(false);        
-          // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});      
         }
         else {
           this.$showErrorMsg({message: "APPROVAL FAILED : " + response.message  }); 
           this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-          // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});              
         }
         this.showLoader = false;
       }

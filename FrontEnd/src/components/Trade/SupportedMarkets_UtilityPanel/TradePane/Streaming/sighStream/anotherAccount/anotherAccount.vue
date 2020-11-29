@@ -117,7 +117,6 @@ export default {
           this.$showSuccessMsg({message: "SIGH STREAM for  "  + this.selectedInstrument.symbol +  " of the account " + this.formData.fromAccount + " has been successfully re-directed to " + this.formData.toAccount   });
           this.formData.fromAccount = null;
           this.formData.toAccount = null;
-          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'SIGHRedirectedFrom',Service: 'STREAMING'});
           await this.refreshCurrentInstrumentWalletState(false);
         }
         else {

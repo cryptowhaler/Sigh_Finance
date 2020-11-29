@@ -90,7 +90,6 @@ export default {
           this.$showSuccessMsg({message: "SIGH STREAM for the instrument "  + this.selectedInstrument.symbol +  " has been successfully re-directed to " + this.formData.toAccount + " from the connected Account " +  this.$store.state.connectedWallet  });
           this.formData.toAccount = null;
           await this.refreshCurrentInstrumentWalletState(true);
-          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'SIGHRedirected',Service: 'STREAMING'});
         }
         else {
           this.$showErrorMsg({message: "SIGH STREAM RE-DIRECTION FAILED : " + response.message  });
@@ -126,7 +125,6 @@ export default {
           this.$showSuccessMsg({message: "ADMINISTRATOR PRIVILEDGES to re-direct the SIGH STREAM for the instrument "  + this.selectedInstrument.symbol +  " of the connected Account " +  this.$store.state.connectedWallet + " has been transferred to " + this.formData.toAccount  });
           this.formData.toAccount = null;
           await this.refreshCurrentInstrumentWalletState(true);          
-          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'SIGHRidirectionRightsTransferred',Service: 'STREAMING'});
         }
         else {
           this.$showErrorMsg({message: " TRANSFERING ADMINISTRATOR PRIVILEDGES FAILED: " + response.message  });
@@ -159,7 +157,6 @@ export default {
         if (response.status) {  
           this.$showSuccessMsg({message: " Farmed $SIGH have been successfully harvested!" });
           await this.refreshCurrentInstrumentWalletState(true);                    
-          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'SIGHClaimed',Service: 'STREAMING'});
         }
         else {
           this.$showErrorMsg({message: " HARVESTING FARMED $SIGH Failed: " + response.message  });

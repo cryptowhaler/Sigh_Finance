@@ -121,12 +121,10 @@ export default {
               this.$showSuccessMsg({message: "REPAY SUCCESS : " + Number(quantity).toFixed(4) + "  " +  this.selectedInstrument.symbol +  " worth " + this.formData.repayValue + " USD have been successfully repayed to SIGH Finance for the Account + " + this.formData.onBehalfOf +  ". Gas used = " + response.gasUsed });
               this.$showInfoMsg({message: " $SIGH FARMS look forward to serving you again!"});
               await this.refreshCurrentInstrumentWalletState(false);
-              this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Repay',Service: 'LENDING'});
             }
             else {
               this.$showErrorMsg({message: "REPAY FAILED : " + response.message  }); 
               this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-              // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Repay',Service: 'LENDING'});
             }
             this.showLoader = false;     
             this.formData.repayValue = null;
@@ -144,12 +142,10 @@ export default {
               this.$showSuccessMsg({message: "REPAY SUCCESS : " + Number(quantity).toFixed(4) + "  " +  this.selectedInstrument.symbol +  " worth " + this.formData.repayValue  + " USD have been successfully repayed to SIGH Finance! Gas used = " + response.gasUsed });
               this.$showInfoMsg({message: " $SIGH FARMS look forward to serving you again!"});
               await this.refreshCurrentInstrumentWalletState(false);
-              this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Repay',Service: 'LENDING'});
             }
             else {
               this.$showErrorMsg({message: "REPAY FAILED : " + response.message  }); 
               this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-              // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Repay',Service: 'LENDING'});
             }
             this.formData.repayValue = null;
             this.showLoader = false;
@@ -178,12 +174,10 @@ export default {
           await this.refreshCurrentInstrumentWalletState(false);        
           this.$showSuccessMsg({message: "APPROVAL SUCCESS : Maximum of " + this.selectedInstrumentWalletState.userAvailableAllowance + "  " +  this.selectedInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });
           this.formData.repayValue = null;
-          // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});      
         }
         else {
           this.$showErrorMsg({message: "APPROVAL FAILED : " + response.message  }); 
           this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-          // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});              
         }
         this.showLoader = false;
       }

@@ -128,8 +128,8 @@ contract DefaultInstrumentInterestRateStrategy is I_InstrumentInterestRateStrate
             currentVariableBorrowRate = baseVariableBorrowRate.add(variableRateSlope1).add( variableRateSlope2.rayMul(excessUtilizationRateRatio) );
         } 
         else {
-            currentStableBorrowRate = currentStableBorrowRate.add( stableRateSlope1.rayMul( utilizationRate.rayDiv( OPTIMAL_UTILIZATION_RATE ) ) );
-            currentVariableBorrowRate = baseVariableBorrowRate.add( utilizationRate.rayDiv(OPTIMAL_UTILIZATION_RATE).rayMul(variableRateSlope1) );
+            currentStableBorrowRate = currentStableBorrowRate.add( stableRateSlope1.rayMul( utilizationRate.rayDiv(OPTIMAL_UTILIZATION_RATE) ) );
+            currentVariableBorrowRate = baseVariableBorrowRate.add( variableRateSlope1.rayMul( utilizationRate.rayDiv(OPTIMAL_UTILIZATION_RATE) ) );
         }
 
         currentLiquidityRate = getOverallBorrowRateInternal( _totalBorrowsStable, _totalBorrowsVariable, currentVariableBorrowRate, _averageStableBorrowRate ).rayMul(utilizationRate);

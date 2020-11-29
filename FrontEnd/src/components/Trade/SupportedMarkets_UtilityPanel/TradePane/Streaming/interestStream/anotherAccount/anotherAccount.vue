@@ -106,7 +106,6 @@ export default {
         if (response.status) {  
           this.$showSuccessMsg({message: "INTEREST STREAM for the instrument + "  + this.selectedInstrument.symbol +  " has been successfully re-directed from " + this.formData.fromAccount + " to " + this.formData.toAccount  });
           await this.refreshCurrentInstrumentWalletState(true);
-          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'InterestRedirectedByAdministrator',Service: 'STREAMING'});
           this.formData.toAccount = null;
         }
         else {

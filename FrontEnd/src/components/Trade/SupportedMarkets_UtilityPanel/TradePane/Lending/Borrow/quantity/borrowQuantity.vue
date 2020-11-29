@@ -119,12 +119,10 @@ export default {
             this.$showSuccessMsg({message: "BORROW SUCCESS : " + this.formData.borrowQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully borrowed from SIGH Finance. Gas used = " + response.gasUsed });
             this.$showInfoMsg({message: "ThankYou for choosing $SIGH Farms! We look forward to serving your capital requirements again!"});
             await this.refreshCurrentInstrumentWalletState(false);
-            this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Borrow',Service: 'LENDING'});
           }
           else {
             this.$showErrorMsg({message: "BORROW FAILED : " + response.message  }); 
             this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-            // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Borrow',Service: 'LENDING'});
           }
           this.formData.borrowQuantity = null;
           this.showLoader = false;

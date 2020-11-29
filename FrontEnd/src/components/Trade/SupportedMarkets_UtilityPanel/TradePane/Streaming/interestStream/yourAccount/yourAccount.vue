@@ -91,7 +91,6 @@ export default {
           this.$showSuccessMsg({message: "INTEREST STREAM for the instrument + "  + this.selectedInstrument.symbol +  " have been successfully re-directed to " + this.formData.toAccount + " from the connected Account " +  this.$store.state.connectedWallet  });
           this.formData.toAccount = null;
           await this.refreshCurrentInstrumentWalletState(true);
-          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'InterestRedirected',Service: 'STREAMING'});
         }
         else {
           this.$showErrorMsg({message: "INTEREST STREAM RE-DIRECTION FAILED : " + response.message  });
@@ -124,7 +123,6 @@ export default {
           this.$showSuccessMsg({message: "ADMINISTRATOR PRIVILEDGES to re-direct the INTEREST STREAM for the instrument + "  + this.selectedInstrument.symbol +  " of the connected Account " +  this.$store.state.connectedWallet + " has been transferred to " + this.formData.toAccount  });
           this.formData.toAccount = null;
           await this.refreshCurrentInstrumentWalletState(true);          
-          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'InterestRidirectionRightsTransferred',Service: 'STREAMING'});
         }
         else {
           this.$showErrorMsg({message: " TRANSFERING ADMINISTRATOR PRIVILEDGES FAILED: " + response.message  });

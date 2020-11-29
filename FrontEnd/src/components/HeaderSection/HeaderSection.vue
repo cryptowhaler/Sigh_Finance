@@ -69,12 +69,10 @@ export default {
         let response =  await this.SIGHSpeedController_drip();
         if (response.status) {      
           this.$showSuccessMsg({message: "SIGH transferred Successfully to SIGH Distribution Handler and the SIGH Treasury Contracts!" });
-          // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
         }
         else {
           this.$showErrorMsg({message: "SIGH Drip FAILED : " + response.message  });
           this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-          // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
         }
       }
     },    

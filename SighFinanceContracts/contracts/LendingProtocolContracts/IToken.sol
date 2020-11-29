@@ -587,7 +587,6 @@ contract IToken is ERC20, ERC20Detailed {
         }
     } 
 
-    event supplier_SIGH_Accured(address supplier, uint currentBalance, uint sighAccured,uint supplierIndex );
 
     // Supply Index tracks the SIGH Accured per Instrument. Supplier Index tracks the Sigh Accured by the Supplier per Instrument
     // Delta Index = Supply Index - Supplier Index
@@ -596,20 +595,18 @@ contract IToken is ERC20, ERC20Detailed {
         uint supplyIndex = sighDistributionHandlerContract.getInstrumentSupplyIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHDistributionHandler Contract
         require(supplyIndex > 0, "SIGH Distribution Handler returned invalid supply Index for the instrument");
 
-        Double memory supplierIndex = Double({mantissa: SupplierIndexes[supplier]}) ;      // Stored Supplier Index
-        Double memory supplyIndex_ = Double({mantissa: supplyIndex});                        // Instrument Index
-        SupplierIndexes[supplier] = supplyIndex_.mantissa;                                   // Supplier Index is UPDATED
+        Double memory userIndex = Double({mantissa: SupplierIndexes[supplier]}) ;      // Stored Supplier Index
+        Double memory instrumentIndex = Double({mantissa: supplyIndex});                        // Instrument Index
+        SupplierIndexes[supplier] = instrumentIndex.mantissa;                                   // Supplier Index is UPDATED
 
-        if (supplierIndex.mantissa == 0 && supplyIndex_.mantissa > 0) {
-            supplierIndex.mantissa = supplyIndex_.mantissa; // sighInitialIndex;
+        if (userIndex.mantissa == 0 && instrumentIndex.mantissa > 0) {
+            userIndex.mantissa = instrumentIndex.mantissa; // sighInitialIndex;
         }
 
         uint supplierTokens = super.balanceOf(supplier);                                                // Current Supplier IToken (1:1 mapping with instrument) Balance
-        Double memory deltaIndex = sub_(supplyIndex_, supplierIndex);                                // , 'Distribute Supplier SIGH : supplyIndex Subtraction Underflow'
+        Double memory deltaIndex = sub_(instrumentIndex, userIndex);                                // , 'Distribute Supplier SIGH : supplyIndex Subtraction Underflow'
 
-        emit supplier_SIGH_Accured(supplier, supplierTokens, mul_(supplierTokens, deltaIndex),  SupplierIndexes[supplier] );
-
-        if (deltaIndex.mantissa > 0) {
+        if ( deltaIndex.mantissa > 0 && supplierTokens > 0 ) {
             uint supplierSighDelta = mul_(supplierTokens, deltaIndex);                                      // Supplier Delta = Balance * Double(DeltaIndex)/DoubleScale
             accureSigh(supplier, supplierSighDelta );        // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the Supplier or the address to which SIGH is being redirected to 
         }

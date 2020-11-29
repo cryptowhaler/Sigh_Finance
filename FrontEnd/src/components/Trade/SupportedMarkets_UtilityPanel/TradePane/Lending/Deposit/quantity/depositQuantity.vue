@@ -113,13 +113,10 @@ export default {
           this.$showSuccessMsg({message: "DEPOSIT SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD have been successfully deposited to SIGH Finance. Enjoy your $SIGH farm yields." });
           this.$showInfoMsg({message: " Interest & $SIGH bearing ITokens (ERC20) are issued as debt against the deposits made in the SIGH Finance Protocol on a 1:1 basis. You can read more about it at medium.com/SighFinance" });
           await this.refreshCurrentInstrumentWalletState(false);
-          // this.$showInfoMsg({message: "Available Allowance : " + this.selectedInstrumentWalletState.userAvailableAllowance + " " + this.selectedInstrument.symbol });        
-          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
         }
         else {
           this.$showErrorMsg({message: "DEPOSIT FAILED : " + response.message  }); // this.formData.depositQuantity + "  " + this.selectedInstrument.symbol +  " worth " + value + " USD approval failed. Try increasing Gas or contact our team at contact@sigh.finance in case of any queries." });        
           this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); // this.formData.depositQuantity + "  " + this.selectedInstrument.symbol +  " worth " + value + " USD approval failed. Try increasing Gas or contact our team at contact@sigh.finance in case of any queries." });        
-          // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
         }
         this.formData.depositQuantity = null;
         this.showLoader = false;
@@ -151,12 +148,10 @@ export default {
         if (response.status) {      
           this.$showSuccessMsg({message: "DEPOSIT (MINT) SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully minted for testing. Gas used = " + response.gasUsed });
           await this.refreshCurrentInstrumentWalletState(false);         // UPDATE THE STATE OF THE SELECTED INSTRUMENT
-          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Minting',Service: 'LENDING'});
         }
         else {
           this.$showErrorMsg({message: "DEPOSIT (MINT) FAILED : " + response.message  }); 
           this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-          // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Deposit',Service: 'LENDING'});
         }
         this.formData.depositValue = null;
         this.showLoader = false;
@@ -184,12 +179,10 @@ export default {
           await this.refreshCurrentInstrumentWalletState(false);        
           this.$showSuccessMsg({message: "APPROVAL SUCCESS : Maximum of " + this.selectedInstrumentWalletState.userAvailableAllowance + "  " +  this.selectedInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });
           this.formData.depositQuantity = null;
-          // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});      
         }
         else {
           this.$showErrorMsg({message: "APPROVAL FAILED : " + response.message  }); 
           this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-          // this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'ApproveForDeposit',Service: 'LENDING'});              
         }
         this.showLoader = false;
       }

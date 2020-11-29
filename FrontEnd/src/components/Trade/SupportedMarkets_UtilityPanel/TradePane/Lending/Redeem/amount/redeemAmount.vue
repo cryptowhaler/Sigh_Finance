@@ -106,12 +106,10 @@ export default {
           this.$showSuccessMsg({message: "REDEEM SUCCESS : " + Number(quantity).toFixed(4) + "  " +  this.selectedInstrument.symbol +  " worth " +  this.formData.redeemValue + " USD have been successfully redeemed from SIGH Finance. Gas used = " + response.gasUsed });
           this.$showInfoMsg({message: " $SIGH FARMS Look forward to serving you again!"});
           await this.refreshCurrentInstrumentWalletState(false);
-          this.$store.commit('addTransactionDetails',{status: 'success',Hash:response.transactionHash, Utility: 'Redeem',Service: 'LENDING'});
         }
         else {
           this.$showErrorMsg({message: "REDEEM FAILED : " + response.message  }); 
           this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-          // this.$store.commit('addTransactionDetails',{status: 'failure',Hash:response.message.transactionHash, Utility: 'Redeem',Service: 'LENDING'});
         }
         this.formData.redeemQuantity = null;
         this.showLoader = false;
