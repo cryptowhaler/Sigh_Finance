@@ -300,7 +300,19 @@ library CoreLibrary {
         return cumulated;
     }
 
+    // TO BE TESTED : SHOULD RETURN THE CURRENT COMPOUNDED VARIABLE BORROW BALANCE FOR THE INSTRUMENT
+    function getCompoundedVariableBorrowBalance(CoreLibrary.InstrumentData storage _instrument) internal view returns (uint256) { 
+            uint256 cumulated = calculateCompoundedInterest(_instrument.currentVariableBorrowRate, _instrument.lastUpdateTimestamp).rayMul(_instrument.lastVariableBorrowCumulativeIndex );
+            uint compoundedVariableBorrowBalance = _instrument.totalBorrowsVariable.wadToRay().rayMul( cumulated ).rayToWad();
+            return compoundedVariableBorrowBalance;
+    }
 
+    // TO BE TESTED : SHOULD RETURN THE CURRENT COMPOUNDED VARIABLE BORROW BALANCE FOR THE INSTRUMENT
+    function getCompoundedStableBorrowBalance(CoreLibrary.InstrumentData storage _instrument) internal view returns (uint256) { 
+            uint256 cumulated = calculateCompoundedInterest(_instrument.currentAverageStableBorrowRate, _instrument.lastUpdateTimestamp);
+            uint compoundedStableBorrowBalance = _instrument.totalBorrowsStable.wadToRay().rayMul( cumulated ).rayToWad();
+            return compoundedStableBorrowBalance;
+    }
 
     /**
     * @dev function to calculate the interest using a linear interest rate formula

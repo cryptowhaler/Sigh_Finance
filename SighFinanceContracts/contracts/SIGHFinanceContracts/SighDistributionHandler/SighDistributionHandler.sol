@@ -602,12 +602,15 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         uint borrowSpeed = add_(Instrument_Sigh_Mechansim_States[currentInstrument].borrowers_Speed, Instrument_Sigh_Mechansim_States[currentInstrument].staking_Speed, "Supplier speed addition with staking speed overflow" );
         uint deltaBlocks = sub_(blockNumber, uint(instrumentState.borrowlastupdatedblock), 'updateSIGHBorrowIndex : Block Subtraction Underflow');         // DELTA BLOCKS
         
+        uint totalVariableBorrows =  lendingPoolCore.getInstrumentCompoundedBorrowsVariable(currentInstrument);
+        uint totalStableBorrows =  lendingPoolCore.getInstrumentCompoundedBorrowsStable(currentInstrument);
+        uint totalCompoundedBorrows =  add_(totalVariableBorrows,totalStableBorrows,'Compounded Borrows Addition gave error'); 
+        
         if (deltaBlocks > 0 && borrowSpeed > 0) {       // In case SIGH would have accured
             uint sigh_Accrued = mul_(deltaBlocks, borrowSpeed);                             // SIGH ACCURED = DELTA BLOCKS x SIGH SPEED (BORROWERS)
-            uint totalBorrows =  lendingPoolCore.getInstrumentTotalBorrows(currentInstrument);
-            Double memory ratio = totalBorrows > 0 ? fraction(sigh_Accrued, totalBorrows) : Double({mantissa: 0});      // SIGH Accured per Borrowed Instrument Token
+            Double memory ratio = totalCompoundedBorrows > 0 ? fraction(sigh_Accrued, totalCompoundedBorrows) : Double({mantissa: 0});      // SIGH Accured per Borrowed Instrument Token
             Double memory newIndex = add_(Double({mantissa: instrumentState.borrowindex}), ratio);                      // New Index
-            emit SIGHBorrowIndexUpdated( currentInstrument, totalBorrows, sigh_Accrued, ratio.mantissa , newIndex.mantissa, blockNumber );
+            emit SIGHBorrowIndexUpdated( currentInstrument, totalCompoundedBorrows, sigh_Accrued, ratio.mantissa , newIndex.mantissa, blockNumber );
 
             instrumentState.borrowindex = newIndex.mantissa ;  // STATE UPDATE: New Index Committed to Storage 
         } 

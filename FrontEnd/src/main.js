@@ -44,36 +44,30 @@ import AsyncComputed from 'vue-async-computed';
 // by passing in our Link and a new instance of InMemoryCache (recommended caching solution). Finally, 
 // we are adding ApolloProvider to the Vue app.
 
-// http://graph.marlin.pro
 // const header = { Authorization: 'Bearer ' + ConnectedWallet.token, };
-  // uri: 'wss://graph.marlin.pro/subgraphs/name/cryptowhaler/sigh-finance-kovan',
   //Link for Subscription and defining headers
-  const graphQL_subscription = new WebSocketLink({     uri: 'wss://api.thegraph.com/subgraphs/name/cryptowhaler/sigh-finance-kovan', options: { reconnect: true, timeout:300000, }, });
+  const graphQL_subscription = new WebSocketLink({ uri: 'wss://api.thegraph.com/subgraphs/name/cryptowhaler/sigh-finance-kovan', options: { reconnect: true, timeout:300000, }, });
   const subscriptionClient = new ApolloClient({ link: graphQL_subscription, cache: new InMemoryCache({ addTypename: true, }),});
 
-  // const marlinCache = new HttpLink ({uri: 'http://graph.marlin.pro/subgraphs/name/cryptowhaler/sigh-finance-kovan'});
-  // const marlinClient = new ApolloClient({ link: marlinCache, cache: new InMemoryCache(), connectToDevTools: true });
+  Vue.use(VueApollo);
 
-Vue.use(VueApollo);
+  /* Init Bootstrap */
+  Vue.use(BootstrapVue);
+  Vue.use(AsyncComputed);  // Plugin to make async calls in computed 
 
-/* Init Bootstrap */
-Vue.use(BootstrapVue);
-Vue.use(AsyncComputed);  // Plugin to make async calls in computed 
+  const apolloProvider = new VueApollo({  //holds the Apollo client instances that can then be used by all the child components
+    defaultClient: subscriptionClient,
+  });
 
-const apolloProvider = new VueApollo({  //holds the Apollo client instances that can then be used by all the child components
-  // clients: { subscriptionClient,  marlinClient},  
-  defaultClient: subscriptionClient,
-});
+  if (!LocalStorage.get(Keys.pingUuid)) {       
+    LocalStorage.set(Keys.pingUuid, uuidv4());
+  }
 
-if (!LocalStorage.get(Keys.pingUuid)) {       
-  LocalStorage.set(Keys.pingUuid, uuidv4());
-}
+  Vue.config.productionTip = false;
 
-Vue.config.productionTip = false;
-
-new Vue({
-  router,
-  store,
-  apolloProvider,
-  render: h => h(App),
-}).$mount('#app');
+  new Vue({
+    router,
+    store,
+    apolloProvider,
+    render: h => h(App),
+  }).$mount('#app');

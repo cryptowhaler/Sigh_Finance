@@ -894,6 +894,13 @@ contract LendingPoolCore is VersionedInitializable {
         return instrument.totalBorrowsStable;
     }
 
+    // TO BE TESTED : SHOULD RETURN COMPOUNDED STABLE BORROW BALANCE
+    function getInstrumentCompoundedBorrowsStable(address _instrument) external view returns (uint256) {
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.getCompoundedStableBorrowBalance();
+    }
+
+
     /**
     * @dev gets the instrument total borrows variable
     * @param _instrument the instrument address
@@ -902,6 +909,12 @@ contract LendingPoolCore is VersionedInitializable {
     function getInstrumentTotalBorrowsVariable(address _instrument) external view returns (uint256) {
         CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
         return instrument.totalBorrowsVariable;
+    }
+
+    // TO BE TESTED : SHOULD RETURN COMPOUNDED VARIABLE BORROW BALANCE
+    function getInstrumentCompoundedBorrowsVariable(address _instrument) external view returns (uint256) {
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.getCompoundedVariableBorrowBalance();
     }
 
     /**

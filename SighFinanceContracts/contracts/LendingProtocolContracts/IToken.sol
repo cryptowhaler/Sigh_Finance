@@ -526,7 +526,7 @@ contract IToken is ERC20, ERC20Detailed {
         if(currentSupplyPrincipal == 0){
             return 0;
         }
-        return currentSupplyPrincipal.wadToRay().rayMul( core.getInstrumentNormalizedIncome(underlyingInstrumentAddress) ) .rayToWad();
+        return currentSupplyPrincipal.wadToRay().rayMul( core.getInstrumentNormalizedIncome(underlyingInstrumentAddress) ).rayToWad();
     }
 
     /**

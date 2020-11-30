@@ -123,7 +123,10 @@ interface ILendingPoolCore {
     function getInstrumentNormalizedIncome(address _instrument) external view returns (uint256) ;
 
     function getInstrumentTotalBorrowsStable(address _instrument) external view returns (uint256) ;
+    function getInstrumentCompoundedBorrowsStable(address _instrument) external view returns (uint256);
+
     function getInstrumentTotalBorrowsVariable(address _instrument) external view returns (uint256) ;
+    function getInstrumentCompoundedBorrowsVariable(address _instrument) external view returns (uint256);
 
     function getInstrumentLiquidationThreshold(address _instrument) external view returns (uint256) ;
     function getInstrumentLiquidationBonus(address _instrument) external view returns (uint256) ;
