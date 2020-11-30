@@ -43,7 +43,7 @@ contract LendingPoolCore is VersionedInitializable {
     mapping(address => CoreLibrary.InstrumentData) internal reserves;
     mapping(address => mapping(address => CoreLibrary.UserInstrumentData)) internal usersInstrumentData;
 
-    uint256 public constant CORE_REVISION = 0x3;          // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
+    uint256 public constant CORE_REVISION = 0x4;          // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
 
     /**
     * @dev Emitted when the state of a instrument is updated

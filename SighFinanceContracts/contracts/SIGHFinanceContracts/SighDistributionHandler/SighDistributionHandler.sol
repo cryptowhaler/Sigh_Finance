@@ -101,7 +101,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     
 
     event SIGHSupplyIndexUpdated(address instrument, uint totalCompoundedSupply, uint sighAccured, uint ratioMantissa, uint newIndexMantissa,  uint blockNum );
-    event SIGHBorrowIndexUpdated(address instrument, uint totalBorrows, uint sighAccured, uint ratioMantissa, uint newIndexMantissa,  uint blockNum );
+    event SIGHBorrowIndexUpdated(address instrument, uint totalCompoundedStableBorrows, uint totalCompoundedVariableBorrows, uint sighAccured, uint ratioMantissa, uint newIndexMantissa,  uint blockNum );
 
     event AccuredSIGHTransferredToTheUser(address instrument, address user, uint sigh_Amount );
 
@@ -133,7 +133,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 // ##############        PROXY RELATED  & ADDRESSES INITIALIZATION        ###############
 // ######################################################################################
 
-    uint256 constant private SIGH_DISTRIBUTION_REVISION = 0x11;
+    uint256 constant private SIGH_DISTRIBUTION_REVISION = 0x13;
 
     function getRevision() internal pure returns(uint256) {
         return SIGH_DISTRIBUTION_REVISION;
@@ -568,7 +568,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         if (deltaBlocks > 0 && supplySpeed > 0) {       // In case SIGH would have accured
             uint sigh_Accrued = mul_(deltaBlocks, supplySpeed);                                                                         // SIGH Accured
             uint totalCompoundedLiquidity = IERC20(financial_instruments[currentInstrument].iTokenAddress).totalSupply();                           // Total amount supplied 
-            Double memory ratio = totalUnderlyingLiquidity > 0 ? fraction(sigh_Accrued, totalCompoundedLiquidity) : Double({mantissa: 0});    // SIGH Accured per Supplied Instrument Token
+            Double memory ratio = totalCompoundedLiquidity > 0 ? fraction(sigh_Accrued, totalCompoundedLiquidity) : Double({mantissa: 0});    // SIGH Accured per Supplied Instrument Token
             Double memory newIndex = add_(Double({mantissa: instrumentState.supplyindex}), ratio);                                      // Updated Index
             emit SIGHSupplyIndexUpdated( currentInstrument, totalCompoundedLiquidity, sigh_Accrued, ratio.mantissa , newIndex.mantissa, blockNumber );  
 
@@ -610,7 +610,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
             uint sigh_Accrued = mul_(deltaBlocks, borrowSpeed);                             // SIGH ACCURED = DELTA BLOCKS x SIGH SPEED (BORROWERS)
             Double memory ratio = totalCompoundedBorrows > 0 ? fraction(sigh_Accrued, totalCompoundedBorrows) : Double({mantissa: 0});      // SIGH Accured per Borrowed Instrument Token
             Double memory newIndex = add_(Double({mantissa: instrumentState.borrowindex}), ratio);                      // New Index
-            emit SIGHBorrowIndexUpdated( currentInstrument, totalCompoundedBorrows, sigh_Accrued, ratio.mantissa , newIndex.mantissa, blockNumber );
+            emit SIGHBorrowIndexUpdated( currentInstrument, totalStableBorrows, totalVariableBorrows, sigh_Accrued, ratio.mantissa , newIndex.mantissa, blockNumber );
 
             instrumentState.borrowindex = newIndex.mantissa ;  // STATE UPDATE: New Index Committed to Storage 
         } 

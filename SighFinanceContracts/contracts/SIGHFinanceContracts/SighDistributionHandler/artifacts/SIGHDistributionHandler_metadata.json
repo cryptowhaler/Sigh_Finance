@@ -209,6 +209,12 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
+						"name": "totalCompoundedBorrows",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
 						"name": "sighAccured",
 						"type": "uint256"
 					},
@@ -267,6 +273,12 @@
 						"internalType": "address",
 						"name": "instrument",
 						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalCompoundedSupply",
+						"type": "uint256"
 					},
 					{
 						"indexed": false,
@@ -1292,24 +1304,24 @@
 			]
 		},
 		"localhost/contracts/Configuration/GlobalAddressesProvider.sol": {
-			"keccak256": "0x7bcc04af3342681228371dca3aa6f0dfb2d3e7ba13ae28ff6547fc3f1d30d3b4",
+			"keccak256": "0xd5e1beff87157d5700516d1f6bfa0a89c58effb73aff0dca33633e40dfd68b1f",
 			"urls": [
-				"bzz-raw://fef78d95c89d5467df1d6cbc122b40d3ddde414de0e5a3ea2a878485eb0e9642",
-				"dweb:/ipfs/QmSkP9rA6WG34hHqNQC8B2g8dpnPZQJp71td6GVpN8zrxP"
+				"bzz-raw://8ce627bea8091d60b2d59ee4ca033ee9859e1c4487ed3f8061c3624c9f10794d",
+				"dweb:/ipfs/QmczACN46FKSTAaUuCzCKS2Ad1rSus1pEQayQ2xio2un8w"
 			]
 		},
 		"localhost/contracts/Configuration/IGlobalAddressesProvider.sol": {
-			"keccak256": "0xefeb61dea52cfa0dcc34ea94d1f402389f598cf8ba238a7a6473cced72d2b73d",
+			"keccak256": "0x30385d394fe30ea120fd04ef3d9f3e6006a90d08c6795ed9b3c586fb98a56512",
 			"urls": [
-				"bzz-raw://a8e77e69d2855a84c0f1ab2e833ecb6656f46512ac4583e2ea7c8c5aa800f655",
-				"dweb:/ipfs/Qme7SjV9Ax6nPoirbgg8WBQ2UxTQESUC6KbDNSwcrzVyp9"
+				"bzz-raw://433194f95571c81d390832741a81d152e40c540722354e4f3c914d83600983a4",
+				"dweb:/ipfs/QmPwRF6AHfvUqco3YP9XZCe818juptqY5UUD75XQwmqg5u"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
-			"keccak256": "0x2aee154889e26c21e268b6b18646d88a9b9113ff789f7be12aa12b764ae1898a",
+			"keccak256": "0x37465febf6c92125bde6afa3d7e0cc33c89077d689eb031f04f1818c1fa26756",
 			"urls": [
-				"bzz-raw://b42112137dcabf248f4e9efbe0330c7d46048c4c1da8186ef4de4e850b5f6799",
-				"dweb:/ipfs/QmZCXWYb4PBGpWJJEzX25XAiVkLvhW9TxVxLFksqJYzTTr"
+				"bzz-raw://68a2de8d743f504fb5510bfa083c8056bd09ede959cba2df7b7e0139b64f60ad",
+				"dweb:/ipfs/QmcMHEawYbuTQCjXEBUpRMJsAaqPgjK6PQC5jKWHZ54zvA"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/IPriceOracleGetter.sol": {
@@ -1320,10 +1332,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
-			"keccak256": "0x5ac06f62f0ceaeb15e94b0961de7e4cf6db8d77ca2c879e55772e4bf386428b3",
+			"keccak256": "0x3799446dff4f09de695bc46e555c50d47592d39b7d4bc0b41f5d046218b787f7",
 			"urls": [
-				"bzz-raw://fcf92275bf98d7c775ad72003a9a34879b039f6d126de59b85fe3a3c67f12a6b",
-				"dweb:/ipfs/QmWXH6H95TiidAP1BWYPEkJ9rYzNKuGnyj7ZSzTj5f8wSm"
+				"bzz-raw://ad7b33ac794daa623c0e47e78bf9430fc8470a67c8a593f065479173031133f1",
+				"dweb:/ipfs/QmTiP7TzYponrC9wCZ2SqzavzgYkBDmRRCHhErwWac5NDT"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/WadRayMath.sol": {
@@ -1355,10 +1367,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighDistributionHandler/SighDistributionHandler.sol": {
-			"keccak256": "0xcf1121b08722595aa8ee4bc269a613730d1747347a88535558192b1eaf787d67",
+			"keccak256": "0x6445b266854a79257c58281b1dfed2d383c4bad7990e57ace01cc7ea60f1b556",
 			"urls": [
-				"bzz-raw://bf7aa0e6e56da3a9508e06ace7633c7f9b7ae0e77d299923aaca1407b45430bb",
-				"dweb:/ipfs/QmTdCY5LBzjwYvco3epC5TryZTXSQxVHvba45RnVQjPCHc"
+				"bzz-raw://4f03427bf6d1df5fdc00cf01d3a5573780d9568ea4196879c67350b9613386b3",
+				"dweb:/ipfs/QmdP1yezT5Lh4jNx766MEVjG98tnCxBJ9UNHnhZVhhK4EU"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

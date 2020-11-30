@@ -6,6 +6,52 @@ import { Instrument } from "../../generated/schema"
 import { createInstrument,updatePrice } from "./LendingPoolConfigurator"
 
 
+// FINAL v0. To be Tested : WEI ONLY
+export function handleSIGHSupplyIndexUpdated(event: SIGHSupplyIndexUpdated): void {
+    let instrumentId = event.params.instrument.toHexString()
+    let instrumentState = Instrument.load(instrumentId)
+
+    // Instrument's current Compounded Liquidity Balance
+    instrumentState.totalCompoundedLiquidityWEI = instrumentState.totalCompoundedLiquidityWEI.plus( event.params.totalCompoundedSupply )
+
+    // Instrument's life-time $SIGH Accured as part of "Liquidity $SIGH Stream"
+    instrumentState.totalLiquiditySIGHAccuredWEI = instrumentState.totalLiquiditySIGHAccuredWEI.plus( event.params.sighAccured )
+
+    // Instrument's current $SIGH Accuredas part of "Liquidity $SIGH Stream" , which is being distributed among the Liquidity Providers
+    instrumentState.currentLiquiditySIGHAccuredWEI = instrumentState.currentLiquiditySIGHAccuredWEI.plus( event.params.sighAccured )
+
+    instrumentState.SIGH_Supply_Index = event.params.newIndexMantissa   // INDEX is used for distributing $SIGH on a per token unit basis
+    instrumentState.SIGH_Supply_Index_lastUpdatedBlock = event.params.blockNum    // Block Number when it was last updated
+
+    instrumentState.save()
+}
+
+// FINAL v0. To be Tested : WEI ONLY
+export function handleSIGHBorrowIndexUpdated(event: SIGHBorrowIndexUpdated): void {
+    let instrumentId = event.params.instrument.toHexString()
+    let instrumentState = Instrument.load(instrumentId)
+
+    // Instrument's current Compounded STABLE Borrow Balance
+    instrumentState.totalCompoundedStableBorrowsWEI = instrumentState.totalCompoundedStableBorrowsWEI.plus( event.params.totalCompoundedStableBorrows )
+
+    // Instrument's current Compounded VARIABLE Borrow Balance
+    instrumentState.totalCompoundedVariableBorrowsWEI = instrumentState.totalCompoundedVariableBorrowsWEI.plus( event.params.totalCompoundedVariableBorrows )
+
+    // Instrument's life-time $SIGH Accured as part of  "Borrowing $SIGH Stream"
+    instrumentState.totalBorrowingSIGHAccuredWEI = instrumentState.totalBorrowingSIGHAccuredWEI.plus( event.params.sighAccured )
+
+    // Instrument's current $SIGH Accured  as part of  "Borrowing $SIGH Stream", which is being distributed among the Instrument Borrowers
+    instrumentState.currentBorrowingSIGHAccuredWEI = instrumentState.currentBorrowingSIGHAccuredWEI.plus( event.params.sighAccured )
+
+    instrumentState.SIGH_Borrow_Index = event.params.newIndexMantissa      // INDEX is used for distributing $SIGH on a per token unit basis
+    instrumentState.SIGH_Borrow_Index_lastUpdatedBlock = event.params.blockNum    // Block Number when it was last updated
+    
+    instrumentState.save()
+}
+
+
+
+
 export function handleInstrumentAdded(event: InstrumentAdded): void {
     log.info('handleInstrumentAdded: 1st ',[])
     let instrumentId = event.params.instrumentAddress_.toHexString()    
@@ -93,21 +139,7 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
     instrumentState.save()
 }
 
-export function handleSIGHSupplyIndexUpdated(event: SIGHSupplyIndexUpdated): void {
-    let instrumentId = event.params.instrument.toHexString()
-    let instrumentState = Instrument.load(instrumentId)
-    instrumentState.SIGH_Supply_Index = event.params.newIndexMantissa
-    instrumentState.SIGH_Supply_Index_lastUpdatedBlock = event.params.blockNum
-    instrumentState.save()
-}
 
-export function handleSIGHBorrowIndexUpdated(event: SIGHBorrowIndexUpdated): void {
-    let instrumentId = event.params.instrument.toHexString()
-    let instrumentState = Instrument.load(instrumentId)
-    instrumentState.SIGH_Borrow_Index = event.params.newIndexMantissa
-    instrumentState.SIGH_Borrow_Index_lastUpdatedBlock = event.params.blockNum
-    instrumentState.save()
-}
 
 export function handleAccuredSIGHTransferredToTheUser(event: AccuredSIGHTransferredToTheUser): void {
     let instrumentId = event.params.instrument.toHexString()

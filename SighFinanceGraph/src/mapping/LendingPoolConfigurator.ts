@@ -365,6 +365,9 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.borrowFeeEarnedETH = BigDecimal.fromString('0')
     instrument_state_initialized.borrowFeeEarnedUSD = BigDecimal.fromString('0')
 
+    instrument_state_initialized.totalCompoundedLiquidityWEI =  new BigInt(0)
+
+
     instrument_state_initialized.totalLiquidity_WEI = new BigInt(0)
     instrument_state_initialized.totalLiquidity = BigDecimal.fromString('0')
     instrument_state_initialized.totalLiquidityETH = BigDecimal.fromString('0')
@@ -380,10 +383,14 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.totalPrincipalBorrowsETH = BigDecimal.fromString('0')
     instrument_state_initialized.totalPrincipalBorrowsUSD = BigDecimal.fromString('0')
 
+    instrument_state_initialized.totalCompoundedStableBorrowsWEI =  new BigInt(0)
+
     instrument_state_initialized.totalPrincipalStableBorrows_WEI = new BigInt(0)
     instrument_state_initialized.totalPrincipalStableBorrows = BigDecimal.fromString('0')
     instrument_state_initialized.totalPrincipalStableBorrowsETH = BigDecimal.fromString('0')
     instrument_state_initialized.totalPrincipalStableBorrowsUSD = BigDecimal.fromString('0')
+
+    instrument_state_initialized.totalCompoundedVariableBorrowsWEI =  new BigInt(0)
 
     instrument_state_initialized.totalPrincipalVariableBorrows_WEI = new BigInt(0)
     instrument_state_initialized.totalPrincipalVariableBorrows = BigDecimal.fromString('0')
@@ -430,11 +437,20 @@ export function createInstrument(addressID: string): Instrument {
 
     // SIGH DISTRIBUTION RELATED
 
+    // BOOLEAN
     instrument_state_initialized.isListedWithSIGH_Mechanism = false
     instrument_state_initialized.isSIGHMechanismActivated = false
 
+    // LIQUIDITY $SIGH STREAM
+    instrument_state_initialized.totalLiquiditySIGHAccuredWEI =    new BigInt(0)
+    instrument_state_initialized.currentLiquiditySIGHAccuredWEI =    new BigInt(0)
+
     instrument_state_initialized.SIGH_Supply_Index =  new BigInt(0)
     instrument_state_initialized.SIGH_Supply_Index_lastUpdatedBlock =  new BigInt(0)
+
+    // BORROWING $SIGH STREAM
+    instrument_state_initialized.totalBorrowingSIGHAccuredWEI =  new BigInt(0)
+    instrument_state_initialized.currentBorrowingSIGHAccuredWEI =  new BigInt(0)
 
     instrument_state_initialized.SIGH_Borrow_Index =  new BigInt(0)
     instrument_state_initialized.SIGH_Borrow_Index_lastUpdatedBlock =  new BigInt(0)

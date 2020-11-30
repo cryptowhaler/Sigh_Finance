@@ -103,6 +103,8 @@ type Instrument @entity {
     totalLiquidityETH: BigDecimal!
     totalLiquidityUSD: BigDecimal!
 
+    totalCompoundedLiquidityWEI: BigInt!
+
     "availableLiquidity_WEI : totalLiquidity_WEI - totalPrincipalBorrows_WEI, present tokenized instrument quantity available with SIGH Finance's Lending Pool for borrowing. (not adjusted by decimal)"    
     availableLiquidity_WEI: BigInt!
     "availableLiquidity : totalLiquidity - totalPrincipalBorrows, present tokenized instrument quantity available with SIGH Finance's Lending Pool for borrowing. (Adjusted by decimal)"    
@@ -117,6 +119,7 @@ type Instrument @entity {
     totalPrincipalBorrowsETH: BigDecimal!
     totalPrincipalBorrowsUSD: BigDecimal!
 
+    totalCompoundedStableBorrowsWEI: BigInt!
     "totalPrincipalStableBorrows_WEI :  present tokenized instrument's total Principal borrowed quantity taken at Stable Interest Rate from SIGH Finance's Lending Pool. (not adjusted by decimal)"    
     totalPrincipalStableBorrows_WEI: BigInt!
     "totalPrincipalStableBorrows :  present tokenized instrument's total Principal borrowed quantity taken at Stable Interest Rate from SIGH Finance's Lending Pool. (Adjusted by decimal)"    
@@ -124,6 +127,7 @@ type Instrument @entity {
     totalPrincipalStableBorrowsETH: BigDecimal!
     totalPrincipalStableBorrowsUSD: BigDecimal!
 
+    totalCompoundedVariableBorrowsWEI: BigInt!
     "totalPrincipalVariableBorrows_WEI :  present tokenized instrument's total Principal borrowed quantity taken at Variable Interest Rate from SIGH Finance's Lending Pool. (not adjusted by decimal)"    
     totalPrincipalVariableBorrows_WEI: BigInt!
     "totalPrincipalVariableBorrows :  present tokenized instrument's total Principal borrowed quantity taken at Variable Interest Rate from SIGH Finance's Lending Pool. (Adjusted by decimal)"    
@@ -197,9 +201,13 @@ type Instrument @entity {
     isListedWithSIGH_Mechanism: Boolean!
     isSIGHMechanismActivated: Boolean!
 
+    totalLiquiditySIGHAccuredWEI: BigInt!
+    currentLiquiditySIGHAccuredWEI: BigInt!
     SIGH_Supply_Index: BigInt!
     SIGH_Supply_Index_lastUpdatedBlock: BigInt!
 
+    totalBorrowingSIGHAccuredWEI: BigInt!
+    currentBorrowingSIGHAccuredWEI: BigInt!
     SIGH_Borrow_Index: BigInt!
     SIGH_Borrow_Index_lastUpdatedBlock: BigInt!
 

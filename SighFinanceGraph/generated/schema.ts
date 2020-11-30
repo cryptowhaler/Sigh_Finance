@@ -752,6 +752,15 @@ export class Instrument extends Entity {
     this.set("totalLiquidityUSD", Value.fromBigDecimal(value));
   }
 
+  get totalCompoundedLiquidityWEI(): BigInt {
+    let value = this.get("totalCompoundedLiquidityWEI");
+    return value.toBigInt();
+  }
+
+  set totalCompoundedLiquidityWEI(value: BigInt) {
+    this.set("totalCompoundedLiquidityWEI", Value.fromBigInt(value));
+  }
+
   get availableLiquidity_WEI(): BigInt {
     let value = this.get("availableLiquidity_WEI");
     return value.toBigInt();
@@ -824,6 +833,15 @@ export class Instrument extends Entity {
     this.set("totalPrincipalBorrowsUSD", Value.fromBigDecimal(value));
   }
 
+  get totalCompoundedStableBorrowsWEI(): BigInt {
+    let value = this.get("totalCompoundedStableBorrowsWEI");
+    return value.toBigInt();
+  }
+
+  set totalCompoundedStableBorrowsWEI(value: BigInt) {
+    this.set("totalCompoundedStableBorrowsWEI", Value.fromBigInt(value));
+  }
+
   get totalPrincipalStableBorrows_WEI(): BigInt {
     let value = this.get("totalPrincipalStableBorrows_WEI");
     return value.toBigInt();
@@ -858,6 +876,15 @@ export class Instrument extends Entity {
 
   set totalPrincipalStableBorrowsUSD(value: BigDecimal) {
     this.set("totalPrincipalStableBorrowsUSD", Value.fromBigDecimal(value));
+  }
+
+  get totalCompoundedVariableBorrowsWEI(): BigInt {
+    let value = this.get("totalCompoundedVariableBorrowsWEI");
+    return value.toBigInt();
+  }
+
+  set totalCompoundedVariableBorrowsWEI(value: BigInt) {
+    this.set("totalCompoundedVariableBorrowsWEI", Value.fromBigInt(value));
   }
 
   get totalPrincipalVariableBorrows_WEI(): BigInt {
@@ -1160,6 +1187,24 @@ export class Instrument extends Entity {
     this.set("isSIGHMechanismActivated", Value.fromBoolean(value));
   }
 
+  get totalLiquiditySIGHAccuredWEI(): BigInt {
+    let value = this.get("totalLiquiditySIGHAccuredWEI");
+    return value.toBigInt();
+  }
+
+  set totalLiquiditySIGHAccuredWEI(value: BigInt) {
+    this.set("totalLiquiditySIGHAccuredWEI", Value.fromBigInt(value));
+  }
+
+  get currentLiquiditySIGHAccuredWEI(): BigInt {
+    let value = this.get("currentLiquiditySIGHAccuredWEI");
+    return value.toBigInt();
+  }
+
+  set currentLiquiditySIGHAccuredWEI(value: BigInt) {
+    this.set("currentLiquiditySIGHAccuredWEI", Value.fromBigInt(value));
+  }
+
   get SIGH_Supply_Index(): BigInt {
     let value = this.get("SIGH_Supply_Index");
     return value.toBigInt();
@@ -1176,6 +1221,24 @@ export class Instrument extends Entity {
 
   set SIGH_Supply_Index_lastUpdatedBlock(value: BigInt) {
     this.set("SIGH_Supply_Index_lastUpdatedBlock", Value.fromBigInt(value));
+  }
+
+  get totalBorrowingSIGHAccuredWEI(): BigInt {
+    let value = this.get("totalBorrowingSIGHAccuredWEI");
+    return value.toBigInt();
+  }
+
+  set totalBorrowingSIGHAccuredWEI(value: BigInt) {
+    this.set("totalBorrowingSIGHAccuredWEI", Value.fromBigInt(value));
+  }
+
+  get currentBorrowingSIGHAccuredWEI(): BigInt {
+    let value = this.get("currentBorrowingSIGHAccuredWEI");
+    return value.toBigInt();
+  }
+
+  set currentBorrowingSIGHAccuredWEI(value: BigInt) {
+    this.set("currentBorrowingSIGHAccuredWEI", Value.fromBigInt(value));
   }
 
   get SIGH_Borrow_Index(): BigInt {

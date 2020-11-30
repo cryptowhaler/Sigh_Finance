@@ -5,6 +5,7 @@ import { ERC20Detailed } from '../../generated/Lending_Pool_Core/ERC20Detailed'
 import { PriceOracleGetter } from '../../generated/Lending_Pool_Core/PriceOracleGetter'
 // import {updatePrice } from "./LendingPoolConfigurator"
 
+// FINAL v0. 
 export function handleInstrumentUpdated(event: InstrumentUpdated): void {
     log.info('handleInstrumentUpdated() in Core',[])
     let instrumentId = event.params.instrument.toHexString()
