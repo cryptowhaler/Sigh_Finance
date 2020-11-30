@@ -44,13 +44,30 @@ contract IToken is ERC20, ERC20Detailed {
     mapping (address => address) private interestRedirectionAddresses;      // Address to which the interest stream is being redirected
     mapping (address => uint256) private redirectedBalances;
     mapping (address => address) public interestRedirectionAllowances;     // Address allowed to perform interest redirection by the user
+    
+    // $SIGH PARAMETERS
+    // EACH USER HAS 2 $SIGH STREAMS :-
+    // 1. $SIGH STREAM BASED ON VOLATILITY OF THE LIQUIDITY PROVIDED
+    // 1. $SIGH STREAM BASED ON VOLATILITY OF THE BORROWED AMOUNT
+    // ---> Each $SIGH Stream can be Re-directed to another Account
+    // ---> Authority to re-direct each $SIGH Stream can be given to another Account
+    // ---> $SIGH Accured by a particular user = 
+    // -----> if (Liquidity $SIGH not redirected ) => $SIGH Accured += Liquidity $SIGH Stream
+    // -----> if (Borrow balance based $SIGH not redirected ) => $SIGH Accured += Borrowing $SIGH Stream
+    // ----->  => $SIGH Accured += SUM(Liquidity $SIGH Streams re-directed to this account), this SUM is calculated by accuring $SIGH over the cummulated re-directed balance
+    // ----->  => $SIGH Accured += SUM(Borrowing $SIGH Streams re-directed to this account), this SUM is calculated by accuring $SIGH over the cummulated re-directed balance
 
     uint public sigh_Transfer_Threshold = 1e18;                         // SIGH Transferred when accured >= 1 SIGH (in ETH)
-    mapping (address => uint256) private AccuredSighBalances;           // SIGH Collected - ADDED BY SIGH FINANCE
-    mapping (address => uint256) private SupplierIndexes;               // SupplierIndex - ADDED BY SIGH FINANCE
-    mapping (address => uint256) private BorrowerIndexes;               // BorrowerIndex - ADDED BY SIGH FINANCE
-    mapping (address => address) private sighRedirectionAddresses;      // Redirection Address - ADDED BY SIGH FINANCE
-    mapping (address => address) private sighRedirectionAllowances;    // Allowance - ADDED BY SIGH FINANCE
+    mapping (address => uint256) private AccuredSighBalance;           // SIGH Collected - ADDED BY SIGH FINANCE
+    
+    mapping (address => uint256) private user_SIGH_Supplyindexes;               // SupplierIndex - ADDED BY SIGH FINANCE
+    mapping (address => uint256) private user_SIGH_Borrowindexes;               // BorrowerIndex - ADDED BY SIGH FINANCE
+
+    mapping (address => address) private supply_Sigh_RedirectionAddress;      // Redirection Address - ADDED BY SIGH FINANCE
+    mapping (address => address) private borrow_Sigh_RedirectionAddress;      // Redirection Address - ADDED BY SIGH FINANCE
+
+    mapping (address => address) private borrow_Sigh_Redirection_Allowance;    // Allowance - ADDED BY SIGH FINANCE
+    mapping (address => address) private supply_Sigh_Redirection_Allowance;    // Allowance - ADDED BY SIGH FINANCE
 
 
 // ########################
@@ -582,7 +599,7 @@ contract IToken is ERC20, ERC20Detailed {
     function claimSighInternal(address user) internal {
         accure_Supplier_SIGH(user, balanceOf(user) );
         accure_Borrower_SIGH_Internal(user);
-        if (AccuredSighBalances[user] > 0) {
+        if (AccuredSighBalance[user] > 0) {
             transferSigh(user, user);
         }
     } 
@@ -595,9 +612,9 @@ contract IToken is ERC20, ERC20Detailed {
         uint supplyIndex = sighDistributionHandlerContract.getInstrumentSupplyIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHDistributionHandler Contract
         require(supplyIndex > 0, "SIGH Distribution Handler returned invalid supply Index for the instrument");
 
-        Double memory userIndex = Double({mantissa: SupplierIndexes[supplier]}) ;      // Stored Supplier Index
+        Double memory userIndex = Double({mantissa: user_SIGH_Supplyindexes[supplier]}) ;      // Stored Supplier Index
         Double memory instrumentIndex = Double({mantissa: supplyIndex});                        // Instrument Index
-        SupplierIndexes[supplier] = instrumentIndex.mantissa;                                   // Supplier Index is UPDATED
+        user_SIGH_Supplyindexes[supplier] = instrumentIndex.mantissa;                                   // Supplier Index is UPDATED
 
         if (userIndex.mantissa == 0 && instrumentIndex.mantissa > 0) {
             userIndex.mantissa = instrumentIndex.mantissa; // sighInitialIndex;
@@ -607,7 +624,7 @@ contract IToken is ERC20, ERC20Detailed {
 
         if ( deltaIndex.mantissa > 0 && currentBalance > 0 ) {
             uint supplierSighDelta = mul_(currentBalance, deltaIndex);                                      // Supplier Delta = Balance * Double(DeltaIndex)/DoubleScale
-            accureSigh(supplier, supplierSighDelta );        // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the Supplier or the address to which SIGH is being redirected to 
+            accureSigh(supplier, supplierSighDelta );        // ACCURED SIGH AMOUNT IS ADDED TO THE AccuredSighBalance of the Supplier or the address to which SIGH is being redirected to 
         }
     }
 
@@ -621,15 +638,15 @@ contract IToken is ERC20, ERC20Detailed {
     }
 
     event distributeBorrower_SIGH_test3(address borrower, uint borrowIndex_mantissa, uint borrowerIndex_mantissa );
-    event distributeBorrower_SIGH_test4(uint BorrowerIndexes, uint deltaIndex,uint marketBorrowIndex, uint borrowBalance,uint borrowerAmount, uint borrowerSIGHDelta );
+    event distributeBorrower_SIGH_test4(uint user_SIGH_Borrowindexes, uint deltaIndex,uint marketBorrowIndex, uint borrowBalance,uint borrowerAmount, uint borrowerSIGHDelta );
 
     function accure_Borrower_SIGH_Internal(address borrower) internal {
         uint borrowIndex = sighDistributionHandlerContract.getInstrumentBorrowIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHDistributionHandler Contract
         require(borrowIndex > 0, "SIGH Distribution Handler returned invalid borrow Index for the instrument");
         
         Double memory borrowIndex_ = Double({mantissa: borrowIndex});                        // Instrument Index
-        Double memory userIndex = Double({mantissa: BorrowerIndexes[borrower]}) ;      // Stored Borrower Index
-        BorrowerIndexes[borrower] = borrowIndex_.mantissa;                                   // Borrower Index is UPDATED
+        Double memory userIndex = Double({mantissa: user_SIGH_Borrowindexes[borrower]}) ;      // Stored Borrower Index
+        user_SIGH_Borrowindexes[borrower] = borrowIndex_.mantissa;                                   // Borrower Index is UPDATED
 
         if (userIndex.mantissa == 0 && borrowIndex_.mantissa > 0) {
             userIndex.mantissa = borrowIndex_.mantissa; //sighInitialIndex;
@@ -640,7 +657,7 @@ contract IToken is ERC20, ERC20Detailed {
 
         if (deltaIndex.mantissa > 0 && principalBorrowBalance > 0) {
             uint borrowerSIGHDelta = mul_(principalBorrowBalance, deltaIndex);        // Additional Sigh Accured by the Borrower
-            accureSigh( borrower,borrowerSIGHDelta );            // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the BORROWER or the address to which SIGH is being redirected to 
+            accureSigh( borrower,borrowerSIGHDelta );            // ACCURED SIGH AMOUNT IS ADDED TO THE AccuredSighBalance of the BORROWER or the address to which SIGH is being redirected to 
         }
     }
 
@@ -654,16 +671,16 @@ contract IToken is ERC20, ERC20Detailed {
     function accureSigh( address user, uint accuredSighAmount ) internal {
         address sighAccuredTo = user;
 
-        if ( sighRedirectionAddresses[sighAccuredTo] == address(0) ) {
-            AccuredSighBalances[sighAccuredTo] = AccuredSighBalances[sighAccuredTo].add(accuredSighAmount);   // Accured SIGH added to the user's sigh balance
+        if ( supply_Sigh_RedirectionAddress[sighAccuredTo] == address(0) ) {
+            AccuredSighBalance[sighAccuredTo] = AccuredSighBalance[sighAccuredTo].add(accuredSighAmount);   // Accured SIGH added to the user's sigh balance
         }
         else {
-            sighAccuredTo = sighRedirectionAddresses[user];
-            AccuredSighBalances[sighAccuredTo] = AccuredSighBalances[sighAccuredTo].add(accuredSighAmount);   // Accured SIGH added to the redirected user's sigh balance            
+            sighAccuredTo = supply_Sigh_RedirectionAddress[user];
+            AccuredSighBalance[sighAccuredTo] = AccuredSighBalance[sighAccuredTo].add(accuredSighAmount);   // Accured SIGH added to the redirected user's sigh balance            
         }
-        emit SighAccured( user , sighAccuredTo, accuredSighAmount, AccuredSighBalances[sighAccuredTo] );
+        emit SighAccured( user , sighAccuredTo, accuredSighAmount, AccuredSighBalance[sighAccuredTo] );
 
-        if ( AccuredSighBalances[sighAccuredTo] > sigh_Transfer_Threshold ) {   // SIGH is Transferred is SIGH_ACCURED_BALANCE > 1e18 SIGH
+        if ( AccuredSighBalance[sighAccuredTo] > sigh_Transfer_Threshold ) {   // SIGH is Transferred is SIGH_ACCURED_BALANCE > 1e18 SIGH
             transferSigh( user, sighAccuredTo );
         }
     }
@@ -674,8 +691,8 @@ contract IToken is ERC20, ERC20Detailed {
      * @param user The user to which the accured SIGH is transferred
      */
     function transferSigh( address user,  address sighAccuredTo ) internal {
-        uint amountToBeTransferred = AccuredSighBalances[sighAccuredTo];
-        AccuredSighBalances[sighAccuredTo] = sighDistributionHandlerContract.transferSighTotheUser( underlyingInstrumentAddress, user, sighAccuredTo, amountToBeTransferred ); // Pending Amount Not Transferred is returned
+        uint amountToBeTransferred = AccuredSighBalance[sighAccuredTo];
+        AccuredSighBalance[sighAccuredTo] = sighDistributionHandlerContract.transferSighTotheUser( underlyingInstrumentAddress, user, sighAccuredTo, amountToBeTransferred ); // Pending Amount Not Transferred is returned
     }
 
 // ###########################################################################################################################################################
@@ -702,7 +719,7 @@ contract IToken is ERC20, ERC20Detailed {
     **/
     function allowSighRedirectionTo(address _to) external {
         require(_to != msg.sender, "User cannot give allowance to himself");
-        sighRedirectionAllowances[msg.sender] = _to;
+        borrow_Sigh_Redirection_Allowance[msg.sender] = _to;
         emit SighRedirectionAllowanceChanged( msg.sender, _to);
     }
 
@@ -713,7 +730,7 @@ contract IToken is ERC20, ERC20Detailed {
     * @param _to the address to which the Sigh will be redirected
     **/
     function redirectSighStreamOf(address _from, address _to) external {
-        require( msg.sender == sighRedirectionAllowances[_from], "Caller is not allowed to redirect the Sigh of the user");
+        require( msg.sender == borrow_Sigh_Redirection_Allowance[_from], "Caller is not allowed to redirect the Sigh of the user");
         redirectSighStreamInternal(_from,_to);
     }
 
@@ -725,7 +742,7 @@ contract IToken is ERC20, ERC20Detailed {
     **/
     function redirectSighStreamInternal( address _from, address _to) internal {
 
-        address currentRedirectionAddress = sighRedirectionAddresses[_from];
+        address currentRedirectionAddress = supply_Sigh_RedirectionAddress[_from];
         require(_to != currentRedirectionAddress, "Sigh is already redirected to the provided account");
         
         uint userSupplyBalance = super.balanceOf(_from);                                                        // SUPPLIED BALANCE
@@ -734,7 +751,7 @@ contract IToken is ERC20, ERC20Detailed {
         require(userSupplyBalance > 0 || borrowBalance > 0 , "Sigh stream can only be redirected if there is a valid Supply or Borrow balance");
 
         if(_to == _from) {               //   if the user is redirecting the Sigh back to himself, we simply set to 0 the Sigh redirection address
-            sighRedirectionAddresses[_from] = address(0);
+            supply_Sigh_RedirectionAddress[_from] = address(0);
             emit SighStreamRedirected( _from, address(0), block.number);
             return;
         }
@@ -744,7 +761,7 @@ contract IToken is ERC20, ERC20Detailed {
             accure_Borrower_SIGH_Internal(_from);
         }
         
-        sighRedirectionAddresses[_from] = _to;                                      // set the redirection address to the new recipient
+        supply_Sigh_RedirectionAddress[_from] = _to;                                      // set the redirection address to the new recipient
         emit SighStreamRedirected( _from, _to, block.number);
     }
 
@@ -752,23 +769,23 @@ contract IToken is ERC20, ERC20Detailed {
 // ######  VIEW FUNCTIONS (SIGH RELATED)    ################## 
 
     function getSighAccured(address account) external view returns (uint) {
-        return AccuredSighBalances[account];
+        return AccuredSighBalance[account];
     }
 
     function getSighStreamRedirectedTo(address account) external view returns (address) {
-        return sighRedirectionAddresses[account];
+        return supply_Sigh_RedirectionAddress[account];
     }
 
     function getSighStreamAllowances(address account) external view returns (address) {
-        return sighRedirectionAllowances[account];
+        return borrow_Sigh_Redirection_Allowance[account];
     }    
 
-    function getSupplierIndexes(address account) external view returns (uint) {
-        return SupplierIndexes[account];
+    function getuser_SIGH_Supplyindexes(address account) external view returns (uint) {
+        return user_SIGH_Supplyindexes[account];
     }    
 
-    function getBorrowerIndexes(address account) external view returns (uint) {
-        return BorrowerIndexes[account];
+    function getuser_SIGH_Borrowindexes(address account) external view returns (uint) {
+        return user_SIGH_Borrowindexes[account];
     }    
 
 // 

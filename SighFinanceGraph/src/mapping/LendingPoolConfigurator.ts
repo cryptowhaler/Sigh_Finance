@@ -393,6 +393,10 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.totalCompoundedEarnings_WEI = new BigInt(0)
     instrument_state_initialized.totalCompoundedEarnings = BigDecimal.fromString('0')
 
+    instrument_state_initialized.utilizationRate = BigDecimal.fromString('0')
+    instrument_state_initialized.utilizationRatePercent= BigDecimal.fromString('0')
+
+
     instrument_state_initialized.stableBorrowInterestRate = new BigInt(0)
     instrument_state_initialized.stableBorrowInterestPercent = BigDecimal.fromString('0')
 

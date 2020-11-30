@@ -24,6 +24,11 @@ export function handleDeposit(event: Deposit): void {
     instrumentState.availableLiquidity_WEI = instrumentState.availableLiquidity_WEI.plus(event.params._amount)
     instrumentState.availableLiquidity = instrumentState.availableLiquidity_WEI.toBigDecimal().div(decimalAdj)
 
+    if (instrumentState.totalLiquidity  > BigDecimal.fromString('0')) {
+        instrumentState.utilizationRate = instrumentState.totalPrincipalBorrows.times(BigInt.fromI32(18).pow(25 as u8).toBigDecimal()).div(instrumentState.totalLiquidity)
+        instrumentState.utilizationRatePercent = instrumentState.utilizationRate.div( BigInt.fromI32(18).pow(23 as u8).toBigDecimal() )
+    }
+
     instrumentState.timeStamp = event.params._timestamp
     instrumentState.save()
 
@@ -44,6 +49,11 @@ export function handleRedeemUnderlying(event: RedeemUnderlying): void {
 
     instrumentState.availableLiquidity_WEI = instrumentState.availableLiquidity_WEI.minus(event.params._amount)
     instrumentState.availableLiquidity = instrumentState.availableLiquidity_WEI.toBigDecimal().div(decimalAdj)
+
+    if (instrumentState.totalLiquidity  > BigDecimal.fromString('0')) {
+        instrumentState.utilizationRate = instrumentState.totalPrincipalBorrows.times(BigInt.fromI32(18).pow(25 as u8).toBigDecimal()).div(instrumentState.totalLiquidity)
+        instrumentState.utilizationRatePercent = instrumentState.utilizationRate.div( BigInt.fromI32(18).pow(23 as u8).toBigDecimal() )
+    }
 
     instrumentState.timeStamp = event.params._timestamp
     instrumentState.save()    
@@ -111,6 +121,11 @@ export function handleBorrow(event: Borrow): void {
     instrumentState.totalCompoundedEarnings_WEI = instrumentState.totalCompoundedEarningsVARIABLEInterest_WEI.plus(instrumentState.totalCompoundedEarningsSTABLEInterest_WEI)
     instrumentState.totalCompoundedEarnings = instrumentState.totalCompoundedEarningsVARIABLEInterest.plus(instrumentState.totalCompoundedEarningsSTABLEInterest)
 
+    if (instrumentState.totalLiquidity  > BigDecimal.fromString('0')) {
+        instrumentState.utilizationRate = instrumentState.totalPrincipalBorrows.times(BigInt.fromI32(18).pow(25 as u8).toBigDecimal()).div(instrumentState.totalLiquidity)
+        instrumentState.utilizationRatePercent = instrumentState.utilizationRate.div( BigInt.fromI32(18).pow(23 as u8).toBigDecimal() )
+    }
+
     instrumentState.timeStamp = event.params._timestamp
     instrumentState.save()    
     updatePrice(instrumentId)
@@ -136,10 +151,11 @@ export function handleRepay(event: Repay): void {
     instrumentState.borrowFeeEarned_WEI = instrumentState.borrowFeeEarned_WEI.plus(event.params._fees)
     instrumentState.borrowFeeEarned = instrumentState.borrowFeeEarned_WEI.toBigDecimal().div(decimalAdj)
 
-        // _borrowBalanceIncrease
-
-
-
+    if (instrumentState.totalLiquidity  > BigDecimal.fromString('0')) {
+        instrumentState.utilizationRate = instrumentState.totalPrincipalBorrows.times(BigInt.fromI32(18).pow(25 as u8).toBigDecimal()).div(instrumentState.totalLiquidity)
+        instrumentState.utilizationRatePercent = instrumentState.utilizationRate.div( BigInt.fromI32(18).pow(23 as u8).toBigDecimal() )    
+    }
+    
     // event.params._amount._amountMinusFees --> Amount Repaid, subtracting Fee
     // event.params._amount._fees --> Fee (Origination Fee)
     // event.params._amount._borrowBalanceIncrease --> Increase in BorrowBalance of the user due to accuring Interest

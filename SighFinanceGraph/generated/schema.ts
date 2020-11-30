@@ -1007,6 +1007,24 @@ export class Instrument extends Entity {
     this.set("variableBorrowIndex", Value.fromBigInt(value));
   }
 
+  get utilizationRate(): BigDecimal {
+    let value = this.get("utilizationRate");
+    return value.toBigDecimal();
+  }
+
+  set utilizationRate(value: BigDecimal) {
+    this.set("utilizationRate", Value.fromBigDecimal(value));
+  }
+
+  get utilizationRatePercent(): BigDecimal {
+    let value = this.get("utilizationRatePercent");
+    return value.toBigDecimal();
+  }
+
+  set utilizationRatePercent(value: BigDecimal) {
+    this.set("utilizationRatePercent", Value.fromBigDecimal(value));
+  }
+
   get supplyInterestRate(): BigInt {
     let value = this.get("supplyInterestRate");
     return value.toBigInt();

@@ -161,6 +161,8 @@ type Instrument @entity {
     "supplyIndex : Index for Accuring instrument quantity as Supply Interest"    
     variableBorrowIndex: BigInt!
 
+    utilizationRate: BigDecimal!
+    utilizationRatePercent: BigDecimal!
 
     "supplyInterestRate : Current Supply Interest Rate (not adjusted by decimal)"    
     supplyInterestRate: BigInt!
