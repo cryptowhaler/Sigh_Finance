@@ -419,7 +419,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
         //if the amount is smaller than the origination fee, just transfer the amount to the fee destination address
         if (vars.paybackAmount <= vars.originationFee) {
             core.updateStateOnRepay( _instrument, _onBehalfOf, 0, vars.paybackAmount, vars.borrowBalanceIncrease, false);
-            core.transferToFeeCollectionAddress.value( vars.isETH ? vars.paybackAmount : 0)( _instrument, _onBehalfOf, vars.paybackAmount,  addressesProvider.getSIGHStaking() );
+            core.transferToFeeCollectionAddress.value( vars.isETH ? vars.paybackAmount : 0)( _instrument, _onBehalfOf, vars.paybackAmount,  addressesProvider.getSIGHFinanceFeeCollector() );
 
             emit Repay(_instrument, _onBehalfOf, msg.sender, 0, vars.paybackAmount, vars.borrowBalanceIncrease, block.timestamp );
             return;
@@ -430,7 +430,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
 
         //if the user didn't repay the origination fee, transfer the fee to the fee collection address
         if(vars.originationFee > 0) {
-            core.transferToFeeCollectionAddress.value(vars.isETH ? vars.originationFee : 0)( _instrument, _onBehalfOf, vars.originationFee, addressesProvider.getSIGHStaking() );
+            core.transferToFeeCollectionAddress.value(vars.isETH ? vars.originationFee : 0)( _instrument, _onBehalfOf, vars.originationFee, addressesProvider.getSIGHFinanceFeeCollector() );
         }
 
         //sending the total msg.value if the transfer is ETH.

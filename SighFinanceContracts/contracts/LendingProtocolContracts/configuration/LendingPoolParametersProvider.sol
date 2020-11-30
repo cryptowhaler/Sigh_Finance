@@ -13,7 +13,7 @@ import "../interfaces/ILendingPoolParametersProvider.sol";
 
 contract LendingPoolParametersProvider is ILendingPoolParametersProvider, VersionedInitializable {
 
-    uint256 private constant MAX_STABLE_RATE_BORROW_SIZE_PERCENT = 25;    
+    uint256 private constant MAX_STABLE_RATE_BORROW_SIZE_PERCENT = 25;    // i.e Max 25% of available Liquidity can be borrowed at Stable Interest Rate
     uint256 private constant REBALANCE_DOWN_RATE_DELTA = (1e27)/5;
     uint256 private constant FLASHLOAN_FEE_TOTAL = 35;
     uint256 private constant FLASHLOAN_FEE_PROTOCOL = 3000;

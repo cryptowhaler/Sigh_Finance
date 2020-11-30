@@ -628,31 +628,20 @@ contract IToken is ERC20, ERC20Detailed {
         require(borrowIndex > 0, "SIGH Distribution Handler returned invalid borrow Index for the instrument");
         
         Double memory borrowIndex_ = Double({mantissa: borrowIndex});                        // Instrument Index
-        Double memory borrowerIndex = Double({mantissa: BorrowerIndexes[borrower]}) ;      // Stored Borrower Index
+        Double memory userIndex = Double({mantissa: BorrowerIndexes[borrower]}) ;      // Stored Borrower Index
         BorrowerIndexes[borrower] = borrowIndex_.mantissa;                                   // Borrower Index is UPDATED
 
-        if (borrowerIndex.mantissa == 0 && borrowIndex_.mantissa > 0) {
-            borrowerIndex.mantissa = borrowIndex_.mantissa; //sighInitialIndex;
+        if (userIndex.mantissa == 0 && borrowIndex_.mantissa > 0) {
+            userIndex.mantissa = borrowIndex_.mantissa; //sighInitialIndex;
         }
 
-        emit distributeBorrower_SIGH_test3(borrower, borrowIndex_.mantissa, borrowerIndex.mantissa );
+        Double memory deltaIndex = sub_(borrowIndex_, userIndex);                                                         // Sigh accured per instrument
+        ( uint principalBorrowBalance , , , ) = core.getUserBorrowBalances(underlyingInstrumentAddress, borrower);                                 // Getting Borrow Balance of the User from LendingPool Core 
 
-        Double memory deltaIndex = sub_(borrowIndex_, borrowerIndex);                                                         // Sigh accured per instrument
-
-
-        // if (deltaIndex.mantissa > 0) {
-            Exp memory marketBorrowIndex = Exp({mantissa: core.getInstrumentVariableBorrowsCumulativeIndex( underlyingInstrumentAddress )});  // Getting index from LendingPool Core
-            uint borrowBalance;
-            ( , borrowBalance , , ) = core.getUserBasicInstrumentData(underlyingInstrumentAddress, borrower);                                 // Getting Borrow Balance of the User from LendingPool Core 
-            uint borrowerAmount = div_(borrowBalance, marketBorrowIndex);
-            uint borrowerSIGHDelta = mul_(borrowerAmount, deltaIndex);        // Additional Sigh Accured by the Borrower
-
-            emit distributeBorrower_SIGH_test4(BorrowerIndexes[borrower], deltaIndex.mantissa, marketBorrowIndex.mantissa , borrowBalance, borrowerAmount, borrowerSIGHDelta );
-
-            if (borrowerSIGHDelta > 0 ) {
-                accureSigh( borrower,borrowerSIGHDelta );            // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the BORROWER or the address to which SIGH is being redirected to 
-            }
-        // }
+        if (deltaIndex.mantissa > 0 && principalBorrowBalance > 0) {
+            uint borrowerSIGHDelta = mul_(principalBorrowBalance, deltaIndex);        // Additional Sigh Accured by the Borrower
+            accureSigh( borrower,borrowerSIGHDelta );            // ACCURED SIGH AMOUNT IS ADDED TO THE ACCUREDSIGHBALANCES of the BORROWER or the address to which SIGH is being redirected to 
+        }
     }
 
     event SighAccured(address user, address sighAccuredTo, uint recentSIGHAccured  , uint AccuredSighBalance );

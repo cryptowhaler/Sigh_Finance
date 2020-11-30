@@ -89,12 +89,15 @@ interface IGlobalAddressesProvider  {
 
 // #######################################################
 // ####___________ PRICE ORACLE CONTRACT _____________####
+// ####_____ SIGH FINANCE FEE COLLECTOR : ADDRESS ____####
 // #######################################################
 
     function getPriceOracle() external view returns (address);
     function setPriceOracle(address _priceOracle) external;
 
 
-
+    // SIGH FINANCE FEE COLLECTOR - BORROWING / FLASH LOAN FEE TRANSERRED TO THIS ADDRESS
+    function getSIGHFinanceFeeCollector() external view returns (address) ;
+    function setSIGHFinanceFeeCollector(address _feeCollector) external ;
 
 }

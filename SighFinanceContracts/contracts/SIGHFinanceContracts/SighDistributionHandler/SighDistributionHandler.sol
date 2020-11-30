@@ -100,8 +100,8 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     event refreshingSighSpeeds( address _Instrument,uint maxSpeed, string side, uint supplierSpeed, uint borrowerSpeed, uint _24HrVolatility, uint percentTotalVolatility, uint totalLosses );
     
 
-    event SIGHSupplyIndexUpdated(address instrument, uint sighAccured, uint ratioMantissa, uint newIndexMantissa,  uint blockNum );
-    event SIGHBorrowIndexUpdated(address instrument, uint sighAccured, uint ratioMantissa, uint newIndexMantissa,  uint blockNum );
+    event SIGHSupplyIndexUpdated(address instrument, uint totalCompoundedSupply, uint sighAccured, uint ratioMantissa, uint newIndexMantissa,  uint blockNum );
+    event SIGHBorrowIndexUpdated(address instrument, uint totalBorrows, uint sighAccured, uint ratioMantissa, uint newIndexMantissa,  uint blockNum );
 
     event AccuredSIGHTransferredToTheUser(address instrument, address user, uint sigh_Amount );
 
@@ -554,14 +554,14 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     }
 
     function updateSIGHSupplyIndexInternal(address currentInstrument) internal returns (bool) {
+        uint blockNumber = getBlockNumber();
 
-        if ( financial_instruments[currentInstrument].supplylastupdatedblock == getBlockNumber() ) {    // NO NEED TO ACCUR AGAIN
+        if ( financial_instruments[currentInstrument].supplylastupdatedblock == blockNumber ) {    // NO NEED TO ACCUR AGAIN
             return true;
         }
 
         SIGHInstrument storage instrumentState = financial_instruments[currentInstrument];
         uint supplySpeed = add_(Instrument_Sigh_Mechansim_States[currentInstrument].suppliers_Speed, Instrument_Sigh_Mechansim_States[currentInstrument].staking_Speed,"Supplier speed addition with staking speed overflow" );
-        uint blockNumber = getBlockNumber();
         uint deltaBlocks = sub_(blockNumber, uint( instrumentState.supplylastupdatedblock ), 'updateSIGHSupplyIndex : Block Subtraction Underflow');    // Delta Blocks 
         
         // WE UPDATE INDEX ONLY IF $SIGH IS ACCURING
@@ -570,7 +570,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
             uint totalCompoundedLiquidity = IERC20(financial_instruments[currentInstrument].iTokenAddress).totalSupply();                           // Total amount supplied 
             Double memory ratio = totalUnderlyingLiquidity > 0 ? fraction(sigh_Accrued, totalCompoundedLiquidity) : Double({mantissa: 0});    // SIGH Accured per Supplied Instrument Token
             Double memory newIndex = add_(Double({mantissa: instrumentState.supplyindex}), ratio);                                      // Updated Index
-            emit SIGHSupplyIndexUpdated( currentInstrument, sigh_Accrued, ratio.mantissa , newIndex.mantissa, blockNumber );  
+            emit SIGHSupplyIndexUpdated( currentInstrument, totalCompoundedLiquidity, sigh_Accrued, ratio.mantissa , newIndex.mantissa, blockNumber );  
 
             instrumentState.supplyindex = newIndex.mantissa;       // STATE UPDATE: New Index Committed to Storage 
         } 
@@ -592,23 +592,22 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     }
 
     function updateSIGHBorrowIndexInternal(address currentInstrument) internal returns(bool) {
+        uint blockNumber = getBlockNumber();
 
-        if ( financial_instruments[currentInstrument].borrowlastupdatedblock == getBlockNumber() ) {    // NO NEED TO ACCUR AGAIN
+        if ( financial_instruments[currentInstrument].borrowlastupdatedblock == blockNumber ) {    // NO NEED TO ACCUR AGAIN
             return true;
         }
 
         SIGHInstrument storage instrumentState = financial_instruments[currentInstrument];
         uint borrowSpeed = add_(Instrument_Sigh_Mechansim_States[currentInstrument].borrowers_Speed, Instrument_Sigh_Mechansim_States[currentInstrument].staking_Speed, "Supplier speed addition with staking speed overflow" );
-        uint blockNumber = getBlockNumber();
         uint deltaBlocks = sub_(blockNumber, uint(instrumentState.borrowlastupdatedblock), 'updateSIGHBorrowIndex : Block Subtraction Underflow');         // DELTA BLOCKS
         
         if (deltaBlocks > 0 && borrowSpeed > 0) {       // In case SIGH would have accured
             uint sigh_Accrued = mul_(deltaBlocks, borrowSpeed);                             // SIGH ACCURED = DELTA BLOCKS x SIGH SPEED (BORROWERS)
-            // TO BE VALIDATED
             uint totalBorrows =  lendingPoolCore.getInstrumentTotalBorrows(currentInstrument);
             Double memory ratio = totalBorrows > 0 ? fraction(sigh_Accrued, totalBorrows) : Double({mantissa: 0});      // SIGH Accured per Borrowed Instrument Token
             Double memory newIndex = add_(Double({mantissa: instrumentState.borrowindex}), ratio);                      // New Index
-            emit SIGHBorrowIndexUpdated( currentInstrument, sigh_Accrued, ratio.mantissa , newIndex.mantissa, blockNumber );
+            emit SIGHBorrowIndexUpdated( currentInstrument, totalBorrows, sigh_Accrued, ratio.mantissa , newIndex.mantissa, blockNumber );
 
             instrumentState.borrowindex = newIndex.mantissa ;  // STATE UPDATE: New Index Committed to Storage 
         } 

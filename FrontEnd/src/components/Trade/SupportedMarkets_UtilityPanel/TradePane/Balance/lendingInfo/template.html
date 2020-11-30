@@ -30,13 +30,19 @@
                 <tr>
                     <td style="padding-bottom: 15px; padding-top: 15px;" > >  &nbsp; Loan To Value (LTV) &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.ltv).toFixed(2) }} %  
                         <p style="line-height: 18px; font-size: 11px; color: gold; padding-right: 15px; float: left;" > ----- Maximum  {{  Number(walletLendingProtocolState.ltv).toFixed(2)  }} % of your 
-                        current total {{ Number(walletLendingProtocolState.totalCollateralETH).toFixed(4) }} ETH  Collateral Balance, i.e total {{ (Number(walletLendingProtocolState.ltv) * Number(walletLendingProtocolState.totalCollateralETH) / 100).toFixed(4) }} ETH
-                        can currently be Borrowed from SIGH Finance!  </p> 
+                            current total {{ Number(walletLendingProtocolState.totalCollateralETH).toFixed(4) }} ETH  Collateral Balance, i.e total {{ (Number(walletLendingProtocolState.ltv) * Number(walletLendingProtocolState.totalCollateralETH) / 100).toFixed(4) }} ETH
+                            can currently be Borrowed from SIGH Finance!  
+                        </p> 
                     </td> 
                 </tr>
                 <tr>
-                    <td>>  &nbsp; Health Factor &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.healthFactor).toFixed(4) }} </td> 
-                </tr>
+                    <td>>  &nbsp; Health Factor &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.healthFactor).toFixed(4) }} 
+                        <p style="line-height: 18px; font-size: 11px; color: gold; padding-right: 15px; float: left;" > 
+                            ----- Health Factor is calculated as the fraction between your Liquidation Threshold and your current active borrows! <br>
+                            -----  It Should never be less than 1 or else you will be subject to Liquidations!
+                        </p>     
+                    </td>
+            </tr>
             </table>
 
             
@@ -69,7 +75,12 @@
                     </td> 
                 </tr>
                 <tr>
-                    <td>>  &nbsp; Health Factor &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.healthFactor).toFixed(4) }} </td> 
+                    <td>>  &nbsp; Health Factor &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.healthFactor).toFixed(4) }} 
+                        <p style="line-height: 18px; font-size: 11px; color: gold; padding-right: 15px; float: left;" > 
+                            ----- Health Factor is calculated as the fraction between your Liquidation Threshold and your current active borrows! <br>
+                            -----  It Should never be less than 1 or else you will be subject to Liquidations!
+                        </p>     
+                    </td>
                 </tr>
             </table>
 
@@ -105,10 +116,12 @@
                     </td> 
                 </tr>
                 <tr>
-                    <td>>  &nbsp; Health Factor &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.healthFactor).toFixed(4) }} </td> 
-                </tr>
-                <tr>
-                    <td>>  &nbsp; Total Fee &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalFeesUSD).toFixed(4) }} USD </td> 
+                    <td>>  &nbsp; Health Factor &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.healthFactor).toFixed(4) }} 
+                        <p style="line-height: 18px; font-size: 11px; color: gold; padding-right: 15px; float: left;" > 
+                            ----- Health Factor is calculated as the fraction between your Liquidation Threshold and your current active borrows! <br>
+                            -----  It Should never be less than 1 or else you will be subject to Liquidations!
+                        </p>     
+                    </td>
                 </tr>
             </table>
 
@@ -141,7 +154,12 @@
                     </td> 
                 </tr>
                 <tr>
-                    <td>>  &nbsp; Health Factor &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.healthFactor).toFixed(4) }} </td> 
+                    <td>>  &nbsp; Health Factor &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.healthFactor).toFixed(4) }} 
+                        <p style="line-height: 18px; font-size: 11px; color: gold; padding-right: 15px; float: left;" > 
+                            ----- Health Factor is calculated as the fraction between your Liquidation Threshold and your current active borrows! <br>
+                            -----  It Should never be less than 1 or else you will be subject to Liquidations!
+                        </p>     
+                    </td>
                 </tr>
             </table>
 

@@ -38,9 +38,8 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
     event SIGHTreasuryImplUpdated(address indexed newAddress);                           // ADDED BY SIGH FINANCE
     event SIGHStakingImplUpdated(address indexed SIGHStakingAddress);                    // ADDED BY SIGH FINANCE
 
-    event EthereumAddressUpdated(address indexed newAddress);
     event PriceOracleUpdated(address indexed newAddress);
-    event TokenDistributorUpdated(address indexed newAddress);
+    event SIGHFinanceFeeCollectorUpdated(address indexed newAddress);
 
     event ProxyCreated(bytes32 id, address indexed newAddress);
 
@@ -60,7 +59,6 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
     bytes32 private constant DATA_PROVIDER = "DATA_PROVIDER";
     bytes32 private constant LENDING_RATE_ORACLE = "LENDING_RATE_ORACLE";
     bytes32 private constant FEE_PROVIDER = "FEE_PROVIDER";
-    bytes32 private constant WALLET_BALANCE_PROVIDER = "WALLET_BALANCE_PROVIDER";
 
     bytes32 private constant SIGH = "SIGH";                                             // ADDED BY SIGH FINANCE
     bytes32 private constant SIGH_SPEED_CONTROLLER = "SIGH_SPEED_CONTROLLER";           // ADDED BY SIGH FINANCE
@@ -69,9 +67,8 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
     bytes32 private constant SIGH_STAKING = "SIGH_STAKING";                             // ADDED BY SIGH FINANCE
 
     bytes32 private constant PRICE_ORACLE = "PRICE_ORACLE";
-    bytes32 private constant ETHEREUM_ADDRESS = "ETHEREUM_ADDRESS";
 
-    bytes32 private constant TOKEN_DISTRIBUTOR = "TOKEN_DISTRIBUTOR";
+    bytes32 private constant SIGH_Finance_Fee_Collector = "SIGH_Finance_Fee_Collector";
 
 // ################################                                                  
 // ######  CONSTRUCTOR ############                                                
@@ -464,7 +461,17 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
         _setAddress(PRICE_ORACLE, _priceOracle);
         emit PriceOracleUpdated(_priceOracle);
     }
-        
+    
+    // SIGH FINANCE FEE COLLECTOR - BORROWING / FLASH LOAN FEE TRANSERRED TO THIS ADDRESS
+    function getSIGHFinanceFeeCollector() external view returns (address) {
+        return getAddress(SIGH_Finance_Fee_Collector);
+    }
+
+    function setSIGHFinanceFeeCollector(address _feeCollector) external onlySIGHFinanceManager {
+        _setAddress(SIGH_Finance_Fee_Collector, _feeCollector);
+        emit SIGHFinanceFeeCollectorUpdated(_feeCollector);
+    }
+
 
 // ############################################# 
 // ######  FUNCTION TO UPGRADE THE PROXY #######  

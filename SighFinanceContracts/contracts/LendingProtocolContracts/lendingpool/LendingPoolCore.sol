@@ -22,7 +22,7 @@ import "../../SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol";
 * @author Aave, SIGH Finance
 * @notice Holds the state of the lending pool and all the funds deposited
 * @dev NOTE: The core does not enforce security checks on the update of the state
-* (eg, updateStateOnBorrow() does not enforce that borrowed is enabled on the Instrument).
+* (eg, getInstrumentTotalBorrows() does not enforce that borrowed is enabled on the Instrument).
 * The check that an action can be performed is a duty of the overlying LendingPool contract.
 **/
 
@@ -403,13 +403,11 @@ contract LendingPoolCore is VersionedInitializable {
         instrument.updateCumulativeIndexes();      //compounding instrument indexes
 
         if (_currentRateMode == CoreLibrary.InterestRateMode.STABLE) {
-            uint256 userCurrentStableRate = user.stableBorrowRate;
-            //swap to variable
+            uint256 userCurrentStableRate = user.stableBorrowRate;              //swap to variable
             instrument.decreaseTotalBorrowsStableAndUpdateAverageRate( _principalBorrowBalance, userCurrentStableRate ); //decreasing stable from old principal balance
             instrument.increaseTotalBorrowsVariable(_compoundedBorrowBalance); //increase variable borrows
         } 
-        else if (_currentRateMode == CoreLibrary.InterestRateMode.VARIABLE) {
-            //swap to stable
+        else if (_currentRateMode == CoreLibrary.InterestRateMode.VARIABLE) {   //swap to stable
             uint256 currentStableRate = instrument.currentStableBorrowRate;
             instrument.decreaseTotalBorrowsVariable(_principalBorrowBalance);
             instrument.increaseTotalBorrowsStableAndUpdateAverageRate( _compoundedBorrowBalance,currentStableRate );
@@ -1152,7 +1150,7 @@ contract LendingPoolCore is VersionedInitializable {
             return 0;
         }
 
-        return rateMode == CoreLibrary.InterestRateMode.STABLE ? usersInstrumentData[_user][_instrument].stableBorrowRate: reserves[_instrument].currentVariableBorrowRate;
+        return rateMode == CoreLibrary.InterestRateMode.STABLE ? usersInstrumentData[_user][_instrument].stableBorrowRate : reserves[_instrument].currentVariableBorrowRate;
     }
 
 
