@@ -246,6 +246,9 @@ contract LendingPoolCore is VersionedInitializable {
 
         //increase the principal borrows and the origination fee
         user.principalBorrowBalance = user.principalBorrowBalance.add(_amountBorrowed).add( _balanceIncrease );
+        ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
+        iToken.updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(_user, _amountBorrowed.add( _balanceIncrease ), 0 );                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
+
         user.originationFee = user.originationFee.add(_fee);
         user.lastUpdateTimestamp = uint40(block.timestamp);
     }
@@ -348,6 +351,8 @@ contract LendingPoolCore is VersionedInitializable {
         CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
 
         //update the user principal borrow balance, adding the cumulated interest and then subtracting the payback amount
+        ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
+        iToken.updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(user, _balanceIncrease, _paybackAmountMinusFees );                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
         user.principalBorrowBalance = user.principalBorrowBalance.add(_balanceIncrease).sub( _paybackAmountMinusFees);
         user.lastVariableBorrowCumulativeIndex = instrument.lastVariableBorrowCumulativeIndex;
 
@@ -443,6 +448,8 @@ contract LendingPoolCore is VersionedInitializable {
             revert("Invalid interest rate mode received");
         }
         
+        ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
+        iToken.updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(user, _balanceIncrease, 0 );                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
         user.principalBorrowBalance = user.principalBorrowBalance.add(_balanceIncrease);        //compounding cumulated interest
         user.lastUpdateTimestamp = uint40(block.timestamp);
         return newMode;
@@ -494,6 +501,9 @@ contract LendingPoolCore is VersionedInitializable {
     function updateUserStateOnRebalanceInternal( address _instrument, address _user, uint256 _balanceIncrease ) internal {
         CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
         CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+
+        ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
+        iToken.updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(user, _balanceIncrease, 0 );                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
 
         user.principalBorrowBalance = user.principalBorrowBalance.add(_balanceIncrease);
         user.stableBorrowRate = instrument.currentStableBorrowRate;
@@ -617,6 +627,9 @@ contract LendingPoolCore is VersionedInitializable {
         CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
         CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
         
+        ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
+        iToken.updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(user, _balanceIncrease, _amountToLiquidate );                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
+
         user.principalBorrowBalance = user.principalBorrowBalance.add(_balanceIncrease).sub( _amountToLiquidate );  //first increase by the compounded interest, then decrease by the liquidated amount
 
         if (  getUserCurrentBorrowRateMode(_instrument, _user) == CoreLibrary.InterestRateMode.VARIABLE ) {

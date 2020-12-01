@@ -771,10 +771,9 @@ contract IToken is ERC20, ERC20Detailed {
         }
 
         Double memory deltaIndex = sub_(instrumentIndex, userIndex);                                // , 'Distribute Supplier SIGH : supplyIndex Subtraction Underflow'
-        uint supplierSighDelta = 0;
 
         if ( deltaIndex.mantissa > 0 && totalBalanceForAccuringSIGH > 0 ) {
-            supplierSighDelta = mul_(totalBalanceForAccuringSIGH, deltaIndex);                                      // Supplier Delta = Balance * Double(DeltaIndex)/DoubleScale
+            uint supplierSighDelta = mul_(totalBalanceForAccuringSIGH, deltaIndex);                                      // Supplier Delta = Balance * Double(DeltaIndex)/DoubleScale
             accureSigh(user, supplierSighDelta, true );        // ACCURED SIGH AMOUNT IS ADDED TO THE AccuredSighBalance of the Supplier or the address to which SIGH is being redirected to 
         }
     }
@@ -857,9 +856,8 @@ contract IToken is ERC20, ERC20Detailed {
         // 1. We accure $SIGH for that address
         // 2. We substract the redirected compounded balance of the from account from that address
         if (currentRedirectionAddress != address(0)) { 
-             updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(_from, balanceIncrease, 0 );           
-            accure_SIGH_For_BorrowingStream( currentRedirectionAddress );
-            updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(_from,0, compoundedBorrowBalance );
+            accure_SIGH_For_BorrowingStream( _from );
+            updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddressInternal(_from,0, principalBorrowBalance );
         }
 
         //   if the user is redirecting the Borrowing $SIGH Stream back to himself, we simply set to 0 the Borrowing $SIGH Stream redirection address
@@ -871,7 +869,7 @@ contract IToken is ERC20, ERC20Detailed {
 
         // Redirecting Borrowing $SIGH Stream and adding the user principal borrow balance to the redirected balance of the redirection address
         userBorrowingSIGHStreamRedirectionAddress[_from] = _to;     
-        updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(_from,principalBorrowBalance,0);                               
+        updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddressInternal(_from,principalBorrowBalance,0);                               
         emit BorrowingSIGHStreamStreamRedirected( _from, _to, principalBorrowBalance );
     }
 
@@ -887,29 +885,54 @@ contract IToken is ERC20, ERC20Detailed {
     * @param _balanceToAdd the amount to add to the redirected balance
     * @param _balanceToRemove the amount to remove from the redirected balance
     **/
-    function updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress( address _user, uint256 _balanceToAdd, uint256 _balanceToRemove ) public {
+    function updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress( address _user, uint256 _balanceToAdd, uint256 _balanceToRemove ) onlyLendingPoolCore public {
+        updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddressInternal(_user,_balanceToAdd,_balanceToRemove);
+    }
+
+    function updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddressInternal( address _user, uint256 _balanceToAdd, uint256 _balanceToRemove ) internal {
         address redirectionAddress = userBorrowingSIGHStreamRedirectionAddress[_user];
         if(redirectionAddress == address(0)){           //if there isn't any redirection, nothing to be done
             return;
         }
         //updating the redirected balance
         userBorrowingSIGHStreamRedirectedBalance[redirectionAddress] = userBorrowingSIGHStreamRedirectedBalance[redirectionAddress].add(_balanceToAdd).sub(_balanceToRemove);
-        emit BorrowingSIGHStreamRedirectedBalanceUpdated( redirectionAddress, _balanceToAdd, _balanceToRemove, userLiquiditySIGHStreamRedirectedBalance[redirectionAddress] );
+        emit BorrowingSIGHStreamRedirectedBalanceUpdated( redirectionAddress, _balanceToAdd, _balanceToRemove, userBorrowingSIGHStreamRedirectedBalance[redirectionAddress] );
     }
+
+
 
     // "userBorrowingSIGHStreamIndex" tracks the SIGH Accured per Instrument. user Index tracks the Sigh Accured by the user per Instrument
     // Delta Index = Instrument Index - User Index
     // SIGH Accured by user = { SUM(Redirected balances) + User's Compounded Borrow Balance (Only if it is also not redirected) } * {Delta Index}
-    function accure_SIGH_For_BorrowingStream( address user) public  {
-        uint borrowIndex = sighDistributionHandlerContract.getInstrumentBorrowIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHDistributionHandler Contract
-        require(borrowIndex > 0, "SIGH Distribution Handler returned invalid borrow Index for the instrument");
+    function accure_SIGH_For_BorrowingStream( address user) public onlyLendingPoolCore {
+        accure_SIGH_For_BorrowingStreamInternal(user);
+    }
+
+    function accure_SIGH_For_BorrowingStreamInternal( address user) internal  {
+        ( uint principalBorrowBalance , uint compoundedBorrowBalance , uint balanceIncrease) = core.getUserBorrowBalances(underlyingInstrumentAddress, user);          // Getting Borrow Balance of the User from LendingPool Core 
         
         // Total Balance = SUM(Redirected balances) + User's Balance (Only if it is not redirected)
-        uint totalBalanceForAccuringSIGH = userBorrowingSIGHStreamRedirectedBalance[user];
         if (userBorrowingSIGHStreamRedirectionAddress[user] == address(0)) {
-            ( uint principalBorrowBalance , uint compoundedBorrowBalance , uint balanceIncrease) = core.getUserBorrowBalances(underlyingInstrumentAddress, user);          // Getting Borrow Balance of the User from LendingPool Core 
-            totalBalanceForAccuringSIGH = totalBalanceForAccuringSIGH.add(compoundedBorrowBalance);
+            accure_SIGH_For_BorrowingStreamInternal(user, compoundedBorrowBalance );
         }
+        else {
+            address redirectionAddress = userBorrowingSIGHStreamRedirectionAddress[user];
+            if (userBorrowingSIGHStreamRedirectionAddress[redirectionAddress] == address(0) ) {
+                ( uint principalBorrowBalance , uint _compoundedBorrowBalance , uint _balanceIncrease) = core.getUserBorrowBalances(underlyingInstrumentAddress, redirectionAddress);          // Getting Borrow Balance of the User from LendingPool Core 
+                accure_SIGH_For_BorrowingStreamInternal(redirectionAddress, _compoundedBorrowBalance.add(balanceIncrease) );
+            }
+            else {
+                accure_SIGH_For_BorrowingStreamInternal(redirectionAddress, balanceIncrease );
+            }
+        }
+    }
+
+    function accure_SIGH_For_BorrowingStreamInternal(address user, uint compoundedBalance) internal {
+        uint borrowIndex = sighDistributionHandlerContract.getInstrumentBorrowIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHDistributionHandler Contract
+        require(borrowIndex > 0, "SIGH Distribution Handler returned invalid borrow Index for the instrument");
+
+        // Total Balance = SUM(Redirected balances) + User's Balance (Only if it is not redirected)
+        uint totalBalanceForAccuringSIGH = userBorrowingSIGHStreamRedirectedBalance[user].add(compoundedBalance);
 
         Double memory userIndex = Double({mantissa: userBorrowingSIGHStreamIndex[user]}) ;      // Stored User Index
         Double memory instrumentIndex = Double({mantissa: borrowIndex});                        // Instrument Index
@@ -926,6 +949,7 @@ contract IToken is ERC20, ERC20Detailed {
             accureSigh(user, borrowerSighDelta, false );        // ACCURED SIGH AMOUNT IS ADDED TO THE AccuredSighBalance of the Supplier or the address to which SIGH is being redirected to 
         }
     }
+
 
 // ###########################################################################
 // ###########################################################################
