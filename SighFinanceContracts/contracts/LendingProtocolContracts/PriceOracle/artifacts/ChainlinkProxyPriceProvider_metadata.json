@@ -321,10 +321,10 @@
 			]
 		},
 		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {
-			"keccak256": "0x3cac9f73a1e6cbd9bdd703519a1a43bd8215f284910dda0807440d01193178b3",
+			"keccak256": "0x30385d394fe30ea120fd04ef3d9f3e6006a90d08c6795ed9b3c586fb98a56512",
 			"urls": [
-				"bzz-raw://e33089eb2c49cbc820f1aeb05e48d041a22838681769dfca9fdae797ee37f26f",
-				"dweb:/ipfs/QmNRwngcxxRd5LkNKTDm68kgrQ3K2aYvxFVVDF3Sm8RcYH"
+				"bzz-raw://433194f95571c81d390832741a81d152e40c540722354e4f3c914d83600983a4",
+				"dweb:/ipfs/QmPwRF6AHfvUqco3YP9XZCe818juptqY5UUD75XQwmqg5u"
 			]
 		}
 	},

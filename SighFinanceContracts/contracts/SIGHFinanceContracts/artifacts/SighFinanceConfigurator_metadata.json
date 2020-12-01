@@ -576,10 +576,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighFinanceConfigurator.sol": {
-			"keccak256": "0x4ecb45ab7e2ab080fe8e234eec3b83f1f4794fb5a1dbb50f4a345c6325cc08cb",
+			"keccak256": "0x437a3bbaaf0eab6cbce271fa5f6329bd4db106af164fc85c70cb863640cae122",
 			"urls": [
-				"bzz-raw://d506cdcc3ced63a41b8bf6609b056468712ef16d1639fc5bd8490621957854a3",
-				"dweb:/ipfs/QmPU3XpYYadZTcShmAFZMwZ6ap8VVx7zufskNWG2kKRq5m"
+				"bzz-raw://110495a799b8a9ffc414787370096cb6854f5c267b63e77da164eebf66b66018",
+				"dweb:/ipfs/QmQJeMJsLn4PMgkgFGzCDucHA9HS4BfcqG4P1qSBRtg4U2"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {

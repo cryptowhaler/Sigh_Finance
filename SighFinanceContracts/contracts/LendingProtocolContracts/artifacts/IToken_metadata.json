@@ -1555,10 +1555,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/IToken.sol": {
-			"keccak256": "0x5ede5e03adcc5c46fac8e5a667478ec7de5ed8a1c74ecabdaf71f0243cdeb36a",
+			"keccak256": "0x9b40eeb6380fd8937627d7d503e6a93d2301a1ed33427e792c9e265c803c4482",
 			"urls": [
-				"bzz-raw://d6f753a16d017f54dd0b3fd9a6a640c739064b681815007b59f15e3786435610",
-				"dweb:/ipfs/QmbZB2RGQEcKAeejx37cSBceThQP5jQbfsuVFnh8ikJL5h"
+				"bzz-raw://d04f64a08b1c02bea6247e192107adee4b1db600b2e082377a2c297a47975840",
+				"dweb:/ipfs/QmbQKk8sCEABPBGXfeACUMGPDWQzGVuuWshssdLGLy67o8"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPool.sol": {
@@ -1569,10 +1569,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
-			"keccak256": "0x37465febf6c92125bde6afa3d7e0cc33c89077d689eb031f04f1818c1fa26756",
+			"keccak256": "0xc1bf40390054e3291783a0586cb19f19fc51281b9243102dfe0e1e3f7f5b9c2c",
 			"urls": [
-				"bzz-raw://68a2de8d743f504fb5510bfa083c8056bd09ede959cba2df7b7e0139b64f60ad",
-				"dweb:/ipfs/QmcMHEawYbuTQCjXEBUpRMJsAaqPgjK6PQC5jKWHZ54zvA"
+				"bzz-raw://1409dbd07ac8edf3809df021ae91ff97d8247e51f946acbd2ca70ab223a701c3",
+				"dweb:/ipfs/QmZ2hUTEWthSdWC6sV9cAKwXzZJZsNy6JWnLkydz7yiMxW"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolDataProvider.sol": {
@@ -1597,10 +1597,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0x4cbeb6dfcf6c36d0390b00ff903e3c2e8c47e8c4c34b041e94225b1c46dffe1a",
+			"keccak256": "0x60a53e4998cae88ea66c568fb8a76e5762c12576a6be9f9b51e37f83439c92d4",
 			"urls": [
-				"bzz-raw://04db3c94492e7ae09c558c5e40f6af5b8a41db0892d96f02541fb31395e054b1",
-				"dweb:/ipfs/QmT3GE3cCAncTjMYtVVCGLcBcevvfuJ28jZqEijYrfQ7zF"
+				"bzz-raw://5df29a7ee8aaf2ce10f1436b4a40b2e8209ab67aa4e7aedfa18122d92c64cf84",
+				"dweb:/ipfs/QmaeLNEHXThNtD8jYsrZ99FnRbsjdGfNJRx3DpysszRt5Q"
 			]
 		},
 		"openzeppelin-solidity/contracts/GSN/Context.sol": {

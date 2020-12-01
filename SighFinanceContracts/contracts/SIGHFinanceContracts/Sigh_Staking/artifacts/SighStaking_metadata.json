@@ -1088,17 +1088,17 @@
 			]
 		},
 		"localhost/contracts/configuration/GlobalAddressesProvider.sol": {
-			"keccak256": "0x7bcc04af3342681228371dca3aa6f0dfb2d3e7ba13ae28ff6547fc3f1d30d3b4",
+			"keccak256": "0xd5e1beff87157d5700516d1f6bfa0a89c58effb73aff0dca33633e40dfd68b1f",
 			"urls": [
-				"bzz-raw://fef78d95c89d5467df1d6cbc122b40d3ddde414de0e5a3ea2a878485eb0e9642",
-				"dweb:/ipfs/QmSkP9rA6WG34hHqNQC8B2g8dpnPZQJp71td6GVpN8zrxP"
+				"bzz-raw://8ce627bea8091d60b2d59ee4ca033ee9859e1c4487ed3f8061c3624c9f10794d",
+				"dweb:/ipfs/QmczACN46FKSTAaUuCzCKS2Ad1rSus1pEQayQ2xio2un8w"
 			]
 		},
 		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {
-			"keccak256": "0x3cac9f73a1e6cbd9bdd703519a1a43bd8215f284910dda0807440d01193178b3",
+			"keccak256": "0x30385d394fe30ea120fd04ef3d9f3e6006a90d08c6795ed9b3c586fb98a56512",
 			"urls": [
-				"bzz-raw://e33089eb2c49cbc820f1aeb05e48d041a22838681769dfca9fdae797ee37f26f",
-				"dweb:/ipfs/QmNRwngcxxRd5LkNKTDm68kgrQ3K2aYvxFVVDF3Sm8RcYH"
+				"bzz-raw://433194f95571c81d390832741a81d152e40c540722354e4f3c914d83600983a4",
+				"dweb:/ipfs/QmPwRF6AHfvUqco3YP9XZCe818juptqY5UUD75XQwmqg5u"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

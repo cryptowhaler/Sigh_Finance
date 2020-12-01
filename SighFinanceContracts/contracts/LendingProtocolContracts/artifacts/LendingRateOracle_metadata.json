@@ -6,6 +6,18 @@
 	"output": {
 		"abi": [
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_globalAddressesProvider",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
 				"constant": true,
 				"inputs": [
 					{
@@ -108,11 +120,18 @@
 		"remappings": []
 	},
 	"sources": {
-		"localhost/contracts/LendingProtocolContracts/LendingRateOracle.sol": {
-			"keccak256": "0x47a710f59b3f55c665819e47fa0072dde501aeae640ef61bdf7ac2ea7c8be333",
+		"localhost/contracts/Configuration/IGlobalAddressesProvider.sol": {
+			"keccak256": "0x30385d394fe30ea120fd04ef3d9f3e6006a90d08c6795ed9b3c586fb98a56512",
 			"urls": [
-				"bzz-raw://5a2473a147d0a21c629fb2fe049dff1b9ec3e145b06d8dde26252fafbd8069eb",
-				"dweb:/ipfs/Qmb4Zh6RyR2h5aVErMVRo5q3VwzgW4SRTLFsWXWQ41e56f"
+				"bzz-raw://433194f95571c81d390832741a81d152e40c540722354e4f3c914d83600983a4",
+				"dweb:/ipfs/QmPwRF6AHfvUqco3YP9XZCe818juptqY5UUD75XQwmqg5u"
+			]
+		},
+		"localhost/contracts/LendingProtocolContracts/LendingRateOracle.sol": {
+			"keccak256": "0x9bc20062c0dd3973cd7e11ab12059e5333eb539c61ad8e739b4422ea143819b9",
+			"urls": [
+				"bzz-raw://762dde3d445ecc2ce13e99c47bc93cbcec5fcd70d0c6e57cd458d4ca1bc47565",
+				"dweb:/ipfs/QmYC3NX8X6eFhutpXT5xtyWHJj3se4jkhQRhdKLLqZEUjR"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingRateOracle.sol": {

@@ -112,6 +112,21 @@
 			{
 				"constant": true,
 				"inputs": [],
+				"name": "LIQUIDATIONMANAGERL_REVISION",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
 				"name": "addressesProvider",
 				"outputs": [
 					{
@@ -206,10 +221,10 @@
 	},
 	"sources": {
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
-			"keccak256": "0x2aee154889e26c21e268b6b18646d88a9b9113ff789f7be12aa12b764ae1898a",
+			"keccak256": "0xc1bf40390054e3291783a0586cb19f19fc51281b9243102dfe0e1e3f7f5b9c2c",
 			"urls": [
-				"bzz-raw://b42112137dcabf248f4e9efbe0330c7d46048c4c1da8186ef4de4e850b5f6799",
-				"dweb:/ipfs/QmZCXWYb4PBGpWJJEzX25XAiVkLvhW9TxVxLFksqJYzTTr"
+				"bzz-raw://1409dbd07ac8edf3809df021ae91ff97d8247e51f946acbd2ca70ab223a701c3",
+				"dweb:/ipfs/QmZ2hUTEWthSdWC6sV9cAKwXzZJZsNy6JWnLkydz7yiMxW"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolDataProvider.sol": {
@@ -234,24 +249,24 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ITokenInterface.sol": {
-			"keccak256": "0x68b0c3d019deec87f528a5a149731c6ef774e5645204fba787312cb6e0312499",
+			"keccak256": "0xb8298ef90441795fef17a24a7cd7fa351b0da1f0920951cfa23f26273ba4ef17",
 			"urls": [
-				"bzz-raw://6d753ae185f78d3a59c6d9764549bba7efc7fbadebe9ecff67a5f6a4a5ec083a",
-				"dweb:/ipfs/QmZ7W31yoGVLfojEBuvwCZ27G49f1kjBVo9zz5jqH9qtyB"
+				"bzz-raw://3defedf04132a2ca90ec84376ff817f8ac8d21e43b2e8de62f78429909b3f98e",
+				"dweb:/ipfs/QmYpWtprr4AymN2c2ebZd5oAYHZ4L4zCoKmrnuz6joaq97"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolLiquidationManager.sol": {
-			"keccak256": "0x8e22ee575808991bb2f418122578f760416c2c6b628444a09d97400a96f7b1bd",
+			"keccak256": "0x9bf9137bfb995105e661426a0681a79ec44f27c18590952d4b0af221717216b3",
 			"urls": [
-				"bzz-raw://8f06370839dc00ff94b191247ebdd1da7307f0cb3e3b2c132c225ff8ad855854",
-				"dweb:/ipfs/QmZj9xfFM6sjwt9BNNLqKCHSEu8zefSZG4zyxZYpFJxWen"
+				"bzz-raw://e98afd0b271c6cc0cbc56aa65d7368342cf57124c61dca97d966d306d416a5b4",
+				"dweb:/ipfs/Qmevqsd5cRPT2hmx9qnoRv8Tw254wc2amGC5UoL3ze7dYw"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
-			"keccak256": "0x5ac06f62f0ceaeb15e94b0961de7e4cf6db8d77ca2c879e55772e4bf386428b3",
+			"keccak256": "0x3799446dff4f09de695bc46e555c50d47592d39b7d4bc0b41f5d046218b787f7",
 			"urls": [
-				"bzz-raw://fcf92275bf98d7c775ad72003a9a34879b039f6d126de59b85fe3a3c67f12a6b",
-				"dweb:/ipfs/QmWXH6H95TiidAP1BWYPEkJ9rYzNKuGnyj7ZSzTj5f8wSm"
+				"bzz-raw://ad7b33ac794daa623c0e47e78bf9430fc8470a67c8a593f065479173031133f1",
+				"dweb:/ipfs/QmTiP7TzYponrC9wCZ2SqzavzgYkBDmRRCHhErwWac5NDT"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/WadRayMath.sol": {
@@ -269,17 +284,17 @@
 			]
 		},
 		"localhost/contracts/configuration/GlobalAddressesProvider.sol": {
-			"keccak256": "0x7bcc04af3342681228371dca3aa6f0dfb2d3e7ba13ae28ff6547fc3f1d30d3b4",
+			"keccak256": "0x4494495a2c3155930b10fc66bc3e18fe721860479471ea7d3f7c27441eee4967",
 			"urls": [
-				"bzz-raw://fef78d95c89d5467df1d6cbc122b40d3ddde414de0e5a3ea2a878485eb0e9642",
-				"dweb:/ipfs/QmSkP9rA6WG34hHqNQC8B2g8dpnPZQJp71td6GVpN8zrxP"
+				"bzz-raw://04b8e40172aa1a0b9bbef6195451b11b865dc3d55c7cd47d4a81cbd372a1b404",
+				"dweb:/ipfs/QmR47xLm4y82RkHhruMc6uuZjriJcksRmvpKhp8D38s1Da"
 			]
 		},
 		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {
-			"keccak256": "0xefeb61dea52cfa0dcc34ea94d1f402389f598cf8ba238a7a6473cced72d2b73d",
+			"keccak256": "0x30385d394fe30ea120fd04ef3d9f3e6006a90d08c6795ed9b3c586fb98a56512",
 			"urls": [
-				"bzz-raw://a8e77e69d2855a84c0f1ab2e833ecb6656f46512ac4583e2ea7c8c5aa800f655",
-				"dweb:/ipfs/Qme7SjV9Ax6nPoirbgg8WBQ2UxTQESUC6KbDNSwcrzVyp9"
+				"bzz-raw://433194f95571c81d390832741a81d152e40c540722354e4f3c914d83600983a4",
+				"dweb:/ipfs/QmPwRF6AHfvUqco3YP9XZCe818juptqY5UUD75XQwmqg5u"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

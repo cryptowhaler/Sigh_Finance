@@ -856,7 +856,7 @@ contract IToken is ERC20, ERC20Detailed {
         // 1. We accure $SIGH for that address
         // 2. We substract the redirected compounded balance of the from account from that address
         if (currentRedirectionAddress != address(0)) { 
-            accure_SIGH_For_BorrowingStream( _from );
+            accure_SIGH_For_BorrowingStreamInternal( _from );
             updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddressInternal(_from,0, principalBorrowBalance );
         }
 
@@ -997,7 +997,7 @@ contract IToken is ERC20, ERC20Detailed {
 
     function claimSighInternal(address user) internal {
         accure_SIGH_For_LiquidityStream(user, balanceOf(user) );
-        accure_SIGH_For_BorrowingStream(user);
+        accure_SIGH_For_BorrowingStreamInternal(user);
         if (AccuredSighBalance[user] > 0) {
             AccuredSighBalance[user] = sighDistributionHandlerContract.transferSighTotheUser( underlyingInstrumentAddress, user, AccuredSighBalance[user] ); // Pending Amount Not Transferred is returned
         }

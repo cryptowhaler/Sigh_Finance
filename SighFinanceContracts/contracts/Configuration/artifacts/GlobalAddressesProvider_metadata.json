@@ -32,19 +32,6 @@
 						"type": "address"
 					}
 				],
-				"name": "EthereumAddressUpdated",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "newAddress",
-						"type": "address"
-					}
-				],
 				"name": "FeeProviderUpdated",
 				"type": "event"
 			},
@@ -240,6 +227,19 @@
 				"anonymous": false,
 				"inputs": [
 					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newAddress",
+						"type": "address"
+					}
+				],
+				"name": "SIGHFinanceFeeCollectorUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
 						"indexed": false,
 						"internalType": "address",
 						"name": "_sighFinanceManager",
@@ -299,19 +299,6 @@
 					}
 				],
 				"name": "SIGHTreasuryImplUpdated",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "newAddress",
-						"type": "address"
-					}
-				],
-				"name": "TokenDistributorUpdated",
 				"type": "event"
 			},
 			{
@@ -552,6 +539,21 @@
 				"constant": true,
 				"inputs": [],
 				"name": "getSIGHFinanceConfigurator",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getSIGHFinanceFeeCollector",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -838,6 +840,21 @@
 				"inputs": [
 					{
 						"internalType": "address",
+						"name": "_feeCollector",
+						"type": "address"
+					}
+				],
+				"name": "setSIGHFinanceFeeCollector",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
 						"name": "_SIGHMechanismHandler",
 						"type": "address"
 					}
@@ -1037,17 +1054,17 @@
 			]
 		},
 		"localhost/contracts/Configuration/GlobalAddressesProvider.sol": {
-			"keccak256": "0x7bcc04af3342681228371dca3aa6f0dfb2d3e7ba13ae28ff6547fc3f1d30d3b4",
+			"keccak256": "0x4494495a2c3155930b10fc66bc3e18fe721860479471ea7d3f7c27441eee4967",
 			"urls": [
-				"bzz-raw://fef78d95c89d5467df1d6cbc122b40d3ddde414de0e5a3ea2a878485eb0e9642",
-				"dweb:/ipfs/QmSkP9rA6WG34hHqNQC8B2g8dpnPZQJp71td6GVpN8zrxP"
+				"bzz-raw://04b8e40172aa1a0b9bbef6195451b11b865dc3d55c7cd47d4a81cbd372a1b404",
+				"dweb:/ipfs/QmR47xLm4y82RkHhruMc6uuZjriJcksRmvpKhp8D38s1Da"
 			]
 		},
 		"localhost/contracts/Configuration/IGlobalAddressesProvider.sol": {
-			"keccak256": "0xefeb61dea52cfa0dcc34ea94d1f402389f598cf8ba238a7a6473cced72d2b73d",
+			"keccak256": "0x30385d394fe30ea120fd04ef3d9f3e6006a90d08c6795ed9b3c586fb98a56512",
 			"urls": [
-				"bzz-raw://a8e77e69d2855a84c0f1ab2e833ecb6656f46512ac4583e2ea7c8c5aa800f655",
-				"dweb:/ipfs/Qme7SjV9Ax6nPoirbgg8WBQ2UxTQESUC6KbDNSwcrzVyp9"
+				"bzz-raw://433194f95571c81d390832741a81d152e40c540722354e4f3c914d83600983a4",
+				"dweb:/ipfs/QmPwRF6AHfvUqco3YP9XZCe818juptqY5UUD75XQwmqg5u"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

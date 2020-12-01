@@ -102,10 +102,10 @@
 	},
 	"sources": {
 		"localhost/contracts/LendingProtocolContracts/configuration/LendingPoolParametersProvider.sol": {
-			"keccak256": "0x5385533821caec88bfdef63db3e649ddf13081efd1059860964c5ac7f8067bb0",
+			"keccak256": "0xac071edbbfa83d2df828799617d772627fb541769c7ae796e41b0138e5714a1a",
 			"urls": [
-				"bzz-raw://893fca3dea05611d21f7a15fdee2fa3ec1082cfcb9154d70d43368567af3b5b7",
-				"dweb:/ipfs/QmXSwf1B42QFGLNQt3dV8ZwBHu2jdJKegsUh3nor2MsN2w"
+				"bzz-raw://abf15ad3bfe49e0927f9359c932c2d4e47ab1b005b9532a8eaa5530e7997ff54",
+				"dweb:/ipfs/QmPpaXDPnY9GN5WW2QF3UyRqvWJpo3aHomksSzs2WV73cZ"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/configuration/UintStorage.sol": {

@@ -763,10 +763,10 @@
 	},
 	"sources": {
 		"localhost/contracts/LendingProtocolContracts/interfaces/ITokenInterface.sol": {
-			"keccak256": "0xb95d4591c1b081b853b8f85a2ef678c915e7763050815faa24805fb9d2d37d26",
+			"keccak256": "0xb8298ef90441795fef17a24a7cd7fa351b0da1f0920951cfa23f26273ba4ef17",
 			"urls": [
-				"bzz-raw://f179702776bf1eca39d2583dec1567046dfa2dd13354810651623ccbbfb48a1c",
-				"dweb:/ipfs/QmVNzq386kZ9HKocUYbvrT8vNc8b16mTxRc1nwLG3iGQf3"
+				"bzz-raw://3defedf04132a2ca90ec84376ff817f8ac8d21e43b2e8de62f78429909b3f98e",
+				"dweb:/ipfs/QmYpWtprr4AymN2c2ebZd5oAYHZ4L4zCoKmrnuz6joaq97"
 			]
 		}
 	},

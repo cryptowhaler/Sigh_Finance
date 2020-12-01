@@ -194,7 +194,7 @@ contract LendingPoolCore is VersionedInitializable {
         (uint256 principalBorrowBalance, , uint256 balanceIncrease) = getUserBorrowBalances( _instrument, _user );     // getting the previous borrow data of the user
     
         ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
-        iToken.accure_Borrower_SIGH(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
+        iToken.accure_SIGH_For_BorrowingStream(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
 
         updateInstrumentStateOnBorrowInternal( _instrument, _user, principalBorrowBalance, balanceIncrease, _amountBorrowed, _rateMode );
         updateUserStateOnBorrowInternal( _instrument, _user, _amountBorrowed, balanceIncrease, _borrowFee, _rateMode );
@@ -305,7 +305,7 @@ contract LendingPoolCore is VersionedInitializable {
         sighMechanism.updateSIGHBorrowIndex(_instrument);              // ADDED BY SIGH FINANCE (Instrument Index is updated)        
 
         ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
-        iToken.accure_Borrower_SIGH(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
+        iToken.accure_SIGH_For_BorrowingStream(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
 
         updateInstrumentStateOnRepayInternal(  _instrument, _user, _paybackAmountMinusFees,  _balanceIncrease );
         updateUserStateOnRepayInternal(  _instrument, _user, _paybackAmountMinusFees,  _originationFeeRepaid, _balanceIncrease, _repaidWholeLoan  );
@@ -352,7 +352,8 @@ contract LendingPoolCore is VersionedInitializable {
 
         //update the user principal borrow balance, adding the cumulated interest and then subtracting the payback amount
         ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
-        iToken.updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(user, _balanceIncrease, _paybackAmountMinusFees );                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
+        iToken.updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(_user, _balanceIncrease, _paybackAmountMinusFees );      // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
+
         user.principalBorrowBalance = user.principalBorrowBalance.add(_balanceIncrease).sub( _paybackAmountMinusFees);
         user.lastVariableBorrowCumulativeIndex = instrument.lastVariableBorrowCumulativeIndex;
 
@@ -385,7 +386,7 @@ contract LendingPoolCore is VersionedInitializable {
         sighMechanism.updateSIGHBorrowIndex(_instrument);              // ADDED BY SIGH FINANCE (Instrument Index is updated)        
 
         ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
-        iToken.accure_Borrower_SIGH(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
+        iToken.accure_SIGH_For_BorrowingStream(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
 
         updateInstrumentStateOnSwapRateInternal( _instrument, _user,_principalBorrowBalance,  _compoundedBorrowBalance, _currentRateMode );
         CoreLibrary.InterestRateMode newRateMode = updateUserStateOnSwapRateInternal( _instrument, _user, _balanceIncrease, _currentRateMode );
@@ -449,7 +450,8 @@ contract LendingPoolCore is VersionedInitializable {
         }
         
         ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
-        iToken.updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(user, _balanceIncrease, 0 );                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
+        iToken.updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(_user, _balanceIncrease, 0 );                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
+
         user.principalBorrowBalance = user.principalBorrowBalance.add(_balanceIncrease);        //compounding cumulated interest
         user.lastUpdateTimestamp = uint40(block.timestamp);
         return newMode;
@@ -470,7 +472,7 @@ contract LendingPoolCore is VersionedInitializable {
     function updateStateOnRebalance(address _instrument, address _user, uint256 _balanceIncrease) external onlyLendingPool returns (uint256) {
         sighMechanism.updateSIGHBorrowIndex(_instrument);              // ADDED BY SIGH FINANCE (Instrument Index is updated)        
         ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
-        iToken.accure_Borrower_SIGH(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
+        iToken.accure_SIGH_For_BorrowingStream(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
 
         updateInstrumentStateOnRebalanceInternal(_instrument, _user, _balanceIncrease);
         updateUserStateOnRebalanceInternal(_instrument, _user, _balanceIncrease);      //update user data and rebalance the rate
@@ -503,7 +505,7 @@ contract LendingPoolCore is VersionedInitializable {
         CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
 
         ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
-        iToken.updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(user, _balanceIncrease, 0 );                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
+        iToken.updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(_user, _balanceIncrease, 0 );                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
 
         user.principalBorrowBalance = user.principalBorrowBalance.add(_balanceIncrease);
         user.stableBorrowRate = instrument.currentStableBorrowRate;
@@ -568,7 +570,7 @@ contract LendingPoolCore is VersionedInitializable {
         sighMechanism.updateSIGHSupplyIndex(_collateralInstrument);              // ADDED BY SIGH FINANCE (Instrument Index is updated)        
 
         ITokenInterface iToken = ITokenInterface( reserves[_principalInstrument].iTokenAddress );  // ITOKEN ADDRESS
-        iToken.accure_Borrower_SIGH(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
+        iToken.accure_SIGH_For_BorrowingStream(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
 
         updatePrincipalInstrumentStateOnLiquidationInternal( _principalInstrument, _user, _amountToLiquidate, _balanceIncrease );
         updatePrincipalInstrumentStateOnLiquidationInternal(  _collateralInstrument );
@@ -628,7 +630,7 @@ contract LendingPoolCore is VersionedInitializable {
         CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
         
         ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
-        iToken.updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(user, _balanceIncrease, _amountToLiquidate );                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
+        iToken.updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(_user, _balanceIncrease, _amountToLiquidate );                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
 
         user.principalBorrowBalance = user.principalBorrowBalance.add(_balanceIncrease).sub( _amountToLiquidate );  //first increase by the compounded interest, then decrease by the liquidated amount
 
@@ -725,7 +727,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _instrument the instrument address
     * @return the address of the interest rate strategy contract
     **/
-    function getInstrumentInterestRateStrategyAddress(address _instrument) public view returns (address) {
+    function getInstrumentItokenAndInterestRateStrategyAddress(address _instrument) public view returns (address interestRateStrategy) {
         CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
         return instrument.interestRateStrategyAddress;
     }
@@ -1272,21 +1274,6 @@ contract LendingPoolCore is VersionedInitializable {
         reserves[_instrument].interestRateStrategyAddress = _rateStrategyAddress;
     }
 
-    /**
-    * @dev enables borrowing on a instrument. Also sets the stable rate borrowing
-    * @param _instrument the address of the instrument
-    **/
-    function enableBorrowingOnInstrument(address _instrument)  external onlyLendingPoolConfigurator {
-        reserves[_instrument].enableBorrowing();
-    }
-
-    /**
-    * @dev disables borrowing on a instrument
-    * @param _instrument the address of the instrument
-    **/
-    function disableBorrowingOnInstrument(address _instrument) external onlyLendingPoolConfigurator {
-        reserves[_instrument].disableBorrowing();
-    }
 
     /**
     * @dev enables a instrument to be used as collateral
@@ -1304,89 +1291,74 @@ contract LendingPoolCore is VersionedInitializable {
         reserves[_instrument].disableAsCollateral();
     }
 
+
     /**
-    * @dev enable the stable borrow rate mode on a instrument
+    * @dev Switches borrowing on a instrument. Also sets the stable rate borrowing
     * @param _instrument the address of the instrument
     **/
-    function enableInstrumentStableBorrowRate(address _instrument) external onlyLendingPoolConfigurator {
-        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
-        instrument.isStableBorrowRateEnabled = true;
+    function borrowingOnInstrumentSwitch(address _instrument, bool toBeActivated)  external onlyLendingPoolConfigurator {
+        if (toBeActivated) {
+            reserves[_instrument].enableBorrowing();
+        }
+        else {
+            reserves[_instrument].disableBorrowing();
+        }
     }
 
     /**
-    * @dev disable the stable borrow rate mode on a instrument
+    * @dev Switches the stable borrow rate mode on a instrument
     * @param _instrument the address of the instrument
     **/
-    function disableInstrumentStableBorrowRate(address _instrument) external onlyLendingPoolConfigurator {
+    function instrumentStableBorrowRateSwitch(address _instrument, bool toBeActivated) external onlyLendingPoolConfigurator {
         CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
-        instrument.isStableBorrowRateEnabled = false;
+        if (toBeActivated) {
+            instrument.isStableBorrowRateEnabled = true;
+        }
+        else {
+            instrument.isStableBorrowRateEnabled = false;
+        }
     }
 
+
     /**
-    * @dev activates an instrument
+    * @dev Switches isActive of an instrument
     * @param _instrument the address of the instrument
     **/
-    function activateInstrument(address _instrument) external onlyLendingPoolConfigurator {
+    function InstrumentActivationSwitch(address _instrument , bool toBeActivated) external onlyLendingPoolConfigurator {
         CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
         require(  instrument.lastLiquidityCumulativeIndex > 0 &&  instrument.lastVariableBorrowCumulativeIndex > 0, "Instrument has not been initialized yet");
-        instrument.isActive = true;
+        if (toBeActivated) {
+            instrument.isActive = true;
+        }
+        else {
+            instrument.isActive = false;
+        }
     }
 
     /**
-    * @dev deactivates a instrument
-    * @param _instrument the address of the instrument
-    **/
-    function deactivateInstrument(address _instrument) external onlyLendingPoolConfigurator {
-        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
-        instrument.isActive = false;
-    }
-
-    /**
-    * @notice allows the configurator to freeze the instrument.
+    * @notice allows the configurator to freeze/unfreeze the instrument.
     * A freezed instrument does not allow any action apart from repay, redeem, liquidationCall, rebalance.
     * @param _instrument the address of the instrument
     **/
-    function freezeInstrument(address _instrument) external onlyLendingPoolConfigurator {
+    function InstrumentFreezeSwitch(address _instrument , bool toBeActivated) external onlyLendingPoolConfigurator {
         CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
-        instrument.isFreezed = true;
+        if (toBeActivated) {
+            instrument.isFreezed = true;
+        }
+        else {
+            instrument.isFreezed = false;
+        }
     }
 
     /**
-    * @notice allows the configurator to unfreeze the instrument. A unfreezed Instrument allows any action to be executed.
-    * @param _instrument the address of the instrument
-    **/
-    function unfreezeInstrument(address _instrument) external onlyLendingPoolConfigurator {
-        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
-        instrument.isFreezed = false;
-    }
-
-    /**
-    * @notice allows the configurator to update the loan to value of a instrument
+    * @notice allows the configurator to update the loan to value of a instrument, liquidation threshold, liquidation bonus
     * @param _instrument the address of the instrument
     * @param _ltv the new loan to value
     **/
-    function setInstrumentBaseLTVasCollateral(address _instrument, uint256 _ltv) external onlyLendingPoolConfigurator {
+    function updateInstrumentCollateralParameters(address _instrument, uint256 _ltv, uint256 _threshold, uint256 _bonus) external onlyLendingPoolConfigurator {
         CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
         instrument.baseLTVasCollateral = _ltv;
-    }
-
-    /**
-    * @notice allows the configurator to update the liquidation threshold of a instrument
-    * @param _instrument the address of the instrument
-    * @param _threshold the new liquidation threshold
-    **/
-    function setInstrumentLiquidationThreshold(address _instrument, uint256 _threshold) external onlyLendingPoolConfigurator {
-        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
         instrument.liquidationThreshold = _threshold;
-    }
-
-    /**
-    * @notice allows the configurator to update the liquidation bonus of a instrument
-    * @param _instrument the address of the instrument
-    * @param _bonus the new liquidation bonus
-    **/
-    function setInstrumentLiquidationBonus(address _instrument, uint256 _bonus) external  onlyLendingPoolConfigurator {
-        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
         instrument.liquidationBonus = _bonus;
     }
 

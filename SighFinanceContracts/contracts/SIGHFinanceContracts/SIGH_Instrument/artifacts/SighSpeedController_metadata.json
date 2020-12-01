@@ -538,10 +538,10 @@
 			]
 		},
 		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {
-			"keccak256": "0xefeb61dea52cfa0dcc34ea94d1f402389f598cf8ba238a7a6473cced72d2b73d",
+			"keccak256": "0x30385d394fe30ea120fd04ef3d9f3e6006a90d08c6795ed9b3c586fb98a56512",
 			"urls": [
-				"bzz-raw://a8e77e69d2855a84c0f1ab2e833ecb6656f46512ac4583e2ea7c8c5aa800f655",
-				"dweb:/ipfs/Qme7SjV9Ax6nPoirbgg8WBQ2UxTQESUC6KbDNSwcrzVyp9"
+				"bzz-raw://433194f95571c81d390832741a81d152e40c540722354e4f3c914d83600983a4",
+				"dweb:/ipfs/QmPwRF6AHfvUqco3YP9XZCe818juptqY5UUD75XQwmqg5u"
 			]
 		},
 		"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
