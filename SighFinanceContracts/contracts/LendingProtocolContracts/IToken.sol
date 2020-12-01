@@ -885,7 +885,7 @@ contract IToken is ERC20, ERC20Detailed {
     * @param _balanceToAdd the amount to add to the redirected balance
     * @param _balanceToRemove the amount to remove from the redirected balance
     **/
-    function updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress( address _user, uint256 _balanceToAdd, uint256 _balanceToRemove ) onlyLendingPoolCore public {
+    function updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress( address _user, uint256 _balanceToAdd, uint256 _balanceToRemove ) onlyLendingPoolCore external {
         updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddressInternal(_user,_balanceToAdd,_balanceToRemove);
     }
 
@@ -904,7 +904,7 @@ contract IToken is ERC20, ERC20Detailed {
     // "userBorrowingSIGHStreamIndex" tracks the SIGH Accured per Instrument. user Index tracks the Sigh Accured by the user per Instrument
     // Delta Index = Instrument Index - User Index
     // SIGH Accured by user = { SUM(Redirected balances) + User's Compounded Borrow Balance (Only if it is also not redirected) } * {Delta Index}
-    function accure_SIGH_For_BorrowingStream( address user) public onlyLendingPoolCore {
+    function accure_SIGH_For_BorrowingStream( address user) external onlyLendingPoolCore {
         accure_SIGH_For_BorrowingStreamInternal(user);
     }
 

@@ -59,6 +59,9 @@ interface ITokenInterface {
     function allowLiquiditySIGHRedirectionTo(address _to) external;
     function redirectLiquiditySIGHStreamOf(address _from, address _to) external;
 
+    function updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress( address _user, uint256 _balanceToAdd, uint256 _balanceToRemove ) external;
+    function accure_SIGH_For_BorrowingStream( address user) external ;
+
     function redirectBorrowingSIGHStream(address _to) external;
     function allowBorrowingSIGHRedirectionTo(address _to) external;
     function redirectBorrowingSIGHStreamOf(address _from, address _to) external;
