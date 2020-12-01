@@ -18,16 +18,16 @@ export function handleDeposit(event: Deposit): void {
     instrumentState.lifeTimeDeposits_WEI = instrumentState.lifeTimeDeposits_WEI.plus(event.params._amount)
     instrumentState.lifeTimeDeposits = instrumentState.lifeTimeDeposits_WEI.toBigDecimal().div(decimalAdj)
 
-    instrumentState.totalLiquidity_WEI = instrumentState.totalLiquidity_WEI.plus(event.params._amount)
-    instrumentState.totalLiquidity = instrumentState.totalLiquidity_WEI.toBigDecimal().div(decimalAdj)
+    instrumentState.totalDepositedLiquidity_WEI = instrumentState.totalDepositedLiquidity_WEI.plus(event.params._amount)
+    instrumentState.totalDepositedLiquidity = instrumentState.totalDepositedLiquidity_WEI.toBigDecimal().div(decimalAdj)
 
     instrumentState.availableLiquidity_WEI = instrumentState.availableLiquidity_WEI.plus(event.params._amount)
     instrumentState.availableLiquidity = instrumentState.availableLiquidity_WEI.toBigDecimal().div(decimalAdj)
 
-    if (instrumentState.totalLiquidity  > BigDecimal.fromString('0')) {
-        instrumentState.utilizationRate = instrumentState.totalPrincipalBorrows.times(BigInt.fromI32(18).pow(25 as u8).toBigDecimal()).div(instrumentState.totalLiquidity)
-        instrumentState.utilizationRatePercent = instrumentState.utilizationRate.div( BigInt.fromI32(18).pow(23 as u8).toBigDecimal() )
-    }
+    // if (instrumentState.totalLiquidity  > BigDecimal.fromString('0')) {
+    //     instrumentState.utilizationRate = instrumentState.totalPrincipalBorrows.times(BigInt.fromI32(18).pow(25 as u8).toBigDecimal()).div(instrumentState.totalLiquidity)
+    //     instrumentState.utilizationRatePercent = instrumentState.utilizationRate.div( BigInt.fromI32(18).pow(23 as u8).toBigDecimal() )
+    // }
 
     instrumentState.timeStamp = event.params._timestamp
     instrumentState.save()
