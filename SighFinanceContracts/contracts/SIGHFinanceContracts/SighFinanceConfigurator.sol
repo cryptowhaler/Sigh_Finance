@@ -40,7 +40,7 @@ contract SighFinanceConfigurator is VersionedInitializable {
 // ####### PROXY RELATED #######
 // #############################
 
-    uint256 public constant CONFIGURATOR_REVISION = 0x2;
+    uint256 public constant CONFIGURATOR_REVISION = 0x1;
 
     function getRevision() internal pure returns (uint256) {
         return CONFIGURATOR_REVISION;
@@ -101,15 +101,9 @@ contract SighFinanceConfigurator is VersionedInitializable {
         sigh_distribution_mechanism.refreshConfig() ;
     }
 
-    function SIGH_the_instrument_In_SIGH_Distribution_Handler(address instrument_) external onlySIGHFinanceManager returns (bool) { 
+    function instrument__SIGH_StateUpdated_Distribution_Handler(address instrument_,  uint _maxVolatilityLimitSuppliers,uint _maxVolatilityLimitBorrowers, bool _isSIGHMechanismActivated ) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
-        require(sigh_distribution_mechanism.Instrument_SIGHed( instrument_ ), "Instrument_SIGHed() execution failed." );
-        return true;
-    }
-
-    function UNsigh_instrument_In_SIGH_Distribution_Handler(address instrument_) external onlySIGHFinanceManager returns (bool) { 
-        ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
-        require(sigh_distribution_mechanism.Instrument_UNSIGHed( instrument_ ), "Instrument_UNSIGHed() execution failed." );
+        require(sigh_distribution_mechanism.Instrument_SIGH_StateUpdated( instrument_, _maxVolatilityLimitSuppliers, _maxVolatilityLimitBorrowers, _isSIGHMechanismActivated ), "Instrument_SIGH_StateUpdated() execution failed." );
         return true;
     }
 
@@ -126,9 +120,9 @@ contract SighFinanceConfigurator is VersionedInitializable {
         return true;
     }        
 
-    function SpeedUpperCheckSwitch_In_SIGH_Distribution_Handler(bool isActivated, uint profitPercentage) external onlySIGHFinanceManager returns (bool) { 
+    function SpeedUpperCheckSwitch_In_SIGH_Distribution_Handler(bool isActivated, uint maxVolatilityProtocolLimit_) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
-        require(sigh_distribution_mechanism.SpeedUpperCheckSwitch( isActivated, profitPercentage ), "SpeedUpperCheckSwitch() execution failed." );
+        require(sigh_distribution_mechanism.updateSIGHSpeedUpperCheck( isActivated, maxVolatilityProtocolLimit_ ), "updateSIGHSpeedUpperCheck() execution failed." );
         return true;
     }        
 

@@ -86,23 +86,29 @@
 					{
 						"indexed": false,
 						"internalType": "address",
-						"name": "instrumentAddress_",
+						"name": "instrument_",
 						"type": "address"
 					},
 					{
 						"indexed": false,
 						"internalType": "bool",
-						"name": "isSighed",
+						"name": "isSIGHMechanismActivated",
 						"type": "bool"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "blockNumber",
+						"name": "maxVolatilityLimitSuppliers",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "maxVolatilityLimitBorrowers",
 						"type": "uint256"
 					}
 				],
-				"name": "InstrumentSIGHed",
+				"name": "InstrumentSIGHStateUpdated",
 				"type": "event"
 			},
 			{
@@ -117,37 +123,25 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "current_Sigh_Price",
+						"name": "_SIGHSpeedUsed",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "totalVolatilityPerBlockAverage",
+						"name": "_totalVolatilityLimitPerBlock",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "deltaBlocks",
+						"name": "_maxVolatilityToAddressPerBlock",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "maxVolatilityToAddress",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "max_valueDistributionLimitDecimalsAdjusted",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "sigh_speed_used",
+						"name": "_max_SIGHDistributionLimitDecimalsAdjusted",
 						"type": "uint256"
 					}
 				],
@@ -186,12 +180,6 @@
 						"internalType": "uint256",
 						"name": "currentClock",
 						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "blockNumber",
-						"type": "uint256"
 					}
 				],
 				"name": "PriceSnapped",
@@ -209,7 +197,13 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "totalCompoundedBorrows",
+						"name": "totalCompoundedStableBorrows",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalCompoundedVariableBorrows",
 						"type": "uint256"
 					},
 					{
@@ -228,12 +222,6 @@
 						"indexed": false,
 						"internalType": "uint256",
 						"name": "newIndexMantissa",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "blockNum",
 						"type": "uint256"
 					}
 				],
@@ -320,13 +308,7 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "upperCheckProfitPercentage",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "blockNumber",
+						"name": "maxVolatilityProtocolLimit",
 						"type": "uint256"
 					}
 				],
@@ -400,15 +382,9 @@
 					},
 					{
 						"indexed": false,
-						"internalType": "uint256",
-						"name": "maxSpeed",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "string",
+						"internalType": "uint8",
 						"name": "side",
-						"type": "string"
+						"type": "uint8"
 					},
 					{
 						"indexed": false,
@@ -425,19 +401,13 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "_24HrVolatility",
+						"name": "_percentTotalVolatilityLimitAmount",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "percentTotalVolatility",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "totalLosses",
+						"name": "_percentTotalVolatility",
 						"type": "uint256"
 					}
 				],
@@ -451,30 +421,24 @@
 						"internalType": "address",
 						"name": "instrument_",
 						"type": "address"
-					}
-				],
-				"name": "Instrument_SIGHed",
-				"outputs": [
+					},
+					{
+						"internalType": "uint256",
+						"name": "_maxVolatilityLimitSuppliers",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_maxVolatilityLimitBorrowers",
+						"type": "uint256"
+					},
 					{
 						"internalType": "bool",
-						"name": "",
+						"name": "_isSIGHMechanismActivated",
 						"type": "bool"
 					}
 				],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "instrument_",
-						"type": "address"
-					}
-				],
-				"name": "Instrument_UNSIGHed",
+				"name": "Instrument_SIGH_StateUpdated",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -499,32 +463,6 @@
 				],
 				"payable": false,
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "bool",
-						"name": "isActivated",
-						"type": "bool"
-					},
-					{
-						"internalType": "uint256",
-						"name": "profitPercentage",
-						"type": "uint256"
-					}
-				],
-				"name": "SpeedUpperCheckSwitch",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -792,8 +730,39 @@
 						"type": "address"
 					}
 				],
-				"name": "getInstrumentSighMechansimStates",
+				"name": "getInstrumentSighLimits",
 				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "_maxVolatilityLimitSuppliers",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_maxVolatilityLimitBorrowers",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrument",
+						"type": "address"
+					}
+				],
+				"name": "getInstrumentSpeeds",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "side",
+						"type": "uint8"
+					},
 					{
 						"internalType": "uint256",
 						"name": "suppliers_speed",
@@ -807,21 +776,6 @@
 					{
 						"internalType": "uint256",
 						"name": "staking_speed",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_24HrVolatility",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "side",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "percentTotalVolatility",
 						"type": "uint256"
 					}
 				],
@@ -839,6 +793,62 @@
 					}
 				],
 				"name": "getInstrumentSupplyIndex",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrument",
+						"type": "address"
+					}
+				],
+				"name": "getInstrumentVolatilityStates",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "side",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_24HrVolatilityLimitAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "percentTotalVolatilityLimitAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_total24HrVolatility",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "percentTotalVolatility",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getMaxVolatilityProtocolLimit",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -898,7 +908,7 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "getupperCheckProfitPercentage",
+				"name": "getSIGHSpeedUsed",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -1050,11 +1060,6 @@
 						"type": "address"
 					},
 					{
-						"internalType": "address",
-						"name": "sighAccuredTo",
-						"type": "address"
-					},
-					{
 						"internalType": "uint256",
 						"name": "sigh_Amount",
 						"type": "uint256"
@@ -1139,6 +1144,32 @@
 				"constant": false,
 				"inputs": [
 					{
+						"internalType": "bool",
+						"name": "isSpeedUpperCheckAllowed_",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "maxVolatilityProtocolLimit_",
+						"type": "uint256"
+					}
+				],
+				"name": "updateSIGHSpeedUpperCheck",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "currentInstrument",
 						"type": "address"
@@ -1185,22 +1216,10 @@
 		],
 		"devdoc": {
 			"methods": {
-				"Instrument_SIGHed(address)": {
-					"details": "Instrument to be convered under the SIGH DIstribution Mechanism - Decided by the SIGH Finance Manager who  can call this function through the Sigh Finance Configurator",
+				"Instrument_SIGH_StateUpdated(address,uint256,uint256,bool)": {
+					"details": "Instrument to be convered under the SIGH DIstribution Mechanism and the associated Volatility Limits - Decided by the SIGH Finance Manager who  can call this function through the Sigh Finance Configurator",
 					"params": {
 						"instrument_": "the instrument object*"
-					}
-				},
-				"Instrument_UNSIGHed(address)": {
-					"details": "Instrument to be removed from SIGH DIstribution Mechanism - Decided by the SIGH Finance Manager who  can call this function through the Sigh Finance Configurator",
-					"params": {
-						"instrument_": "the instrument object*"
-					}
-				},
-				"SpeedUpperCheckSwitch(bool,uint256)": {
-					"params": {
-						"isActivated": "Boolean deciding if the upper check on SIGH speed (loss driven) activated or not",
-						"profitPercentage": "The additional profit based SIGH distribution over and above the covered losses"
 					}
 				},
 				"addInstrument(address,address,uint256)": {
@@ -1217,7 +1236,7 @@
 						"_instrument": "the instrument object*"
 					}
 				},
-				"transferSighTotheUser(address,address,address,uint256)": {
+				"transferSighTotheUser(address,address,uint256)": {
 					"details": "Note: If there is not enough SIGH, we do not perform the transfer call.",
 					"params": {
 						"instrument": "The instrument for which the SIGH has been accured",
@@ -1256,13 +1275,10 @@
 		},
 		"userdoc": {
 			"methods": {
-				"SpeedUpperCheckSwitch(bool,uint256)": {
-					"notice": "Activates / Deactivates the upper check and sets the profit percentage for an Instrument - Decided by the SIGH Finance Manager who  can call this function through the Sigh Finance Configurator"
-				},
 				"refreshSIGHSpeeds()": {
 					"notice": "Recalculate and update SIGH speeds for all Supported SIGH markets"
 				},
-				"transferSighTotheUser(address,address,address,uint256)": {
+				"transferSighTotheUser(address,address,uint256)": {
 					"notice": "Transfer SIGH to the user. Called by the corresponding IToken Contract of the instrument"
 				},
 				"updateDeltaBlocksForSpeedRefresh(uint256)": {
@@ -1367,10 +1383,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighDistributionHandler/SighDistributionHandler.sol": {
-			"keccak256": "0x6445b266854a79257c58281b1dfed2d383c4bad7990e57ace01cc7ea60f1b556",
+			"keccak256": "0x18524e0c5692385490ffe6305838dd6fcb09d6a1f5301e7b77b85d4ebc87d7ee",
 			"urls": [
-				"bzz-raw://4f03427bf6d1df5fdc00cf01d3a5573780d9568ea4196879c67350b9613386b3",
-				"dweb:/ipfs/QmdP1yezT5Lh4jNx766MEVjG98tnCxBJ9UNHnhZVhhK4EU"
+				"bzz-raw://5609a8aa5f03e51edbc47bdd5633479069975dc1927be5a35ab3f2c73d5f71e5",
+				"dweb:/ipfs/QmauoK6vE6r4F79sA2HqNZPbPsdcBFeC4aqzNvLZJujJiS"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

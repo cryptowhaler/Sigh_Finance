@@ -27,12 +27,20 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     IPriceOracleGetter public oracle;
     ILendingPoolCore public lendingPoolCore;
 
-// ######## PARAMETERS ########
-    uint constant SIGH_ClaimThreshold = 1e18;        ///  The threshold above which the flywheel transfers SIGH, in wei
     uint constant sighInitialIndex = 1e36;            ///  The initial SIGH index for a market
 
+    // SIGH Speed Upper Check
     bool private isSpeedUpperCheckAllowed = false;
-    Exp private upperCheckProfitPercentage = Exp({ mantissa : 0 });  
+    Exp private maxVolatilityProtocolLimit = Exp({mantissa: 1e18 });  
+
+    // TOTAL Protocol Volatility Values (Current Session)
+    uint256 private last24HrsTotalProtocolVolatility = 0;
+    uint256 private last24HrsTotalProtocolVolatilityLimit = 0;
+    uint256 private deltaBlockslast24HrSession = 0;
+    
+    // SIGH Speed is set by SIGH Finance Manager. SIGH Speed Used = Calculated based on "maxVolatilityProtocolLimit" & "last24HrsTotalProtocolVolatilityLimit"
+    uint private SIGHSpeed;
+    uint private SIGHSpeedUsed;
 
     address[] private all_Instruments;    // LIST OF INSTRUMENTS 
 
@@ -65,15 +73,17 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
 // ######## SIGH DISTRIBUTION SPEED FOR EACH INSTRUMENT ########
 
-    uint private SIGHSpeed;
-
     struct Instrument_Sigh_Mechansim_State {
+        uint8 side;                                         // side = enum{Suppliers,Borrowers,inactive}
+        uint256 maxVolatilityLimitSuppliers;                 // Volatility Limit Ratio = maxVolatilityLimitSuppliers (if side == Suppliers)
+        uint256 maxVolatilityLimitBorrowers;                 // Volatility Limit Ratio = maxVolatilityLimitSuppliers (if side == Borrowers)
+        uint256 _total24HrVolatility;                        // TOTAL VOLATILITY = Total Compounded Balance * Price Difference
+        uint256 _24HrVolatilityLimitAmount;                  // Volatility Limit Amount = TOTAL VOLATILITY * (Volatility Limit Ratio) / 1e18
+        uint256 percentTotalVolatility;                      // TOTAL VOLATILITY / last24HrsTotalProtocolVolatility
+        uint256 percentTotalVolatilityLimitAmount;           // Volatility Limit Amount / last24HrsTotalProtocolVolatilityLimit
         uint256 suppliers_Speed;
         uint256 borrowers_Speed;
         uint256 staking_Speed;
-        uint256 _24HrVolatility;
-        string side;
-        uint256 percentTotalVolatility;
     }
 
     mapping(address => Instrument_Sigh_Mechansim_State) private Instrument_Sigh_Mechansim_States;
@@ -87,21 +97,21 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
     event InstrumentAdded (address instrumentAddress_, address iTokenAddress,  uint decimals , uint blockNumber); 
     event InstrumentRemoved(address _instrument, uint blockNumber); 
+    event InstrumentSIGHStateUpdated( address instrument_, bool isSIGHMechanismActivated, uint maxVolatilityLimitSuppliers, uint maxVolatilityLimitBorrowers );
 
     event SIGHSpeedUpdated(uint oldSIGHSpeed, uint newSIGHSpeed, uint blockNumber_);     /// Emitted when SIGH speed is changed
-    event SpeedUpperCheckSwitched(bool previsSpeedUpperCheckAllowed, uint upperCheckProfitPercentage, uint blockNumber );
+    event SpeedUpperCheckSwitched(bool previsSpeedUpperCheckAllowed, uint maxVolatilityProtocolLimit );
     event minimumBlocksForSpeedRefreshUpdated( uint prevDeltaBlocksForSpeed,uint newDeltaBlocksForSpeed, uint blockNumber );
 
-    event InstrumentSIGHed(address instrumentAddress_, bool isSighed, uint blockNumber);    /// Emitted when market isSIGHMechanismActivated status is changed
     event StakingSpeedUpdated(address instrumentAddress_ , uint prevStakingSpeed, uint new_staking_Speed, uint blockNumber );
     
-    event PriceSnapped(address instrument, uint prevPrice, uint currentPrice, uint deltaBlocks, uint currentClock, uint blockNumber);   /// @notice Emitted when Price snapshot is taken
-    event MaxSIGHSpeedCalculated(uint _SIGHSpeed, uint current_Sigh_Price, uint totalVolatilityPerBlockAverage, uint deltaBlocks, uint maxVolatilityToAddress, uint max_valueDistributionLimitDecimalsAdjusted, uint sigh_speed_used );
-    event refreshingSighSpeeds( address _Instrument,uint maxSpeed, string side, uint supplierSpeed, uint borrowerSpeed, uint _24HrVolatility, uint percentTotalVolatility, uint totalLosses );
+    event PriceSnapped(address instrument, uint prevPrice, uint currentPrice, uint deltaBlocks, uint currentClock );   /// @notice Emitted when Price snapshot is taken
+    event MaxSIGHSpeedCalculated(uint _SIGHSpeed, uint _SIGHSpeedUsed, uint _totalVolatilityLimitPerBlock, uint _maxVolatilityToAddressPerBlock, uint _max_SIGHDistributionLimitDecimalsAdjusted );
+    event refreshingSighSpeeds( address _Instrument, uint8 side,  uint supplierSpeed, uint borrowerSpeed, uint _percentTotalVolatilityLimitAmount, uint _percentTotalVolatility );
     
 
     event SIGHSupplyIndexUpdated(address instrument, uint totalCompoundedSupply, uint sighAccured, uint ratioMantissa, uint newIndexMantissa,  uint blockNum );
-    event SIGHBorrowIndexUpdated(address instrument, uint totalCompoundedStableBorrows, uint totalCompoundedVariableBorrows, uint sighAccured, uint ratioMantissa, uint newIndexMantissa,  uint blockNum );
+    event SIGHBorrowIndexUpdated(address instrument, uint totalCompoundedStableBorrows, uint totalCompoundedVariableBorrows, uint sighAccured, uint ratioMantissa, uint newIndexMantissa );
 
     event AccuredSIGHTransferredToTheUser(address instrument, address user, uint sigh_Amount );
 
@@ -133,7 +143,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 // ##############        PROXY RELATED  & ADDRESSES INITIALIZATION        ###############
 // ######################################################################################
 
-    uint256 constant private SIGH_DISTRIBUTION_REVISION = 0x13;
+    uint256 constant private SIGH_DISTRIBUTION_REVISION = 0x1;
 
     function getRevision() internal pure returns(uint256) {
         return SIGH_DISTRIBUTION_REVISION;
@@ -157,9 +167,9 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     
 // #####################################################################################################################################################
 // ##############        ADDING INSTRUMENTS AND ENABLING / DISABLING SIGH's LOSS MINIMIZING DISTRIBUTION MECHANISM       ###############################
-// ##############        1. addInstrument() : Adds an instrument. Called by LendingPoolCore       ######################################################
-// ##############        2. Instrument_SIGHed() : Instrument supported by Sigh Distribution. Called by Sigh Finance Configurator   #####################
-// ##############        3. Instrument_UNSIGHed() : Instrument to be removed from Sigh Distribution. Called by Sigh Finance Configurator ###############
+// ##############        1. addInstrument() : Adds an instrument. Called by LendingPoolCore                              ######################################################
+// ##############        2. removeInstrument() : Instrument supported by Sigh Distribution. Called by Sigh Finance Configurator   #####################
+// ##############        3. Instrument_SIGH_StateUpdated() : Activate / Deactivate SIGH Mechanism, update Volatility Limits for Suppliers / Borrowers ###############
 // #####################################################################################################################################################
 
     /**
@@ -187,13 +197,18 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
                                                                 } );
         // STATE UPDATED : INITITALIZE INSTRUMENT SPEEDS
         Instrument_Sigh_Mechansim_States[_instrument] = Instrument_Sigh_Mechansim_State({ 
-                                                                       suppliers_Speed: uint(0),
-                                                                       borrowers_Speed: uint(0),
-                                                                       staking_Speed: uint(0),
-                                                                       _24HrVolatility: uint(0),
-                                                                       side: 'inactive' ,
-                                                                       percentTotalVolatility: uint(0)
-                                                                    } );
+                                                            side: uint8(0) ,
+                                                            maxVolatilityLimitSuppliers : uint(1e18),
+                                                            maxVolatilityLimitBorrowers: uint(1e18),
+                                                            suppliers_Speed: uint(0),
+                                                            borrowers_Speed: uint(0),
+                                                            staking_Speed: uint(0),
+                                                            _total24HrVolatility: uint(0),
+                                                            _24HrVolatilityLimitAmount: uint(0),
+                                                            percentTotalVolatility: uint(0),
+                                                            percentTotalVolatilityLimitAmount: uint(0)
+                                                        } );
+                                                        
 
         // STATE UPDATED : INITIALIZE PRICECYCLES
         if ( instrumentPriceCycles[_instrument].initializationCounter == 0 ) {
@@ -237,37 +252,23 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
 
     /**
-    * @dev Instrument to be convered under the SIGH DIstribution Mechanism - Decided by the SIGH Finance Manager who 
+    * @dev Instrument to be convered under the SIGH DIstribution Mechanism and the associated Volatility Limits - Decided by the SIGH Finance Manager who 
     * can call this function through the Sigh Finance Configurator
     * @param instrument_ the instrument object
     **/
-    function Instrument_SIGHed(address instrument_) external onlySighFinanceConfigurator returns (bool) {                   // 
+    function Instrument_SIGH_StateUpdated(address instrument_, uint _maxVolatilityLimitSuppliers,uint _maxVolatilityLimitBorrowers, bool _isSIGHMechanismActivated  ) external onlySighFinanceConfigurator returns (bool) {                   // 
         require(financial_instruments[instrument_].isListed ,"Instrument not supported.");
-        require(!financial_instruments[instrument_].isSIGHMechanismActivated, "Instrument already covered under SIGH Distribution Mechanism");
+        require( _maxVolatilityLimitSuppliers >= 0.01e18, 'The new Volatility Limit for Suppliers must be greater than 0.01e18 (1%)');
+        require( _maxVolatilityLimitSuppliers <= 10e18, 'The new Volatility Limit for Suppliers must be less than 10e18 (10x)');
+        require( _maxVolatilityLimitBorrowers >= 0.01e18, 'The new Volatility Limit for Borrowers must be greater than 0.01e18 (1%)');
+        require( _maxVolatilityLimitBorrowers <= 10e18, 'The new Volatility Limit for Borrowers must be less than 10e18 (10x)');
         refreshSIGHSpeeds(); 
         
-        financial_instruments[instrument_].isSIGHMechanismActivated = true;     // STATE UPDATED
-        emit InstrumentSIGHed( instrument_, financial_instruments[instrument_].isSIGHMechanismActivated, getBlockNumber());
-        return true;
-    }
-
-    /**
-    * @dev Instrument to be removed from SIGH DIstribution Mechanism - Decided by the SIGH Finance Manager who 
-    * can call this function through the Sigh Finance Configurator
-    * @param instrument_ the instrument object
-    **/
-    function Instrument_UNSIGHed(address instrument_) external onlySighFinanceConfigurator returns (bool) {         // 
-        require(financial_instruments[instrument_].isListed ,"Instrument not supported.");
-        require(financial_instruments[instrument_].isSIGHMechanismActivated, "Instrument already not supported by the SIGH Distribution Mechanism");
-        refreshSIGHSpeeds();
-
-        // Recorded Price snapshots initialized to 0. 
-        uint256[24] memory emptyPrices;
-        instrumentPriceCycles[instrument_].recordedPriceSnapshot = emptyPrices; //InstrumentPriceCycle({ recordedPriceSnapshot : emptyPrices, initializationCounter: 0 }) ;   // STATE UPDATED
-        instrumentPriceCycles[instrument_].initializationCounter = uint32(0); //InstrumentPriceCycle({ recordedPriceSnapshot : emptyPrices, initializationCounter: 0 }) ;     // STATE UPDATED
-
-        financial_instruments[instrument_].isSIGHMechanismActivated = false;              // STATE UPDATED
-        emit InstrumentSIGHed( instrument_, financial_instruments[instrument_].isSIGHMechanismActivated, getBlockNumber());
+        financial_instruments[instrument_].isSIGHMechanismActivated = _isSIGHMechanismActivated;                       // STATE UPDATED
+        Instrument_Sigh_Mechansim_States[instrument_].maxVolatilityLimitSuppliers = _maxVolatilityLimitSuppliers;      // STATE UPDATED
+        Instrument_Sigh_Mechansim_States[instrument_].maxVolatilityLimitBorrowers = _maxVolatilityLimitBorrowers;      // STATE UPDATED
+        
+        emit InstrumentSIGHStateUpdated( instrument_, financial_instruments[instrument_].isSIGHMechanismActivated, Instrument_Sigh_Mechansim_States[instrument_].maxVolatilityLimitSuppliers, Instrument_Sigh_Mechansim_States[instrument_].maxVolatilityLimitBorrowers );
         return true;
     }
     
@@ -275,9 +276,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 // ###########################################################################################################################
 // ##############        GLOBAL SIGH SPEED AND SIGH SPEED RATIO FOR A MARKET          ########################################
 // ##############        1. updateSIGHSpeed() : Governed by Sigh Finance Manager          ####################################
-// ##############        2. updateSIGHSpeedRatioForAnInstrument(): Decided by the LendingPool Manager          ###############
 // ##############        3. updateStakingSpeedForAnInstrument():  Decided by the SIGH Finance Manager          ###############
-// ##############        4. SpeedUpperCheckSwitch():  Decided by the SIGH Finance Manager   ##################################
 // ##############        5. updateDeltaBlocksForSpeedRefresh() : Decided by the SIGH Finance Manager           ###############
 // ###########################################################################################################################
 
@@ -286,7 +285,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
      * can call this function through the Sigh Finance Configurator
      * @param SIGHSpeed_ The amount of SIGH wei per block to distribute
      */
-    function updateSIGHSpeed(uint SIGHSpeed_) external onlySighFinanceConfigurator returns (bool) {             //
+    function updateSIGHSpeed(uint SIGHSpeed_) external onlySighFinanceConfigurator returns (bool) {     
         refreshSIGHSpeeds();
         uint oldSpeed = SIGHSpeed;
         SIGHSpeed = SIGHSpeed_;                                 // STATE UPDATED
@@ -308,33 +307,8 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
         emit StakingSpeedUpdated(instrument_, prevStakingSpeed, Instrument_Sigh_Mechansim_States[instrument_].staking_Speed, getBlockNumber() );
         return true;
-        
     }
 
-    /**
-     * @notice Activates / Deactivates the upper check and sets the profit percentage for an Instrument - Decided by the SIGH Finance Manager who 
-     * can call this function through the Sigh Finance Configurator
-     * @param isActivated Boolean deciding if the upper check on SIGH speed (loss driven) activated or not
-     * @param profitPercentage The additional profit based SIGH distribution over and above the covered losses
-     */    
-    function SpeedUpperCheckSwitch( bool isActivated, uint profitPercentage ) external onlySighFinanceConfigurator returns (bool) {     // 
-        require( profitPercentage > 0.01e18, 'The new Profit Percentage must be greater than 0.01e18 (1%) ');
-        require( profitPercentage <= 10e18, 'The new Supplier Ratio must be less than 10e18 (10x)');
-        refreshSIGHSpeeds();
-    
-        
-        if (!isActivated) {
-            isSpeedUpperCheckAllowed = false;                                           // STATE UPDATED
-            upperCheckProfitPercentage = Exp({ mantissa : 0 });              // STATE UPDATED
-        }
-        else {
-            isSpeedUpperCheckAllowed = true;                                                // STATE UPDATED
-            upperCheckProfitPercentage = Exp({ mantissa : profitPercentage });              // STATE UPDATED
-        }
-
-        emit SpeedUpperCheckSwitched(isSpeedUpperCheckAllowed, upperCheckProfitPercentage.mantissa, getBlockNumber() );
-        return true;
-    }
 
     /**
      * @notice Updates the minimum blocks to be mined before speed can be refreshed again  - Decided by the SIGH Finance Manager who 
@@ -349,6 +323,15 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         return true;
     }
 
+    function updateSIGHSpeedUpperCheck (bool isSpeedUpperCheckAllowed_ , uint maxVolatilityProtocolLimit_ ) external onlySighFinanceConfigurator returns (bool) {
+        require( maxVolatilityProtocolLimit_ >= 0.01e18, 'The new Volatility Limit for Borrowers must be greater than 0.01e18 (1%)');
+        require( maxVolatilityProtocolLimit_ <= 10e18, 'The new Volatility Limit for Borrowers must be less than 10e18 (10x)');
+        
+        isSpeedUpperCheckAllowed = isSpeedUpperCheckAllowed_;
+        maxVolatilityProtocolLimit = Exp({mantissa: maxVolatilityProtocolLimit_ });  
+        emit SpeedUpperCheckSwitched( isSpeedUpperCheckAllowed, maxVolatilityProtocolLimit.mantissa );
+        return true;
+    }
 
     // #########################################################################################################
     // ################ REFRESH SIGH DISTRIBUTION SPEEDS FOR INSTRUMENTS (INITIALLY EVERY HOUR) ################
@@ -389,98 +372,88 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
         require(updatedInstrumentIndexesInternal(), "Updating Instrument Indexes Failed");       //  accure the indexes 
 
-        Exp[] memory supplierLosses = new Exp[](all_Instruments_.length);     // LOSSES MADE BY EACH INSTRUMENT SUPPLIERS
-        Exp[] memory borrowerLosses = new Exp[](all_Instruments_.length);     // LOSSES MADE BY EACH INSTRUMENT BORROWERS
-        Exp memory totalLosses = Exp({mantissa: 0});                            // TOTAL LOSSES (Over past 24 hours)
+        Exp memory totalProtocolVolatility = Exp({mantissa: 0});                            // TOTAL LOSSES (Over past 24 hours)
+        Exp memory totalProtocolVolatilityLimit = Exp({mantissa: 0});                            // TOTAL LOSSES (Over past 24 hours)
         
-
-        // DELTA BLOCKS = CURRENT BLOCK - 24HRS_OLD_STORED_BLOCK_NUMBER
-        // TOTAL LIQUIDITY FOR AN INSTRUMENT = CURRENT BALANCE OF LENDINGPOOLCORE + TOTALBORROWS (taken from lendingPoolCore)
-        // LOSS PER INSTRUMENT = PREVIOUS PRICE (STORED) - CURRENT PRICE (TAKEN FROM ORACLE)
-        // TOTAL LOSSES OF AN INSTRUMENT = LOSS PER INSTRUMENT * TOTAL LIQUIDITY
-        // INSTRUMENT LOSSES (PER BLOCK AVERAGE) = TOTAL LOSSES OF AN INSTRUMENT / DELTA BLOCKS 
-        // TOTAL LOSSES (PER BLOCK AVERAGE) = TOTAL LOSSES + INSTRUMENT LOSSES (PER BLOCK AVERAGE) 
         // Price Snapshot for current clock replaces the pervious price snapshot
+        // DELTA BLOCKS = CURRENT BLOCK - 24HRS_OLD_STORED_BLOCK_NUMBER
+        // LOSS PER INSTRUMENT = PREVIOUS PRICE (STORED) - CURRENT PRICE (TAKEN FROM ORACLE)
+        // TOTAL VOLATILITY OF AN INSTRUMENT = LOSS PER INSTRUMENT * TOTAL COMPOUNDED LIQUIDITY
+        // VOLATILITY OF AN INSTRUMENT TO BE ACCOUNTED FOR = TOTAL VOLATILITY OF AN INSTRUMENT * VOLATILITY LIMIT (DIFFERENT FOR SUPPLIERS/BORROWERS OF INSTRUMENT)
+        // TOTAL PROTOCOL VOLATILITY =  + ( VOLATILITY OF AN INSTRUMENT TO BE ACCOUNTED FOR )
         for (uint i = 0; i < all_Instruments_.length; i++) {
 
             address _currentInstrument = all_Instruments_[i];       // Current Instrument
             
-            Exp memory previousPrice = Exp({ mantissa: instrumentPriceCycles[_currentInstrument].recordedPriceSnapshot[curClock] });            // 24hr old price snapshot
-            Exp memory currentPrice = Exp({ mantissa: oracle.getAssetPrice( _currentInstrument ) });                                            // current price from the oracle
-            require ( currentPrice.mantissa > 0, "refreshSIGHSpeedsInternal : Oracle returned Invalid Price" );
-            instrumentPriceCycles[_currentInstrument].recordedPriceSnapshot[curClock] =  uint256(currentPrice.mantissa); //  STATE UPDATED : PRICE SNAPSHOT TAKEN        
-            emit PriceSnapped(_currentInstrument, previousPrice.mantissa, instrumentPriceCycles[_currentInstrument].recordedPriceSnapshot[curClock], deltaBlocks_, curClock, block.number );
+            // UPDATING PRICE SNAPSHOTS
+            Exp memory previousPriceETH = Exp({ mantissa: instrumentPriceCycles[_currentInstrument].recordedPriceSnapshot[curClock] });            // 24hr old price snapshot
+            Exp memory currentPriceETH = Exp({ mantissa: oracle.getAssetPrice( _currentInstrument ) });                                            // current price from the oracle
+            require ( currentPriceETH.mantissa > 0, "refreshSIGHSpeedsInternal : Oracle returned Invalid Price" );
+            instrumentPriceCycles[_currentInstrument].recordedPriceSnapshot[curClock] =  uint256(currentPriceETH.mantissa); //  STATE UPDATED : PRICE SNAPSHOT TAKEN        
+            emit PriceSnapped(_currentInstrument, previousPriceETH.mantissa, instrumentPriceCycles[_currentInstrument].recordedPriceSnapshot[curClock], deltaBlocks_, curClock );
 
             if ( !financial_instruments[_currentInstrument].isSIGHMechanismActivated || instrumentPriceCycles[_currentInstrument].initializationCounter != uint32(24) ) {     // if LOSS MINIMIZNG MECHANISM IS NOT ACTIVATED FOR THIS INSTRUMENT
-                supplierLosses[i] = Exp({mantissa: 0});
-                borrowerLosses[i] = Exp({mantissa: 0});
-                Instrument_Sigh_Mechansim_States[_currentInstrument].side = 'inactive';
-                //    Newly Sighed Instrument needs to reach 24 (priceSnapshots need to be taken) before it can be assigned a Sigh Speed based on LOSSES   
+                // STATE UPDATE
+                Instrument_Sigh_Mechansim_States[_currentInstrument].side = uint8(0);
+                Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility =  uint(0);
+                Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatilityLimitAmount =  uint(0);
+                //    Newly Sighed Instrument needs to reach 24 (priceSnapshots need to be taken) before it can be assigned a Sigh Speed based on VOLATILITY   
                 if (instrumentPriceCycles[_currentInstrument].initializationCounter < uint32(24) ) {
                     instrumentPriceCycles[_currentInstrument].initializationCounter = uint32(add_(instrumentPriceCycles[_currentInstrument].initializationCounter , uint32(1) , 'Price Counter addition failed.'));  // STATE UPDATE : INITIALIZATION COUNTER UPDATED
                 }
             }
             else {
-                if ( greaterThanExp(previousPrice , currentPrice) ) {   // i.e the price has decreased so we calculate Losses accured by Suppliers of the Instrument
-                    uint totalUnderlyingLiquidity = lendingPoolCore.getInstrumentTotalLiquidity( _currentInstrument ); // Total amount supplied 
-                    (MathError error, Exp memory lossPerInstrument) = subExp( previousPrice , currentPrice );       
-                    ( MathError error2, Exp memory supplierLoss ) = mulScalar( lossPerInstrument, totalUnderlyingLiquidity );
-                    supplierLosses[i].mantissa = adjustForDecimalsInternal(supplierLoss.mantissa, financial_instruments[_currentInstrument].decimals , oracle.getAssetPriceDecimals(_currentInstrument) );
-                    borrowerLosses[i] = Exp({mantissa: 0});
-                    ( error, totalLosses) = addExp(totalLosses, supplierLosses[i]);            //  Total loss  += supplier loss
-                    Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatility =  supplierLosses[i].mantissa;
-                    Instrument_Sigh_Mechansim_States[_currentInstrument].side = 'Supplier';
+                MathError error;
+                Exp memory volatility = Exp({mantissa: 0});
+                Exp memory lossPerInstrument = Exp({mantissa: 0});   
+                Exp memory instrumentVolatilityLimit = Exp({mantissa: 0});
+                
+                if ( greaterThanExp(previousPriceETH , currentPriceETH) ) {   // i.e the price has decreased so we calculate Losses accured by Suppliers of the Instrument
+                    uint totalCompoundedLiquidity = IERC20(financial_instruments[_currentInstrument].iTokenAddress).totalSupply(); // Total Compounded Liquidity
+                    ( error, lossPerInstrument) = subExp( previousPriceETH , currentPriceETH );       
+                    ( error, volatility ) = mulScalar( lossPerInstrument, totalCompoundedLiquidity );
+                    instrumentVolatilityLimit = Exp({mantissa: Instrument_Sigh_Mechansim_States[_currentInstrument].maxVolatilityLimitSuppliers });
+                    // STATE UPDATE
+                    Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility =  adjustForDecimalsInternal(volatility.mantissa, financial_instruments[_currentInstrument].decimals , oracle.getAssetPriceDecimals(_currentInstrument) );
+                    Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatilityLimitAmount =  mul_(Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility , instrumentVolatilityLimit );
+                    Instrument_Sigh_Mechansim_States[_currentInstrument].side = uint8(1);
                 }
                 else {                                              // i.e the price has increased so we calculate Losses accured by Borrowers of the Instrument
-                    uint totalBorrows = lendingPoolCore.getInstrumentTotalBorrows( _currentInstrument ); // Total amount supplied 
-                    (MathError error, Exp memory lossPerInstrument) = subExp( currentPrice, previousPrice );       
-                    ( MathError error2, Exp memory borrowerLoss ) = mulScalar( lossPerInstrument, totalBorrows );
-                    borrowerLosses[i].mantissa = adjustForDecimalsInternal(borrowerLoss.mantissa , financial_instruments[_currentInstrument].decimals , oracle.getAssetPriceDecimals(_currentInstrument) );
-                    supplierLosses[i] = Exp({mantissa: 0});
-                    ( error, totalLosses) = addExp(totalLosses, borrowerLosses[i]);            //  Total loss  += borrower loss
-                    Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatility =  borrowerLosses[i].mantissa;
-                    Instrument_Sigh_Mechansim_States[_currentInstrument].side = 'Borrower';
+                    uint totalVariableBorrows =  lendingPoolCore.getInstrumentCompoundedBorrowsVariable(_currentInstrument);
+                    uint totalStableBorrows =  lendingPoolCore.getInstrumentCompoundedBorrowsStable(_currentInstrument);
+                    uint totalCompoundedBorrows =  add_(totalVariableBorrows,totalStableBorrows,'Compounded Borrows Addition gave error'); 
+                    ( error, lossPerInstrument) = subExp( currentPriceETH, previousPriceETH );       
+                    ( error, volatility ) = mulScalar( lossPerInstrument, totalCompoundedBorrows );
+                    instrumentVolatilityLimit = Exp({mantissa: Instrument_Sigh_Mechansim_States[_currentInstrument].maxVolatilityLimitBorrowers });
+                    // STATE UPDATE
+                    Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility = adjustForDecimalsInternal(volatility.mantissa , financial_instruments[_currentInstrument].decimals , oracle.getAssetPriceDecimals(_currentInstrument) );
+                    Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatilityLimitAmount =  mul_(Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility , instrumentVolatilityLimit );
+                    Instrument_Sigh_Mechansim_States[_currentInstrument].side = uint8(2);
                 }
+                //  Total Protocol Volatility  += Instrument Volatility 
+                totalProtocolVolatility = add_(totalProtocolVolatility, Exp({mantissa: Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility}) );            
+                //  Total Protocol Volatility Limit  += Instrument Volatility Limit Amount                 
+                 totalProtocolVolatilityLimit = add_(totalProtocolVolatilityLimit, Exp({mantissa: Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatilityLimitAmount})) ;            
             }
         }
         
-        uint maxSpeed = SIGHSpeed;
+       
+        last24HrsTotalProtocolVolatility = totalProtocolVolatility.mantissa;              // STATE UPDATE : Last 24 Hrs Protocol Volatility  (i.e SUM(_total24HrVolatility for Instruments))  Updated
+        last24HrsTotalProtocolVolatilityLimit = totalProtocolVolatilityLimit.mantissa;     // STATE UPDATE : Last 24 Hrs Protocol Volatility Limit (i.e SUM(_24HrVolatilityLimitAmount for Instruments)) Updated
+        deltaBlockslast24HrSession = deltaBlocks_;                               // STATE UPDATE :
+        
+        // STATE UPDATE :: CALCULATING SIGH SPEED WHICH IS TO BE USED FOR CALCULATING EACH INSTRUMENT's SIGH DISTRIBUTION SPEEDS
+        SIGHSpeedUsed = SIGHSpeed;
+
         if (isSpeedUpperCheckAllowed) {                     // SIGH SPEED BASED ON UPPER CHECK AND ADDITIONAL PROFIT POTENTIAL
-            (MathError error, Exp memory totalLossPerBlock) = divScalar(totalLosses,deltaBlocks_);   // Total Loss per Block
-            maxSpeed = calculateMaxSighSpeedInternal( totalLossPerBlock.mantissa, deltaBlocks_ ); 
+            (MathError error, Exp memory totalVolatilityLimitPerBlock) = divScalar(Exp({mantissa: last24HrsTotalProtocolVolatilityLimit }) , deltaBlocks_);   // Total Volatility per Block
+            calculateMaxSighSpeedInternal( totalVolatilityLimitPerBlock.mantissa ); 
         }
-
-        // ###### Updates the Speed (loss driven) for the Supported Markets ######
-        for (uint i=0 ; i < all_Instruments_.length ; i++) {
-
-            address _currentInstrument = all_Instruments_[i];       // Current Instrument
-
-            Exp memory lossRatio;
-            MathError error;
-            if (totalLosses.mantissa > 0) {
-                if (supplierLosses[i].mantissa > 0 ) {
-                    ( error, lossRatio) = divExp(supplierLosses[i], totalLosses);
-                    Instrument_Sigh_Mechansim_States[_currentInstrument].suppliers_Speed = mul_(maxSpeed, lossRatio);                                         // STATE UPDATE
-                    Instrument_Sigh_Mechansim_States[_currentInstrument].borrowers_Speed = uint(0);                                                           // STATE UPDATE
-                } 
-                else {
-                    ( error, lossRatio) = divExp(borrowerLosses[i], totalLosses);
-                    Instrument_Sigh_Mechansim_States[_currentInstrument].borrowers_Speed = mul_(maxSpeed, lossRatio);                                         // STATE UPDATE
-                    Instrument_Sigh_Mechansim_States[_currentInstrument].suppliers_Speed = uint(0);                                                           // STATE UPDATE
-                }
-            } 
-            else {
-                Instrument_Sigh_Mechansim_States[_currentInstrument].borrowers_Speed = uint(0);                                                               // STATE UPDATE
-                Instrument_Sigh_Mechansim_States[_currentInstrument].suppliers_Speed = uint(0);                                                               // STATE UPDATE
-            }
-            Instrument_Sigh_Mechansim_States[_currentInstrument].percentTotalVolatility = mul_(1000000, lossRatio);                                              // STATE UPDATE (LOss Ratio is instrumentVolatility/totalVolatility * 100000 )
-
-            emit refreshingSighSpeeds( _currentInstrument ,maxSpeed, Instrument_Sigh_Mechansim_States[_currentInstrument].side,  Instrument_Sigh_Mechansim_States[_currentInstrument].suppliers_Speed, Instrument_Sigh_Mechansim_States[_currentInstrument].borrowers_Speed, Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatility, Instrument_Sigh_Mechansim_States[_currentInstrument].percentTotalVolatility, totalLosses.mantissa);
-        }
-
+        
+        // ###### Updates the Speed (Volatility Driven) for the Supported Instruments ######
+        updateSIGHDistributionSpeeds();
         require(updateCurrentClockInternal(), "Updating CLock Failed");                         // Updates the Clock    
     }
-
 
 
     //  Updates the Supply & Borrow Indexes for all the Supported Instruments
@@ -492,37 +465,82 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         }
         return true;
     }
+    
+    // UPDATES SIGH DISTRIBUTION SPEEDS
+    function updateSIGHDistributionSpeeds() internal returns (bool) {
+        
+        for (uint i=0 ; i < all_Instruments.length ; i++) {
+
+            address _currentInstrument = all_Instruments[i];       // Current Instrument
+            Exp memory limitVolatilityRatio =  Exp({mantissa: 0});
+            Exp memory totalVolatilityRatio =  Exp({mantissa: 0});
+            MathError error;
+            
+            if ( last24HrsTotalProtocolVolatilityLimit > 0 && Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatilityLimitAmount > 0 ) {
+                ( error, limitVolatilityRatio) = getExp(Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatilityLimitAmount, last24HrsTotalProtocolVolatilityLimit);
+                ( error, totalVolatilityRatio) = getExp(Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility, last24HrsTotalProtocolVolatility);
+                // CALCULATING $SIGH SPEEDS
+                if (Instrument_Sigh_Mechansim_States[_currentInstrument].side == uint8(1) ) {
+                    // STATE UPDATE
+                    Instrument_Sigh_Mechansim_States[_currentInstrument].suppliers_Speed = mul_(SIGHSpeedUsed, limitVolatilityRatio);                                         
+                    Instrument_Sigh_Mechansim_States[_currentInstrument].borrowers_Speed = uint(0);                                                           
+                } 
+                else if  (Instrument_Sigh_Mechansim_States[_currentInstrument].side == uint8(2) )  {
+                    // STATE UPDATE
+                    Instrument_Sigh_Mechansim_States[_currentInstrument].borrowers_Speed = mul_(SIGHSpeedUsed, limitVolatilityRatio);                                       
+                    Instrument_Sigh_Mechansim_States[_currentInstrument].suppliers_Speed = uint(0);                                                          
+                }
+            } 
+            else {
+                    // STATE UPDATE
+                Instrument_Sigh_Mechansim_States[_currentInstrument].borrowers_Speed = uint(0);                                                               
+                Instrument_Sigh_Mechansim_States[_currentInstrument].suppliers_Speed = uint(0);                                                                
+            }
+
+            Instrument_Sigh_Mechansim_States[_currentInstrument].percentTotalVolatilityLimitAmount = mul_(10**9, limitVolatilityRatio);                                              // STATE UPDATE (LOss Ratio is instrumentVolatility/totalVolatility * 100000 )
+            Instrument_Sigh_Mechansim_States[_currentInstrument].percentTotalVolatility = mul_(10**9, totalVolatilityRatio);                                              // STATE UPDATE (LOss Ratio is instrumentVolatility/totalVolatility * 100000 )
+
+            emit refreshingSighSpeeds( _currentInstrument, Instrument_Sigh_Mechansim_States[_currentInstrument].side,  Instrument_Sigh_Mechansim_States[_currentInstrument].suppliers_Speed, Instrument_Sigh_Mechansim_States[_currentInstrument].borrowers_Speed, Instrument_Sigh_Mechansim_States[_currentInstrument].percentTotalVolatilityLimitAmount, Instrument_Sigh_Mechansim_States[_currentInstrument].percentTotalVolatility );
+        }
+    }
+
+
+
+
 
     // returns the currently maximum possible SIGH Distribution speed. Called only when upper check is activated
-    function calculateMaxSighSpeedInternal( uint totalLossesPerBlockAverage, uint deltaBlocks ) internal returns (uint) {
-        uint sigh_speed_used = SIGHSpeed;
-        uint current_Sigh_Price = oracle.getAssetPrice( address(Sigh_Address) );   
+    // Updated the Global "SIGHSpeedUsed" Variable & "last24HrsTotalProtocolVolatilityLimitAddressedPerBlock" Variable
+    function calculateMaxSighSpeedInternal( uint totalVolatilityLimitPerBlock ) internal {
+        uint current_Sigh_PriceETH = oracle.getAssetPrice( address(Sigh_Address) );   
         ERC20Detailed sighContract = ERC20Detailed(address(Sigh_Address));
         uint priceDecimals = oracle.getAssetPriceDecimals(address(Sigh_Address));
         uint sighDecimals =  sighContract.decimals();
 
         // MAX Value that can be distributed per block through SIGH Distribution
-        uint max_valueDistributionLimit = mul_( current_Sigh_Price, SIGHSpeed );   
-        uint max_valueDistributionLimitDecimalsAdjusted = adjustForDecimalsInternal( max_valueDistributionLimit,sighDecimals , priceDecimals  );
+        uint max_SIGHDistributionLimit = mul_( current_Sigh_PriceETH, SIGHSpeed );   
+        uint max_SIGHDistributionLimitDecimalsAdjusted = adjustForDecimalsInternal( max_SIGHDistributionLimit,sighDecimals , priceDecimals  );
 
         // MAX Volatility that is allowed to be covered through SIGH Distribution
-        uint maxVolatilityToAddress = mul_(totalLossesPerBlockAverage, upperCheckProfitPercentage ); // (a * b)/1e18 [b is in Exp Scale]
+        uint maxVolatilityToAddressPerBlock = mul_(totalVolatilityLimitPerBlock, maxVolatilityProtocolLimit ); // (a * b)/1e18 [b is in Exp Scale]
 
-        if ( max_valueDistributionLimitDecimalsAdjusted >  maxVolatilityToAddress ) {
-            uint maxVolatilityToAddress_SIGHdecimalsMul = mul_( maxVolatilityToAddress, uint(10**(sighDecimals)), "Max Volatility : SIGH Decimals multiplication gave error" );
+
+        if ( max_SIGHDistributionLimitDecimalsAdjusted >  maxVolatilityToAddressPerBlock ) {
+            uint maxVolatilityToAddress_SIGHdecimalsMul = mul_( maxVolatilityToAddressPerBlock, uint(10**(sighDecimals)), "Max Volatility : SIGH Decimals multiplication gave error" );
             uint maxVolatilityToAddress_PricedecimalsMul = mul_( maxVolatilityToAddress_SIGHdecimalsMul, uint(10**(priceDecimals)), "Max Volatility : Price Decimals multiplication gave error" );
             uint maxVolatilityToAddress_DecimalsDiv = div_( maxVolatilityToAddress_PricedecimalsMul, uint(10**18), "Max Volatility : Decimals division gave error" );
-            sigh_speed_used = div_( maxVolatilityToAddress_DecimalsDiv, current_Sigh_Price, "Max Speed division gave error" );
+            SIGHSpeedUsed = div_( maxVolatilityToAddress_DecimalsDiv, current_Sigh_PriceETH, "Max Speed division gave error" );
         }
-        emit MaxSIGHSpeedCalculated(SIGHSpeed, current_Sigh_Price, totalLossesPerBlockAverage, deltaBlocks, maxVolatilityToAddress, max_valueDistributionLimitDecimalsAdjusted, sigh_speed_used  );
-        return sigh_speed_used;
+
+        emit MaxSIGHSpeedCalculated(SIGHSpeed, SIGHSpeedUsed, totalVolatilityLimitPerBlock, maxVolatilityToAddressPerBlock, max_SIGHDistributionLimitDecimalsAdjusted  );
     }
+
 
     // Updates the Current CLock (global variable tracking the current hour )
     function updateCurrentClockInternal() internal returns (bool) {
         curClock = curClock == 23 ? 0 : uint224(add_(curClock,1,"curClock : Addition Failed"));
         return true;
     }
+
     
     function adjustForDecimalsInternal(uint _amount, uint instrumentDecimals, uint priceDecimals) internal pure returns (uint) {
         require(instrumentDecimals > 0, "Instrument Decimals cannot be Zero");
@@ -610,7 +628,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
             uint sigh_Accrued = mul_(deltaBlocks, borrowSpeed);                             // SIGH ACCURED = DELTA BLOCKS x SIGH SPEED (BORROWERS)
             Double memory ratio = totalCompoundedBorrows > 0 ? fraction(sigh_Accrued, totalCompoundedBorrows) : Double({mantissa: 0});      // SIGH Accured per Borrowed Instrument Token
             Double memory newIndex = add_(Double({mantissa: instrumentState.borrowindex}), ratio);                      // New Index
-            emit SIGHBorrowIndexUpdated( currentInstrument, totalStableBorrows, totalVariableBorrows, sigh_Accrued, ratio.mantissa , newIndex.mantissa, blockNumber );
+            emit SIGHBorrowIndexUpdated( currentInstrument, totalStableBorrows, totalVariableBorrows, sigh_Accrued, ratio.mantissa , newIndex.mantissa );
 
             instrumentState.borrowindex = newIndex.mantissa ;  // STATE UPDATE: New Index Committed to Storage 
         } 
@@ -635,10 +653,6 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         uint sigh_not_transferred = 0;
         if ( Sigh_Address.balanceOf(address(this)) > sigh_Amount ) {   // NO SIGH TRANSFERRED IF CONTRACT LACKS REQUIRED SIGH AMOUNT
             require(Sigh_Address.transfer( user, sigh_Amount ), "Failed to transfer accured SIGH to the user." );
-            if (sighAccuredTo == addressesProvider.getSIGHStaking() ) {                          // When SIGH is directly being streamed to the Staking Contract
-                ISighStaking stakingContract = ISighStaking(addressesProvider.getSIGHStaking());
-                require(stakingContract.updateStakedBalanceForStreaming(user,sigh_Amount ),"Failed to update Staked balance");       // UPDATES STAKED BALANCE (STREAMING SIGH FUNCTIONALITY) 
-            }
             emit AccuredSIGHTransferredToTheUser( instrument, user, sigh_Amount );
         }
         else {
@@ -670,14 +684,25 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
                 ); 
     }
 
-    function getInstrumentSighMechansimStates(address instrument) external view returns (uint suppliers_speed, uint borrowers_speed, uint staking_speed, uint _24HrVolatility, string memory side, uint percentTotalVolatility ) {
-        return (Instrument_Sigh_Mechansim_States[instrument].suppliers_Speed, 
-                Instrument_Sigh_Mechansim_States[instrument].borrowers_Speed , 
-                Instrument_Sigh_Mechansim_States[instrument].staking_Speed,
-                Instrument_Sigh_Mechansim_States[instrument]._24HrVolatility,
-                Instrument_Sigh_Mechansim_States[instrument].side,
+    function getInstrumentSpeeds(address instrument) external view returns ( uint8 side, uint suppliers_speed, uint borrowers_speed, uint staking_speed ) {
+        return ( Instrument_Sigh_Mechansim_States[instrument].side,
+                 Instrument_Sigh_Mechansim_States[instrument].suppliers_Speed, 
+                 Instrument_Sigh_Mechansim_States[instrument].borrowers_Speed , 
+                 Instrument_Sigh_Mechansim_States[instrument].staking_Speed
+                );
+    }
+    
+    function getInstrumentVolatilityStates(address instrument) external view returns ( uint8 side, uint _24HrVolatilityLimitAmount, uint percentTotalVolatilityLimitAmount, uint _total24HrVolatility, uint percentTotalVolatility  ) {
+        return (Instrument_Sigh_Mechansim_States[instrument].side,
+                Instrument_Sigh_Mechansim_States[instrument]._24HrVolatilityLimitAmount,
+                Instrument_Sigh_Mechansim_States[instrument].percentTotalVolatilityLimitAmount,
+                Instrument_Sigh_Mechansim_States[instrument]._total24HrVolatility,
                 Instrument_Sigh_Mechansim_States[instrument].percentTotalVolatility
                 );
+    }    
+
+    function getInstrumentSighLimits(address instrument) external view returns ( uint _maxVolatilityLimitSuppliers , uint _maxVolatilityLimitBorrowers ) {
+    return ( Instrument_Sigh_Mechansim_States[instrument].maxVolatilityLimitSuppliers, Instrument_Sigh_Mechansim_States[instrument].maxVolatilityLimitBorrowers );
     }
 
     function getAllPriceSnapshots(address instrument_ ) external view returns (uint256[24] memory) {
@@ -691,6 +716,11 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     function getSIGHSpeed() external view returns (uint) {
         return SIGHSpeed;
     }
+
+    function getSIGHSpeedUsed() external view returns (uint) {
+        return SIGHSpeedUsed;
+    }
+
 
     function isInstrumentSupported (address instrument_) external view returns (bool) {
         return financial_instruments[instrument_].isListed;
@@ -715,8 +745,8 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     }
 
 
-    function getupperCheckProfitPercentage () external view returns (uint) {
-        return upperCheckProfitPercentage.mantissa;
+    function getMaxVolatilityProtocolLimit () external view returns (uint) {
+        return maxVolatilityProtocolLimit.mantissa;
     } 
 
     function checkPriceSnapshots(address instrument_, uint clock) external view returns (uint256) {

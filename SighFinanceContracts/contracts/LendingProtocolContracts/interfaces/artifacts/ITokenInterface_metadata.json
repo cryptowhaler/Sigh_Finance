@@ -10,26 +10,117 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "instrument_",
+						"name": "borrower",
+						"type": "address"
+					}
+				],
+				"name": "accure_Borrower_SIGH",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "accure_SIGH_For_BorrowingStream",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "allowBorrowingSIGHRedirectionTo",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "allowInterestRedirectionTo",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "allowLiquiditySIGHRedirectionTo",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					}
+				],
+				"name": "allowance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "spender",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_maxVolatilityLimitSuppliers",
+						"name": "amount",
 						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_maxVolatilityLimitBorrowers",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bool",
-						"name": "_isSIGHMechanismActivated",
-						"type": "bool"
 					}
 				],
-				"name": "Instrument_SIGH_StateUpdated",
+				"name": "approve",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -42,445 +133,20 @@
 				"type": "function"
 			},
 			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_iTokenAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_decimals",
-						"type": "uint256"
-					}
-				],
-				"name": "addInstrument",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"constant": true,
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "instrument_",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "clock",
-						"type": "uint256"
-					}
-				],
-				"name": "checkPriceSnapshots",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "instrument_",
+						"name": "user",
 						"type": "address"
 					}
 				],
-				"name": "checkinitializationCounter",
-				"outputs": [
-					{
-						"internalType": "uint32",
-						"name": "",
-						"type": "uint32"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getAllInstrumentsSupported",
-				"outputs": [
-					{
-						"internalType": "address[]",
-						"name": "",
-						"type": "address[]"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "instrument_",
-						"type": "address"
-					}
-				],
-				"name": "getAllPriceSnapshots",
-				"outputs": [
-					{
-						"internalType": "uint256[24]",
-						"name": "",
-						"type": "uint256[24]"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getBlockNumbersForPriceSnapshots",
-				"outputs": [
-					{
-						"internalType": "uint256[24]",
-						"name": "",
-						"type": "uint256[24]"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getBlocksRemainingToNextSpeedRefresh",
+				"name": "balanceOf",
 				"outputs": [
 					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getDeltaBlocksForSpeed",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "instrument_",
-						"type": "address"
-					}
-				],
-				"name": "getInstrumentBorrowIndex",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "instrument_",
-						"type": "address"
-					}
-				],
-				"name": "getInstrumentData",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "name",
-						"type": "string"
-					},
-					{
-						"internalType": "address",
-						"name": "iTokenAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "decimals",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bool",
-						"name": "isSIGHMechanismActivated",
-						"type": "bool"
-					},
-					{
-						"internalType": "uint256",
-						"name": "supplyindex",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "borrowindex",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "instrument",
-						"type": "address"
-					}
-				],
-				"name": "getInstrumentSighLimits",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "_maxVolatilityLimitSuppliers",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_maxVolatilityLimitBorrowers",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "instrument",
-						"type": "address"
-					}
-				],
-				"name": "getInstrumentSpeeds",
-				"outputs": [
-					{
-						"internalType": "uint8",
-						"name": "side",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint256",
-						"name": "suppliers_speed",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "borrowers_speed",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "staking_speed",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "instrument_",
-						"type": "address"
-					}
-				],
-				"name": "getInstrumentSupplyIndex",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "instrument",
-						"type": "address"
-					}
-				],
-				"name": "getInstrumentVolatilityStates",
-				"outputs": [
-					{
-						"internalType": "uint8",
-						"name": "side",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_24HrVolatilityLimitAmount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "percentTotalVolatilityLimitAmount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_total24HrVolatility",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "percentTotalVolatility",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getMaxVolatilityProtocolLimit",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getPrevSpeedRefreshBlock",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getSIGHBalance",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getSIGHSpeed",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getSIGHSpeedUsed",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "instrument_",
-						"type": "address"
-					}
-				],
-				"name": "isInstrumentSupported",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
 					}
 				],
 				"payable": false,
@@ -489,8 +155,19 @@
 			},
 			{
 				"constant": false,
-				"inputs": [],
-				"name": "refreshConfig",
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_account",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_value",
+						"type": "uint256"
+					}
+				],
+				"name": "burnOnLiquidation",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -499,14 +176,8 @@
 			{
 				"constant": false,
 				"inputs": [],
-				"name": "refreshSIGHSpeeds",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
+				"name": "claimMySIGH",
+				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -515,19 +186,13 @@
 				"constant": false,
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
+						"internalType": "address[]",
+						"name": "holders",
+						"type": "address[]"
 					}
 				],
-				"name": "removeInstrument",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
+				"name": "claimSIGH",
+				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -535,7 +200,220 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "totalInstrumentsSupported",
+				"name": "decimals",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "getBorrowerIndexes",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "getInterestRedirectionAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "getRedirectedBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getSighAccured",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "getSighAccuredForAccount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "getSighStreamAllowances",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getSighStreamAllowances",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getSighStreamRedirectedTo",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "getSighStreamRedirectedTo",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "getSupplierIndexes",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "getUserIndex",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -552,72 +430,55 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "instrument",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "user",
+						"name": "_account",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "sigh_Amount",
+						"name": "_amount",
 						"type": "uint256"
 					}
 				],
-				"name": "transferSighTotheUser",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
+				"name": "mintOnDeposit",
+				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "deltaBlocksLimit",
-						"type": "uint256"
-					}
-				],
-				"name": "updateDeltaBlocksForSpeedRefresh",
+				"constant": true,
+				"inputs": [],
+				"name": "name",
 				"outputs": [
 					{
-						"internalType": "bool",
+						"internalType": "string",
 						"name": "",
-						"type": "bool"
+						"type": "string"
 					}
 				],
 				"payable": false,
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
-				"constant": false,
+				"constant": true,
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "currentInstrument",
+						"name": "_user",
 						"type": "address"
 					}
 				],
-				"name": "updateSIGHBorrowIndex",
+				"name": "principalBalanceOf",
 				"outputs": [
 					{
-						"internalType": "bool",
+						"internalType": "uint256",
 						"name": "",
-						"type": "bool"
+						"type": "uint256"
 					}
 				],
 				"payable": false,
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -625,44 +486,12 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "SIGHSpeed_",
+						"name": "_amount",
 						"type": "uint256"
 					}
 				],
-				"name": "updateSIGHSpeed",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "bool",
-						"name": "isActivated",
-						"type": "bool"
-					},
-					{
-						"internalType": "uint256",
-						"name": "maxVolatilityProtocolLimit_",
-						"type": "uint256"
-					}
-				],
-				"name": "updateSIGHSpeedUpperCheck",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
+				"name": "redeem",
+				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -672,11 +501,151 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "currentInstrument",
+						"name": "_to",
 						"type": "address"
 					}
 				],
-				"name": "updateSIGHSupplyIndex",
+				"name": "redirectBorrowingSIGHStream",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "redirectBorrowingSIGHStreamOf",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "redirectInterestStream",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "redirectInterestStreamOf",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "redirectLiquiditySIGHStream",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "redirectLiquiditySIGHStreamOf",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "symbol",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "totalSupply",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "transfer",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -693,16 +662,21 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "instrument_",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "recipient",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "newStakingSpeed",
+						"name": "amount",
 						"type": "uint256"
 					}
 				],
-				"name": "updateStakingSpeedForAnInstrument",
+				"name": "transferFrom",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -710,25 +684,74 @@
 						"type": "bool"
 					}
 				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_value",
+						"type": "uint256"
+					}
+				],
+				"name": "transferOnLiquidation",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_balanceToAdd",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_balanceToRemove",
+						"type": "uint256"
+					}
+				],
+				"name": "updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress",
+				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
 		"devdoc": {
-			"author": "SIGH Finance",
-			"details": "Accures SIGH for the supported markets based on losses made every 24 hours, along with Staking speeds. This accuring speed is updated every hour",
+			"author": "Aave, SIGH Finance (modified by SIGH Finance)",
+			"details": "Implementation of the interest bearing token for the protocol.",
 			"methods": {},
-			"title": "Sigh Distribution Handler Contract"
+			"title": "ERC20 Itokens (modified by SIGH Finance)"
 		},
 		"userdoc": {
-			"methods": {},
-			"notice": "Handles the SIGH Loss Minimizing Mechanism for the Lending Protocol"
+			"methods": {}
 		}
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": "ISighDistributionHandler"
+			"localhost/contracts/LendingProtocolContracts/interfaces/ITokenInterface.sol": "ITokenInterface"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -739,11 +762,11 @@
 		"remappings": []
 	},
 	"sources": {
-		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0x60a53e4998cae88ea66c568fb8a76e5762c12576a6be9f9b51e37f83439c92d4",
+		"localhost/contracts/LendingProtocolContracts/interfaces/ITokenInterface.sol": {
+			"keccak256": "0xb95d4591c1b081b853b8f85a2ef678c915e7763050815faa24805fb9d2d37d26",
 			"urls": [
-				"bzz-raw://5df29a7ee8aaf2ce10f1436b4a40b2e8209ab67aa4e7aedfa18122d92c64cf84",
-				"dweb:/ipfs/QmaeLNEHXThNtD8jYsrZ99FnRbsjdGfNJRx3DpysszRt5Q"
+				"bzz-raw://f179702776bf1eca39d2583dec1567046dfa2dd13354810651623ccbbfb48a1c",
+				"dweb:/ipfs/QmVNzq386kZ9HKocUYbvrT8vNc8b16mTxRc1nwLG3iGQf3"
 			]
 		}
 	},
