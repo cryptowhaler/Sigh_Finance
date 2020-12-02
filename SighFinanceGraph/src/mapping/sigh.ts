@@ -55,7 +55,7 @@ export function handleSIGHMinted(event: SIGHMinted): void {
   sigh_state.totalSupply  = mint_snapshot.totalSupply
   sigh_state.save()
 
-  if (event.block.number >  BigInt.fromI32(22315212) ) {
+  if (event.block.number >  BigInt.fromI32(22388773) ) {
     updateSIGHPrice(sighID)
   }
 
@@ -82,7 +82,7 @@ export function handleMintingInitialized(event: MintingInitialized): void {
   sigh_state.speedController = event.params.speedController
   sigh_state.save()
 
-  if (event.block.number >  BigInt.fromI32(22315212) ) {
+  if (event.block.number >  BigInt.fromI32(22388773) ) {
     updateSIGHPrice(sighID)
   }
 }
@@ -109,7 +109,7 @@ export function handleSIGHBurned(event: SIGHBurned): void {
   sigh_state.currentMintSpeed =  sigh_state.currentMintSpeed_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
   sigh_state.save()
 
-  if (event.block.number >  BigInt.fromI32(22315212) ) {
+  if (event.block.number >  BigInt.fromI32(22388773) ) {
     updateSIGHPrice(sighID)
   }
 }
@@ -128,7 +128,7 @@ export function handleNewSchedule(event: NewSchedule): void {
 
   sigh_state.save()
 
-  if (event.block.number >  BigInt.fromI32(22315212) ) {
+  if (event.block.number >  BigInt.fromI32(22388773) ) {
     updateSIGHPrice(sighID)
   }
 }
@@ -145,7 +145,7 @@ export function handleTransfer(event: Transfer): void {
   sigh_state.address = Address.fromString(sighID)
   sigh_state.save()
 
-  if (event.block.number >  BigInt.fromI32(22315212) ) {
+  if (event.block.number >  BigInt.fromI32(22388773) ) {
     updateSIGHPrice(sighID)
   }
 }

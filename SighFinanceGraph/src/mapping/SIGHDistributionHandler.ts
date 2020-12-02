@@ -1,6 +1,6 @@
 import { Address, BigInt,BigDecimal, log } from "@graphprotocol/graph-ts"
 import { InstrumentAdded, InstrumentRemoved, InstrumentSIGHStateUpdated, SIGHSpeedUpdated, StakingSpeedUpdated, SpeedUpperCheckSwitched
- , minimumBlocksForSpeedRefreshUpdated , PriceSnapped, SIGHBorrowIndexUpdated, AccuredSIGHTransferredToTheUser,
+ , minimumBlocksForSpeedRefreshUpdated , PriceSnapped, SIGHBorrowIndexUpdated, AccuredSIGHTransferredToTheUser, InstrumentVolatilityCalculated,
  MaxSIGHSpeedCalculated, refreshingSighSpeeds , SIGHSupplyIndexUpdated } from "../../generated/Sigh_Distribution_Handler/SIGHDistributionHandler"
 import { Instrument } from "../../generated/schema"
 import { createInstrument,updatePrice } from "./LendingPoolConfigurator"
@@ -196,15 +196,9 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
 
 
 export function handleAccuredSIGHTransferredToTheUser(event: AccuredSIGHTransferredToTheUser): void {
-    let instrumentId = event.params.instrument.toHexString()
-    let instrumentState = Instrument.load(instrumentId)
-    if (!event.params.isLiquidityStream) {
-        instrumentState.currentBorrowingSIGHAccuredWEI = instrumentState.currentBorrowingSIGHAccuredWEI.minus(event.params.sigh_Amount)
-    }
-    else {
-        instrumentState.currentLiquiditySIGHAccuredWEI = instrumentState.currentLiquiditySIGHAccuredWEI.minus(event.params.sigh_Amount)
-    }
-    instrumentState.save()
+    // let instrumentId = event.params.instrument.toHexString()
+    // let instrumentState = Instrument.load(instrumentId)
+    // instrumentState.save()
 }
 
 

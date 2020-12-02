@@ -215,12 +215,12 @@ type Instrument @entity {
     "% of total Protocol Protocol Volatility"
     present_percentTotalVolatility: BigDecimal! 
     "Instrument volatility in 24 hrs"
-    present_total24HrVolatilityETH: BigInt!    
+    present_total24HrVolatilityETH: BigDecimal!    
     present_total24HrVolatilityUSD: BigDecimal!
 
     present_percentTotalVolatilityLimitAmount: BigDecimal!
     "Instrument volatility * maxVolatilityLimit"
-    present_24HrVolatilityLimitAmountETH: BigInt!  
+    present_24HrVolatilityLimitAmountETH: BigDecimal!  
     present_24HrVolatilityLimitAmountUSD: BigDecimal!
 
     present_SIGH_Suppliers_Speed_WEI: BigInt!

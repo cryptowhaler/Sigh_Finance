@@ -488,145 +488,6 @@
     "type": "function"
   },
   {
-    "constant": true,
-    "inputs": [],
-    "name": "core",
-    "outputs": [
-      {
-        "internalType": "contract ILendingPoolCore",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "dataProvider",
-    "outputs": [
-      {
-        "internalType": "contract ILendingPoolDataProvider",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "feeProvider",
-    "outputs": [
-      {
-        "internalType": "contract IFeeProvider",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "parametersProvider",
-    "outputs": [
-      {
-        "internalType": "contract ILendingPoolParametersProvider",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "contract GlobalAddressesProvider",
-        "name": "_addressesProvider",
-        "type": "address"
-      }
-    ],
-    "name": "initialize",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "refreshConfig",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint16",
-        "name": "_referralCode",
-        "type": "uint16"
-      }
-    ],
-    "name": "deposit",
-    "outputs": [],
-    "payable": true,
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      },
-      {
-        "internalType": "address payable",
-        "name": "_user",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_ITokenBalanceAfterRedeem",
-        "type": "uint256"
-      }
-    ],
-    "name": "redeemUnderlying",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "constant": false,
     "inputs": [
       {
@@ -657,6 +518,36 @@
     "type": "function"
   },
   {
+    "constant": true,
+    "inputs": [],
+    "name": "core",
+    "outputs": [
+      {
+        "internalType": "contract ILendingPoolCore",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "dataProvider",
+    "outputs": [
+      {
+        "internalType": "contract ILendingPoolDataProvider",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "constant": false,
     "inputs": [
       {
@@ -670,105 +561,30 @@
         "type": "uint256"
       },
       {
-        "internalType": "address payable",
-        "name": "_onBehalfOf",
-        "type": "address"
+        "internalType": "uint16",
+        "name": "_referralCode",
+        "type": "uint16"
       }
     ],
-    "name": "repay",
+    "name": "deposit",
     "outputs": [],
     "payable": true,
     "stateMutability": "payable",
     "type": "function"
   },
   {
-    "constant": false,
-    "inputs": [
+    "constant": true,
+    "inputs": [],
+    "name": "feeProvider",
+    "outputs": [
       {
-        "internalType": "address",
-        "name": "_instrument",
+        "internalType": "contract IFeeProvider",
+        "name": "",
         "type": "address"
       }
     ],
-    "name": "swapBorrowRateMode",
-    "outputs": [],
     "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-      }
-    ],
-    "name": "rebalanceStableBorrowRate",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "_useAsCollateral",
-        "type": "bool"
-      }
-    ],
-    "name": "setUserUseInstrumentAsCollateral",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_collateral",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_purchaseAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "_receiveIToken",
-        "type": "bool"
-      }
-    ],
-    "name": "liquidationCall",
-    "outputs": [],
-    "payable": true,
-    "stateMutability": "payable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -940,6 +756,21 @@
   },
   {
     "constant": true,
+    "inputs": [],
+    "name": "getInstruments",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [
       {
         "internalType": "address",
@@ -1066,18 +897,187 @@
     "type": "function"
   },
   {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "contract GlobalAddressesProvider",
+        "name": "_addressesProvider",
+        "type": "address"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_collateral",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_instrument",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_purchaseAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "_receiveIToken",
+        "type": "bool"
+      }
+    ],
+    "name": "liquidationCall",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
     "constant": true,
     "inputs": [],
-    "name": "getInstruments",
+    "name": "parametersProvider",
     "outputs": [
       {
-        "internalType": "address[]",
+        "internalType": "contract ILendingPoolParametersProvider",
         "name": "",
-        "type": "address[]"
+        "type": "address"
       }
     ],
     "payable": false,
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_instrument",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      }
+    ],
+    "name": "rebalanceStableBorrowRate",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_instrument",
+        "type": "address"
+      },
+      {
+        "internalType": "address payable",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_ITokenBalanceAfterRedeem",
+        "type": "uint256"
+      }
+    ],
+    "name": "redeemUnderlying",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "refreshConfig",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_instrument",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address payable",
+        "name": "_onBehalfOf",
+        "type": "address"
+      }
+    ],
+    "name": "repay",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_instrument",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "_useAsCollateral",
+        "type": "bool"
+      }
+    ],
+    "name": "setUserUseInstrumentAsCollateral",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_instrument",
+        "type": "address"
+      }
+    ],
+    "name": "swapBorrowRateMode",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

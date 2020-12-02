@@ -1406,13 +1406,13 @@ export class Instrument extends Entity {
     this.set("present_percentTotalVolatility", Value.fromBigDecimal(value));
   }
 
-  get present_total24HrVolatilityETH(): BigInt {
+  get present_total24HrVolatilityETH(): BigDecimal {
     let value = this.get("present_total24HrVolatilityETH");
-    return value.toBigInt();
+    return value.toBigDecimal();
   }
 
-  set present_total24HrVolatilityETH(value: BigInt) {
-    this.set("present_total24HrVolatilityETH", Value.fromBigInt(value));
+  set present_total24HrVolatilityETH(value: BigDecimal) {
+    this.set("present_total24HrVolatilityETH", Value.fromBigDecimal(value));
   }
 
   get present_total24HrVolatilityUSD(): BigDecimal {
@@ -1436,13 +1436,16 @@ export class Instrument extends Entity {
     );
   }
 
-  get present_24HrVolatilityLimitAmountETH(): BigInt {
+  get present_24HrVolatilityLimitAmountETH(): BigDecimal {
     let value = this.get("present_24HrVolatilityLimitAmountETH");
-    return value.toBigInt();
+    return value.toBigDecimal();
   }
 
-  set present_24HrVolatilityLimitAmountETH(value: BigInt) {
-    this.set("present_24HrVolatilityLimitAmountETH", Value.fromBigInt(value));
+  set present_24HrVolatilityLimitAmountETH(value: BigDecimal) {
+    this.set(
+      "present_24HrVolatilityLimitAmountETH",
+      Value.fromBigDecimal(value)
+    );
   }
 
   get present_24HrVolatilityLimitAmountUSD(): BigDecimal {

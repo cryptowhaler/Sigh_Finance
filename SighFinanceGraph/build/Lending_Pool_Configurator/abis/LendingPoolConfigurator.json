@@ -7,10 +7,147 @@
         "internalType": "address",
         "name": "_instrument",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "switch_",
+        "type": "bool"
       }
     ],
-    "name": "BorrowingDisabledOnInstrument",
+    "name": "BorrowingOnInstrumentSwitched",
     "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_instrument",
+        "type": "address"
+      }
+    ],
+    "name": "disableInstrumentAsCollateral",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_instrument",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_baseLTVasCollateral",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_liquidationThreshold",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_liquidationBonus",
+        "type": "uint256"
+      }
+    ],
+    "name": "enableInstrumentAsCollateral",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "instrumentAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getSighStreamAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "sighStreamProxyAddress",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "contract IGlobalAddressesProvider",
+        "name": "_globalAddressesProvider",
+        "type": "address"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_instrument",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "iTokenInstance",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_interestRateStrategyAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "sighStreamImplAddress",
+        "type": "address"
+      }
+    ],
+    "name": "initInstrument",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_instrument",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "switch_",
+        "type": "bool"
+      }
+    ],
+    "name": "instrumentActivationSwitch",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "anonymous": false,
@@ -20,23 +157,36 @@
         "internalType": "address",
         "name": "_instrument",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "switch_",
+        "type": "bool"
       }
     ],
-    "name": "BorrowingEnabledOnInstrument",
+    "name": "InstrumentActivationSwitched",
     "type": "event"
   },
   {
-    "anonymous": false,
+    "constant": false,
     "inputs": [
       {
-        "indexed": true,
         "internalType": "address",
         "name": "_instrument",
         "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "borrowRateSwitch",
+        "type": "bool"
       }
     ],
-    "name": "InstrumentActivated",
-    "type": "event"
+    "name": "instrumentBorrowingSwitch",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "anonymous": false,
@@ -52,22 +202,40 @@
         "internalType": "uint256",
         "name": "_ltv",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_liquidationThreshold",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_liquidationBonus",
+        "type": "uint256"
       }
     ],
-    "name": "InstrumentBaseLtvChanged",
+    "name": "InstrumentCollateralParametersUpdated",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "address",
         "name": "_instrument",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "decimals",
+        "type": "uint256"
       }
     ],
-    "name": "InstrumentDeactivated",
+    "name": "InstrumentDecimalsUpdated",
     "type": "event"
   },
   {
@@ -115,6 +283,26 @@
     "type": "event"
   },
   {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_instrument",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "switch_",
+        "type": "bool"
+      }
+    ],
+    "name": "instrumentFreezeSwitch",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -153,6 +341,18 @@
         "internalType": "address",
         "name": "_interestRateStrategyAddress",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "sighStreamAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "sighStreamImplAddress",
+        "type": "address"
       }
     ],
     "name": "InstrumentInitialized",
@@ -181,44 +381,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_bonus",
-        "type": "uint256"
-      }
-    ],
-    "name": "InstrumentLiquidationBonusChanged",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_threshold",
-        "type": "uint256"
-      }
-    ],
-    "name": "InstrumentLiquidationThresholdChanged",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": true,
         "internalType": "address",
         "name": "_instrument",
@@ -227,6 +389,133 @@
     ],
     "name": "InstrumentRemoved",
     "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_instrument",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "switchStableBorrowRate",
+        "type": "bool"
+      }
+    ],
+    "name": "instrumentStableBorrowRateSwitch",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "instrument",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "sighStreamProxyAddress",
+        "type": "address"
+      }
+    ],
+    "name": "ProxyCreated",
+    "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "refreshLendingPoolConfiguration",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "refreshLendingPoolCoreConfiguration",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_instrument",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_ltv",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_threshold",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_bonus",
+        "type": "uint256"
+      }
+    ],
+    "name": "setInstrumentCollateralParameters",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_instrument",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "decimals",
+        "type": "uint256"
+      }
+    ],
+    "name": "setInstrumentDecimals",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_instrument",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_rateStrategyAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setInstrumentInterestRateStrategyAddress",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "anonymous": false,
@@ -246,6 +535,50 @@
     ],
     "name": "StableRateOnInstrumentSwitched",
     "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "instrumentAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "newSighStreamImpl",
+        "type": "address"
+      }
+    ],
+    "name": "sighStreamImplUpdated",
+    "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newSighStreamImpl",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "instrumentAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "iTokenAddress",
+        "type": "address"
+      }
+    ],
+    "name": "updateSIGHStreamForInstrument",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "constant": true,
@@ -275,279 +608,6 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "contract IGlobalAddressesProvider",
-        "name": "_globalAddressesProvider",
-        "type": "address"
-      }
-    ],
-    "name": "initialize",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_interestRateStrategyAddress",
-        "type": "address"
-      }
-    ],
-    "name": "initInstrument",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      }
-    ],
-    "name": "removeInstrument",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "switch_",
-        "type": "bool"
-      }
-    ],
-    "name": "instrumentActivationSwitch",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "borrowRateSwitch",
-        "type": "bool"
-      }
-    ],
-    "name": "instrumentBorrowingSwitch",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "switchStableBorrowRate",
-        "type": "bool"
-      }
-    ],
-    "name": "instrumentStableBorrowRateSwitch",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_baseLTVasCollateral",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_liquidationThreshold",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_liquidationBonus",
-        "type": "uint256"
-      }
-    ],
-    "name": "enableInstrumentAsCollateral",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      }
-    ],
-    "name": "disableInstrumentAsCollateral",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "switch_",
-        "type": "bool"
-      }
-    ],
-    "name": "instrumentFreezeSwitch",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_ltv",
-        "type": "uint256"
-      }
-    ],
-    "name": "setInstrumentBaseLTVasCollateral",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_threshold",
-        "type": "uint256"
-      }
-    ],
-    "name": "setInstrumentLiquidationThreshold",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_bonus",
-        "type": "uint256"
-      }
-    ],
-    "name": "setInstrumentLiquidationBonus",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_rateStrategyAddress",
-        "type": "address"
-      }
-    ],
-    "name": "setInstrumentInterestRateStrategyAddress",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "refreshLendingPoolCoreConfiguration",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "refreshLendingPoolConfiguration",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

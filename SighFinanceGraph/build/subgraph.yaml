@@ -9,7 +9,7 @@ dataSources:
     name: SIGH
     network: kovan
     source:
-      address: "0xF56E9e83Ad39cF32F15c603404C05b02DB986e5E"
+      address: "0x6378a83C510EF3868B2e197dA4A3245a05c1ECbE"
       abi: SIGH
       startBlock: 22305514
     mapping:
@@ -41,7 +41,7 @@ dataSources:
     name: Lending_Pool_Core
     network: kovan
     source:
-      address: "0x50A9bA0386cA7020de60B251Fafa0992db860401"
+      address: "0xFb474973cC487e2b624cab2FddddBc0189EE4c0c"
       abi: LendingPoolCore
       startBlock: 22305514
     mapping:
@@ -65,7 +65,7 @@ dataSources:
     name: Lending_Pool
     network: kovan
     source:
-      address: "0xf58D599D44da62a85ADE3026B074b60692e0A5eA"
+      address: "0x039dB2F72e8Ae1CE7a9C5b07a311A8672F99f64B"
       abi: LendingPool
       startBlock: 22305514
     mapping:
@@ -113,7 +113,7 @@ dataSources:
     name: Lending_Pool_Configurator
     network: kovan
     source:
-      address: "0xF4c1c67C44b4795F60533B594A190bcF5C8808A2"
+      address: "0x448B3994eebaB4648e0D913eC7e73702e99Ed316"
       abi: LendingPoolConfigurator
       startBlock: 22305514
     mapping:
@@ -131,39 +131,31 @@ dataSources:
         - name: ERC20Detailed
           file: Lending_Pool_Configurator/abis/ERC20Detailed.json
       eventHandlers:
-        - event: InstrumentInitialized(indexed address,indexed address,address)
+        - event: InstrumentInitialized(indexed address,indexed address,address,address,address)
           handler: handleInstrumentInitialized
         - event: InstrumentRemoved(indexed address)
           handler: handleInstrumentRemoved
-        - event: BorrowingEnabledOnInstrument(indexed address)
-          handler: handleBorrowingEnabledOnInstrument
-        - event: BorrowingDisabledOnInstrument(indexed address)
-          handler: handleBorrowingDisabledOnInstrument
+        - event: BorrowingOnInstrumentSwitched(indexed address,bool)
+          handler: handleBorrowingOnInstrumentSwitched
         - event: InstrumentEnabledAsCollateral(indexed address,uint256,uint256,uint256)
           handler: handleInstrumentEnabledAsCollateral
         - event: InstrumentDisabledAsCollateral(indexed address)
           handler: handleInstrumentDisabledAsCollateral
         - event: StableRateOnInstrumentSwitched(indexed address,bool)
           handler: handleStableRateOnInstrumentSwitched
-        - event: InstrumentActivated(indexed address)
-          handler: handleInstrumentActivated
-        - event: InstrumentDeactivated(indexed address)
-          handler: handleInstrumentDeactivated
+        - event: InstrumentActivationSwitched(indexed address,bool)
+          handler: handleInstrumentActivationSwitched
         - event: InstrumentFreezeSwitched(indexed address,bool)
           handler: handleInstrumentFreezeSwitched
-        - event: InstrumentLiquidationThresholdChanged(address,uint256)
-          handler: handleInstrumentLiquidationThresholdChanged
-        - event: InstrumentLiquidationBonusChanged(address,uint256)
-          handler: handleInstrumentLiquidationBonusChanged
+        - event: InstrumentCollateralParametersUpdated(address,uint256,uint256,uint256)
+          handler: handleInstrumentCollateralParametersUpdated
         - event: InstrumentInterestRateStrategyChanged(address,address)
           handler: handleInstrumentInterestRateStrategyChanged
-        - event: InstrumentBaseLtvChanged(address,uint256)
-          handler: handleInstrumentBaseLtvChanged
   - kind: ethereum/contract
     name: Sigh_Distribution_Handler
     network: kovan
     source:
-      address: "0x05a5105D411004F224143bA88DD6D87eB6B56d80"
+      address: "0xC14aEdF5a041DAd54e8A0eD125D54F418F9C96dA"
       abi: SIGHDistributionHandler
       startBlock: 22305514
     mapping:
@@ -181,29 +173,31 @@ dataSources:
         - name: ERC20Detailed
           file: Sigh_Distribution_Handler/abis/ERC20Detailed.json
       eventHandlers:
-        - event: InstrumentAdded(address,address,uint256,uint256)
+        - event: InstrumentAdded(address,address,address,uint256,uint256)
           handler: handleInstrumentAdded
         - event: InstrumentRemoved(address,uint256)
           handler: handleInstrumentRemoved
-        - event: InstrumentSIGHed(address,bool,uint256)
-          handler: handleInstrumentSIGHed
+        - event: InstrumentSIGHStateUpdated(address,bool,uint256,uint256)
+          handler: handleInstrumentSIGHStateUpdated
         - event: SIGHSpeedUpdated(uint256,uint256,uint256)
           handler: handleSIGHSpeedUpdated
         - event: StakingSpeedUpdated(address,uint256,uint256,uint256)
           handler: handleStakingSpeedUpdated
-        - event: SpeedUpperCheckSwitched(bool,uint256,uint256)
+        - event: SpeedUpperCheckSwitched(bool,uint256)
           handler: handleSpeedUpperCheckSwitched
         - event: minimumBlocksForSpeedRefreshUpdated(uint256,uint256,uint256)
           handler: handleMinimumBlocksForSpeedRefreshUpdated
-        - event: PriceSnapped(address,uint256,uint256,uint256,uint256,uint256)
+        - event: PriceSnapped(address,uint256,uint256,uint256,uint256)
           handler: handlePriceSnapped
-        - event: MaxSIGHSpeedCalculated(uint256,uint256,uint256,uint256,uint256,uint256,uint256)
+        - event: MaxSIGHSpeedCalculated(uint256,uint256,uint256,uint256,uint256)
           handler: handleMaxSIGHSpeedCalculated
-        - event: refreshingSighSpeeds(address,uint256,string,uint256,uint256,uint256,uint256,uint256)
+        - event: InstrumentVolatilityCalculated(address,uint256,uint256)
+          handler: handleInstrumentVolatilityCalculated
+        - event: refreshingSighSpeeds(address,uint8,uint256,uint256,uint256,uint256)
           handler: handleRefreshingSighSpeeds
-        - event: SIGHSupplyIndexUpdated(address,uint256,uint256,uint256,uint256)
+        - event: SIGHSupplyIndexUpdated(address,uint256,uint256,uint256,uint256,uint256)
           handler: handleSIGHSupplyIndexUpdated
-        - event: SIGHBorrowIndexUpdated(address,uint256,uint256,uint256,uint256)
+        - event: SIGHBorrowIndexUpdated(address,uint256,uint256,uint256,uint256,uint256)
           handler: handleSIGHBorrowIndexUpdated
         - event: AccuredSIGHTransferredToTheUser(address,address,uint256)
           handler: handleAccuredSIGHTransferredToTheUser

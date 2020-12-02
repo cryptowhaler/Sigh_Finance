@@ -51,7 +51,9 @@ export function handleInstrumentInitialized(event: InstrumentInitialized): void 
     instrumentState.variableBorrowIndex = BigInt.fromI32(10).pow(27  as u8)         // RAY = 1e27 (initialized in CoreLibrary's init() )
 
     instrumentState.save()
-    updatePrice(instrumentId)    
+    if (event.block.number > BigInt.fromI32(22388773) ) { 
+         updatePrice(instrumentId) 
+    }   
 }
 
 
@@ -70,7 +72,9 @@ export function handleInstrumentEnabledAsCollateral(event: InstrumentEnabledAsCo
     instrumentState.liquidationBonus = event.params._liquidationBonus 
 
     instrumentState.save()
-    updatePrice(instrumentId)    
+    if (event.block.number > BigInt.fromI32(22388773)) { 
+         updatePrice(instrumentId) 
+    }    
 }
 
 export function handleInstrumentDisabledAsCollateral(event: InstrumentDisabledAsCollateral): void {
@@ -79,7 +83,9 @@ export function handleInstrumentDisabledAsCollateral(event: InstrumentDisabledAs
     let instrumentState = Instrument.load(instrumentId)
     instrumentState.usageAsCollateralEnabled = false
     instrumentState.save()
-    updatePrice(instrumentId)    
+    if (event.block.number >  BigInt.fromI32(22388773)) { 
+         updatePrice(instrumentId) 
+    }    
 }
 
 
@@ -90,7 +96,9 @@ export function handleBorrowingOnInstrumentSwitched(event: BorrowingOnInstrument
     let instrumentState = Instrument.load(instrumentId)
     instrumentState.borrowingEnabled = event.params.switch_
     instrumentState.save()
-    updatePrice(instrumentId)    
+    if (event.block.number > BigInt.fromI32(22388773)) { 
+         updatePrice(instrumentId) 
+    }    
 }
 
 
@@ -101,7 +109,9 @@ export function handleStableRateOnInstrumentSwitched(event: StableRateOnInstrume
     let instrumentState = Instrument.load(instrumentId)
     instrumentState.isStableBorrowRateEnabled = event.params.isEnabled 
     instrumentState.save()
-    updatePrice(instrumentId)    
+    if (event.block.number >  BigInt.fromI32(22388773)) { 
+         updatePrice(instrumentId) 
+    }    
 }
 
 export function handleInstrumentActivationSwitched(event: InstrumentActivationSwitched): void {
@@ -110,7 +120,9 @@ export function handleInstrumentActivationSwitched(event: InstrumentActivationSw
     let instrumentState = Instrument.load(instrumentId)
     instrumentState.isActive = event.params.switch_ 
     instrumentState.save()
-    updatePrice(instrumentId)    
+    if (event.block.number > BigInt.fromI32(22388773)) { 
+         updatePrice(instrumentId) 
+    }    
 }
 
 
@@ -120,7 +132,9 @@ export function handleInstrumentFreezeSwitched(event: InstrumentFreezeSwitched):
     let instrumentState = Instrument.load(instrumentId)
     instrumentState.isFreezed = event.params.isFreezed 
     instrumentState.save()
-    updatePrice(instrumentId)
+    if (event.block.number >  BigInt.fromI32(22388773)) { 
+         updatePrice(instrumentId) 
+    }
 }
 
 export function handleInstrumentCollateralParametersUpdated(event: InstrumentCollateralParametersUpdated): void {
@@ -429,11 +443,11 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.present_maxVolatilityLimitBorrowersPercent = BigDecimal.fromString('0')
 
     instrument_state_initialized.present_percentTotalVolatility = BigDecimal.fromString('0')
-    instrument_state_initialized.present_total24HrVolatilityETH = new BigInt(0)
+    instrument_state_initialized.present_total24HrVolatilityETH = BigDecimal.fromString('0')
     instrument_state_initialized.present_total24HrVolatilityUSD = BigDecimal.fromString('0')
 
     instrument_state_initialized.present_percentTotalVolatilityLimitAmount = BigDecimal.fromString('0')
-    instrument_state_initialized.present_24HrVolatilityLimitAmountETH = new BigInt(0)
+    instrument_state_initialized.present_24HrVolatilityLimitAmountETH = BigDecimal.fromString('0')
     instrument_state_initialized.present_24HrVolatilityLimitAmountUSD = BigDecimal.fromString('0')
 
     instrument_state_initialized.present_SIGH_Suppliers_Speed_WEI =  new BigInt(0)

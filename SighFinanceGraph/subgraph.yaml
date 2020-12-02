@@ -197,6 +197,8 @@ dataSources:
           handler: handlePriceSnapped
         - event: MaxSIGHSpeedCalculated(uint256,uint256,uint256,uint256,uint256)
           handler: handleMaxSIGHSpeedCalculated
+        - event: InstrumentVolatilityCalculated(address,uint256,uint256)
+          handler: handleInstrumentVolatilityCalculated
         - event: refreshingSighSpeeds(address,uint8,uint256,uint256,uint256,uint256)
           handler: handleRefreshingSighSpeeds
         - event: SIGHSupplyIndexUpdated(address,uint256,uint256,uint256,uint256,uint256)

@@ -64,6 +64,9 @@ type Instrument @entity {
     instrumentAddress: Bytes!
     iTokenAddress: Bytes!
     interestRateStrategyAddress: Bytes!
+    sighStreamStorageAddress: Bytes!
+    sighStreamImplAddress: Bytes!
+
     oracle: Bytes!
 
     priceETH: BigDecimal! 
@@ -85,6 +88,11 @@ type Instrument @entity {
     liquidationThreshold: BigInt!
     liquidationBonus: BigInt!
 
+    "availableLiquidity_WEI : totalLiquidity_WEI - totalPrincipalBorrows_WEI, present tokenized instrument quantity available with SIGH Finance's Lending Pool for borrowing. (not adjusted by decimal)"    
+    availableLiquidity_WEI: BigInt!
+    availableLiquidity: BigDecimal!
+    availableLiquidityETH: BigDecimal!
+    availableLiquidityUSD: BigDecimal!
 
     borrowFeeDue_WEI: BigInt! 
     borrowFeeDue: BigDecimal! 
@@ -96,68 +104,36 @@ type Instrument @entity {
     borrowFeeEarnedETH: BigDecimal!
     borrowFeeEarnedUSD: BigDecimal!
 
-    "totalLiquidity_WEI : Present tokenized instrument quantity deposited in SIGH Finance's Lending Pool in WEI (not adjusted by decimal)"    
-    totalLiquidity_WEI: BigInt!
-    "totalLiquidity : Present tokenized instrument quantity deposited in SIGH Finance's Lending Pool. (Adjusted by decimal)"    
-    totalLiquidity: BigDecimal!
-    totalLiquidityETH: BigDecimal!
-    totalLiquidityUSD: BigDecimal!
+    totalCompoundedLiquidityWEI: BigInt!
+    totalCompoundedLiquidity: BigDecimal!
+    totalCompoundedLiquidityETH: BigDecimal!
+    totalCompoundedLiquidityUSD: BigDecimal!
 
-    "availableLiquidity_WEI : totalLiquidity_WEI - totalPrincipalBorrows_WEI, present tokenized instrument quantity available with SIGH Finance's Lending Pool for borrowing. (not adjusted by decimal)"    
-    availableLiquidity_WEI: BigInt!
-    "availableLiquidity : totalLiquidity - totalPrincipalBorrows, present tokenized instrument quantity available with SIGH Finance's Lending Pool for borrowing. (Adjusted by decimal)"    
-    availableLiquidity: BigDecimal!
-    availableLiquidityETH: BigDecimal!
-    availableLiquidityUSD: BigDecimal!
+    totalCompoundedStableBorrowsWEI: BigInt!
+    totalCompoundedStableBorrows: BigDecimal!
+    totalCompoundedStableBorrowsETH: BigDecimal!
+    totalCompoundedStableBorrowsUSD: BigDecimal!
 
-    "totalPrincipalBorrows_WEI : totalPrincipalStableBorrows_WEI + totalPrincipalVariableBorrows_WEI, present tokenized instrument's total Principal borrowed quantity taken from SIGH Finance's Lending Pool. (not adjusted by decimal)"    
-    totalPrincipalBorrows_WEI: BigInt!
-    "totalPrincipalBorrows : totalPrincipalStableBorrows + totalPrincipalVariableBorrows, present tokenized instrument's total Principal borrowed quantity taken from SIGH Finance's Lending Pool. (Adjusted by decimal)"    
-    totalPrincipalBorrows: BigDecimal!
-    totalPrincipalBorrowsETH: BigDecimal!
-    totalPrincipalBorrowsUSD: BigDecimal!
-
-    "totalPrincipalStableBorrows_WEI :  present tokenized instrument's total Principal borrowed quantity taken at Stable Interest Rate from SIGH Finance's Lending Pool. (not adjusted by decimal)"    
-    totalPrincipalStableBorrows_WEI: BigInt!
-    "totalPrincipalStableBorrows :  present tokenized instrument's total Principal borrowed quantity taken at Stable Interest Rate from SIGH Finance's Lending Pool. (Adjusted by decimal)"    
-    totalPrincipalStableBorrows: BigDecimal!
-    totalPrincipalStableBorrowsETH: BigDecimal!
-    totalPrincipalStableBorrowsUSD: BigDecimal!
-
-    "totalPrincipalVariableBorrows_WEI :  present tokenized instrument's total Principal borrowed quantity taken at Variable Interest Rate from SIGH Finance's Lending Pool. (not adjusted by decimal)"    
-    totalPrincipalVariableBorrows_WEI: BigInt!
-    "totalPrincipalVariableBorrows :  present tokenized instrument's total Principal borrowed quantity taken at Variable Interest Rate from SIGH Finance's Lending Pool. (Adjusted by decimal)"    
-    totalPrincipalVariableBorrows: BigDecimal!
-    totalPrincipalVariableBorrowsETH: BigDecimal!
-    totalPrincipalVariableBorrowsUSD: BigDecimal!
-
-
+    totalCompoundedVariableBorrowsWEI: BigInt!
+    totalCompoundedVariableBorrows: BigDecimal!
+    totalCompoundedVariableBorrowsETH: BigDecimal!
+    totalCompoundedVariableBorrowsUSD: BigDecimal!
 
     "totalCompoundedEarnings_WEI : totalCompoundedEarningsSTABLEInterest_WEI + totalCompoundedEarningsVARIABLEInterest_WEI, present tokenized instrument's total quantity earned through Borrowing Interest Rates. (not adjusted by decimal)"    
-    totalCompoundedEarnings_WEI: BigInt!
-    "totalCompoundedEarnings : totalCompoundedEarningsSTABLEInterest + totalCompoundedEarningsVARIABLEInterest, present tokenized instrument's total quantity earned through Borrowing Interest Rates. (Adjusted by decimal)"    
-    totalCompoundedEarnings: BigDecimal!
+    totalBorrowingEarnings_WEI: BigInt!
+    totalBorrowingEarnings: BigDecimal!
+    totalBorrowingEarningsETH: BigDecimal!
+    totalBorrowingEarningsUSD: BigDecimal!
 
     "stableBorrowInterestRate : Current Stable Borrow Interest Rate (not adjusted by decimal)"    
     stableBorrowInterestRate: BigInt!
     "stableBorrowInterestPercent : Current Stable Borrow Interest Rate (Adjusted by decimal)"    
     stableBorrowInterestPercent: BigDecimal!
 
-    "totalCompoundedEarningsSTABLEInterest_WEI : Present tokenized instrument's quantity earned through STABLE Borrowing Interest Rates. (not adjusted by decimal)"    
-    totalCompoundedEarningsSTABLEInterest_WEI: BigInt!
-    "totalCompoundedEarningsSTABLEInterest : Present tokenized instrument's quantity earned through STABLE Borrowing Interest Rates. (Adjusted by decimal)"    
-    totalCompoundedEarningsSTABLEInterest: BigDecimal!
-
     "variableBorrowInterestRate : Current Variable Borrow Interest Rate (not adjusted by decimal)"    
     variableBorrowInterestRate: BigInt!
     "variableBorrowInterestPercent : Current Variable Borrow Interest Rate (Adjusted by decimal)"        
     variableBorrowInterestPercent: BigDecimal!
-
-    "totalCompoundedEarningsVARIABLEInterest_WEI : Present tokenized instrument's quantity earned through VARIABLE Borrowing Interest Rates. (not adjusted by decimal)"    
-    totalCompoundedEarningsVARIABLEInterest_WEI: BigInt!
-    "totalCompoundedEarningsVARIABLEInterest : Present tokenized instrument's quantity earned through VARIABLE Borrowing Interest Rates. (Adjusted by decimal)"    
-    totalCompoundedEarningsVARIABLEInterest: BigDecimal!
-
     "supplyIndex : Index for Accuring instrument quantity as Supply Interest"    
     variableBorrowIndex: BigInt!
 
@@ -168,14 +144,6 @@ type Instrument @entity {
     supplyInterestRate: BigInt!
     "supplyInterestRate : Current Supply Interest Rate (Adjusted by decimal, i.e Interest APY )"    
     supplyInterestRatePercent: BigDecimal!
-
-    "totalSupplierEarnings_WEI : Present tokenized Instrument Quantity Earned as Supplier Earnings ( through Supply Interest Rates ) (not adjusted by decimal)"    
-    totalSupplierEarnings_WEI: BigInt!
-    "totalSupplierEarnings : Present tokenized Instrument Quantity Earned as Supplier Earnings ( through Supply Interest Rates ) (Adjusted by decimal)"    
-    totalSupplierEarnings: BigDecimal!
-    totalSupplierEarningsETH: BigDecimal!
-    totalSupplierEarningsUSD: BigDecimal!
-
     "supplyIndex : Index for Accuring instrument quantity as Supply Interest"    
     supplyIndex: BigInt!
 
@@ -187,7 +155,35 @@ type Instrument @entity {
 
     lifeTimeBorrows_WEI:  BigInt!
     lifeTimeBorrows:  BigDecimal!
+    lifeTimeBorrowsETH: BigDecimal!
+    lifeTimeBorrowsUSD: BigDecimal!
 
+    lifeTimeStableBorrows_WEI: BigInt!
+    lifeTimeStableBorrows: BigDecimal!
+    lifeTimeStableBorrowsETH: BigDecimal!
+    lifeTimeStableBorrowsUSD: BigDecimal!
+
+    lifeTimeVariableBorrows_WEI: BigInt!
+    lifeTimeVariableBorrows: BigDecimal!
+    lifeTimeVariableBorrowsETH: BigDecimal!
+    lifeTimeVariableBorrowsUSD: BigDecimal!
+
+    lifeTimeBorrowsRepaid_WEI: BigInt!
+    lifeTimeBorrowsRepaid: BigDecimal!
+    lifeTimeBorrowsRepaidETH: BigDecimal!
+    lifeTimeBorrowsRepaidUSD: BigDecimal!
+
+    totalLiquiditySIGHAccuredWEI: BigInt!
+    totalLiquiditySIGHAccured: BigDecimal!
+
+    currentLiquiditySIGHAccuredWEI: BigInt!
+    currentLiquiditySIGHAccured: BigDecimal!
+
+    totalBorrowingSIGHAccuredWEI: BigInt!
+    totalBorrowingSIGHAccured: BigDecimal!
+
+    currentBorrowingSIGHAccuredWEI: BigInt!
+    currentBorrowingSIGHAccured: BigDecimal!
 
 
 
@@ -203,36 +199,46 @@ type Instrument @entity {
     SIGH_Borrow_Index: BigInt!
     SIGH_Borrow_Index_lastUpdatedBlock: BigInt!
 
-    present_24HrWindow_InstrumentOpeningPriceETH: BigDecimal!
-    present_24HrWindow_InstrumentOpeningPriceUSD: BigDecimal!
 
-    present_24HrWindow_InstrumentClosingPriceETH: BigDecimal!
-    present_24HrWindow_InstrumentClosingPriceUSD: BigDecimal!
+    fromBlockNumber: BigInt!
+    toBlockNumber: BigInt!
 
-    present_24HrWindow_MaxSIGHSpeed: BigDecimal!
-    present_24HrWindow_DeltaBlocks: BigInt!
-    present_24HrVolatility_ETH: BigDecimal!
-    present_24HrVolatility_USD: BigDecimal!
-    present_percentTotalVolatility: BigDecimal!
-    present_TotalVolatility_ETH: BigDecimal!
-    present_TotalVolatility_USD: BigDecimal!
+    present_SIGH_Side: String!
+    present_DeltaBlocks: BigInt!
+    present_Clock: BigInt!
 
-    present_SIGH_Distribution_Side: String!
+    present_maxVolatilityLimitSuppliers: BigInt!
+    present_maxVolatilityLimitSuppliersPercent: BigDecimal!
+    present_maxVolatilityLimitBorrowers: BigInt!
+    present_maxVolatilityLimitBorrowersPercent: BigDecimal!
 
-    present_24HrWindow_SIGH_OpeningPrice_ETH: BigDecimal! 
-    present_24HrWindow_SIGH_OpeningPrice_USD: BigDecimal! 
+    "% of total Protocol Protocol Volatility"
+    present_percentTotalVolatility: BigDecimal! 
+    "Instrument volatility in 24 hrs"
+    present_total24HrVolatilityETH: BigDecimal!    
+    present_total24HrVolatilityUSD: BigDecimal!
+
+    present_percentTotalVolatilityLimitAmount: BigDecimal!
+    "Instrument volatility * maxVolatilityLimit"
+    present_24HrVolatilityLimitAmountETH: BigDecimal!  
+    present_24HrVolatilityLimitAmountUSD: BigDecimal!
 
     present_SIGH_Suppliers_Speed_WEI: BigInt!
     present_SIGH_Suppliers_Speed: BigDecimal!
+
     present_SIGH_Borrowers_Speed_WEI: BigInt!
     present_SIGH_Borrowers_Speed: BigDecimal!
+
     present_SIGH_Staking_Speed_WEI: BigInt!
     present_SIGH_Staking_Speed: BigDecimal!
 
-    present_SIGH_DistributionValuePerBlock_ETH: BigDecimal!
-    present_SIGH_DistributionValuePerBlock_USD: BigDecimal!
 
-    present_VolatilityAddressedPerBlock: BigDecimal!
+    present_PrevPrice_ETH: BigDecimal! 
+    present_PrevPrice_USD: BigDecimal! 
+
+    present_OpeningPrice_ETH: BigDecimal! 
+    present_OpeningPrice_USD: BigDecimal! 
+
 
     SIGH_Distribution_History: [SIGH_Distribution!]! @derivedFrom(field:"instrumentAddress")
 
