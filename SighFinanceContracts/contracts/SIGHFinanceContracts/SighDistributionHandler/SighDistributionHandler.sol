@@ -50,6 +50,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         bool isListed;
         string name;
         address iTokenAddress;
+        address sighStreamAddress;
         uint256 decimals;
         bool isSIGHMechanismActivated;
         uint supplyindex;
@@ -132,10 +133,10 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     }
 
     // This function can only be called by the Instrument's IToken Contract
-    modifier onlyITokenContract(address instrument) {
+    modifier onlySighStreamContract(address instrument) {
            SIGHInstrument memory currentInstrument = financial_instruments[instrument];
            require( currentInstrument.isListed, "This instrument is not supported by SIGH Distribution Handler");
-           require( msg.sender == currentInstrument.iTokenAddress, "This function can only be called by the Instrument's IToken Contract");
+           require( msg.sender == currentInstrument.sighStreamAddress, "This function can only be called by the Instrument's SIGH Streams Handler Contract");
         _;
     }
         
@@ -178,7 +179,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     * @param _iTokenAddress the address of the overlying iToken contract
     * @param _decimals the number of decimals of the underlying asset
     **/
-    function addInstrument( address _instrument, address _iTokenAddress, uint256 _decimals ) external onlyLendingPoolCore returns (bool) {
+    function addInstrument( address _instrument, address _iTokenAddress, address _sighStreamAddress, uint256 _decimals ) external onlyLendingPoolCore returns (bool) {
         require(!financial_instruments[_instrument].isListed ,"Instrument already supported.");
 
         all_Instruments.push(_instrument); // ADD THE INSTRUMENT TO THE LIST OF SUPPORTED INSTRUMENTS
@@ -188,6 +189,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         financial_instruments[_instrument] = SIGHInstrument( {  isListed: true, 
                                                                 name: instrumentContract.name(),
                                                                 iTokenAddress: _iTokenAddress,
+                                                                sighStreamAddress: _sighStreamAddress,
                                                                 decimals: _decimals, 
                                                                 isSIGHMechanismActivated: false, 
                                                                 supplyindex: sighInitialIndex, // ,"sighInitialIndex exceeds 224 bits"), 
@@ -649,7 +651,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
      * @param sigh_Amount The amount of SIGH to (possibly) transfer
      * @return The amount of SIGH which was NOT transferred to the user
      */
-    function transferSighTotheUser(address instrument, address user, uint sigh_Amount) external onlyITokenContract(instrument) returns (uint) {   // 
+    function transferSighTotheUser(address instrument, address user, uint sigh_Amount) external onlySighStreamContract(instrument) returns (uint) {   // 
         uint sigh_not_transferred = 0;
         if ( Sigh_Address.balanceOf(address(this)) > sigh_Amount ) {   // NO SIGH TRANSFERRED IF CONTRACT LACKS REQUIRED SIGH AMOUNT
             require(Sigh_Address.transfer( user, sigh_Amount ), "Failed to transfer accured SIGH to the user." );

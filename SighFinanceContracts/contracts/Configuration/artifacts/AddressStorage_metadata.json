@@ -1,0 +1,59 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_key",
+						"type": "bytes32"
+					}
+				],
+				"name": "getAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"methods": {}
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/Configuration/AddressStorage.sol": "AddressStorage"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/Configuration/AddressStorage.sol": {
+			"keccak256": "0x0d0b40ccc403e45861faf71d042f5c419ff51930a45896633052c91b7ed6eae4",
+			"urls": [
+				"bzz-raw://ad8c170f6b3b87ec85076f3fdcd006fcef61ef47c978a9da8971df22682cf657",
+				"dweb:/ipfs/QmRWUQzdk7GHfcyrPzE6vw9ipfrW6Kiq1Jyp9xzbWqmv5p"
+			]
+		}
+	},
+	"version": 1
+}

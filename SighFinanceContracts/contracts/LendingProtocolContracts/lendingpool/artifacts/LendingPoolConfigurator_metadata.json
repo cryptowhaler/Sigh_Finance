@@ -13,9 +13,15 @@
 						"internalType": "address",
 						"name": "_instrument",
 						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "switch_",
+						"type": "bool"
 					}
 				],
-				"name": "BorrowingDisabledOnInstrument",
+				"name": "BorrowingOnInstrumentSwitched",
 				"type": "event"
 			},
 			{
@@ -26,22 +32,15 @@
 						"internalType": "address",
 						"name": "_instrument",
 						"type": "address"
-					}
-				],
-				"name": "BorrowingEnabledOnInstrument",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
+					},
 					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
+						"indexed": false,
+						"internalType": "bool",
+						"name": "switch_",
+						"type": "bool"
 					}
 				],
-				"name": "InstrumentActivated",
+				"name": "InstrumentActivationSwitched",
 				"type": "event"
 			},
 			{
@@ -58,22 +57,40 @@
 						"internalType": "uint256",
 						"name": "_ltv",
 						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_liquidationThreshold",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_liquidationBonus",
+						"type": "uint256"
 					}
 				],
-				"name": "InstrumentBaseLtvChanged",
+				"name": "InstrumentCollateralParametersUpdated",
 				"type": "event"
 			},
 			{
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": true,
+						"indexed": false,
 						"internalType": "address",
 						"name": "_instrument",
 						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "decimals",
+						"type": "uint256"
 					}
 				],
-				"name": "InstrumentDeactivated",
+				"name": "InstrumentDecimalsUpdated",
 				"type": "event"
 			},
 			{
@@ -181,44 +198,6 @@
 					}
 				],
 				"name": "InstrumentInterestRateStrategyChanged",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "_bonus",
-						"type": "uint256"
-					}
-				],
-				"name": "InstrumentLiquidationBonusChanged",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "_threshold",
-						"type": "uint256"
-					}
-				],
-				"name": "InstrumentLiquidationThresholdChanged",
 				"type": "event"
 			},
 			{
@@ -473,9 +452,39 @@
 						"internalType": "uint256",
 						"name": "_ltv",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_threshold",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_bonus",
+						"type": "uint256"
 					}
 				],
-				"name": "setInstrumentBaseLTVasCollateral",
+				"name": "setInstrumentCollateralParameters",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "decimals",
+						"type": "uint256"
+					}
+				],
+				"name": "setInstrumentDecimals",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -496,46 +505,6 @@
 					}
 				],
 				"name": "setInstrumentInterestRateStrategyAddress",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_bonus",
-						"type": "uint256"
-					}
-				],
-				"name": "setInstrumentLiquidationBonus",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_threshold",
-						"type": "uint256"
-					}
-				],
-				"name": "setInstrumentLiquidationThreshold",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -594,7 +563,7 @@
 						"switchStableBorrowRate": "true / false to enable / disable*"
 					}
 				},
-				"setInstrumentBaseLTVasCollateral(address,uint256)": {
+				"setInstrumentCollateralParameters(address,uint256,uint256,uint256)": {
 					"details": "emitted when a _instrument loan to value is updated",
 					"params": {
 						"_instrument": "the address of the _instrument",
@@ -606,20 +575,6 @@
 					"params": {
 						"_instrument": "the address of the _instrument",
 						"_rateStrategyAddress": "the new address of the interest strategy contract*"
-					}
-				},
-				"setInstrumentLiquidationBonus(address,uint256)": {
-					"details": "updates the liquidation bonus of a _instrument",
-					"params": {
-						"_bonus": "the new value for the liquidation bonus*",
-						"_instrument": "the address of the _instrument"
-					}
-				},
-				"setInstrumentLiquidationThreshold(address,uint256)": {
-					"details": "updates the liquidation threshold of a _instrument.",
-					"params": {
-						"_instrument": "the address of the _instrument",
-						"_threshold": "the new value for the liquidation threshold*"
 					}
 				}
 			},
@@ -644,17 +599,17 @@
 	},
 	"sources": {
 		"localhost/contracts/Configuration/IGlobalAddressesProvider.sol": {
-			"keccak256": "0xefeb61dea52cfa0dcc34ea94d1f402389f598cf8ba238a7a6473cced72d2b73d",
+			"keccak256": "0x30385d394fe30ea120fd04ef3d9f3e6006a90d08c6795ed9b3c586fb98a56512",
 			"urls": [
-				"bzz-raw://a8e77e69d2855a84c0f1ab2e833ecb6656f46512ac4583e2ea7c8c5aa800f655",
-				"dweb:/ipfs/Qme7SjV9Ax6nPoirbgg8WBQ2UxTQESUC6KbDNSwcrzVyp9"
+				"bzz-raw://433194f95571c81d390832741a81d152e40c540722354e4f3c914d83600983a4",
+				"dweb:/ipfs/QmPwRF6AHfvUqco3YP9XZCe818juptqY5UUD75XQwmqg5u"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/IToken.sol": {
-			"keccak256": "0x7aa3ebd421e77730a7a3df6a54ba971705ebd47276dd69e594eadb7aaceca643",
+			"keccak256": "0x9b40eeb6380fd8937627d7d503e6a93d2301a1ed33427e792c9e265c803c4482",
 			"urls": [
-				"bzz-raw://a0ead474666edbb33a6167d617db01f553598e797648f427c23b030f95793824",
-				"dweb:/ipfs/QmNzx53FBZqYhy824irHDnerVSZ2qhtsXpMy4hruWC9FAr"
+				"bzz-raw://d04f64a08b1c02bea6247e192107adee4b1db600b2e082377a2c297a47975840",
+				"dweb:/ipfs/QmbQKk8sCEABPBGXfeACUMGPDWQzGVuuWshssdLGLy67o8"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPool.sol": {
@@ -665,10 +620,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
-			"keccak256": "0x2aee154889e26c21e268b6b18646d88a9b9113ff789f7be12aa12b764ae1898a",
+			"keccak256": "0xc1bf40390054e3291783a0586cb19f19fc51281b9243102dfe0e1e3f7f5b9c2c",
 			"urls": [
-				"bzz-raw://b42112137dcabf248f4e9efbe0330c7d46048c4c1da8186ef4de4e850b5f6799",
-				"dweb:/ipfs/QmZCXWYb4PBGpWJJEzX25XAiVkLvhW9TxVxLFksqJYzTTr"
+				"bzz-raw://1409dbd07ac8edf3809df021ae91ff97d8247e51f946acbd2ca70ab223a701c3",
+				"dweb:/ipfs/QmZ2hUTEWthSdWC6sV9cAKwXzZJZsNy6JWnLkydz7yiMxW"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolDataProvider.sol": {
@@ -679,17 +634,17 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolConfigurator.sol": {
-			"keccak256": "0xdd911701f0cd0c9b5955562609bb4645bded252e4e0f33c8a99b4dbb26dab6a1",
+			"keccak256": "0x1f8fef1a128ed374271cbcbd6647ec9af15629cf002ec914d4572212974fcfb0",
 			"urls": [
-				"bzz-raw://43d961ebb5023d5124c14e43516c97b0194b52e25aa2e405fb4c8611fcdc8434",
-				"dweb:/ipfs/QmcxhruR4mgXgCWK1JfJrt2xG9yzqSYnM79uS5kqQ79ruz"
+				"bzz-raw://5b960a461b86661028fe057eae73fa8d43f7527ab035c795cb579e897c33dc9b",
+				"dweb:/ipfs/QmahejCDdAjW1J47D7ZbiV4t6G6WNWcY2CFGWNcmdN1sQH"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
-			"keccak256": "0x5ac06f62f0ceaeb15e94b0961de7e4cf6db8d77ca2c879e55772e4bf386428b3",
+			"keccak256": "0x3799446dff4f09de695bc46e555c50d47592d39b7d4bc0b41f5d046218b787f7",
 			"urls": [
-				"bzz-raw://fcf92275bf98d7c775ad72003a9a34879b039f6d126de59b85fe3a3c67f12a6b",
-				"dweb:/ipfs/QmWXH6H95TiidAP1BWYPEkJ9rYzNKuGnyj7ZSzTj5f8wSm"
+				"bzz-raw://ad7b33ac794daa623c0e47e78bf9430fc8470a67c8a593f065479173031133f1",
+				"dweb:/ipfs/QmTiP7TzYponrC9wCZ2SqzavzgYkBDmRRCHhErwWac5NDT"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/WadRayMath.sol": {
@@ -700,10 +655,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0x00e23698d82f3478a2f13c42ee2dba44103625ada5502656d70e3ef639ad48cd",
+			"keccak256": "0x60a53e4998cae88ea66c568fb8a76e5762c12576a6be9f9b51e37f83439c92d4",
 			"urls": [
-				"bzz-raw://2aef56131f9c98e40ad9a13abbcefbb2bd254ffd887006f3e3b1b8358adc3ac9",
-				"dweb:/ipfs/QmerbiWKbh35yoyDVMPLrMxvJ4aoGcVzTroGA3qB8r6d8y"
+				"bzz-raw://5df29a7ee8aaf2ce10f1436b4a40b2e8209ab67aa4e7aedfa18122d92c64cf84",
+				"dweb:/ipfs/QmaeLNEHXThNtD8jYsrZ99FnRbsjdGfNJRx3DpysszRt5Q"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/VersionedInitializable.sol": {

@@ -47,8 +47,8 @@ contract LendingPoolConfigurator is VersionedInitializable {
 
 
     event InstrumentCollateralParametersUpdated(address _instrument,uint256 _ltv,  uint256 _liquidationThreshold,  uint256 _liquidationBonus );     
-
     event InstrumentInterestRateStrategyChanged(address _instrument, address _strategy);      // emitted when a _instrument interest strategy contract is updated
+    event InstrumentDecimalsUpdated(address _instrument,uint256 decimals);
 
 
 // #############################
@@ -102,19 +102,13 @@ contract LendingPoolConfigurator is VersionedInitializable {
 // ###################################################################################################
 // ####### FUNCTIONS WHICH INTERACT WITH LENDINGPOOLCORE CONTRACT ####################################
 // ####### --> removeInstrument() : REMOVE INSTRUMENT    #####################################
-// ####### --> enableBorrowingOnInstrument()   :   BORROWING RELATED  #################################
-// ####### --> disableBorrowingOnInstrument()  :   BORROWING RELATED  #################################
+// ####### --> instrumentActivationSwitch()      :      INSTRUMENT ACTIVATION SWITCH ################################
+// ####### --> instrumentBorrowingSwitch()   :   BORROWING SWITCH  #################################
+// ####### --> instrumentStableBorrowRateSwitch()    :     STABLE BORROW RATE SWITCH  ################
 // ####### --> enableInstrumentAsCollateral()    :   COLLATERAL RELATED  ##############################
 // ####### --> disableInstrumentAsCollateral()   :   COLLATERAL RELATED  ##############################
-// ####### --> enableInstrumentStableBorrowRate()    :     STABLE BORROW RATE RELATED  ################
-// ####### --> disableInstrumentStableBorrowRate()   :     STABLE BORROW RATE RELATED  ################
-// ####### --> activateInstrument()      :      INSTRUMENT ACTIVATION  ################################
-// ####### --> deactivateInstrument()    :      INSTRUMENT DE-ACTIVATION  #############################
-// ####### --> freezeInstrument()     :      FREEZE INSTRUMENT  #######################################
-// ####### --> unfreezeInstrument()   :      UNFREEZE INSTRUMENT  #####################################
-// ####### --> setInstrumentBaseLTVasCollateral()    :   SETTING VARIABLES  ###########################
-// ####### --> setInstrumentLiquidationThreshold()   :   SETTING VARIABLES  ###########################
-// ####### --> setInstrumentLiquidationBonus()       :   SETTING VARIABLES  ###########################
+// ####### --> instrumentFreezeSwitch()     :      FREEZE INSTRUMENT SWITCH #######################################
+// ####### --> setInstrumentCollateralParameters()    :   SETTING COLLATERAL VARIABLES : [LTV, Liquidation Threshold, Liquidation Bonus]  ###########################
 // ####### --> setInstrumentDecimals()               :   SETTING VARIABLES  ###########################
 // ####### --> setInstrumentInterestRateStrategyAddress()     : SETTING INTEREST RATE STRATEGY  #######
 // ####### --> refreshLendingPoolCoreConfiguration()   :   REFRESH THE ADDRESS OF CORE  ###############
@@ -145,7 +139,7 @@ contract LendingPoolConfigurator is VersionedInitializable {
     function instrumentBorrowingSwitch(address _instrument, bool borrowRateSwitch) external onlyLendingPoolManager {
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
             core.borrowingOnInstrumentSwitch(_instrument, borrowRateSwitch );
-            emit BorrowingDisabledOnInstrument(_instrument, borrowRateSwitch);
+            emit BorrowingOnInstrumentSwitched(_instrument, borrowRateSwitch);
     }
 
     /**
@@ -198,7 +192,7 @@ contract LendingPoolConfigurator is VersionedInitializable {
     * @param _instrument the address of the _instrument
     * @param _ltv the new value for the loan to value
     **/
-    function setInstrumentBaseLTVasCollateral(address _instrument, uint256 _ltv, uint256 _threshold, uint256 _bonus) external onlyLendingPoolManager {
+    function setInstrumentCollateralParameters(address _instrument, uint256 _ltv, uint256 _threshold, uint256 _bonus) external onlyLendingPoolManager {
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
         core.updateInstrumentCollateralParameters(_instrument, _ltv, _threshold, _bonus);
         emit InstrumentCollateralParametersUpdated(_instrument, _ltv, _threshold, _bonus);
@@ -215,6 +209,13 @@ contract LendingPoolConfigurator is VersionedInitializable {
         core.setInstrumentInterestRateStrategyAddress(_instrument, _rateStrategyAddress);
         emit InstrumentInterestRateStrategyChanged(_instrument, _rateStrategyAddress);
     }
+    
+    function setInstrumentDecimals(address _instrument, uint decimals) external onlyLendingPoolManager {
+        ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
+        core.setInstrumentDecimals(_instrument, decimals);
+        emit InstrumentDecimalsUpdated(_instrument, decimals);
+    }
+    
 
     // refreshes the lending pool core configuration to update the cached address
     function refreshLendingPoolCoreConfiguration() external onlyLendingPoolManager {

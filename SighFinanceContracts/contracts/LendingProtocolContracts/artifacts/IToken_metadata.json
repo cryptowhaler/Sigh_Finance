@@ -783,131 +783,6 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "user",
-						"type": "address"
-					}
-				],
-				"name": "getSIGHStreamsAllowances",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "liquiditySIGHStreamRedirectionAllowance",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "BorrowingSIGHStreamRedirectionAllowance",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "user",
-						"type": "address"
-					}
-				],
-				"name": "getSIGHStreamsIndexes",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "liquiditySIGHStreamIndex",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "borrowingSIGHStreamIndex",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "user",
-						"type": "address"
-					}
-				],
-				"name": "getSIGHStreamsRedirectedBalances",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "liquiditySIGHStreamRedirectedBalance",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "borrowingSIGHStreamRedirectedBalance",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "user",
-						"type": "address"
-					}
-				],
-				"name": "getSIGHStreamsRedirectedTo",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "liquiditySIGHStreamRedirectionAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "BorrowingSIGHStreamRedirectionAddress",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "account",
-						"type": "address"
-					}
-				],
-				"name": "getSighAccured",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
 						"name": "_user",
 						"type": "address"
 					}
@@ -1541,7 +1416,7 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
@@ -1555,17 +1430,17 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/IToken.sol": {
-			"keccak256": "0x9b40eeb6380fd8937627d7d503e6a93d2301a1ed33427e792c9e265c803c4482",
+			"keccak256": "0xecd30791fbd8bf92c5a2237a2d06b44fb6bda73871d949f75fa9d6587a5efcad",
 			"urls": [
-				"bzz-raw://d04f64a08b1c02bea6247e192107adee4b1db600b2e082377a2c297a47975840",
-				"dweb:/ipfs/QmbQKk8sCEABPBGXfeACUMGPDWQzGVuuWshssdLGLy67o8"
+				"bzz-raw://a2fb63967611b360f341aad31a4a96c451b626283c60df03bc777cb5ee299063",
+				"dweb:/ipfs/QmWzSSyqCoKdoeQC8HDr3yQ3vSat8JSRw4E2DqpmgvXgAN"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPool.sol": {
-			"keccak256": "0x9293968389a224ec42c1ce4b82cfd01f5c487dc632198472100eae41f1447da8",
+			"keccak256": "0x3fab75bef0889d4f7b8c422beeb460fcbaf190e91bf8f82a5f253e0d4182741d",
 			"urls": [
-				"bzz-raw://3dc57e90f36750703617a69c0f24407b782a1b5b7ae81d332f20de5c4ec37454",
-				"dweb:/ipfs/QmchfrDX8WCX759DeDRGEmFLQrp3wuw3rGvjQons7AefzE"
+				"bzz-raw://4d02d6b053210e3d2dd80623410eb31c487b6fd4087c376c5a581d84ff5ba453",
+				"dweb:/ipfs/QmZfaVmrZe1jmt3jTCX6thmokTv7beGeVGYbMUvZD2ZanM"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
