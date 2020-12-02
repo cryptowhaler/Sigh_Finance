@@ -8,13 +8,14 @@ pragma solidity ^0.5.0;
  */
 interface ISighStream {
 
+
     // LIQUIDITY $SIGH STREAM - CALLED FROM ITOKEN CONTRACT
     function redirectLiquiditySIGHStream(address from, address _to) external;
     function allowLiquiditySIGHRedirectionTo(address from, address _to) external;
     function redirectLiquiditySIGHStreamOf(address user, address _from, address _to) external;
 
     function updateRedirectedBalanceOfLiquiditySIGHStreamRedirectionAddress( address _user, uint256 _balanceToAdd, uint256 _balanceToRemove ) external;
-    function accure_SIGH_For_LiquidityStream( address supplier, uint unaccountedBalanceIncrease , uint256 currentCompoundedBalance )  external ;
+    function accureLiquiditySighStream( address supplier, uint unaccountedBalanceIncrease , uint256 currentCompoundedBalance )  external ;
 
     // BORROWING $SIGH STREAM - CALLED FROM ITOKEN CONTRACT
     function redirectBorrowingSIGHStream(address user, address _to) external ;
@@ -25,7 +26,7 @@ interface ISighStream {
     function accure_SIGH_For_BorrowingStream( address user) external ;
 
     // FUNCTION TO CLAIM CURRENTLY ACCURED $SIGH
-    function claimMySIGH(address user) onlyITokenContract external;
+    function claimMySIGH(address user) external;
 
     // VIEW FUNCTIONS
     function getSighAccured(address account) external view returns (uint);

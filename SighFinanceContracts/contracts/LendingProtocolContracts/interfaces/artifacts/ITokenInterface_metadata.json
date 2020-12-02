@@ -602,6 +602,27 @@
 				"type": "function"
 			},
 			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_sighStreamAddress",
+						"type": "address"
+					}
+				],
+				"name": "setSighStreamAddress",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"constant": true,
 				"inputs": [],
 				"name": "symbol",
@@ -756,17 +777,17 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"localhost/contracts/LendingProtocolContracts/interfaces/ITokenInterface.sol": {
-			"keccak256": "0xb8298ef90441795fef17a24a7cd7fa351b0da1f0920951cfa23f26273ba4ef17",
+			"keccak256": "0xbb2e0aad734c692c23dfc8e2c3b6df2e4e202f811d55c97f08ea3f921e7b2132",
 			"urls": [
-				"bzz-raw://3defedf04132a2ca90ec84376ff817f8ac8d21e43b2e8de62f78429909b3f98e",
-				"dweb:/ipfs/QmYpWtprr4AymN2c2ebZd5oAYHZ4L4zCoKmrnuz6joaq97"
+				"bzz-raw://a2cc8061647a695e95f6a38aee62b5585c43d2be0c6ed4d43a396cee05d61f5d",
+				"dweb:/ipfs/QmWzhfAhL68E9QtW9UNRk7PiopSRX1dBc97ZUdaMhjkicm"
 			]
 		}
 	},

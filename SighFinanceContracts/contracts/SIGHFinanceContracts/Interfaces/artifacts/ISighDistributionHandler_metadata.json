@@ -55,6 +55,11 @@
 						"type": "address"
 					},
 					{
+						"internalType": "address",
+						"name": "_sighStreamAddress",
+						"type": "address"
+					},
+					{
 						"internalType": "uint256",
 						"name": "_decimals",
 						"type": "uint256"
@@ -733,17 +738,17 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0x60a53e4998cae88ea66c568fb8a76e5762c12576a6be9f9b51e37f83439c92d4",
+			"keccak256": "0x115ccd1475e1da68ae805765ac1d073e02dd3076dd86354251017948301e1c9d",
 			"urls": [
-				"bzz-raw://5df29a7ee8aaf2ce10f1436b4a40b2e8209ab67aa4e7aedfa18122d92c64cf84",
-				"dweb:/ipfs/QmaeLNEHXThNtD8jYsrZ99FnRbsjdGfNJRx3DpysszRt5Q"
+				"bzz-raw://c81a7924ea7350f410b1a0a07c1d8772d38b825e68da0ec10f63dd4034d9792a",
+				"dweb:/ipfs/QmaJRXRy9PGT81amgFVCrahPsMvs5GncXB9fQTFn9vNVet"
 			]
 		}
 	},

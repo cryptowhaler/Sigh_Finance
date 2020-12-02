@@ -727,7 +727,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _instrument the instrument address
     * @return the address of the interest rate strategy contract
     **/
-    function getInstrumentItokenAndInterestRateStrategyAddress(address _instrument) public view returns (address interestRateStrategy) {
+    function getInstrumentInterestRateStrategyAddress(address _instrument) public view returns (address interestRateStrategy) {
         CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
         return instrument.interestRateStrategyAddress;
     }
@@ -1209,13 +1209,13 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _decimals the decimals of the instrument currency
     * @param _interestRateStrategyAddress the address of the interest rate strategy contract
     **/
-    function initInstrument( address _instrument, address _iTokenAddress,  uint256 _decimals, address _interestRateStrategyAddress, address sighStreamAddress ) external onlyLendingPoolConfigurator {
+    function initInstrument( address _instrument, address _iTokenAddress,  uint256 _decimals, address _interestRateStrategyAddress, address _sighStreamAddress ) external onlyLendingPoolConfigurator {
         reserves[_instrument].init(_iTokenAddress, _decimals, _interestRateStrategyAddress);
         addInstrumentToListInternal(_instrument);
         // ADDED BY SIGH FINANCE
-        require ( sighMechanism.addInstrument( _instrument, _iTokenAddress, sighStreamAddress, _decimals ), "Instrument failed to be properly added to the list of Instruments supported by SIGH Finance" ); // ADDED BY SIGH FINANCE        
-        ITokenInterface iToken = ITokenInterface( reserves[instrument].iTokenAddress ); 
-        require ( iToken.updateSighStreamAddress( sighstreamAddress_ ), "Sigh Stream Address failed to be properly initialized in ITOKEN " ); // ADDED BY SIGH FINANCE
+        require( sighMechanism.addInstrument( _instrument, _iTokenAddress, _sighStreamAddress, _decimals ), "Instrument failed to be properly added to the list of Instruments supported by SIGH Finance" ); // ADDED BY SIGH FINANCE        
+        ITokenInterface iToken = ITokenInterface( _iTokenAddress ); 
+        require( iToken.setSighStreamAddress( _sighStreamAddress ), "Sigh Stream Address failed to be properly initialized in ITOKEN " ); // ADDED BY SIGH FINANCE
     }
 
     // adds a instrument to the array of the instruments address
@@ -1231,15 +1231,15 @@ contract LendingPoolCore is VersionedInitializable {
 
 
     // UPADATES SIGH STREAM CONTRACT FOR AN ITOKEN
-    function sighStreamAddressUpdated(address instrument, address sighstreamAddress_ ) external onlyLendingPoolConfigurator returns (bool) {
-        require ( sighMechanism.updateSighStreamAddressForInstrument( instrument, sighstreamAddress_ ), "Sigh Stream Address failed to be properly updated in SIGH Distribution Handler " ); // ADDED BY SIGH FINANCE
-        ITokenInterface iToken = ITokenInterface( reserves[instrument].iTokenAddress ); 
-        require ( iToken.updateSighStreamAddress( sighstreamAddress_ ), "Sigh Stream Address failed to be properly updated in ITOKEN " ); // ADDED BY SIGH FINANCE
-    }
+    // function sighStreamAddressUpdated(address instrument, address sighstreamAddress_ ) external onlyLendingPoolConfigurator returns (bool) {
+    //     require ( sighMechanism.updateSighStreamAddressForInstrument( instrument, sighstreamAddress_ ), "Sigh Stream Address failed to be properly updated in SIGH Distribution Handler " ); // ADDED BY SIGH FINANCE
+    //     ITokenInterface iToken = ITokenInterface( reserves[instrument].iTokenAddress ); 
+    //     require ( iToken.updateSighStreamAddress( sighstreamAddress_ ), "Sigh Stream Address failed to be properly updated in ITOKEN " ); // ADDED BY SIGH FINANCE
+    // }
 
     /**
-    * @dev removes the last added instrument in the instrumentsList array
-    * @param _instrumentToRemove the address of the instrument
+    // * @dev removes the last added instrument in the instrumentsList array
+    // * @param _instrumentToRemove the address of the instrument
     **/
     // function removeInstrument(address _instrumentToRemove) external onlyLendingPoolConfigurator returns (bool) {
 

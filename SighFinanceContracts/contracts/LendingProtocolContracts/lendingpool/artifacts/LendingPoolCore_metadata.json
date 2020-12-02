@@ -422,6 +422,27 @@
 						"type": "address"
 					}
 				],
+				"name": "getInstrumentInterestRateStrategyAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "interestRateStrategy",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					}
+				],
 				"name": "getInstrumentIsActive",
 				"outputs": [
 					{
@@ -470,27 +491,6 @@
 						"internalType": "bool",
 						"name": "",
 						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					}
-				],
-				"name": "getInstrumentItokenAndInterestRateStrategyAddress",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "interestRateStrategy",
-						"type": "address"
 					}
 				],
 				"payable": false,
@@ -997,6 +997,11 @@
 					{
 						"internalType": "address",
 						"name": "_interestRateStrategyAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_sighStreamAddress",
 						"type": "address"
 					}
 				],
@@ -1803,6 +1808,13 @@
 					},
 					"return": "the address of the iToken contract*"
 				},
+				"getInstrumentInterestRateStrategyAddress(address)": {
+					"details": "gets the interest rate strategy contract address for the instrument",
+					"params": {
+						"_instrument": "the instrument address"
+					},
+					"return": "the address of the interest rate strategy contract*"
+				},
 				"getInstrumentIsActive(address)": {
 					"details": "returns true if the _instrument is active",
 					"params": {
@@ -1822,13 +1834,6 @@
 						"_instrument": "the _instrument address"
 					},
 					"return": "true if the stable rate is enabled on _instrument, false otherwise*"
-				},
-				"getInstrumentItokenAndInterestRateStrategyAddress(address)": {
-					"details": "gets the interest rate strategy contract address for the instrument",
-					"params": {
-						"_instrument": "the instrument address"
-					},
-					"return": "the address of the interest rate strategy contract*"
 				},
 				"getInstrumentLastUpdate(address)": {
 					"params": {
@@ -1972,7 +1977,7 @@
 					},
 					"return": "the variable borrow index for the user*"
 				},
-				"initInstrument(address,address,uint256,address)": {
+				"initInstrument(address,address,uint256,address,address)": {
 					"details": "initializes a instrument",
 					"params": {
 						"_decimals": "the decimals of the instrument currency",
@@ -2213,10 +2218,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ITokenInterface.sol": {
-			"keccak256": "0xda877c1d7dfa3fdde65756be08ee495216aeb8f87f576450794251ce7d3515e3",
+			"keccak256": "0xbb2e0aad734c692c23dfc8e2c3b6df2e4e202f811d55c97f08ea3f921e7b2132",
 			"urls": [
-				"bzz-raw://546104571c8ececd3f29e34aed54b8970b04a70cc3b5b43376f27645102a2fe4",
-				"dweb:/ipfs/QmPaF1WzU8ropzzJQBx9whXNJzT3x8C6QMHztqpYoe7szL"
+				"bzz-raw://a2cc8061647a695e95f6a38aee62b5585c43d2be0c6ed4d43a396cee05d61f5d",
+				"dweb:/ipfs/QmWzhfAhL68E9QtW9UNRk7PiopSRX1dBc97ZUdaMhjkicm"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/I_InstrumentInterestRateStrategy.sol": {
@@ -2227,10 +2232,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolCore.sol": {
-			"keccak256": "0xaa19b1365229ae7b6143194861556f35ec912bd3e23ebe404366648b09c85d13",
+			"keccak256": "0xe2938439dced49c1748bc76f5bbc846094bcff295ef44d1ae4ed1a7663bd2852",
 			"urls": [
-				"bzz-raw://b0472bf5e4d552268a62046a415004f81be64974f4f48f18f90a876ea22eda84",
-				"dweb:/ipfs/QmbMiCDzvhZpYcCNSZHSY9bsEyrcmpRvgkwsKWwQvtueEq"
+				"bzz-raw://b0d44de83dcecd6fcab0dea3aecf19c75635b22d2b14feff10b50ed223c52b3d",
+				"dweb:/ipfs/QmfWmTZFXGpAACeT43WPVBXw6fpzxWbxZFLsWaQv1dZCHW"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
@@ -2255,10 +2260,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0x60a53e4998cae88ea66c568fb8a76e5762c12576a6be9f9b51e37f83439c92d4",
+			"keccak256": "0x115ccd1475e1da68ae805765ac1d073e02dd3076dd86354251017948301e1c9d",
 			"urls": [
-				"bzz-raw://5df29a7ee8aaf2ce10f1436b4a40b2e8209ab67aa4e7aedfa18122d92c64cf84",
-				"dweb:/ipfs/QmaeLNEHXThNtD8jYsrZ99FnRbsjdGfNJRx3DpysszRt5Q"
+				"bzz-raw://c81a7924ea7350f410b1a0a07c1d8772d38b825e68da0ec10f63dd4034d9792a",
+				"dweb:/ipfs/QmaJRXRy9PGT81amgFVCrahPsMvs5GncXB9fQTFn9vNVet"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {
@@ -2269,10 +2274,10 @@
 			]
 		},
 		"localhost/contracts/configuration/GlobalAddressesProvider.sol": {
-			"keccak256": "0x4494495a2c3155930b10fc66bc3e18fe721860479471ea7d3f7c27441eee4967",
+			"keccak256": "0x5d6d5159c1496e67cd10809e40ed0d6f046d5fe754972297b9715406152cc59f",
 			"urls": [
-				"bzz-raw://04b8e40172aa1a0b9bbef6195451b11b865dc3d55c7cd47d4a81cbd372a1b404",
-				"dweb:/ipfs/QmR47xLm4y82RkHhruMc6uuZjriJcksRmvpKhp8D38s1Da"
+				"bzz-raw://dd074e6cd0e6d6f043ec82c55beade9e9daaaf3c0f1fd1153a278d77da8b2321",
+				"dweb:/ipfs/QmZWmVzdTBj9qvxb42H7nKfUSKuKXHpxGVQMQZRVxJovit"
 			]
 		},
 		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {

@@ -497,6 +497,5 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
         } else {
             proxy.upgradeToAndCall(_newAddress, params);
         }
-
     }
 }

@@ -14,6 +14,425 @@
 						"type": "address"
 					},
 					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_interestRateMode",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint16",
+						"name": "_referralCode",
+						"type": "uint16"
+					}
+				],
+				"name": "borrow",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint16",
+						"name": "_referralCode",
+						"type": "uint16"
+					}
+				],
+				"name": "deposit",
+				"outputs": [],
+				"payable": true,
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_receiver",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "_params",
+						"type": "bytes"
+					}
+				],
+				"name": "flashLoan",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					}
+				],
+				"name": "getInstrumentConfigurationData",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "ltv",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "liquidationThreshold",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "liquidationBonus",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "interestRateStrategyAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "usageAsCollateralEnabled",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "borrowingEnabled",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "stableBorrowRateEnabled",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "isActive",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					}
+				],
+				"name": "getInstrumentData",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "totalLiquidity",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "availableLiquidity",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalBorrowsStable",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalBorrowsVariable",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "liquidityRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "variableBorrowRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "stableBorrowRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "averageStableBorrowRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "utilizationRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "liquidityIndex",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "variableBorrowIndex",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "iTokenAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint40",
+						"name": "lastUpdateTimestamp",
+						"type": "uint40"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getInstruments",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "",
+						"type": "address[]"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "getUserAccountData",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "totalLiquidityETH",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalCollateralETH",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalBorrowsETH",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalFeesETH",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "availableBorrowsETH",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "currentLiquidationThreshold",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "ltv",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "healthFactor",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "getUserInstrumentData",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "currentITokenBalance",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "currentBorrowBalance",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "principalBorrowBalance",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "borrowRateMode",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "borrowRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "liquidityRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "originationFee",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "variableBorrowIndex",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "lastUpdateTimestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "usageAsCollateralEnabled",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_collateral",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_purchaseAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "_receiveIToken",
+						"type": "bool"
+					}
+				],
+				"name": "liquidationCall",
+				"outputs": [],
+				"payable": true,
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "rebalanceStableBorrowRate",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
 						"internalType": "address payable",
 						"name": "_user",
 						"type": "address"
@@ -43,6 +462,66 @@
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address payable",
+						"name": "_onBehalfOf",
+						"type": "address"
+					}
+				],
+				"name": "repay",
+				"outputs": [],
+				"payable": true,
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "_useAsCollateral",
+						"type": "bool"
+					}
+				],
+				"name": "setUserUseInstrumentAsCollateral",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					}
+				],
+				"name": "swapBorrowRateMode",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -66,10 +545,10 @@
 	},
 	"sources": {
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPool.sol": {
-			"keccak256": "0x3fab75bef0889d4f7b8c422beeb460fcbaf190e91bf8f82a5f253e0d4182741d",
+			"keccak256": "0x9293968389a224ec42c1ce4b82cfd01f5c487dc632198472100eae41f1447da8",
 			"urls": [
-				"bzz-raw://4d02d6b053210e3d2dd80623410eb31c487b6fd4087c376c5a581d84ff5ba453",
-				"dweb:/ipfs/QmZfaVmrZe1jmt3jTCX6thmokTv7beGeVGYbMUvZD2ZanM"
+				"bzz-raw://3dc57e90f36750703617a69c0f24407b782a1b5b7ae81d332f20de5c4ec37454",
+				"dweb:/ipfs/QmchfrDX8WCX759DeDRGEmFLQrp3wuw3rGvjQons7AefzE"
 			]
 		}
 	},

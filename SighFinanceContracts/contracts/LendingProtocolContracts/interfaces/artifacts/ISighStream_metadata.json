@@ -1,0 +1,401 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "accure_SIGH_For_BorrowingStream",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "supplier",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "unaccountedBalanceIncrease",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "currentCompoundedBalance",
+						"type": "uint256"
+					}
+				],
+				"name": "accure_SIGH_For_LiquidityStream",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "allowBorrowingSIGHRedirectionTo",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "allowLiquiditySIGHRedirectionTo",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "claimMySIGH",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "getSIGHStreamsAllowances",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "liquiditySIGHStreamRedirectionAllowance",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "BorrowingSIGHStreamRedirectionAllowance",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "getSIGHStreamsIndexes",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "liquiditySIGHStreamIndex",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "borrowingSIGHStreamIndex",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "getSIGHStreamsRedirectedBalances",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "liquiditySIGHStreamRedirectedBalance",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "borrowingSIGHStreamRedirectedBalance",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "getSIGHStreamsRedirectedTo",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "liquiditySIGHStreamRedirectionAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "BorrowingSIGHStreamRedirectionAddress",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "getSighAccured",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "redirectBorrowingSIGHStream",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "redirectBorrowingSIGHStreamOf",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "redirectLiquiditySIGHStream",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "redirectLiquiditySIGHStreamOf",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_balanceToAdd",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_balanceToRemove",
+						"type": "uint256"
+					}
+				],
+				"name": "updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_balanceToAdd",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_balanceToRemove",
+						"type": "uint256"
+					}
+				],
+				"name": "updateRedirectedBalanceOfLiquiditySIGHStreamRedirectionAddress",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "SIGH Finance ",
+			"details": "Implementation of the $SIGH Liquidity & Borrowing Streams for ITokens.",
+			"methods": {},
+			"title": "$SIGH STREAMS"
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/LendingProtocolContracts/interfaces/ISighStream.sol": "ISighStream"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/LendingProtocolContracts/interfaces/ISighStream.sol": {
+			"keccak256": "0xeb32da1c1fec6206491c2b66e50b78d99738aa53d707f718074e8f9f0c0083dd",
+			"urls": [
+				"bzz-raw://f3716dee621f7dcb10340ad0459a44f76d00a95b04ee5a44ccb6772f86d54ea1",
+				"dweb:/ipfs/QmYaZrapityyJ8WJk3kNZBoVVWHiDpM5d6SELT5BaJ9SpG"
+			]
+		}
+	},
+	"version": 1
+}

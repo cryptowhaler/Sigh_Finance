@@ -45,7 +45,7 @@
 		"gasEstimates": null,
 		"methodIdentifiers": {
 			"Instrument_SIGH_StateUpdated(address,uint256,uint256,bool)": "9df816cf",
-			"addInstrument(address,address,uint256)": "52bbe658",
+			"addInstrument(address,address,address,uint256)": "67671989",
 			"checkPriceSnapshots(address,uint256)": "4df859fd",
 			"checkinitializationCounter(address)": "8d9cf864",
 			"getAllInstrumentsSupported()": "831449de",
@@ -126,6 +126,11 @@
 				{
 					"internalType": "address",
 					"name": "_iTokenAddress",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_sighStreamAddress",
 					"type": "address"
 				},
 				{

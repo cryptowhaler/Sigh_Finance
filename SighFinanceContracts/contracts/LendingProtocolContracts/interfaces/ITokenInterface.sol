@@ -7,6 +7,8 @@ pragma solidity ^0.5.0;
  * @author Aave, SIGH Finance (modified by SIGH Finance)
  */
 interface ITokenInterface {
+    
+    function setSighStreamAddress( address _sighStreamAddress )  external  returns (bool);
 
 // #############################
 // #####  ERC20 FUNCTIONS  #####
@@ -54,6 +56,8 @@ interface ITokenInterface {
 // ####################################
 // #####  SIGH RELATED FUNCTIONS  #####
 // ####################################
+
+    function cumulateBalance(address _user) external returns(uint256, uint256, uint256, uint256);
 
     function redirectLiquiditySIGHStream(address _to) external;
     function allowLiquiditySIGHRedirectionTo(address _to) external;

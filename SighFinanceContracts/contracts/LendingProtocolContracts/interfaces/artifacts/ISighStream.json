@@ -1,0 +1,427 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"görli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"deployedBytecode": {
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"gasEstimates": null,
+		"methodIdentifiers": {
+			"accure_SIGH_For_BorrowingStream(address)": "1e77d68b",
+			"accure_SIGH_For_LiquidityStream(address,uint256,uint256)": "5cbf9c75",
+			"allowBorrowingSIGHRedirectionTo(address,address)": "dc89da0a",
+			"allowLiquiditySIGHRedirectionTo(address,address)": "6755329e",
+			"claimMySIGH(address)": "ad0f5fa9",
+			"getSIGHStreamsAllowances(address)": "bf7814cb",
+			"getSIGHStreamsIndexes(address)": "950514b3",
+			"getSIGHStreamsRedirectedBalances(address)": "65b5820b",
+			"getSIGHStreamsRedirectedTo(address)": "8432822a",
+			"getSighAccured(address)": "2eaae3c7",
+			"redirectBorrowingSIGHStream(address,address)": "b71adb20",
+			"redirectBorrowingSIGHStreamOf(address,address,address)": "8c2de3c3",
+			"redirectLiquiditySIGHStream(address,address)": "74087098",
+			"redirectLiquiditySIGHStreamOf(address,address,address)": "bddf3795",
+			"updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(address,uint256,uint256)": "67e6aeed",
+			"updateRedirectedBalanceOfLiquiditySIGHStreamRedirectionAddress(address,uint256,uint256)": "c1da31c7"
+		}
+	},
+	"abi": [
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "user",
+					"type": "address"
+				}
+			],
+			"name": "accure_SIGH_For_BorrowingStream",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "supplier",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "unaccountedBalanceIncrease",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "currentCompoundedBalance",
+					"type": "uint256"
+				}
+			],
+			"name": "accure_SIGH_For_LiquidityStream",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "user",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_to",
+					"type": "address"
+				}
+			],
+			"name": "allowBorrowingSIGHRedirectionTo",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "from",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_to",
+					"type": "address"
+				}
+			],
+			"name": "allowLiquiditySIGHRedirectionTo",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "user",
+					"type": "address"
+				}
+			],
+			"name": "claimMySIGH",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "user",
+					"type": "address"
+				}
+			],
+			"name": "getSIGHStreamsAllowances",
+			"outputs": [
+				{
+					"internalType": "address",
+					"name": "liquiditySIGHStreamRedirectionAllowance",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "BorrowingSIGHStreamRedirectionAllowance",
+					"type": "address"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "user",
+					"type": "address"
+				}
+			],
+			"name": "getSIGHStreamsIndexes",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "liquiditySIGHStreamIndex",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "borrowingSIGHStreamIndex",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "user",
+					"type": "address"
+				}
+			],
+			"name": "getSIGHStreamsRedirectedBalances",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "liquiditySIGHStreamRedirectedBalance",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "borrowingSIGHStreamRedirectedBalance",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "user",
+					"type": "address"
+				}
+			],
+			"name": "getSIGHStreamsRedirectedTo",
+			"outputs": [
+				{
+					"internalType": "address",
+					"name": "liquiditySIGHStreamRedirectionAddress",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "BorrowingSIGHStreamRedirectionAddress",
+					"type": "address"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
+				}
+			],
+			"name": "getSighAccured",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "user",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_to",
+					"type": "address"
+				}
+			],
+			"name": "redirectBorrowingSIGHStream",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "user",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_from",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_to",
+					"type": "address"
+				}
+			],
+			"name": "redirectBorrowingSIGHStreamOf",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "from",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_to",
+					"type": "address"
+				}
+			],
+			"name": "redirectLiquiditySIGHStream",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "user",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_from",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_to",
+					"type": "address"
+				}
+			],
+			"name": "redirectLiquiditySIGHStreamOf",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_user",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_balanceToAdd",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_balanceToRemove",
+					"type": "uint256"
+				}
+			],
+			"name": "updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_user",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_balanceToAdd",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_balanceToRemove",
+					"type": "uint256"
+				}
+			],
+			"name": "updateRedirectedBalanceOfLiquiditySIGHStreamRedirectionAddress",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		}
+	]
+}

@@ -107,6 +107,11 @@ contract IToken is ERC20, ERC20Detailed {
         _;
     }
 
+    modifier onlySighStream {
+        require( msg.sender == address(sighStream), "The caller of this function must be the $SIGH Stream Contract");
+        _;
+    }
+
     /**
      * @dev Used to validate transfers before actually executing them.
      * @param _user address of the user to check
@@ -132,7 +137,7 @@ contract IToken is ERC20, ERC20Detailed {
         underlyingInstrumentAddress = _underlyingAsset;
     }
 
-   updateSighStreamAddress( address _sighStreamAddress ) external {
+   function setSighStreamAddress( address _sighStreamAddress )  external returns (bool) {
        require(msg.sender == address(core),"Only Lending Pool Core can call this function");
         sighStream = ISighStream(_sighStreamAddress);
         return true;
@@ -154,7 +159,7 @@ contract IToken is ERC20, ERC20Detailed {
      */
     function mintOnDeposit(address _account, uint256 _amount) external onlyLendingPool {
         (, uint256 currentCompoundedBalance, uint256 balanceIncrease, uint256 index) = cumulateBalanceInternal(_account);       //calculates new interest generated and mints the ITokens (based on interest)
-        sighStream.accure_SIGH_For_LiquidityStream(_account,balanceIncrease,currentCompoundedBalance);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR DEPOSITOR)
+        sighStream.accureLiquiditySighStream(_account,balanceIncrease,currentCompoundedBalance);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR DEPOSITOR)
 
          //if the user is redirecting his interest / Liquidity $SIGH Stream towards someone else, we update the redirected balance 
          // of the redirection addresses by adding 1. Accrued interest, 2. Amount Deposited
@@ -193,7 +198,7 @@ contract IToken is ERC20, ERC20Detailed {
         require(isTransferAllowed(msg.sender, amountToRedeem), "Transfer cannot be allowed.");       //check that the user is allowed to redeem the amount
 
         pool.redeemUnderlying( underlyingInstrumentAddress, msg.sender, amountToRedeem, currentBalance.sub(amountToRedeem) );   // executes redeem of the underlying asset
-        sighStream.accure_SIGH_For_LiquidityStream(msg.sender,balanceIncrease,currentBalance );                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR REDEEMER)
+        sighStream.accureLiquiditySighStream(msg.sender,balanceIncrease,currentBalance );                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR REDEEMER)
 
         //if the user is redirecting his interest towards someone else,
         //we update the redirected balance of the redirection address by adding the accrued interest, and removing the amount to redeem
@@ -228,7 +233,7 @@ contract IToken is ERC20, ERC20Detailed {
      **/
     function burnOnLiquidation(address _account, uint256 _value) external onlyLendingPool {
         (,uint256 accountBalance,uint256 balanceIncrease,uint256 index) = cumulateBalanceInternal(_account);    //cumulates the balance of the user being liquidated
-        sighStream.accure_SIGH_For_LiquidityStream(_account,balanceIncrease,accountBalance);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR REDEEMER)
+        sighStream.accureLiquiditySighStream(_account,balanceIncrease,accountBalance);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR REDEEMER)
 
         //adds the accrued interest and substracts the burned amount to the redirected balance
         updateRedirectedBalanceOfRedirectionAddressesInternal(_account, balanceIncrease, _value);
@@ -279,8 +284,8 @@ contract IToken is ERC20, ERC20Detailed {
         (, uint256 fromBalance, uint256 fromBalanceIncrease, uint256 fromIndex ) = cumulateBalanceInternal(_from);   //cumulate the balance of the sender
         (, uint256 toBalance, uint256 toBalanceIncrease, uint256 toIndex ) = cumulateBalanceInternal(_to);       //cumulate the balance of the receiver
 
-        sighStream.accure_SIGH_For_LiquidityStream(_from, fromBalanceIncrease, fromBalance);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR From Account)
-        sighStream.accure_SIGH_For_LiquidityStream(_to, toBalanceIncrease, toBalance);                                                            // ADDED BY SIGH FINANCE (ACCURS SIGH FOR To Account)
+        sighStream.accureLiquiditySighStream(_from, fromBalanceIncrease, fromBalance);                                                          // ADDED BY SIGH FINANCE (ACCURS SIGH FOR From Account)
+        sighStream.accureLiquiditySighStream(_to, toBalanceIncrease, toBalance);                                                            // ADDED BY SIGH FINANCE (ACCURS SIGH FOR To Account)
         
         //if the sender is redirecting his interest towards someone else, adds to the redirected balance the accrued interest and removes the amount being transferred
         updateRedirectedBalanceOfRedirectionAddressesInternal(_from, fromBalanceIncrease, _value);
@@ -398,6 +403,10 @@ contract IToken is ERC20, ERC20Detailed {
 // ###  3. balanceIncrease : increase in balance based on interest from both principal and redirected interest streams  #############
 // ###  4. index : updated user Index (gets the value from the core lending pool contract)  #########################################
 // ##################################################################################################################################
+
+    function cumulateBalance(address _user) external onlySighStream returns(uint256, uint256, uint256, uint256) {
+     cumulateBalanceInternal(_user);
+    }
 
     /**
     * @dev accumulates the accrued interest of the user to the principal balance

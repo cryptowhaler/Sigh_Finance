@@ -222,15 +222,6 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         return true;
     }
 
-    event sighStreamAddressUpdated(address instrument,address sighstreamAddress_);
-
-    updateSighStreamAddressForInstrument(address instrument, address sighstreamAddress_ ) external onlyLendingPoolCore returns (bool) {
-        financial_instruments[instrument].sighStreamAddress = sighstreamAddress_;
-        emit sighStreamAddressUpdated(instrument,sighstreamAddress_);
-        return true;
-     }
-
-
     /**
     * @dev removes an instrument - Called by LendingPool Core when an instrument is removed from the Lending Protocol
     * @param _instrument the instrument object

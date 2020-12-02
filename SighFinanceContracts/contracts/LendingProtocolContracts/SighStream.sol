@@ -1,9 +1,11 @@
 pragma solidity ^0.5.0;
 
-import "../Configuration/IGlobalAddressesProvider.sol";
+import "../openzeppelin-upgradeability/VersionedInitializable.sol";
 
+import "../Configuration/IGlobalAddressesProvider.sol";
 import "../SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol";
 import "./interfaces/ILendingPoolCore.sol";
+import "./interfaces/ITokenInterface.sol";
 
 import "./libraries/WadRayMath.sol";
 import "./interfaces/ISighStream.sol";
@@ -14,15 +16,15 @@ import "./interfaces/ISighStream.sol";
  * @dev Implementation of the $SIGH Liquidity & Borrowing Streams for ITokens.
  * @author SIGH Finance 
  */
-contract SighStream is ISighStream {
+contract SighStream is ISighStream, VersionedInitializable {
 
     using WadRayMath for uint256;
     uint private sighInitialIndex = 1e36;        // INDEX (SIGH RELATED)
 
     address public underlyingInstrumentAddress;
-    address public iTokenAddress;
+    ITokenInterface public iToken;
 
-    IGlobalAddressesProvider private addressesProvider;     // Only used in Constructor()
+    IGlobalAddressesProvider private globalAddressesProvider;     // Only used in Constructor()
     ISighDistributionHandler public sighDistributionHandlerContract; // Fetches Instrument Indexes/ Calls Function to transfer accured SIGH
     ILendingPoolCore private core;                                  // Fetches user borrow Balances
 
@@ -79,27 +81,34 @@ contract SighStream is ISighStream {
 
     event SighAccured(address instrument, address user, bool isLiquidityStream, uint recentSIGHAccured  , uint AccuredSighBalance );
 
-    onlyITokenContract {
-        require( msg.sender == iTokenAddress, "The caller of this function must be the associated IToken Contract");
+    modifier onlyITokenContract {
+        require( msg.sender == address(iToken), "The caller of this function must be the associated IToken Contract");
         _;
     }    
+    
 
-
-// ################################################################################################################################################
-// ######  CONSTRUCTOR ############################################################################################################################
+// ####################################################################################################################
+// ####### PROXY RELATED ##############################################################################################
 // ######  1. Sets the underlyingInstrumentAddress, and _iTokenAddress.              ###############################################################
 // ######  2. The GlobalAddressesProvider's address is used to get the LendingPoolCore #######################################################
 // ######     contract address, Sigh Distribution Handler contract address,  and set them.    ###################
-// ################################################################################################################################################
+// ####################################################################################################################
 
-   constructor( address _addressesProvider,    address _underlyingAsset, address _iTokenAddress) public {
-        addressesProvider = IGlobalAddressesProvider(_addressesProvider);
-        core = ILendingPoolCore(addressesProvider.getLendingPoolCore());
-        sighDistributionHandlerContract = ISighDistributionHandler(addressesProvider.getSIGHMechanismHandler());
+    uint256 public constant CONFIGURATOR_REVISION = 0x1;
+
+    function getRevision() internal pure returns (uint256) {
+        return CONFIGURATOR_REVISION;
+    }
+
+    function initialize(IGlobalAddressesProvider _globalAddressesProvider, address _underlyingAsset, address _iTokenAddress) public initializer {
+        globalAddressesProvider = _globalAddressesProvider;
+        core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
+        sighDistributionHandlerContract = ISighDistributionHandler(globalAddressesProvider.getSIGHMechanismHandler());
+        iToken = ITokenInterface(_iTokenAddress) ;
 
         underlyingInstrumentAddress = _underlyingAsset;
-        iTokenAddress = _iTokenAddress;
     }
+
 
 // ###########################################################################################################################################################
 // ###########################################################################################################################################################
@@ -170,7 +179,7 @@ contract SighStream is ISighStream {
         require(_to != currentRedirectionAddress, "Liquidity $SIGH Stream is already redirected to the provided account");
 
         // check 2
-        (,uint256 currentBalance , uint256 balanceIncrease, ) = cumulateBalanceInternal(_from);
+        (,uint256 currentBalance , uint256 balanceIncrease, ) = iToken.cumulateBalance(_from);
         require( balanceOf(_from) > 0, "Liquidity $SIGH Stream stream can only be redirected if there is a valid Liquidity Balance accuring $SIGH for the user");
         
 
@@ -180,8 +189,8 @@ contract SighStream is ISighStream {
         // 2. We substract the redirected balance of the from account from that address
         if (currentRedirectionAddress != address(0)) { 
              updateRedirectedBalanceOfLiquiditySIGHStreamRedirectionAddressesInternal(_from, balanceIncrease, 0 );    
-            (,uint256 redirectionAddressAccountBalance, ,) = cumulateBalanceInternal(currentRedirectionAddress);    //cumulates the balance of the user being liquidated
-            accure_SIGH_For_LiquidityStream(currentRedirectionAddress, redirectionAddressAccountBalance );
+            (,uint256 redirectionAddressAccountBalance, ,) = iToken.cumulateBalance(currentRedirectionAddress);    //cumulates the balance of the user being liquidated
+            accure_SIGH_For_LiquidityStream_Internal(currentRedirectionAddress, redirectionAddressAccountBalance );
             updateRedirectedBalanceOfLiquiditySIGHStreamRedirectionAddressesInternal(_from,0, currentBalance );
         }
 
@@ -200,8 +209,14 @@ contract SighStream is ISighStream {
 
 // ###########################################################################################################################################################
 // ######  ____  Liquidity $SIGH STREAMS : FUNCTIONALITY ____     ##############################################################################################################
-// ######  1. updateRedirectedBalanceOfLiquiditySIGHStreamRedirectionAddress() [INTERNAL] : Addition / Subtraction from the redirected balance of the address to which the user's Liquidity $SIGH stream is redirected      #################################################################
-// ######  2. accure_SIGH_For_LiquidityStream() [INTERNAL] : Accure SIGH from the Liquidity $SIGH Streams     ##########################
+// ######  1. updateRedirectedBalanceOfLiquiditySIGHStreamRedirectionAddress() [EXTERNAL]
+// ######  ---> Addition / Subtraction from the redirected balance of the address to which the user's Liquidity $SIGH stream is redirected      
+// ######  2. accureLiquiditySighStream() [EXTERNAL]  
+// ######  ---> Calls accureLiquiditySighStreamInternal()
+// ######  3. accureLiquiditySighStreamInternal() [EXTERNAL]  
+// ######  ---> Calls accure_SIGH_For_LiquidityStream_Internal() in case SIGH needs to be accured for both the user and the address to which it is redirecting $SIGH
+// ######  4. accure_SIGH_For_LiquidityStream_Internal() [EXTERNAL]  
+// ######  ---> Accures $SIGH for the user
 // ###########################################################################################################################################################
 
     /**
@@ -210,7 +225,11 @@ contract SighStream is ISighStream {
     * @param _balanceToAdd the amount to add to the redirected balance
     * @param _balanceToRemove the amount to remove from the redirected balance
     **/
-    function updateRedirectedBalanceOfLiquiditySIGHStreamRedirectionAddress( address _user, uint256 _balanceToAdd, uint256 _balanceToRemove ) public onlyITokenContract {
+    function updateRedirectedBalanceOfLiquiditySIGHStreamRedirectionAddress( address _user, uint256 _balanceToAdd, uint256 _balanceToRemove ) external onlyITokenContract {
+        updateRedirectedBalanceOfLiquiditySIGHStreamRedirectionAddressesInternal(_user,_balanceToAdd,_balanceToRemove);
+    }
+
+    function updateRedirectedBalanceOfLiquiditySIGHStreamRedirectionAddressesInternal( address _user, uint256 _balanceToAdd, uint256 _balanceToRemove ) internal {
         address redirectionAddress = user_SIGH_States[_user].userLiquiditySIGHStreamRedirectionAddress;
         if(redirectionAddress == address(0)){           //if there isn't any redirection, nothing to be done
             return;
@@ -220,28 +239,32 @@ contract SighStream is ISighStream {
         emit LiquiditySIGHStreamRedirectedBalanceUpdated(underlyingInstrumentAddress, redirectionAddress, _balanceToAdd, _balanceToRemove, user_SIGH_States[redirectionAddress].userLiquiditySIGHStreamRedirectedBalance );
     }
 
+    function accureLiquiditySighStream( address supplier, uint unaccountedBalanceIncrease , uint256 currentCompoundedBalance )  external onlyITokenContract   {
+        accureLiquiditySighStreamInternal(supplier,unaccountedBalanceIncrease,currentCompoundedBalance);
+    }
+
     // $SIGH Accured for the Supplier (depositor/redeemer) and the address to which it is redirecting its stream to
     // --> For the redirected address, we cumulate its interest if it is not redirecting again
     // SIGH Accured by Supplier = { SUM(Redirected balances) + User's Balance (Only if it is also not redirected) } * {Delta Index}
-    function accure_SIGH_For_LiquidityStream( address supplier, uint unaccountedBalanceIncrease , uint256 currentCompoundedBalance )  public onlyITokenContract   {
+    function accureLiquiditySighStreamInternal( address supplier, uint unaccountedBalanceIncrease , uint256 currentCompoundedBalance )  internal  {
         if (user_SIGH_States[supplier].userLiquiditySIGHStreamRedirectionAddress == address(0)) {
-            accure_SIGH_For_LiquidityStreamInternal( supplier,currentCompoundedBalance );        
+            accure_SIGH_For_LiquidityStream_Internal( supplier,currentCompoundedBalance );        
         }
         else {
             address redirectionAddress = user_SIGH_States[supplier].userLiquiditySIGHStreamRedirectionAddress;
             if (user_SIGH_States[redirectionAddress].userLiquiditySIGHStreamRedirectionAddress == address(0) ) {
-                (,uint256 accountBalance, uint256 balanceIncrease, uint256 index) = cumulateBalanceInternal(redirectionAddress);    //cumulates the balance of the user being liquidated
-                accure_SIGH_For_LiquidityStreamInternal(redirectionAddress,accountBalance.add(unaccountedBalanceIncrease) );
+                (,uint256 accountBalance, uint256 balanceIncrease, uint256 index) = iToken.cumulateBalance(redirectionAddress);    //cumulates the balance of the user being liquidated
+                accure_SIGH_For_LiquidityStream_Internal(redirectionAddress,accountBalance.add(unaccountedBalanceIncrease) );
             }
             else {
-                accure_SIGH_For_LiquidityStreamInternal(redirectionAddress,unaccountedBalanceIncrease);
+                accure_SIGH_For_LiquidityStream_Internal(redirectionAddress,unaccountedBalanceIncrease);
             }
-            accure_SIGH_For_LiquidityStreamInternal(supplier,0);
+            accure_SIGH_For_LiquidityStream_Internal(supplier,0);
         }
     }
 
 
-    function accure_SIGH_For_LiquidityStreamInternal( address user, uint256 currentCompoundedBalance ) internal  {
+    function accure_SIGH_For_LiquidityStream_Internal( address user, uint256 currentCompoundedBalance ) internal  {
         uint supplyIndex = sighDistributionHandlerContract.getInstrumentSupplyIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHDistributionHandler Contract
         require(supplyIndex > 0, "SIGH Distribution Handler returned invalid supply Index for the instrument");
 
@@ -390,10 +413,10 @@ contract SighStream is ISighStream {
     // Delta Index = Instrument Index - User Index
     // SIGH Accured by user = { SUM(Redirected balances) + User's Compounded Borrow Balance (Only if it is also not redirected) } * {Delta Index}
     function accure_SIGH_For_BorrowingStream( address user) external onlyITokenContract {
-        accure_SIGH_For_BorrowingStreamInternal(user);
+        accureBorrowingSighStreamInternal(user);
     }
 
-    function accure_SIGH_For_BorrowingStreamInternal( address user) internal  {
+    function accureBorrowingSighStreamInternal( address user) internal  {
         ( uint principalBorrowBalance , uint compoundedBorrowBalance , uint balanceIncrease) = core.getUserBorrowBalances(underlyingInstrumentAddress, user);          // Getting Borrow Balance of the User from LendingPool Core 
         
         // Total Balance = SUM(Redirected balances) + User's Balance (Only if it is not redirected)
@@ -462,8 +485,8 @@ contract SighStream is ISighStream {
 
 
     function claimSighInternal(address user) internal {
-        accure_SIGH_For_LiquidityStream(user, balanceOf(user) );
-        accure_SIGH_For_BorrowingStreamInternal(user);
+        accureLiquiditySighStreamInternal(user, iToken.balanceOf(user) );
+        accureBorrowingSighStreamInternal(user);
         if (AccuredSighBalance[user] > 0) {
             AccuredSighBalance[user] = sighDistributionHandlerContract.transferSighTotheUser( underlyingInstrumentAddress, user, AccuredSighBalance[user] ); // Pending Amount Not Transferred is returned
         }

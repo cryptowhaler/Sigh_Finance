@@ -77,6 +77,7 @@
 			"redirectInterestStreamOf(address,address)": "325a9b13",
 			"redirectLiquiditySIGHStream(address)": "dafc3fe9",
 			"redirectLiquiditySIGHStreamOf(address,address)": "8c639909",
+			"setSighStreamAddress(address)": "84fba81a",
 			"symbol()": "95d89b41",
 			"totalSupply()": "18160ddd",
 			"transfer(address,uint256)": "a9059cbb",
@@ -678,6 +679,27 @@
 			],
 			"name": "redirectLiquiditySIGHStreamOf",
 			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_sighStreamAddress",
+					"type": "address"
+				}
+			],
+			"name": "setSighStreamAddress",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
 			"payable": false,
 			"stateMutability": "nonpayable",
 			"type": "function"
