@@ -57,12 +57,16 @@ export class InstrumentAdded__Params {
     return this._event.parameters[1].value.toAddress();
   }
 
+  get sighStreamAddress(): Address {
+    return this._event.parameters[2].value.toAddress();
+  }
+
   get decimals(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
+    return this._event.parameters[3].value.toBigInt();
   }
 
   get blockNumber(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
+    return this._event.parameters[4].value.toBigInt();
   }
 }
 
@@ -88,28 +92,58 @@ export class InstrumentRemoved__Params {
   }
 }
 
-export class InstrumentSIGHed extends ethereum.Event {
-  get params(): InstrumentSIGHed__Params {
-    return new InstrumentSIGHed__Params(this);
+export class InstrumentSIGHStateUpdated extends ethereum.Event {
+  get params(): InstrumentSIGHStateUpdated__Params {
+    return new InstrumentSIGHStateUpdated__Params(this);
   }
 }
 
-export class InstrumentSIGHed__Params {
-  _event: InstrumentSIGHed;
+export class InstrumentSIGHStateUpdated__Params {
+  _event: InstrumentSIGHStateUpdated;
 
-  constructor(event: InstrumentSIGHed) {
+  constructor(event: InstrumentSIGHStateUpdated) {
     this._event = event;
   }
 
-  get instrumentAddress_(): Address {
+  get instrument_(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get isSighed(): boolean {
+  get isSIGHMechanismActivated(): boolean {
     return this._event.parameters[1].value.toBoolean();
   }
 
-  get blockNumber(): BigInt {
+  get maxVolatilityLimitSuppliers(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get maxVolatilityLimitBorrowers(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+}
+
+export class InstrumentVolatilityCalculated extends ethereum.Event {
+  get params(): InstrumentVolatilityCalculated__Params {
+    return new InstrumentVolatilityCalculated__Params(this);
+  }
+}
+
+export class InstrumentVolatilityCalculated__Params {
+  _event: InstrumentVolatilityCalculated;
+
+  constructor(event: InstrumentVolatilityCalculated) {
+    this._event = event;
+  }
+
+  get _Instrument(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get _total24HrVolatility(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get _24HrVolatilityLimitAmount(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 }
@@ -131,28 +165,20 @@ export class MaxSIGHSpeedCalculated__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get current_Sigh_Price(): BigInt {
+  get _SIGHSpeedUsed(): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get totalVolatilityPerBlockAverage(): BigInt {
+  get _totalVolatilityLimitPerBlock(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get deltaBlocks(): BigInt {
+  get _maxVolatilityToAddressPerBlock(): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
 
-  get maxVolatilityToAddress(): BigInt {
+  get _max_SIGHDistributionLimitDecimalsAdjusted(): BigInt {
     return this._event.parameters[4].value.toBigInt();
-  }
-
-  get max_valueDistributionLimitDecimalsAdjusted(): BigInt {
-    return this._event.parameters[5].value.toBigInt();
-  }
-
-  get sigh_speed_used(): BigInt {
-    return this._event.parameters[6].value.toBigInt();
   }
 }
 
@@ -188,10 +214,6 @@ export class PriceSnapped__Params {
   get currentClock(): BigInt {
     return this._event.parameters[4].value.toBigInt();
   }
-
-  get blockNumber(): BigInt {
-    return this._event.parameters[5].value.toBigInt();
-  }
 }
 
 export class SIGHBorrowIndexUpdated extends ethereum.Event {
@@ -211,20 +233,24 @@ export class SIGHBorrowIndexUpdated__Params {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get sighAccured(): BigInt {
+  get totalCompoundedStableBorrows(): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get ratioMantissa(): BigInt {
+  get totalCompoundedVariableBorrows(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get newIndexMantissa(): BigInt {
+  get sighAccured(): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
 
-  get blockNum(): BigInt {
+  get ratioMantissa(): BigInt {
     return this._event.parameters[4].value.toBigInt();
+  }
+
+  get newIndexMantissa(): BigInt {
+    return this._event.parameters[5].value.toBigInt();
   }
 }
 
@@ -271,20 +297,24 @@ export class SIGHSupplyIndexUpdated__Params {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get sighAccured(): BigInt {
+  get totalCompoundedSupply(): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get ratioMantissa(): BigInt {
+  get sighAccured(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get newIndexMantissa(): BigInt {
+  get ratioMantissa(): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
 
-  get blockNum(): BigInt {
+  get newIndexMantissa(): BigInt {
     return this._event.parameters[4].value.toBigInt();
+  }
+
+  get blockNum(): BigInt {
+    return this._event.parameters[5].value.toBigInt();
   }
 }
 
@@ -305,12 +335,8 @@ export class SpeedUpperCheckSwitched__Params {
     return this._event.parameters[0].value.toBoolean();
   }
 
-  get upperCheckProfitPercentage(): BigInt {
+  get maxVolatilityProtocolLimit(): BigInt {
     return this._event.parameters[1].value.toBigInt();
-  }
-
-  get blockNumber(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
   }
 }
 
@@ -387,32 +413,24 @@ export class refreshingSighSpeeds__Params {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get maxSpeed(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-
-  get side(): string {
-    return this._event.parameters[2].value.toString();
+  get side(): i32 {
+    return this._event.parameters[1].value.toI32();
   }
 
   get supplierSpeed(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
+    return this._event.parameters[2].value.toBigInt();
   }
 
   get borrowerSpeed(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+
+  get _percentTotalVolatilityLimitAmount(): BigInt {
     return this._event.parameters[4].value.toBigInt();
   }
 
-  get _24HrVolatility(): BigInt {
+  get _percentTotalVolatility(): BigInt {
     return this._event.parameters[5].value.toBigInt();
-  }
-
-  get percentTotalVolatility(): BigInt {
-    return this._event.parameters[6].value.toBigInt();
-  }
-
-  get totalLosses(): BigInt {
-    return this._event.parameters[7].value.toBigInt();
   }
 }
 
@@ -452,38 +470,80 @@ export class SIGHDistributionHandler__getInstrumentDataResult {
   }
 }
 
-export class SIGHDistributionHandler__getInstrumentSighMechansimStatesResult {
+export class SIGHDistributionHandler__getInstrumentSighLimitsResult {
   value0: BigInt;
   value1: BigInt;
-  value2: BigInt;
-  value3: BigInt;
-  value4: string;
-  value5: BigInt;
 
-  constructor(
-    value0: BigInt,
-    value1: BigInt,
-    value2: BigInt,
-    value3: BigInt,
-    value4: string,
-    value5: BigInt
-  ) {
+  constructor(value0: BigInt, value1: BigInt) {
     this.value0 = value0;
     this.value1 = value1;
-    this.value2 = value2;
-    this.value3 = value3;
-    this.value4 = value4;
-    this.value5 = value5;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
     map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    return map;
+  }
+}
+
+export class SIGHDistributionHandler__getInstrumentSpeedsResult {
+  value0: i32;
+  value1: BigInt;
+  value2: BigInt;
+  value3: BigInt;
+
+  constructor(value0: i32, value1: BigInt, value2: BigInt, value3: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set(
+      "value0",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value0))
+    );
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
     map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
     map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
-    map.set("value4", ethereum.Value.fromString(this.value4));
-    map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
+    return map;
+  }
+}
+
+export class SIGHDistributionHandler__getInstrumentVolatilityStatesResult {
+  value0: i32;
+  value1: BigInt;
+  value2: BigInt;
+  value3: BigInt;
+  value4: BigInt;
+
+  constructor(
+    value0: i32,
+    value1: BigInt,
+    value2: BigInt,
+    value3: BigInt,
+    value4: BigInt
+  ) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
+    this.value4 = value4;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set(
+      "value0",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value0))
+    );
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
+    map.set("value4", ethereum.Value.fromUnsignedBigInt(this.value4));
     return map;
   }
 }
@@ -493,17 +553,77 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
     return new SIGHDistributionHandler("SIGHDistributionHandler", address);
   }
 
+  Instrument_SIGH_StateUpdated(
+    instrument_: Address,
+    _maxVolatilityLimitSuppliers: BigInt,
+    _maxVolatilityLimitBorrowers: BigInt,
+    _isSIGHMechanismActivated: boolean
+  ): boolean {
+    let result = super.call(
+      "Instrument_SIGH_StateUpdated",
+      "Instrument_SIGH_StateUpdated(address,uint256,uint256,bool):(bool)",
+      [
+        ethereum.Value.fromAddress(instrument_),
+        ethereum.Value.fromUnsignedBigInt(_maxVolatilityLimitSuppliers),
+        ethereum.Value.fromUnsignedBigInt(_maxVolatilityLimitBorrowers),
+        ethereum.Value.fromBoolean(_isSIGHMechanismActivated)
+      ]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_Instrument_SIGH_StateUpdated(
+    instrument_: Address,
+    _maxVolatilityLimitSuppliers: BigInt,
+    _maxVolatilityLimitBorrowers: BigInt,
+    _isSIGHMechanismActivated: boolean
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "Instrument_SIGH_StateUpdated",
+      "Instrument_SIGH_StateUpdated(address,uint256,uint256,bool):(bool)",
+      [
+        ethereum.Value.fromAddress(instrument_),
+        ethereum.Value.fromUnsignedBigInt(_maxVolatilityLimitSuppliers),
+        ethereum.Value.fromUnsignedBigInt(_maxVolatilityLimitBorrowers),
+        ethereum.Value.fromBoolean(_isSIGHMechanismActivated)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  Sigh_Address(): Address {
+    let result = super.call("Sigh_Address", "Sigh_Address():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_Sigh_Address(): ethereum.CallResult<Address> {
+    let result = super.tryCall("Sigh_Address", "Sigh_Address():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   addInstrument(
     _instrument: Address,
     _iTokenAddress: Address,
+    _sighStreamAddress: Address,
     _decimals: BigInt
   ): boolean {
     let result = super.call(
       "addInstrument",
-      "addInstrument(address,address,uint256):(bool)",
+      "addInstrument(address,address,address,uint256):(bool)",
       [
         ethereum.Value.fromAddress(_instrument),
         ethereum.Value.fromAddress(_iTokenAddress),
+        ethereum.Value.fromAddress(_sighStreamAddress),
         ethereum.Value.fromUnsignedBigInt(_decimals)
       ]
     );
@@ -514,318 +634,17 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
   try_addInstrument(
     _instrument: Address,
     _iTokenAddress: Address,
+    _sighStreamAddress: Address,
     _decimals: BigInt
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "addInstrument",
-      "addInstrument(address,address,uint256):(bool)",
+      "addInstrument(address,address,address,uint256):(bool)",
       [
         ethereum.Value.fromAddress(_instrument),
         ethereum.Value.fromAddress(_iTokenAddress),
+        ethereum.Value.fromAddress(_sighStreamAddress),
         ethereum.Value.fromUnsignedBigInt(_decimals)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  Instrument_SIGHed(instrument_: Address): boolean {
-    let result = super.call(
-      "Instrument_SIGHed",
-      "Instrument_SIGHed(address):(bool)",
-      [ethereum.Value.fromAddress(instrument_)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_Instrument_SIGHed(instrument_: Address): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "Instrument_SIGHed",
-      "Instrument_SIGHed(address):(bool)",
-      [ethereum.Value.fromAddress(instrument_)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  Instrument_UNSIGHed(instrument_: Address): boolean {
-    let result = super.call(
-      "Instrument_UNSIGHed",
-      "Instrument_UNSIGHed(address):(bool)",
-      [ethereum.Value.fromAddress(instrument_)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_Instrument_UNSIGHed(instrument_: Address): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "Instrument_UNSIGHed",
-      "Instrument_UNSIGHed(address):(bool)",
-      [ethereum.Value.fromAddress(instrument_)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  refreshSIGHSpeeds(): boolean {
-    let result = super.call(
-      "refreshSIGHSpeeds",
-      "refreshSIGHSpeeds():(bool)",
-      []
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_refreshSIGHSpeeds(): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "refreshSIGHSpeeds",
-      "refreshSIGHSpeeds():(bool)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  removeInstrument(_instrument: Address): boolean {
-    let result = super.call(
-      "removeInstrument",
-      "removeInstrument(address):(bool)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_removeInstrument(_instrument: Address): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "removeInstrument",
-      "removeInstrument(address):(bool)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  SpeedUpperCheckSwitch(
-    isActivated: boolean,
-    profitPercentage: BigInt
-  ): boolean {
-    let result = super.call(
-      "SpeedUpperCheckSwitch",
-      "SpeedUpperCheckSwitch(bool,uint256):(bool)",
-      [
-        ethereum.Value.fromBoolean(isActivated),
-        ethereum.Value.fromUnsignedBigInt(profitPercentage)
-      ]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_SpeedUpperCheckSwitch(
-    isActivated: boolean,
-    profitPercentage: BigInt
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "SpeedUpperCheckSwitch",
-      "SpeedUpperCheckSwitch(bool,uint256):(bool)",
-      [
-        ethereum.Value.fromBoolean(isActivated),
-        ethereum.Value.fromUnsignedBigInt(profitPercentage)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  transferSighTotheUser(
-    instrument: Address,
-    user: Address,
-    sighAccuredTo: Address,
-    sigh_Amount: BigInt
-  ): BigInt {
-    let result = super.call(
-      "transferSighTotheUser",
-      "transferSighTotheUser(address,address,address,uint256):(uint256)",
-      [
-        ethereum.Value.fromAddress(instrument),
-        ethereum.Value.fromAddress(user),
-        ethereum.Value.fromAddress(sighAccuredTo),
-        ethereum.Value.fromUnsignedBigInt(sigh_Amount)
-      ]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_transferSighTotheUser(
-    instrument: Address,
-    user: Address,
-    sighAccuredTo: Address,
-    sigh_Amount: BigInt
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "transferSighTotheUser",
-      "transferSighTotheUser(address,address,address,uint256):(uint256)",
-      [
-        ethereum.Value.fromAddress(instrument),
-        ethereum.Value.fromAddress(user),
-        ethereum.Value.fromAddress(sighAccuredTo),
-        ethereum.Value.fromUnsignedBigInt(sigh_Amount)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  updateDeltaBlocksForSpeedRefresh(deltaBlocksLimit: BigInt): boolean {
-    let result = super.call(
-      "updateDeltaBlocksForSpeedRefresh",
-      "updateDeltaBlocksForSpeedRefresh(uint256):(bool)",
-      [ethereum.Value.fromUnsignedBigInt(deltaBlocksLimit)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_updateDeltaBlocksForSpeedRefresh(
-    deltaBlocksLimit: BigInt
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "updateDeltaBlocksForSpeedRefresh",
-      "updateDeltaBlocksForSpeedRefresh(uint256):(bool)",
-      [ethereum.Value.fromUnsignedBigInt(deltaBlocksLimit)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  updateSIGHBorrowIndex(currentInstrument: Address): boolean {
-    let result = super.call(
-      "updateSIGHBorrowIndex",
-      "updateSIGHBorrowIndex(address):(bool)",
-      [ethereum.Value.fromAddress(currentInstrument)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_updateSIGHBorrowIndex(
-    currentInstrument: Address
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "updateSIGHBorrowIndex",
-      "updateSIGHBorrowIndex(address):(bool)",
-      [ethereum.Value.fromAddress(currentInstrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  updateSIGHSpeed(SIGHSpeed_: BigInt): boolean {
-    let result = super.call(
-      "updateSIGHSpeed",
-      "updateSIGHSpeed(uint256):(bool)",
-      [ethereum.Value.fromUnsignedBigInt(SIGHSpeed_)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_updateSIGHSpeed(SIGHSpeed_: BigInt): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "updateSIGHSpeed",
-      "updateSIGHSpeed(uint256):(bool)",
-      [ethereum.Value.fromUnsignedBigInt(SIGHSpeed_)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  updateSIGHSupplyIndex(currentInstrument: Address): boolean {
-    let result = super.call(
-      "updateSIGHSupplyIndex",
-      "updateSIGHSupplyIndex(address):(bool)",
-      [ethereum.Value.fromAddress(currentInstrument)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_updateSIGHSupplyIndex(
-    currentInstrument: Address
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "updateSIGHSupplyIndex",
-      "updateSIGHSupplyIndex(address):(bool)",
-      [ethereum.Value.fromAddress(currentInstrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  updateStakingSpeedForAnInstrument(
-    instrument_: Address,
-    newStakingSpeed: BigInt
-  ): boolean {
-    let result = super.call(
-      "updateStakingSpeedForAnInstrument",
-      "updateStakingSpeedForAnInstrument(address,uint256):(bool)",
-      [
-        ethereum.Value.fromAddress(instrument_),
-        ethereum.Value.fromUnsignedBigInt(newStakingSpeed)
-      ]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_updateStakingSpeedForAnInstrument(
-    instrument_: Address,
-    newStakingSpeed: BigInt
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "updateStakingSpeedForAnInstrument",
-      "updateStakingSpeedForAnInstrument(address,uint256):(bool)",
-      [
-        ethereum.Value.fromAddress(instrument_),
-        ethereum.Value.fromUnsignedBigInt(newStakingSpeed)
       ]
     );
     if (result.reverted) {
@@ -858,31 +677,6 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  checkinitializationCounter(instrument_: Address): BigInt {
-    let result = super.call(
-      "checkinitializationCounter",
-      "checkinitializationCounter(address):(uint32)",
-      [ethereum.Value.fromAddress(instrument_)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_checkinitializationCounter(
-    instrument_: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "checkinitializationCounter",
-      "checkinitializationCounter(address):(uint32)",
-      [ethereum.Value.fromAddress(instrument_)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   checkPriceSnapshots(instrument_: Address, clock: BigInt): BigInt {
     let result = super.call(
       "checkPriceSnapshots",
@@ -907,6 +701,31 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
         ethereum.Value.fromAddress(instrument_),
         ethereum.Value.fromUnsignedBigInt(clock)
       ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  checkinitializationCounter(instrument_: Address): BigInt {
+    let result = super.call(
+      "checkinitializationCounter",
+      "checkinitializationCounter(address):(uint32)",
+      [ethereum.Value.fromAddress(instrument_)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_checkinitializationCounter(
+    instrument_: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "checkinitializationCounter",
+      "checkinitializationCounter(address):(uint32)",
+      [ethereum.Value.fromAddress(instrument_)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1119,33 +938,29 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
     );
   }
 
-  getInstrumentSighMechansimStates(
+  getInstrumentSighLimits(
     instrument: Address
-  ): SIGHDistributionHandler__getInstrumentSighMechansimStatesResult {
+  ): SIGHDistributionHandler__getInstrumentSighLimitsResult {
     let result = super.call(
-      "getInstrumentSighMechansimStates",
-      "getInstrumentSighMechansimStates(address):(uint256,uint256,uint256,uint256,string,uint256)",
+      "getInstrumentSighLimits",
+      "getInstrumentSighLimits(address):(uint256,uint256)",
       [ethereum.Value.fromAddress(instrument)]
     );
 
-    return new SIGHDistributionHandler__getInstrumentSighMechansimStatesResult(
+    return new SIGHDistributionHandler__getInstrumentSighLimitsResult(
       result[0].toBigInt(),
-      result[1].toBigInt(),
-      result[2].toBigInt(),
-      result[3].toBigInt(),
-      result[4].toString(),
-      result[5].toBigInt()
+      result[1].toBigInt()
     );
   }
 
-  try_getInstrumentSighMechansimStates(
+  try_getInstrumentSighLimits(
     instrument: Address
   ): ethereum.CallResult<
-    SIGHDistributionHandler__getInstrumentSighMechansimStatesResult
+    SIGHDistributionHandler__getInstrumentSighLimitsResult
   > {
     let result = super.tryCall(
-      "getInstrumentSighMechansimStates",
-      "getInstrumentSighMechansimStates(address):(uint256,uint256,uint256,uint256,string,uint256)",
+      "getInstrumentSighLimits",
+      "getInstrumentSighLimits(address):(uint256,uint256)",
       [ethereum.Value.fromAddress(instrument)]
     );
     if (result.reverted) {
@@ -1153,13 +968,48 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new SIGHDistributionHandler__getInstrumentSighMechansimStatesResult(
+      new SIGHDistributionHandler__getInstrumentSighLimitsResult(
         value[0].toBigInt(),
+        value[1].toBigInt()
+      )
+    );
+  }
+
+  getInstrumentSpeeds(
+    instrument: Address
+  ): SIGHDistributionHandler__getInstrumentSpeedsResult {
+    let result = super.call(
+      "getInstrumentSpeeds",
+      "getInstrumentSpeeds(address):(uint8,uint256,uint256,uint256)",
+      [ethereum.Value.fromAddress(instrument)]
+    );
+
+    return new SIGHDistributionHandler__getInstrumentSpeedsResult(
+      result[0].toI32(),
+      result[1].toBigInt(),
+      result[2].toBigInt(),
+      result[3].toBigInt()
+    );
+  }
+
+  try_getInstrumentSpeeds(
+    instrument: Address
+  ): ethereum.CallResult<SIGHDistributionHandler__getInstrumentSpeedsResult> {
+    let result = super.tryCall(
+      "getInstrumentSpeeds",
+      "getInstrumentSpeeds(address):(uint8,uint256,uint256,uint256)",
+      [ethereum.Value.fromAddress(instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new SIGHDistributionHandler__getInstrumentSpeedsResult(
+        value[0].toI32(),
         value[1].toBigInt(),
         value[2].toBigInt(),
-        value[3].toBigInt(),
-        value[4].toString(),
-        value[5].toBigInt()
+        value[3].toBigInt()
       )
     );
   }
@@ -1181,6 +1031,72 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
       "getInstrumentSupplyIndex",
       "getInstrumentSupplyIndex(address):(uint256)",
       [ethereum.Value.fromAddress(instrument_)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentVolatilityStates(
+    instrument: Address
+  ): SIGHDistributionHandler__getInstrumentVolatilityStatesResult {
+    let result = super.call(
+      "getInstrumentVolatilityStates",
+      "getInstrumentVolatilityStates(address):(uint8,uint256,uint256,uint256,uint256)",
+      [ethereum.Value.fromAddress(instrument)]
+    );
+
+    return new SIGHDistributionHandler__getInstrumentVolatilityStatesResult(
+      result[0].toI32(),
+      result[1].toBigInt(),
+      result[2].toBigInt(),
+      result[3].toBigInt(),
+      result[4].toBigInt()
+    );
+  }
+
+  try_getInstrumentVolatilityStates(
+    instrument: Address
+  ): ethereum.CallResult<
+    SIGHDistributionHandler__getInstrumentVolatilityStatesResult
+  > {
+    let result = super.tryCall(
+      "getInstrumentVolatilityStates",
+      "getInstrumentVolatilityStates(address):(uint8,uint256,uint256,uint256,uint256)",
+      [ethereum.Value.fromAddress(instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new SIGHDistributionHandler__getInstrumentVolatilityStatesResult(
+        value[0].toI32(),
+        value[1].toBigInt(),
+        value[2].toBigInt(),
+        value[3].toBigInt(),
+        value[4].toBigInt()
+      )
+    );
+  }
+
+  getMaxVolatilityProtocolLimit(): BigInt {
+    let result = super.call(
+      "getMaxVolatilityProtocolLimit",
+      "getMaxVolatilityProtocolLimit():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getMaxVolatilityProtocolLimit(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getMaxVolatilityProtocolLimit",
+      "getMaxVolatilityProtocolLimit():(uint256)",
+      []
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1246,20 +1162,20 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getupperCheckProfitPercentage(): BigInt {
+  getSIGHSpeedUsed(): BigInt {
     let result = super.call(
-      "getupperCheckProfitPercentage",
-      "getupperCheckProfitPercentage():(uint256)",
+      "getSIGHSpeedUsed",
+      "getSIGHSpeedUsed():(uint256)",
       []
     );
 
     return result[0].toBigInt();
   }
 
-  try_getupperCheckProfitPercentage(): ethereum.CallResult<BigInt> {
+  try_getSIGHSpeedUsed(): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getupperCheckProfitPercentage",
-      "getupperCheckProfitPercentage():(uint256)",
+      "getSIGHSpeedUsed",
+      "getSIGHSpeedUsed():(uint256)",
       []
     );
     if (result.reverted) {
@@ -1332,19 +1248,50 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  Sigh_Address(): Address {
-    let result = super.call("Sigh_Address", "Sigh_Address():(address)", []);
+  refreshSIGHSpeeds(): boolean {
+    let result = super.call(
+      "refreshSIGHSpeeds",
+      "refreshSIGHSpeeds():(bool)",
+      []
+    );
 
-    return result[0].toAddress();
+    return result[0].toBoolean();
   }
 
-  try_Sigh_Address(): ethereum.CallResult<Address> {
-    let result = super.tryCall("Sigh_Address", "Sigh_Address():(address)", []);
+  try_refreshSIGHSpeeds(): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "refreshSIGHSpeeds",
+      "refreshSIGHSpeeds():(bool)",
+      []
+    );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  removeInstrument(_instrument: Address): boolean {
+    let result = super.call(
+      "removeInstrument",
+      "removeInstrument(address):(bool)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_removeInstrument(_instrument: Address): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "removeInstrument",
+      "removeInstrument(address):(bool)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   totalInstrumentsSupported(): BigInt {
@@ -1368,6 +1315,259 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  transferSighTotheUser(
+    instrument: Address,
+    user: Address,
+    sigh_Amount: BigInt
+  ): BigInt {
+    let result = super.call(
+      "transferSighTotheUser",
+      "transferSighTotheUser(address,address,uint256):(uint256)",
+      [
+        ethereum.Value.fromAddress(instrument),
+        ethereum.Value.fromAddress(user),
+        ethereum.Value.fromUnsignedBigInt(sigh_Amount)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_transferSighTotheUser(
+    instrument: Address,
+    user: Address,
+    sigh_Amount: BigInt
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "transferSighTotheUser",
+      "transferSighTotheUser(address,address,uint256):(uint256)",
+      [
+        ethereum.Value.fromAddress(instrument),
+        ethereum.Value.fromAddress(user),
+        ethereum.Value.fromUnsignedBigInt(sigh_Amount)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  updateDeltaBlocksForSpeedRefresh(deltaBlocksLimit: BigInt): boolean {
+    let result = super.call(
+      "updateDeltaBlocksForSpeedRefresh",
+      "updateDeltaBlocksForSpeedRefresh(uint256):(bool)",
+      [ethereum.Value.fromUnsignedBigInt(deltaBlocksLimit)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_updateDeltaBlocksForSpeedRefresh(
+    deltaBlocksLimit: BigInt
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "updateDeltaBlocksForSpeedRefresh",
+      "updateDeltaBlocksForSpeedRefresh(uint256):(bool)",
+      [ethereum.Value.fromUnsignedBigInt(deltaBlocksLimit)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  updateSIGHBorrowIndex(currentInstrument: Address): boolean {
+    let result = super.call(
+      "updateSIGHBorrowIndex",
+      "updateSIGHBorrowIndex(address):(bool)",
+      [ethereum.Value.fromAddress(currentInstrument)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_updateSIGHBorrowIndex(
+    currentInstrument: Address
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "updateSIGHBorrowIndex",
+      "updateSIGHBorrowIndex(address):(bool)",
+      [ethereum.Value.fromAddress(currentInstrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  updateSIGHSpeed(SIGHSpeed_: BigInt): boolean {
+    let result = super.call(
+      "updateSIGHSpeed",
+      "updateSIGHSpeed(uint256):(bool)",
+      [ethereum.Value.fromUnsignedBigInt(SIGHSpeed_)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_updateSIGHSpeed(SIGHSpeed_: BigInt): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "updateSIGHSpeed",
+      "updateSIGHSpeed(uint256):(bool)",
+      [ethereum.Value.fromUnsignedBigInt(SIGHSpeed_)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  updateSIGHSpeedUpperCheck(
+    isSpeedUpperCheckAllowed_: boolean,
+    maxVolatilityProtocolLimit_: BigInt
+  ): boolean {
+    let result = super.call(
+      "updateSIGHSpeedUpperCheck",
+      "updateSIGHSpeedUpperCheck(bool,uint256):(bool)",
+      [
+        ethereum.Value.fromBoolean(isSpeedUpperCheckAllowed_),
+        ethereum.Value.fromUnsignedBigInt(maxVolatilityProtocolLimit_)
+      ]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_updateSIGHSpeedUpperCheck(
+    isSpeedUpperCheckAllowed_: boolean,
+    maxVolatilityProtocolLimit_: BigInt
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "updateSIGHSpeedUpperCheck",
+      "updateSIGHSpeedUpperCheck(bool,uint256):(bool)",
+      [
+        ethereum.Value.fromBoolean(isSpeedUpperCheckAllowed_),
+        ethereum.Value.fromUnsignedBigInt(maxVolatilityProtocolLimit_)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  updateSIGHSupplyIndex(currentInstrument: Address): boolean {
+    let result = super.call(
+      "updateSIGHSupplyIndex",
+      "updateSIGHSupplyIndex(address):(bool)",
+      [ethereum.Value.fromAddress(currentInstrument)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_updateSIGHSupplyIndex(
+    currentInstrument: Address
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "updateSIGHSupplyIndex",
+      "updateSIGHSupplyIndex(address):(bool)",
+      [ethereum.Value.fromAddress(currentInstrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  updateStakingSpeedForAnInstrument(
+    instrument_: Address,
+    newStakingSpeed: BigInt
+  ): boolean {
+    let result = super.call(
+      "updateStakingSpeedForAnInstrument",
+      "updateStakingSpeedForAnInstrument(address,uint256):(bool)",
+      [
+        ethereum.Value.fromAddress(instrument_),
+        ethereum.Value.fromUnsignedBigInt(newStakingSpeed)
+      ]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_updateStakingSpeedForAnInstrument(
+    instrument_: Address,
+    newStakingSpeed: BigInt
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "updateStakingSpeedForAnInstrument",
+      "updateStakingSpeedForAnInstrument(address,uint256):(bool)",
+      [
+        ethereum.Value.fromAddress(instrument_),
+        ethereum.Value.fromUnsignedBigInt(newStakingSpeed)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+}
+
+export class Instrument_SIGH_StateUpdatedCall extends ethereum.Call {
+  get inputs(): Instrument_SIGH_StateUpdatedCall__Inputs {
+    return new Instrument_SIGH_StateUpdatedCall__Inputs(this);
+  }
+
+  get outputs(): Instrument_SIGH_StateUpdatedCall__Outputs {
+    return new Instrument_SIGH_StateUpdatedCall__Outputs(this);
+  }
+}
+
+export class Instrument_SIGH_StateUpdatedCall__Inputs {
+  _call: Instrument_SIGH_StateUpdatedCall;
+
+  constructor(call: Instrument_SIGH_StateUpdatedCall) {
+    this._call = call;
+  }
+
+  get instrument_(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _maxVolatilityLimitSuppliers(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get _maxVolatilityLimitBorrowers(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get _isSIGHMechanismActivated(): boolean {
+    return this._call.inputValues[3].value.toBoolean();
+  }
+}
+
+export class Instrument_SIGH_StateUpdatedCall__Outputs {
+  _call: Instrument_SIGH_StateUpdatedCall;
+
+  constructor(call: Instrument_SIGH_StateUpdatedCall) {
+    this._call = call;
+  }
+
+  get value0(): boolean {
+    return this._call.outputValues[0].value.toBoolean();
   }
 }
 
@@ -1396,8 +1596,12 @@ export class AddInstrumentCall__Inputs {
     return this._call.inputValues[1].value.toAddress();
   }
 
+  get _sighStreamAddress(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+
   get _decimals(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
+    return this._call.inputValues[3].value.toBigInt();
   }
 }
 
@@ -1440,74 +1644,6 @@ export class InitializeCall__Outputs {
 
   constructor(call: InitializeCall) {
     this._call = call;
-  }
-}
-
-export class Instrument_SIGHedCall extends ethereum.Call {
-  get inputs(): Instrument_SIGHedCall__Inputs {
-    return new Instrument_SIGHedCall__Inputs(this);
-  }
-
-  get outputs(): Instrument_SIGHedCall__Outputs {
-    return new Instrument_SIGHedCall__Outputs(this);
-  }
-}
-
-export class Instrument_SIGHedCall__Inputs {
-  _call: Instrument_SIGHedCall;
-
-  constructor(call: Instrument_SIGHedCall) {
-    this._call = call;
-  }
-
-  get instrument_(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class Instrument_SIGHedCall__Outputs {
-  _call: Instrument_SIGHedCall;
-
-  constructor(call: Instrument_SIGHedCall) {
-    this._call = call;
-  }
-
-  get value0(): boolean {
-    return this._call.outputValues[0].value.toBoolean();
-  }
-}
-
-export class Instrument_UNSIGHedCall extends ethereum.Call {
-  get inputs(): Instrument_UNSIGHedCall__Inputs {
-    return new Instrument_UNSIGHedCall__Inputs(this);
-  }
-
-  get outputs(): Instrument_UNSIGHedCall__Outputs {
-    return new Instrument_UNSIGHedCall__Outputs(this);
-  }
-}
-
-export class Instrument_UNSIGHedCall__Inputs {
-  _call: Instrument_UNSIGHedCall;
-
-  constructor(call: Instrument_UNSIGHedCall) {
-    this._call = call;
-  }
-
-  get instrument_(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class Instrument_UNSIGHedCall__Outputs {
-  _call: Instrument_UNSIGHedCall;
-
-  constructor(call: Instrument_UNSIGHedCall) {
-    this._call = call;
-  }
-
-  get value0(): boolean {
-    return this._call.outputValues[0].value.toBoolean();
   }
 }
 
@@ -1601,44 +1737,6 @@ export class RemoveInstrumentCall__Outputs {
   }
 }
 
-export class SpeedUpperCheckSwitchCall extends ethereum.Call {
-  get inputs(): SpeedUpperCheckSwitchCall__Inputs {
-    return new SpeedUpperCheckSwitchCall__Inputs(this);
-  }
-
-  get outputs(): SpeedUpperCheckSwitchCall__Outputs {
-    return new SpeedUpperCheckSwitchCall__Outputs(this);
-  }
-}
-
-export class SpeedUpperCheckSwitchCall__Inputs {
-  _call: SpeedUpperCheckSwitchCall;
-
-  constructor(call: SpeedUpperCheckSwitchCall) {
-    this._call = call;
-  }
-
-  get isActivated(): boolean {
-    return this._call.inputValues[0].value.toBoolean();
-  }
-
-  get profitPercentage(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-}
-
-export class SpeedUpperCheckSwitchCall__Outputs {
-  _call: SpeedUpperCheckSwitchCall;
-
-  constructor(call: SpeedUpperCheckSwitchCall) {
-    this._call = call;
-  }
-
-  get value0(): boolean {
-    return this._call.outputValues[0].value.toBoolean();
-  }
-}
-
 export class TransferSighTotheUserCall extends ethereum.Call {
   get inputs(): TransferSighTotheUserCall__Inputs {
     return new TransferSighTotheUserCall__Inputs(this);
@@ -1664,12 +1762,8 @@ export class TransferSighTotheUserCall__Inputs {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get sighAccuredTo(): Address {
-    return this._call.inputValues[2].value.toAddress();
-  }
-
   get sigh_Amount(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
+    return this._call.inputValues[2].value.toBigInt();
   }
 }
 
@@ -1779,6 +1873,44 @@ export class UpdateSIGHSpeedCall__Outputs {
   _call: UpdateSIGHSpeedCall;
 
   constructor(call: UpdateSIGHSpeedCall) {
+    this._call = call;
+  }
+
+  get value0(): boolean {
+    return this._call.outputValues[0].value.toBoolean();
+  }
+}
+
+export class UpdateSIGHSpeedUpperCheckCall extends ethereum.Call {
+  get inputs(): UpdateSIGHSpeedUpperCheckCall__Inputs {
+    return new UpdateSIGHSpeedUpperCheckCall__Inputs(this);
+  }
+
+  get outputs(): UpdateSIGHSpeedUpperCheckCall__Outputs {
+    return new UpdateSIGHSpeedUpperCheckCall__Outputs(this);
+  }
+}
+
+export class UpdateSIGHSpeedUpperCheckCall__Inputs {
+  _call: UpdateSIGHSpeedUpperCheckCall;
+
+  constructor(call: UpdateSIGHSpeedUpperCheckCall) {
+    this._call = call;
+  }
+
+  get isSpeedUpperCheckAllowed_(): boolean {
+    return this._call.inputValues[0].value.toBoolean();
+  }
+
+  get maxVolatilityProtocolLimit_(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class UpdateSIGHSpeedUpperCheckCall__Outputs {
+  _call: UpdateSIGHSpeedUpperCheckCall;
+
+  constructor(call: UpdateSIGHSpeedUpperCheckCall) {
     this._call = call;
   }
 

@@ -16,7 +16,7 @@ export function handleSIGHSupplyIndexUpdated(event: SIGHSupplyIndexUpdated): voi
 
     // Instrument's current Compounded Liquidity Balance
     instrumentState.totalCompoundedLiquidityWEI = event.params.totalCompoundedSupply
-    instrumentState.totalCompoundedLiquidity = instrumentState.totalCompoundedLiquidity.toBigDecimal().div(decimalAdj) 
+    instrumentState.totalCompoundedLiquidity = instrumentState.totalCompoundedLiquidityWEI.toBigDecimal().div(decimalAdj) 
 
     // Instrument's life-time $SIGH Accured as part of "Liquidity $SIGH Stream"
     instrumentState.totalLiquiditySIGHAccuredWEI = instrumentState.totalLiquiditySIGHAccuredWEI.plus( event.params.sighAccured )
@@ -83,11 +83,11 @@ export function handleInstrumentAdded(event: InstrumentAdded): void {
     instrumentState.SIGH_Borrow_Index_lastUpdatedBlock =  event.block.number
     log.info('handleInstrumentAdded: 5st ',[])
 
-    instrumentState.present_SIGH_Side = BigInt(0)
+    instrumentState.present_SIGH_Side = 'inactive'
     instrumentState.present_maxVolatilityLimitSuppliers = BigInt.fromI32(10).pow(18 as u8) 
-    instrumentState.present_maxVolatilityLimitSuppliersPercent = instrumentState.present_maxVolatilityLimitSuppliers.toBigDecimal().div( BigInt.fromI32(10).pow(16 as u8) )  
+    instrumentState.present_maxVolatilityLimitSuppliersPercent = instrumentState.present_maxVolatilityLimitSuppliers.toBigDecimal().div( BigInt.fromI32(10).pow(16 as u8).toBigDecimal() )  
     instrumentState.present_maxVolatilityLimitBorrowers = BigInt.fromI32(10).pow(18 as u8)
-    instrumentState.present_maxVolatilityLimitBorrowersPercent = instrumentState.present_maxVolatilityLimitBorrowers.toBigDecimal().div( BigInt.fromI32(10).pow(16 as u8) )  
+    instrumentState.present_maxVolatilityLimitBorrowersPercent = instrumentState.present_maxVolatilityLimitBorrowers.toBigDecimal().div( BigInt.fromI32(10).pow(16 as u8).toBigDecimal() )  
 
     instrumentState.save()
 }
@@ -101,13 +101,13 @@ export function handleInstrumentRemoved(event: InstrumentRemoved): void {
 }
 
 export function handleInstrumentSIGHStateUpdated(event: InstrumentSIGHStateUpdated): void {
-    let instrumentId = event.params.instrumentAddress_.toHexString()
+    let instrumentId = event.params.instrument_.toHexString()
     let instrumentState = Instrument.load(instrumentId)
     instrumentState.isSIGHMechanismActivated = event.params.isSIGHMechanismActivated
     instrumentState.present_maxVolatilityLimitSuppliers = event.params.maxVolatilityLimitSuppliers
-    instrumentState.present_maxVolatilityLimitSuppliersPercent = instrumentState.present_maxVolatilityLimitSuppliers.toBigDecimal().div( BigInt.fromI32(10).pow(16 as u8) )  
+    instrumentState.present_maxVolatilityLimitSuppliersPercent = instrumentState.present_maxVolatilityLimitSuppliers.toBigDecimal().div( BigInt.fromI32(10).pow(16 as u8).toBigDecimal() )  
     instrumentState.present_maxVolatilityLimitBorrowers = event.params.maxVolatilityLimitBorrowers
-    instrumentState.present_maxVolatilityLimitBorrowersPercent = instrumentState.present_maxVolatilityLimitBorrowers.toBigDecimal().div( BigInt.fromI32(10).pow(16 as u8) )  
+    instrumentState.present_maxVolatilityLimitBorrowersPercent = instrumentState.present_maxVolatilityLimitBorrowers.toBigDecimal().div( BigInt.fromI32(10).pow(16 as u8).toBigDecimal() )  
     instrumentState.save()
 }
 
@@ -123,7 +123,7 @@ export function handleStakingSpeedUpdated(event: StakingSpeedUpdated): void {
 
 
 export function handlePriceSnapped(event: PriceSnapped): void {
-    let instrumentId = event.params.instrumentAddress_.toHexString()
+    let instrumentId = event.params.instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
 
     instrumentState.present_PrevPrice_ETH = event.params.prevPrice.toBigDecimal().div(  (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
@@ -170,8 +170,18 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
     let instrumentId = event.params._Instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
 
-    instrumentState.present_SIGH_Side = BigInt.fromI32(event.params.side) 
+    if ( BigInt.fromI32(event.params.side)  == new BigInt(0) ) {
+        instrumentState.present_SIGH_Side = 'inActive'
+    }
+    
+    if ( BigInt.fromI32(event.params.side)  == new BigInt(1) ) {
+    instrumentState.present_SIGH_Side = 'Suppliers'
+    }
 
+    if ( BigInt.fromI32(event.params.side)  == new BigInt(2) ) {
+        instrumentState.present_SIGH_Side = 'Borrowers'
+    }
+    
     instrumentState.present_SIGH_Suppliers_Speed_WEI = event.params.supplierSpeed
     instrumentState.present_SIGH_Suppliers_Speed = instrumentState.present_SIGH_Suppliers_Speed_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
     instrumentState.present_SIGH_Borrowers_Speed_WEI = event.params.borrowerSpeed

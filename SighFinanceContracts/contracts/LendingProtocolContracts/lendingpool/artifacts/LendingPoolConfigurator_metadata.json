@@ -182,6 +182,12 @@
 						"internalType": "address",
 						"name": "sighStreamAddress",
 						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "sighStreamImplAddress",
+						"type": "address"
 					}
 				],
 				"name": "InstrumentInitialized",
@@ -255,6 +261,25 @@
 					}
 				],
 				"name": "StableRateOnInstrumentSwitched",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "instrumentAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "newSighStreamImpl",
+						"type": "address"
+					}
+				],
+				"name": "sighStreamImplUpdated",
 				"type": "event"
 			},
 			{
@@ -694,10 +719,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolConfigurator.sol": {
-			"keccak256": "0x0925976fd522e4773a1d06fcdbbe27f01dec14ebdd1cdbc0793fb33e2d9eea8a",
+			"keccak256": "0xd8064274a372efc2ada23859c96fbf13a5af522a5a2534e15e0f5df109be7359",
 			"urls": [
-				"bzz-raw://62382ccd1dd298756093a57b088f30c32736712da8ca88db5b32712c59d8e796",
-				"dweb:/ipfs/Qmf4G6csVN4DJcfQ1NrM2BNYPpt9DopsRc8TTBsHAZC31x"
+				"bzz-raw://b22ac4f985f2c0650504b3be6731439065def38b4a1c52fb84923013f66ac18b",
+				"dweb:/ipfs/QmULsofvUmiKHBcGAg3JSuq2kUTxfTVAYBKcjRy7nNcLFr"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {

@@ -112,7 +112,7 @@ type Instrument @entity {
     totalCompoundedStableBorrowsWEI: BigInt!
     totalCompoundedStableBorrows: BigDecimal!
     totalCompoundedStableBorrowsETH: BigDecimal!
-    totalCompoundedLiquidityUSD: BigDecimal!
+    totalCompoundedStableBorrowsUSD: BigDecimal!
 
     totalCompoundedVariableBorrowsWEI: BigInt!
     totalCompoundedVariableBorrows: BigDecimal!
@@ -174,7 +174,7 @@ type Instrument @entity {
     lifeTimeBorrowsRepaidUSD: BigDecimal!
 
     totalLiquiditySIGHAccuredWEI: BigInt!
-    currentLiquiditySIGHAccured: BigDecimal!
+    totalLiquiditySIGHAccured: BigDecimal!
 
     currentLiquiditySIGHAccuredWEI: BigInt!
     currentLiquiditySIGHAccured: BigDecimal!

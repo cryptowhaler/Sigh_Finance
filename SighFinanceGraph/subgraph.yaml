@@ -135,34 +135,26 @@ dataSources:
       - name: ERC20Detailed
         file: ./abis/ERC20Detailed.json
       eventHandlers:
-        - event: InstrumentInitialized(indexed address,indexed address,address)
+        - event: InstrumentInitialized(indexed address,indexed address,address,address,address)
           handler: handleInstrumentInitialized
         - event: InstrumentRemoved(indexed address)
           handler: handleInstrumentRemoved
-        - event: BorrowingEnabledOnInstrument(indexed address)
-          handler: handleBorrowingEnabledOnInstrument
-        - event: BorrowingDisabledOnInstrument(indexed address)
-          handler: handleBorrowingDisabledOnInstrument
+        - event: BorrowingOnInstrumentSwitched(indexed address,bool)
+          handler: handleBorrowingOnInstrumentSwitched
         - event: InstrumentEnabledAsCollateral(indexed address,uint256,uint256,uint256)
           handler: handleInstrumentEnabledAsCollateral
         - event: InstrumentDisabledAsCollateral(indexed address)
           handler: handleInstrumentDisabledAsCollateral
         - event: StableRateOnInstrumentSwitched(indexed address,bool)
           handler: handleStableRateOnInstrumentSwitched
-        - event: InstrumentActivated(indexed address)
-          handler: handleInstrumentActivated
-        - event: InstrumentDeactivated(indexed address)
-          handler: handleInstrumentDeactivated
+        - event: InstrumentActivationSwitched(indexed address,bool)
+          handler: handleInstrumentActivationSwitched
         - event: InstrumentFreezeSwitched(indexed address,bool)
           handler: handleInstrumentFreezeSwitched
-        - event: InstrumentLiquidationThresholdChanged(address,uint256)
-          handler: handleInstrumentLiquidationThresholdChanged
-        - event: InstrumentLiquidationBonusChanged(address,uint256)
-          handler: handleInstrumentLiquidationBonusChanged
+        - event: InstrumentCollateralParametersUpdated(address,uint256,uint256,uint256)
+          handler: handleInstrumentCollateralParametersUpdated
         - event: InstrumentInterestRateStrategyChanged(address,address)
           handler: handleInstrumentInterestRateStrategyChanged
-        - event: InstrumentBaseLtvChanged(address,uint256)
-          handler: handleInstrumentBaseLtvChanged
 
 
   - kind: ethereum/contract
@@ -187,29 +179,29 @@ dataSources:
       - name: ERC20Detailed
         file: ./abis/ERC20Detailed.json
       eventHandlers:
-        - event: InstrumentAdded(address,address,uint256,uint256)
+        - event: InstrumentAdded(address,address,address,uint256,uint256)
           handler: handleInstrumentAdded
         - event: InstrumentRemoved(address,uint256)
           handler: handleInstrumentRemoved
-        - event: InstrumentSIGHed(address,bool,uint256)
-          handler: handleInstrumentSIGHed
+        - event: InstrumentSIGHStateUpdated(address,bool,uint256,uint256)
+          handler: handleInstrumentSIGHStateUpdated
         - event: SIGHSpeedUpdated(uint256,uint256,uint256)
           handler: handleSIGHSpeedUpdated
         - event: StakingSpeedUpdated(address,uint256,uint256,uint256)
           handler: handleStakingSpeedUpdated
-        - event: SpeedUpperCheckSwitched(bool,uint256,uint256)
+        - event: SpeedUpperCheckSwitched(bool,uint256)
           handler: handleSpeedUpperCheckSwitched
         - event: minimumBlocksForSpeedRefreshUpdated(uint256,uint256,uint256)
           handler: handleMinimumBlocksForSpeedRefreshUpdated
-        - event: PriceSnapped(address,uint256,uint256,uint256,uint256,uint256)
+        - event: PriceSnapped(address,uint256,uint256,uint256,uint256)
           handler: handlePriceSnapped
-        - event: MaxSIGHSpeedCalculated(uint256,uint256,uint256,uint256,uint256,uint256,uint256)
+        - event: MaxSIGHSpeedCalculated(uint256,uint256,uint256,uint256,uint256)
           handler: handleMaxSIGHSpeedCalculated
-        - event: refreshingSighSpeeds(address,uint256,string,uint256,uint256,uint256,uint256,uint256)
+        - event: refreshingSighSpeeds(address,uint8,uint256,uint256,uint256,uint256)
           handler: handleRefreshingSighSpeeds
-        - event: SIGHSupplyIndexUpdated(address,uint256,uint256,uint256,uint256)
+        - event: SIGHSupplyIndexUpdated(address,uint256,uint256,uint256,uint256,uint256)
           handler: handleSIGHSupplyIndexUpdated
-        - event: SIGHBorrowIndexUpdated(address,uint256,uint256,uint256,uint256)
+        - event: SIGHBorrowIndexUpdated(address,uint256,uint256,uint256,uint256,uint256)
           handler: handleSIGHBorrowIndexUpdated
         - event: AccuredSIGHTransferredToTheUser(address,address,uint256)
           handler: handleAccuredSIGHTransferredToTheUser

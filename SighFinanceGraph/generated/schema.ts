@@ -833,13 +833,13 @@ export class Instrument extends Entity {
     this.set("totalCompoundedStableBorrowsETH", Value.fromBigDecimal(value));
   }
 
-  get totalCompoundedLiquidityUSD(): BigDecimal {
-    let value = this.get("totalCompoundedLiquidityUSD");
+  get totalCompoundedStableBorrowsUSD(): BigDecimal {
+    let value = this.get("totalCompoundedStableBorrowsUSD");
     return value.toBigDecimal();
   }
 
-  set totalCompoundedLiquidityUSD(value: BigDecimal) {
-    this.set("totalCompoundedLiquidityUSD", Value.fromBigDecimal(value));
+  set totalCompoundedStableBorrowsUSD(value: BigDecimal) {
+    this.set("totalCompoundedStableBorrowsUSD", Value.fromBigDecimal(value));
   }
 
   get totalCompoundedVariableBorrowsWEI(): BigInt {
@@ -1193,13 +1193,13 @@ export class Instrument extends Entity {
     this.set("totalLiquiditySIGHAccuredWEI", Value.fromBigInt(value));
   }
 
-  get currentLiquiditySIGHAccured(): BigDecimal {
-    let value = this.get("currentLiquiditySIGHAccured");
+  get totalLiquiditySIGHAccured(): BigDecimal {
+    let value = this.get("totalLiquiditySIGHAccured");
     return value.toBigDecimal();
   }
 
-  set currentLiquiditySIGHAccured(value: BigDecimal) {
-    this.set("currentLiquiditySIGHAccured", Value.fromBigDecimal(value));
+  set totalLiquiditySIGHAccured(value: BigDecimal) {
+    this.set("totalLiquiditySIGHAccured", Value.fromBigDecimal(value));
   }
 
   get currentLiquiditySIGHAccuredWEI(): BigInt {

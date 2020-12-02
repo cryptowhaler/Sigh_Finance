@@ -727,29 +727,6 @@ export class LendingPool extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  parametersProvider(): Address {
-    let result = super.call(
-      "parametersProvider",
-      "parametersProvider():(address)",
-      []
-    );
-
-    return result[0].toAddress();
-  }
-
-  try_parametersProvider(): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "parametersProvider",
-      "parametersProvider():(address)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
   getInstrumentConfigurationData(
     _instrument: Address
   ): LendingPool__getInstrumentConfigurationDataResult {
@@ -852,6 +829,29 @@ export class LendingPool extends ethereum.SmartContract {
         value[12].toBigInt()
       )
     );
+  }
+
+  getInstruments(): Array<Address> {
+    let result = super.call(
+      "getInstruments",
+      "getInstruments():(address[])",
+      []
+    );
+
+    return result[0].toAddressArray();
+  }
+
+  try_getInstruments(): ethereum.CallResult<Array<Address>> {
+    let result = super.tryCall(
+      "getInstruments",
+      "getInstruments():(address[])",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddressArray());
   }
 
   getUserAccountData(_user: Address): LendingPool__getUserAccountDataResult {
@@ -958,163 +958,27 @@ export class LendingPool extends ethereum.SmartContract {
     );
   }
 
-  getInstruments(): Array<Address> {
+  parametersProvider(): Address {
     let result = super.call(
-      "getInstruments",
-      "getInstruments():(address[])",
+      "parametersProvider",
+      "parametersProvider():(address)",
       []
     );
 
-    return result[0].toAddressArray();
+    return result[0].toAddress();
   }
 
-  try_getInstruments(): ethereum.CallResult<Array<Address>> {
+  try_parametersProvider(): ethereum.CallResult<Address> {
     let result = super.tryCall(
-      "getInstruments",
-      "getInstruments():(address[])",
+      "parametersProvider",
+      "parametersProvider():(address)",
       []
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddressArray());
-  }
-}
-
-export class InitializeCall extends ethereum.Call {
-  get inputs(): InitializeCall__Inputs {
-    return new InitializeCall__Inputs(this);
-  }
-
-  get outputs(): InitializeCall__Outputs {
-    return new InitializeCall__Outputs(this);
-  }
-}
-
-export class InitializeCall__Inputs {
-  _call: InitializeCall;
-
-  constructor(call: InitializeCall) {
-    this._call = call;
-  }
-
-  get _addressesProvider(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class InitializeCall__Outputs {
-  _call: InitializeCall;
-
-  constructor(call: InitializeCall) {
-    this._call = call;
-  }
-}
-
-export class RefreshConfigCall extends ethereum.Call {
-  get inputs(): RefreshConfigCall__Inputs {
-    return new RefreshConfigCall__Inputs(this);
-  }
-
-  get outputs(): RefreshConfigCall__Outputs {
-    return new RefreshConfigCall__Outputs(this);
-  }
-}
-
-export class RefreshConfigCall__Inputs {
-  _call: RefreshConfigCall;
-
-  constructor(call: RefreshConfigCall) {
-    this._call = call;
-  }
-}
-
-export class RefreshConfigCall__Outputs {
-  _call: RefreshConfigCall;
-
-  constructor(call: RefreshConfigCall) {
-    this._call = call;
-  }
-}
-
-export class DepositCall extends ethereum.Call {
-  get inputs(): DepositCall__Inputs {
-    return new DepositCall__Inputs(this);
-  }
-
-  get outputs(): DepositCall__Outputs {
-    return new DepositCall__Outputs(this);
-  }
-}
-
-export class DepositCall__Inputs {
-  _call: DepositCall;
-
-  constructor(call: DepositCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _amount(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get _referralCode(): i32 {
-    return this._call.inputValues[2].value.toI32();
-  }
-}
-
-export class DepositCall__Outputs {
-  _call: DepositCall;
-
-  constructor(call: DepositCall) {
-    this._call = call;
-  }
-}
-
-export class RedeemUnderlyingCall extends ethereum.Call {
-  get inputs(): RedeemUnderlyingCall__Inputs {
-    return new RedeemUnderlyingCall__Inputs(this);
-  }
-
-  get outputs(): RedeemUnderlyingCall__Outputs {
-    return new RedeemUnderlyingCall__Outputs(this);
-  }
-}
-
-export class RedeemUnderlyingCall__Inputs {
-  _call: RedeemUnderlyingCall;
-
-  constructor(call: RedeemUnderlyingCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _user(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get _amount(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-
-  get _ITokenBalanceAfterRedeem(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
-  }
-}
-
-export class RedeemUnderlyingCall__Outputs {
-  _call: RedeemUnderlyingCall;
-
-  constructor(call: RedeemUnderlyingCall) {
-    this._call = call;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 }
 
@@ -1160,20 +1024,20 @@ export class BorrowCall__Outputs {
   }
 }
 
-export class RepayCall extends ethereum.Call {
-  get inputs(): RepayCall__Inputs {
-    return new RepayCall__Inputs(this);
+export class DepositCall extends ethereum.Call {
+  get inputs(): DepositCall__Inputs {
+    return new DepositCall__Inputs(this);
   }
 
-  get outputs(): RepayCall__Outputs {
-    return new RepayCall__Outputs(this);
+  get outputs(): DepositCall__Outputs {
+    return new DepositCall__Outputs(this);
   }
 }
 
-export class RepayCall__Inputs {
-  _call: RepayCall;
+export class DepositCall__Inputs {
+  _call: DepositCall;
 
-  constructor(call: RepayCall) {
+  constructor(call: DepositCall) {
     this._call = call;
   }
 
@@ -1185,113 +1049,87 @@ export class RepayCall__Inputs {
     return this._call.inputValues[1].value.toBigInt();
   }
 
-  get _onBehalfOf(): Address {
-    return this._call.inputValues[2].value.toAddress();
+  get _referralCode(): i32 {
+    return this._call.inputValues[2].value.toI32();
   }
 }
 
-export class RepayCall__Outputs {
-  _call: RepayCall;
+export class DepositCall__Outputs {
+  _call: DepositCall;
 
-  constructor(call: RepayCall) {
+  constructor(call: DepositCall) {
     this._call = call;
   }
 }
 
-export class SwapBorrowRateModeCall extends ethereum.Call {
-  get inputs(): SwapBorrowRateModeCall__Inputs {
-    return new SwapBorrowRateModeCall__Inputs(this);
+export class FlashLoanCall extends ethereum.Call {
+  get inputs(): FlashLoanCall__Inputs {
+    return new FlashLoanCall__Inputs(this);
   }
 
-  get outputs(): SwapBorrowRateModeCall__Outputs {
-    return new SwapBorrowRateModeCall__Outputs(this);
+  get outputs(): FlashLoanCall__Outputs {
+    return new FlashLoanCall__Outputs(this);
   }
 }
 
-export class SwapBorrowRateModeCall__Inputs {
-  _call: SwapBorrowRateModeCall;
+export class FlashLoanCall__Inputs {
+  _call: FlashLoanCall;
 
-  constructor(call: SwapBorrowRateModeCall) {
+  constructor(call: FlashLoanCall) {
     this._call = call;
   }
 
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class SwapBorrowRateModeCall__Outputs {
-  _call: SwapBorrowRateModeCall;
-
-  constructor(call: SwapBorrowRateModeCall) {
-    this._call = call;
-  }
-}
-
-export class RebalanceStableBorrowRateCall extends ethereum.Call {
-  get inputs(): RebalanceStableBorrowRateCall__Inputs {
-    return new RebalanceStableBorrowRateCall__Inputs(this);
-  }
-
-  get outputs(): RebalanceStableBorrowRateCall__Outputs {
-    return new RebalanceStableBorrowRateCall__Outputs(this);
-  }
-}
-
-export class RebalanceStableBorrowRateCall__Inputs {
-  _call: RebalanceStableBorrowRateCall;
-
-  constructor(call: RebalanceStableBorrowRateCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
+  get _receiver(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _user(): Address {
+  get _instrument(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
+
+  get _amount(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get _params(): Bytes {
+    return this._call.inputValues[3].value.toBytes();
+  }
 }
 
-export class RebalanceStableBorrowRateCall__Outputs {
-  _call: RebalanceStableBorrowRateCall;
+export class FlashLoanCall__Outputs {
+  _call: FlashLoanCall;
 
-  constructor(call: RebalanceStableBorrowRateCall) {
+  constructor(call: FlashLoanCall) {
     this._call = call;
   }
 }
 
-export class SetUserUseInstrumentAsCollateralCall extends ethereum.Call {
-  get inputs(): SetUserUseInstrumentAsCollateralCall__Inputs {
-    return new SetUserUseInstrumentAsCollateralCall__Inputs(this);
+export class InitializeCall extends ethereum.Call {
+  get inputs(): InitializeCall__Inputs {
+    return new InitializeCall__Inputs(this);
   }
 
-  get outputs(): SetUserUseInstrumentAsCollateralCall__Outputs {
-    return new SetUserUseInstrumentAsCollateralCall__Outputs(this);
+  get outputs(): InitializeCall__Outputs {
+    return new InitializeCall__Outputs(this);
   }
 }
 
-export class SetUserUseInstrumentAsCollateralCall__Inputs {
-  _call: SetUserUseInstrumentAsCollateralCall;
+export class InitializeCall__Inputs {
+  _call: InitializeCall;
 
-  constructor(call: SetUserUseInstrumentAsCollateralCall) {
+  constructor(call: InitializeCall) {
     this._call = call;
   }
 
-  get _instrument(): Address {
+  get _addressesProvider(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
-
-  get _useAsCollateral(): boolean {
-    return this._call.inputValues[1].value.toBoolean();
-  }
 }
 
-export class SetUserUseInstrumentAsCollateralCall__Outputs {
-  _call: SetUserUseInstrumentAsCollateralCall;
+export class InitializeCall__Outputs {
+  _call: InitializeCall;
 
-  constructor(call: SetUserUseInstrumentAsCollateralCall) {
+  constructor(call: InitializeCall) {
     this._call = call;
   }
 }
@@ -1342,28 +1180,62 @@ export class LiquidationCallCall__Outputs {
   }
 }
 
-export class FlashLoanCall extends ethereum.Call {
-  get inputs(): FlashLoanCall__Inputs {
-    return new FlashLoanCall__Inputs(this);
+export class RebalanceStableBorrowRateCall extends ethereum.Call {
+  get inputs(): RebalanceStableBorrowRateCall__Inputs {
+    return new RebalanceStableBorrowRateCall__Inputs(this);
   }
 
-  get outputs(): FlashLoanCall__Outputs {
-    return new FlashLoanCall__Outputs(this);
+  get outputs(): RebalanceStableBorrowRateCall__Outputs {
+    return new RebalanceStableBorrowRateCall__Outputs(this);
   }
 }
 
-export class FlashLoanCall__Inputs {
-  _call: FlashLoanCall;
+export class RebalanceStableBorrowRateCall__Inputs {
+  _call: RebalanceStableBorrowRateCall;
 
-  constructor(call: FlashLoanCall) {
+  constructor(call: RebalanceStableBorrowRateCall) {
     this._call = call;
   }
 
-  get _receiver(): Address {
+  get _instrument(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
+  get _user(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+}
+
+export class RebalanceStableBorrowRateCall__Outputs {
+  _call: RebalanceStableBorrowRateCall;
+
+  constructor(call: RebalanceStableBorrowRateCall) {
+    this._call = call;
+  }
+}
+
+export class RedeemUnderlyingCall extends ethereum.Call {
+  get inputs(): RedeemUnderlyingCall__Inputs {
+    return new RedeemUnderlyingCall__Inputs(this);
+  }
+
+  get outputs(): RedeemUnderlyingCall__Outputs {
+    return new RedeemUnderlyingCall__Outputs(this);
+  }
+}
+
+export class RedeemUnderlyingCall__Inputs {
+  _call: RedeemUnderlyingCall;
+
+  constructor(call: RedeemUnderlyingCall) {
+    this._call = call;
+  }
+
   get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _user(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 
@@ -1371,15 +1243,143 @@ export class FlashLoanCall__Inputs {
     return this._call.inputValues[2].value.toBigInt();
   }
 
-  get _params(): Bytes {
-    return this._call.inputValues[3].value.toBytes();
+  get _ITokenBalanceAfterRedeem(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
   }
 }
 
-export class FlashLoanCall__Outputs {
-  _call: FlashLoanCall;
+export class RedeemUnderlyingCall__Outputs {
+  _call: RedeemUnderlyingCall;
 
-  constructor(call: FlashLoanCall) {
+  constructor(call: RedeemUnderlyingCall) {
+    this._call = call;
+  }
+}
+
+export class RefreshConfigCall extends ethereum.Call {
+  get inputs(): RefreshConfigCall__Inputs {
+    return new RefreshConfigCall__Inputs(this);
+  }
+
+  get outputs(): RefreshConfigCall__Outputs {
+    return new RefreshConfigCall__Outputs(this);
+  }
+}
+
+export class RefreshConfigCall__Inputs {
+  _call: RefreshConfigCall;
+
+  constructor(call: RefreshConfigCall) {
+    this._call = call;
+  }
+}
+
+export class RefreshConfigCall__Outputs {
+  _call: RefreshConfigCall;
+
+  constructor(call: RefreshConfigCall) {
+    this._call = call;
+  }
+}
+
+export class RepayCall extends ethereum.Call {
+  get inputs(): RepayCall__Inputs {
+    return new RepayCall__Inputs(this);
+  }
+
+  get outputs(): RepayCall__Outputs {
+    return new RepayCall__Outputs(this);
+  }
+}
+
+export class RepayCall__Inputs {
+  _call: RepayCall;
+
+  constructor(call: RepayCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _amount(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get _onBehalfOf(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+}
+
+export class RepayCall__Outputs {
+  _call: RepayCall;
+
+  constructor(call: RepayCall) {
+    this._call = call;
+  }
+}
+
+export class SetUserUseInstrumentAsCollateralCall extends ethereum.Call {
+  get inputs(): SetUserUseInstrumentAsCollateralCall__Inputs {
+    return new SetUserUseInstrumentAsCollateralCall__Inputs(this);
+  }
+
+  get outputs(): SetUserUseInstrumentAsCollateralCall__Outputs {
+    return new SetUserUseInstrumentAsCollateralCall__Outputs(this);
+  }
+}
+
+export class SetUserUseInstrumentAsCollateralCall__Inputs {
+  _call: SetUserUseInstrumentAsCollateralCall;
+
+  constructor(call: SetUserUseInstrumentAsCollateralCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _useAsCollateral(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class SetUserUseInstrumentAsCollateralCall__Outputs {
+  _call: SetUserUseInstrumentAsCollateralCall;
+
+  constructor(call: SetUserUseInstrumentAsCollateralCall) {
+    this._call = call;
+  }
+}
+
+export class SwapBorrowRateModeCall extends ethereum.Call {
+  get inputs(): SwapBorrowRateModeCall__Inputs {
+    return new SwapBorrowRateModeCall__Inputs(this);
+  }
+
+  get outputs(): SwapBorrowRateModeCall__Outputs {
+    return new SwapBorrowRateModeCall__Outputs(this);
+  }
+}
+
+export class SwapBorrowRateModeCall__Inputs {
+  _call: SwapBorrowRateModeCall;
+
+  constructor(call: SwapBorrowRateModeCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class SwapBorrowRateModeCall__Outputs {
+  _call: SwapBorrowRateModeCall;
+
+  constructor(call: SwapBorrowRateModeCall) {
     this._call = call;
   }
 }

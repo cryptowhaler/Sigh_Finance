@@ -48,6 +48,72 @@ export class InstrumentUpdated__Params {
   }
 }
 
+export class LendingPoolCore__getInstrumentConfigurationResult {
+  value0: BigInt;
+  value1: BigInt;
+  value2: BigInt;
+  value3: boolean;
+
+  constructor(value0: BigInt, value1: BigInt, value2: BigInt, value3: boolean) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    map.set("value3", ethereum.Value.fromBoolean(this.value3));
+    return map;
+  }
+}
+
+export class LendingPoolCore__getUserBasicInstrumentDataResult {
+  value0: BigInt;
+  value1: BigInt;
+  value2: BigInt;
+  value3: boolean;
+
+  constructor(value0: BigInt, value1: BigInt, value2: BigInt, value3: boolean) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    map.set("value3", ethereum.Value.fromBoolean(this.value3));
+    return map;
+  }
+}
+
+export class LendingPoolCore__getUserBorrowBalancesResult {
+  value0: BigInt;
+  value1: BigInt;
+  value2: BigInt;
+
+  constructor(value0: BigInt, value1: BigInt, value2: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    return map;
+  }
+}
+
 export class LendingPoolCore__updateStateOnBorrowResult {
   value0: BigInt;
   value1: BigInt;
@@ -81,72 +147,6 @@ export class LendingPoolCore__updateStateOnSwapRateResult {
       ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value0))
     );
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    return map;
-  }
-}
-
-export class LendingPoolCore__getUserBorrowBalancesResult {
-  value0: BigInt;
-  value1: BigInt;
-  value2: BigInt;
-
-  constructor(value0: BigInt, value1: BigInt, value2: BigInt) {
-    this.value0 = value0;
-    this.value1 = value1;
-    this.value2 = value2;
-  }
-
-  toMap(): TypedMap<string, ethereum.Value> {
-    let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
-    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
-    return map;
-  }
-}
-
-export class LendingPoolCore__getUserBasicInstrumentDataResult {
-  value0: BigInt;
-  value1: BigInt;
-  value2: BigInt;
-  value3: boolean;
-
-  constructor(value0: BigInt, value1: BigInt, value2: BigInt, value3: boolean) {
-    this.value0 = value0;
-    this.value1 = value1;
-    this.value2 = value2;
-    this.value3 = value3;
-  }
-
-  toMap(): TypedMap<string, ethereum.Value> {
-    let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
-    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
-    map.set("value3", ethereum.Value.fromBoolean(this.value3));
-    return map;
-  }
-}
-
-export class LendingPoolCore__getInstrumentConfigurationResult {
-  value0: BigInt;
-  value1: BigInt;
-  value2: BigInt;
-  value3: boolean;
-
-  constructor(value0: BigInt, value1: BigInt, value2: BigInt, value3: boolean) {
-    this.value0 = value0;
-    this.value1 = value1;
-    this.value2 = value2;
-    this.value3 = value3;
-  }
-
-  toMap(): TypedMap<string, ethereum.Value> {
-    let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
-    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
-    map.set("value3", ethereum.Value.fromBoolean(this.value3));
     return map;
   }
 }
@@ -198,6 +198,953 @@ export class LendingPoolCore extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
+  getInstrumentAvailableLiquidity(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentAvailableLiquidity",
+      "getInstrumentAvailableLiquidity(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentAvailableLiquidity(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentAvailableLiquidity",
+      "getInstrumentAvailableLiquidity(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentCompoundedBorrowsStable(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentCompoundedBorrowsStable",
+      "getInstrumentCompoundedBorrowsStable(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentCompoundedBorrowsStable(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentCompoundedBorrowsStable",
+      "getInstrumentCompoundedBorrowsStable(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentCompoundedBorrowsVariable(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentCompoundedBorrowsVariable",
+      "getInstrumentCompoundedBorrowsVariable(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentCompoundedBorrowsVariable(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentCompoundedBorrowsVariable",
+      "getInstrumentCompoundedBorrowsVariable(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentConfiguration(
+    _instrument: Address
+  ): LendingPoolCore__getInstrumentConfigurationResult {
+    let result = super.call(
+      "getInstrumentConfiguration",
+      "getInstrumentConfiguration(address):(uint256,uint256,uint256,bool)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return new LendingPoolCore__getInstrumentConfigurationResult(
+      result[0].toBigInt(),
+      result[1].toBigInt(),
+      result[2].toBigInt(),
+      result[3].toBoolean()
+    );
+  }
+
+  try_getInstrumentConfiguration(
+    _instrument: Address
+  ): ethereum.CallResult<LendingPoolCore__getInstrumentConfigurationResult> {
+    let result = super.tryCall(
+      "getInstrumentConfiguration",
+      "getInstrumentConfiguration(address):(uint256,uint256,uint256,bool)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new LendingPoolCore__getInstrumentConfigurationResult(
+        value[0].toBigInt(),
+        value[1].toBigInt(),
+        value[2].toBigInt(),
+        value[3].toBoolean()
+      )
+    );
+  }
+
+  getInstrumentCurrentAverageStableBorrowRate(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentCurrentAverageStableBorrowRate",
+      "getInstrumentCurrentAverageStableBorrowRate(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentCurrentAverageStableBorrowRate(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentCurrentAverageStableBorrowRate",
+      "getInstrumentCurrentAverageStableBorrowRate(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentCurrentLiquidityRate(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentCurrentLiquidityRate",
+      "getInstrumentCurrentLiquidityRate(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentCurrentLiquidityRate(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentCurrentLiquidityRate",
+      "getInstrumentCurrentLiquidityRate(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentCurrentStableBorrowRate(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentCurrentStableBorrowRate",
+      "getInstrumentCurrentStableBorrowRate(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentCurrentStableBorrowRate(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentCurrentStableBorrowRate",
+      "getInstrumentCurrentStableBorrowRate(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentCurrentVariableBorrowRate(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentCurrentVariableBorrowRate",
+      "getInstrumentCurrentVariableBorrowRate(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentCurrentVariableBorrowRate(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentCurrentVariableBorrowRate",
+      "getInstrumentCurrentVariableBorrowRate(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentDecimals(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentDecimals",
+      "getInstrumentDecimals(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentDecimals(_instrument: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentDecimals",
+      "getInstrumentDecimals(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentITokenAddress(_instrument: Address): Address {
+    let result = super.call(
+      "getInstrumentITokenAddress",
+      "getInstrumentITokenAddress(address):(address)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_getInstrumentITokenAddress(
+    _instrument: Address
+  ): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "getInstrumentITokenAddress",
+      "getInstrumentITokenAddress(address):(address)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getInstrumentInterestRateStrategyAddress(_instrument: Address): Address {
+    let result = super.call(
+      "getInstrumentInterestRateStrategyAddress",
+      "getInstrumentInterestRateStrategyAddress(address):(address)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_getInstrumentInterestRateStrategyAddress(
+    _instrument: Address
+  ): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "getInstrumentInterestRateStrategyAddress",
+      "getInstrumentInterestRateStrategyAddress(address):(address)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getInstrumentIsActive(_instrument: Address): boolean {
+    let result = super.call(
+      "getInstrumentIsActive",
+      "getInstrumentIsActive(address):(bool)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_getInstrumentIsActive(
+    _instrument: Address
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "getInstrumentIsActive",
+      "getInstrumentIsActive(address):(bool)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  getInstrumentIsFreezed(_instrument: Address): boolean {
+    let result = super.call(
+      "getInstrumentIsFreezed",
+      "getInstrumentIsFreezed(address):(bool)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_getInstrumentIsFreezed(
+    _instrument: Address
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "getInstrumentIsFreezed",
+      "getInstrumentIsFreezed(address):(bool)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  getInstrumentIsStableBorrowRateEnabled(_instrument: Address): boolean {
+    let result = super.call(
+      "getInstrumentIsStableBorrowRateEnabled",
+      "getInstrumentIsStableBorrowRateEnabled(address):(bool)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_getInstrumentIsStableBorrowRateEnabled(
+    _instrument: Address
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "getInstrumentIsStableBorrowRateEnabled",
+      "getInstrumentIsStableBorrowRateEnabled(address):(bool)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  getInstrumentLastUpdate(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentLastUpdate",
+      "getInstrumentLastUpdate(address):(uint40)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentLastUpdate(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentLastUpdate",
+      "getInstrumentLastUpdate(address):(uint40)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentLiquidationBonus(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentLiquidationBonus",
+      "getInstrumentLiquidationBonus(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentLiquidationBonus(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentLiquidationBonus",
+      "getInstrumentLiquidationBonus(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentLiquidationThreshold(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentLiquidationThreshold",
+      "getInstrumentLiquidationThreshold(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentLiquidationThreshold(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentLiquidationThreshold",
+      "getInstrumentLiquidationThreshold(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentLiquidityCumulativeIndex(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentLiquidityCumulativeIndex",
+      "getInstrumentLiquidityCumulativeIndex(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentLiquidityCumulativeIndex(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentLiquidityCumulativeIndex",
+      "getInstrumentLiquidityCumulativeIndex(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentNormalizedIncome(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentNormalizedIncome",
+      "getInstrumentNormalizedIncome(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentNormalizedIncome(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentNormalizedIncome",
+      "getInstrumentNormalizedIncome(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentTotalBorrows(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentTotalBorrows",
+      "getInstrumentTotalBorrows(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentTotalBorrows(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentTotalBorrows",
+      "getInstrumentTotalBorrows(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentTotalBorrowsStable(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentTotalBorrowsStable",
+      "getInstrumentTotalBorrowsStable(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentTotalBorrowsStable(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentTotalBorrowsStable",
+      "getInstrumentTotalBorrowsStable(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentTotalBorrowsVariable(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentTotalBorrowsVariable",
+      "getInstrumentTotalBorrowsVariable(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentTotalBorrowsVariable(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentTotalBorrowsVariable",
+      "getInstrumentTotalBorrowsVariable(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentTotalLiquidity(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentTotalLiquidity",
+      "getInstrumentTotalLiquidity(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentTotalLiquidity(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentTotalLiquidity",
+      "getInstrumentTotalLiquidity(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentUtilizationRate(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentUtilizationRate",
+      "getInstrumentUtilizationRate(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentUtilizationRate(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentUtilizationRate",
+      "getInstrumentUtilizationRate(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentVariableBorrowsCumulativeIndex(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentVariableBorrowsCumulativeIndex",
+      "getInstrumentVariableBorrowsCumulativeIndex(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentVariableBorrowsCumulativeIndex(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentVariableBorrowsCumulativeIndex",
+      "getInstrumentVariableBorrowsCumulativeIndex(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstruments(): Array<Address> {
+    let result = super.call(
+      "getInstruments",
+      "getInstruments():(address[])",
+      []
+    );
+
+    return result[0].toAddressArray();
+  }
+
+  try_getInstruments(): ethereum.CallResult<Array<Address>> {
+    let result = super.tryCall(
+      "getInstruments",
+      "getInstruments():(address[])",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddressArray());
+  }
+
+  getUserBasicInstrumentData(
+    _instrument: Address,
+    _user: Address
+  ): LendingPoolCore__getUserBasicInstrumentDataResult {
+    let result = super.call(
+      "getUserBasicInstrumentData",
+      "getUserBasicInstrumentData(address,address):(uint256,uint256,uint256,bool)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+
+    return new LendingPoolCore__getUserBasicInstrumentDataResult(
+      result[0].toBigInt(),
+      result[1].toBigInt(),
+      result[2].toBigInt(),
+      result[3].toBoolean()
+    );
+  }
+
+  try_getUserBasicInstrumentData(
+    _instrument: Address,
+    _user: Address
+  ): ethereum.CallResult<LendingPoolCore__getUserBasicInstrumentDataResult> {
+    let result = super.tryCall(
+      "getUserBasicInstrumentData",
+      "getUserBasicInstrumentData(address,address):(uint256,uint256,uint256,bool)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new LendingPoolCore__getUserBasicInstrumentDataResult(
+        value[0].toBigInt(),
+        value[1].toBigInt(),
+        value[2].toBigInt(),
+        value[3].toBoolean()
+      )
+    );
+  }
+
+  getUserBorrowBalances(
+    _instrument: Address,
+    _user: Address
+  ): LendingPoolCore__getUserBorrowBalancesResult {
+    let result = super.call(
+      "getUserBorrowBalances",
+      "getUserBorrowBalances(address,address):(uint256,uint256,uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+
+    return new LendingPoolCore__getUserBorrowBalancesResult(
+      result[0].toBigInt(),
+      result[1].toBigInt(),
+      result[2].toBigInt()
+    );
+  }
+
+  try_getUserBorrowBalances(
+    _instrument: Address,
+    _user: Address
+  ): ethereum.CallResult<LendingPoolCore__getUserBorrowBalancesResult> {
+    let result = super.tryCall(
+      "getUserBorrowBalances",
+      "getUserBorrowBalances(address,address):(uint256,uint256,uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new LendingPoolCore__getUserBorrowBalancesResult(
+        value[0].toBigInt(),
+        value[1].toBigInt(),
+        value[2].toBigInt()
+      )
+    );
+  }
+
+  getUserCurrentBorrowRateMode(_instrument: Address, _user: Address): i32 {
+    let result = super.call(
+      "getUserCurrentBorrowRateMode",
+      "getUserCurrentBorrowRateMode(address,address):(uint8)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+
+    return result[0].toI32();
+  }
+
+  try_getUserCurrentBorrowRateMode(
+    _instrument: Address,
+    _user: Address
+  ): ethereum.CallResult<i32> {
+    let result = super.tryCall(
+      "getUserCurrentBorrowRateMode",
+      "getUserCurrentBorrowRateMode(address,address):(uint8)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toI32());
+  }
+
+  getUserCurrentStableBorrowRate(_instrument: Address, _user: Address): BigInt {
+    let result = super.call(
+      "getUserCurrentStableBorrowRate",
+      "getUserCurrentStableBorrowRate(address,address):(uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getUserCurrentStableBorrowRate(
+    _instrument: Address,
+    _user: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getUserCurrentStableBorrowRate",
+      "getUserCurrentStableBorrowRate(address,address):(uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getUserLastUpdate(_instrument: Address, _user: Address): BigInt {
+    let result = super.call(
+      "getUserLastUpdate",
+      "getUserLastUpdate(address,address):(uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getUserLastUpdate(
+    _instrument: Address,
+    _user: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getUserLastUpdate",
+      "getUserLastUpdate(address,address):(uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getUserOriginationFee(_instrument: Address, _user: Address): BigInt {
+    let result = super.call(
+      "getUserOriginationFee",
+      "getUserOriginationFee(address,address):(uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getUserOriginationFee(
+    _instrument: Address,
+    _user: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getUserOriginationFee",
+      "getUserOriginationFee(address,address):(uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getUserUnderlyingAssetBalance(_instrument: Address, _user: Address): BigInt {
+    let result = super.call(
+      "getUserUnderlyingAssetBalance",
+      "getUserUnderlyingAssetBalance(address,address):(uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getUserUnderlyingAssetBalance(
+    _instrument: Address,
+    _user: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getUserUnderlyingAssetBalance",
+      "getUserUnderlyingAssetBalance(address,address):(uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getUserVariableBorrowCumulativeIndex(
+    _instrument: Address,
+    _user: Address
+  ): BigInt {
+    let result = super.call(
+      "getUserVariableBorrowCumulativeIndex",
+      "getUserVariableBorrowCumulativeIndex(address,address):(uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getUserVariableBorrowCumulativeIndex(
+    _instrument: Address,
+    _user: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getUserVariableBorrowCumulativeIndex",
+      "getUserVariableBorrowCumulativeIndex(address,address):(uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   instrumentsList(param0: BigInt): Address {
     let result = super.call(
       "instrumentsList",
@@ -219,6 +1166,130 @@ export class LendingPoolCore extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  isInstrumentBorrowingEnabled(_instrument: Address): boolean {
+    let result = super.call(
+      "isInstrumentBorrowingEnabled",
+      "isInstrumentBorrowingEnabled(address):(bool)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_isInstrumentBorrowingEnabled(
+    _instrument: Address
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "isInstrumentBorrowingEnabled",
+      "isInstrumentBorrowingEnabled(address):(bool)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  isInstrumentUsageAsCollateralEnabled(_instrument: Address): boolean {
+    let result = super.call(
+      "isInstrumentUsageAsCollateralEnabled",
+      "isInstrumentUsageAsCollateralEnabled(address):(bool)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_isInstrumentUsageAsCollateralEnabled(
+    _instrument: Address
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "isInstrumentUsageAsCollateralEnabled",
+      "isInstrumentUsageAsCollateralEnabled(address):(bool)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  isUserAllowedToBorrowAtStable(
+    _instrument: Address,
+    _user: Address,
+    _amount: BigInt
+  ): boolean {
+    let result = super.call(
+      "isUserAllowedToBorrowAtStable",
+      "isUserAllowedToBorrowAtStable(address,address,uint256):(bool)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user),
+        ethereum.Value.fromUnsignedBigInt(_amount)
+      ]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_isUserAllowedToBorrowAtStable(
+    _instrument: Address,
+    _user: Address,
+    _amount: BigInt
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "isUserAllowedToBorrowAtStable",
+      "isUserAllowedToBorrowAtStable(address,address,uint256):(bool)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user),
+        ethereum.Value.fromUnsignedBigInt(_amount)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  isUserUseInstrumentAsCollateralEnabled(
+    _instrument: Address,
+    _user: Address
+  ): boolean {
+    let result = super.call(
+      "isUserUseInstrumentAsCollateralEnabled",
+      "isUserUseInstrumentAsCollateralEnabled(address,address):(bool)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_isUserUseInstrumentAsCollateralEnabled(
+    _instrument: Address,
+    _user: Address
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "isUserUseInstrumentAsCollateralEnabled",
+      "isUserUseInstrumentAsCollateralEnabled(address,address):(bool)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   lendingPoolAddress(): Address {
@@ -318,6 +1389,45 @@ export class LendingPoolCore extends ethereum.SmartContract {
     );
   }
 
+  updateStateOnRebalance(
+    _instrument: Address,
+    _user: Address,
+    _balanceIncrease: BigInt
+  ): BigInt {
+    let result = super.call(
+      "updateStateOnRebalance",
+      "updateStateOnRebalance(address,address,uint256):(uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user),
+        ethereum.Value.fromUnsignedBigInt(_balanceIncrease)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_updateStateOnRebalance(
+    _instrument: Address,
+    _user: Address,
+    _balanceIncrease: BigInt
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "updateStateOnRebalance",
+      "updateStateOnRebalance(address,address,uint256):(uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user),
+        ethereum.Value.fromUnsignedBigInt(_balanceIncrease)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   updateStateOnSwapRate(
     _instrument: Address,
     _user: Address,
@@ -376,1091 +1486,6 @@ export class LendingPoolCore extends ethereum.SmartContract {
       )
     );
   }
-
-  updateStateOnRebalance(
-    _instrument: Address,
-    _user: Address,
-    _balanceIncrease: BigInt
-  ): BigInt {
-    let result = super.call(
-      "updateStateOnRebalance",
-      "updateStateOnRebalance(address,address,uint256):(uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user),
-        ethereum.Value.fromUnsignedBigInt(_balanceIncrease)
-      ]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_updateStateOnRebalance(
-    _instrument: Address,
-    _user: Address,
-    _balanceIncrease: BigInt
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "updateStateOnRebalance",
-      "updateStateOnRebalance(address,address,uint256):(uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user),
-        ethereum.Value.fromUnsignedBigInt(_balanceIncrease)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getUserUnderlyingAssetBalance(_instrument: Address, _user: Address): BigInt {
-    let result = super.call(
-      "getUserUnderlyingAssetBalance",
-      "getUserUnderlyingAssetBalance(address,address):(uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getUserUnderlyingAssetBalance(
-    _instrument: Address,
-    _user: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getUserUnderlyingAssetBalance",
-      "getUserUnderlyingAssetBalance(address,address):(uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getInstrumentInterestRateStrategyAddress(_instrument: Address): Address {
-    let result = super.call(
-      "getInstrumentInterestRateStrategyAddress",
-      "getInstrumentInterestRateStrategyAddress(address):(address)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toAddress();
-  }
-
-  try_getInstrumentInterestRateStrategyAddress(
-    _instrument: Address
-  ): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "getInstrumentInterestRateStrategyAddress",
-      "getInstrumentInterestRateStrategyAddress(address):(address)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  getInstrumentITokenAddress(_instrument: Address): Address {
-    let result = super.call(
-      "getInstrumentITokenAddress",
-      "getInstrumentITokenAddress(address):(address)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toAddress();
-  }
-
-  try_getInstrumentITokenAddress(
-    _instrument: Address
-  ): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "getInstrumentITokenAddress",
-      "getInstrumentITokenAddress(address):(address)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  getInstrumentAvailableLiquidity(_instrument: Address): BigInt {
-    let result = super.call(
-      "getInstrumentAvailableLiquidity",
-      "getInstrumentAvailableLiquidity(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getInstrumentAvailableLiquidity(
-    _instrument: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getInstrumentAvailableLiquidity",
-      "getInstrumentAvailableLiquidity(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getInstrumentTotalLiquidity(_instrument: Address): BigInt {
-    let result = super.call(
-      "getInstrumentTotalLiquidity",
-      "getInstrumentTotalLiquidity(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getInstrumentTotalLiquidity(
-    _instrument: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getInstrumentTotalLiquidity",
-      "getInstrumentTotalLiquidity(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getInstrumentTotalBorrows(_instrument: Address): BigInt {
-    let result = super.call(
-      "getInstrumentTotalBorrows",
-      "getInstrumentTotalBorrows(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getInstrumentTotalBorrows(
-    _instrument: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getInstrumentTotalBorrows",
-      "getInstrumentTotalBorrows(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getInstrumentCurrentStableBorrowRate(_instrument: Address): BigInt {
-    let result = super.call(
-      "getInstrumentCurrentStableBorrowRate",
-      "getInstrumentCurrentStableBorrowRate(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getInstrumentCurrentStableBorrowRate(
-    _instrument: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getInstrumentCurrentStableBorrowRate",
-      "getInstrumentCurrentStableBorrowRate(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getInstrumentUtilizationRate(_instrument: Address): BigInt {
-    let result = super.call(
-      "getInstrumentUtilizationRate",
-      "getInstrumentUtilizationRate(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getInstrumentUtilizationRate(
-    _instrument: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getInstrumentUtilizationRate",
-      "getInstrumentUtilizationRate(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getUserCurrentBorrowRateMode(_instrument: Address, _user: Address): i32 {
-    let result = super.call(
-      "getUserCurrentBorrowRateMode",
-      "getUserCurrentBorrowRateMode(address,address):(uint8)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-
-    return result[0].toI32();
-  }
-
-  try_getUserCurrentBorrowRateMode(
-    _instrument: Address,
-    _user: Address
-  ): ethereum.CallResult<i32> {
-    let result = super.tryCall(
-      "getUserCurrentBorrowRateMode",
-      "getUserCurrentBorrowRateMode(address,address):(uint8)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toI32());
-  }
-
-  getUserBorrowBalances(
-    _instrument: Address,
-    _user: Address
-  ): LendingPoolCore__getUserBorrowBalancesResult {
-    let result = super.call(
-      "getUserBorrowBalances",
-      "getUserBorrowBalances(address,address):(uint256,uint256,uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-
-    return new LendingPoolCore__getUserBorrowBalancesResult(
-      result[0].toBigInt(),
-      result[1].toBigInt(),
-      result[2].toBigInt()
-    );
-  }
-
-  try_getUserBorrowBalances(
-    _instrument: Address,
-    _user: Address
-  ): ethereum.CallResult<LendingPoolCore__getUserBorrowBalancesResult> {
-    let result = super.tryCall(
-      "getUserBorrowBalances",
-      "getUserBorrowBalances(address,address):(uint256,uint256,uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new LendingPoolCore__getUserBorrowBalancesResult(
-        value[0].toBigInt(),
-        value[1].toBigInt(),
-        value[2].toBigInt()
-      )
-    );
-  }
-
-  getUserBasicInstrumentData(
-    _instrument: Address,
-    _user: Address
-  ): LendingPoolCore__getUserBasicInstrumentDataResult {
-    let result = super.call(
-      "getUserBasicInstrumentData",
-      "getUserBasicInstrumentData(address,address):(uint256,uint256,uint256,bool)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-
-    return new LendingPoolCore__getUserBasicInstrumentDataResult(
-      result[0].toBigInt(),
-      result[1].toBigInt(),
-      result[2].toBigInt(),
-      result[3].toBoolean()
-    );
-  }
-
-  try_getUserBasicInstrumentData(
-    _instrument: Address,
-    _user: Address
-  ): ethereum.CallResult<LendingPoolCore__getUserBasicInstrumentDataResult> {
-    let result = super.tryCall(
-      "getUserBasicInstrumentData",
-      "getUserBasicInstrumentData(address,address):(uint256,uint256,uint256,bool)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new LendingPoolCore__getUserBasicInstrumentDataResult(
-        value[0].toBigInt(),
-        value[1].toBigInt(),
-        value[2].toBigInt(),
-        value[3].toBoolean()
-      )
-    );
-  }
-
-  isUserAllowedToBorrowAtStable(
-    _instrument: Address,
-    _user: Address,
-    _amount: BigInt
-  ): boolean {
-    let result = super.call(
-      "isUserAllowedToBorrowAtStable",
-      "isUserAllowedToBorrowAtStable(address,address,uint256):(bool)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user),
-        ethereum.Value.fromUnsignedBigInt(_amount)
-      ]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_isUserAllowedToBorrowAtStable(
-    _instrument: Address,
-    _user: Address,
-    _amount: BigInt
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "isUserAllowedToBorrowAtStable",
-      "isUserAllowedToBorrowAtStable(address,address,uint256):(bool)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user),
-        ethereum.Value.fromUnsignedBigInt(_amount)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  getInstrumentNormalizedIncome(_instrument: Address): BigInt {
-    let result = super.call(
-      "getInstrumentNormalizedIncome",
-      "getInstrumentNormalizedIncome(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getInstrumentNormalizedIncome(
-    _instrument: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getInstrumentNormalizedIncome",
-      "getInstrumentNormalizedIncome(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getInstrumentTotalBorrowsStable(_instrument: Address): BigInt {
-    let result = super.call(
-      "getInstrumentTotalBorrowsStable",
-      "getInstrumentTotalBorrowsStable(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getInstrumentTotalBorrowsStable(
-    _instrument: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getInstrumentTotalBorrowsStable",
-      "getInstrumentTotalBorrowsStable(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getInstrumentTotalBorrowsVariable(_instrument: Address): BigInt {
-    let result = super.call(
-      "getInstrumentTotalBorrowsVariable",
-      "getInstrumentTotalBorrowsVariable(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getInstrumentTotalBorrowsVariable(
-    _instrument: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getInstrumentTotalBorrowsVariable",
-      "getInstrumentTotalBorrowsVariable(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getInstrumentLiquidationThreshold(_instrument: Address): BigInt {
-    let result = super.call(
-      "getInstrumentLiquidationThreshold",
-      "getInstrumentLiquidationThreshold(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getInstrumentLiquidationThreshold(
-    _instrument: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getInstrumentLiquidationThreshold",
-      "getInstrumentLiquidationThreshold(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getInstrumentLiquidationBonus(_instrument: Address): BigInt {
-    let result = super.call(
-      "getInstrumentLiquidationBonus",
-      "getInstrumentLiquidationBonus(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getInstrumentLiquidationBonus(
-    _instrument: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getInstrumentLiquidationBonus",
-      "getInstrumentLiquidationBonus(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getInstrumentCurrentVariableBorrowRate(_instrument: Address): BigInt {
-    let result = super.call(
-      "getInstrumentCurrentVariableBorrowRate",
-      "getInstrumentCurrentVariableBorrowRate(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getInstrumentCurrentVariableBorrowRate(
-    _instrument: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getInstrumentCurrentVariableBorrowRate",
-      "getInstrumentCurrentVariableBorrowRate(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getInstrumentCurrentAverageStableBorrowRate(_instrument: Address): BigInt {
-    let result = super.call(
-      "getInstrumentCurrentAverageStableBorrowRate",
-      "getInstrumentCurrentAverageStableBorrowRate(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getInstrumentCurrentAverageStableBorrowRate(
-    _instrument: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getInstrumentCurrentAverageStableBorrowRate",
-      "getInstrumentCurrentAverageStableBorrowRate(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getInstrumentCurrentLiquidityRate(_instrument: Address): BigInt {
-    let result = super.call(
-      "getInstrumentCurrentLiquidityRate",
-      "getInstrumentCurrentLiquidityRate(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getInstrumentCurrentLiquidityRate(
-    _instrument: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getInstrumentCurrentLiquidityRate",
-      "getInstrumentCurrentLiquidityRate(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getInstrumentLiquidityCumulativeIndex(_instrument: Address): BigInt {
-    let result = super.call(
-      "getInstrumentLiquidityCumulativeIndex",
-      "getInstrumentLiquidityCumulativeIndex(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getInstrumentLiquidityCumulativeIndex(
-    _instrument: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getInstrumentLiquidityCumulativeIndex",
-      "getInstrumentLiquidityCumulativeIndex(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getInstrumentVariableBorrowsCumulativeIndex(_instrument: Address): BigInt {
-    let result = super.call(
-      "getInstrumentVariableBorrowsCumulativeIndex",
-      "getInstrumentVariableBorrowsCumulativeIndex(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getInstrumentVariableBorrowsCumulativeIndex(
-    _instrument: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getInstrumentVariableBorrowsCumulativeIndex",
-      "getInstrumentVariableBorrowsCumulativeIndex(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getInstrumentConfiguration(
-    _instrument: Address
-  ): LendingPoolCore__getInstrumentConfigurationResult {
-    let result = super.call(
-      "getInstrumentConfiguration",
-      "getInstrumentConfiguration(address):(uint256,uint256,uint256,bool)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return new LendingPoolCore__getInstrumentConfigurationResult(
-      result[0].toBigInt(),
-      result[1].toBigInt(),
-      result[2].toBigInt(),
-      result[3].toBoolean()
-    );
-  }
-
-  try_getInstrumentConfiguration(
-    _instrument: Address
-  ): ethereum.CallResult<LendingPoolCore__getInstrumentConfigurationResult> {
-    let result = super.tryCall(
-      "getInstrumentConfiguration",
-      "getInstrumentConfiguration(address):(uint256,uint256,uint256,bool)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new LendingPoolCore__getInstrumentConfigurationResult(
-        value[0].toBigInt(),
-        value[1].toBigInt(),
-        value[2].toBigInt(),
-        value[3].toBoolean()
-      )
-    );
-  }
-
-  getInstrumentDecimals(_instrument: Address): BigInt {
-    let result = super.call(
-      "getInstrumentDecimals",
-      "getInstrumentDecimals(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getInstrumentDecimals(_instrument: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getInstrumentDecimals",
-      "getInstrumentDecimals(address):(uint256)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  isInstrumentBorrowingEnabled(_instrument: Address): boolean {
-    let result = super.call(
-      "isInstrumentBorrowingEnabled",
-      "isInstrumentBorrowingEnabled(address):(bool)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_isInstrumentBorrowingEnabled(
-    _instrument: Address
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "isInstrumentBorrowingEnabled",
-      "isInstrumentBorrowingEnabled(address):(bool)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  isInstrumentUsageAsCollateralEnabled(_instrument: Address): boolean {
-    let result = super.call(
-      "isInstrumentUsageAsCollateralEnabled",
-      "isInstrumentUsageAsCollateralEnabled(address):(bool)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_isInstrumentUsageAsCollateralEnabled(
-    _instrument: Address
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "isInstrumentUsageAsCollateralEnabled",
-      "isInstrumentUsageAsCollateralEnabled(address):(bool)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  getInstrumentIsStableBorrowRateEnabled(_instrument: Address): boolean {
-    let result = super.call(
-      "getInstrumentIsStableBorrowRateEnabled",
-      "getInstrumentIsStableBorrowRateEnabled(address):(bool)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_getInstrumentIsStableBorrowRateEnabled(
-    _instrument: Address
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "getInstrumentIsStableBorrowRateEnabled",
-      "getInstrumentIsStableBorrowRateEnabled(address):(bool)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  getInstrumentIsActive(_instrument: Address): boolean {
-    let result = super.call(
-      "getInstrumentIsActive",
-      "getInstrumentIsActive(address):(bool)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_getInstrumentIsActive(
-    _instrument: Address
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "getInstrumentIsActive",
-      "getInstrumentIsActive(address):(bool)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  getInstrumentIsFreezed(_instrument: Address): boolean {
-    let result = super.call(
-      "getInstrumentIsFreezed",
-      "getInstrumentIsFreezed(address):(bool)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_getInstrumentIsFreezed(
-    _instrument: Address
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "getInstrumentIsFreezed",
-      "getInstrumentIsFreezed(address):(bool)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  getInstrumentLastUpdate(_instrument: Address): BigInt {
-    let result = super.call(
-      "getInstrumentLastUpdate",
-      "getInstrumentLastUpdate(address):(uint40)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getInstrumentLastUpdate(
-    _instrument: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getInstrumentLastUpdate",
-      "getInstrumentLastUpdate(address):(uint40)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getInstruments(): Array<Address> {
-    let result = super.call(
-      "getInstruments",
-      "getInstruments():(address[])",
-      []
-    );
-
-    return result[0].toAddressArray();
-  }
-
-  try_getInstruments(): ethereum.CallResult<Array<Address>> {
-    let result = super.tryCall(
-      "getInstruments",
-      "getInstruments():(address[])",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddressArray());
-  }
-
-  isUserUseInstrumentAsCollateralEnabled(
-    _instrument: Address,
-    _user: Address
-  ): boolean {
-    let result = super.call(
-      "isUserUseInstrumentAsCollateralEnabled",
-      "isUserUseInstrumentAsCollateralEnabled(address,address):(bool)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_isUserUseInstrumentAsCollateralEnabled(
-    _instrument: Address,
-    _user: Address
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "isUserUseInstrumentAsCollateralEnabled",
-      "isUserUseInstrumentAsCollateralEnabled(address,address):(bool)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  getUserOriginationFee(_instrument: Address, _user: Address): BigInt {
-    let result = super.call(
-      "getUserOriginationFee",
-      "getUserOriginationFee(address,address):(uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getUserOriginationFee(
-    _instrument: Address,
-    _user: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getUserOriginationFee",
-      "getUserOriginationFee(address,address):(uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getUserCurrentStableBorrowRate(_instrument: Address, _user: Address): BigInt {
-    let result = super.call(
-      "getUserCurrentStableBorrowRate",
-      "getUserCurrentStableBorrowRate(address,address):(uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getUserCurrentStableBorrowRate(
-    _instrument: Address,
-    _user: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getUserCurrentStableBorrowRate",
-      "getUserCurrentStableBorrowRate(address,address):(uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getUserVariableBorrowCumulativeIndex(
-    _instrument: Address,
-    _user: Address
-  ): BigInt {
-    let result = super.call(
-      "getUserVariableBorrowCumulativeIndex",
-      "getUserVariableBorrowCumulativeIndex(address,address):(uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getUserVariableBorrowCumulativeIndex(
-    _instrument: Address,
-    _user: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getUserVariableBorrowCumulativeIndex",
-      "getUserVariableBorrowCumulativeIndex(address,address):(uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getUserLastUpdate(_instrument: Address, _user: Address): BigInt {
-    let result = super.call(
-      "getUserLastUpdate",
-      "getUserLastUpdate(address,address):(uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getUserLastUpdate(
-    _instrument: Address,
-    _user: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getUserLastUpdate",
-      "getUserLastUpdate(address,address):(uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  removeInstrument(_instrumentToRemove: Address): boolean {
-    let result = super.call(
-      "removeInstrument",
-      "removeInstrument(address):(bool)",
-      [ethereum.Value.fromAddress(_instrumentToRemove)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_removeInstrument(
-    _instrumentToRemove: Address
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "removeInstrument",
-      "removeInstrument(address):(bool)",
-      [ethereum.Value.fromAddress(_instrumentToRemove)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
 }
 
 export class DefaultCall extends ethereum.Call {
@@ -1485,6 +1510,226 @@ export class DefaultCall__Outputs {
   _call: DefaultCall;
 
   constructor(call: DefaultCall) {
+    this._call = call;
+  }
+}
+
+export class InstrumentActivationSwitchCall extends ethereum.Call {
+  get inputs(): InstrumentActivationSwitchCall__Inputs {
+    return new InstrumentActivationSwitchCall__Inputs(this);
+  }
+
+  get outputs(): InstrumentActivationSwitchCall__Outputs {
+    return new InstrumentActivationSwitchCall__Outputs(this);
+  }
+}
+
+export class InstrumentActivationSwitchCall__Inputs {
+  _call: InstrumentActivationSwitchCall;
+
+  constructor(call: InstrumentActivationSwitchCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get toBeActivated(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class InstrumentActivationSwitchCall__Outputs {
+  _call: InstrumentActivationSwitchCall;
+
+  constructor(call: InstrumentActivationSwitchCall) {
+    this._call = call;
+  }
+}
+
+export class InstrumentFreezeSwitchCall extends ethereum.Call {
+  get inputs(): InstrumentFreezeSwitchCall__Inputs {
+    return new InstrumentFreezeSwitchCall__Inputs(this);
+  }
+
+  get outputs(): InstrumentFreezeSwitchCall__Outputs {
+    return new InstrumentFreezeSwitchCall__Outputs(this);
+  }
+}
+
+export class InstrumentFreezeSwitchCall__Inputs {
+  _call: InstrumentFreezeSwitchCall;
+
+  constructor(call: InstrumentFreezeSwitchCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get toBeActivated(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class InstrumentFreezeSwitchCall__Outputs {
+  _call: InstrumentFreezeSwitchCall;
+
+  constructor(call: InstrumentFreezeSwitchCall) {
+    this._call = call;
+  }
+}
+
+export class BorrowingOnInstrumentSwitchCall extends ethereum.Call {
+  get inputs(): BorrowingOnInstrumentSwitchCall__Inputs {
+    return new BorrowingOnInstrumentSwitchCall__Inputs(this);
+  }
+
+  get outputs(): BorrowingOnInstrumentSwitchCall__Outputs {
+    return new BorrowingOnInstrumentSwitchCall__Outputs(this);
+  }
+}
+
+export class BorrowingOnInstrumentSwitchCall__Inputs {
+  _call: BorrowingOnInstrumentSwitchCall;
+
+  constructor(call: BorrowingOnInstrumentSwitchCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get toBeActivated(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class BorrowingOnInstrumentSwitchCall__Outputs {
+  _call: BorrowingOnInstrumentSwitchCall;
+
+  constructor(call: BorrowingOnInstrumentSwitchCall) {
+    this._call = call;
+  }
+}
+
+export class DisableInstrumentAsCollateralCall extends ethereum.Call {
+  get inputs(): DisableInstrumentAsCollateralCall__Inputs {
+    return new DisableInstrumentAsCollateralCall__Inputs(this);
+  }
+
+  get outputs(): DisableInstrumentAsCollateralCall__Outputs {
+    return new DisableInstrumentAsCollateralCall__Outputs(this);
+  }
+}
+
+export class DisableInstrumentAsCollateralCall__Inputs {
+  _call: DisableInstrumentAsCollateralCall;
+
+  constructor(call: DisableInstrumentAsCollateralCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class DisableInstrumentAsCollateralCall__Outputs {
+  _call: DisableInstrumentAsCollateralCall;
+
+  constructor(call: DisableInstrumentAsCollateralCall) {
+    this._call = call;
+  }
+}
+
+export class EnableInstrumentAsCollateralCall extends ethereum.Call {
+  get inputs(): EnableInstrumentAsCollateralCall__Inputs {
+    return new EnableInstrumentAsCollateralCall__Inputs(this);
+  }
+
+  get outputs(): EnableInstrumentAsCollateralCall__Outputs {
+    return new EnableInstrumentAsCollateralCall__Outputs(this);
+  }
+}
+
+export class EnableInstrumentAsCollateralCall__Inputs {
+  _call: EnableInstrumentAsCollateralCall;
+
+  constructor(call: EnableInstrumentAsCollateralCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _baseLTVasCollateral(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get _liquidationThreshold(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get _liquidationBonus(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+}
+
+export class EnableInstrumentAsCollateralCall__Outputs {
+  _call: EnableInstrumentAsCollateralCall;
+
+  constructor(call: EnableInstrumentAsCollateralCall) {
+    this._call = call;
+  }
+}
+
+export class InitInstrumentCall extends ethereum.Call {
+  get inputs(): InitInstrumentCall__Inputs {
+    return new InitInstrumentCall__Inputs(this);
+  }
+
+  get outputs(): InitInstrumentCall__Outputs {
+    return new InitInstrumentCall__Outputs(this);
+  }
+}
+
+export class InitInstrumentCall__Inputs {
+  _call: InitInstrumentCall;
+
+  constructor(call: InitInstrumentCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _iTokenAddress(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get _decimals(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get _interestRateStrategyAddress(): Address {
+    return this._call.inputValues[3].value.toAddress();
+  }
+
+  get _sighStreamAddress(): Address {
+    return this._call.inputValues[4].value.toAddress();
+  }
+}
+
+export class InitInstrumentCall__Outputs {
+  _call: InitInstrumentCall;
+
+  constructor(call: InitInstrumentCall) {
     this._call = call;
   }
 }
@@ -1519,20 +1764,152 @@ export class InitializeCall__Outputs {
   }
 }
 
-export class UpdateStateOnDepositCall extends ethereum.Call {
-  get inputs(): UpdateStateOnDepositCall__Inputs {
-    return new UpdateStateOnDepositCall__Inputs(this);
+export class InstrumentStableBorrowRateSwitchCall extends ethereum.Call {
+  get inputs(): InstrumentStableBorrowRateSwitchCall__Inputs {
+    return new InstrumentStableBorrowRateSwitchCall__Inputs(this);
   }
 
-  get outputs(): UpdateStateOnDepositCall__Outputs {
-    return new UpdateStateOnDepositCall__Outputs(this);
+  get outputs(): InstrumentStableBorrowRateSwitchCall__Outputs {
+    return new InstrumentStableBorrowRateSwitchCall__Outputs(this);
   }
 }
 
-export class UpdateStateOnDepositCall__Inputs {
-  _call: UpdateStateOnDepositCall;
+export class InstrumentStableBorrowRateSwitchCall__Inputs {
+  _call: InstrumentStableBorrowRateSwitchCall;
 
-  constructor(call: UpdateStateOnDepositCall) {
+  constructor(call: InstrumentStableBorrowRateSwitchCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get toBeActivated(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class InstrumentStableBorrowRateSwitchCall__Outputs {
+  _call: InstrumentStableBorrowRateSwitchCall;
+
+  constructor(call: InstrumentStableBorrowRateSwitchCall) {
+    this._call = call;
+  }
+}
+
+export class LiquidateFeeCall extends ethereum.Call {
+  get inputs(): LiquidateFeeCall__Inputs {
+    return new LiquidateFeeCall__Inputs(this);
+  }
+
+  get outputs(): LiquidateFeeCall__Outputs {
+    return new LiquidateFeeCall__Outputs(this);
+  }
+}
+
+export class LiquidateFeeCall__Inputs {
+  _call: LiquidateFeeCall;
+
+  constructor(call: LiquidateFeeCall) {
+    this._call = call;
+  }
+
+  get _token(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _amount(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get _destination(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+}
+
+export class LiquidateFeeCall__Outputs {
+  _call: LiquidateFeeCall;
+
+  constructor(call: LiquidateFeeCall) {
+    this._call = call;
+  }
+}
+
+export class RefreshConfigurationCall extends ethereum.Call {
+  get inputs(): RefreshConfigurationCall__Inputs {
+    return new RefreshConfigurationCall__Inputs(this);
+  }
+
+  get outputs(): RefreshConfigurationCall__Outputs {
+    return new RefreshConfigurationCall__Outputs(this);
+  }
+}
+
+export class RefreshConfigurationCall__Inputs {
+  _call: RefreshConfigurationCall;
+
+  constructor(call: RefreshConfigurationCall) {
+    this._call = call;
+  }
+}
+
+export class RefreshConfigurationCall__Outputs {
+  _call: RefreshConfigurationCall;
+
+  constructor(call: RefreshConfigurationCall) {
+    this._call = call;
+  }
+}
+
+export class SetInstrumentInterestRateStrategyAddressCall extends ethereum.Call {
+  get inputs(): SetInstrumentInterestRateStrategyAddressCall__Inputs {
+    return new SetInstrumentInterestRateStrategyAddressCall__Inputs(this);
+  }
+
+  get outputs(): SetInstrumentInterestRateStrategyAddressCall__Outputs {
+    return new SetInstrumentInterestRateStrategyAddressCall__Outputs(this);
+  }
+}
+
+export class SetInstrumentInterestRateStrategyAddressCall__Inputs {
+  _call: SetInstrumentInterestRateStrategyAddressCall;
+
+  constructor(call: SetInstrumentInterestRateStrategyAddressCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _rateStrategyAddress(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+}
+
+export class SetInstrumentInterestRateStrategyAddressCall__Outputs {
+  _call: SetInstrumentInterestRateStrategyAddressCall;
+
+  constructor(call: SetInstrumentInterestRateStrategyAddressCall) {
+    this._call = call;
+  }
+}
+
+export class SetUserUseInstrumentAsCollateralCall extends ethereum.Call {
+  get inputs(): SetUserUseInstrumentAsCollateralCall__Inputs {
+    return new SetUserUseInstrumentAsCollateralCall__Inputs(this);
+  }
+
+  get outputs(): SetUserUseInstrumentAsCollateralCall__Outputs {
+    return new SetUserUseInstrumentAsCollateralCall__Outputs(this);
+  }
+}
+
+export class SetUserUseInstrumentAsCollateralCall__Inputs {
+  _call: SetUserUseInstrumentAsCollateralCall;
+
+  constructor(call: SetUserUseInstrumentAsCollateralCall) {
     this._call = call;
   }
 
@@ -1544,19 +1921,57 @@ export class UpdateStateOnDepositCall__Inputs {
     return this._call.inputValues[1].value.toAddress();
   }
 
+  get _useAsCollateral(): boolean {
+    return this._call.inputValues[2].value.toBoolean();
+  }
+}
+
+export class SetUserUseInstrumentAsCollateralCall__Outputs {
+  _call: SetUserUseInstrumentAsCollateralCall;
+
+  constructor(call: SetUserUseInstrumentAsCollateralCall) {
+    this._call = call;
+  }
+}
+
+export class TransferToFeeCollectionAddressCall extends ethereum.Call {
+  get inputs(): TransferToFeeCollectionAddressCall__Inputs {
+    return new TransferToFeeCollectionAddressCall__Inputs(this);
+  }
+
+  get outputs(): TransferToFeeCollectionAddressCall__Outputs {
+    return new TransferToFeeCollectionAddressCall__Outputs(this);
+  }
+}
+
+export class TransferToFeeCollectionAddressCall__Inputs {
+  _call: TransferToFeeCollectionAddressCall;
+
+  constructor(call: TransferToFeeCollectionAddressCall) {
+    this._call = call;
+  }
+
+  get _token(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _user(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
   get _amount(): BigInt {
     return this._call.inputValues[2].value.toBigInt();
   }
 
-  get _isFirstDeposit(): boolean {
-    return this._call.inputValues[3].value.toBoolean();
+  get _destination(): Address {
+    return this._call.inputValues[3].value.toAddress();
   }
 }
 
-export class UpdateStateOnDepositCall__Outputs {
-  _call: UpdateStateOnDepositCall;
+export class TransferToFeeCollectionAddressCall__Outputs {
+  _call: TransferToFeeCollectionAddressCall;
 
-  constructor(call: UpdateStateOnDepositCall) {
+  constructor(call: TransferToFeeCollectionAddressCall) {
     this._call = call;
   }
 }
@@ -1599,48 +2014,6 @@ export class TransferToReserveCall__Outputs {
   }
 }
 
-export class UpdateStateOnRedeemCall extends ethereum.Call {
-  get inputs(): UpdateStateOnRedeemCall__Inputs {
-    return new UpdateStateOnRedeemCall__Inputs(this);
-  }
-
-  get outputs(): UpdateStateOnRedeemCall__Outputs {
-    return new UpdateStateOnRedeemCall__Outputs(this);
-  }
-}
-
-export class UpdateStateOnRedeemCall__Inputs {
-  _call: UpdateStateOnRedeemCall;
-
-  constructor(call: UpdateStateOnRedeemCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _user(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get _amountRedeemed(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-
-  get _userRedeemedEverything(): boolean {
-    return this._call.inputValues[3].value.toBoolean();
-  }
-}
-
-export class UpdateStateOnRedeemCall__Outputs {
-  _call: UpdateStateOnRedeemCall;
-
-  constructor(call: UpdateStateOnRedeemCall) {
-    this._call = call;
-  }
-}
-
 export class TransferToUserCall extends ethereum.Call {
   get inputs(): TransferToUserCall__Inputs {
     return new TransferToUserCall__Inputs(this);
@@ -1675,6 +2048,48 @@ export class TransferToUserCall__Outputs {
   _call: TransferToUserCall;
 
   constructor(call: TransferToUserCall) {
+    this._call = call;
+  }
+}
+
+export class UpdateInstrumentCollateralParametersCall extends ethereum.Call {
+  get inputs(): UpdateInstrumentCollateralParametersCall__Inputs {
+    return new UpdateInstrumentCollateralParametersCall__Inputs(this);
+  }
+
+  get outputs(): UpdateInstrumentCollateralParametersCall__Outputs {
+    return new UpdateInstrumentCollateralParametersCall__Outputs(this);
+  }
+}
+
+export class UpdateInstrumentCollateralParametersCall__Inputs {
+  _call: UpdateInstrumentCollateralParametersCall;
+
+  constructor(call: UpdateInstrumentCollateralParametersCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _ltv(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get _threshold(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get _bonus(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+}
+
+export class UpdateInstrumentCollateralParametersCall__Outputs {
+  _call: UpdateInstrumentCollateralParametersCall;
+
+  constructor(call: UpdateInstrumentCollateralParametersCall) {
     this._call = call;
   }
 }
@@ -1733,20 +2148,20 @@ export class UpdateStateOnBorrowCall__Outputs {
   }
 }
 
-export class UpdateStateOnRepayCall extends ethereum.Call {
-  get inputs(): UpdateStateOnRepayCall__Inputs {
-    return new UpdateStateOnRepayCall__Inputs(this);
+export class UpdateStateOnDepositCall extends ethereum.Call {
+  get inputs(): UpdateStateOnDepositCall__Inputs {
+    return new UpdateStateOnDepositCall__Inputs(this);
   }
 
-  get outputs(): UpdateStateOnRepayCall__Outputs {
-    return new UpdateStateOnRepayCall__Outputs(this);
+  get outputs(): UpdateStateOnDepositCall__Outputs {
+    return new UpdateStateOnDepositCall__Outputs(this);
   }
 }
 
-export class UpdateStateOnRepayCall__Inputs {
-  _call: UpdateStateOnRepayCall;
+export class UpdateStateOnDepositCall__Inputs {
+  _call: UpdateStateOnDepositCall;
 
-  constructor(call: UpdateStateOnRepayCall) {
+  constructor(call: UpdateStateOnDepositCall) {
     this._call = call;
   }
 
@@ -1758,165 +2173,19 @@ export class UpdateStateOnRepayCall__Inputs {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get _paybackAmountMinusFees(): BigInt {
+  get _amount(): BigInt {
     return this._call.inputValues[2].value.toBigInt();
   }
 
-  get _originationFeeRepaid(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
-  }
-
-  get _balanceIncrease(): BigInt {
-    return this._call.inputValues[4].value.toBigInt();
-  }
-
-  get _repaidWholeLoan(): boolean {
-    return this._call.inputValues[5].value.toBoolean();
+  get _isFirstDeposit(): boolean {
+    return this._call.inputValues[3].value.toBoolean();
   }
 }
 
-export class UpdateStateOnRepayCall__Outputs {
-  _call: UpdateStateOnRepayCall;
+export class UpdateStateOnDepositCall__Outputs {
+  _call: UpdateStateOnDepositCall;
 
-  constructor(call: UpdateStateOnRepayCall) {
-    this._call = call;
-  }
-}
-
-export class UpdateStateOnSwapRateCall extends ethereum.Call {
-  get inputs(): UpdateStateOnSwapRateCall__Inputs {
-    return new UpdateStateOnSwapRateCall__Inputs(this);
-  }
-
-  get outputs(): UpdateStateOnSwapRateCall__Outputs {
-    return new UpdateStateOnSwapRateCall__Outputs(this);
-  }
-}
-
-export class UpdateStateOnSwapRateCall__Inputs {
-  _call: UpdateStateOnSwapRateCall;
-
-  constructor(call: UpdateStateOnSwapRateCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _user(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get _principalBorrowBalance(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-
-  get _compoundedBorrowBalance(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
-  }
-
-  get _balanceIncrease(): BigInt {
-    return this._call.inputValues[4].value.toBigInt();
-  }
-
-  get _currentRateMode(): i32 {
-    return this._call.inputValues[5].value.toI32();
-  }
-}
-
-export class UpdateStateOnSwapRateCall__Outputs {
-  _call: UpdateStateOnSwapRateCall;
-
-  constructor(call: UpdateStateOnSwapRateCall) {
-    this._call = call;
-  }
-
-  get value0(): i32 {
-    return this._call.outputValues[0].value.toI32();
-  }
-
-  get value1(): BigInt {
-    return this._call.outputValues[1].value.toBigInt();
-  }
-}
-
-export class UpdateStateOnRebalanceCall extends ethereum.Call {
-  get inputs(): UpdateStateOnRebalanceCall__Inputs {
-    return new UpdateStateOnRebalanceCall__Inputs(this);
-  }
-
-  get outputs(): UpdateStateOnRebalanceCall__Outputs {
-    return new UpdateStateOnRebalanceCall__Outputs(this);
-  }
-}
-
-export class UpdateStateOnRebalanceCall__Inputs {
-  _call: UpdateStateOnRebalanceCall;
-
-  constructor(call: UpdateStateOnRebalanceCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _user(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get _balanceIncrease(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-}
-
-export class UpdateStateOnRebalanceCall__Outputs {
-  _call: UpdateStateOnRebalanceCall;
-
-  constructor(call: UpdateStateOnRebalanceCall) {
-    this._call = call;
-  }
-
-  get value0(): BigInt {
-    return this._call.outputValues[0].value.toBigInt();
-  }
-}
-
-export class SetUserUseInstrumentAsCollateralCall extends ethereum.Call {
-  get inputs(): SetUserUseInstrumentAsCollateralCall__Inputs {
-    return new SetUserUseInstrumentAsCollateralCall__Inputs(this);
-  }
-
-  get outputs(): SetUserUseInstrumentAsCollateralCall__Outputs {
-    return new SetUserUseInstrumentAsCollateralCall__Outputs(this);
-  }
-}
-
-export class SetUserUseInstrumentAsCollateralCall__Inputs {
-  _call: SetUserUseInstrumentAsCollateralCall;
-
-  constructor(call: SetUserUseInstrumentAsCollateralCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _user(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get _useAsCollateral(): boolean {
-    return this._call.inputValues[2].value.toBoolean();
-  }
-}
-
-export class SetUserUseInstrumentAsCollateralCall__Outputs {
-  _call: SetUserUseInstrumentAsCollateralCall;
-
-  constructor(call: SetUserUseInstrumentAsCollateralCall) {
+  constructor(call: UpdateStateOnDepositCall) {
     this._call = call;
   }
 }
@@ -2025,62 +2294,24 @@ export class UpdateStateOnLiquidationCall__Outputs {
   }
 }
 
-export class LiquidateFeeCall extends ethereum.Call {
-  get inputs(): LiquidateFeeCall__Inputs {
-    return new LiquidateFeeCall__Inputs(this);
+export class UpdateStateOnRebalanceCall extends ethereum.Call {
+  get inputs(): UpdateStateOnRebalanceCall__Inputs {
+    return new UpdateStateOnRebalanceCall__Inputs(this);
   }
 
-  get outputs(): LiquidateFeeCall__Outputs {
-    return new LiquidateFeeCall__Outputs(this);
+  get outputs(): UpdateStateOnRebalanceCall__Outputs {
+    return new UpdateStateOnRebalanceCall__Outputs(this);
   }
 }
 
-export class LiquidateFeeCall__Inputs {
-  _call: LiquidateFeeCall;
+export class UpdateStateOnRebalanceCall__Inputs {
+  _call: UpdateStateOnRebalanceCall;
 
-  constructor(call: LiquidateFeeCall) {
+  constructor(call: UpdateStateOnRebalanceCall) {
     this._call = call;
   }
 
-  get _token(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _amount(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get _destination(): Address {
-    return this._call.inputValues[2].value.toAddress();
-  }
-}
-
-export class LiquidateFeeCall__Outputs {
-  _call: LiquidateFeeCall;
-
-  constructor(call: LiquidateFeeCall) {
-    this._call = call;
-  }
-}
-
-export class TransferToFeeCollectionAddressCall extends ethereum.Call {
-  get inputs(): TransferToFeeCollectionAddressCall__Inputs {
-    return new TransferToFeeCollectionAddressCall__Inputs(this);
-  }
-
-  get outputs(): TransferToFeeCollectionAddressCall__Outputs {
-    return new TransferToFeeCollectionAddressCall__Outputs(this);
-  }
-}
-
-export class TransferToFeeCollectionAddressCall__Inputs {
-  _call: TransferToFeeCollectionAddressCall;
-
-  constructor(call: TransferToFeeCollectionAddressCall) {
-    this._call = call;
-  }
-
-  get _token(): Address {
+  get _instrument(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
@@ -2088,63 +2319,37 @@ export class TransferToFeeCollectionAddressCall__Inputs {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get _amount(): BigInt {
+  get _balanceIncrease(): BigInt {
     return this._call.inputValues[2].value.toBigInt();
   }
-
-  get _destination(): Address {
-    return this._call.inputValues[3].value.toAddress();
-  }
 }
 
-export class TransferToFeeCollectionAddressCall__Outputs {
-  _call: TransferToFeeCollectionAddressCall;
+export class UpdateStateOnRebalanceCall__Outputs {
+  _call: UpdateStateOnRebalanceCall;
 
-  constructor(call: TransferToFeeCollectionAddressCall) {
+  constructor(call: UpdateStateOnRebalanceCall) {
     this._call = call;
   }
-}
 
-export class RefreshConfigurationCall extends ethereum.Call {
-  get inputs(): RefreshConfigurationCall__Inputs {
-    return new RefreshConfigurationCall__Inputs(this);
-  }
-
-  get outputs(): RefreshConfigurationCall__Outputs {
-    return new RefreshConfigurationCall__Outputs(this);
+  get value0(): BigInt {
+    return this._call.outputValues[0].value.toBigInt();
   }
 }
 
-export class RefreshConfigurationCall__Inputs {
-  _call: RefreshConfigurationCall;
+export class UpdateStateOnRedeemCall extends ethereum.Call {
+  get inputs(): UpdateStateOnRedeemCall__Inputs {
+    return new UpdateStateOnRedeemCall__Inputs(this);
+  }
 
-  constructor(call: RefreshConfigurationCall) {
-    this._call = call;
+  get outputs(): UpdateStateOnRedeemCall__Outputs {
+    return new UpdateStateOnRedeemCall__Outputs(this);
   }
 }
 
-export class RefreshConfigurationCall__Outputs {
-  _call: RefreshConfigurationCall;
+export class UpdateStateOnRedeemCall__Inputs {
+  _call: UpdateStateOnRedeemCall;
 
-  constructor(call: RefreshConfigurationCall) {
-    this._call = call;
-  }
-}
-
-export class InitInstrumentCall extends ethereum.Call {
-  get inputs(): InitInstrumentCall__Inputs {
-    return new InitInstrumentCall__Inputs(this);
-  }
-
-  get outputs(): InitInstrumentCall__Outputs {
-    return new InitInstrumentCall__Outputs(this);
-  }
-}
-
-export class InitInstrumentCall__Inputs {
-  _call: InitInstrumentCall;
-
-  constructor(call: InitInstrumentCall) {
+  constructor(call: UpdateStateOnRedeemCall) {
     this._call = call;
   }
 
@@ -2152,75 +2357,41 @@ export class InitInstrumentCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _iTokenAddress(): Address {
+  get _user(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get _decimals(): BigInt {
+  get _amountRedeemed(): BigInt {
     return this._call.inputValues[2].value.toBigInt();
   }
 
-  get _interestRateStrategyAddress(): Address {
-    return this._call.inputValues[3].value.toAddress();
+  get _userRedeemedEverything(): boolean {
+    return this._call.inputValues[3].value.toBoolean();
   }
 }
 
-export class InitInstrumentCall__Outputs {
-  _call: InitInstrumentCall;
+export class UpdateStateOnRedeemCall__Outputs {
+  _call: UpdateStateOnRedeemCall;
 
-  constructor(call: InitInstrumentCall) {
+  constructor(call: UpdateStateOnRedeemCall) {
     this._call = call;
   }
 }
 
-export class RemoveInstrumentCall extends ethereum.Call {
-  get inputs(): RemoveInstrumentCall__Inputs {
-    return new RemoveInstrumentCall__Inputs(this);
+export class UpdateStateOnRepayCall extends ethereum.Call {
+  get inputs(): UpdateStateOnRepayCall__Inputs {
+    return new UpdateStateOnRepayCall__Inputs(this);
   }
 
-  get outputs(): RemoveInstrumentCall__Outputs {
-    return new RemoveInstrumentCall__Outputs(this);
-  }
-}
-
-export class RemoveInstrumentCall__Inputs {
-  _call: RemoveInstrumentCall;
-
-  constructor(call: RemoveInstrumentCall) {
-    this._call = call;
-  }
-
-  get _instrumentToRemove(): Address {
-    return this._call.inputValues[0].value.toAddress();
+  get outputs(): UpdateStateOnRepayCall__Outputs {
+    return new UpdateStateOnRepayCall__Outputs(this);
   }
 }
 
-export class RemoveInstrumentCall__Outputs {
-  _call: RemoveInstrumentCall;
+export class UpdateStateOnRepayCall__Inputs {
+  _call: UpdateStateOnRepayCall;
 
-  constructor(call: RemoveInstrumentCall) {
-    this._call = call;
-  }
-
-  get value0(): boolean {
-    return this._call.outputValues[0].value.toBoolean();
-  }
-}
-
-export class SetInstrumentInterestRateStrategyAddressCall extends ethereum.Call {
-  get inputs(): SetInstrumentInterestRateStrategyAddressCall__Inputs {
-    return new SetInstrumentInterestRateStrategyAddressCall__Inputs(this);
-  }
-
-  get outputs(): SetInstrumentInterestRateStrategyAddressCall__Outputs {
-    return new SetInstrumentInterestRateStrategyAddressCall__Outputs(this);
-  }
-}
-
-export class SetInstrumentInterestRateStrategyAddressCall__Inputs {
-  _call: SetInstrumentInterestRateStrategyAddressCall;
-
-  constructor(call: SetInstrumentInterestRateStrategyAddressCall) {
+  constructor(call: UpdateStateOnRepayCall) {
     this._call = call;
   }
 
@@ -2228,345 +2399,49 @@ export class SetInstrumentInterestRateStrategyAddressCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _rateStrategyAddress(): Address {
+  get _user(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
-}
 
-export class SetInstrumentInterestRateStrategyAddressCall__Outputs {
-  _call: SetInstrumentInterestRateStrategyAddressCall;
-
-  constructor(call: SetInstrumentInterestRateStrategyAddressCall) {
-    this._call = call;
-  }
-}
-
-export class EnableBorrowingOnInstrumentCall extends ethereum.Call {
-  get inputs(): EnableBorrowingOnInstrumentCall__Inputs {
-    return new EnableBorrowingOnInstrumentCall__Inputs(this);
-  }
-
-  get outputs(): EnableBorrowingOnInstrumentCall__Outputs {
-    return new EnableBorrowingOnInstrumentCall__Outputs(this);
-  }
-}
-
-export class EnableBorrowingOnInstrumentCall__Inputs {
-  _call: EnableBorrowingOnInstrumentCall;
-
-  constructor(call: EnableBorrowingOnInstrumentCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class EnableBorrowingOnInstrumentCall__Outputs {
-  _call: EnableBorrowingOnInstrumentCall;
-
-  constructor(call: EnableBorrowingOnInstrumentCall) {
-    this._call = call;
-  }
-}
-
-export class DisableBorrowingOnInstrumentCall extends ethereum.Call {
-  get inputs(): DisableBorrowingOnInstrumentCall__Inputs {
-    return new DisableBorrowingOnInstrumentCall__Inputs(this);
-  }
-
-  get outputs(): DisableBorrowingOnInstrumentCall__Outputs {
-    return new DisableBorrowingOnInstrumentCall__Outputs(this);
-  }
-}
-
-export class DisableBorrowingOnInstrumentCall__Inputs {
-  _call: DisableBorrowingOnInstrumentCall;
-
-  constructor(call: DisableBorrowingOnInstrumentCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class DisableBorrowingOnInstrumentCall__Outputs {
-  _call: DisableBorrowingOnInstrumentCall;
-
-  constructor(call: DisableBorrowingOnInstrumentCall) {
-    this._call = call;
-  }
-}
-
-export class EnableInstrumentAsCollateralCall extends ethereum.Call {
-  get inputs(): EnableInstrumentAsCollateralCall__Inputs {
-    return new EnableInstrumentAsCollateralCall__Inputs(this);
-  }
-
-  get outputs(): EnableInstrumentAsCollateralCall__Outputs {
-    return new EnableInstrumentAsCollateralCall__Outputs(this);
-  }
-}
-
-export class EnableInstrumentAsCollateralCall__Inputs {
-  _call: EnableInstrumentAsCollateralCall;
-
-  constructor(call: EnableInstrumentAsCollateralCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _baseLTVasCollateral(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get _liquidationThreshold(): BigInt {
+  get _paybackAmountMinusFees(): BigInt {
     return this._call.inputValues[2].value.toBigInt();
   }
 
-  get _liquidationBonus(): BigInt {
+  get _originationFeeRepaid(): BigInt {
     return this._call.inputValues[3].value.toBigInt();
   }
+
+  get _balanceIncrease(): BigInt {
+    return this._call.inputValues[4].value.toBigInt();
+  }
+
+  get _repaidWholeLoan(): boolean {
+    return this._call.inputValues[5].value.toBoolean();
+  }
 }
 
-export class EnableInstrumentAsCollateralCall__Outputs {
-  _call: EnableInstrumentAsCollateralCall;
+export class UpdateStateOnRepayCall__Outputs {
+  _call: UpdateStateOnRepayCall;
 
-  constructor(call: EnableInstrumentAsCollateralCall) {
+  constructor(call: UpdateStateOnRepayCall) {
     this._call = call;
   }
 }
 
-export class DisableInstrumentAsCollateralCall extends ethereum.Call {
-  get inputs(): DisableInstrumentAsCollateralCall__Inputs {
-    return new DisableInstrumentAsCollateralCall__Inputs(this);
+export class UpdateStateOnSwapRateCall extends ethereum.Call {
+  get inputs(): UpdateStateOnSwapRateCall__Inputs {
+    return new UpdateStateOnSwapRateCall__Inputs(this);
   }
 
-  get outputs(): DisableInstrumentAsCollateralCall__Outputs {
-    return new DisableInstrumentAsCollateralCall__Outputs(this);
-  }
-}
-
-export class DisableInstrumentAsCollateralCall__Inputs {
-  _call: DisableInstrumentAsCollateralCall;
-
-  constructor(call: DisableInstrumentAsCollateralCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
+  get outputs(): UpdateStateOnSwapRateCall__Outputs {
+    return new UpdateStateOnSwapRateCall__Outputs(this);
   }
 }
 
-export class DisableInstrumentAsCollateralCall__Outputs {
-  _call: DisableInstrumentAsCollateralCall;
+export class UpdateStateOnSwapRateCall__Inputs {
+  _call: UpdateStateOnSwapRateCall;
 
-  constructor(call: DisableInstrumentAsCollateralCall) {
-    this._call = call;
-  }
-}
-
-export class EnableInstrumentStableBorrowRateCall extends ethereum.Call {
-  get inputs(): EnableInstrumentStableBorrowRateCall__Inputs {
-    return new EnableInstrumentStableBorrowRateCall__Inputs(this);
-  }
-
-  get outputs(): EnableInstrumentStableBorrowRateCall__Outputs {
-    return new EnableInstrumentStableBorrowRateCall__Outputs(this);
-  }
-}
-
-export class EnableInstrumentStableBorrowRateCall__Inputs {
-  _call: EnableInstrumentStableBorrowRateCall;
-
-  constructor(call: EnableInstrumentStableBorrowRateCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class EnableInstrumentStableBorrowRateCall__Outputs {
-  _call: EnableInstrumentStableBorrowRateCall;
-
-  constructor(call: EnableInstrumentStableBorrowRateCall) {
-    this._call = call;
-  }
-}
-
-export class DisableInstrumentStableBorrowRateCall extends ethereum.Call {
-  get inputs(): DisableInstrumentStableBorrowRateCall__Inputs {
-    return new DisableInstrumentStableBorrowRateCall__Inputs(this);
-  }
-
-  get outputs(): DisableInstrumentStableBorrowRateCall__Outputs {
-    return new DisableInstrumentStableBorrowRateCall__Outputs(this);
-  }
-}
-
-export class DisableInstrumentStableBorrowRateCall__Inputs {
-  _call: DisableInstrumentStableBorrowRateCall;
-
-  constructor(call: DisableInstrumentStableBorrowRateCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class DisableInstrumentStableBorrowRateCall__Outputs {
-  _call: DisableInstrumentStableBorrowRateCall;
-
-  constructor(call: DisableInstrumentStableBorrowRateCall) {
-    this._call = call;
-  }
-}
-
-export class ActivateInstrumentCall extends ethereum.Call {
-  get inputs(): ActivateInstrumentCall__Inputs {
-    return new ActivateInstrumentCall__Inputs(this);
-  }
-
-  get outputs(): ActivateInstrumentCall__Outputs {
-    return new ActivateInstrumentCall__Outputs(this);
-  }
-}
-
-export class ActivateInstrumentCall__Inputs {
-  _call: ActivateInstrumentCall;
-
-  constructor(call: ActivateInstrumentCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class ActivateInstrumentCall__Outputs {
-  _call: ActivateInstrumentCall;
-
-  constructor(call: ActivateInstrumentCall) {
-    this._call = call;
-  }
-}
-
-export class DeactivateInstrumentCall extends ethereum.Call {
-  get inputs(): DeactivateInstrumentCall__Inputs {
-    return new DeactivateInstrumentCall__Inputs(this);
-  }
-
-  get outputs(): DeactivateInstrumentCall__Outputs {
-    return new DeactivateInstrumentCall__Outputs(this);
-  }
-}
-
-export class DeactivateInstrumentCall__Inputs {
-  _call: DeactivateInstrumentCall;
-
-  constructor(call: DeactivateInstrumentCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class DeactivateInstrumentCall__Outputs {
-  _call: DeactivateInstrumentCall;
-
-  constructor(call: DeactivateInstrumentCall) {
-    this._call = call;
-  }
-}
-
-export class FreezeInstrumentCall extends ethereum.Call {
-  get inputs(): FreezeInstrumentCall__Inputs {
-    return new FreezeInstrumentCall__Inputs(this);
-  }
-
-  get outputs(): FreezeInstrumentCall__Outputs {
-    return new FreezeInstrumentCall__Outputs(this);
-  }
-}
-
-export class FreezeInstrumentCall__Inputs {
-  _call: FreezeInstrumentCall;
-
-  constructor(call: FreezeInstrumentCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class FreezeInstrumentCall__Outputs {
-  _call: FreezeInstrumentCall;
-
-  constructor(call: FreezeInstrumentCall) {
-    this._call = call;
-  }
-}
-
-export class UnfreezeInstrumentCall extends ethereum.Call {
-  get inputs(): UnfreezeInstrumentCall__Inputs {
-    return new UnfreezeInstrumentCall__Inputs(this);
-  }
-
-  get outputs(): UnfreezeInstrumentCall__Outputs {
-    return new UnfreezeInstrumentCall__Outputs(this);
-  }
-}
-
-export class UnfreezeInstrumentCall__Inputs {
-  _call: UnfreezeInstrumentCall;
-
-  constructor(call: UnfreezeInstrumentCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class UnfreezeInstrumentCall__Outputs {
-  _call: UnfreezeInstrumentCall;
-
-  constructor(call: UnfreezeInstrumentCall) {
-    this._call = call;
-  }
-}
-
-export class SetInstrumentBaseLTVasCollateralCall extends ethereum.Call {
-  get inputs(): SetInstrumentBaseLTVasCollateralCall__Inputs {
-    return new SetInstrumentBaseLTVasCollateralCall__Inputs(this);
-  }
-
-  get outputs(): SetInstrumentBaseLTVasCollateralCall__Outputs {
-    return new SetInstrumentBaseLTVasCollateralCall__Outputs(this);
-  }
-}
-
-export class SetInstrumentBaseLTVasCollateralCall__Inputs {
-  _call: SetInstrumentBaseLTVasCollateralCall;
-
-  constructor(call: SetInstrumentBaseLTVasCollateralCall) {
+  constructor(call: UpdateStateOnSwapRateCall) {
     this._call = call;
   }
 
@@ -2574,117 +2449,39 @@ export class SetInstrumentBaseLTVasCollateralCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _ltv(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
+  get _user(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get _principalBorrowBalance(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get _compoundedBorrowBalance(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+
+  get _balanceIncrease(): BigInt {
+    return this._call.inputValues[4].value.toBigInt();
+  }
+
+  get _currentRateMode(): i32 {
+    return this._call.inputValues[5].value.toI32();
   }
 }
 
-export class SetInstrumentBaseLTVasCollateralCall__Outputs {
-  _call: SetInstrumentBaseLTVasCollateralCall;
+export class UpdateStateOnSwapRateCall__Outputs {
+  _call: UpdateStateOnSwapRateCall;
 
-  constructor(call: SetInstrumentBaseLTVasCollateralCall) {
-    this._call = call;
-  }
-}
-
-export class SetInstrumentLiquidationThresholdCall extends ethereum.Call {
-  get inputs(): SetInstrumentLiquidationThresholdCall__Inputs {
-    return new SetInstrumentLiquidationThresholdCall__Inputs(this);
-  }
-
-  get outputs(): SetInstrumentLiquidationThresholdCall__Outputs {
-    return new SetInstrumentLiquidationThresholdCall__Outputs(this);
-  }
-}
-
-export class SetInstrumentLiquidationThresholdCall__Inputs {
-  _call: SetInstrumentLiquidationThresholdCall;
-
-  constructor(call: SetInstrumentLiquidationThresholdCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _threshold(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-}
-
-export class SetInstrumentLiquidationThresholdCall__Outputs {
-  _call: SetInstrumentLiquidationThresholdCall;
-
-  constructor(call: SetInstrumentLiquidationThresholdCall) {
-    this._call = call;
-  }
-}
-
-export class SetInstrumentLiquidationBonusCall extends ethereum.Call {
-  get inputs(): SetInstrumentLiquidationBonusCall__Inputs {
-    return new SetInstrumentLiquidationBonusCall__Inputs(this);
-  }
-
-  get outputs(): SetInstrumentLiquidationBonusCall__Outputs {
-    return new SetInstrumentLiquidationBonusCall__Outputs(this);
-  }
-}
-
-export class SetInstrumentLiquidationBonusCall__Inputs {
-  _call: SetInstrumentLiquidationBonusCall;
-
-  constructor(call: SetInstrumentLiquidationBonusCall) {
+  constructor(call: UpdateStateOnSwapRateCall) {
     this._call = call;
   }
 
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
+  get value0(): i32 {
+    return this._call.outputValues[0].value.toI32();
   }
 
-  get _bonus(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-}
-
-export class SetInstrumentLiquidationBonusCall__Outputs {
-  _call: SetInstrumentLiquidationBonusCall;
-
-  constructor(call: SetInstrumentLiquidationBonusCall) {
-    this._call = call;
-  }
-}
-
-export class SetInstrumentDecimalsCall extends ethereum.Call {
-  get inputs(): SetInstrumentDecimalsCall__Inputs {
-    return new SetInstrumentDecimalsCall__Inputs(this);
-  }
-
-  get outputs(): SetInstrumentDecimalsCall__Outputs {
-    return new SetInstrumentDecimalsCall__Outputs(this);
-  }
-}
-
-export class SetInstrumentDecimalsCall__Inputs {
-  _call: SetInstrumentDecimalsCall;
-
-  constructor(call: SetInstrumentDecimalsCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _decimals(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-}
-
-export class SetInstrumentDecimalsCall__Outputs {
-  _call: SetInstrumentDecimalsCall;
-
-  constructor(call: SetInstrumentDecimalsCall) {
-    this._call = call;
+  get value1(): BigInt {
+    return this._call.outputValues[1].value.toBigInt();
   }
 }

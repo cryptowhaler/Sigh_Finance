@@ -10,70 +10,60 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
-export class BorrowingDisabledOnInstrument extends ethereum.Event {
-  get params(): BorrowingDisabledOnInstrument__Params {
-    return new BorrowingDisabledOnInstrument__Params(this);
+export class BorrowingOnInstrumentSwitched extends ethereum.Event {
+  get params(): BorrowingOnInstrumentSwitched__Params {
+    return new BorrowingOnInstrumentSwitched__Params(this);
   }
 }
 
-export class BorrowingDisabledOnInstrument__Params {
-  _event: BorrowingDisabledOnInstrument;
+export class BorrowingOnInstrumentSwitched__Params {
+  _event: BorrowingOnInstrumentSwitched;
 
-  constructor(event: BorrowingDisabledOnInstrument) {
+  constructor(event: BorrowingOnInstrumentSwitched) {
     this._event = event;
   }
 
   get _instrument(): Address {
     return this._event.parameters[0].value.toAddress();
   }
-}
 
-export class BorrowingEnabledOnInstrument extends ethereum.Event {
-  get params(): BorrowingEnabledOnInstrument__Params {
-    return new BorrowingEnabledOnInstrument__Params(this);
+  get switch_(): boolean {
+    return this._event.parameters[1].value.toBoolean();
   }
 }
 
-export class BorrowingEnabledOnInstrument__Params {
-  _event: BorrowingEnabledOnInstrument;
+export class InstrumentActivationSwitched extends ethereum.Event {
+  get params(): InstrumentActivationSwitched__Params {
+    return new InstrumentActivationSwitched__Params(this);
+  }
+}
 
-  constructor(event: BorrowingEnabledOnInstrument) {
+export class InstrumentActivationSwitched__Params {
+  _event: InstrumentActivationSwitched;
+
+  constructor(event: InstrumentActivationSwitched) {
     this._event = event;
   }
 
   get _instrument(): Address {
     return this._event.parameters[0].value.toAddress();
   }
-}
 
-export class InstrumentActivated extends ethereum.Event {
-  get params(): InstrumentActivated__Params {
-    return new InstrumentActivated__Params(this);
+  get switch_(): boolean {
+    return this._event.parameters[1].value.toBoolean();
   }
 }
 
-export class InstrumentActivated__Params {
-  _event: InstrumentActivated;
-
-  constructor(event: InstrumentActivated) {
-    this._event = event;
-  }
-
-  get _instrument(): Address {
-    return this._event.parameters[0].value.toAddress();
+export class InstrumentCollateralParametersUpdated extends ethereum.Event {
+  get params(): InstrumentCollateralParametersUpdated__Params {
+    return new InstrumentCollateralParametersUpdated__Params(this);
   }
 }
 
-export class InstrumentBaseLtvChanged extends ethereum.Event {
-  get params(): InstrumentBaseLtvChanged__Params {
-    return new InstrumentBaseLtvChanged__Params(this);
-  }
-}
+export class InstrumentCollateralParametersUpdated__Params {
+  _event: InstrumentCollateralParametersUpdated;
 
-export class InstrumentBaseLtvChanged__Params {
-  _event: InstrumentBaseLtvChanged;
-
-  constructor(event: InstrumentBaseLtvChanged) {
+  constructor(event: InstrumentCollateralParametersUpdated) {
     this._event = event;
   }
 
@@ -84,23 +74,35 @@ export class InstrumentBaseLtvChanged__Params {
   get _ltv(): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
-}
 
-export class InstrumentDeactivated extends ethereum.Event {
-  get params(): InstrumentDeactivated__Params {
-    return new InstrumentDeactivated__Params(this);
+  get _liquidationThreshold(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get _liquidationBonus(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
   }
 }
 
-export class InstrumentDeactivated__Params {
-  _event: InstrumentDeactivated;
+export class InstrumentDecimalsUpdated extends ethereum.Event {
+  get params(): InstrumentDecimalsUpdated__Params {
+    return new InstrumentDecimalsUpdated__Params(this);
+  }
+}
 
-  constructor(event: InstrumentDeactivated) {
+export class InstrumentDecimalsUpdated__Params {
+  _event: InstrumentDecimalsUpdated;
+
+  constructor(event: InstrumentDecimalsUpdated) {
     this._event = event;
   }
 
   get _instrument(): Address {
     return this._event.parameters[0].value.toAddress();
+  }
+
+  get decimals(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
   }
 }
 
@@ -198,6 +200,14 @@ export class InstrumentInitialized__Params {
   get _interestRateStrategyAddress(): Address {
     return this._event.parameters[2].value.toAddress();
   }
+
+  get sighStreamAddress(): Address {
+    return this._event.parameters[3].value.toAddress();
+  }
+
+  get sighStreamImplAddress(): Address {
+    return this._event.parameters[4].value.toAddress();
+  }
 }
 
 export class InstrumentInterestRateStrategyChanged extends ethereum.Event {
@@ -222,50 +232,6 @@ export class InstrumentInterestRateStrategyChanged__Params {
   }
 }
 
-export class InstrumentLiquidationBonusChanged extends ethereum.Event {
-  get params(): InstrumentLiquidationBonusChanged__Params {
-    return new InstrumentLiquidationBonusChanged__Params(this);
-  }
-}
-
-export class InstrumentLiquidationBonusChanged__Params {
-  _event: InstrumentLiquidationBonusChanged;
-
-  constructor(event: InstrumentLiquidationBonusChanged) {
-    this._event = event;
-  }
-
-  get _instrument(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
-  get _bonus(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-}
-
-export class InstrumentLiquidationThresholdChanged extends ethereum.Event {
-  get params(): InstrumentLiquidationThresholdChanged__Params {
-    return new InstrumentLiquidationThresholdChanged__Params(this);
-  }
-}
-
-export class InstrumentLiquidationThresholdChanged__Params {
-  _event: InstrumentLiquidationThresholdChanged;
-
-  constructor(event: InstrumentLiquidationThresholdChanged) {
-    this._event = event;
-  }
-
-  get _instrument(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
-  get _threshold(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-}
-
 export class InstrumentRemoved extends ethereum.Event {
   get params(): InstrumentRemoved__Params {
     return new InstrumentRemoved__Params(this);
@@ -281,6 +247,28 @@ export class InstrumentRemoved__Params {
 
   get _instrument(): Address {
     return this._event.parameters[0].value.toAddress();
+  }
+}
+
+export class ProxyCreated extends ethereum.Event {
+  get params(): ProxyCreated__Params {
+    return new ProxyCreated__Params(this);
+  }
+}
+
+export class ProxyCreated__Params {
+  _event: ProxyCreated;
+
+  constructor(event: ProxyCreated) {
+    this._event = event;
+  }
+
+  get instrument(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get sighStreamProxyAddress(): Address {
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -306,9 +294,56 @@ export class StableRateOnInstrumentSwitched__Params {
   }
 }
 
+export class sighStreamImplUpdated extends ethereum.Event {
+  get params(): sighStreamImplUpdated__Params {
+    return new sighStreamImplUpdated__Params(this);
+  }
+}
+
+export class sighStreamImplUpdated__Params {
+  _event: sighStreamImplUpdated;
+
+  constructor(event: sighStreamImplUpdated) {
+    this._event = event;
+  }
+
+  get instrumentAddress(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get newSighStreamImpl(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
 export class LendingPoolConfigurator extends ethereum.SmartContract {
   static bind(address: Address): LendingPoolConfigurator {
     return new LendingPoolConfigurator("LendingPoolConfigurator", address);
+  }
+
+  getSighStreamAddress(instrumentAddress: Address): Address {
+    let result = super.call(
+      "getSighStreamAddress",
+      "getSighStreamAddress(address):(address)",
+      [ethereum.Value.fromAddress(instrumentAddress)]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_getSighStreamAddress(
+    instrumentAddress: Address
+  ): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "getSighStreamAddress",
+      "getSighStreamAddress(address):(address)",
+      [ethereum.Value.fromAddress(instrumentAddress)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   CONFIGURATOR_REVISION(): BigInt {
@@ -355,6 +390,112 @@ export class LendingPoolConfigurator extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+}
+
+export class DisableInstrumentAsCollateralCall extends ethereum.Call {
+  get inputs(): DisableInstrumentAsCollateralCall__Inputs {
+    return new DisableInstrumentAsCollateralCall__Inputs(this);
+  }
+
+  get outputs(): DisableInstrumentAsCollateralCall__Outputs {
+    return new DisableInstrumentAsCollateralCall__Outputs(this);
+  }
+}
+
+export class DisableInstrumentAsCollateralCall__Inputs {
+  _call: DisableInstrumentAsCollateralCall;
+
+  constructor(call: DisableInstrumentAsCollateralCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class DisableInstrumentAsCollateralCall__Outputs {
+  _call: DisableInstrumentAsCollateralCall;
+
+  constructor(call: DisableInstrumentAsCollateralCall) {
+    this._call = call;
+  }
+}
+
+export class EnableInstrumentAsCollateralCall extends ethereum.Call {
+  get inputs(): EnableInstrumentAsCollateralCall__Inputs {
+    return new EnableInstrumentAsCollateralCall__Inputs(this);
+  }
+
+  get outputs(): EnableInstrumentAsCollateralCall__Outputs {
+    return new EnableInstrumentAsCollateralCall__Outputs(this);
+  }
+}
+
+export class EnableInstrumentAsCollateralCall__Inputs {
+  _call: EnableInstrumentAsCollateralCall;
+
+  constructor(call: EnableInstrumentAsCollateralCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _baseLTVasCollateral(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get _liquidationThreshold(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get _liquidationBonus(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+}
+
+export class EnableInstrumentAsCollateralCall__Outputs {
+  _call: EnableInstrumentAsCollateralCall;
+
+  constructor(call: EnableInstrumentAsCollateralCall) {
+    this._call = call;
+  }
+}
+
+export class GetSighStreamAddressCall extends ethereum.Call {
+  get inputs(): GetSighStreamAddressCall__Inputs {
+    return new GetSighStreamAddressCall__Inputs(this);
+  }
+
+  get outputs(): GetSighStreamAddressCall__Outputs {
+    return new GetSighStreamAddressCall__Outputs(this);
+  }
+}
+
+export class GetSighStreamAddressCall__Inputs {
+  _call: GetSighStreamAddressCall;
+
+  constructor(call: GetSighStreamAddressCall) {
+    this._call = call;
+  }
+
+  get instrumentAddress(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class GetSighStreamAddressCall__Outputs {
+  _call: GetSighStreamAddressCall;
+
+  constructor(call: GetSighStreamAddressCall) {
+    this._call = call;
+  }
+
+  get sighStreamProxyAddress(): Address {
+    return this._call.outputValues[0].value.toAddress();
   }
 }
 
@@ -409,8 +550,16 @@ export class InitInstrumentCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _interestRateStrategyAddress(): Address {
+  get iTokenInstance(): Address {
     return this._call.inputValues[1].value.toAddress();
+  }
+
+  get _interestRateStrategyAddress(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+
+  get sighStreamImplAddress(): Address {
+    return this._call.inputValues[3].value.toAddress();
   }
 }
 
@@ -418,36 +567,6 @@ export class InitInstrumentCall__Outputs {
   _call: InitInstrumentCall;
 
   constructor(call: InitInstrumentCall) {
-    this._call = call;
-  }
-}
-
-export class RemoveInstrumentCall extends ethereum.Call {
-  get inputs(): RemoveInstrumentCall__Inputs {
-    return new RemoveInstrumentCall__Inputs(this);
-  }
-
-  get outputs(): RemoveInstrumentCall__Outputs {
-    return new RemoveInstrumentCall__Outputs(this);
-  }
-}
-
-export class RemoveInstrumentCall__Inputs {
-  _call: RemoveInstrumentCall;
-
-  constructor(call: RemoveInstrumentCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class RemoveInstrumentCall__Outputs {
-  _call: RemoveInstrumentCall;
-
-  constructor(call: RemoveInstrumentCall) {
     this._call = call;
   }
 }
@@ -520,112 +639,6 @@ export class InstrumentBorrowingSwitchCall__Outputs {
   }
 }
 
-export class InstrumentStableBorrowRateSwitchCall extends ethereum.Call {
-  get inputs(): InstrumentStableBorrowRateSwitchCall__Inputs {
-    return new InstrumentStableBorrowRateSwitchCall__Inputs(this);
-  }
-
-  get outputs(): InstrumentStableBorrowRateSwitchCall__Outputs {
-    return new InstrumentStableBorrowRateSwitchCall__Outputs(this);
-  }
-}
-
-export class InstrumentStableBorrowRateSwitchCall__Inputs {
-  _call: InstrumentStableBorrowRateSwitchCall;
-
-  constructor(call: InstrumentStableBorrowRateSwitchCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get switchStableBorrowRate(): boolean {
-    return this._call.inputValues[1].value.toBoolean();
-  }
-}
-
-export class InstrumentStableBorrowRateSwitchCall__Outputs {
-  _call: InstrumentStableBorrowRateSwitchCall;
-
-  constructor(call: InstrumentStableBorrowRateSwitchCall) {
-    this._call = call;
-  }
-}
-
-export class EnableInstrumentAsCollateralCall extends ethereum.Call {
-  get inputs(): EnableInstrumentAsCollateralCall__Inputs {
-    return new EnableInstrumentAsCollateralCall__Inputs(this);
-  }
-
-  get outputs(): EnableInstrumentAsCollateralCall__Outputs {
-    return new EnableInstrumentAsCollateralCall__Outputs(this);
-  }
-}
-
-export class EnableInstrumentAsCollateralCall__Inputs {
-  _call: EnableInstrumentAsCollateralCall;
-
-  constructor(call: EnableInstrumentAsCollateralCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _baseLTVasCollateral(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get _liquidationThreshold(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-
-  get _liquidationBonus(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
-  }
-}
-
-export class EnableInstrumentAsCollateralCall__Outputs {
-  _call: EnableInstrumentAsCollateralCall;
-
-  constructor(call: EnableInstrumentAsCollateralCall) {
-    this._call = call;
-  }
-}
-
-export class DisableInstrumentAsCollateralCall extends ethereum.Call {
-  get inputs(): DisableInstrumentAsCollateralCall__Inputs {
-    return new DisableInstrumentAsCollateralCall__Inputs(this);
-  }
-
-  get outputs(): DisableInstrumentAsCollateralCall__Outputs {
-    return new DisableInstrumentAsCollateralCall__Outputs(this);
-  }
-}
-
-export class DisableInstrumentAsCollateralCall__Inputs {
-  _call: DisableInstrumentAsCollateralCall;
-
-  constructor(call: DisableInstrumentAsCollateralCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class DisableInstrumentAsCollateralCall__Outputs {
-  _call: DisableInstrumentAsCollateralCall;
-
-  constructor(call: DisableInstrumentAsCollateralCall) {
-    this._call = call;
-  }
-}
-
 export class InstrumentFreezeSwitchCall extends ethereum.Call {
   get inputs(): InstrumentFreezeSwitchCall__Inputs {
     return new InstrumentFreezeSwitchCall__Inputs(this);
@@ -660,20 +673,106 @@ export class InstrumentFreezeSwitchCall__Outputs {
   }
 }
 
-export class SetInstrumentBaseLTVasCollateralCall extends ethereum.Call {
-  get inputs(): SetInstrumentBaseLTVasCollateralCall__Inputs {
-    return new SetInstrumentBaseLTVasCollateralCall__Inputs(this);
+export class InstrumentStableBorrowRateSwitchCall extends ethereum.Call {
+  get inputs(): InstrumentStableBorrowRateSwitchCall__Inputs {
+    return new InstrumentStableBorrowRateSwitchCall__Inputs(this);
   }
 
-  get outputs(): SetInstrumentBaseLTVasCollateralCall__Outputs {
-    return new SetInstrumentBaseLTVasCollateralCall__Outputs(this);
+  get outputs(): InstrumentStableBorrowRateSwitchCall__Outputs {
+    return new InstrumentStableBorrowRateSwitchCall__Outputs(this);
   }
 }
 
-export class SetInstrumentBaseLTVasCollateralCall__Inputs {
-  _call: SetInstrumentBaseLTVasCollateralCall;
+export class InstrumentStableBorrowRateSwitchCall__Inputs {
+  _call: InstrumentStableBorrowRateSwitchCall;
 
-  constructor(call: SetInstrumentBaseLTVasCollateralCall) {
+  constructor(call: InstrumentStableBorrowRateSwitchCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get switchStableBorrowRate(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class InstrumentStableBorrowRateSwitchCall__Outputs {
+  _call: InstrumentStableBorrowRateSwitchCall;
+
+  constructor(call: InstrumentStableBorrowRateSwitchCall) {
+    this._call = call;
+  }
+}
+
+export class RefreshLendingPoolConfigurationCall extends ethereum.Call {
+  get inputs(): RefreshLendingPoolConfigurationCall__Inputs {
+    return new RefreshLendingPoolConfigurationCall__Inputs(this);
+  }
+
+  get outputs(): RefreshLendingPoolConfigurationCall__Outputs {
+    return new RefreshLendingPoolConfigurationCall__Outputs(this);
+  }
+}
+
+export class RefreshLendingPoolConfigurationCall__Inputs {
+  _call: RefreshLendingPoolConfigurationCall;
+
+  constructor(call: RefreshLendingPoolConfigurationCall) {
+    this._call = call;
+  }
+}
+
+export class RefreshLendingPoolConfigurationCall__Outputs {
+  _call: RefreshLendingPoolConfigurationCall;
+
+  constructor(call: RefreshLendingPoolConfigurationCall) {
+    this._call = call;
+  }
+}
+
+export class RefreshLendingPoolCoreConfigurationCall extends ethereum.Call {
+  get inputs(): RefreshLendingPoolCoreConfigurationCall__Inputs {
+    return new RefreshLendingPoolCoreConfigurationCall__Inputs(this);
+  }
+
+  get outputs(): RefreshLendingPoolCoreConfigurationCall__Outputs {
+    return new RefreshLendingPoolCoreConfigurationCall__Outputs(this);
+  }
+}
+
+export class RefreshLendingPoolCoreConfigurationCall__Inputs {
+  _call: RefreshLendingPoolCoreConfigurationCall;
+
+  constructor(call: RefreshLendingPoolCoreConfigurationCall) {
+    this._call = call;
+  }
+}
+
+export class RefreshLendingPoolCoreConfigurationCall__Outputs {
+  _call: RefreshLendingPoolCoreConfigurationCall;
+
+  constructor(call: RefreshLendingPoolCoreConfigurationCall) {
+    this._call = call;
+  }
+}
+
+export class SetInstrumentCollateralParametersCall extends ethereum.Call {
+  get inputs(): SetInstrumentCollateralParametersCall__Inputs {
+    return new SetInstrumentCollateralParametersCall__Inputs(this);
+  }
+
+  get outputs(): SetInstrumentCollateralParametersCall__Outputs {
+    return new SetInstrumentCollateralParametersCall__Outputs(this);
+  }
+}
+
+export class SetInstrumentCollateralParametersCall__Inputs {
+  _call: SetInstrumentCollateralParametersCall;
+
+  constructor(call: SetInstrumentCollateralParametersCall) {
     this._call = call;
   }
 
@@ -684,80 +783,54 @@ export class SetInstrumentBaseLTVasCollateralCall__Inputs {
   get _ltv(): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
-}
-
-export class SetInstrumentBaseLTVasCollateralCall__Outputs {
-  _call: SetInstrumentBaseLTVasCollateralCall;
-
-  constructor(call: SetInstrumentBaseLTVasCollateralCall) {
-    this._call = call;
-  }
-}
-
-export class SetInstrumentLiquidationThresholdCall extends ethereum.Call {
-  get inputs(): SetInstrumentLiquidationThresholdCall__Inputs {
-    return new SetInstrumentLiquidationThresholdCall__Inputs(this);
-  }
-
-  get outputs(): SetInstrumentLiquidationThresholdCall__Outputs {
-    return new SetInstrumentLiquidationThresholdCall__Outputs(this);
-  }
-}
-
-export class SetInstrumentLiquidationThresholdCall__Inputs {
-  _call: SetInstrumentLiquidationThresholdCall;
-
-  constructor(call: SetInstrumentLiquidationThresholdCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
 
   get _threshold(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-}
-
-export class SetInstrumentLiquidationThresholdCall__Outputs {
-  _call: SetInstrumentLiquidationThresholdCall;
-
-  constructor(call: SetInstrumentLiquidationThresholdCall) {
-    this._call = call;
-  }
-}
-
-export class SetInstrumentLiquidationBonusCall extends ethereum.Call {
-  get inputs(): SetInstrumentLiquidationBonusCall__Inputs {
-    return new SetInstrumentLiquidationBonusCall__Inputs(this);
-  }
-
-  get outputs(): SetInstrumentLiquidationBonusCall__Outputs {
-    return new SetInstrumentLiquidationBonusCall__Outputs(this);
-  }
-}
-
-export class SetInstrumentLiquidationBonusCall__Inputs {
-  _call: SetInstrumentLiquidationBonusCall;
-
-  constructor(call: SetInstrumentLiquidationBonusCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
+    return this._call.inputValues[2].value.toBigInt();
   }
 
   get _bonus(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+}
+
+export class SetInstrumentCollateralParametersCall__Outputs {
+  _call: SetInstrumentCollateralParametersCall;
+
+  constructor(call: SetInstrumentCollateralParametersCall) {
+    this._call = call;
+  }
+}
+
+export class SetInstrumentDecimalsCall extends ethereum.Call {
+  get inputs(): SetInstrumentDecimalsCall__Inputs {
+    return new SetInstrumentDecimalsCall__Inputs(this);
+  }
+
+  get outputs(): SetInstrumentDecimalsCall__Outputs {
+    return new SetInstrumentDecimalsCall__Outputs(this);
+  }
+}
+
+export class SetInstrumentDecimalsCall__Inputs {
+  _call: SetInstrumentDecimalsCall;
+
+  constructor(call: SetInstrumentDecimalsCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get decimals(): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
 }
 
-export class SetInstrumentLiquidationBonusCall__Outputs {
-  _call: SetInstrumentLiquidationBonusCall;
+export class SetInstrumentDecimalsCall__Outputs {
+  _call: SetInstrumentDecimalsCall;
 
-  constructor(call: SetInstrumentLiquidationBonusCall) {
+  constructor(call: SetInstrumentDecimalsCall) {
     this._call = call;
   }
 }
@@ -796,54 +869,40 @@ export class SetInstrumentInterestRateStrategyAddressCall__Outputs {
   }
 }
 
-export class RefreshLendingPoolCoreConfigurationCall extends ethereum.Call {
-  get inputs(): RefreshLendingPoolCoreConfigurationCall__Inputs {
-    return new RefreshLendingPoolCoreConfigurationCall__Inputs(this);
+export class UpdateSIGHStreamForInstrumentCall extends ethereum.Call {
+  get inputs(): UpdateSIGHStreamForInstrumentCall__Inputs {
+    return new UpdateSIGHStreamForInstrumentCall__Inputs(this);
   }
 
-  get outputs(): RefreshLendingPoolCoreConfigurationCall__Outputs {
-    return new RefreshLendingPoolCoreConfigurationCall__Outputs(this);
+  get outputs(): UpdateSIGHStreamForInstrumentCall__Outputs {
+    return new UpdateSIGHStreamForInstrumentCall__Outputs(this);
   }
 }
 
-export class RefreshLendingPoolCoreConfigurationCall__Inputs {
-  _call: RefreshLendingPoolCoreConfigurationCall;
+export class UpdateSIGHStreamForInstrumentCall__Inputs {
+  _call: UpdateSIGHStreamForInstrumentCall;
 
-  constructor(call: RefreshLendingPoolCoreConfigurationCall) {
+  constructor(call: UpdateSIGHStreamForInstrumentCall) {
     this._call = call;
   }
-}
 
-export class RefreshLendingPoolCoreConfigurationCall__Outputs {
-  _call: RefreshLendingPoolCoreConfigurationCall;
+  get newSighStreamImpl(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
 
-  constructor(call: RefreshLendingPoolCoreConfigurationCall) {
-    this._call = call;
+  get instrumentAddress(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get iTokenAddress(): Address {
+    return this._call.inputValues[2].value.toAddress();
   }
 }
 
-export class RefreshLendingPoolConfigurationCall extends ethereum.Call {
-  get inputs(): RefreshLendingPoolConfigurationCall__Inputs {
-    return new RefreshLendingPoolConfigurationCall__Inputs(this);
-  }
+export class UpdateSIGHStreamForInstrumentCall__Outputs {
+  _call: UpdateSIGHStreamForInstrumentCall;
 
-  get outputs(): RefreshLendingPoolConfigurationCall__Outputs {
-    return new RefreshLendingPoolConfigurationCall__Outputs(this);
-  }
-}
-
-export class RefreshLendingPoolConfigurationCall__Inputs {
-  _call: RefreshLendingPoolConfigurationCall;
-
-  constructor(call: RefreshLendingPoolConfigurationCall) {
-    this._call = call;
-  }
-}
-
-export class RefreshLendingPoolConfigurationCall__Outputs {
-  _call: RefreshLendingPoolConfigurationCall;
-
-  constructor(call: RefreshLendingPoolConfigurationCall) {
+  constructor(call: UpdateSIGHStreamForInstrumentCall) {
     this._call = call;
   }
 }

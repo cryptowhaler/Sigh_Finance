@@ -8,7 +8,7 @@ import { PriceOracleGetter } from '../../generated/Lending_Pool_Configurator/Pri
 
 // STORES THE SIGH STREAM IMPL ADDRESS (IMPLEMENTATION ADDRESS)
 export function handleSighStreamImplUpdated(event: sighStreamImplUpdated): void {
-    let instrumentId = event.params.instrument.toHexString()
+    let instrumentId = event.params.instrumentAddress.toHexString()
     let instrumentState = Instrument.load(instrumentId)
     if (instrumentState == null) {
         instrumentState = createInstrument(instrumentId)
@@ -29,7 +29,7 @@ export function handleInstrumentInitialized(event: InstrumentInitialized): void 
     instrumentState.instrumentAddress = event.params._instrument
     instrumentState.iTokenAddress = event.params._iToken
     instrumentState.interestRateStrategyAddress = event.params._interestRateStrategyAddress
-    instrumentState.sighStreamStorageAddress = event.params.sighStreamProxyAddress
+    instrumentState.sighStreamStorageAddress = event.params.sighStreamAddress
     instrumentState.sighStreamImplAddress = event.params.sighStreamImplAddress
 
     instrumentState.isActive = true
@@ -143,14 +143,14 @@ export function handleInstrumentInterestRateStrategyChanged(event: InstrumentInt
     updatePrice(instrumentId)
 }
 
-export function handleInstrumentDecimalsUpdated(event: InstrumentDecimalsUpdated): void {
-    log.info('LENDINGPOOLCONFIGURATOR : handleInstrumentInterestRateStrategyChanged',[])                            
-    let instrumentId = event.params._instrument.toHexString()
-    let instrumentState = Instrument.load(instrumentId)
-    instrumentState.interestRateStrategyAddress = event.params._strategy 
-    instrumentState.save()
-    updatePrice(instrumentId)
-}
+// export function handleInstrumentDecimalsUpdated(event: InstrumentDecimalsUpdated): void {
+//     log.info('LENDINGPOOLCONFIGURATOR : handleInstrumentInterestRateStrategyChanged',[])                            
+//     let instrumentId = event.params._instrument.toHexString()
+//     let instrumentState = Instrument.load(instrumentId)
+//     instrumentState.interestRateStrategyAddress = event.params._strategy 
+//     instrumentState.save()
+//     updatePrice(instrumentId)
+// }
 
 
 
@@ -174,16 +174,13 @@ export function handleInstrumentRemoved(event: InstrumentRemoved): void {
     instrumentState.SIGH_Supply_Index =  new BigInt(0)
     instrumentState.SIGH_Borrow_Index =  new BigInt(0)
 
-    instrumentState.present_SIGH_Distribution_Side = 'inactive'
+    instrumentState.present_SIGH_Side = 'inactive'
     instrumentState.present_SIGH_Suppliers_Speed_WEI =  new BigInt(0)
     instrumentState.present_SIGH_Suppliers_Speed =  BigDecimal.fromString('0')
     instrumentState.present_SIGH_Borrowers_Speed_WEI =  new BigInt(0)
     instrumentState.present_SIGH_Borrowers_Speed =   BigDecimal.fromString('0')
     instrumentState.present_SIGH_Staking_Speed_WEI =  new BigInt(0)
     instrumentState.present_SIGH_Staking_Speed =   BigDecimal.fromString('0')
-    instrumentState.present_SIGH_DistributionValuePerBlock_ETH =   BigDecimal.fromString('0')
-    instrumentState.present_SIGH_DistributionValuePerBlock_USD =   BigDecimal.fromString('0')
-    instrumentState.present_VolatilityAddressedPerBlock =   BigDecimal.fromString('0')
     
     instrumentState.save()
 
@@ -219,6 +216,10 @@ export function updatePrice( ID: string ) : void {
     let ETHPriceInUSD = ETH_PriceInUSD.div(  BigInt.fromI32(10).pow(ETH_PriceInUSDDecimals as u8).toBigDecimal() )
     instrument_state.priceUSD = instrument_state.priceETH.times(ETHPriceInUSD)
     
+    // CURRENT AVAILABLE LIQUIDITY PRESENT IN THE POOL FOR BORROWING
+    instrument_state.availableLiquidityETH = instrument_state.availableLiquidity.times(instrument_state.priceETH)
+    instrument_state.availableLiquidityUSD = instrument_state.availableLiquidity.times(instrument_state.priceUSD)
+
     // BORROW FEE DUE 
     instrument_state.borrowFeeDueETH = instrument_state.borrowFeeDue.times(instrument_state.priceETH)
     instrument_state.borrowFeeDueUSD = instrument_state.borrowFeeDue.times(instrument_state.priceUSD)
@@ -228,32 +229,48 @@ export function updatePrice( ID: string ) : void {
     instrument_state.borrowFeeEarnedUSD = instrument_state.borrowFeeEarned.times(instrument_state.priceUSD)
 
     // CURRENT TOTAL LIQUIDITY PRESENT IN THE POOL
-    instrument_state.totalLiquidityETH = instrument_state.totalLiquidity.times(instrument_state.priceETH)
-    instrument_state.totalLiquidityUSD = instrument_state.totalLiquidity.times(instrument_state.priceUSD)
+    instrument_state.totalCompoundedLiquidityETH = instrument_state.totalCompoundedLiquidity.times(instrument_state.priceETH)
+    instrument_state.totalCompoundedLiquidityUSD = instrument_state.totalCompoundedLiquidity.times(instrument_state.priceUSD)
 
-    // CURRENT AVAILABLE LIQUIDITY PRESENT IN THE POOL FOR BORROWING
-    instrument_state.availableLiquidityETH = instrument_state.availableLiquidity.times(instrument_state.priceETH)
-    instrument_state.availableLiquidityUSD = instrument_state.availableLiquidity.times(instrument_state.priceUSD)
 
     // CURRENT TOTAL PRINCIPAL AMOUNT BORROWED
-    instrument_state.totalPrincipalBorrowsETH = instrument_state.totalPrincipalBorrows.times(instrument_state.priceETH)
-    instrument_state.totalPrincipalBorrowsUSD = instrument_state.totalPrincipalBorrows.times(instrument_state.priceUSD)
+    instrument_state.totalCompoundedStableBorrowsETH = instrument_state.totalCompoundedStableBorrows.times(instrument_state.priceETH)
+    instrument_state.totalCompoundedStableBorrowsUSD = instrument_state.totalCompoundedStableBorrows.times(instrument_state.priceUSD)
 
     // CURRENT TOTAL PRINCIPAL AMOUNT BORROWED AT STABLE INTEREST RATE
-    instrument_state.totalPrincipalStableBorrowsETH = instrument_state.totalPrincipalStableBorrows.times(instrument_state.priceETH)
-    instrument_state.totalPrincipalStableBorrowsUSD = instrument_state.totalPrincipalStableBorrows.times(instrument_state.priceUSD)
+    instrument_state.totalCompoundedVariableBorrowsETH = instrument_state.totalCompoundedVariableBorrows.times(instrument_state.priceETH)
+    instrument_state.totalCompoundedVariableBorrowsUSD = instrument_state.totalCompoundedVariableBorrows.times(instrument_state.priceUSD)
 
     // CURRENT TOTAL PRINCIPAL AMOUNT BORROWED AT VARIABLE INTEREST RATE
-    instrument_state.totalPrincipalVariableBorrowsETH = instrument_state.totalPrincipalVariableBorrows.times(instrument_state.priceETH)
-    instrument_state.totalPrincipalVariableBorrowsUSD = instrument_state.totalPrincipalVariableBorrows.times(instrument_state.priceUSD)
+    instrument_state.totalBorrowingEarningsETH = instrument_state.totalBorrowingEarnings.times(instrument_state.priceETH)
+    instrument_state.totalBorrowingEarningsUSD = instrument_state.totalBorrowingEarnings.times(instrument_state.priceUSD)
 
-    // CURRENT TOTAL EARNINGS OF SUPPLIERS (LIIQUIDITY PROVIDERS) THROUGH STABLE INTEREST RATES
-    instrument_state.totalSupplierEarningsETH = instrument_state.totalSupplierEarnings.times(instrument_state.priceETH)
-    instrument_state.totalSupplierEarningsUSD = instrument_state.totalSupplierEarnings.times(instrument_state.priceUSD)
 
     // LIFE-TIME DEPOSITS MADE IN THE LENDING PROTOCOL
     instrument_state.lifeTimeDepositsETH = instrument_state.lifeTimeDeposits.times(instrument_state.priceUSD)
     instrument_state.lifeTimeDepositsUSD = instrument_state.lifeTimeDeposits.times(instrument_state.priceUSD)
+
+    // LIFE-TIME BORROWS TAKEN FROM THE LENDING PROTOCOL
+    instrument_state.lifeTimeBorrowsETH = instrument_state.lifeTimeBorrows.times(instrument_state.priceUSD)
+    instrument_state.lifeTimeBorrowsUSD = instrument_state.lifeTimeBorrows.times(instrument_state.priceUSD)
+
+
+    // LIFE-TIME "STABLE" BORROWS TAKEN FROM THE LENDING PROTOCOL
+    instrument_state.lifeTimeStableBorrowsETH = instrument_state.lifeTimeStableBorrows.times(instrument_state.priceUSD)
+    instrument_state.lifeTimeStableBorrowsUSD = instrument_state.lifeTimeStableBorrows.times(instrument_state.priceUSD)
+
+    // LIFE-TIME "VARIABLE" BORROWS TAKEN FROM THE LENDING PROTOCOL
+    instrument_state.lifeTimeVariableBorrowsETH = instrument_state.lifeTimeVariableBorrows.times(instrument_state.priceUSD)
+    instrument_state.lifeTimeVariableBorrowsUSD = instrument_state.lifeTimeVariableBorrows.times(instrument_state.priceUSD)
+
+    // LIFE-TIME BORROW AMOUNT RE-PAID BACK TO THE LENDING PROTOCOL
+    instrument_state.lifeTimeBorrowsRepaidETH = instrument_state.lifeTimeBorrowsRepaid.times(instrument_state.priceUSD)
+    instrument_state.lifeTimeBorrowsRepaidUSD = instrument_state.lifeTimeBorrowsRepaid.times(instrument_state.priceUSD)
+
+
+
+
+
 
 
     instrument_state.save()
@@ -273,7 +290,13 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.instrumentAddress = Address.fromString('0x0000000000000000000000000000000000000000')
     instrument_state_initialized.iTokenAddress = Address.fromString('0x0000000000000000000000000000000000000000')
     instrument_state_initialized.interestRateStrategyAddress = Address.fromString('0x0000000000000000000000000000000000000000')
-    instrument_state_initialized.oracle = Address.fromString('0xdFDE2BCB133A2E6d6e6889D1b27a0c4857BED3A1',) 
+    instrument_state_initialized.sighStreamStorageAddress = Address.fromString('0x0000000000000000000000000000000000000000')
+    instrument_state_initialized.sighStreamImplAddress = Address.fromString('0x0000000000000000000000000000000000000000')
+
+    instrument_state_initialized.oracle = Address.fromString('0xd378300a022215B41A08625aA849F9682fDda54d',) 
+
+    instrument_state_initialized.priceETH = BigDecimal.fromString('0')
+    instrument_state_initialized.priceUSD = BigDecimal.fromString('0')
 
     instrument_state_initialized.name = null
     instrument_state_initialized.symbol = null
@@ -291,8 +314,10 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.liquidationThreshold = new BigInt(0)
     instrument_state_initialized.liquidationBonus = new BigInt(0)
 
-    instrument_state_initialized.priceETH = BigDecimal.fromString('0')
-    instrument_state_initialized.priceUSD = BigDecimal.fromString('0')
+    instrument_state_initialized.availableLiquidity_WEI = new BigInt(0)
+    instrument_state_initialized.availableLiquidity = BigDecimal.fromString('0')
+    instrument_state_initialized.availableLiquidityETH = BigDecimal.fromString('0')
+    instrument_state_initialized.availableLiquidityUSD = BigDecimal.fromString('0')
 
     instrument_state_initialized.borrowFeeDue_WEI = new BigInt(0)
     instrument_state_initialized.borrowFeeDue = BigDecimal.fromString('0')
@@ -305,66 +330,38 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.borrowFeeEarnedUSD = BigDecimal.fromString('0')
 
     instrument_state_initialized.totalCompoundedLiquidityWEI =  new BigInt(0)
-
-
-    instrument_state_initialized.totalLiquidity_WEI = new BigInt(0)
-    instrument_state_initialized.totalLiquidity = BigDecimal.fromString('0')
-    instrument_state_initialized.totalLiquidityETH = BigDecimal.fromString('0')
-    instrument_state_initialized.totalLiquidityUSD = BigDecimal.fromString('0')
-
-    instrument_state_initialized.availableLiquidity_WEI = new BigInt(0)
-    instrument_state_initialized.availableLiquidity = BigDecimal.fromString('0')
-    instrument_state_initialized.availableLiquidityETH = BigDecimal.fromString('0')
-    instrument_state_initialized.availableLiquidityUSD = BigDecimal.fromString('0')
-
-    instrument_state_initialized.totalPrincipalBorrows_WEI = new BigInt(0)
-    instrument_state_initialized.totalPrincipalBorrows = BigDecimal.fromString('0')
-    instrument_state_initialized.totalPrincipalBorrowsETH = BigDecimal.fromString('0')
-    instrument_state_initialized.totalPrincipalBorrowsUSD = BigDecimal.fromString('0')
+    instrument_state_initialized.totalCompoundedLiquidity = BigDecimal.fromString('0')
+    instrument_state_initialized.totalCompoundedLiquidityETH = BigDecimal.fromString('0')
+    instrument_state_initialized.totalCompoundedLiquidityUSD = BigDecimal.fromString('0')
 
     instrument_state_initialized.totalCompoundedStableBorrowsWEI =  new BigInt(0)
-
-    instrument_state_initialized.totalPrincipalStableBorrows_WEI = new BigInt(0)
-    instrument_state_initialized.totalPrincipalStableBorrows = BigDecimal.fromString('0')
-    instrument_state_initialized.totalPrincipalStableBorrowsETH = BigDecimal.fromString('0')
-    instrument_state_initialized.totalPrincipalStableBorrowsUSD = BigDecimal.fromString('0')
+    instrument_state_initialized.totalCompoundedStableBorrows = BigDecimal.fromString('0')
+    instrument_state_initialized.totalCompoundedStableBorrowsETH = BigDecimal.fromString('0')
+    instrument_state_initialized.totalCompoundedStableBorrowsUSD = BigDecimal.fromString('0')
 
     instrument_state_initialized.totalCompoundedVariableBorrowsWEI =  new BigInt(0)
+    instrument_state_initialized.totalCompoundedVariableBorrows = BigDecimal.fromString('0')
+    instrument_state_initialized.totalCompoundedVariableBorrowsETH = BigDecimal.fromString('0')
+    instrument_state_initialized.totalCompoundedVariableBorrowsUSD = BigDecimal.fromString('0')
 
-    instrument_state_initialized.totalPrincipalVariableBorrows_WEI = new BigInt(0)
-    instrument_state_initialized.totalPrincipalVariableBorrows = BigDecimal.fromString('0')
-    instrument_state_initialized.totalPrincipalVariableBorrowsETH = BigDecimal.fromString('0')
-    instrument_state_initialized.totalPrincipalVariableBorrowsUSD = BigDecimal.fromString('0')
-
-    instrument_state_initialized.totalCompoundedEarnings_WEI = new BigInt(0)
-    instrument_state_initialized.totalCompoundedEarnings = BigDecimal.fromString('0')
-
-    instrument_state_initialized.utilizationRate = BigDecimal.fromString('0')
-    instrument_state_initialized.utilizationRatePercent= BigDecimal.fromString('0')
-
+    instrument_state_initialized.totalBorrowingEarnings_WEI = new BigInt(0)
+    instrument_state_initialized.totalBorrowingEarnings = BigDecimal.fromString('0')
+    instrument_state_initialized.totalBorrowingEarningsETH = BigDecimal.fromString('0')
+    instrument_state_initialized.totalBorrowingEarningsUSD = BigDecimal.fromString('0')
 
     instrument_state_initialized.stableBorrowInterestRate = new BigInt(0)
     instrument_state_initialized.stableBorrowInterestPercent = BigDecimal.fromString('0')
 
-    instrument_state_initialized.totalCompoundedEarningsSTABLEInterest_WEI = new BigInt(0)
-    instrument_state_initialized.totalCompoundedEarningsSTABLEInterest = BigDecimal.fromString('0')
-
     instrument_state_initialized.variableBorrowInterestRate = new BigInt(0)
     instrument_state_initialized.variableBorrowInterestPercent = BigDecimal.fromString('0')
-
-    instrument_state_initialized.totalCompoundedEarningsVARIABLEInterest_WEI = new BigInt(0)
-    instrument_state_initialized.totalCompoundedEarningsVARIABLEInterest = BigDecimal.fromString('0')
-
     instrument_state_initialized.variableBorrowIndex = new BigInt(0)
-    instrument_state_initialized.supplyIndex = new BigInt(0)
+ 
+    instrument_state_initialized.utilizationRate = BigDecimal.fromString('0')
+    instrument_state_initialized.utilizationRatePercent= BigDecimal.fromString('0')
 
     instrument_state_initialized.supplyInterestRate = new BigInt(0)
     instrument_state_initialized.supplyInterestRatePercent = BigDecimal.fromString('0')
-
-    instrument_state_initialized.totalSupplierEarnings_WEI = new BigInt(0)
-    instrument_state_initialized.totalSupplierEarnings = BigDecimal.fromString('0')
-    instrument_state_initialized.totalSupplierEarningsETH = BigDecimal.fromString('0')
-    instrument_state_initialized.totalSupplierEarningsUSD = BigDecimal.fromString('0')
+    instrument_state_initialized.supplyIndex = new BigInt(0)
 
     instrument_state_initialized.lifeTimeDeposits_WEI = new BigInt(0)
     instrument_state_initialized.lifeTimeDeposits = BigDecimal.fromString('0')
@@ -373,45 +370,71 @@ export function createInstrument(addressID: string): Instrument {
 
     instrument_state_initialized.lifeTimeBorrows_WEI = new BigInt(0)
     instrument_state_initialized.lifeTimeBorrows = BigDecimal.fromString('0')
+    instrument_state_initialized.lifeTimeBorrowsETH = BigDecimal.fromString('0')
+    instrument_state_initialized.lifeTimeBorrowsUSD = BigDecimal.fromString('0')
+
+    instrument_state_initialized.lifeTimeStableBorrows_WEI = new BigInt(0)
+    instrument_state_initialized.lifeTimeStableBorrows = BigDecimal.fromString('0')
+    instrument_state_initialized.lifeTimeStableBorrowsETH = BigDecimal.fromString('0')
+    instrument_state_initialized.lifeTimeStableBorrowsUSD = BigDecimal.fromString('0')
+
+    instrument_state_initialized.lifeTimeVariableBorrows_WEI = new BigInt(0)
+    instrument_state_initialized.lifeTimeVariableBorrows = BigDecimal.fromString('0')
+    instrument_state_initialized.lifeTimeVariableBorrowsETH = BigDecimal.fromString('0')
+    instrument_state_initialized.lifeTimeVariableBorrowsUSD = BigDecimal.fromString('0')
+
+    instrument_state_initialized.lifeTimeBorrowsRepaid_WEI = new BigInt(0)
+    instrument_state_initialized.lifeTimeBorrowsRepaid = BigDecimal.fromString('0')
+    instrument_state_initialized.lifeTimeBorrowsRepaidETH = BigDecimal.fromString('0')
+    instrument_state_initialized.lifeTimeBorrowsRepaidUSD = BigDecimal.fromString('0')
+
+    instrument_state_initialized.totalLiquiditySIGHAccuredWEI = new BigInt(0)
+    instrument_state_initialized.totalLiquiditySIGHAccured = BigDecimal.fromString('0')
+
+    instrument_state_initialized.currentLiquiditySIGHAccuredWEI = new BigInt(0)
+    instrument_state_initialized.currentLiquiditySIGHAccured = BigDecimal.fromString('0')
+
+    instrument_state_initialized.totalBorrowingSIGHAccuredWEI = new BigInt(0)
+    instrument_state_initialized.totalBorrowingSIGHAccured = BigDecimal.fromString('0')
+
+    instrument_state_initialized.currentBorrowingSIGHAccuredWEI = new BigInt(0)
+    instrument_state_initialized.currentBorrowingSIGHAccured = BigDecimal.fromString('0')
+
 
     // SIGH DISTRIBUTION RELATED
+    // SIGH DISTRIBUTION RELATED
+    // SIGH DISTRIBUTION RELATED
+    // SIGH DISTRIBUTION RELATED
 
-    // BOOLEAN
+
     instrument_state_initialized.isListedWithSIGH_Mechanism = false
     instrument_state_initialized.isSIGHMechanismActivated = false
 
-    // LIQUIDITY $SIGH STREAM
-    instrument_state_initialized.totalLiquiditySIGHAccuredWEI =    new BigInt(0)
-    instrument_state_initialized.currentLiquiditySIGHAccuredWEI =    new BigInt(0)
+    instrument_state_initialized.SIGH_Supply_Index = new BigInt(0)
+    instrument_state_initialized.SIGH_Supply_Index_lastUpdatedBlock = new BigInt(0)
 
-    instrument_state_initialized.SIGH_Supply_Index =  new BigInt(0)
-    instrument_state_initialized.SIGH_Supply_Index_lastUpdatedBlock =  new BigInt(0)
+    instrument_state_initialized.SIGH_Borrow_Index = new BigInt(0)
+    instrument_state_initialized.SIGH_Borrow_Index_lastUpdatedBlock = new BigInt(0)
 
-    // BORROWING $SIGH STREAM
-    instrument_state_initialized.totalBorrowingSIGHAccuredWEI =  new BigInt(0)
-    instrument_state_initialized.currentBorrowingSIGHAccuredWEI =  new BigInt(0)
+    instrument_state_initialized.fromBlockNumber = new BigInt(0)
+    instrument_state_initialized.toBlockNumber = new BigInt(0)
 
-    instrument_state_initialized.SIGH_Borrow_Index =  new BigInt(0)
-    instrument_state_initialized.SIGH_Borrow_Index_lastUpdatedBlock =  new BigInt(0)
+    instrument_state_initialized.present_SIGH_Side = null
+    instrument_state_initialized.present_DeltaBlocks = new BigInt(0)
+    instrument_state_initialized.present_Clock = new BigInt(0)
 
-    instrument_state_initialized.present_24HrWindow_InstrumentOpeningPriceETH = BigDecimal.fromString('0')
-    instrument_state_initialized.present_24HrWindow_InstrumentOpeningPriceUSD = BigDecimal.fromString('0')
+    instrument_state_initialized.present_maxVolatilityLimitSuppliers = new BigInt(0)
+    instrument_state_initialized.present_maxVolatilityLimitSuppliersPercent = BigDecimal.fromString('0')
+    instrument_state_initialized.present_maxVolatilityLimitBorrowers = new BigInt(0)
+    instrument_state_initialized.present_maxVolatilityLimitBorrowersPercent = BigDecimal.fromString('0')
 
-    instrument_state_initialized.present_24HrWindow_InstrumentClosingPriceETH = BigDecimal.fromString('0')
-    instrument_state_initialized.present_24HrWindow_InstrumentClosingPriceUSD = BigDecimal.fromString('0')
-
-    instrument_state_initialized.present_24HrWindow_MaxSIGHSpeed = BigDecimal.fromString('0')
-    instrument_state_initialized.present_24HrWindow_DeltaBlocks =  new BigInt(0)
-    instrument_state_initialized.present_24HrVolatility_ETH = BigDecimal.fromString('0')
-    instrument_state_initialized.present_24HrVolatility_USD = BigDecimal.fromString('0')
     instrument_state_initialized.present_percentTotalVolatility = BigDecimal.fromString('0')
-    instrument_state_initialized.present_TotalVolatility_ETH = BigDecimal.fromString('0')
-    instrument_state_initialized.present_TotalVolatility_USD = BigDecimal.fromString('0')
+    instrument_state_initialized.present_total24HrVolatilityETH = new BigInt(0)
+    instrument_state_initialized.present_total24HrVolatilityUSD = BigDecimal.fromString('0')
 
-    instrument_state_initialized.present_SIGH_Distribution_Side = 'inactive'
-
-    instrument_state_initialized.present_24HrWindow_SIGH_OpeningPrice_ETH = BigDecimal.fromString('0') 
-    instrument_state_initialized.present_24HrWindow_SIGH_OpeningPrice_USD = BigDecimal.fromString('0') 
+    instrument_state_initialized.present_percentTotalVolatilityLimitAmount = BigDecimal.fromString('0')
+    instrument_state_initialized.present_24HrVolatilityLimitAmountETH = new BigInt(0)
+    instrument_state_initialized.present_24HrVolatilityLimitAmountUSD = BigDecimal.fromString('0')
 
     instrument_state_initialized.present_SIGH_Suppliers_Speed_WEI =  new BigInt(0)
     instrument_state_initialized.present_SIGH_Suppliers_Speed = BigDecimal.fromString('0')
@@ -420,10 +443,11 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.present_SIGH_Staking_Speed_WEI =  new BigInt(0)
     instrument_state_initialized.present_SIGH_Staking_Speed = BigDecimal.fromString('0')
 
-    instrument_state_initialized.present_SIGH_DistributionValuePerBlock_ETH = BigDecimal.fromString('0')
-    instrument_state_initialized.present_SIGH_DistributionValuePerBlock_USD = BigDecimal.fromString('0')
+    instrument_state_initialized.present_PrevPrice_ETH = BigDecimal.fromString('0')
+    instrument_state_initialized.present_PrevPrice_USD = BigDecimal.fromString('0')
 
-    instrument_state_initialized.present_VolatilityAddressedPerBlock = BigDecimal.fromString('0')
+    instrument_state_initialized.present_OpeningPrice_ETH = BigDecimal.fromString('0')
+    instrument_state_initialized.present_OpeningPrice_USD = BigDecimal.fromString('0')
 
     instrument_state_initialized.timeStamp =  new BigInt(0)
    
