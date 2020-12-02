@@ -47,6 +47,12 @@
 					},
 					{
 						"indexed": false,
+						"internalType": "address",
+						"name": "sighStreamAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
 						"internalType": "uint256",
 						"name": "decimals",
 						"type": "uint256"
@@ -109,6 +115,31 @@
 					}
 				],
 				"name": "InstrumentSIGHStateUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "_Instrument",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_total24HrVolatility",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_24HrVolatilityLimitAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "InstrumentVolatilityCalculated",
 				"type": "event"
 			},
 			{
@@ -476,6 +507,11 @@
 					{
 						"internalType": "address",
 						"name": "_iTokenAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_sighStreamAddress",
 						"type": "address"
 					},
 					{
@@ -1222,7 +1258,7 @@
 						"instrument_": "the instrument object*"
 					}
 				},
-				"addInstrument(address,address,uint256)": {
+				"addInstrument(address,address,address,uint256)": {
 					"details": "adds an instrument - Called by LendingPool Core when an instrument is added to the Lending Protocol",
 					"params": {
 						"_decimals": "the number of decimals of the underlying asset*",
@@ -1320,10 +1356,10 @@
 			]
 		},
 		"localhost/contracts/Configuration/GlobalAddressesProvider.sol": {
-			"keccak256": "0xd5e1beff87157d5700516d1f6bfa0a89c58effb73aff0dca33633e40dfd68b1f",
+			"keccak256": "0x5d6d5159c1496e67cd10809e40ed0d6f046d5fe754972297b9715406152cc59f",
 			"urls": [
-				"bzz-raw://8ce627bea8091d60b2d59ee4ca033ee9859e1c4487ed3f8061c3624c9f10794d",
-				"dweb:/ipfs/QmczACN46FKSTAaUuCzCKS2Ad1rSus1pEQayQ2xio2un8w"
+				"bzz-raw://dd074e6cd0e6d6f043ec82c55beade9e9daaaf3c0f1fd1153a278d77da8b2321",
+				"dweb:/ipfs/QmZWmVzdTBj9qvxb42H7nKfUSKuKXHpxGVQMQZRVxJovit"
 			]
 		},
 		"localhost/contracts/Configuration/IGlobalAddressesProvider.sol": {
@@ -1334,10 +1370,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
-			"keccak256": "0x37465febf6c92125bde6afa3d7e0cc33c89077d689eb031f04f1818c1fa26756",
+			"keccak256": "0x1657a8a39266adbacbff83f7ae804eb22686150929e33874976a2398abf53f83",
 			"urls": [
-				"bzz-raw://68a2de8d743f504fb5510bfa083c8056bd09ede959cba2df7b7e0139b64f60ad",
-				"dweb:/ipfs/QmcMHEawYbuTQCjXEBUpRMJsAaqPgjK6PQC5jKWHZ54zvA"
+				"bzz-raw://9ad253e3c976e8a930a5a3747ba3831e393d7abf4bbab8bd4990453cb139a9ac",
+				"dweb:/ipfs/QmbVnNS3t5mh46s5d2C1HvZBUqHVdWzv2hSm2vdiP8GrL7"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/IPriceOracleGetter.sol": {
@@ -1383,10 +1419,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighDistributionHandler/SighDistributionHandler.sol": {
-			"keccak256": "0x18524e0c5692385490ffe6305838dd6fcb09d6a1f5301e7b77b85d4ebc87d7ee",
+			"keccak256": "0x2b6449abece5bd7c0c96be63ae2148824aa204bffa72cba883e80a745f64dc70",
 			"urls": [
-				"bzz-raw://5609a8aa5f03e51edbc47bdd5633479069975dc1927be5a35ab3f2c73d5f71e5",
-				"dweb:/ipfs/QmauoK6vE6r4F79sA2HqNZPbPsdcBFeC4aqzNvLZJujJiS"
+				"bzz-raw://7c9b66c789dceaa7a181d542abdd6eb62efb3f1ba61cabce565f5d6c56d59802",
+				"dweb:/ipfs/QmXcQsKXRfzRjRRvo7WnsBUfQZxCUQvM1tcrFG16ujVphm"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

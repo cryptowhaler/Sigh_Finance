@@ -34,7 +34,7 @@ contract LendingPoolConfigurator is VersionedInitializable  {
     * @param _iToken the address of the overlying iToken contract
     * @param _interestRateStrategyAddress the address of the interest rate strategy for the instrument
     **/
-    event InstrumentInitialized( address indexed _instrument, address indexed _iToken, address _interestRateStrategyAddress, address sighStreamProxyAddress, address sighStreamImplAddress );
+    event InstrumentInitialized( address indexed _instrument, address indexed _iToken, address _interestRateStrategyAddress, address sighStreamAddress );
     event InstrumentRemoved( address indexed _instrument);      // emitted when a instrument is removed.
 
     event BorrowingOnInstrumentSwitched(address indexed _instrument, bool switch_ );     
@@ -56,8 +56,9 @@ contract LendingPoolConfigurator is VersionedInitializable  {
     event InstrumentCollateralParametersUpdated(address _instrument,uint256 _ltv,  uint256 _liquidationThreshold,  uint256 _liquidationBonus );     
     event InstrumentInterestRateStrategyChanged(address _instrument, address _strategy);      // emitted when a _instrument interest strategy contract is updated
     event InstrumentDecimalsUpdated(address _instrument,uint256 decimals);
-    event sighStreamImplUpdated(address instrument,address newSighStreamImpl);
 
+    event ProxyCreated(address instrument, address  sighStreamProxyAddress);
+    
 // #############################
 // ####### PROXY RELATED #######
 // #############################
@@ -111,7 +112,7 @@ contract LendingPoolConfigurator is VersionedInitializable  {
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
         core.initInstrument( _instrument, iTokenInstance, decimals, _interestRateStrategyAddress, sighStreamProxy );
 
-        emit InstrumentInitialized( _instrument, iTokenInstance, _interestRateStrategyAddress,  sighStreamProxy, sighStreamImplAddress  );
+        emit InstrumentInitialized( _instrument, iTokenInstance, _interestRateStrategyAddress,  sighStreamProxy  );
     }
 
 // ###################################################################################################
@@ -249,7 +250,6 @@ contract LendingPoolConfigurator is VersionedInitializable  {
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
         require(core.getInstrumentITokenAddress(instrumentAddress) == iTokenAddress,"Wrong instrument - IToken addresses provided");
         updateSighStreamImplInternal(newSighStreamImpl,instrumentAddress,iTokenAddress);
-        emit sighStreamImplUpdated(instrumentAddress,newSighStreamImpl);
     }
 
     function getSighStreamAddress(address instrumentAddress) external returns (address sighStreamProxyAddress) {
@@ -266,6 +266,7 @@ contract LendingPoolConfigurator is VersionedInitializable  {
         InitializableAdminUpgradeabilityProxy proxy = new InitializableAdminUpgradeabilityProxy();
         proxy.initialize(_sighStreamAddress, address(this), params); 
         sighStreamProxies[instrumentAddress] = address(proxy);
+        emit ProxyCreated(instrumentAddress, address(proxy));
     }    
 
     function updateSighStreamImplInternal(address _sighStreamAddress, address instrumentAddress, address iTokenAddress ) internal {

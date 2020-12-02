@@ -1224,26 +1224,6 @@
 						"type": "address"
 					},
 					{
-						"internalType": "uint256",
-						"name": "_decimals",
-						"type": "uint256"
-					}
-				],
-				"name": "setInstrumentDecimals",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					},
-					{
 						"internalType": "address",
 						"name": "_rateStrategyAddress",
 						"type": "address"
@@ -2039,12 +2019,6 @@
 				"refreshConfiguration()": {
 					"details": "updates the lending pool core configuration*"
 				},
-				"setInstrumentDecimals(address,uint256)": {
-					"params": {
-						"_decimals": "the decimals of the instrument*",
-						"_instrument": "the address of the instrument"
-					}
-				},
 				"setInstrumentInterestRateStrategyAddress(address,address)": {
 					"details": "updates the address of the interest rate strategy contract",
 					"params": {
@@ -2187,9 +2161,6 @@
 				"getInstrumentLastUpdate(address)": {
 					"notice": "returns the timestamp of the last action on the _instrument"
 				},
-				"setInstrumentDecimals(address,uint256)": {
-					"notice": "allows the configurator to update the instrument decimals"
-				},
 				"updateInstrumentCollateralParameters(address,uint256,uint256,uint256)": {
 					"notice": "allows the configurator to update the loan to value of a instrument, liquidation threshold, liquidation bonus"
 				}
@@ -2218,10 +2189,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ITokenInterface.sol": {
-			"keccak256": "0xbb2e0aad734c692c23dfc8e2c3b6df2e4e202f811d55c97f08ea3f921e7b2132",
+			"keccak256": "0xa5496671da81524360364282a3eff338a0fb1719601e852218a78c864579c5a8",
 			"urls": [
-				"bzz-raw://a2cc8061647a695e95f6a38aee62b5585c43d2be0c6ed4d43a396cee05d61f5d",
-				"dweb:/ipfs/QmWzhfAhL68E9QtW9UNRk7PiopSRX1dBc97ZUdaMhjkicm"
+				"bzz-raw://17cb99afb5f7d2f53280268129475f2b66e5cc4f828f9de521c84c5222ebe58e",
+				"dweb:/ipfs/QmYi2dQd18tGSXpzDVTFxviAHuXz82JGq9qaU85LM58yKC"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/I_InstrumentInterestRateStrategy.sol": {
@@ -2232,10 +2203,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolCore.sol": {
-			"keccak256": "0xe2938439dced49c1748bc76f5bbc846094bcff295ef44d1ae4ed1a7663bd2852",
+			"keccak256": "0xe2b78539fc206a3f7c216cf0ea8e86a9f1a71ba8dc43332dcc3f29384c7bb1a9",
 			"urls": [
-				"bzz-raw://b0d44de83dcecd6fcab0dea3aecf19c75635b22d2b14feff10b50ed223c52b3d",
-				"dweb:/ipfs/QmfWmTZFXGpAACeT43WPVBXw6fpzxWbxZFLsWaQv1dZCHW"
+				"bzz-raw://17ff22284cfaeaf8df521c9467018c4c2fad4ee182a8b64f975fe7902885f69c",
+				"dweb:/ipfs/QmfMfg4ty7wDGQ2WHm9EzwsEqZ2vzs3Pc7NxG3kyEWR9JY"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
@@ -2260,10 +2231,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0x115ccd1475e1da68ae805765ac1d073e02dd3076dd86354251017948301e1c9d",
+			"keccak256": "0xe1edaef7749162d1423d5e5b68c5022d6a444102ca1f5fd3d05250527e508a7c",
 			"urls": [
-				"bzz-raw://c81a7924ea7350f410b1a0a07c1d8772d38b825e68da0ec10f63dd4034d9792a",
-				"dweb:/ipfs/QmaJRXRy9PGT81amgFVCrahPsMvs5GncXB9fQTFn9vNVet"
+				"bzz-raw://9ca93c68f2e1be89d5bbc8f5cb662c793924cb7f28ea67698e54e382e255f746",
+				"dweb:/ipfs/QmX1MK2H5gWGtLqipxqfdEVuywe2ZDtaaSgqnkuMaPuEDQ"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {

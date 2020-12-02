@@ -26,7 +26,7 @@ interface ISighDistributionHandler {
     function updateSIGHSupplyIndex(address currentInstrument) external  returns (bool);                                      // onlyLendingPoolCore
     function updateSIGHBorrowIndex(address currentInstrument) external  returns (bool);                                      // onlyLendingPoolCore
 
-    function transferSighTotheUser(address instrument, address user, uint sigh_Amount) external  returns (uint);             // onlyITokenContract(instrument)
+    function transferSighTotheUser(address instrument, address user, uint sigh_Amount ) external  returns (uint);             // onlyITokenContract(instrument)
 
     // ###### VIEW FUNCTIONS ######
     function getSIGHBalance() external view returns (uint);

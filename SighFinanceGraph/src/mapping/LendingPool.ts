@@ -18,18 +18,9 @@ export function handleDeposit(event: Deposit): void {
     instrumentState.lifeTimeDeposits_WEI = instrumentState.lifeTimeDeposits_WEI.plus(event.params._amount)
     instrumentState.lifeTimeDeposits = instrumentState.lifeTimeDeposits_WEI.toBigDecimal().div(decimalAdj)
 
-    instrumentState.totalDepositedLiquidity_WEI = instrumentState.totalDepositedLiquidity_WEI.plus(event.params._amount)
-    instrumentState.totalDepositedLiquidity = instrumentState.totalDepositedLiquidity_WEI.toBigDecimal().div(decimalAdj)
-
     instrumentState.availableLiquidity_WEI = instrumentState.availableLiquidity_WEI.plus(event.params._amount)
     instrumentState.availableLiquidity = instrumentState.availableLiquidity_WEI.toBigDecimal().div(decimalAdj)
 
-    // if (instrumentState.totalLiquidity  > BigDecimal.fromString('0')) {
-    //     instrumentState.utilizationRate = instrumentState.totalPrincipalBorrows.times(BigInt.fromI32(18).pow(25 as u8).toBigDecimal()).div(instrumentState.totalLiquidity)
-    //     instrumentState.utilizationRatePercent = instrumentState.utilizationRate.div( BigInt.fromI32(18).pow(23 as u8).toBigDecimal() )
-    // }
-
-        instrumentState.timeStamp = event.params._timestamp
     instrumentState.save()
 
     updatePrice(instrumentId)
@@ -44,18 +35,9 @@ export function handleRedeemUnderlying(event: RedeemUnderlying): void {
 
     let decimalAdj = BigInt.fromI32(10).pow(instrumentState.decimals.toI32() as u8).toBigDecimal()
 
-    instrumentState.totalLiquidity_WEI = instrumentState.totalLiquidity_WEI.minus(event.params._amount)
-    instrumentState.totalLiquidity = instrumentState.totalLiquidity_WEI.toBigDecimal().div(decimalAdj)
-
     instrumentState.availableLiquidity_WEI = instrumentState.availableLiquidity_WEI.minus(event.params._amount)
     instrumentState.availableLiquidity = instrumentState.availableLiquidity_WEI.toBigDecimal().div(decimalAdj)
 
-    if (instrumentState.totalLiquidity  > BigDecimal.fromString('0')) {
-        instrumentState.utilizationRate = instrumentState.totalPrincipalBorrows.times(BigInt.fromI32(18).pow(25 as u8).toBigDecimal()).div(instrumentState.totalLiquidity)
-        instrumentState.utilizationRatePercent = instrumentState.utilizationRate.div( BigInt.fromI32(18).pow(23 as u8).toBigDecimal() )
-    }
-
-    instrumentState.timeStamp = event.params._timestamp
     instrumentState.save()    
     updatePrice(instrumentId)
 }
@@ -78,55 +60,25 @@ export function handleBorrow(event: Borrow): void {
     instrumentState.availableLiquidity_WEI = instrumentState.availableLiquidity_WEI.minus(event.params._amount)
     instrumentState.availableLiquidity = instrumentState.availableLiquidity_WEI.toBigDecimal().div(decimalAdj)
 
-    // TOTAL PRINCIPAL BORROWS
-    instrumentState.totalPrincipalBorrows_WEI = instrumentState.totalPrincipalBorrows_WEI.plus(event.params._amount)
-    instrumentState.totalPrincipalBorrows = instrumentState.totalPrincipalBorrows_WEI.toBigDecimal().div(decimalAdj)
-
     // BORROW FEE (Currently DUE)
     instrumentState.borrowFeeDue_WEI = instrumentState.borrowFeeDue_WEI.plus(event.params._originationFee)
     instrumentState.borrowFeeDue = instrumentState.borrowFeeDue_WEI.toBigDecimal().div(decimalAdj)
 
     if (event.params._borrowRateMode == new BigInt(0) ) {
         // TOTAL PRINCIPAL (STABLE) BORROWS
-        instrumentState.totalPrincipalStableBorrows_WEI = instrumentState.totalPrincipalStableBorrows_WEI.plus(event.params._amount)
-        instrumentState.totalPrincipalStableBorrows = instrumentState.totalPrincipalStableBorrows_WEI.toBigDecimal().div(decimalAdj)    
-
-        // COMPOUNDED EARNINGS : STABLE BORROWS
-        instrumentState.totalCompoundedEarningsSTABLEInterest_WEI = instrumentState.totalCompoundedEarningsSTABLEInterest_WEI.plus(event.params._borrowBalanceIncrease)
-        instrumentState.totalCompoundedEarningsSTABLEInterest = instrumentState.totalCompoundedEarningsSTABLEInterest_WEI.toBigDecimal().div(decimalAdj)    
-
-       //  STABLE BORROW INTEREST RATE
-       instrumentState.stableBorrowInterestRate = event.params._borrowRate
-        // instrumentState.stableBorrowInterestPercent = 0 // instrumentState.stableBorrowInterestRate.toBigDecimal().div(decimalAdj)    
-
+        instrumentState.lifeTimeStableBorrows_WEI = instrumentState.lifeTimeStableBorrows_WEI.plus(event.params._amount)
+        instrumentState.lifeTimeStableBorrows = instrumentState.lifeTimeStableBorrows_WEI.toBigDecimal().div(decimalAdj)    
     }
     else {
         // TOTAL PRINCIPAL (VARIABLE) BORROWS
-        instrumentState.totalPrincipalVariableBorrows_WEI = instrumentState.totalPrincipalVariableBorrows_WEI.plus(event.params._amount)
-        instrumentState.totalPrincipalVariableBorrows = instrumentState.totalPrincipalVariableBorrows_WEI.toBigDecimal().div(decimalAdj)    
-
-        // COMPOUNDED EARNINGS : VARIABLE BORROWS
-        instrumentState.totalCompoundedEarningsVARIABLEInterest_WEI = instrumentState.totalCompoundedEarningsVARIABLEInterest_WEI.plus(event.params._borrowBalanceIncrease)
-        instrumentState.totalCompoundedEarningsVARIABLEInterest = instrumentState.totalCompoundedEarningsVARIABLEInterest_WEI.toBigDecimal().div(decimalAdj)    
-
-       //  VARIABLE BORROW INTEREST RATE
-        instrumentState.variableBorrowInterestRate = event.params._borrowRate
-        // instrumentState.variableBorrowInterestPercent = 0 // instrumentState.stableBorrowInterestRate.toBigDecimal().div(decimalAdj)    
+        instrumentState.lifeTimeVariableBorrows_WEI = instrumentState.lifeTimeVariableBorrows_WEI.plus(event.params._amount)
+        instrumentState.lifeTimeVariableBorrows = instrumentState.lifeTimeVariableBorrows_WEI.toBigDecimal().div(decimalAdj)    
     }
 
-    // instrumentState.totalPrincipalBorrows_WEI = instrumentState.totalPrincipalStableBorrows_WEI.plus(instrumentState.totalPrincipalVariableBorrows_WEI)
-    // instrumentState.totalPrincipalBorrows = instrumentState.totalPrincipalStableBorrows.plus(instrumentState.totalVariableBorrows)
+    // TOTAL EARNINGS FROM BORROWING
+    instrumentState.totalBorrowingEarnings_WEI = instrumentState.totalBorrowingEarnings_WEI.plus(event.params._borrowBalanceIncrease)
+    instrumentState.totalBorrowingEarnings = instrumentState.totalBorrowingEarnings_WEI.toBigDecimal().div(decimalAdj) 
 
-    // TOTAL COMPOUNDED EARNINGS 
-    instrumentState.totalCompoundedEarnings_WEI = instrumentState.totalCompoundedEarningsVARIABLEInterest_WEI.plus(instrumentState.totalCompoundedEarningsSTABLEInterest_WEI)
-    instrumentState.totalCompoundedEarnings = instrumentState.totalCompoundedEarningsVARIABLEInterest.plus(instrumentState.totalCompoundedEarningsSTABLEInterest)
-
-    if (instrumentState.totalLiquidity  > BigDecimal.fromString('0')) {
-        instrumentState.utilizationRate = instrumentState.totalPrincipalBorrows.times(BigInt.fromI32(18).pow(25 as u8).toBigDecimal()).div(instrumentState.totalLiquidity)
-        instrumentState.utilizationRatePercent = instrumentState.utilizationRate.div( BigInt.fromI32(18).pow(23 as u8).toBigDecimal() )
-    }
-
-    instrumentState.timeStamp = event.params._timestamp
     instrumentState.save()    
     updatePrice(instrumentId)
 }
@@ -143,24 +95,23 @@ export function handleRepay(event: Repay): void {
     instrumentState.availableLiquidity_WEI = instrumentState.availableLiquidity_WEI.plus(event.params._amountMinusFees)
     instrumentState.availableLiquidity = instrumentState.availableLiquidity_WEI.toBigDecimal().div(decimalAdj)
 
-    // TOTAL PRINCIPAL BORROWS
-    instrumentState.totalPrincipalBorrows_WEI = instrumentState.totalPrincipalBorrows_WEI.minus(event.params._amountMinusFees)
-    instrumentState.totalPrincipalBorrows = instrumentState.totalPrincipalBorrows_WEI.toBigDecimal().div(decimalAdj)
+    // BORROW FEE (Currently DUE)
+    instrumentState.borrowFeeDue_WEI = instrumentState.borrowFeeDue_WEI.minus(event.params._fees)
+    instrumentState.borrowFeeDue = instrumentState.borrowFeeDue_WEI.toBigDecimal().div(decimalAdj)
 
     // BORROW FEE (Earned)
     instrumentState.borrowFeeEarned_WEI = instrumentState.borrowFeeEarned_WEI.plus(event.params._fees)
     instrumentState.borrowFeeEarned = instrumentState.borrowFeeEarned_WEI.toBigDecimal().div(decimalAdj)
 
-    if (instrumentState.totalLiquidity  > BigDecimal.fromString('0')) {
-        instrumentState.utilizationRate = instrumentState.totalPrincipalBorrows.times(BigInt.fromI32(18).pow(25 as u8).toBigDecimal()).div(instrumentState.totalLiquidity)
-        instrumentState.utilizationRatePercent = instrumentState.utilizationRate.div( BigInt.fromI32(18).pow(23 as u8).toBigDecimal() )    
-    }
-    
-    // event.params._amount._amountMinusFees --> Amount Repaid, subtracting Fee
-    // event.params._amount._fees --> Fee (Origination Fee)
-    // event.params._amount._borrowBalanceIncrease --> Increase in BorrowBalance of the user due to accuring Interest
+    // TOTAL BORROW AMOUNT RE-PAID
+    instrumentState.lifeTimeBorrowsRepaid_WEI = instrumentState.lifeTimeBorrowsRepaid_WEI.plus(event.params._amountMinusFees)
+    instrumentState.lifeTimeBorrowsRepaid = instrumentState.lifeTimeBorrowsRepaid_WEI.toBigDecimal().div(decimalAdj)
 
-    instrumentState.timeStamp = event.params._timestamp
+    // TOTAL EARNINGS FROM BORROWING
+    instrumentState.totalBorrowingEarnings_WEI = instrumentState.totalBorrowingEarnings_WEI.plus(event.params._borrowBalanceIncrease)
+    instrumentState.totalBorrowingEarnings = instrumentState.totalBorrowingEarnings_WEI.toBigDecimal().div(decimalAdj) 
+
+
     instrumentState.save()   
     updatePrice(instrumentId) 
 }

@@ -106,8 +106,9 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
     event StakingSpeedUpdated(address instrumentAddress_ , uint prevStakingSpeed, uint new_staking_Speed, uint blockNumber );
     
-    event PriceSnapped(address instrument, uint prevPrice, uint currentPrice, uint deltaBlocks, uint currentClock );   /// @notice Emitted when Price snapshot is taken
+    event PriceSnapped(address instrument, uint prevPrice, uint currentPrice, uint deltaBlocks, uint currentClock );   
     event MaxSIGHSpeedCalculated(uint _SIGHSpeed, uint _SIGHSpeedUsed, uint _totalVolatilityLimitPerBlock, uint _maxVolatilityToAddressPerBlock, uint _max_SIGHDistributionLimitDecimalsAdjusted );
+    event InstrumentVolatilityCalculated(address _Instrument, uint _total24HrVolatility , uint _24HrVolatilityLimitAmount);
     event refreshingSighSpeeds( address _Instrument, uint8 side,  uint supplierSpeed, uint borrowerSpeed, uint _percentTotalVolatilityLimitAmount, uint _percentTotalVolatility );
     
 
@@ -144,7 +145,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 // ##############        PROXY RELATED  & ADDRESSES INITIALIZATION        ###############
 // ######################################################################################
 
-    uint256 constant private SIGH_DISTRIBUTION_REVISION = 0x1;
+    uint256 constant private SIGH_DISTRIBUTION_REVISION = 0x2;
 
     function getRevision() internal pure returns(uint256) {
         return SIGH_DISTRIBUTION_REVISION;
@@ -437,6 +438,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
                 //  Total Protocol Volatility Limit  += Instrument Volatility Limit Amount                 
                  totalProtocolVolatilityLimit = add_(totalProtocolVolatilityLimit, Exp({mantissa: Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatilityLimitAmount})) ;            
             }
+            emit InstrumentVolatilityCalculated(_currentInstrument, Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility , Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatilityLimitAmount);
         }
         
        
@@ -651,7 +653,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
      * @param sigh_Amount The amount of SIGH to (possibly) transfer
      * @return The amount of SIGH which was NOT transferred to the user
      */
-    function transferSighTotheUser(address instrument, address user, uint sigh_Amount) external onlySighStreamContract(instrument) returns (uint) {   // 
+    function transferSighTotheUser(address instrument, address user, uint sigh_Amount ) external onlySighStreamContract(instrument) returns (uint) {   // 
         uint sigh_not_transferred = 0;
         if ( Sigh_Address.balanceOf(address(this)) > sigh_Amount ) {   // NO SIGH TRANSFERRED IF CONTRACT LACKS REQUIRED SIGH AMOUNT
             require(Sigh_Address.transfer( user, sigh_Amount ), "Failed to transfer accured SIGH to the user." );

@@ -1372,16 +1372,6 @@ contract LendingPoolCore is VersionedInitializable {
         instrument.liquidationBonus = _bonus;
     }
 
-    /**
-    * @notice allows the configurator to update the instrument decimals
-    * @param _instrument the address of the instrument
-    * @param _decimals the decimals of the instrument
-    **/
-    function setInstrumentDecimals(address _instrument, uint256 _decimals) external onlyLendingPoolConfigurator {
-        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
-        instrument.decimals = _decimals;
-    }
-
 // ##########################################################################
 // ################    FREQUENTLY USED INTERNAL FUNCTIONS    ################
 // ##########################################################################

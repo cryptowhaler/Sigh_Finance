@@ -9,7 +9,7 @@ dataSources:
     name: SIGH
     network: kovan
     source:
-      address: "0xF56E9e83Ad39cF32F15c603404C05b02DB986e5E"
+      address: "0x6378a83C510EF3868B2e197dA4A3245a05c1ECbE"
       abi: SIGH
       startBlock: 22305514
     mapping:
@@ -44,7 +44,7 @@ dataSources:
     name: Lending_Pool_Core
     network: kovan
     source:
-      address: "0x50A9bA0386cA7020de60B251Fafa0992db860401"
+      address: "0xFb474973cC487e2b624cab2FddddBc0189EE4c0c"
       abi: LendingPoolCore
       startBlock: 22305514
     mapping:
@@ -71,7 +71,7 @@ dataSources:
     name: Lending_Pool
     network: kovan
     source:
-      address: "0xf58D599D44da62a85ADE3026B074b60692e0A5eA"
+      address: "0x039dB2F72e8Ae1CE7a9C5b07a311A8672F99f64B"
       abi: LendingPool
       startBlock: 22305514
     mapping:
@@ -117,7 +117,7 @@ dataSources:
     name: Lending_Pool_Configurator
     network: kovan
     source:
-      address: "0xF4c1c67C44b4795F60533B594A190bcF5C8808A2"
+      address: "0x448B3994eebaB4648e0D913eC7e73702e99Ed316"
       abi: LendingPoolConfigurator
       startBlock: 22305514
     mapping:
@@ -169,7 +169,7 @@ dataSources:
     name: Sigh_Distribution_Handler
     network: kovan
     source:
-      address: "0x05a5105D411004F224143bA88DD6D87eB6B56d80"
+      address: "0xC14aEdF5a041DAd54e8A0eD125D54F418F9C96dA"
       abi: SIGHDistributionHandler
       startBlock: 22305514
     mapping:

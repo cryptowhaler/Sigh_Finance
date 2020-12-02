@@ -500,6 +500,24 @@ export class Instrument extends Entity {
     this.set("interestRateStrategyAddress", Value.fromBytes(value));
   }
 
+  get sighStreamStorageAddress(): Bytes {
+    let value = this.get("sighStreamStorageAddress");
+    return value.toBytes();
+  }
+
+  set sighStreamStorageAddress(value: Bytes) {
+    this.set("sighStreamStorageAddress", Value.fromBytes(value));
+  }
+
+  get sighStreamImplAddress(): Bytes {
+    let value = this.get("sighStreamImplAddress");
+    return value.toBytes();
+  }
+
+  set sighStreamImplAddress(value: Bytes) {
+    this.set("sighStreamImplAddress", Value.fromBytes(value));
+  }
+
   get oracle(): Bytes {
     let value = this.get("oracle");
     return value.toBytes();
@@ -644,6 +662,42 @@ export class Instrument extends Entity {
     this.set("liquidationBonus", Value.fromBigInt(value));
   }
 
+  get availableLiquidity_WEI(): BigInt {
+    let value = this.get("availableLiquidity_WEI");
+    return value.toBigInt();
+  }
+
+  set availableLiquidity_WEI(value: BigInt) {
+    this.set("availableLiquidity_WEI", Value.fromBigInt(value));
+  }
+
+  get availableLiquidity(): BigDecimal {
+    let value = this.get("availableLiquidity");
+    return value.toBigDecimal();
+  }
+
+  set availableLiquidity(value: BigDecimal) {
+    this.set("availableLiquidity", Value.fromBigDecimal(value));
+  }
+
+  get availableLiquidityETH(): BigDecimal {
+    let value = this.get("availableLiquidityETH");
+    return value.toBigDecimal();
+  }
+
+  set availableLiquidityETH(value: BigDecimal) {
+    this.set("availableLiquidityETH", Value.fromBigDecimal(value));
+  }
+
+  get availableLiquidityUSD(): BigDecimal {
+    let value = this.get("availableLiquidityUSD");
+    return value.toBigDecimal();
+  }
+
+  set availableLiquidityUSD(value: BigDecimal) {
+    this.set("availableLiquidityUSD", Value.fromBigDecimal(value));
+  }
+
   get borrowFeeDue_WEI(): BigInt {
     let value = this.get("borrowFeeDue_WEI");
     return value.toBigInt();
@@ -716,42 +770,6 @@ export class Instrument extends Entity {
     this.set("borrowFeeEarnedUSD", Value.fromBigDecimal(value));
   }
 
-  get totalLiquidity_WEI(): BigInt {
-    let value = this.get("totalLiquidity_WEI");
-    return value.toBigInt();
-  }
-
-  set totalLiquidity_WEI(value: BigInt) {
-    this.set("totalLiquidity_WEI", Value.fromBigInt(value));
-  }
-
-  get totalLiquidity(): BigDecimal {
-    let value = this.get("totalLiquidity");
-    return value.toBigDecimal();
-  }
-
-  set totalLiquidity(value: BigDecimal) {
-    this.set("totalLiquidity", Value.fromBigDecimal(value));
-  }
-
-  get totalLiquidityETH(): BigDecimal {
-    let value = this.get("totalLiquidityETH");
-    return value.toBigDecimal();
-  }
-
-  set totalLiquidityETH(value: BigDecimal) {
-    this.set("totalLiquidityETH", Value.fromBigDecimal(value));
-  }
-
-  get totalLiquidityUSD(): BigDecimal {
-    let value = this.get("totalLiquidityUSD");
-    return value.toBigDecimal();
-  }
-
-  set totalLiquidityUSD(value: BigDecimal) {
-    this.set("totalLiquidityUSD", Value.fromBigDecimal(value));
-  }
-
   get totalCompoundedLiquidityWEI(): BigInt {
     let value = this.get("totalCompoundedLiquidityWEI");
     return value.toBigInt();
@@ -761,76 +779,31 @@ export class Instrument extends Entity {
     this.set("totalCompoundedLiquidityWEI", Value.fromBigInt(value));
   }
 
-  get availableLiquidity_WEI(): BigInt {
-    let value = this.get("availableLiquidity_WEI");
-    return value.toBigInt();
-  }
-
-  set availableLiquidity_WEI(value: BigInt) {
-    this.set("availableLiquidity_WEI", Value.fromBigInt(value));
-  }
-
-  get availableLiquidity(): BigDecimal {
-    let value = this.get("availableLiquidity");
+  get totalCompoundedLiquidity(): BigDecimal {
+    let value = this.get("totalCompoundedLiquidity");
     return value.toBigDecimal();
   }
 
-  set availableLiquidity(value: BigDecimal) {
-    this.set("availableLiquidity", Value.fromBigDecimal(value));
+  set totalCompoundedLiquidity(value: BigDecimal) {
+    this.set("totalCompoundedLiquidity", Value.fromBigDecimal(value));
   }
 
-  get availableLiquidityETH(): BigDecimal {
-    let value = this.get("availableLiquidityETH");
+  get totalCompoundedLiquidityETH(): BigDecimal {
+    let value = this.get("totalCompoundedLiquidityETH");
     return value.toBigDecimal();
   }
 
-  set availableLiquidityETH(value: BigDecimal) {
-    this.set("availableLiquidityETH", Value.fromBigDecimal(value));
+  set totalCompoundedLiquidityETH(value: BigDecimal) {
+    this.set("totalCompoundedLiquidityETH", Value.fromBigDecimal(value));
   }
 
-  get availableLiquidityUSD(): BigDecimal {
-    let value = this.get("availableLiquidityUSD");
+  get totalCompoundedLiquidityUSD(): BigDecimal {
+    let value = this.get("totalCompoundedLiquidityUSD");
     return value.toBigDecimal();
   }
 
-  set availableLiquidityUSD(value: BigDecimal) {
-    this.set("availableLiquidityUSD", Value.fromBigDecimal(value));
-  }
-
-  get totalPrincipalBorrows_WEI(): BigInt {
-    let value = this.get("totalPrincipalBorrows_WEI");
-    return value.toBigInt();
-  }
-
-  set totalPrincipalBorrows_WEI(value: BigInt) {
-    this.set("totalPrincipalBorrows_WEI", Value.fromBigInt(value));
-  }
-
-  get totalPrincipalBorrows(): BigDecimal {
-    let value = this.get("totalPrincipalBorrows");
-    return value.toBigDecimal();
-  }
-
-  set totalPrincipalBorrows(value: BigDecimal) {
-    this.set("totalPrincipalBorrows", Value.fromBigDecimal(value));
-  }
-
-  get totalPrincipalBorrowsETH(): BigDecimal {
-    let value = this.get("totalPrincipalBorrowsETH");
-    return value.toBigDecimal();
-  }
-
-  set totalPrincipalBorrowsETH(value: BigDecimal) {
-    this.set("totalPrincipalBorrowsETH", Value.fromBigDecimal(value));
-  }
-
-  get totalPrincipalBorrowsUSD(): BigDecimal {
-    let value = this.get("totalPrincipalBorrowsUSD");
-    return value.toBigDecimal();
-  }
-
-  set totalPrincipalBorrowsUSD(value: BigDecimal) {
-    this.set("totalPrincipalBorrowsUSD", Value.fromBigDecimal(value));
+  set totalCompoundedLiquidityUSD(value: BigDecimal) {
+    this.set("totalCompoundedLiquidityUSD", Value.fromBigDecimal(value));
   }
 
   get totalCompoundedStableBorrowsWEI(): BigInt {
@@ -842,40 +815,31 @@ export class Instrument extends Entity {
     this.set("totalCompoundedStableBorrowsWEI", Value.fromBigInt(value));
   }
 
-  get totalPrincipalStableBorrows_WEI(): BigInt {
-    let value = this.get("totalPrincipalStableBorrows_WEI");
-    return value.toBigInt();
-  }
-
-  set totalPrincipalStableBorrows_WEI(value: BigInt) {
-    this.set("totalPrincipalStableBorrows_WEI", Value.fromBigInt(value));
-  }
-
-  get totalPrincipalStableBorrows(): BigDecimal {
-    let value = this.get("totalPrincipalStableBorrows");
+  get totalCompoundedStableBorrows(): BigDecimal {
+    let value = this.get("totalCompoundedStableBorrows");
     return value.toBigDecimal();
   }
 
-  set totalPrincipalStableBorrows(value: BigDecimal) {
-    this.set("totalPrincipalStableBorrows", Value.fromBigDecimal(value));
+  set totalCompoundedStableBorrows(value: BigDecimal) {
+    this.set("totalCompoundedStableBorrows", Value.fromBigDecimal(value));
   }
 
-  get totalPrincipalStableBorrowsETH(): BigDecimal {
-    let value = this.get("totalPrincipalStableBorrowsETH");
+  get totalCompoundedStableBorrowsETH(): BigDecimal {
+    let value = this.get("totalCompoundedStableBorrowsETH");
     return value.toBigDecimal();
   }
 
-  set totalPrincipalStableBorrowsETH(value: BigDecimal) {
-    this.set("totalPrincipalStableBorrowsETH", Value.fromBigDecimal(value));
+  set totalCompoundedStableBorrowsETH(value: BigDecimal) {
+    this.set("totalCompoundedStableBorrowsETH", Value.fromBigDecimal(value));
   }
 
-  get totalPrincipalStableBorrowsUSD(): BigDecimal {
-    let value = this.get("totalPrincipalStableBorrowsUSD");
+  get totalCompoundedLiquidityUSD(): BigDecimal {
+    let value = this.get("totalCompoundedLiquidityUSD");
     return value.toBigDecimal();
   }
 
-  set totalPrincipalStableBorrowsUSD(value: BigDecimal) {
-    this.set("totalPrincipalStableBorrowsUSD", Value.fromBigDecimal(value));
+  set totalCompoundedLiquidityUSD(value: BigDecimal) {
+    this.set("totalCompoundedLiquidityUSD", Value.fromBigDecimal(value));
   }
 
   get totalCompoundedVariableBorrowsWEI(): BigInt {
@@ -887,58 +851,67 @@ export class Instrument extends Entity {
     this.set("totalCompoundedVariableBorrowsWEI", Value.fromBigInt(value));
   }
 
-  get totalPrincipalVariableBorrows_WEI(): BigInt {
-    let value = this.get("totalPrincipalVariableBorrows_WEI");
+  get totalCompoundedVariableBorrows(): BigDecimal {
+    let value = this.get("totalCompoundedVariableBorrows");
+    return value.toBigDecimal();
+  }
+
+  set totalCompoundedVariableBorrows(value: BigDecimal) {
+    this.set("totalCompoundedVariableBorrows", Value.fromBigDecimal(value));
+  }
+
+  get totalCompoundedVariableBorrowsETH(): BigDecimal {
+    let value = this.get("totalCompoundedVariableBorrowsETH");
+    return value.toBigDecimal();
+  }
+
+  set totalCompoundedVariableBorrowsETH(value: BigDecimal) {
+    this.set("totalCompoundedVariableBorrowsETH", Value.fromBigDecimal(value));
+  }
+
+  get totalCompoundedVariableBorrowsUSD(): BigDecimal {
+    let value = this.get("totalCompoundedVariableBorrowsUSD");
+    return value.toBigDecimal();
+  }
+
+  set totalCompoundedVariableBorrowsUSD(value: BigDecimal) {
+    this.set("totalCompoundedVariableBorrowsUSD", Value.fromBigDecimal(value));
+  }
+
+  get totalBorrowingEarnings_WEI(): BigInt {
+    let value = this.get("totalBorrowingEarnings_WEI");
     return value.toBigInt();
   }
 
-  set totalPrincipalVariableBorrows_WEI(value: BigInt) {
-    this.set("totalPrincipalVariableBorrows_WEI", Value.fromBigInt(value));
+  set totalBorrowingEarnings_WEI(value: BigInt) {
+    this.set("totalBorrowingEarnings_WEI", Value.fromBigInt(value));
   }
 
-  get totalPrincipalVariableBorrows(): BigDecimal {
-    let value = this.get("totalPrincipalVariableBorrows");
+  get totalBorrowingEarnings(): BigDecimal {
+    let value = this.get("totalBorrowingEarnings");
     return value.toBigDecimal();
   }
 
-  set totalPrincipalVariableBorrows(value: BigDecimal) {
-    this.set("totalPrincipalVariableBorrows", Value.fromBigDecimal(value));
+  set totalBorrowingEarnings(value: BigDecimal) {
+    this.set("totalBorrowingEarnings", Value.fromBigDecimal(value));
   }
 
-  get totalPrincipalVariableBorrowsETH(): BigDecimal {
-    let value = this.get("totalPrincipalVariableBorrowsETH");
+  get totalBorrowingEarningsETH(): BigDecimal {
+    let value = this.get("totalBorrowingEarningsETH");
     return value.toBigDecimal();
   }
 
-  set totalPrincipalVariableBorrowsETH(value: BigDecimal) {
-    this.set("totalPrincipalVariableBorrowsETH", Value.fromBigDecimal(value));
+  set totalBorrowingEarningsETH(value: BigDecimal) {
+    this.set("totalBorrowingEarningsETH", Value.fromBigDecimal(value));
   }
 
-  get totalPrincipalVariableBorrowsUSD(): BigDecimal {
-    let value = this.get("totalPrincipalVariableBorrowsUSD");
+  get totalBorrowingEarningsUSD(): BigDecimal {
+    let value = this.get("totalBorrowingEarningsUSD");
     return value.toBigDecimal();
   }
 
-  set totalPrincipalVariableBorrowsUSD(value: BigDecimal) {
-    this.set("totalPrincipalVariableBorrowsUSD", Value.fromBigDecimal(value));
-  }
-
-  get totalCompoundedEarnings_WEI(): BigInt {
-    let value = this.get("totalCompoundedEarnings_WEI");
-    return value.toBigInt();
-  }
-
-  set totalCompoundedEarnings_WEI(value: BigInt) {
-    this.set("totalCompoundedEarnings_WEI", Value.fromBigInt(value));
-  }
-
-  get totalCompoundedEarnings(): BigDecimal {
-    let value = this.get("totalCompoundedEarnings");
-    return value.toBigDecimal();
-  }
-
-  set totalCompoundedEarnings(value: BigDecimal) {
-    this.set("totalCompoundedEarnings", Value.fromBigDecimal(value));
+  set totalBorrowingEarningsUSD(value: BigDecimal) {
+    this.set("totalBorrowingEarningsUSD", Value.fromBigDecimal(value));
   }
 
   get stableBorrowInterestRate(): BigInt {
@@ -959,30 +932,6 @@ export class Instrument extends Entity {
     this.set("stableBorrowInterestPercent", Value.fromBigDecimal(value));
   }
 
-  get totalCompoundedEarningsSTABLEInterest_WEI(): BigInt {
-    let value = this.get("totalCompoundedEarningsSTABLEInterest_WEI");
-    return value.toBigInt();
-  }
-
-  set totalCompoundedEarningsSTABLEInterest_WEI(value: BigInt) {
-    this.set(
-      "totalCompoundedEarningsSTABLEInterest_WEI",
-      Value.fromBigInt(value)
-    );
-  }
-
-  get totalCompoundedEarningsSTABLEInterest(): BigDecimal {
-    let value = this.get("totalCompoundedEarningsSTABLEInterest");
-    return value.toBigDecimal();
-  }
-
-  set totalCompoundedEarningsSTABLEInterest(value: BigDecimal) {
-    this.set(
-      "totalCompoundedEarningsSTABLEInterest",
-      Value.fromBigDecimal(value)
-    );
-  }
-
   get variableBorrowInterestRate(): BigInt {
     let value = this.get("variableBorrowInterestRate");
     return value.toBigInt();
@@ -999,30 +948,6 @@ export class Instrument extends Entity {
 
   set variableBorrowInterestPercent(value: BigDecimal) {
     this.set("variableBorrowInterestPercent", Value.fromBigDecimal(value));
-  }
-
-  get totalCompoundedEarningsVARIABLEInterest_WEI(): BigInt {
-    let value = this.get("totalCompoundedEarningsVARIABLEInterest_WEI");
-    return value.toBigInt();
-  }
-
-  set totalCompoundedEarningsVARIABLEInterest_WEI(value: BigInt) {
-    this.set(
-      "totalCompoundedEarningsVARIABLEInterest_WEI",
-      Value.fromBigInt(value)
-    );
-  }
-
-  get totalCompoundedEarningsVARIABLEInterest(): BigDecimal {
-    let value = this.get("totalCompoundedEarningsVARIABLEInterest");
-    return value.toBigDecimal();
-  }
-
-  set totalCompoundedEarningsVARIABLEInterest(value: BigDecimal) {
-    this.set(
-      "totalCompoundedEarningsVARIABLEInterest",
-      Value.fromBigDecimal(value)
-    );
   }
 
   get variableBorrowIndex(): BigInt {
@@ -1068,42 +993,6 @@ export class Instrument extends Entity {
 
   set supplyInterestRatePercent(value: BigDecimal) {
     this.set("supplyInterestRatePercent", Value.fromBigDecimal(value));
-  }
-
-  get totalSupplierEarnings_WEI(): BigInt {
-    let value = this.get("totalSupplierEarnings_WEI");
-    return value.toBigInt();
-  }
-
-  set totalSupplierEarnings_WEI(value: BigInt) {
-    this.set("totalSupplierEarnings_WEI", Value.fromBigInt(value));
-  }
-
-  get totalSupplierEarnings(): BigDecimal {
-    let value = this.get("totalSupplierEarnings");
-    return value.toBigDecimal();
-  }
-
-  set totalSupplierEarnings(value: BigDecimal) {
-    this.set("totalSupplierEarnings", Value.fromBigDecimal(value));
-  }
-
-  get totalSupplierEarningsETH(): BigDecimal {
-    let value = this.get("totalSupplierEarningsETH");
-    return value.toBigDecimal();
-  }
-
-  set totalSupplierEarningsETH(value: BigDecimal) {
-    this.set("totalSupplierEarningsETH", Value.fromBigDecimal(value));
-  }
-
-  get totalSupplierEarningsUSD(): BigDecimal {
-    let value = this.get("totalSupplierEarningsUSD");
-    return value.toBigDecimal();
-  }
-
-  set totalSupplierEarningsUSD(value: BigDecimal) {
-    this.set("totalSupplierEarningsUSD", Value.fromBigDecimal(value));
   }
 
   get supplyIndex(): BigInt {
@@ -1169,6 +1058,204 @@ export class Instrument extends Entity {
     this.set("lifeTimeBorrows", Value.fromBigDecimal(value));
   }
 
+  get lifeTimeBorrowsETH(): BigDecimal {
+    let value = this.get("lifeTimeBorrowsETH");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeBorrowsETH(value: BigDecimal) {
+    this.set("lifeTimeBorrowsETH", Value.fromBigDecimal(value));
+  }
+
+  get lifeTimeBorrowsUSD(): BigDecimal {
+    let value = this.get("lifeTimeBorrowsUSD");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeBorrowsUSD(value: BigDecimal) {
+    this.set("lifeTimeBorrowsUSD", Value.fromBigDecimal(value));
+  }
+
+  get lifeTimeStableBorrows_WEI(): BigInt {
+    let value = this.get("lifeTimeStableBorrows_WEI");
+    return value.toBigInt();
+  }
+
+  set lifeTimeStableBorrows_WEI(value: BigInt) {
+    this.set("lifeTimeStableBorrows_WEI", Value.fromBigInt(value));
+  }
+
+  get lifeTimeStableBorrows(): BigDecimal {
+    let value = this.get("lifeTimeStableBorrows");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeStableBorrows(value: BigDecimal) {
+    this.set("lifeTimeStableBorrows", Value.fromBigDecimal(value));
+  }
+
+  get lifeTimeStableBorrowsETH(): BigDecimal {
+    let value = this.get("lifeTimeStableBorrowsETH");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeStableBorrowsETH(value: BigDecimal) {
+    this.set("lifeTimeStableBorrowsETH", Value.fromBigDecimal(value));
+  }
+
+  get lifeTimeStableBorrowsUSD(): BigDecimal {
+    let value = this.get("lifeTimeStableBorrowsUSD");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeStableBorrowsUSD(value: BigDecimal) {
+    this.set("lifeTimeStableBorrowsUSD", Value.fromBigDecimal(value));
+  }
+
+  get lifeTimeVariableBorrows_WEI(): BigInt {
+    let value = this.get("lifeTimeVariableBorrows_WEI");
+    return value.toBigInt();
+  }
+
+  set lifeTimeVariableBorrows_WEI(value: BigInt) {
+    this.set("lifeTimeVariableBorrows_WEI", Value.fromBigInt(value));
+  }
+
+  get lifeTimeVariableBorrows(): BigDecimal {
+    let value = this.get("lifeTimeVariableBorrows");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeVariableBorrows(value: BigDecimal) {
+    this.set("lifeTimeVariableBorrows", Value.fromBigDecimal(value));
+  }
+
+  get lifeTimeVariableBorrowsETH(): BigDecimal {
+    let value = this.get("lifeTimeVariableBorrowsETH");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeVariableBorrowsETH(value: BigDecimal) {
+    this.set("lifeTimeVariableBorrowsETH", Value.fromBigDecimal(value));
+  }
+
+  get lifeTimeVariableBorrowsUSD(): BigDecimal {
+    let value = this.get("lifeTimeVariableBorrowsUSD");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeVariableBorrowsUSD(value: BigDecimal) {
+    this.set("lifeTimeVariableBorrowsUSD", Value.fromBigDecimal(value));
+  }
+
+  get lifeTimeBorrowsRepaid_WEI(): BigInt {
+    let value = this.get("lifeTimeBorrowsRepaid_WEI");
+    return value.toBigInt();
+  }
+
+  set lifeTimeBorrowsRepaid_WEI(value: BigInt) {
+    this.set("lifeTimeBorrowsRepaid_WEI", Value.fromBigInt(value));
+  }
+
+  get lifeTimeBorrowsRepaid(): BigDecimal {
+    let value = this.get("lifeTimeBorrowsRepaid");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeBorrowsRepaid(value: BigDecimal) {
+    this.set("lifeTimeBorrowsRepaid", Value.fromBigDecimal(value));
+  }
+
+  get lifeTimeBorrowsRepaidETH(): BigDecimal {
+    let value = this.get("lifeTimeBorrowsRepaidETH");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeBorrowsRepaidETH(value: BigDecimal) {
+    this.set("lifeTimeBorrowsRepaidETH", Value.fromBigDecimal(value));
+  }
+
+  get lifeTimeBorrowsRepaidUSD(): BigDecimal {
+    let value = this.get("lifeTimeBorrowsRepaidUSD");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeBorrowsRepaidUSD(value: BigDecimal) {
+    this.set("lifeTimeBorrowsRepaidUSD", Value.fromBigDecimal(value));
+  }
+
+  get totalLiquiditySIGHAccuredWEI(): BigInt {
+    let value = this.get("totalLiquiditySIGHAccuredWEI");
+    return value.toBigInt();
+  }
+
+  set totalLiquiditySIGHAccuredWEI(value: BigInt) {
+    this.set("totalLiquiditySIGHAccuredWEI", Value.fromBigInt(value));
+  }
+
+  get currentLiquiditySIGHAccured(): BigDecimal {
+    let value = this.get("currentLiquiditySIGHAccured");
+    return value.toBigDecimal();
+  }
+
+  set currentLiquiditySIGHAccured(value: BigDecimal) {
+    this.set("currentLiquiditySIGHAccured", Value.fromBigDecimal(value));
+  }
+
+  get currentLiquiditySIGHAccuredWEI(): BigInt {
+    let value = this.get("currentLiquiditySIGHAccuredWEI");
+    return value.toBigInt();
+  }
+
+  set currentLiquiditySIGHAccuredWEI(value: BigInt) {
+    this.set("currentLiquiditySIGHAccuredWEI", Value.fromBigInt(value));
+  }
+
+  get currentLiquiditySIGHAccured(): BigDecimal {
+    let value = this.get("currentLiquiditySIGHAccured");
+    return value.toBigDecimal();
+  }
+
+  set currentLiquiditySIGHAccured(value: BigDecimal) {
+    this.set("currentLiquiditySIGHAccured", Value.fromBigDecimal(value));
+  }
+
+  get totalBorrowingSIGHAccuredWEI(): BigInt {
+    let value = this.get("totalBorrowingSIGHAccuredWEI");
+    return value.toBigInt();
+  }
+
+  set totalBorrowingSIGHAccuredWEI(value: BigInt) {
+    this.set("totalBorrowingSIGHAccuredWEI", Value.fromBigInt(value));
+  }
+
+  get totalBorrowingSIGHAccured(): BigDecimal {
+    let value = this.get("totalBorrowingSIGHAccured");
+    return value.toBigDecimal();
+  }
+
+  set totalBorrowingSIGHAccured(value: BigDecimal) {
+    this.set("totalBorrowingSIGHAccured", Value.fromBigDecimal(value));
+  }
+
+  get currentBorrowingSIGHAccuredWEI(): BigInt {
+    let value = this.get("currentBorrowingSIGHAccuredWEI");
+    return value.toBigInt();
+  }
+
+  set currentBorrowingSIGHAccuredWEI(value: BigInt) {
+    this.set("currentBorrowingSIGHAccuredWEI", Value.fromBigInt(value));
+  }
+
+  get currentBorrowingSIGHAccured(): BigDecimal {
+    let value = this.get("currentBorrowingSIGHAccured");
+    return value.toBigDecimal();
+  }
+
+  set currentBorrowingSIGHAccured(value: BigDecimal) {
+    this.set("currentBorrowingSIGHAccured", Value.fromBigDecimal(value));
+  }
+
   get isListedWithSIGH_Mechanism(): boolean {
     let value = this.get("isListedWithSIGH_Mechanism");
     return value.toBoolean();
@@ -1185,24 +1272,6 @@ export class Instrument extends Entity {
 
   set isSIGHMechanismActivated(value: boolean) {
     this.set("isSIGHMechanismActivated", Value.fromBoolean(value));
-  }
-
-  get totalLiquiditySIGHAccuredWEI(): BigInt {
-    let value = this.get("totalLiquiditySIGHAccuredWEI");
-    return value.toBigInt();
-  }
-
-  set totalLiquiditySIGHAccuredWEI(value: BigInt) {
-    this.set("totalLiquiditySIGHAccuredWEI", Value.fromBigInt(value));
-  }
-
-  get currentLiquiditySIGHAccuredWEI(): BigInt {
-    let value = this.get("currentLiquiditySIGHAccuredWEI");
-    return value.toBigInt();
-  }
-
-  set currentLiquiditySIGHAccuredWEI(value: BigInt) {
-    this.set("currentLiquiditySIGHAccuredWEI", Value.fromBigInt(value));
   }
 
   get SIGH_Supply_Index(): BigInt {
@@ -1223,24 +1292,6 @@ export class Instrument extends Entity {
     this.set("SIGH_Supply_Index_lastUpdatedBlock", Value.fromBigInt(value));
   }
 
-  get totalBorrowingSIGHAccuredWEI(): BigInt {
-    let value = this.get("totalBorrowingSIGHAccuredWEI");
-    return value.toBigInt();
-  }
-
-  set totalBorrowingSIGHAccuredWEI(value: BigInt) {
-    this.set("totalBorrowingSIGHAccuredWEI", Value.fromBigInt(value));
-  }
-
-  get currentBorrowingSIGHAccuredWEI(): BigInt {
-    let value = this.get("currentBorrowingSIGHAccuredWEI");
-    return value.toBigInt();
-  }
-
-  set currentBorrowingSIGHAccuredWEI(value: BigInt) {
-    this.set("currentBorrowingSIGHAccuredWEI", Value.fromBigInt(value));
-  }
-
   get SIGH_Borrow_Index(): BigInt {
     let value = this.get("SIGH_Borrow_Index");
     return value.toBigInt();
@@ -1259,88 +1310,91 @@ export class Instrument extends Entity {
     this.set("SIGH_Borrow_Index_lastUpdatedBlock", Value.fromBigInt(value));
   }
 
-  get present_24HrWindow_InstrumentOpeningPriceETH(): BigDecimal {
-    let value = this.get("present_24HrWindow_InstrumentOpeningPriceETH");
-    return value.toBigDecimal();
-  }
-
-  set present_24HrWindow_InstrumentOpeningPriceETH(value: BigDecimal) {
-    this.set(
-      "present_24HrWindow_InstrumentOpeningPriceETH",
-      Value.fromBigDecimal(value)
-    );
-  }
-
-  get present_24HrWindow_InstrumentOpeningPriceUSD(): BigDecimal {
-    let value = this.get("present_24HrWindow_InstrumentOpeningPriceUSD");
-    return value.toBigDecimal();
-  }
-
-  set present_24HrWindow_InstrumentOpeningPriceUSD(value: BigDecimal) {
-    this.set(
-      "present_24HrWindow_InstrumentOpeningPriceUSD",
-      Value.fromBigDecimal(value)
-    );
-  }
-
-  get present_24HrWindow_InstrumentClosingPriceETH(): BigDecimal {
-    let value = this.get("present_24HrWindow_InstrumentClosingPriceETH");
-    return value.toBigDecimal();
-  }
-
-  set present_24HrWindow_InstrumentClosingPriceETH(value: BigDecimal) {
-    this.set(
-      "present_24HrWindow_InstrumentClosingPriceETH",
-      Value.fromBigDecimal(value)
-    );
-  }
-
-  get present_24HrWindow_InstrumentClosingPriceUSD(): BigDecimal {
-    let value = this.get("present_24HrWindow_InstrumentClosingPriceUSD");
-    return value.toBigDecimal();
-  }
-
-  set present_24HrWindow_InstrumentClosingPriceUSD(value: BigDecimal) {
-    this.set(
-      "present_24HrWindow_InstrumentClosingPriceUSD",
-      Value.fromBigDecimal(value)
-    );
-  }
-
-  get present_24HrWindow_MaxSIGHSpeed(): BigDecimal {
-    let value = this.get("present_24HrWindow_MaxSIGHSpeed");
-    return value.toBigDecimal();
-  }
-
-  set present_24HrWindow_MaxSIGHSpeed(value: BigDecimal) {
-    this.set("present_24HrWindow_MaxSIGHSpeed", Value.fromBigDecimal(value));
-  }
-
-  get present_24HrWindow_DeltaBlocks(): BigInt {
-    let value = this.get("present_24HrWindow_DeltaBlocks");
+  get fromBlockNumber(): BigInt {
+    let value = this.get("fromBlockNumber");
     return value.toBigInt();
   }
 
-  set present_24HrWindow_DeltaBlocks(value: BigInt) {
-    this.set("present_24HrWindow_DeltaBlocks", Value.fromBigInt(value));
+  set fromBlockNumber(value: BigInt) {
+    this.set("fromBlockNumber", Value.fromBigInt(value));
   }
 
-  get present_24HrVolatility_ETH(): BigDecimal {
-    let value = this.get("present_24HrVolatility_ETH");
+  get toBlockNumber(): BigInt {
+    let value = this.get("toBlockNumber");
+    return value.toBigInt();
+  }
+
+  set toBlockNumber(value: BigInt) {
+    this.set("toBlockNumber", Value.fromBigInt(value));
+  }
+
+  get present_SIGH_Side(): string {
+    let value = this.get("present_SIGH_Side");
+    return value.toString();
+  }
+
+  set present_SIGH_Side(value: string) {
+    this.set("present_SIGH_Side", Value.fromString(value));
+  }
+
+  get present_DeltaBlocks(): BigInt {
+    let value = this.get("present_DeltaBlocks");
+    return value.toBigInt();
+  }
+
+  set present_DeltaBlocks(value: BigInt) {
+    this.set("present_DeltaBlocks", Value.fromBigInt(value));
+  }
+
+  get present_Clock(): BigInt {
+    let value = this.get("present_Clock");
+    return value.toBigInt();
+  }
+
+  set present_Clock(value: BigInt) {
+    this.set("present_Clock", Value.fromBigInt(value));
+  }
+
+  get present_maxVolatilityLimitSuppliers(): BigInt {
+    let value = this.get("present_maxVolatilityLimitSuppliers");
+    return value.toBigInt();
+  }
+
+  set present_maxVolatilityLimitSuppliers(value: BigInt) {
+    this.set("present_maxVolatilityLimitSuppliers", Value.fromBigInt(value));
+  }
+
+  get present_maxVolatilityLimitSuppliersPercent(): BigDecimal {
+    let value = this.get("present_maxVolatilityLimitSuppliersPercent");
     return value.toBigDecimal();
   }
 
-  set present_24HrVolatility_ETH(value: BigDecimal) {
-    this.set("present_24HrVolatility_ETH", Value.fromBigDecimal(value));
+  set present_maxVolatilityLimitSuppliersPercent(value: BigDecimal) {
+    this.set(
+      "present_maxVolatilityLimitSuppliersPercent",
+      Value.fromBigDecimal(value)
+    );
   }
 
-  get present_24HrVolatility_USD(): BigDecimal {
-    let value = this.get("present_24HrVolatility_USD");
+  get present_maxVolatilityLimitBorrowers(): BigInt {
+    let value = this.get("present_maxVolatilityLimitBorrowers");
+    return value.toBigInt();
+  }
+
+  set present_maxVolatilityLimitBorrowers(value: BigInt) {
+    this.set("present_maxVolatilityLimitBorrowers", Value.fromBigInt(value));
+  }
+
+  get present_maxVolatilityLimitBorrowersPercent(): BigDecimal {
+    let value = this.get("present_maxVolatilityLimitBorrowersPercent");
     return value.toBigDecimal();
   }
 
-  set present_24HrVolatility_USD(value: BigDecimal) {
-    this.set("present_24HrVolatility_USD", Value.fromBigDecimal(value));
+  set present_maxVolatilityLimitBorrowersPercent(value: BigDecimal) {
+    this.set(
+      "present_maxVolatilityLimitBorrowersPercent",
+      Value.fromBigDecimal(value)
+    );
   }
 
   get present_percentTotalVolatility(): BigDecimal {
@@ -1352,53 +1406,53 @@ export class Instrument extends Entity {
     this.set("present_percentTotalVolatility", Value.fromBigDecimal(value));
   }
 
-  get present_TotalVolatility_ETH(): BigDecimal {
-    let value = this.get("present_TotalVolatility_ETH");
+  get present_total24HrVolatilityETH(): BigInt {
+    let value = this.get("present_total24HrVolatilityETH");
+    return value.toBigInt();
+  }
+
+  set present_total24HrVolatilityETH(value: BigInt) {
+    this.set("present_total24HrVolatilityETH", Value.fromBigInt(value));
+  }
+
+  get present_total24HrVolatilityUSD(): BigDecimal {
+    let value = this.get("present_total24HrVolatilityUSD");
     return value.toBigDecimal();
   }
 
-  set present_TotalVolatility_ETH(value: BigDecimal) {
-    this.set("present_TotalVolatility_ETH", Value.fromBigDecimal(value));
+  set present_total24HrVolatilityUSD(value: BigDecimal) {
+    this.set("present_total24HrVolatilityUSD", Value.fromBigDecimal(value));
   }
 
-  get present_TotalVolatility_USD(): BigDecimal {
-    let value = this.get("present_TotalVolatility_USD");
+  get present_percentTotalVolatilityLimitAmount(): BigDecimal {
+    let value = this.get("present_percentTotalVolatilityLimitAmount");
     return value.toBigDecimal();
   }
 
-  set present_TotalVolatility_USD(value: BigDecimal) {
-    this.set("present_TotalVolatility_USD", Value.fromBigDecimal(value));
-  }
-
-  get present_SIGH_Distribution_Side(): string {
-    let value = this.get("present_SIGH_Distribution_Side");
-    return value.toString();
-  }
-
-  set present_SIGH_Distribution_Side(value: string) {
-    this.set("present_SIGH_Distribution_Side", Value.fromString(value));
-  }
-
-  get present_24HrWindow_SIGH_OpeningPrice_ETH(): BigDecimal {
-    let value = this.get("present_24HrWindow_SIGH_OpeningPrice_ETH");
-    return value.toBigDecimal();
-  }
-
-  set present_24HrWindow_SIGH_OpeningPrice_ETH(value: BigDecimal) {
+  set present_percentTotalVolatilityLimitAmount(value: BigDecimal) {
     this.set(
-      "present_24HrWindow_SIGH_OpeningPrice_ETH",
+      "present_percentTotalVolatilityLimitAmount",
       Value.fromBigDecimal(value)
     );
   }
 
-  get present_24HrWindow_SIGH_OpeningPrice_USD(): BigDecimal {
-    let value = this.get("present_24HrWindow_SIGH_OpeningPrice_USD");
+  get present_24HrVolatilityLimitAmountETH(): BigInt {
+    let value = this.get("present_24HrVolatilityLimitAmountETH");
+    return value.toBigInt();
+  }
+
+  set present_24HrVolatilityLimitAmountETH(value: BigInt) {
+    this.set("present_24HrVolatilityLimitAmountETH", Value.fromBigInt(value));
+  }
+
+  get present_24HrVolatilityLimitAmountUSD(): BigDecimal {
+    let value = this.get("present_24HrVolatilityLimitAmountUSD");
     return value.toBigDecimal();
   }
 
-  set present_24HrWindow_SIGH_OpeningPrice_USD(value: BigDecimal) {
+  set present_24HrVolatilityLimitAmountUSD(value: BigDecimal) {
     this.set(
-      "present_24HrWindow_SIGH_OpeningPrice_USD",
+      "present_24HrVolatilityLimitAmountUSD",
       Value.fromBigDecimal(value)
     );
   }
@@ -1457,40 +1511,40 @@ export class Instrument extends Entity {
     this.set("present_SIGH_Staking_Speed", Value.fromBigDecimal(value));
   }
 
-  get present_SIGH_DistributionValuePerBlock_ETH(): BigDecimal {
-    let value = this.get("present_SIGH_DistributionValuePerBlock_ETH");
+  get present_PrevPrice_ETH(): BigDecimal {
+    let value = this.get("present_PrevPrice_ETH");
     return value.toBigDecimal();
   }
 
-  set present_SIGH_DistributionValuePerBlock_ETH(value: BigDecimal) {
-    this.set(
-      "present_SIGH_DistributionValuePerBlock_ETH",
-      Value.fromBigDecimal(value)
-    );
+  set present_PrevPrice_ETH(value: BigDecimal) {
+    this.set("present_PrevPrice_ETH", Value.fromBigDecimal(value));
   }
 
-  get present_SIGH_DistributionValuePerBlock_USD(): BigDecimal {
-    let value = this.get("present_SIGH_DistributionValuePerBlock_USD");
+  get present_PrevPrice_USD(): BigDecimal {
+    let value = this.get("present_PrevPrice_USD");
     return value.toBigDecimal();
   }
 
-  set present_SIGH_DistributionValuePerBlock_USD(value: BigDecimal) {
-    this.set(
-      "present_SIGH_DistributionValuePerBlock_USD",
-      Value.fromBigDecimal(value)
-    );
+  set present_PrevPrice_USD(value: BigDecimal) {
+    this.set("present_PrevPrice_USD", Value.fromBigDecimal(value));
   }
 
-  get present_VolatilityAddressedPerBlock(): BigDecimal {
-    let value = this.get("present_VolatilityAddressedPerBlock");
+  get present_OpeningPrice_ETH(): BigDecimal {
+    let value = this.get("present_OpeningPrice_ETH");
     return value.toBigDecimal();
   }
 
-  set present_VolatilityAddressedPerBlock(value: BigDecimal) {
-    this.set(
-      "present_VolatilityAddressedPerBlock",
-      Value.fromBigDecimal(value)
-    );
+  set present_OpeningPrice_ETH(value: BigDecimal) {
+    this.set("present_OpeningPrice_ETH", Value.fromBigDecimal(value));
+  }
+
+  get present_OpeningPrice_USD(): BigDecimal {
+    let value = this.get("present_OpeningPrice_USD");
+    return value.toBigDecimal();
+  }
+
+  set present_OpeningPrice_USD(value: BigDecimal) {
+    this.set("present_OpeningPrice_USD", Value.fromBigDecimal(value));
   }
 
   get SIGH_Distribution_History(): Array<string> {

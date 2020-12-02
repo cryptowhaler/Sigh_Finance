@@ -1,13 +1,21 @@
 import { Address, BigInt,BigDecimal, log } from "@graphprotocol/graph-ts"
-import { InstrumentInitialized,InstrumentRemoved, BorrowingEnabledOnInstrument, BorrowingDisabledOnInstrument
-    ,InstrumentEnabledAsCollateral, InstrumentDisabledAsCollateral, StableRateOnInstrumentSwitched,
-     InstrumentActivated, InstrumentDeactivated, InstrumentFreezeSwitched,
-    InstrumentLiquidationThresholdChanged, InstrumentLiquidationBonusChanged, InstrumentInterestRateStrategyChanged,
-    InstrumentBaseLtvChanged} from "../../generated/Lending_Pool_Configurator/LendingPoolConfigurator"
+import { InstrumentInitialized,InstrumentRemoved, BorrowingOnInstrumentSwitched,InstrumentEnabledAsCollateral, InstrumentDisabledAsCollateral, StableRateOnInstrumentSwitched,
+    InstrumentActivationSwitched, InstrumentFreezeSwitched,InstrumentCollateralParametersUpdated, InstrumentInterestRateStrategyChanged, InstrumentDecimalsUpdated, sighStreamImplUpdated
+    } from "../../generated/Lending_Pool_Configurator/LendingPoolConfigurator"
 import { Instrument } from "../../generated/schema"
 import { ERC20Detailed } from '../../generated/Lending_Pool_Configurator/ERC20Detailed'
 import { PriceOracleGetter } from '../../generated/Lending_Pool_Configurator/PriceOracleGetter'
 
+// STORES THE SIGH STREAM IMPL ADDRESS (IMPLEMENTATION ADDRESS)
+export function handleSighStreamImplUpdated(event: sighStreamImplUpdated): void {
+    let instrumentId = event.params.instrument.toHexString()
+    let instrumentState = Instrument.load(instrumentId)
+    if (instrumentState == null) {
+        instrumentState = createInstrument(instrumentId)
+    }
+    instrumentState.sighStreamImplAddress = event.params.newSighStreamImpl;
+    instrumentState.save()
+}
 
 // Works as Expected : Instrument's price Oracle should be initialized before initializing instrument itself
 export function handleInstrumentInitialized(event: InstrumentInitialized): void {
@@ -21,6 +29,9 @@ export function handleInstrumentInitialized(event: InstrumentInitialized): void 
     instrumentState.instrumentAddress = event.params._instrument
     instrumentState.iTokenAddress = event.params._iToken
     instrumentState.interestRateStrategyAddress = event.params._interestRateStrategyAddress
+    instrumentState.sighStreamStorageAddress = event.params.sighStreamProxyAddress
+    instrumentState.sighStreamImplAddress = event.params.sighStreamImplAddress
+
     instrumentState.isActive = true
     instrumentState.isFreezed = false
 
@@ -41,8 +52,9 @@ export function handleInstrumentInitialized(event: InstrumentInitialized): void 
 
     instrumentState.save()
     updatePrice(instrumentId)    
-
 }
+
+
 
 // WORKS AS EXPECTED
 export function handleInstrumentEnabledAsCollateral(event: InstrumentEnabledAsCollateral): void {
@@ -61,153 +73,83 @@ export function handleInstrumentEnabledAsCollateral(event: InstrumentEnabledAsCo
     updatePrice(instrumentId)    
 }
 
-
-
-
-// WORKS AS EXPECTED
-export function handleBorrowingEnabledOnInstrument(event: BorrowingEnabledOnInstrument): void {
-    log.info('LENDINGPOOLCONFIGURATOR : handleBorrowingEnabledOnInstrument',[])
-    let instrumentId = event.params._instrument.toHexString()
-    let instrumentState = Instrument.load(instrumentId)
-    if (instrumentState == null) {
-        instrumentState = createInstrument(instrumentId)
-    }
-    instrumentState.borrowingEnabled = true
-
-    instrumentState.save()
-    updatePrice(instrumentId)    
-}
-
-
-// Works as Expected 
-export function handleBorrowingDisabledOnInstrument(event: BorrowingDisabledOnInstrument): void {
-    log.info('LENDINGPOOLCONFIGURATOR : handleBorrowingDisabledOnInstrument',[])
-    let instrumentId = event.params._instrument.toHexString()
-    let instrumentState = Instrument.load(instrumentId)
-    if (instrumentState == null) {
-        instrumentState = createInstrument(instrumentId)
-    }
-    instrumentState.borrowingEnabled = false
-
-    instrumentState.save()
-    updatePrice(instrumentId)    
-}
-
-
 export function handleInstrumentDisabledAsCollateral(event: InstrumentDisabledAsCollateral): void {
     log.info('LENDINGPOOLCONFIGURATOR : handleInstrumentDisabledAsCollateral',[])
     let instrumentId = event.params._instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
-    if (instrumentState == null) {
-        instrumentState = createInstrument(instrumentId)
-    }
     instrumentState.usageAsCollateralEnabled = false
     instrumentState.save()
     updatePrice(instrumentId)    
 }
 
 
+// WORKS AS EXPECTED
+export function handleBorrowingOnInstrumentSwitched(event: BorrowingOnInstrumentSwitched): void {
+    log.info('LENDINGPOOLCONFIGURATOR : BorrowingOnInstrumentSwitched',[])
+    let instrumentId = event.params._instrument.toHexString()
+    let instrumentState = Instrument.load(instrumentId)
+    instrumentState.borrowingEnabled = event.params.switch_
+    instrumentState.save()
+    updatePrice(instrumentId)    
+}
+
+
+
 export function handleStableRateOnInstrumentSwitched(event: StableRateOnInstrumentSwitched): void {
     log.info('LENDINGPOOLCONFIGURATOR : handleStableRateOnInstrumentSwitched',[])    
     let instrumentId = event.params._instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
-    if (instrumentState == null) {
-        instrumentState = createInstrument(instrumentId)
-    }
     instrumentState.isStableBorrowRateEnabled = event.params.isEnabled 
     instrumentState.save()
     updatePrice(instrumentId)    
 }
 
-
-
-
-export function handleInstrumentActivated(event: InstrumentActivated): void {
-    log.info('LENDINGPOOLCONFIGURATOR : handleInstrumentActivated',[])        
+export function handleInstrumentActivationSwitched(event: InstrumentActivationSwitched): void {
+    log.info('LENDINGPOOLCONFIGURATOR : InstrumentActivationSwitched',[])    
     let instrumentId = event.params._instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
-    if (instrumentState == null) {
-        instrumentState = createInstrument(instrumentId)
-    }
-    instrumentState.isActive = true 
+    instrumentState.isActive = event.params.switch_ 
     instrumentState.save()
     updatePrice(instrumentId)    
 }
 
-
-export function handleInstrumentDeactivated(event: InstrumentDeactivated): void {
-    log.info('LENDINGPOOLCONFIGURATOR : handleInstrumentDeactivated',[])            
-    let instrumentId = event.params._instrument.toHexString()
-    let instrumentState = Instrument.load(instrumentId)
-    if (instrumentState == null) {
-        instrumentState = createInstrument(instrumentId)
-    }
-    instrumentState.isActive = false 
-    instrumentState.save()
-    updatePrice(instrumentId)    
-}
 
 export function handleInstrumentFreezeSwitched(event: InstrumentFreezeSwitched): void {
     log.info('LENDINGPOOLCONFIGURATOR : handleInstrumentFreezeSwitched',[])                
     let instrumentId = event.params._instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
-    if (instrumentState == null) {
-        instrumentState = createInstrument(instrumentId)
-    }
     instrumentState.isFreezed = event.params.isFreezed 
     instrumentState.save()
     updatePrice(instrumentId)
 }
 
-export function handleInstrumentLiquidationThresholdChanged(event: InstrumentLiquidationThresholdChanged): void {
-    log.info('LENDINGPOOLCONFIGURATOR : handleInstrumentLiquidationThresholdChanged',[])                    
+export function handleInstrumentCollateralParametersUpdated(event: InstrumentCollateralParametersUpdated): void {
+    log.info('LENDINGPOOLCONFIGURATOR : InstrumentCollateralParametersUpdated',[])                    
     let instrumentId = event.params._instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
-    if (instrumentState == null) {
-        instrumentState = createInstrument(instrumentId)
-    }
-    instrumentState.liquidationThreshold = event.params._threshold 
+    instrumentState.baseLTVasCollateral = event.params._ltv 
+    instrumentState.liquidationThreshold = event.params._liquidationThreshold 
+    instrumentState.liquidationBonus = event.params._liquidationBonus 
     instrumentState.save()
     updatePrice(instrumentId)
 }
-
-
-export function handleInstrumentLiquidationBonusChanged(event: InstrumentLiquidationBonusChanged): void {
-    log.info('LENDINGPOOLCONFIGURATOR : handleInstrumentLiquidationBonusChanged',[])                        
-    let instrumentId = event.params._instrument.toHexString()
-    let instrumentState = Instrument.load(instrumentId)
-    if (instrumentState == null) {
-        instrumentState = createInstrument(instrumentId)
-    }
-    instrumentState.liquidationBonus = event.params._bonus 
-    instrumentState.save()
-    updatePrice(instrumentId)
-}
-
 
 export function handleInstrumentInterestRateStrategyChanged(event: InstrumentInterestRateStrategyChanged): void {
     log.info('LENDINGPOOLCONFIGURATOR : handleInstrumentInterestRateStrategyChanged',[])                            
     let instrumentId = event.params._instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
-    if (instrumentState == null) {
-        instrumentState = createInstrument(instrumentId)
-    }
     instrumentState.interestRateStrategyAddress = event.params._strategy 
     instrumentState.save()
     updatePrice(instrumentId)
 }
 
-
-export function handleInstrumentBaseLtvChanged(event: InstrumentBaseLtvChanged): void {
-    log.info('LENDINGPOOLCONFIGURATOR : handleInstrumentBaseLtvChanged',[])                                
+export function handleInstrumentDecimalsUpdated(event: InstrumentDecimalsUpdated): void {
+    log.info('LENDINGPOOLCONFIGURATOR : handleInstrumentInterestRateStrategyChanged',[])                            
     let instrumentId = event.params._instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
-    if (instrumentState == null) {
-        instrumentState = createInstrument(instrumentId)
-    }
-    instrumentState.baseLTVasCollateral = event.params._ltv 
+    instrumentState.interestRateStrategyAddress = event.params._strategy 
     instrumentState.save()
-    updatePrice(instrumentId)    
+    updatePrice(instrumentId)
 }
 
 
@@ -216,9 +158,6 @@ export function handleInstrumentRemoved(event: InstrumentRemoved): void {
     log.info('LENDINGPOOLCONFIGURATOR : handleInstrumentRemoved',[])                                
     let instrumentId = event.params._instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
-    if (instrumentState == null) {
-        instrumentState = createInstrument(instrumentId)
-    }
 
     instrumentState.isActive = false
     instrumentState.borrowingEnabled = false

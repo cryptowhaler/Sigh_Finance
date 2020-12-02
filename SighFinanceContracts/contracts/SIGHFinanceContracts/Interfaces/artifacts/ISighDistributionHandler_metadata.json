@@ -738,17 +738,17 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0x115ccd1475e1da68ae805765ac1d073e02dd3076dd86354251017948301e1c9d",
+			"keccak256": "0xe1edaef7749162d1423d5e5b68c5022d6a444102ca1f5fd3d05250527e508a7c",
 			"urls": [
-				"bzz-raw://c81a7924ea7350f410b1a0a07c1d8772d38b825e68da0ec10f63dd4034d9792a",
-				"dweb:/ipfs/QmaJRXRy9PGT81amgFVCrahPsMvs5GncXB9fQTFn9vNVet"
+				"bzz-raw://9ca93c68f2e1be89d5bbc8f5cb662c793924cb7f28ea67698e54e382e255f746",
+				"dweb:/ipfs/QmX1MK2H5gWGtLqipxqfdEVuywe2ZDtaaSgqnkuMaPuEDQ"
 			]
 		}
 	},

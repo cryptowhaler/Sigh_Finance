@@ -12,14 +12,19 @@ export function handleSIGHSupplyIndexUpdated(event: SIGHSupplyIndexUpdated): voi
     let instrumentId = event.params.instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
 
+    let decimalAdj = BigInt.fromI32(10).pow(instrumentState.decimals.toI32() as u8).toBigDecimal()
+
     // Instrument's current Compounded Liquidity Balance
     instrumentState.totalCompoundedLiquidityWEI = event.params.totalCompoundedSupply
+    instrumentState.totalCompoundedLiquidity = instrumentState.totalCompoundedLiquidity.toBigDecimal().div(decimalAdj) 
 
     // Instrument's life-time $SIGH Accured as part of "Liquidity $SIGH Stream"
     instrumentState.totalLiquiditySIGHAccuredWEI = instrumentState.totalLiquiditySIGHAccuredWEI.plus( event.params.sighAccured )
+    instrumentState.totalLiquiditySIGHAccured = instrumentState.totalLiquiditySIGHAccuredWEI.toBigDecimal().div( BigInt.fromI32(10).pow(18 as u8).toBigDecimal() )
 
     // Instrument's current $SIGH Accuredas part of "Liquidity $SIGH Stream" , which is being distributed among the Liquidity Providers
     instrumentState.currentLiquiditySIGHAccuredWEI = instrumentState.currentLiquiditySIGHAccuredWEI.plus( event.params.sighAccured )
+    instrumentState.currentLiquiditySIGHAccured = instrumentState.currentLiquiditySIGHAccuredWEI.toBigDecimal().div( BigInt.fromI32(10).pow(18 as u8).toBigDecimal() )
 
     instrumentState.SIGH_Supply_Index = event.params.newIndexMantissa   // INDEX is used for distributing $SIGH on a per token unit basis
     instrumentState.SIGH_Supply_Index_lastUpdatedBlock = event.block.number    // Block Number when it was last updated
@@ -31,18 +36,23 @@ export function handleSIGHSupplyIndexUpdated(event: SIGHSupplyIndexUpdated): voi
 export function handleSIGHBorrowIndexUpdated(event: SIGHBorrowIndexUpdated): void {
     let instrumentId = event.params.instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
+    let decimalAdj = BigInt.fromI32(10).pow(instrumentState.decimals.toI32() as u8).toBigDecimal()
 
     // Instrument's current Compounded STABLE Borrow Balance
     instrumentState.totalCompoundedStableBorrowsWEI = event.params.totalCompoundedStableBorrows 
+    instrumentState.totalCompoundedStableBorrows = instrumentState.totalCompoundedStableBorrowsWEI.toBigDecimal().div( decimalAdj )
 
     // Instrument's current Compounded VARIABLE Borrow Balance
     instrumentState.totalCompoundedVariableBorrowsWEI = event.params.totalCompoundedVariableBorrows
+    instrumentState.totalCompoundedVariableBorrows = instrumentState.totalCompoundedVariableBorrowsWEI.toBigDecimal().div( decimalAdj )
 
     // Instrument's life-time $SIGH Accured as part of  "Borrowing $SIGH Stream"
     instrumentState.totalBorrowingSIGHAccuredWEI = instrumentState.totalBorrowingSIGHAccuredWEI.plus( event.params.sighAccured )
+    instrumentState.totalBorrowingSIGHAccured = instrumentState.totalBorrowingSIGHAccuredWEI.toBigDecimal().div( BigInt.fromI32(10).pow(18 as u8).toBigDecimal() )
 
     // Instrument's current $SIGH Accured  as part of  "Borrowing $SIGH Stream", which is being distributed among the Instrument Borrowers
     instrumentState.currentBorrowingSIGHAccuredWEI = instrumentState.currentBorrowingSIGHAccuredWEI.plus( event.params.sighAccured )
+    instrumentState.currentBorrowingSIGHAccured = instrumentState.currentBorrowingSIGHAccuredWEI.toBigDecimal().div( BigInt.fromI32(10).pow(18 as u8).toBigDecimal() )
 
     instrumentState.SIGH_Borrow_Index = event.params.newIndexMantissa      // INDEX is used for distributing $SIGH on a per token unit basis
     instrumentState.SIGH_Borrow_Index_lastUpdatedBlock = event.block.number     // Block Number when it was last updated
