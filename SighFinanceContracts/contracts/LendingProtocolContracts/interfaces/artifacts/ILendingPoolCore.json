@@ -83,7 +83,7 @@
 			"getUserOriginationFee(address,address)": "feab31ac",
 			"getUserUnderlyingAssetBalance(address,address)": "18a4dbca",
 			"getUserVariableBorrowCumulativeIndex(address,address)": "f6ea8d76",
-			"initInstrument(address,address,uint256,address)": "ecc9e372",
+			"initInstrument(address,address,uint256,address,address)": "18f9749a",
 			"instrumentStableBorrowRateSwitch(address,bool)": "72e8d22a",
 			"isInstrumentBorrowingEnabled(address)": "10183a35",
 			"isInstrumentUsageAsCollateralEnabled(address)": "d0c55548",
@@ -1023,6 +1023,11 @@
 				{
 					"internalType": "address",
 					"name": "_interestRateStrategyAddress",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "sighStreamProxy",
 					"type": "address"
 				}
 			],

@@ -165,7 +165,7 @@ interface ILendingPoolCore {
 
     function refreshConfiguration() external ;
 
-    function initInstrument( address _instrument, address _iTokenAddress,  uint256 _decimals, address _interestRateStrategyAddress ) external;
+    function initInstrument( address _instrument, address _iTokenAddress,  uint256 _decimals, address _interestRateStrategyAddress, address sighStreamProxy ) external;
     // function removeInstrument(address _instrumentToRemove) external  returns (bool) ;
   
     function setInstrumentInterestRateStrategyAddress(address _instrument, address _rateStrategyAddress) external;

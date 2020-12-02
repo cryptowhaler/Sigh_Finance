@@ -55,6 +55,7 @@
 			"burnOnLiquidation(address,uint256)": "3edb7cb8",
 			"claimMySIGH()": "f1abdaf6",
 			"claimSIGH(address[])": "27ec16ed",
+			"cumulateBalance(address)": "c25c4e30",
 			"decimals()": "313ce567",
 			"getBorrowerIndexes(address)": "2ccf00f9",
 			"getInterestRedirectionAddress(address)": "445e8010",
@@ -275,6 +276,42 @@
 			],
 			"name": "claimSIGH",
 			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_user",
+					"type": "address"
+				}
+			],
+			"name": "cumulateBalance",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
 			"payable": false,
 			"stateMutability": "nonpayable",
 			"type": "function"

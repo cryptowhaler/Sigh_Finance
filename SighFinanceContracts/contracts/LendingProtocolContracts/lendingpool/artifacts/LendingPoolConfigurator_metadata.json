@@ -176,6 +176,12 @@
 						"internalType": "address",
 						"name": "_interestRateStrategyAddress",
 						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "sighStreamAddress",
+						"type": "address"
 					}
 				],
 				"name": "InstrumentInitialized",
@@ -211,6 +217,25 @@
 					}
 				],
 				"name": "InstrumentRemoved",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "instrument",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "sighStreamProxyAddress",
+						"type": "address"
+					}
+				],
+				"name": "ProxyCreated",
 				"type": "event"
 			},
 			{
@@ -293,6 +318,27 @@
 				"type": "function"
 			},
 			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrumentAddress",
+						"type": "address"
+					}
+				],
+				"name": "getSighStreamAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "sighStreamProxyAddress",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"constant": true,
 				"inputs": [],
 				"name": "globalAddressesProvider",
@@ -317,7 +363,17 @@
 					},
 					{
 						"internalType": "address",
+						"name": "iTokenInstance",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
 						"name": "_interestRateStrategyAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "sighStreamImplAddress",
 						"type": "address"
 					}
 				],
@@ -509,6 +565,31 @@
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newSighStreamImpl",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "instrumentAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "iTokenAddress",
+						"type": "address"
+					}
+				],
+				"name": "updateSIGHStreamForInstrument",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -529,7 +610,7 @@
 						"_liquidationThreshold": "the threshold at which loans using this asset as collateral will be considered undercollateralized"
 					}
 				},
-				"initInstrument(address,address)": {
+				"initInstrument(address,address,address,address)": {
 					"details": "initializes an instrument",
 					"params": {
 						"_instrument": "the address of the instrument to be initialized",
@@ -598,20 +679,6 @@
 		"remappings": []
 	},
 	"sources": {
-		"localhost/contracts/Configuration/IGlobalAddressesProvider.sol": {
-			"keccak256": "0x30385d394fe30ea120fd04ef3d9f3e6006a90d08c6795ed9b3c586fb98a56512",
-			"urls": [
-				"bzz-raw://433194f95571c81d390832741a81d152e40c540722354e4f3c914d83600983a4",
-				"dweb:/ipfs/QmPwRF6AHfvUqco3YP9XZCe818juptqY5UUD75XQwmqg5u"
-			]
-		},
-		"localhost/contracts/LendingProtocolContracts/IToken.sol": {
-			"keccak256": "0x9b40eeb6380fd8937627d7d503e6a93d2301a1ed33427e792c9e265c803c4482",
-			"urls": [
-				"bzz-raw://d04f64a08b1c02bea6247e192107adee4b1db600b2e082377a2c297a47975840",
-				"dweb:/ipfs/QmbQKk8sCEABPBGXfeACUMGPDWQzGVuuWshssdLGLy67o8"
-			]
-		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPool.sol": {
 			"keccak256": "0x9293968389a224ec42c1ce4b82cfd01f5c487dc632198472100eae41f1447da8",
 			"urls": [
@@ -620,24 +687,17 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
-			"keccak256": "0xc1bf40390054e3291783a0586cb19f19fc51281b9243102dfe0e1e3f7f5b9c2c",
+			"keccak256": "0x1657a8a39266adbacbff83f7ae804eb22686150929e33874976a2398abf53f83",
 			"urls": [
-				"bzz-raw://1409dbd07ac8edf3809df021ae91ff97d8247e51f946acbd2ca70ab223a701c3",
-				"dweb:/ipfs/QmZ2hUTEWthSdWC6sV9cAKwXzZJZsNy6JWnLkydz7yiMxW"
-			]
-		},
-		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolDataProvider.sol": {
-			"keccak256": "0xef2d74cb5475d64cb8ab4ba9199af7182f001e3611b6fc602155179db5592ae2",
-			"urls": [
-				"bzz-raw://4d6a7d824dd105d8a4e3c0f8ab9e82ecac31f8d3e9b2e2ef5fd1da314b5c6a28",
-				"dweb:/ipfs/QmX117j9cyVA9BUmMV1AJTzp6CwL3L2PBYZyx2bMrNNrdk"
+				"bzz-raw://9ad253e3c976e8a930a5a3747ba3831e393d7abf4bbab8bd4990453cb139a9ac",
+				"dweb:/ipfs/QmbVnNS3t5mh46s5d2C1HvZBUqHVdWzv2hSm2vdiP8GrL7"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolConfigurator.sol": {
-			"keccak256": "0x1f8fef1a128ed374271cbcbd6647ec9af15629cf002ec914d4572212974fcfb0",
+			"keccak256": "0x0925976fd522e4773a1d06fcdbbe27f01dec14ebdd1cdbc0793fb33e2d9eea8a",
 			"urls": [
-				"bzz-raw://5b960a461b86661028fe057eae73fa8d43f7527ab035c795cb579e897c33dc9b",
-				"dweb:/ipfs/QmahejCDdAjW1J47D7ZbiV4t6G6WNWcY2CFGWNcmdN1sQH"
+				"bzz-raw://62382ccd1dd298756093a57b088f30c32736712da8ca88db5b32712c59d8e796",
+				"dweb:/ipfs/Qmf4G6csVN4DJcfQ1NrM2BNYPpt9DopsRc8TTBsHAZC31x"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
@@ -654,11 +714,67 @@
 				"dweb:/ipfs/QmeZie4G7caYQsuFbaVqt3YRnrr2s42VAgVHeW1WAq3BRh"
 			]
 		},
-		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0x60a53e4998cae88ea66c568fb8a76e5762c12576a6be9f9b51e37f83439c92d4",
+		"localhost/contracts/configuration/AddressStorage.sol": {
+			"keccak256": "0x0d0b40ccc403e45861faf71d042f5c419ff51930a45896633052c91b7ed6eae4",
 			"urls": [
-				"bzz-raw://5df29a7ee8aaf2ce10f1436b4a40b2e8209ab67aa4e7aedfa18122d92c64cf84",
-				"dweb:/ipfs/QmaeLNEHXThNtD8jYsrZ99FnRbsjdGfNJRx3DpysszRt5Q"
+				"bzz-raw://ad8c170f6b3b87ec85076f3fdcd006fcef61ef47c978a9da8971df22682cf657",
+				"dweb:/ipfs/QmRWUQzdk7GHfcyrPzE6vw9ipfrW6Kiq1Jyp9xzbWqmv5p"
+			]
+		},
+		"localhost/contracts/configuration/GlobalAddressesProvider.sol": {
+			"keccak256": "0x5d6d5159c1496e67cd10809e40ed0d6f046d5fe754972297b9715406152cc59f",
+			"urls": [
+				"bzz-raw://dd074e6cd0e6d6f043ec82c55beade9e9daaaf3c0f1fd1153a278d77da8b2321",
+				"dweb:/ipfs/QmZWmVzdTBj9qvxb42H7nKfUSKuKXHpxGVQMQZRVxJovit"
+			]
+		},
+		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {
+			"keccak256": "0x30385d394fe30ea120fd04ef3d9f3e6006a90d08c6795ed9b3c586fb98a56512",
+			"urls": [
+				"bzz-raw://433194f95571c81d390832741a81d152e40c540722354e4f3c914d83600983a4",
+				"dweb:/ipfs/QmPwRF6AHfvUqco3YP9XZCe818juptqY5UUD75XQwmqg5u"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {
+			"keccak256": "0x6bb623c8fe336eeba953283dbe3014ab18e882d3a3f27f38234672a5a69885d1",
+			"urls": [
+				"bzz-raw://2810308c8de3ef8291356ea30e866a0b20e2729223caffc43b0f6513f7b0aaeb",
+				"dweb:/ipfs/QmT6AD9CxgeeUndEj6F6z9zd8eJLDxUxJcHekcBRGop3ch"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/BaseUpgradeabilityProxy.sol": {
+			"keccak256": "0x99e393b97e79374c0dd133282f83ac48f15777d3894eafb9257768a1bf7acff5",
+			"urls": [
+				"bzz-raw://1c9d283b3442e71b7c611f8f79e792b248d97e1502a14d8507f131161b288f8b",
+				"dweb:/ipfs/QmWxuFrfdLHmhJrpoGwHRujeV6zpdFydVM1DY3N5RBwNs5"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/InitializableAdminUpgradeabilityProxy.sol": {
+			"keccak256": "0x7928dfc5736d1ec6a29672f41458b7de688ef2d0ec31b3e4a16e6bc554b87df1",
+			"urls": [
+				"bzz-raw://712ce2645eeb72c5c12e40ef1e04f7161ab9f8aaae3413b82f6a1b48956d6c38",
+				"dweb:/ipfs/QmcTNBeHbqBUj2UUgNob1s22oMjj4UpcLMNdXTBC2m1b6p"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/InitializableUpgradeabilityProxy.sol": {
+			"keccak256": "0x46052d95ea9b770116913041555f808f1b099c0a35e5c7ecbfc04ffef64a83bd",
+			"urls": [
+				"bzz-raw://67c2cacee01c1c8972a195be9f018abeae6917f45e45a4dc22b462fbb148150f",
+				"dweb:/ipfs/QmZhM5vvrvjFbTXjzYDB3ZTtNbTf3j54v76SZoDSbFTjdU"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/Proxy.sol": {
+			"keccak256": "0xd8dcdaaf2f03c606a569d91506958bf78df9adfb41df76727857e5dfe956e872",
+			"urls": [
+				"bzz-raw://1d780033022b07478621ce08cd4e668603fc899ae3212a883eea23347937e8d5",
+				"dweb:/ipfs/QmVZkBHpdDjko87qT4597e3UZ5uYdrEfPYbamEjBep52Se"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/UpgradeabilityProxy.sol": {
+			"keccak256": "0x5829b59012f64d1ce3ae6b98a61ddf5d6daa6e6f1a54e336ce910c8afd415c69",
+			"urls": [
+				"bzz-raw://28cba7d1f3d67aab91a4f88df4cb63762b443c31cb62a87e957add0b43dc8e1a",
+				"dweb:/ipfs/QmUXzpQDBXA2xGSNRqjn3VMJ3o8RXmpATieU9ovvk6QDAD"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/VersionedInitializable.sol": {
@@ -668,25 +784,11 @@
 				"dweb:/ipfs/QmdSYn9D1Q3FRXRNDLYGGFoYb8rsN4U2MYdxciuZBTSg83"
 			]
 		},
-		"openzeppelin-solidity/contracts/GSN/Context.sol": {
-			"keccak256": "0xa5ce23dc71caa76caf782712dc8fef8dd2390c277f71e286474e9894d6ece97f",
-			"urls": [
-				"bzz-raw://cb14fd3bdc804349f070f0a372a2b6819bfe6e1b186080bb4850a1e1d024a16f",
-				"dweb:/ipfs/Qmcp5Nhsq3PRRgXQYeqY41FMY1G2YbYC4JCWxFrst24MsC"
-			]
-		},
 		"openzeppelin-solidity/contracts/math/SafeMath.sol": {
 			"keccak256": "0x7f293e2ee29a32416531a0bf3da9972358887c45ec1836642ec8e700cc152ba0",
 			"urls": [
 				"bzz-raw://e6ca40872864cb64a2dcc1b4f0be6a3cfc406f363e045fa7991f9f22f6257a63",
 				"dweb:/ipfs/QmdsPdEayCcUa1fg3YTbhTPn3GTcjfNYZqnwf9EDC3QGpp"
-			]
-		},
-		"openzeppelin-solidity/contracts/token/ERC20/ERC20.sol": {
-			"keccak256": "0xe8ce903c4fcae44e7e17b5e6f9033a424a83936a4053f110dc30d3d6b10a64a5",
-			"urls": [
-				"bzz-raw://39e473abefa5257df715fc3c038485f1fb548422633610fbce5cf603c5adf9f5",
-				"dweb:/ipfs/QmVh6qhTWAPfBZkdYrn9eLj3Zeig9GVcm83LmskZz7zsmg"
 			]
 		},
 		"openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol": {
@@ -703,11 +805,11 @@
 				"dweb:/ipfs/QmemQazcc1Cww2Umgc4UFYpwF8WRqajPB6z5TNdC13XJCR"
 			]
 		},
-		"openzeppelin-solidity/contracts/token/ERC20/Initializable.sol": {
-			"keccak256": "0xe27817d107db2266b238a10e1e06f3304f3ec4b5c28968a83386ab7ba3859aee",
+		"openzeppelin-solidity/contracts/utils/Address.sol": {
+			"keccak256": "0x58543a8d0f0fc465618566ee6b3c04071965cd26ba20d1de3f9768014ed807e4",
 			"urls": [
-				"bzz-raw://f245b0b4d4271f882624302b7ac88846080417d2f5ad27ea8b81fa77eacd016b",
-				"dweb:/ipfs/Qmabm1XwR2D9U43Vk14zHzByhmhjmZZoVJFft6a3dpoVRh"
+				"bzz-raw://f060c6ee3ca16eb001823e2c0f8b642ecf3ead486721bab6f6be5220158d4421",
+				"dweb:/ipfs/QmWv1ms6aLAfjZ49dNnffbg49XiKmuEWHeu4wi6EinkEek"
 			]
 		}
 	},

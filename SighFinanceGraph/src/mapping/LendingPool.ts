@@ -29,7 +29,7 @@ export function handleDeposit(event: Deposit): void {
     //     instrumentState.utilizationRatePercent = instrumentState.utilizationRate.div( BigInt.fromI32(18).pow(23 as u8).toBigDecimal() )
     // }
 
-    instrumentState.timeStamp = event.params._timestamp
+        instrumentState.timeStamp = event.params._timestamp
     instrumentState.save()
 
     updatePrice(instrumentId)

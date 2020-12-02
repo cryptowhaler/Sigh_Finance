@@ -10,6 +10,10 @@ import "./interfaces/ITokenInterface.sol";
 import "./libraries/WadRayMath.sol";
 import "./interfaces/ISighStream.sol";
 
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+
+//import "./libraries/WadRayMath.sol";
+
 /**
  * @title  $SIGH STREAMS
  *
@@ -18,7 +22,7 @@ import "./interfaces/ISighStream.sol";
  */
 contract SighStream is ISighStream, VersionedInitializable {
 
-    using WadRayMath for uint256;
+    using SafeMath for uint256;
     uint private sighInitialIndex = 1e36;        // INDEX (SIGH RELATED)
 
     address public underlyingInstrumentAddress;
@@ -180,7 +184,7 @@ contract SighStream is ISighStream, VersionedInitializable {
 
         // check 2
         (,uint256 currentBalance , uint256 balanceIncrease, ) = iToken.cumulateBalance(_from);
-        require( balanceOf(_from) > 0, "Liquidity $SIGH Stream stream can only be redirected if there is a valid Liquidity Balance accuring $SIGH for the user");
+        require( iToken.balanceOf(_from) > 0, "Liquidity $SIGH Stream stream can only be redirected if there is a valid Liquidity Balance accuring $SIGH for the user");
         
 
         // if the user is already redirecting the Liquidity $SIGH Stream to someone, before changing the redirection address 
@@ -364,7 +368,7 @@ contract SighStream is ISighStream, VersionedInitializable {
         // 1. We accure $SIGH for that address
         // 2. We substract the redirected compounded balance of the from account from that address
         if (currentRedirectionAddress != address(0)) { 
-            accure_SIGH_For_BorrowingStreamInternal( _from );
+            accureBorrowingSighStreamInternal( _from );
             updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddressInternal(_from,0, principalBorrowBalance );
         }
 
@@ -485,7 +489,8 @@ contract SighStream is ISighStream, VersionedInitializable {
 
 
     function claimSighInternal(address user) internal {
-        accureLiquiditySighStreamInternal(user, iToken.balanceOf(user) );
+        (,uint256 currentBalance , uint256 balanceIncrease, ) = iToken.cumulateBalance(user);
+        accureLiquiditySighStreamInternal(user, balanceIncrease, iToken.balanceOf(user) );
         accureBorrowingSighStreamInternal(user);
         if (AccuredSighBalance[user] > 0) {
             AccuredSighBalance[user] = sighDistributionHandlerContract.transferSighTotheUser( underlyingInstrumentAddress, user, AccuredSighBalance[user] ); // Pending Amount Not Transferred is returned
@@ -501,7 +506,7 @@ contract SighStream is ISighStream, VersionedInitializable {
         AccuredSighBalance[user] = AccuredSighBalance[user].add(accuredSighAmount);   // Accured SIGH added to the redirected user's sigh balance                    
         emit SighAccured( underlyingInstrumentAddress, user, isLiquidityStream, accuredSighAmount, AccuredSighBalance[user] );
         if ( AccuredSighBalance[user] > sigh_Transfer_Threshold ) {   // SIGH is Transferred if SIGH_ACCURED_BALANCE > 1e18 SIGH
-            AccuredSighBalance[user] = sighDistributionHandlerContract.transferSighTotheUser( underlyingInstrumentAddress, user, AccuredSighBalance[user] ); // Pending Amount Not Transferred is returned
+            AccuredSighBalance[user] = sighDistributionHandlerContract.transferSighTotheUser( underlyingInstrumentAddress, user, AccuredSighBalance[user], isLiquidityStream ); // Pending Amount Not Transferred is returned
         }
     }
 

@@ -64,6 +64,9 @@ type Instrument @entity {
     instrumentAddress: Bytes!
     iTokenAddress: Bytes!
     interestRateStrategyAddress: Bytes!
+    sighStreamStorageAddress: Bytes!
+    sighStreamImplAddress: Bytes!
+
     oracle: Bytes!
 
     priceETH: BigDecimal! 
@@ -197,50 +200,63 @@ type Instrument @entity {
 
 
 
-
     isListedWithSIGH_Mechanism: Boolean!
     isSIGHMechanismActivated: Boolean!
 
-    totalLiquiditySIGHAccuredWEI: BigInt!
-    currentLiquiditySIGHAccuredWEI: BigInt!
     SIGH_Supply_Index: BigInt!
     SIGH_Supply_Index_lastUpdatedBlock: BigInt!
 
-    totalBorrowingSIGHAccuredWEI: BigInt!
-    currentBorrowingSIGHAccuredWEI: BigInt!
     SIGH_Borrow_Index: BigInt!
     SIGH_Borrow_Index_lastUpdatedBlock: BigInt!
 
-    present_24HrWindow_InstrumentOpeningPriceETH: BigDecimal!
-    present_24HrWindow_InstrumentOpeningPriceUSD: BigDecimal!
 
-    present_24HrWindow_InstrumentClosingPriceETH: BigDecimal!
-    present_24HrWindow_InstrumentClosingPriceUSD: BigDecimal!
 
-    present_24HrWindow_MaxSIGHSpeed: BigDecimal!
-    present_24HrWindow_DeltaBlocks: BigInt!
-    present_24HrVolatility_ETH: BigDecimal!
-    present_24HrVolatility_USD: BigDecimal!
-    present_percentTotalVolatility: BigDecimal!
-    present_TotalVolatility_ETH: BigDecimal!
-    present_TotalVolatility_USD: BigDecimal!
 
-    present_SIGH_Distribution_Side: String!
+    fromBlockNumber: BigInt!
+    toBlockNumber: BigInt!
+        
+    present_SIGH_Side: String!
+    present_DeltaBlocks: BigInt!
+    present_Clock: BigInt!
 
-    present_24HrWindow_SIGH_OpeningPrice_ETH: BigDecimal! 
-    present_24HrWindow_SIGH_OpeningPrice_USD: BigDecimal! 
+    present_maxVolatilityLimitSuppliers: BigInt!
+    present_maxVolatilityLimitSuppliersPercent: BigDecimal!
+    present_maxVolatilityLimitBorrowers: BigInt!
+    present_maxVolatilityLimitBorrowersPercent: BigDecimal!
+
+    present_percentTotalVolatility: BigDecimal! // % of total protocol volatility
+    present_total24HrVolatilityETH: BigInt!     // instrument volatility in 24 hrs
+    present_total24HrVolatilityUSD: BigDecimal!
+
+    present_percentTotalVolatilityLimitAmount: BigDecimal!
+    present_24HrVolatilityLimitAmountETH: BigInt!   // instrument volatility * maxVolatilityLimit
+    present_24HrVolatilityLimitAmountUSD: BigDecimal!
 
     present_SIGH_Suppliers_Speed_WEI: BigInt!
     present_SIGH_Suppliers_Speed: BigDecimal!
+
     present_SIGH_Borrowers_Speed_WEI: BigInt!
     present_SIGH_Borrowers_Speed: BigDecimal!
+
     present_SIGH_Staking_Speed_WEI: BigInt!
     present_SIGH_Staking_Speed: BigDecimal!
 
-    present_SIGH_DistributionValuePerBlock_ETH: BigDecimal!
-    present_SIGH_DistributionValuePerBlock_USD: BigDecimal!
 
-    present_VolatilityAddressedPerBlock: BigDecimal!
+    present_PrevPrice_ETH: BigDecimal! 
+    present_PrevPrice_USD: BigDecimal! 
+
+    present_OpeningPrice_ETH: BigDecimal! 
+    present_OpeningPrice_USD: BigDecimal! 
+
+
+
+    totalLiquiditySIGHAccuredWEI: BigInt!
+    currentLiquiditySIGHAccuredWEI: BigInt!
+
+    totalBorrowingSIGHAccuredWEI: BigInt!
+    currentBorrowingSIGHAccuredWEI: BigInt!
+
+
 
     SIGH_Distribution_History: [SIGH_Distribution!]! @derivedFrom(field:"instrumentAddress")
 

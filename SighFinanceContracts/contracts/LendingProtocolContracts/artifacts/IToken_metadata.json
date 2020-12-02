@@ -509,6 +509,42 @@
 				"type": "function"
 			},
 			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "cumulateBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"constant": true,
 				"inputs": [],
 				"name": "decimals",
@@ -1299,7 +1335,7 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
@@ -1313,10 +1349,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/IToken.sol": {
-			"keccak256": "0xeeea9d38805f890f6ee4f77fd753f31333c2ba1a91c8f029634aacbee829f298",
+			"keccak256": "0xedfbe6d07ce3a4e7a379e87e4aa9991052dd7d9fb1799df293d3765257c5ee46",
 			"urls": [
-				"bzz-raw://75a5dca225a86bba6a5882a918eeeeea7d9dbe613533939272f8227862187eee",
-				"dweb:/ipfs/QmWpLdwWcUxsuC9KNHTRcERm1nmcwqMR4QR9FDxT88ru2t"
+				"bzz-raw://84a74207bdcb5184fb51d96c3e908537b45035bc8dc373710ed58e76efa4a90f",
+				"dweb:/ipfs/QmZd9s4AKXuj8GybafxdS72qBg9x4MAxrW3NjBaszjxwb9"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPool.sol": {
@@ -1341,10 +1377,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ISighStream.sol": {
-			"keccak256": "0xeb32da1c1fec6206491c2b66e50b78d99738aa53d707f718074e8f9f0c0083dd",
+			"keccak256": "0xf3decf62a01e31e6196001f426e55dbdc8510a8991a2a6a9b7f03f767de8ee4b",
 			"urls": [
-				"bzz-raw://f3716dee621f7dcb10340ad0459a44f76d00a95b04ee5a44ccb6772f86d54ea1",
-				"dweb:/ipfs/QmYaZrapityyJ8WJk3kNZBoVVWHiDpM5d6SELT5BaJ9SpG"
+				"bzz-raw://49cef556ba0e99a6f545cd2211f810288f2b28d09f950bf522f1084538654326",
+				"dweb:/ipfs/QmSM9tbYCoAqLG5fkDREDvibSTq58JCNC18t9kK2buT3nk"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {

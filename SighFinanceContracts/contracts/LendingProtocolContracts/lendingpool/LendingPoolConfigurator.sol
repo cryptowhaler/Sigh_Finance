@@ -1,10 +1,15 @@
 pragma solidity ^0.5.0;
 
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+// import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
+import "../../openzeppelin-upgradeability/InitializableAdminUpgradeabilityProxy.sol";
+import "../../configuration/GlobalAddressesProvider.sol";
+// import "../IToken.sol";
+// import "../SighStream.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
+import "../interfaces/ILendingPoolCore.sol";
+import "../interfaces/ILendingPool.sol";
 
-import "../IToken.sol";
-import "../SighStream.sol";
 
 /**
 * @title LendingPoolConfigurator contract
@@ -13,11 +18,12 @@ import "../SighStream.sol";
 * and set different protocol parameters.
 **/
 
-contract LendingPoolConfigurator is VersionedInitializable,  AddressStorage  {
+contract LendingPoolConfigurator is VersionedInitializable  {
 
-    using SafeMath for uint256;
+    // using SafeMath for uint256;
     IGlobalAddressesProvider public globalAddressesProvider;
-
+    
+    mapping (address => address) private sighStreamProxies;
 // ######################
 // ####### EVENTS #######
 // ######################
@@ -28,7 +34,7 @@ contract LendingPoolConfigurator is VersionedInitializable,  AddressStorage  {
     * @param _iToken the address of the overlying iToken contract
     * @param _interestRateStrategyAddress the address of the interest rate strategy for the instrument
     **/
-    event InstrumentInitialized( address indexed _instrument, address indexed _iToken, address _interestRateStrategyAddress, address sighStreamAddress );
+    event InstrumentInitialized( address indexed _instrument, address indexed _iToken, address _interestRateStrategyAddress, address sighStreamProxyAddress, address sighStreamImplAddress );
     event InstrumentRemoved( address indexed _instrument);      // emitted when a instrument is removed.
 
     event BorrowingOnInstrumentSwitched(address indexed _instrument, bool switch_ );     
@@ -50,7 +56,7 @@ contract LendingPoolConfigurator is VersionedInitializable,  AddressStorage  {
     event InstrumentCollateralParametersUpdated(address _instrument,uint256 _ltv,  uint256 _liquidationThreshold,  uint256 _liquidationBonus );     
     event InstrumentInterestRateStrategyChanged(address _instrument, address _strategy);      // emitted when a _instrument interest strategy contract is updated
     event InstrumentDecimalsUpdated(address _instrument,uint256 decimals);
-
+    event sighStreamImplUpdated(address instrument,address newSighStreamImpl);
 
 // #############################
 // ####### PROXY RELATED #######
@@ -86,26 +92,26 @@ contract LendingPoolConfigurator is VersionedInitializable,  AddressStorage  {
     * @param _instrument the address of the instrument to be initialized
     * @param _interestRateStrategyAddress the address of the interest rate strategy contract for this instrument
     **/
-    function initInstrument( address _instrument, address _interestRateStrategyAddress) external onlyLendingPoolManager {
+    function initInstrument( address _instrument, address iTokenInstance,  address _interestRateStrategyAddress, address sighStreamImplAddress) external onlyLendingPoolManager {
         ERC20Detailed asset = ERC20Detailed(_instrument);
 
-        string memory iTokenName = string(abi.encodePacked(" Yield Farming Instrument - ", asset.name()));
-        string memory iTokenSymbol = string(abi.encodePacked("I-", asset.symbol()));
+        // string memory iTokenName = string(abi.encodePacked(" Yield Farming Instrument - ", asset.name()));
+        // string memory iTokenSymbol = string(abi.encodePacked("I-", asset.symbol()));
         uint8 decimals = uint8(asset.decimals());
 
         // Deploying IToken And Sigh Stream Contracts
-        IToken iTokenInstance = new IToken( address(globalAddressesProvider), _instrument, decimals, iTokenName, iTokenSymbol ); // DEPLOYS A NEW ITOKEN CONTRACT
-        SighStream sighStreamInstance = new SighStream();
+        // IToken iTokenInstance = new IToken( address(globalAddressesProvider), _instrument, decimals, iTokenName, iTokenSymbol ); // DEPLOYS A NEW ITOKEN CONTRACT
+        // SighStream sighStreamInstance = new SighStream();
 
         // creates a Proxy for the SIGH Stream Contract
-        setSighStreamImplInternal(iTokenSymbol, address(sighStreamInstance), _instrument, address(iTokenInstance) );
+        setSighStreamImplInternal(sighStreamImplAddress, _instrument, iTokenInstance );
 
-        address sighStreamProxy = getAddress(iTokenSymbol);
+        address sighStreamProxy = sighStreamProxies[_instrument];
 
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
-        core.initInstrument( _instrument, address(iTokenInstance), decimals, _interestRateStrategyAddress, sighStreamProxy );
+        core.initInstrument( _instrument, iTokenInstance, decimals, _interestRateStrategyAddress, sighStreamProxy );
 
-        emit InstrumentInitialized( _instrument, address(iTokenInstance), _interestRateStrategyAddress,  sighStreamProxy  );
+        emit InstrumentInitialized( _instrument, iTokenInstance, _interestRateStrategyAddress,  sighStreamProxy, sighStreamImplAddress  );
     }
 
 // ###################################################################################################
@@ -239,32 +245,32 @@ contract LendingPoolConfigurator is VersionedInitializable,  AddressStorage  {
     }
 
 //   // Changes SIGH Stream Contract For an Instrument
-    function updateSIGHStreamForInstrument( bytes32 instrumentITokenSymbol, address newSighStreamImpl, address instrumentAddress, address iTokenAddress) external onlyLendingPoolManager {
+    function updateSIGHStreamForInstrument(  address newSighStreamImpl, address instrumentAddress, address iTokenAddress) external onlyLendingPoolManager {
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
         require(core.getInstrumentITokenAddress(instrumentAddress) == iTokenAddress,"Wrong instrument - IToken addresses provided");
         updateSighStreamImplInternal(newSighStreamImpl,instrumentAddress,iTokenAddress);
+        emit sighStreamImplUpdated(instrumentAddress,newSighStreamImpl);
     }
 
-    function getSighStreamAddress(bytes32 instrumentITokenSymbol) {
-        return getAddress(instrumentITokenSymbol);
+    function getSighStreamAddress(address instrumentAddress) external returns (address sighStreamProxyAddress) {
+        return sighStreamProxies[instrumentAddress];
     }
 
 // ############################################# 
 // ######  FUNCTION TO UPGRADE THE PROXY #######  
 // #############################################  
 
-    function setSighStreamImplInternal(bytes32 _id, address _sighStreamAddress, address instrumentAddress, address iTokenAddress ) internal {
+    function setSighStreamImplInternal( address _sighStreamAddress, address instrumentAddress, address iTokenAddress ) internal {
 
         bytes memory params = abi.encodeWithSignature("initialize(address,address,address)", address(globalAddressesProvider),instrumentAddress,iTokenAddress );            // initialize function is called in the new implementation contract
         InitializableAdminUpgradeabilityProxy proxy = new InitializableAdminUpgradeabilityProxy();
         proxy.initialize(_sighStreamAddress, address(this), params); 
-        _setAddress(_id, address(proxy));
-        emit ProxyCreated(_id, address(proxy));
+        sighStreamProxies[instrumentAddress] = address(proxy);
     }    
 
-    function updateSighStreamImplInternal(bytes32 _id, address _sighStreamAddress, address instrumentAddress, address iTokenAddress ) internal {
+    function updateSighStreamImplInternal(address _sighStreamAddress, address instrumentAddress, address iTokenAddress ) internal {
         // Proxy Contract Address
-        address payable proxyAddress = address(uint160(getAddress(_id)));
+        address payable proxyAddress = address(uint160(sighStreamProxies[instrumentAddress] ));
         InitializableAdminUpgradeabilityProxy proxy = InitializableAdminUpgradeabilityProxy(proxyAddress);
         bytes memory params = abi.encodeWithSignature("initialize(address,address,address)", address(globalAddressesProvider),instrumentAddress,iTokenAddress );            // initialize function is called in the new implementation contract
         proxy.upgradeToAndCall(_sighStreamAddress, params);
