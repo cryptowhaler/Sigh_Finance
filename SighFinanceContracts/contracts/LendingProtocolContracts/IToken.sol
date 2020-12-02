@@ -7,6 +7,7 @@ import "../Configuration/IGlobalAddressesProvider.sol";
 import "./interfaces/ILendingPool.sol";
 import "./interfaces/ILendingPoolDataProvider.sol";
 import "./interfaces/ILendingPoolCore.sol";
+import "./interfaces/ISighStream.sol";
 
 import "./libraries/WadRayMath.sol";
 
@@ -123,14 +124,19 @@ contract IToken is ERC20, ERC20Detailed {
 // ######     contract address, LendingPool contract address, and the LendingPoolDataProvider contract address and set them.    ###################
 // ################################################################################################################################################
 
-   constructor( address _addressesProvider,    address _underlyingAsset, address _sighStreamAddress, uint8 _underlyingAssetDecimals, string memory _name, string memory _symbol) public ERC20Detailed(_name, _symbol, _underlyingAssetDecimals) {
+   constructor( address _addressesProvider,  address _underlyingAsset, uint8 _underlyingAssetDecimals, string memory _name, string memory _symbol) public ERC20Detailed(_name, _symbol, _underlyingAssetDecimals) {
         addressesProvider = IGlobalAddressesProvider(_addressesProvider);
         core = ILendingPoolCore(addressesProvider.getLendingPoolCore());
         pool = ILendingPool(addressesProvider.getLendingPool());
         dataProvider = ILendingPoolDataProvider(addressesProvider.getLendingPoolDataProvider());
         underlyingInstrumentAddress = _underlyingAsset;
-        sighStream = ISighStream(_sighStreamAddress);
     }
+
+   updateSighStreamAddress( address _sighStreamAddress ) external {
+       require(msg.sender == address(core),"Only Lending Pool Core can call this function");
+        sighStream = ISighStream(_sighStreamAddress);
+        return true;
+   }
 
 // ###############################################################################################
 // ######  MINT NEW ITOKENS ON DEPOST ############################################################

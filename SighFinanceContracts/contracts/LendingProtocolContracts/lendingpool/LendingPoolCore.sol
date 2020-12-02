@@ -1209,11 +1209,13 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _decimals the decimals of the instrument currency
     * @param _interestRateStrategyAddress the address of the interest rate strategy contract
     **/
-    function initInstrument( address _instrument, address _iTokenAddress,  uint256 _decimals, address _interestRateStrategyAddress ) external onlyLendingPoolConfigurator {
+    function initInstrument( address _instrument, address _iTokenAddress,  uint256 _decimals, address _interestRateStrategyAddress, address sighStreamAddress ) external onlyLendingPoolConfigurator {
         reserves[_instrument].init(_iTokenAddress, _decimals, _interestRateStrategyAddress);
         addInstrumentToListInternal(_instrument);
         // ADDED BY SIGH FINANCE
-        require ( sighMechanism.addInstrument( _instrument, _iTokenAddress, _decimals ), "Instrument failed to be properly added to the list of Instruments supported by SIGH Finance" ); // ADDED BY SIGH FINANCE
+        require ( sighMechanism.addInstrument( _instrument, _iTokenAddress, sighStreamAddress, _decimals ), "Instrument failed to be properly added to the list of Instruments supported by SIGH Finance" ); // ADDED BY SIGH FINANCE        
+        ITokenInterface iToken = ITokenInterface( reserves[instrument].iTokenAddress ); 
+        require ( iToken.updateSighStreamAddress( sighstreamAddress_ ), "Sigh Stream Address failed to be properly initialized in ITOKEN " ); // ADDED BY SIGH FINANCE
     }
 
     // adds a instrument to the array of the instruments address
@@ -1225,6 +1227,14 @@ contract LendingPoolCore is VersionedInitializable {
             }
         if (!_instrumentAlreadyAdded) 
             instrumentsList.push(_instrument);
+    }
+
+
+    // UPADATES SIGH STREAM CONTRACT FOR AN ITOKEN
+    function sighStreamAddressUpdated(address instrument, address sighstreamAddress_ ) external onlyLendingPoolConfigurator returns (bool) {
+        require ( sighMechanism.updateSighStreamAddressForInstrument( instrument, sighstreamAddress_ ), "Sigh Stream Address failed to be properly updated in SIGH Distribution Handler " ); // ADDED BY SIGH FINANCE
+        ITokenInterface iToken = ITokenInterface( reserves[instrument].iTokenAddress ); 
+        require ( iToken.updateSighStreamAddress( sighstreamAddress_ ), "Sigh Stream Address failed to be properly updated in ITOKEN " ); // ADDED BY SIGH FINANCE
     }
 
     /**

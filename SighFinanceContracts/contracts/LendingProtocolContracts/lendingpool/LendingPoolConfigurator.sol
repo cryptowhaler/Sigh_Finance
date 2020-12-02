@@ -4,6 +4,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 
 import "../IToken.sol";
+import "../SighStream.sol";
 
 /**
 * @title LendingPoolConfigurator contract
@@ -27,7 +28,7 @@ contract LendingPoolConfigurator is VersionedInitializable {
     * @param _iToken the address of the overlying iToken contract
     * @param _interestRateStrategyAddress the address of the interest rate strategy for the instrument
     **/
-    event InstrumentInitialized( address indexed _instrument, address indexed _iToken, address _interestRateStrategyAddress );
+    event InstrumentInitialized( address indexed _instrument, address indexed _iToken, address _interestRateStrategyAddress, address sighStreamAddress );
     event InstrumentRemoved( address indexed _instrument);      // emitted when a instrument is removed.
 
     event BorrowingOnInstrumentSwitched(address indexed _instrument, bool switch_ );     
@@ -85,7 +86,7 @@ contract LendingPoolConfigurator is VersionedInitializable {
     * @param _instrument the address of the instrument to be initialized
     * @param _interestRateStrategyAddress the address of the interest rate strategy contract for this instrument
     **/
-    function initInstrument( address _instrument, address _interestRateStrategyAddress ) external onlyLendingPoolManager {
+    function initInstrument( address _instrument, address _interestRateStrategyAddress) external onlyLendingPoolManager {
         ERC20Detailed asset = ERC20Detailed(_instrument);
 
         string memory iTokenName = string(abi.encodePacked(" Yield Farming Instrument - ", asset.name()));
@@ -94,9 +95,12 @@ contract LendingPoolConfigurator is VersionedInitializable {
 
         ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
 
-        IToken iTokenInstance = new IToken( address(globalAddressesProvider), _instrument, decimals, iTokenName, iTokenSymbol ); // DEPLOYS A NEW ITOKEN CONTRACT
-        core.initInstrument( _instrument, address(iTokenInstance), decimals, _interestRateStrategyAddress );
-        emit InstrumentInitialized( _instrument, address(iTokenInstance), _interestRateStrategyAddress );
+        IToken iTokenInstance = new IToken( address(globalAddressesProvider), address(this) , _instrument, decimals, iTokenName, iTokenSymbol ); // DEPLOYS A NEW ITOKEN CONTRACT
+        SighStream sighStreamInstance = new SighStream(address(globalAddressesProvider),_instrument , address(iTokenInstance) );
+        iTokenInstance.updateSighStreamAddress( address(sighStreamInstance) );
+
+        core.initInstrument( _instrument, address(iTokenInstance), decimals, _interestRateStrategyAddress, address(sighStreamInstance) );
+        emit InstrumentInitialized( _instrument, address(iTokenInstance), _interestRateStrategyAddress,  address(sighStreamInstance)  );
     }
 
 // ###################################################################################################
@@ -227,6 +231,15 @@ contract LendingPoolConfigurator is VersionedInitializable {
     function refreshLendingPoolConfiguration() external onlyLendingPoolManager {
         ILendingPool lendingPool = ILendingPool(globalAddressesProvider.getLendingPool());
         lendingPool.refreshConfig();
+    }
+
+//   // Changes SIGH Stream Contract For an Instrument
+    function updateSIGHStreamForInstrument( address instrument, address sighStream ) external onlyLendingPoolManager {
+        // In Sigh Distribution Handler
+        ILendingPoolCore core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
+        core.sighStreamAddressUpdated(instrument, sighStream);
+        // In IToken
+
     }
 
 }

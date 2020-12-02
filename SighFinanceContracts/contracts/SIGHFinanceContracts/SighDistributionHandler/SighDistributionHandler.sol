@@ -96,7 +96,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     // ############## EVENTS ##############
     // ####################################
 
-    event InstrumentAdded (address instrumentAddress_, address iTokenAddress,  uint decimals , uint blockNumber); 
+    event InstrumentAdded (address instrumentAddress_, address iTokenAddress, address sighStreamAddress,  uint decimals , uint blockNumber); 
     event InstrumentRemoved(address _instrument, uint blockNumber); 
     event InstrumentSIGHStateUpdated( address instrument_, bool isSIGHMechanismActivated, uint maxVolatilityLimitSuppliers, uint maxVolatilityLimitBorrowers );
 
@@ -218,9 +218,18 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
             instrumentPriceCycles[_instrument] = InstrumentPriceCycle({ recordedPriceSnapshot : emptyPrices, initializationCounter: uint32(0) }) ;
         }   
 
-        emit InstrumentAdded(_instrument,_iTokenAddress,  _decimals, block.number); 
+        emit InstrumentAdded(_instrument,_iTokenAddress, _sighStreamAddress,  _decimals, block.number); 
         return true;
     }
+
+    event sighStreamAddressUpdated(address instrument,address sighstreamAddress_);
+
+    updateSighStreamAddressForInstrument(address instrument, address sighstreamAddress_ ) external onlyLendingPoolCore returns (bool) {
+        financial_instruments[instrument].sighStreamAddress = sighstreamAddress_;
+        emit sighStreamAddressUpdated(instrument,sighstreamAddress_);
+        return true;
+     }
+
 
     /**
     * @dev removes an instrument - Called by LendingPool Core when an instrument is removed from the Lending Protocol

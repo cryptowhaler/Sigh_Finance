@@ -1,25 +1,20 @@
 pragma solidity ^0.5.0;
 
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
-
-import "./interfaces/ITokenInterface.sol";
+import "../Configuration/IGlobalAddressesProvider.sol";
 
 import "../SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol";
-
-import "../Configuration/IGlobalAddressesProvider.sol";
-import "./interfaces/ILendingPoolDataProvider.sol";
 import "./interfaces/ILendingPoolCore.sol";
 
 import "./libraries/WadRayMath.sol";
+import "./interfaces/ISighStream.sol";
 
 /**
- * @title Aave ERC20 Itokens (modified by SIGH Finance)
+ * @title  $SIGH STREAMS
  *
- * @dev Implementation of the interest bearing token for the protocol.
- * @author Aave, SIGH Finance (modified by SIGH Finance)
+ * @dev Implementation of the $SIGH Liquidity & Borrowing Streams for ITokens.
+ * @author SIGH Finance 
  */
-contract SighStream {
+contract SighStream is ISighStream {
 
     using WadRayMath for uint256;
     uint private sighInitialIndex = 1e36;        // INDEX (SIGH RELATED)
