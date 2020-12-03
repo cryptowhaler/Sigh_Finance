@@ -29,7 +29,7 @@ export default {
   }, 
 
   methods: {
-    ...mapActions(['loadWeb3','getContractsBasedOnNetwork','fetchSighFinanceProtocolState','getWalletConfig','getConnectedWalletState','SIGHDistributionHandler_refreshSighSpeeds','SIGHSpeedController_drip']),
+    ...mapActions(['loadWeb3','getContractsBasedOnNetwork','initiateSighFinancePolling','getWalletConfig','getConnectedWalletState','SIGHDistributionHandler_refreshSighSpeeds','SIGHSpeedController_drip']),
 
 
     async refreshWalletConnected() {
@@ -117,7 +117,7 @@ export default {
         let contractAddressesInitialized = await this.getContractsBasedOnNetwork();  // Fetches Addresses & Instrument states
         if (contractAddressesInitialized) {
           this.$showInfoMsg({message: " SIGH Finance Contracts fetched successfully for the network " + id + " - " + this.$store.getters.networkName });
-          let response = await this.fetchSighFinanceProtocolState();
+          let response = await this.initiateSighFinancePolling();
           if (response) {
             this.$showSuccessMsg({message:" SIGH Finance Current State fetched Successfully"});
             return true;

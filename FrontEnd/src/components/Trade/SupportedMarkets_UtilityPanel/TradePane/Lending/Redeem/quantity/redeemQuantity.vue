@@ -154,6 +154,10 @@ export default {
     
     
     getBalanceString(number)  {
+      if ( Number(number) >= 1000000000 ) {
+        let inBil = (Number(number) / 1000000000).toFixed(2);
+        return inBil.toString() + ' B';
+      } 
       if ( Number(number) >= 1000000 ) {
         let inMil = (Number(number) / 1000000).toFixed(2);
         return inMil.toString() + ' M';

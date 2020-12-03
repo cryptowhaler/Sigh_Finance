@@ -54,14 +54,14 @@
     "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/IFeeProvider.sol",
     "exportedSymbols": {
       "IFeeProvider": [
-        3972
+        4843
       ]
     },
-    "id": 3973,
+    "id": 4844,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3957,
+        "id": 4828,
         "literals": [
           "solidity",
           "^",
@@ -69,7 +69,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:12"
+        "src": "0:23:13"
       },
       {
         "baseContracts": [],
@@ -77,9 +77,9 @@
         "contractKind": "interface",
         "documentation": "**********\n@title IFeeProvider interface\n@notice Interface for the SIGH Finance's Lending Protocol fee provider.",
         "fullyImplemented": false,
-        "id": 3972,
+        "id": 4843,
         "linearizedBaseContracts": [
-          3972
+          4843
         ],
         "name": "IFeeProvider",
         "nodeType": "ContractDefinition",
@@ -87,23 +87,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 3966,
+            "id": 4837,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "calculateLoanOriginationFee",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3962,
+              "id": 4833,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3959,
+                  "id": 4830,
                   "name": "_user",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3966,
-                  "src": "211:13:12",
+                  "scope": 4837,
+                  "src": "211:13:13",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -111,10 +111,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3958,
+                    "id": 4829,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "211:7:12",
+                    "src": "211:7:13",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -126,11 +126,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3961,
+                  "id": 4832,
                   "name": "_amount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3966,
-                  "src": "226:15:12",
+                  "scope": 4837,
+                  "src": "226:15:13",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -138,10 +138,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3960,
+                    "id": 4831,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "226:7:12",
+                    "src": "226:7:13",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -151,19 +151,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "210:32:12"
+              "src": "210:32:13"
             },
             "returnParameters": {
-              "id": 3965,
+              "id": 4836,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3964,
+                  "id": 4835,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3966,
-                  "src": "266:7:12",
+                  "scope": 4837,
+                  "src": "266:7:13",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -171,10 +171,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3963,
+                    "id": 4834,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "266:7:12",
+                    "src": "266:7:13",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -184,10 +184,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "265:9:12"
+              "src": "265:9:13"
             },
-            "scope": 3972,
-            "src": "174:101:12",
+            "scope": 4843,
+            "src": "174:101:13",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
@@ -195,29 +195,29 @@
           {
             "body": null,
             "documentation": null,
-            "id": 3971,
+            "id": 4842,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLoanOriginationFeePercentage",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3967,
+              "id": 4838,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "320:2:12"
+              "src": "320:2:13"
             },
             "returnParameters": {
-              "id": 3970,
+              "id": 4841,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3969,
+                  "id": 4840,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3971,
-                  "src": "346:7:12",
+                  "scope": 4842,
+                  "src": "346:7:13",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -225,10 +225,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3968,
+                    "id": 4839,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "346:7:12",
+                    "src": "346:7:13",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -238,33 +238,33 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "345:9:12"
+              "src": "345:9:13"
             },
-            "scope": 3972,
-            "src": "280:75:12",
+            "scope": 4843,
+            "src": "280:75:13",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 3973,
-        "src": "145:212:12"
+        "scope": 4844,
+        "src": "145:212:13"
       }
     ],
-    "src": "0:358:12"
+    "src": "0:358:13"
   },
   "legacyAST": {
     "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/interfaces/IFeeProvider.sol",
     "exportedSymbols": {
       "IFeeProvider": [
-        3972
+        4843
       ]
     },
-    "id": 3973,
+    "id": 4844,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3957,
+        "id": 4828,
         "literals": [
           "solidity",
           "^",
@@ -272,7 +272,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:12"
+        "src": "0:23:13"
       },
       {
         "baseContracts": [],
@@ -280,9 +280,9 @@
         "contractKind": "interface",
         "documentation": "**********\n@title IFeeProvider interface\n@notice Interface for the SIGH Finance's Lending Protocol fee provider.",
         "fullyImplemented": false,
-        "id": 3972,
+        "id": 4843,
         "linearizedBaseContracts": [
-          3972
+          4843
         ],
         "name": "IFeeProvider",
         "nodeType": "ContractDefinition",
@@ -290,23 +290,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 3966,
+            "id": 4837,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "calculateLoanOriginationFee",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3962,
+              "id": 4833,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3959,
+                  "id": 4830,
                   "name": "_user",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3966,
-                  "src": "211:13:12",
+                  "scope": 4837,
+                  "src": "211:13:13",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -314,10 +314,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3958,
+                    "id": 4829,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "211:7:12",
+                    "src": "211:7:13",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -329,11 +329,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3961,
+                  "id": 4832,
                   "name": "_amount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3966,
-                  "src": "226:15:12",
+                  "scope": 4837,
+                  "src": "226:15:13",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -341,10 +341,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3960,
+                    "id": 4831,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "226:7:12",
+                    "src": "226:7:13",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -354,19 +354,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "210:32:12"
+              "src": "210:32:13"
             },
             "returnParameters": {
-              "id": 3965,
+              "id": 4836,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3964,
+                  "id": 4835,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3966,
-                  "src": "266:7:12",
+                  "scope": 4837,
+                  "src": "266:7:13",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -374,10 +374,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3963,
+                    "id": 4834,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "266:7:12",
+                    "src": "266:7:13",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -387,10 +387,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "265:9:12"
+              "src": "265:9:13"
             },
-            "scope": 3972,
-            "src": "174:101:12",
+            "scope": 4843,
+            "src": "174:101:13",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
@@ -398,29 +398,29 @@
           {
             "body": null,
             "documentation": null,
-            "id": 3971,
+            "id": 4842,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLoanOriginationFeePercentage",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3967,
+              "id": 4838,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "320:2:12"
+              "src": "320:2:13"
             },
             "returnParameters": {
-              "id": 3970,
+              "id": 4841,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3969,
+                  "id": 4840,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3971,
-                  "src": "346:7:12",
+                  "scope": 4842,
+                  "src": "346:7:13",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -428,10 +428,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3968,
+                    "id": 4839,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "346:7:12",
+                    "src": "346:7:13",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -441,20 +441,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "345:9:12"
+              "src": "345:9:13"
             },
-            "scope": 3972,
-            "src": "280:75:12",
+            "scope": 4843,
+            "src": "280:75:13",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 3973,
-        "src": "145:212:12"
+        "scope": 4844,
+        "src": "145:212:13"
       }
     ],
-    "src": "0:358:12"
+    "src": "0:358:13"
   },
   "compiler": {
     "name": "solc",
@@ -462,7 +462,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-11-16T00:51:24.282Z",
+  "updatedAt": "2020-12-03T08:10:19.254Z",
   "devdoc": {
     "methods": {},
     "title": "IFeeProvider interface"

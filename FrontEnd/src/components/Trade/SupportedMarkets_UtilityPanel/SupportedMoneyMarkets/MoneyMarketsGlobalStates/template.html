@@ -35,8 +35,8 @@
                         <!-- live instruments content -->
                         <tr v-if="!displayInUSD"  v-for="instrument in instruments">
                             <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.underlyingInstrumentSymbol }}</td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" > {{ instrument.totalCompoundedLiquidity }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ instrument.totalCompoundedBorrows }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" > {{ getBalanceString(instrument.totalCompoundedLiquidity) }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ getBalanceString(instrument.totalCompoundedBorrows) }} </td>
                             <td class="uk-text-center c-white" style="line-height: 4;"  > {{ Number(instrument.utilizationRatePercent).toFixed(2) }} % </td>
                             <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(instrument.supplyInterestRatePercent).toFixed(2)  }} % </td>
                             <td class="uk-text-center c-red" style="line-height: 4;" >{{ Number(instrument.stableBorrowInterestPercent).toFixed(2)  }} % </td>
@@ -49,8 +49,8 @@
                         </tr>
                         <tr v-if="displayInUSD" v-for="instrument in instruments">
                             <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.underlyingInstrumentSymbol }}</td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" > $ {{ instrument.totalCompoundedLiquidityUSD }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;"  > $ {{ instrument.totalCompoundedBorrowsUSD }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" > $ {{ getBalanceString(instrument.totalCompoundedLiquidityUSD) }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;"  > $ {{ getBalanceString(instrument.totalCompoundedBorrowsUSD) }} </td>
                             <td class="uk-text-center c-white" style="line-height: 4;"  > {{ Number(instrument.utilizationRatePercent).toFixed(2) }} % </td>
                             <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(instrument.supplyInterestRatePercent).toFixed(2)  }} % </td>
                             <td class="uk-text-center c-red" style="line-height: 4;" >{{ Number(instrument.stableBorrowInterestPercent).toFixed(2)  }} % </td>

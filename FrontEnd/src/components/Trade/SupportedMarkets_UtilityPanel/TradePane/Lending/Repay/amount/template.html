@@ -63,14 +63,14 @@
                 <td> >   {{ selectedInstrument.symbol  }} &nbsp; : &nbsp;{{ selectedInstrumentWalletState.instrumentAddress  }}   </td> 
             </tr>
             <tr>
-                <td> >   {{ selectedInstrument.symbol  }} ITOKEN &nbsp; : &nbsp;{{ selectedInstrumentWalletState.iTokenAddress  }} </td> 
+                <td> >   {{ selectedInstrument.iTokenName  }}&nbsp; : &nbsp;{{ selectedInstrumentWalletState.iTokenAddress  }} </td> 
             </tr>
             <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> BALANCES </h3>
             <tr>
                 <td> >   {{ selectedInstrument.symbol  }} Balance &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.userBalanceWorth).toFixed(4)  }} USD )  </td> 
             </tr>
             <tr>
-                <td> >  {{ selectedInstrument.symbol  }} Deposited &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(4)  }} USD ) </td> 
+                <td> >  {{ selectedInstrument.iTokenSymbol  }} Balance &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(4)  }} USD ) </td> 
             </tr>
             <tr>
                 <td> >   {{ selectedInstrument.symbol  }} Deposit Allowance &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userAvailableAllowance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.userAvailableAllowanceWorth).toFixed(4)  }} USD ) </td> 
@@ -122,14 +122,14 @@
                 <td> >   {{ selectedInstrument.symbol  }} &nbsp; : &nbsp;{{ selectedInstrumentWalletState.instrumentAddress  }}   </td> 
             </tr>
             <tr>
-                <td> >   {{ selectedInstrument.symbol  }} ITOKEN &nbsp; : &nbsp;{{ selectedInstrumentWalletState.iTokenAddress  }} </td> 
+                <td> >   {{ selectedInstrument.iTokenName  }}&nbsp; : &nbsp;{{ selectedInstrumentWalletState.iTokenAddress  }} </td> 
             </tr>
             <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> BALANCES </h3>
             <tr>
                 <td> >   {{ selectedInstrument.symbol  }} Balance &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.userBalance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.userBalanceWorth).toFixed(4))  }} USD )  </td> 
             </tr>
             <tr>
-                <td> >  {{ selectedInstrument.symbol  }} Deposited &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(4))  }} USD ) </td> 
+                <td> >  {{ selectedInstrument.iTokenSymbol  }} Balance &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(4))  }} USD ) </td> 
             </tr>
             <tr>
                 <td> >   {{ selectedInstrument.symbol  }} Deposit Allowance &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.userAvailableAllowance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.userAvailableAllowanceWorth).toFixed(4))  }} USD ) </td> 

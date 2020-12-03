@@ -35,6 +35,8 @@ export default {
 
     this.changeSelectedInstrument = (instrument) => {       //Changing Selected Instrument
       this.selectedInstrument = instrument.instrument;       // UPDATED SELECTED INSTRUMENT (LOCALLY)
+      console.log("this.selectedInstrument");
+      console.log(this.selectedInstrument);
       this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
       if (this.intervalActivated == false) {
         this.initiatePriceLoop();
@@ -75,6 +77,10 @@ export default {
 
 
     async initiatePriceLoop() {
+
+      console.log("initiatePriceLoop");
+      console.log(this.selectedInstrument);
+
       if ( this.$store.state.isNetworkSupported && this.selectedInstrument.instrumentAddress ) {
         setInterval(async () => {
           // console.log("IN SET PRICE : DEPOSIT / QUANTITY");
@@ -224,13 +230,20 @@ export default {
       this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
       console.log(this.selectedInstrument);
       if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
+        console.log("In Deposit Quantity : loadSessionData : Before loading the state");
         this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
+        console.log("In Deposit Quantity : loadSessionData : After loading the state");
+        console.log(this.selectedInstrumentWalletState);
       }
       console.log(this.selectedInstrumentWalletState);
     },
 
 
     getBalanceString(number)  {
+      if ( Number(number) >= 1000000000 ) {
+        let inBil = (Number(number) / 1000000000).toFixed(2);
+        return inBil.toString() + ' B';
+      } 
       if ( Number(number) >= 1000000 ) {
         let inMil = (Number(number) / 1000000).toFixed(2);
         return inMil.toString() + ' M';

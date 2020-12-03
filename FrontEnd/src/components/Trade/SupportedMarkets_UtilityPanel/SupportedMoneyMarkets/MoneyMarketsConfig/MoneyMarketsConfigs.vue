@@ -57,12 +57,14 @@ export default {
             console.log('loading');
           }
           else {
-          console.log("IN SUBSCRIPTIONS : INSTRUMENTS CONFIGURATION");
-          console.log(data);
+          // console.log("IN SUBSCRIPTIONS : INSTRUMENTS CONFIGURATION");
+          // console.log(data);
           let instruments_ = data.instruments;
           if (instruments_) {
             this.instruments = instruments_;
-            this.addToSupportedInstruments(instruments_);
+            if (this.$store.state.supportedInstruments.length == 0 ) {
+              this.addToSupportedInstruments(instruments_);
+            }
             setInterval(async () => {
               this.commitConfigurations(this.instruments);
             }, 5000);

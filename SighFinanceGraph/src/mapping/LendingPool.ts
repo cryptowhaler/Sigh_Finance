@@ -21,6 +21,10 @@ export function handleDeposit(event: Deposit): void {
     instrumentState.availableLiquidity_WEI = instrumentState.availableLiquidity_WEI.plus(event.params._amount)
     instrumentState.availableLiquidity = instrumentState.availableLiquidity_WEI.toBigDecimal().div(decimalAdj)
 
+    // We get Compounded Liquidity Till this deposit from SIGHSupplyIndexUpdated Event. So,
+    // we add the current deposit amount to that value
+    instrumentState.totalCompoundedLiquidityWEI = instrumentState.totalCompoundedLiquidityWEI.plus(event.params._amount)
+    instrumentState.totalCompoundedLiquidity = instrumentState.totalCompoundedLiquidityWEI.toBigDecimal().div(decimalAdj)     
     instrumentState.save()
 
     updatePrice(instrumentId)
@@ -37,6 +41,11 @@ export function handleRedeemUnderlying(event: RedeemUnderlying): void {
 
     instrumentState.availableLiquidity_WEI = instrumentState.availableLiquidity_WEI.minus(event.params._amount)
     instrumentState.availableLiquidity = instrumentState.availableLiquidity_WEI.toBigDecimal().div(decimalAdj)
+
+    // We get Compounded Liquidity Till this Redeem from SIGHSupplyIndexUpdated Event. So,
+    // we subtract the current redeem amount from that value
+    instrumentState.totalCompoundedLiquidityWEI = instrumentState.totalCompoundedLiquidityWEI.minus(event.params._amount)
+    instrumentState.totalCompoundedLiquidity = instrumentState.totalCompoundedLiquidityWEI.toBigDecimal().div(decimalAdj)     
 
     instrumentState.save()    
     updatePrice(instrumentId)
