@@ -222,6 +222,10 @@ export function updatePrice( ID: string ) : void {
   
     // GETTING INSTRUMENT PRICE IN ETH
     let instrumentAddress = instrument_state.instrumentAddress as Address
+
+    if (instrumentAddress ==  Address.fromString('0x0000000000000000000000000000000000000000') )
+        return 
+
     log.info('updatePrice: instrumentAddress {} ',[instrumentAddress.toHexString()])
     let priceInETH = oracleContract.getAssetPrice( instrumentAddress ).toBigDecimal() 
     if ( instrument_state.priceDecimals == BigInt.fromI32(0)  ) {

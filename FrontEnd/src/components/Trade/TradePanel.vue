@@ -25,27 +25,8 @@ export default {
   },
 
   methods: {
-    ...mapActions(['SIGHDistributionHandler_refreshSighSpeeds','SIGHSpeedController_drip']),
+    ...mapActions(['SIGHSpeedController_drip']),
 
-      async refresh_SIGH_Speeds() {
-      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
-        this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
-        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
-      }
-      else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
-        this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
-      }       
-      else {       // WHEN ABOVE CONDITIONS ARE MET SO THE TRANSACTION GOES THROUGH
-        let response =  await this.SIGHDistributionHandler_refreshSighSpeeds();
-        if (response.status) {      
-          this.$showSuccessMsg({message: "SIGH Speeds refreshed successfully for the supported Instruments" });
-        }
-        else {
-          this.$showErrorMsg({message: "SIGH Speed Refresh FAILED : " + response.message  });
-          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
-        }
-      }
-    },
 
       async drip_SIGH() {
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check

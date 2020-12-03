@@ -138,7 +138,7 @@ const store = new Vuex.Store({
     ethereumPriceUSD: null,             // ETH Price in USD
 
     // BLOCKS REMAINING FOR SIGH SPEED REFRESH
-    blocksRemainingForSIGHSpeedRefresh : null,
+    blocksRemainingForSIGHSpeedRefresh : 0,
 
     username: null, //Added
     websocketStatus: 'Closed',
@@ -1201,10 +1201,11 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => { 
           let response = await sighDistributionHandlerContract.methods.refreshSIGHSpeeds().send({from: state.connectedWallet}).on('transactionHash',function(hash) {
             let transaction = {hash : hash, function : '$SIGH Speeds : Refresh' , amount : null  }; 
             commit('addToSessionPendingTransactions',transaction);
+          });
+            console.log("SIGHDistributionHandler_refreshSighSpeeds");
             console.log(response);
             return response;
-          });  
-        }
+          }  
         catch(error) {
           console.log(error);
           return error;

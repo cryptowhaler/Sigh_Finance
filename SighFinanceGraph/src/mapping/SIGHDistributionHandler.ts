@@ -138,8 +138,8 @@ export function handlePriceSnapped(event: PriceSnapped): void {
     let oracleAddress = instrumentState.oracle as Address
     let oracleContract = PriceOracleGetter.bind( oracleAddress )
     // GETTING ETH PRICE IN USD
-    let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x1b563766d835b49C5A7D9f5a0893d28e35746818')).toBigDecimal()
-    let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x1b563766d835b49C5A7D9f5a0893d28e35746818'))
+    let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x757439a75088859958cD98D2E134C8d63a2aA10c')).toBigDecimal()
+    let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x757439a75088859958cD98D2E134C8d63a2aA10c'))
     let ETHPriceInUSD = ETH_PriceInUSD.div(  BigInt.fromI32(10).pow(ETH_PriceInUSDDecimals as u8).toBigDecimal() )
   
     instrumentState.present_PrevPrice_USD = instrumentState.present_PrevPrice_ETH.times(ETHPriceInUSD)
@@ -159,12 +159,13 @@ export function handleInstrumentVolatilityCalculated(event: InstrumentVolatility
     let oracleAddress = instrumentState.oracle as Address
     let oracleContract = PriceOracleGetter.bind( oracleAddress )
     // GETTING ETH PRICE IN USD
-    let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x1b563766d835b49C5A7D9f5a0893d28e35746818')).toBigDecimal()
-    let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x1b563766d835b49C5A7D9f5a0893d28e35746818'))
+    log.info("handleInstrumentVolatilityCalculated",[])
+    let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x757439a75088859958cD98D2E134C8d63a2aA10c')).toBigDecimal()
+    let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x757439a75088859958cD98D2E134C8d63a2aA10c'))
     let ETHPriceInUSD = ETH_PriceInUSD.div(  BigInt.fromI32(10).pow(ETH_PriceInUSDDecimals as u8).toBigDecimal() )
 
-    instrumentState.present_total24HrVolatilityETH = instrumentState.present_total24HrVolatilityETH.times(ETHPriceInUSD) 
-    instrumentState.present_24HrVolatilityLimitAmountETH = instrumentState.present_total24HrVolatilityETH.times(ETHPriceInUSD) 
+    instrumentState.present_total24HrVolatilityUSD = instrumentState.present_total24HrVolatilityETH.times(ETHPriceInUSD) 
+    instrumentState.present_24HrVolatilityLimitAmountUSD = instrumentState.present_total24HrVolatilityETH.times(ETHPriceInUSD) 
     instrumentState.save()
 }
 
@@ -175,15 +176,15 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
     let instrumentState = Instrument.load(instrumentId)
 
     if ( BigInt.fromI32(event.params.side)  == new BigInt(0) ) {
-        instrumentState.present_SIGH_Side = 'inActive'
+        instrumentState.present_SIGH_Side = 'In-Active'
     }
     
     if ( BigInt.fromI32(event.params.side)  == new BigInt(1) ) {
-    instrumentState.present_SIGH_Side = 'Suppliers'
+    instrumentState.present_SIGH_Side = 'Borrowers'
     }
 
     if ( BigInt.fromI32(event.params.side)  == new BigInt(2) ) {
-        instrumentState.present_SIGH_Side = 'Borrowers'
+        instrumentState.present_SIGH_Side = 'Suppliers'
     }
     
     instrumentState.present_SIGH_Suppliers_Speed_WEI = event.params.supplierSpeed
@@ -191,8 +192,8 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
     instrumentState.present_SIGH_Borrowers_Speed_WEI = event.params.borrowerSpeed
     instrumentState.present_SIGH_Borrowers_Speed = instrumentState.present_SIGH_Borrowers_Speed_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
 
-    instrumentState.present_percentTotalVolatility = event.params._percentTotalVolatility.toBigDecimal().div(BigDecimal.fromString('10000'))
-    instrumentState.present_percentTotalVolatilityLimitAmount = event.params._percentTotalVolatilityLimitAmount.toBigDecimal().div(BigDecimal.fromString('10000'))
+    instrumentState.present_percentTotalVolatility = event.params._percentTotalVolatility.toBigDecimal().div(BigDecimal.fromString('10000000'))
+    instrumentState.present_percentTotalVolatilityLimitAmount = event.params._percentTotalVolatilityLimitAmount.toBigDecimal().div(BigDecimal.fromString('10000000'))
 
     instrumentState.save()
 }

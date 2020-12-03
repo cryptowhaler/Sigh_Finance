@@ -4,8 +4,9 @@
 // import EventBus, { EventNames,} from '@/eventBuses/default';
 // import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import Spinner from '@/components/Spinner/Spinner.vue';
-// import {mapState,mapActions,} from 'vuex';
+import {mapState,mapActions,} from 'vuex';
 import gql from 'graphql-tag';
+import Web3 from 'web3';
 
 export default {
   name: 'Money-Markets-SIGH-State',
@@ -20,6 +21,7 @@ export default {
     return {
       instruments: [],      
       showLoader:false,
+      speedRefreshed: true,
     };
   },
 
@@ -31,6 +33,11 @@ export default {
                       name
                       underlyingInstrumentSymbol
                       isSIGHMechanismActivated
+                      present_SIGH_Side
+
+                      present_DeltaBlocks
+                      fromBlockNumber
+                      toBlockNumber
 
                       present_maxVolatilityLimitSuppliersPercent 
                       present_maxVolatilityLimitBorrowersPercent
@@ -61,6 +68,11 @@ export default {
           let instruments_ = data.instruments;
           if (instruments_) {
             this.instruments = instruments_;
+            if (this.speedRefreshed) {
+              this.instruments = [];
+              this.instruments = instruments_;
+              this.speedRefreshed = false;
+            }
           }
           }
         },
@@ -77,6 +89,30 @@ export default {
 
   methods: {
 
+    ...mapActions(['SIGHDistributionHandler_refreshSighSpeeds']),
+
+      async refresh_SIGH_Speeds() {
+      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
+        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
+      }
+      else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
+        this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
+      }       
+      else {       // WHEN ABOVE CONDITIONS ARE MET SO THE TRANSACTION GOES THROUGH
+        this.showLoader = true;
+        let response =  await this.SIGHDistributionHandler_refreshSighSpeeds();
+        if (response.status) {      
+          this.$showSuccessMsg({message: "SIGH Speeds refreshed successfully for the supported Instruments" });
+          this.speedRefreshed = true;
+        }
+        else {
+          this.$showErrorMsg({message: "SIGH Speed Refresh FAILED : " + response.message  });
+          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+        }
+        this.showLoader = false;
+      }
+    },
 
 
   },
