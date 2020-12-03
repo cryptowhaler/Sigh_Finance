@@ -5,6 +5,7 @@ import EventBus, { EventNames,} from '@/eventBuses/default';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import Spinner from '@/components/Spinner/Spinner.vue';
 import {mapState,mapActions,} from 'vuex';
+import gql from 'graphql-tag';
 
 export default {
   name: 'Money-Markets-Global-States',
@@ -23,6 +24,56 @@ export default {
     };
   },
 
+
+  apollo: {
+    $subscribe: {
+      instruments: {
+        query: gql`subscription {
+                    instruments {
+                      instrumentAddress
+                      iTokenAddress
+                      name
+                      symbol
+                      underlyingInstrumentName
+                      underlyingInstrumentSymbol
+                      decimals
+                      totalCompoundedLiquidity
+                      totalCompoundedLiquidityUSD
+                      totalCompoundedBorrows
+                      totalCompoundedBorrowsUSD
+                      utilizationRatePercent
+                      stableBorrowInterestPercent
+                      variableBorrowInterestPercent
+                      supplyInterestRatePercent
+                      present_SIGH_Side
+                      present_percentTotalVolatility
+                      present_total24HrVolatilityUSD
+                      present_percentTotalVolatilityLimitAmount
+                      present_24HrVolatilityLimitAmountUSD
+                      present_SIGH_Suppliers_Speed
+                      present_SIGH_Borrowers_Speed
+                      present_SIGH_Staking_Speed
+                    }
+                  }`,
+
+        // variables() {  return {id: this.id.toLowerCase(),};  },
+
+        result({data,loading,}) {
+          if (loading) {
+            console.log('loading');
+          }
+          else {
+          console.log("IN SUBSCRIPTIONS : INSTRUMENTS GLOBAL STATES");
+          console.log(data);
+          // let accountData = data.account;
+          // if (accountData) {
+          //   this.subcribeToMarketPositions(accountData);
+          // }
+          }
+        },
+      },
+    },
+  },
 
   // watch: {
   //   parentHeight: function(newVal) {

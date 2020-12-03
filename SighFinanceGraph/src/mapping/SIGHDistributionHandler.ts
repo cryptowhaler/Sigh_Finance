@@ -46,6 +46,9 @@ export function handleSIGHBorrowIndexUpdated(event: SIGHBorrowIndexUpdated): voi
     instrumentState.totalCompoundedVariableBorrowsWEI = event.params.totalCompoundedVariableBorrows
     instrumentState.totalCompoundedVariableBorrows = instrumentState.totalCompoundedVariableBorrowsWEI.toBigDecimal().div( decimalAdj )
 
+    instrumentState.totalCompoundedBorrowsWEI = instrumentState.totalCompoundedStableBorrowsWEI.plus(instrumentState.totalCompoundedVariableBorrowsWEI)
+    instrumentState.totalCompoundedBorrows = instrumentState.totalCompoundedBorrowsWEI.toBigDecimal().div( decimalAdj )
+
     // Instrument's life-time $SIGH Accured as part of  "Borrowing $SIGH Stream"
     instrumentState.totalBorrowingSIGHAccuredWEI = instrumentState.totalBorrowingSIGHAccuredWEI.plus( event.params.sighAccured )
     instrumentState.totalBorrowingSIGHAccured = instrumentState.totalBorrowingSIGHAccuredWEI.toBigDecimal().div( BigInt.fromI32(10).pow(18 as u8).toBigDecimal() )
@@ -70,18 +73,19 @@ export function handleInstrumentAdded(event: InstrumentAdded): void {
     if (instrumentState == null) {
         log.info('handleInstrumentAdded: createInstrument ',[])
         instrumentState = createInstrument(instrumentId)
+        instrumentState.creationBlockNumber = event.block.number        
     }
     log.info('handleInstrumentAdded: instrumentId {} ',[instrumentId])
     log.info('handleInstrumentAdded: instrumentId  {} ',[instrumentId.toString()])
     instrumentState.isListedWithSIGH_Mechanism = true
     instrumentState.isSIGHMechanismActivated = false
-    log.info('handleInstrumentAdded: 3st ',[])
+    // log.info('handleInstrumentAdded: 3st ',[])
     instrumentState.SIGH_Supply_Index = BigInt.fromI32(10).pow(36 as u8)  
     instrumentState.SIGH_Supply_Index_lastUpdatedBlock = event.block.number
-    log.info('handleInstrumentAdded: 4st ',[])
+    // log.info('handleInstrumentAdded: 4st ',[])
     instrumentState.SIGH_Borrow_Index = BigInt.fromI32(10).pow(36 as u8)  
     instrumentState.SIGH_Borrow_Index_lastUpdatedBlock =  event.block.number
-    log.info('handleInstrumentAdded: 5st ',[])
+    // log.info('handleInstrumentAdded: 5st ',[])
 
     instrumentState.present_SIGH_Side = 'inactive'
     instrumentState.present_maxVolatilityLimitSuppliers = BigInt.fromI32(10).pow(18 as u8) 

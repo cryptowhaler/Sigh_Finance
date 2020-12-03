@@ -109,6 +109,11 @@ type Instrument @entity {
     totalCompoundedLiquidityETH: BigDecimal!
     totalCompoundedLiquidityUSD: BigDecimal!
 
+    totalCompoundedBorrowsWEI: BigInt!
+    totalCompoundedBorrows: BigDecimal!
+    totalCompoundedBorrowsETH: BigDecimal!
+    totalCompoundedBorrowsUSD: BigDecimal!
+
     totalCompoundedStableBorrowsWEI: BigInt!
     totalCompoundedStableBorrows: BigDecimal!
     totalCompoundedStableBorrowsETH: BigDecimal!
@@ -243,6 +248,7 @@ type Instrument @entity {
     SIGH_Distribution_History: [SIGH_Distribution!]! @derivedFrom(field:"instrumentAddress")
 
     timeStamp: BigInt!
+    creationBlockNumber : BigInt!
 }
 
 

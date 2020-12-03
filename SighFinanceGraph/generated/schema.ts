@@ -806,6 +806,42 @@ export class Instrument extends Entity {
     this.set("totalCompoundedLiquidityUSD", Value.fromBigDecimal(value));
   }
 
+  get totalCompoundedBorrowsWEI(): BigInt {
+    let value = this.get("totalCompoundedBorrowsWEI");
+    return value.toBigInt();
+  }
+
+  set totalCompoundedBorrowsWEI(value: BigInt) {
+    this.set("totalCompoundedBorrowsWEI", Value.fromBigInt(value));
+  }
+
+  get totalCompoundedBorrows(): BigDecimal {
+    let value = this.get("totalCompoundedBorrows");
+    return value.toBigDecimal();
+  }
+
+  set totalCompoundedBorrows(value: BigDecimal) {
+    this.set("totalCompoundedBorrows", Value.fromBigDecimal(value));
+  }
+
+  get totalCompoundedBorrowsETH(): BigDecimal {
+    let value = this.get("totalCompoundedBorrowsETH");
+    return value.toBigDecimal();
+  }
+
+  set totalCompoundedBorrowsETH(value: BigDecimal) {
+    this.set("totalCompoundedBorrowsETH", Value.fromBigDecimal(value));
+  }
+
+  get totalCompoundedBorrowsUSD(): BigDecimal {
+    let value = this.get("totalCompoundedBorrowsUSD");
+    return value.toBigDecimal();
+  }
+
+  set totalCompoundedBorrowsUSD(value: BigDecimal) {
+    this.set("totalCompoundedBorrowsUSD", Value.fromBigDecimal(value));
+  }
+
   get totalCompoundedStableBorrowsWEI(): BigInt {
     let value = this.get("totalCompoundedStableBorrowsWEI");
     return value.toBigInt();
@@ -1566,6 +1602,15 @@ export class Instrument extends Entity {
 
   set timeStamp(value: BigInt) {
     this.set("timeStamp", Value.fromBigInt(value));
+  }
+
+  get creationBlockNumber(): BigInt {
+    let value = this.get("creationBlockNumber");
+    return value.toBigInt();
+  }
+
+  set creationBlockNumber(value: BigInt) {
+    this.set("creationBlockNumber", Value.fromBigInt(value));
   }
 }
 

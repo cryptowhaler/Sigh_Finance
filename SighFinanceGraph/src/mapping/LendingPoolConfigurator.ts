@@ -23,7 +23,9 @@ export function handleInstrumentInitialized(event: InstrumentInitialized): void 
     let instrumentId = event.params._instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
     if (instrumentState == null) {
+        log.info('handleInstrumentInitialized: createInstrument ',[])
         instrumentState = createInstrument(instrumentId)
+        instrumentState.creationBlockNumber = event.block.number
     }
     // log.info('handleInstrumentInitialized : msg 1',[])
     instrumentState.instrumentAddress = event.params._instrument
@@ -31,6 +33,7 @@ export function handleInstrumentInitialized(event: InstrumentInitialized): void 
     instrumentState.interestRateStrategyAddress = event.params._interestRateStrategyAddress
     instrumentState.sighStreamStorageAddress = event.params.sighStreamAddress
     instrumentState.sighStreamImplAddress = event.params.sighStreamImplAddress
+    log.info('handleInstrumentInitialized : sighStreamImplAddress - {}',[instrumentState.sighStreamImplAddress.toHexString() ])
 
     instrumentState.isActive = true
     instrumentState.isFreezed = false
@@ -225,8 +228,8 @@ export function updatePrice( ID: string ) : void {
     instrument_state.priceETH = priceInETH.div( BigInt.fromI32(10).pow(priceInETH_Decimals as u8).toBigDecimal() ) 
   
     // GETTING ETH PRICE IN USD
-    let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x1b563766d835b49C5A7D9f5a0893d28e35746818')).toBigDecimal()
-    let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x1b563766d835b49C5A7D9f5a0893d28e35746818'))
+    let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x757439a75088859958cD98D2E134C8d63a2aA10c')).toBigDecimal()
+    let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x757439a75088859958cD98D2E134C8d63a2aA10c'))
     let ETHPriceInUSD = ETH_PriceInUSD.div(  BigInt.fromI32(10).pow(ETH_PriceInUSDDecimals as u8).toBigDecimal() )
     instrument_state.priceUSD = instrument_state.priceETH.times(ETHPriceInUSD)
     
@@ -242,19 +245,23 @@ export function updatePrice( ID: string ) : void {
     instrument_state.borrowFeeEarnedETH = instrument_state.borrowFeeEarned.times(instrument_state.priceETH)
     instrument_state.borrowFeeEarnedUSD = instrument_state.borrowFeeEarned.times(instrument_state.priceUSD)
 
-    // CURRENT TOTAL LIQUIDITY PRESENT IN THE POOL
+    // CURRENT COMPOUNDED LIQUIDITY IN THE POOL (Available + To be repaid by borrowers)
     instrument_state.totalCompoundedLiquidityETH = instrument_state.totalCompoundedLiquidity.times(instrument_state.priceETH)
     instrument_state.totalCompoundedLiquidityUSD = instrument_state.totalCompoundedLiquidity.times(instrument_state.priceUSD)
 
 
-    // CURRENT TOTAL PRINCIPAL AMOUNT BORROWED
+    // CURRENT TOTAL COMPOUNDED AMOUNT BORROWED AT STABLE RATE
     instrument_state.totalCompoundedStableBorrowsETH = instrument_state.totalCompoundedStableBorrows.times(instrument_state.priceETH)
     instrument_state.totalCompoundedStableBorrowsUSD = instrument_state.totalCompoundedStableBorrows.times(instrument_state.priceUSD)
 
-    // CURRENT TOTAL PRINCIPAL AMOUNT BORROWED AT STABLE INTEREST RATE
+    // CURRENT TOTAL COMPOUNDED AMOUNT BORROWED AT VARIABLE RATE
     instrument_state.totalCompoundedVariableBorrowsETH = instrument_state.totalCompoundedVariableBorrows.times(instrument_state.priceETH)
     instrument_state.totalCompoundedVariableBorrowsUSD = instrument_state.totalCompoundedVariableBorrows.times(instrument_state.priceUSD)
 
+    // CURRENT TOTAL COMPOUNDED AMOUNT BORROWED AT VARIABLE RATE
+    instrument_state.totalCompoundedVariableBorrowsETH = instrument_state.totalCompoundedBorrows.times(instrument_state.priceETH)
+    instrument_state.totalCompoundedVariableBorrowsUSD = instrument_state.totalCompoundedBorrows.times(instrument_state.priceUSD)
+    
     // CURRENT TOTAL PRINCIPAL AMOUNT BORROWED AT VARIABLE INTEREST RATE
     instrument_state.totalBorrowingEarningsETH = instrument_state.totalBorrowingEarnings.times(instrument_state.priceETH)
     instrument_state.totalBorrowingEarningsUSD = instrument_state.totalBorrowingEarnings.times(instrument_state.priceUSD)
@@ -347,6 +354,11 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.totalCompoundedLiquidity = BigDecimal.fromString('0')
     instrument_state_initialized.totalCompoundedLiquidityETH = BigDecimal.fromString('0')
     instrument_state_initialized.totalCompoundedLiquidityUSD = BigDecimal.fromString('0')
+
+    instrument_state_initialized.totalCompoundedBorrowsWEI =  new BigInt(0)
+    instrument_state_initialized.totalCompoundedBorrows = BigDecimal.fromString('0')
+    instrument_state_initialized.totalCompoundedBorrowsETH = BigDecimal.fromString('0')
+    instrument_state_initialized.totalCompoundedBorrowsUSD = BigDecimal.fromString('0')
 
     instrument_state_initialized.totalCompoundedStableBorrowsWEI =  new BigInt(0)
     instrument_state_initialized.totalCompoundedStableBorrows = BigDecimal.fromString('0')

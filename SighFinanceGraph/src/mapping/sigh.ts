@@ -164,8 +164,8 @@ function updateSIGHPrice( ID: string ) : void {
   sigh_state.priceETH = priceInETH.div( BigInt.fromI32(10).pow(priceInETH_Decimals as u8).toBigDecimal() ) 
 
   // GETTING ETH PRICE IN USD
-  let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x1b563766d835b49C5A7D9f5a0893d28e35746818')).toBigDecimal()
-  let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x1b563766d835b49C5A7D9f5a0893d28e35746818'))
+  let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x757439a75088859958cD98D2E134C8d63a2aA10c')).toBigDecimal()
+  let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x757439a75088859958cD98D2E134C8d63a2aA10c'))
   let ETHPriceInUSD = ETH_PriceInUSD.div(  BigInt.fromI32(10).pow(ETH_PriceInUSDDecimals as u8).toBigDecimal() )
   sigh_state.priceUSD = sigh_state.priceETH.times(ETHPriceInUSD)
 
@@ -211,7 +211,7 @@ export function createSIGH(addressID: string): SIGH_Instrument {
   sigh_token_contract.priceETH = BigDecimal.fromString('0')
   sigh_token_contract.priceUSD = BigDecimal.fromString('0')
 
-  sigh_token_contract.oracle = Address.fromString('0xdFDE2BCB133A2E6d6e6889D1b27a0c4857BED3A1',) 
+  sigh_token_contract.oracle = Address.fromString('0xd378300a022215B41A08625aA849F9682fDda54d',) 
 
   sigh_token_contract.save()
   return sigh_token_contract as SIGH_Instrument
