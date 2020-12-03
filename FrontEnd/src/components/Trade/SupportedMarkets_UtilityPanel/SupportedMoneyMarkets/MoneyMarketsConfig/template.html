@@ -1,10 +1,10 @@
 <div>
 
     <div class="uk-panel">
-        <!-- Live markets heading -->
-        <h3 class="uk-panel-title uk-text-center" style="padding-bottom: 15px; padding-left: 190px; font-size: 19px !important;">SUPPORTED MONEY MARKETS : CONFIGURATION
-                <img v-if="showLoader" style="width: 7%; margin-left: 170px;" src="https://image.ibb.co/dc02hd/30.gif" />
-                <button v-else class="uk-button " style="background-color: indianred; margin-left: 170px; "  @click="refresh()">Refresh</button>
+        <!-- Live markets heading  uk-text-center-->
+        <h3 class="uk-panel-title" style="padding-top: 24px; padding-bottom: 15px; padding-left: 27%; font-size: 19px !important;">SUPPORTED MONEY MARKETS : CONFIGURATION
+                <!-- <img v-if="showLoader" style="width: 7%; margin-left: 170px;" src="https://image.ibb.co/dc02hd/30.gif" />
+                <button v-else class="uk-button " style="background-color: indianred; margin-left: 170px; "  @click="refresh()">Refresh</button> -->
         </h3>
         
     </div>
@@ -20,25 +20,35 @@
                         <tr>
                             <th class="uk-text-center">Instrument</th>
                             <th class="uk-text-center">Is Active</th>
+                            <th class="uk-text-center">Is Freezed</th>
                             <th class="uk-text-center">Borrowing Enabled</th>
                             <th class="uk-text-center">Stable Borrow Enabled</th>
                             <th class="uk-text-center">Usage as Collateral Enabled</th>
                             <th class="uk-text-center"> LTV </th>
                             <th class="uk-text-center">Liquidation Threshold</th>
                             <th class="uk-text-center">Liquidation Bonus</th>
+                            <th class="uk-text-center">$SIGH Mechanism Activated</th>
                         </tr>
                     </thead>
                     <tbody>
                         <!-- live instruments content -->
                         <tr v-for="instrument in instruments">
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.basicData.symbol }}</td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" > {{ instrument.config.isActive }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ instrument.config.borrowingEnabled }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ instrument.config.stableBorrowRateEnabled }} </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ instrument.config.usageAsCollateralEnabled  }}</td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.config.ltv  }} %  </td>
-                            <td class="uk-text-center c-red" style="line-height: 4;" >{{ instrument.config.liquidationThreshold  }} % </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.config.liquidationBonus  }} %  </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.underlyingInstrumentSymbol }}</td>
+                            <td v-if="instrument.isActive" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.isActive }} </td>
+                            <td v-if="!instrument.isActive" class="uk-text-center c-red" style="line-height: 4;" > {{ instrument.isActive }} </td>
+                            <td v-if="instrument.isFreezed" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.isFreezed }} </td>
+                            <td v-if="!instrument.isFreezed" class="uk-text-center c-red" style="line-height: 4;" > {{ instrument.isFreezed }} </td>
+                            <td v-if="instrument.borrowingEnabled" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.borrowingEnabled }} </td>
+                            <td v-if="!instrument.borrowingEnabled" class="uk-text-center c-red" style="line-height: 4;" > {{ instrument.borrowingEnabled }} </td>
+                            <td v-if="instrument.usageAsCollateralEnabled" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.usageAsCollateralEnabled }} </td>
+                            <td v-if="!instrument.usageAsCollateralEnabled" class="uk-text-center c-red" style="line-height: 4;" > {{ instrument.usageAsCollateralEnabled }} </td>
+                            <td v-if="instrument.isStableBorrowRateEnabled" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.isStableBorrowRateEnabled }} </td>
+                            <td v-if="!instrument.isStableBorrowRateEnabled" class="uk-text-center c-red" style="line-height: 4;" > {{ instrument.isStableBorrowRateEnabled }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.baseLTVasCollateral  }} %  </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.liquidationThreshold  }} % </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.liquidationBonus  }} %  </td>
+                            <td v-if="instrument.isSIGHMechanismActivated" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.isSIGHMechanismActivated }} </td>
+                            <td v-if="!instrument.isSIGHMechanismActivated" class="uk-text-center c-red" style="line-height: 4;" > {{ instrument.isSIGHMechanismActivated }} </td>
                         </tr>
                     </tbody>
                 </table>

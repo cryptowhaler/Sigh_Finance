@@ -71,6 +71,7 @@ type Instrument @entity {
 
     priceETH: BigDecimal! 
     priceUSD: BigDecimal! 
+    priceDecimals: BigInt!
 
     name: String!
     symbol: String!

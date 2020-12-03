@@ -87,7 +87,7 @@ export function handleInstrumentAdded(event: InstrumentAdded): void {
     instrumentState.SIGH_Borrow_Index_lastUpdatedBlock =  event.block.number
     // log.info('handleInstrumentAdded: 5st ',[])
 
-    instrumentState.present_SIGH_Side = 'inactive'
+    instrumentState.present_SIGH_Side = 'inActive'
     instrumentState.present_maxVolatilityLimitSuppliers = BigInt.fromI32(10).pow(18 as u8) 
     instrumentState.present_maxVolatilityLimitSuppliersPercent = instrumentState.present_maxVolatilityLimitSuppliers.toBigDecimal().div( BigInt.fromI32(10).pow(16 as u8).toBigDecimal() )  
     instrumentState.present_maxVolatilityLimitBorrowers = BigInt.fromI32(10).pow(18 as u8)

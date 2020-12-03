@@ -8,7 +8,7 @@ import Spinner from '@/components/Spinner/Spinner.vue';
 import gql from 'graphql-tag';
 
 export default {
-  name: 'Money-Markets-Global-States',
+  name: 'Money-Markets-SIGH-State',
 
 
   components: {
@@ -19,50 +19,44 @@ export default {
   data() {
     return {
       instruments: [],      
-      tableHeight: '',
       showLoader:false,
-      displayInUSD: true,
     };
   },
-
 
   apollo: {
     $subscribe: {
       instruments: {
         query: gql`subscription {
                     instruments {
-                      instrumentAddress
-                      iTokenAddress
                       name
-                      symbol
-                      underlyingInstrumentName
                       underlyingInstrumentSymbol
-                      decimals
-                      totalCompoundedLiquidity
-                      totalCompoundedLiquidityUSD
-                      totalCompoundedBorrows
-                      totalCompoundedBorrowsUSD
-                      utilizationRatePercent
-                      stableBorrowInterestPercent
-                      variableBorrowInterestPercent
-                      supplyInterestRatePercent
-                      present_SIGH_Side
-                      present_percentTotalVolatility
+                      isSIGHMechanismActivated
+
+                      present_maxVolatilityLimitSuppliersPercent 
+                      present_maxVolatilityLimitBorrowersPercent
+
+                      present_PrevPrice_USD
+                      present_OpeningPrice_USD
+
                       present_total24HrVolatilityUSD
-                      present_percentTotalVolatilityLimitAmount
+                      present_percentTotalVolatility
+
                       present_24HrVolatilityLimitAmountUSD
+                      present_percentTotalVolatilityLimitAmount
+
                       present_SIGH_Suppliers_Speed
                       present_SIGH_Borrowers_Speed
                       present_SIGH_Staking_Speed
                     }
                   }`,
 
+
         result({data,loading,}) {
           if (loading) {
             console.log('loading');
           }
           else {
-          console.log("IN SUBSCRIPTIONS : INSTRUMENTS GLOBAL STATES");
+          console.log("IN SUBSCRIPTIONS : INSTRUMENTS SIGH STATE ");
           console.log(data);
           let instruments_ = data.instruments;
           if (instruments_) {
@@ -74,19 +68,16 @@ export default {
     },
   },
 
-  // watch: {
-  //   parentHeight: function(newVal) {
-  //     let calcHeight = newVal;
-  //     this.tableHeight = 'calc(100vh - ' + (calcHeight  + 100) + 'px';
-  //   },
-  // },
+
+  async created() {
+  },
+
+
 
 
   methods: {
 
-    toggle() {
-      this.displayInUSD = !this.displayInUSD;
-    }
+
 
   },
 

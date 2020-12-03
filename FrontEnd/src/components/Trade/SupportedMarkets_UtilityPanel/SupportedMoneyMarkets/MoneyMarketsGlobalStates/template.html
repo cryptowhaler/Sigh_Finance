@@ -4,7 +4,8 @@
         <!-- Live markets heading -->
         <h3 class="uk-panel-title uk-text-center" style="padding-bottom: 15px; padding-left: 190px; font-size: 19px !important;">SUPPORTED MONEY MARKETS : GLOBAL STATE
                 <img v-if="showLoader" style="width: 7%; margin-left: 170px;" src="https://image.ibb.co/dc02hd/30.gif" />
-                <button v-else class="uk-button " style="background-color: indianred; margin-left: 170px; "  @click="refresh()">Refresh</button>
+                <button v-if="!displayInUSD" class="uk-button " style="background-color: indianred; margin-left: 170px; "  @click="toggle()">Display In USD</button>
+                <button v-if="displayInUSD" class="uk-button " style="background-color: indianred; margin-left: 170px; "  @click="toggle()">Display In Numbers</button>
         </h3>
         
     </div>
@@ -25,26 +26,42 @@
                             <th class="uk-text-center">Supply APY</th>
                             <th class="uk-text-center">Borrow APY (Stable)</th>
                             <th class="uk-text-center">Borrow APY (Variable)</th>
-                            <th class="uk-text-center"> Volatility (24 Hr) </th>
-                            <th class="uk-text-center"> % Volatility </th>
+                            <th class="uk-text-center"> Total Volatility (24 Hr) </th>
+                            <th class="uk-text-center"> Accounted Volatility (24 Hr)  </th>
                             <th class="uk-text-center"> $SIGH Yield (24 Hr)  </th>
                         </tr>
                     </thead>
                     <tbody>
                         <!-- live instruments content -->
-                        <tr v-for="instrument in instruments">
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.basicData.symbol }}</td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" > {{ instrument.globalState.totalLiquidity }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ instrument.globalState.totalBorrows }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ Number(Number(instrument.globalState.utilizationRate)/(10**25)).toFixed(2) }} % </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ instrument.globalState.liquidityRate  }} % </td>
-                            <td class="uk-text-center c-red" style="line-height: 4;" >{{ instrument.globalState.averageStableBorrowRate  }} % </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.globalState.variableBorrowRate  }} %  </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(Number(instrument.sighState.losses_24_hrs_ETH) * Number($store.state.ethereumPriceUSD) / 10**Number($store.state.ethPriceDecimals)  ).toFixed(2)  }} USD   </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.sighState.percentageTotalVolatility  }} %  </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(Number(instrument.sighState.totalsighYield_ETH) * Number($store.state.ethereumPriceUSD) / 10**Number($store.state.ethPriceDecimals)  ).toFixed(2)  }} USD  </td>
-                            <!-- <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(Number(instrument.sighAccuredInCurrentCycle)/10000000).toFixed(2) }} </td> -->
+                        <tr v-if="!displayInUSD"  v-for="instrument in instruments">
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.underlyingInstrumentSymbol }}</td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" > {{ instrument.totalCompoundedLiquidity }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ instrument.totalCompoundedBorrows }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ Number(instrument.utilizationRatePercent).toFixed(2) }} % </td>
+                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(instrument.supplyInterestRatePercent).toFixed(2)  }} % </td>
+                            <td class="uk-text-center c-red" style="line-height: 4;" >{{ Number(instrument.stableBorrowInterestPercent).toFixed(2)  }} % </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(instrument.variableBorrowInterestPercent).toFixed(2)  }} %  </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >$ {{ Number(instrument.present_total24HrVolatilityUSD).toFixed(2)  }}   ( {{ Number(instrument.present_percentTotalVolatility).toFixed(2) }} % ) </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(instrument.present_24HrVolatilityLimitAmountUSD).toFixed(2)  }} USD ( {{ Number(instrument.present_percentTotalVolatilityLimitAmount).toFixed(2) }} % ) </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" v-if="instrument.present_SIGH_Side=='inActive'"  > In-Active </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" v-if="instrument.present_SIGH_Side=='Suppliers'"  > {{ Number(instrument.present_SIGH_Suppliers_Speed) + Number(instrument.present_SIGH_Staking_Speed)  }} $SIGH </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" v-if="instrument.present_SIGH_Side=='Borrowers'"  > {{ Number(instrument.present_SIGH_Borrowers_Speed) + Number(instrument.present_SIGH_Staking_Speed)  }} $SIGH </td> 
                         </tr>
+                        <tr v-if="displayInUSD" v-for="instrument in instruments">
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.underlyingInstrumentSymbol }}</td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" > $ {{ instrument.totalCompoundedLiquidityUSD }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;"  > $ {{ instrument.totalCompoundedBorrowsUSD }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ Number(instrument.utilizationRatePercent).toFixed(2) }} % </td>
+                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(instrument.supplyInterestRatePercent).toFixed(2)  }} % </td>
+                            <td class="uk-text-center c-red" style="line-height: 4;" >{{ Number(instrument.stableBorrowInterestPercent).toFixed(2)  }} % </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(instrument.variableBorrowInterestPercent).toFixed(2)  }} %  </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >$ {{ Number(instrument.present_total24HrVolatilityUSD).toFixed(2)  }}   ( {{ Number(instrument.present_percentTotalVolatility).toFixed(2) }} % ) </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(instrument.present_24HrVolatilityLimitAmountUSD).toFixed(2)  }} USD ( {{ Number(instrument.present_percentTotalVolatilityLimitAmount).toFixed(2) }} % ) </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" v-if="instrument.present_SIGH_Side=='inActive'"  > In-Active </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" v-if="instrument.present_SIGH_Side=='Suppliers'"  > {{ Number(instrument.present_SIGH_Suppliers_Speed) + Number(instrument.present_SIGH_Staking_Speed)  }} $SIGH </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" v-if="instrument.present_SIGH_Side=='Borrowers'"  > {{ Number(instrument.present_SIGH_Borrowers_Speed) + Number(instrument.present_SIGH_Staking_Speed)  }} $SIGH </td> 
+                        </tr>
+
                     </tbody>
                 </table>
             <!-- </div> -->

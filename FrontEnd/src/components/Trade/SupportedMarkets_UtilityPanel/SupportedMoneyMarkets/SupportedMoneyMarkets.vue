@@ -6,6 +6,7 @@ import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import Spinner from '@/components/Spinner/Spinner.vue';
 import MoneyMarketGlobalStates from './MoneyMarketsGlobalStates/MoneyMarketsGlobalStates.vue';
 import MoneyMarketConfigs from './MoneyMarketsConfig/MoneyMarketsConfigs.vue';
+import MoneyMarketSIGHState from './MoneyMarketsSIGHState/MoneyMarketsSIGHState.vue';
 
 export default {
   name: 'Supported-Money-Markets',
@@ -14,7 +15,8 @@ export default {
   components: {
     Spinner,
     MoneyMarketGlobalStates,
-    MoneyMarketConfigs
+    MoneyMarketConfigs,
+    MoneyMarketSIGHState
   },
 
 

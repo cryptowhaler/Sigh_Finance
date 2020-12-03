@@ -1,0 +1,64 @@
+<div>
+
+    <div class="uk-panel">
+        <!-- Live markets heading  uk-text-center-->
+        <h3 class="uk-panel-title" style="padding-top: 24px; padding-bottom: 15px; padding-left: 27%; font-size: 19px !important;">SUPPORTED MONEY MARKETS : $SIGH FARMING HARVESTS
+                <!-- <img v-if="showLoader" style="width: 7%; margin-left: 170px;" src="https://image.ibb.co/dc02hd/30.gif" />
+                <button v-else class="uk-button " style="background-color: indianred; margin-left: 170px; "  @click="refresh()">Refresh</button> -->
+        </h3>
+        
+    </div>
+    
+    <!-- v-if="!showLoader" -->
+    <template >   
+        <div class="noShow noHorizontal"> 
+            <!-- <div id="hello" data-simplebar data-simplebar-auto-hide="uk-text-center" > -->
+                <!-- :style="{ height: tableHeight } -->
+                <table >
+                    <thead class="uk-visible">
+                        <!-- live instruments Bar heading -->
+                        <tr>
+                            <th class="uk-text-center">Crop</th>
+                            <!-- <th class="uk-text-center">Instrument</th> -->
+                            <th class="uk-text-center">Volatility Harvest Limit (Suppliers) </th>
+                            <th class="uk-text-center">Volatility Harvest Limit (Borrowers) </th>
+                            <th class="uk-text-center">Previous Price</th>
+                            <th class="uk-text-center">Harvest Price</th>
+                            <th class="uk-text-center">Total Volatility (24Hr)</th>
+                            <th class="uk-text-center">Harvests Limit (24Hr)</th>
+                            <th class="uk-text-center">Harvested Volatility (24Hr)</th>
+                            <th class="uk-text-center">$SIGH Speed (Suppliers)</th>
+                            <th class="uk-text-center"> $SIGH Speed (Borrowers) </th>
+                            <!-- <th class="uk-text-center"> $SIGH Speed (Staking) </th> -->
+                            <!-- <th class="uk-text-center">$SIGH Yields</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- live instruments content -->
+                        <tr v-for="instrument in instruments">
+                            <td class="uk-text-center c-white" style="line-height: 1;" >{{ instrument.name }}</td>
+                            <td v-if="instrument.isSIGHMechanismActivated" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.present_maxVolatilityLimitSuppliersPercent }} </td>
+                            <td v-if="!instrument.isSIGHMechanismActivated" class="uk-text-center c-red" style="line-height: 4;" > In-Active </td>
+                            <td v-if="instrument.isSIGHMechanismActivated" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.present_maxVolatilityLimitBorrowersPercent }} </td>
+                            <td v-if="!instrument.isSIGHMechanismActivated" class="uk-text-center c-red" style="line-height: 4;" > In-Active </td>
+                            <td  class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.present_PrevPrice_USD }} </td>
+                            <td  class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.present_OpeningPrice_USD }} </td>
+                            <td v-if="instrument.isSIGHMechanismActivated" class="uk-text-center c-green" style="line-height: 4;" > $ {{ instrument.present_total24HrVolatilityUSD }} ({{ instrument.present_percentTotalVolatility }}%) </td>
+                            <td v-if="!instrument.isSIGHMechanismActivated" class="uk-text-center c-red" style="line-height: 4;" > In-Active </td>
+                            <td v-if="instrument.isSIGHMechanismActivated" class="uk-text-center c-green" style="line-height: 4;" > $ {{ instrument.present_24HrVolatilityLimitAmountUSD }} ({{ instrument.present_percentTotalVolatilityLimitAmount }}%) </td>
+                            <td v-if="!instrument.isSIGHMechanismActivated" class="uk-text-center c-red" style="line-height: 4;" > In-Active </td>
+                            <td v-if="instrument.isSIGHMechanismActivated" class="uk-text-center c-green" style="line-height: 4;" > $ To BE Added </td>
+                            <td v-if="!instrument.isSIGHMechanismActivated" class="uk-text-center c-red" style="line-height: 4;" > In-Active </td>
+                            <td v-if="instrument.isSIGHMechanismActivated" class="uk-text-center c-green" style="line-height: 4;" >{{ Number(instrument.present_SIGH_Suppliers_Speed) + Number(instrument.present_SIGH_Staking_Speed)  }} $SIGH </td>
+                            <td v-if="!instrument.isSIGHMechanismActivated" class="uk-text-center c-red" style="line-height: 4;" >  {{ instrument.present_SIGH_Staking_Speed }} $SIGH </td>
+                            <td v-if="instrument.isSIGHMechanismActivated" class="uk-text-center c-green" style="line-height: 4;" >   {{ Number(instrument.present_SIGH_Borrowers_Speed) + Number(instrument.present_SIGH_Staking_Speed)  }} $SIGH </td> 
+                            <td v-if="!instrument.isSIGHMechanismActivated" class="uk-text-center c-red" style="line-height: 4;" >  {{ instrument.present_SIGH_Staking_Speed }} $SIGH </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            <!-- </div> -->
+        </div>
+    </template>
+    
+</div>

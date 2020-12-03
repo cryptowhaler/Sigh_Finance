@@ -224,9 +224,15 @@ export function updatePrice( ID: string ) : void {
     let instrumentAddress = instrument_state.instrumentAddress as Address
     log.info('updatePrice: instrumentAddress {} ',[instrumentAddress.toHexString()])
     let priceInETH = oracleContract.getAssetPrice( instrumentAddress ).toBigDecimal() 
-    let priceInETH_Decimals = oracleContract.getAssetPriceDecimals( instrumentAddress )
-    instrument_state.priceETH = priceInETH.div( BigInt.fromI32(10).pow(priceInETH_Decimals as u8).toBigDecimal() ) 
-  
+    if ( instrument_state.priceDecimals == BigInt.fromI32(0)  ) {
+        log.info('in if statement: UPDATE PRICE',[])
+        let priceInETH_Decimals = oracleContract.getAssetPriceDecimals( instrumentAddress )
+        instrument_state.priceDecimals = BigInt.fromI32(priceInETH_Decimals)
+    }
+    log.info('out of if statement: UPDATE PRICE - 1',[])
+    instrument_state.priceETH = priceInETH.div( BigInt.fromI32(10).pow( instrument_state.priceDecimals.toI32() as u8).toBigDecimal() ) 
+    log.info('out of if statement: UPDATE PRICE - 1',[])
+
     // GETTING ETH PRICE IN USD
     let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x757439a75088859958cD98D2E134C8d63a2aA10c')).toBigDecimal()
     let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x757439a75088859958cD98D2E134C8d63a2aA10c'))
@@ -318,6 +324,7 @@ export function createInstrument(addressID: string): Instrument {
 
     instrument_state_initialized.priceETH = BigDecimal.fromString('0')
     instrument_state_initialized.priceUSD = BigDecimal.fromString('0')
+    instrument_state_initialized.priceDecimals = new BigInt(0)
 
     instrument_state_initialized.name = null
     instrument_state_initialized.symbol = null
@@ -425,7 +432,8 @@ export function createInstrument(addressID: string): Instrument {
 
     instrument_state_initialized.currentBorrowingSIGHAccuredWEI = new BigInt(0)
     instrument_state_initialized.currentBorrowingSIGHAccured = BigDecimal.fromString('0')
-
+    instrument_state_initialized.creationBlockNumber = new BigInt(0)
+    
 
     // SIGH DISTRIBUTION RELATED
     // SIGH DISTRIBUTION RELATED

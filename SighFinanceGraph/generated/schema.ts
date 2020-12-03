@@ -545,6 +545,15 @@ export class Instrument extends Entity {
     this.set("priceUSD", Value.fromBigDecimal(value));
   }
 
+  get priceDecimals(): BigInt {
+    let value = this.get("priceDecimals");
+    return value.toBigInt();
+  }
+
+  set priceDecimals(value: BigInt) {
+    this.set("priceDecimals", Value.fromBigInt(value));
+  }
+
   get name(): string {
     let value = this.get("name");
     return value.toString();
