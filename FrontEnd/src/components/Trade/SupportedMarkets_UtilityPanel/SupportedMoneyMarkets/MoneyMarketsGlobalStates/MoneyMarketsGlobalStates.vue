@@ -68,6 +68,7 @@ export default {
                       present_SIGH_Suppliers_Speed
                       present_SIGH_Borrowers_Speed
                       present_SIGH_Staking_Speed
+                      isSIGHMechanismActivated
                     }
                   }`,
 
@@ -103,7 +104,7 @@ export default {
     },   
     
     subscribeToInstruments(instruments) {
-      this.calculateSIGHPriceInUSD();
+      let sighPriceInUSD = this.calculateSIGHPriceInUSD();
       let instrumentsArray = [];
 
       for (let i=0;i<instruments.length;i++) {
@@ -201,6 +202,9 @@ export default {
 
     calculateSIGHPriceInUSD() {
        this.sighPriceInUSD = (Number(this.$store.state.sighPriceETH) / Math.pow(10,this.$store.state.sighPriceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)); 
+       console.log( "CALCULATED $SIGH PRICE FOR HARVEST CALCULATION : " + this.sighPriceInUSD)
+       return this.sighPriceInUSD;
+       con
     },
 
 
@@ -215,7 +219,7 @@ export default {
         return inMil.toString() + ' M';
       } 
       if ( Number(number) >= 1000 ) {
-        let inK = (Number(number) / 1000).toFixed(3);
+        let inK = (Number(number) / 1000).toFixed(2);
         return inK.toString() + ' K';
       } 
       return Number(number).toFixed(2);

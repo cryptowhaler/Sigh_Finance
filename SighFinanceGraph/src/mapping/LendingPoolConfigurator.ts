@@ -269,8 +269,8 @@ export function updatePrice( ID: string ) : void {
     instrument_state.totalCompoundedVariableBorrowsUSD = instrument_state.totalCompoundedVariableBorrows.times(instrument_state.priceUSD)
 
     // CURRENT TOTAL COMPOUNDED AMOUNT BORROWED AT VARIABLE RATE
-    instrument_state.totalCompoundedVariableBorrowsETH = instrument_state.totalCompoundedBorrows.times(instrument_state.priceETH)
-    instrument_state.totalCompoundedVariableBorrowsUSD = instrument_state.totalCompoundedBorrows.times(instrument_state.priceUSD)
+    instrument_state.totalCompoundedBorrowsETH = instrument_state.totalCompoundedBorrows.times(instrument_state.priceETH)
+    instrument_state.totalCompoundedBorrowsUSD = instrument_state.totalCompoundedBorrows.times(instrument_state.priceUSD)
     
     // CURRENT TOTAL PRINCIPAL AMOUNT BORROWED AT VARIABLE INTEREST RATE
     instrument_state.totalBorrowingEarningsETH = instrument_state.totalBorrowingEarnings.times(instrument_state.priceETH)

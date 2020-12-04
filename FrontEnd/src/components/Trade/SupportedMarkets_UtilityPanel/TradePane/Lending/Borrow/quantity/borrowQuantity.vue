@@ -182,7 +182,7 @@ export default {
         return inMil.toString() + ' M';
       } 
       if ( Number(number) >= 1000 ) {
-        let inK = (Number(number) / 1000).toFixed(3);
+        let inK = (Number(number) / 1000).toFixed(2);
         return inK.toString() + ' K';
       } 
       return Number(number).toFixed(2);

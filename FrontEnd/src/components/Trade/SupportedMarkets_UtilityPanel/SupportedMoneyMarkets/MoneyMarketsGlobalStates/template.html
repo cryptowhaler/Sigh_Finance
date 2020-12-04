@@ -32,7 +32,7 @@
                             <th class="uk-text-center"> <span style="color: ivory;font-weight: 700; color:yellow; font-size: 15px !important;" > MARKETS </span>  </th>
                             <th class="uk-text-center"> <span style="color:violet; font-weight: 700; font-size:14px;"> MARKET SIZE </span> </th>
                             <th class="uk-text-center"> <span style="color:violet; font-weight: 700; font-size:14px;"> TOTAL BORROWS </span> </th>
-                            <th class="uk-text-center">Utilization Rate</th>
+                            <!-- <th class="uk-text-center">Utilization Rate</th> -->
                             <th class="uk-text-center" style="color: darkturquoise;">SUPPLY APY</th>
                             <th class="uk-text-center" style="color: darkturquoise;">BORROW APY (Stable)</th>
                             <th class="uk-text-center" style="color: darkturquoise;">BORROW APY (Variable)</th>
@@ -47,7 +47,7 @@
                             <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" >{{ instrument.symbol }}</td>
                             <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 15px !important; color: violet !important; font-weight: 400;" > {{ getBalanceString(instrument.totalCompoundedLiquidity) }} </td>
                             <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 15px !important; color: violet !important; font-weight: 400;"  > {{ getBalanceString(instrument.totalCompoundedBorrows) }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;"  > {{ Number(instrument.utilizationRatePercent).toFixed(2) }} % </td>
+                            <!-- <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;"  > {{ Number(instrument.utilizationRatePercent).toFixed(2) }} % </td> -->
                             <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.supplyInterestRatePercent).toFixed(2)  }} % </td>
                             <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.stableBorrowInterestPercent).toFixed(2)  }} % </td>
                             <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.variableBorrowInterestPercent).toFixed(2)  }} %  </td>
@@ -61,7 +61,7 @@
                             <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" >{{ instrument.symbol }}</td>
                             <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 15px !important; color: violet !important; font-weight: 400;" > $ {{ getBalanceString(instrument.totalCompoundedLiquidityUSD) }} </td>
                             <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 15px !important; color: violet !important; font-weight: 400;"  > $ {{ getBalanceString(instrument.totalCompoundedBorrowsUSD) }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;"  > {{ Number(instrument.utilizationRatePercent).toFixed(2) }} % </td>
+                            <!-- <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;"  > {{ Number(instrument.utilizationRatePercent).toFixed(2) }} % </td> -->
                             <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.supplyInterestRatePercent).toFixed(2)  }} % </td>
                             <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.stableBorrowInterestPercent).toFixed(2)  }} % </td>
                             <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.variableBorrowInterestPercent).toFixed(2)  }} %  </td>

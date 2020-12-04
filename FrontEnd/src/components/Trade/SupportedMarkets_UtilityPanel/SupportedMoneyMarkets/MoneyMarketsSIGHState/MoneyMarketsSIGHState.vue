@@ -112,8 +112,26 @@ export default {
       }
     },
 
+
+    // subscribeToInstrumentCurrent_SIGH_Harvests(instruments) {
+    //   this.calculateSIGHPriceInUSD();
+    //   let instrumentsArray = [];
+
+    //   for (let i=0;i<instruments.length;i++) {
+    //     let currentInstrument = {};
+    //     currentInstrument.symbol = instruments[i].underlyingInstrumentSymbol;
+    //     currentInstrument.isSIGHMechanismActivated = instruments[i].isSIGHMechanismActivated;
+    //     currentInstrument.totalCompoundedLiquidity = instruments[i].totalCompoundedLiquidity;
+    //     currentInstrument.totalCompoundedLiquidityUSD = instruments[i].totalCompoundedLiquidityUSD;
+    //     currentInstrument.totalCompoundedBorrows = instruments[i].totalCompoundedBorrows;
+
+    // },
+
+
+
     calculateSIGHPriceInUSD() {
        this.sighPriceInUSD = (Number(this.$store.state.sighPriceETH) / Math.pow(10,this.$store.state.sighPriceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)); 
+       console.log( "CALCULATED $SIGH PRICE FOR HARVEST CALCULATION : " + this.sighPriceInUSD)
     },    
 
   },

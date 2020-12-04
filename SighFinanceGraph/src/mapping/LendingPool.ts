@@ -74,6 +74,21 @@ export function handleBorrow(event: Borrow): void {
     instrumentState.borrowFeeDue = instrumentState.borrowFeeDue_WEI.toBigDecimal().div(decimalAdj)
 
     if (event.params._borrowRateMode == new BigInt(0) ) {
+        // Instrument's current Compounded STABLE Borrow Balance
+        instrumentState.totalCompoundedStableBorrowsWEI = instrumentState.totalCompoundedStableBorrowsWEI.plus(event.params._amount) 
+        instrumentState.totalCompoundedStableBorrows = instrumentState.totalCompoundedStableBorrowsWEI.toBigDecimal().div( decimalAdj )
+    }
+    else {
+        // Instrument's current Compounded VARIABLE Borrow Balance
+        instrumentState.totalCompoundedVariableBorrowsWEI = instrumentState.totalCompoundedVariableBorrowsWEI.plus(event.params._amount) 
+        instrumentState.totalCompoundedVariableBorrows = instrumentState.totalCompoundedVariableBorrowsWEI.toBigDecimal().div( decimalAdj )
+    }
+
+    instrumentState.totalCompoundedBorrowsWEI = instrumentState.totalCompoundedBorrowsWEI.plus(event.params._amount)
+    instrumentState.totalCompoundedBorrows = instrumentState.totalCompoundedBorrowsWEI.toBigDecimal().div( decimalAdj )
+
+
+    if (event.params._borrowRateMode == new BigInt(0) ) {
         // TOTAL PRINCIPAL (STABLE) BORROWS
         instrumentState.lifeTimeStableBorrows_WEI = instrumentState.lifeTimeStableBorrows_WEI.plus(event.params._amount)
         instrumentState.lifeTimeStableBorrows = instrumentState.lifeTimeStableBorrows_WEI.toBigDecimal().div(decimalAdj)    

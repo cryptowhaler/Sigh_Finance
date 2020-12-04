@@ -30,6 +30,8 @@ export function handleSIGHSupplyIndexUpdated(event: SIGHSupplyIndexUpdated): voi
     instrumentState.SIGH_Supply_Index_lastUpdatedBlock = event.block.number    // Block Number when it was last updated
 
     instrumentState.save()
+    updatePrice(instrumentId)
+
 }
 
 // FINAL v0. To be Tested : WEI ONLY
@@ -61,6 +63,8 @@ export function handleSIGHBorrowIndexUpdated(event: SIGHBorrowIndexUpdated): voi
     instrumentState.SIGH_Borrow_Index_lastUpdatedBlock = event.block.number     // Block Number when it was last updated
     
     instrumentState.save()
+    updatePrice(instrumentId)
+
 }
 
 
@@ -87,7 +91,7 @@ export function handleInstrumentAdded(event: InstrumentAdded): void {
     instrumentState.SIGH_Borrow_Index_lastUpdatedBlock =  event.block.number
     // log.info('handleInstrumentAdded: 5st ',[])
 
-    instrumentState.present_SIGH_Side = 'inActive'
+    instrumentState.present_SIGH_Side = 'In-Active'
     instrumentState.present_maxVolatilityLimitSuppliers = BigInt.fromI32(10).pow(18 as u8) 
     instrumentState.present_maxVolatilityLimitSuppliersPercent = instrumentState.present_maxVolatilityLimitSuppliers.toBigDecimal().div( BigInt.fromI32(10).pow(16 as u8).toBigDecimal() )  
     instrumentState.present_maxVolatilityLimitBorrowers = BigInt.fromI32(10).pow(18 as u8)
@@ -172,20 +176,23 @@ export function handleInstrumentVolatilityCalculated(event: InstrumentVolatility
 
 
 export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
+    log.info("handleRefreshingSighSpeeds",[])
     let instrumentId = event.params._Instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
 
-    if ( BigInt.fromI32(event.params.side)  == new BigInt(0) ) {
+
+    if ( BigInt.fromI32(event.params.side).toString()  == '0' ) {
         instrumentState.present_SIGH_Side = 'In-Active'
     }
     
-    if ( BigInt.fromI32(event.params.side)  == new BigInt(1) ) {
-    instrumentState.present_SIGH_Side = 'Borrowers'
+    if ( BigInt.fromI32(event.params.side).toString()  == '1' ) {
+    instrumentState.present_SIGH_Side = 'Suppliers'
     }
 
-    if ( BigInt.fromI32(event.params.side)  == new BigInt(2) ) {
-        instrumentState.present_SIGH_Side = 'Suppliers'
+    if ( BigInt.fromI32(event.params.side).toString()  == '2' ) {
+        instrumentState.present_SIGH_Side = 'Borrowers'
     }
+    log.info("handleRefreshingSighSpeeds : {} : {} : {} ",[instrumentState.name.toString(),instrumentState.present_SIGH_Side.toString(), BigInt.fromI32(event.params.side).toString() ] )
     
     instrumentState.present_SIGH_Suppliers_Speed_WEI = event.params.supplierSpeed
     instrumentState.present_SIGH_Suppliers_Speed = instrumentState.present_SIGH_Suppliers_Speed_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )

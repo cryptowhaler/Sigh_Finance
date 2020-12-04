@@ -138,7 +138,7 @@ export default {
         // REPAYING YOUR OWN LOAN
         else {
           if (Number(this.selectedInstrumentWalletState.currentBorrowBalance) < Number(quantity) ) {
-            this.$showErrorMsg({message: " The amount entered to be repaid for the account exceeds your current borrowed balance, which is + " + this.selectedInstrumentWalletState.compoundedBorrowBalance + " " + this.selectedInstrument.symbol + ". Please enter an amount less than your current Borrowed Balance!" }); 
+            this.$showErrorMsg({message: " The amount entered to be repaid for the account exceeds your current borrowed balance, which is + " + this.selectedInstrumentWalletState.currentBorrowBalance + " " + this.selectedInstrument.symbol + ". Please enter an amount less than your current Borrowed Balance!" }); 
           }
           else {
             this.showLoader = true;      
@@ -242,7 +242,7 @@ export default {
         return inMil.toString() + ' M';
       } 
       if ( Number(number) >= 1000 ) {
-        let inK = (Number(number) / 1000).toFixed(3);
+        let inK = (Number(number) / 1000).toFixed(2);
         return inK.toString() + ' K';
       } 
       return Number(number).toFixed(2);

@@ -79,7 +79,7 @@ export default {
 
   created() {
     if (this.$store.state.supportedInstruments.length == 0 ) {
-      this.addToSupportedInstruments(instruments_);
+      this.addToSupportedInstruments(this.instruments);
         this.commitConfigurations(this.instruments);
     }
     if (!this.loopInitialized) {
