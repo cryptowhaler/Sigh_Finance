@@ -4,7 +4,7 @@
 // import EventBus, { EventNames,} from '@/eventBuses/default';
 // import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import Spinner from '@/components/Spinner/Spinner.vue';
-// import {mapState,mapActions,} from 'vuex';
+import {mapState,mapActions,} from 'vuex';
 import gql from 'graphql-tag';
 
 export default {
@@ -22,6 +22,24 @@ export default {
       tableHeight: '',
       showLoader:false,
       displayInUSD: true,
+      sighPriceInUSD: 0,
+
+      SIGH_Pay_Rate: 0,               //  Interest Percent for SIGH Rewards
+      SIGH_Pay_Amount_Day: 0,         // Instrument Tokens being paid per day as SIGH Rewards
+      SIGH_Pay_Amount_Year: 0,       // Instrument Tokens being paid per year as SIGH Rewards
+
+      SIGH_Pay_Amount_Day_USD: 0,         // Value of Instrument Tokens being paid per day as SIGH Rewards
+      SIGH_Pay_Amount_Year_USD: 0,       // Value of Instrument Tokens being paid per year as SIGH Rewards
+
+      SIGH_Harvests_Speed:0,                //  Total SIGH Tokens being distributed by the instrument per Block among participants
+      SIGH_Harvests_Amount_Day: 0,          //  Total SIGH Tokens being distributed by the instrument per day among participants
+      SIGH_Harvests_Amount_Year: 0,         //  Total SIGH Tokens being distributed by the instrument per year among participants
+
+      SIGH_Harvests_Speed_USD:0,            //  Value of SIGH Tokens being distributed by the instrument per Block among participants
+      SIGH_Harvests_Amount_Day_USD: 0,      //  Value of SIGH Tokens being distributed by the instrument per day among participants
+      SIGH_Harvests_Amount_Year_USD: 0,     //  Value of SIGH Tokens being distributed by the instrument per year among participants
+
+      
     };
   },
 
@@ -31,13 +49,11 @@ export default {
       instruments: {
         query: gql`subscription {
                     instruments {
-                      instrumentAddress
-                      iTokenAddress
                       name
                       symbol
                       underlyingInstrumentName
                       underlyingInstrumentSymbol
-                      decimals
+                      priceUSD
                       totalCompoundedLiquidity
                       totalCompoundedLiquidityUSD
                       totalCompoundedBorrows
@@ -46,6 +62,7 @@ export default {
                       stableBorrowInterestPercent
                       variableBorrowInterestPercent
                       supplyInterestRatePercent
+                      # sighRewardsInterestRatePercent
                       present_SIGH_Side
                       present_DeltaBlocks
                       present_SIGH_Suppliers_Speed
@@ -63,7 +80,7 @@ export default {
           console.log(data);
           let instruments_ = data.instruments;
           if (instruments_) {
-            this.instruments = instruments_;
+            this.subscribeToInstruments(instruments_);
           }
           }
         },
@@ -83,7 +100,109 @@ export default {
 
     toggle() {
       this.displayInUSD = !this.displayInUSD;
+    },   
+    
+    subscribeToInstruments(instruments) {
+      this.calculateSIGHPriceInUSD();
+      let instrumentsArray = [];
+
+      for (let i=0;i<instruments.length;i++) {
+        let currentInstrument = {};
+        currentInstrument.symbol = instruments[i].underlyingInstrumentSymbol;
+        currentInstrument.totalCompoundedLiquidity = instruments[i].totalCompoundedLiquidity;
+        currentInstrument.totalCompoundedLiquidityUSD = instruments[i].totalCompoundedLiquidityUSD;
+        currentInstrument.totalCompoundedBorrows = instruments[i].totalCompoundedBorrows;
+        currentInstrument.totalCompoundedBorrowsUSD = instruments[i].totalCompoundedBorrowsUSD;
+        currentInstrument.utilizationRatePercent = instruments[i].utilizationRatePercent;
+        currentInstrument.stableBorrowInterestPercent = instruments[i].stableBorrowInterestPercent;
+        currentInstrument.variableBorrowInterestPercent = instruments[i].variableBorrowInterestPercent;
+        currentInstrument.supplyInterestRatePercent = instruments[i].supplyInterestRatePercent;
+        currentInstrument.deltaBlocks = instruments[i].present_DeltaBlocks;
+        currentInstrument.side = instruments[i].present_SIGH_Side;
+
+        // Get AMOUNT & VALUE OF TOKENS BEING PAID AS $SIGH REWARDS AGAINST $SIGH STAKING
+        // Get AMOUNT & VALUE OF TOKENS BEING PAID AS $SIGH REWARDS AGAINST $SIGH STAKING
+        // Get AMOUNT & VALUE OF TOKENS BEING PAID AS $SIGH REWARDS AGAINST $SIGH STAKING                
+        currentInstrument.SIGH_Pay_Rate =  0; //instruments[i].sighRewardsInterestRatePercent;
+        currentInstrument.SIGH_Pay_Amount_Year = currentInstrument.SIGH_Pay_Rate * Number(currentInstrument.totalCompoundedLiquidity) ;
+        currentInstrument.SIGH_Pay_Amount_Day = Number(currentInstrument.SIGH_Pay_Amount_Year) / 365;
+        currentInstrument.SIGH_Pay_Amount_Block = Number(currentInstrument.SIGH_Pay_Amount_Day) / Number(currentInstrument.deltaBlocks);
+
+        currentInstrument.SIGH_Pay_Amount_Day_USD = Number(currentInstrument.SIGH_Pay_Amount_Day) * Number(instruments[i].priceUSD);
+        currentInstrument.SIGH_Pay_Amount_Year_USD = Number(currentInstrument.SIGH_Pay_Amount_Year) * Number(instruments[i].priceUSD);
+        currentInstrument.SIGH_Pay_Amount_Block_USD = Number(currentInstrument.SIGH_Pay_Amount_Year_USD) / Number(currentInstrument.deltaBlocks);
+                              
+        // Get SIGH HARVESTS SPEEDS & AMOUNTS (DAILY AND YEARLY) based on current $SIGH Side
+        // Get SIGH HARVESTS SPEEDS & AMOUNTS (DAILY AND YEARLY) based on current $SIGH Side
+        // Get SIGH HARVESTS SPEEDS & AMOUNTS (DAILY AND YEARLY) based on current $SIGH Side                
+        if (Number(instruments[i].present_SIGH_Suppliers_Speed) > 0) {
+          currentInstrument.SIGH_Harvests_Speed = Number(instruments[i].present_SIGH_Suppliers_Speed);
+        }
+        else if (Number(instruments[i].present_SIGH_Suppliers_Speed) > 0) {
+          currentInstrument.SIGH_Harvests_Speed = Number(instruments[i].present_SIGH_Borrowers_Speed);
+        }
+        else {
+          currentInstrument.SIGH_Harvests_Speed = Number(instruments[i].present_SIGH_Staking_Speed);
+        }
+        currentInstrument.SIGH_Harvests_Amount_Day = Number(currentInstrument.SIGH_Harvests_Speed * currentInstrument.deltaBlocks);
+        currentInstrument.SIGH_Harvests_Amount_Year = Number(currentInstrument.SIGH_Harvests_Amount_Day) * 365;
+
+        currentInstrument.SIGH_Harvests_Speed_USD = Number(currentInstrument.SIGH_Harvests_Speed) * Number(this.sighPriceInUSD);
+        currentInstrument.SIGH_Harvests_Amount_Day_USD = Number(currentInstrument.SIGH_Harvests_Amount_Day) * Number(this.sighPriceInUSD);
+        currentInstrument.SIGH_Harvests_Amount_Year_USD = Number(currentInstrument.SIGH_Harvests_Amount_Year) * Number(this.sighPriceInUSD);
+
+        if ( Number(currentInstrument.SIGH_Harvests_Amount_Year_USD) == 0) {
+          currentInstrument.SIGH_Harvests_APY = 0;
+        }
+        else if (instruments[i].side == 'Suppliers'  && Number(currentInstrument.totalCompoundedLiquidityUSD) > 0) {
+          currentInstrument.SIGH_Harvests_APY =  Number(currentInstrument.SIGH_Harvests_Amount_Year_USD) / Number(currentInstrument.totalCompoundedLiquidityUSD);
+        }
+        else if (instruments[i].side == 'Borrowers'  && Number(currentInstrument.totalCompoundedBorrowsUSD) > 0) {
+          currentInstrument.SIGH_Harvests_APY =  Number(currentInstrument.SIGH_Harvests_Amount_Year_USD) / Number(currentInstrument.totalCompoundedBorrowsUSD);
+        }
+        else if ( (Number(currentInstrument.totalCompoundedLiquidityUSD) > 0) || (Number(currentInstrument.totalCompoundedBorrowsUSD) > 0) ) {
+          currentInstrument.SIGH_Harvests_APY =  Number(currentInstrument.SIGH_Harvests_Amount_Year_USD) / (Number(currentInstrument.totalCompoundedBorrowsUSD) + Number(currentInstrument.totalCompoundedLiquidityUS))  ;
+        }
+        else {
+          currentInstrument.SIGH_Harvests_APY =  0;
+        }
+
+        // Get ALPHA BEING GENERATED FOR THE INSTRUMENT
+        // Get ALPHA BEING GENERATED FOR THE INSTRUMENT
+        // Get ALPHA BEING GENERATED FOR THE INSTRUMENT        
+        currentInstrument.alpha_perBlock_USD = Number(currentInstrument.SIGH_Harvests_Speed_USD) - Number(currentInstrument.SIGH_Pay_Amount_Block_USD);
+        currentInstrument.alpha_perDay_USD =  Number(currentInstrument.SIGH_Harvests_Amount_Day_USD) - Number(currentInstrument.SIGH_Pay_Amount_Day_USD);
+        currentInstrument.alpha_perYear_USD =  Number(currentInstrument.SIGH_Harvests_Amount_Year_USD) - Number(currentInstrument.SIGH_Pay_Amount_Year_USD);
+        if ( Number(currentInstrument.alpha_perYear_USD) == 0) {
+          currentInstrument.alpha_APY = 0;
+        }
+        else if (instruments[i].side == 'Suppliers'  && Number(currentInstrument.totalCompoundedLiquidityUSD) > 0) {
+          currentInstrument.alpha_APY =  Number(currentInstrument.alpha_perYear_USD) / Number(currentInstrument.totalCompoundedLiquidityUSD);
+        }
+        else if (instruments[i].side == 'Borrowers'  && Number(currentInstrument.totalCompoundedBorrowsUSD) > 0) {
+          currentInstrument.alpha_APY =  Number(currentInstrument.alpha_perYear_USD) / Number(currentInstrument.totalCompoundedBorrowsUSD);
+        }
+        else if ( (Number(currentInstrument.totalCompoundedLiquidityUSD) > 0) || (Number(currentInstrument.totalCompoundedLiquidityUSD) > 0) ) {
+          currentInstrument.alpha_APY =  Number(currentInstrument.alpha_perYear_USD) / (Number(currentInstrument.totalCompoundedBorrowsUSD) + Number(currentInstrument.totalCompoundedLiquidityUS))  ;
+        }
+        else {
+          currentInstrument.alpha_APY =  0;
+        }
+
+        instrumentsArray.push(currentInstrument);
+      }
+      this.instruments = instrumentsArray;      // UPDATE THE STATE BEING DISPLAYED
+      console.log("subscribeToInstruments");
+      console.log(this.instruments);      
     },
+
+
+
+    calculateSIGHPriceInUSD() {
+       this.sighPriceInUSD = (Number(this.$store.state.sighPriceETH) / Math.pow(10,this.$store.state.sighPriceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)); 
+    },
+
+
 
     getBalanceString(number)  {
       if ( Number(number) >= 1000000000 ) {
@@ -99,9 +218,7 @@ export default {
         return inK.toString() + ' K';
       } 
       return Number(number).toFixed(2);
-    },      
-
-
+    }, 
 
   },
 

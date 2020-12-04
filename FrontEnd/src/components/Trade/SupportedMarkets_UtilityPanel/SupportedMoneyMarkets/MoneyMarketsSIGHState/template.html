@@ -18,7 +18,7 @@
         
         <div style="margin:14px; text-align: center;" >
                 <span style="color: ivory; padding-right:24px;" > <u>Read About $SIGH FARMS Here</u>  :  Medium Article  </span>  
-                <span style="color: ivory; padding-left:42px; color: darkkhaki; " > DELTA BLOCKS :  {{ instruments[0].present_DeltaBlocks }}  </span>         
+                <span style="color: ivory; padding-left:42px; color: darkkhaki; " > DELTA BLOCKS :  {{ deltaBlocks }}  </span>         
         </div>
         
     </div>
@@ -68,9 +68,9 @@
                             <td v-if="instrument.isSIGHMechanismActivated && instrument.present_SIGH_Side=='Borrowers'" class="uk-text-center c-red" style="line-height: 1.4;" > $ {{ Number(instrument.present_24HrVolatilityLimitAmountUSD).toFixed(2) }} <br> <span style="color:cornsilk; font-size:inherit;">({{ Number(instrument.present_percentTotalVolatilityLimitAmount).toFixed(2) }}%)</span> </td>
                             <td v-if="!instrument.isSIGHMechanismActivated" class="uk-text-center c-white" style="line-height: 4;" > In-Active </td>
                             <!-- HARVESTED $SIGH : (Suppliers Speed * Delta Blocks * $SIGH Price) / (Borrowers Speed * Delta Blocks * $SIGH Price) / IN-Active -->
-                            <td v-if="instrument.isSIGHMechanismActivated && instrument.present_SIGH_Side=='Suppliers'" class="uk-text-center c-green" style="line-height: 1.4;" > {{ Number( Number(instrument.present_SIGH_Suppliers_Speed) * Number(instrument.present_DeltaBlocks)  ).toFixed(2) }} </td>
-                            <td v-if="instrument.isSIGHMechanismActivated && instrument.present_SIGH_Side=='Borrowers'" class="uk-text-center c-red" style="line-height: 1.4;" > {{  Number( Number(instrument.present_SIGH_Borrowers_Speed) * Number(instrument.present_DeltaBlocks) ).toFixed(2) }}  </td>
-                            <td v-if="!instrument.isSIGHMechanismActivated || instrument.present_SIGH_Side=='In-Active'" class="uk-text-center c-white" style="line-height: 1.4;" > $ {{ Number( Number(instrument.present_SIGH_Staking_Speed)  * Number(instrument.present_DeltaBlocks)  ).toFixed(2) }}  </td>
+                            <td v-if="instrument.isSIGHMechanismActivated && instrument.present_SIGH_Side=='Suppliers'" class="uk-text-center c-green" style="line-height: 1.4;" >  {{ Number( Number(instrument.present_SIGH_Suppliers_Speed) * Number(instrument.present_DeltaBlocks) * sighPriceInUSD ).toFixed(2) }} </td>
+                            <td v-if="instrument.isSIGHMechanismActivated && instrument.present_SIGH_Side=='Borrowers'" class="uk-text-center c-red" style="line-height: 1.4;" >  {{  Number( Number(instrument.present_SIGH_Borrowers_Speed) * Number(instrument.present_DeltaBlocks) * sighPriceInUSD ).toFixed(2) }}  </td>
+                            <td v-if="!instrument.isSIGHMechanismActivated || instrument.present_SIGH_Side=='In-Active'" class="uk-text-center c-white" style="line-height: 1.4;" > $ {{ Number( Number(instrument.present_SIGH_Staking_Speed)  * Number(instrument.present_DeltaBlocks) *sighPriceInUSD ).toFixed(2) }}  </td>
                         </tr>
                     </tbody>
                 </table>

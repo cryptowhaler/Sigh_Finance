@@ -133,9 +133,13 @@ const store = new Vuex.Store({
     sessionSuccessfulTransactions : [],
     sessionFailedTransactions : [],
     
-    // ETH PRICE 
+    // ETH / USD : PRICE 
     ethPriceDecimals: null,             // Decimals 
     ethereumPriceUSD: null,             // ETH Price in USD
+
+    // SIGH / ETH : PRICE 
+    sighPriceETH: null,                  // SIGH Price in ETH
+    sighPriceDecimals: null,             // Decimals 
 
     // BLOCKS REMAINING FOR SIGH SPEED REFRESH
     blocksRemainingForSIGHSpeedRefresh : 0,
@@ -243,6 +247,12 @@ const store = new Vuex.Store({
     },     
     getEthPriceDecimals(state) {
       return state.ethPriceDecimals;
+    },
+    getSIGHPrice(state) {
+      return state.sighPriceETH;
+    },     
+    getSIGHPriceDecimals(state) {
+      return state.sighPriceDecimals;
     },
     // SUPPRTED INSTRUMENTS ARRAY
     getSupportedInstrumentAddresses(state) {
@@ -432,11 +442,15 @@ const store = new Vuex.Store({
     },
     setEthPriceDecimals(state, decimals) {
       state.ethPriceDecimals = decimals;
-      console.log('setEthPriceDecimals ' + state.ethPriceDecimals);      
     },
     updateETHPrice(state, updatedPrice) {
       state.ethereumPriceUSD = updatedPrice;
-      // console.log('In updateETHPrice - ' + state.ethereumPriceUSD);
+    },
+    setSIGHPriceDecimals(state, decimals) {
+      state.sighPriceDecimals = decimals;
+    },
+    updateSIGHPrice(state, updatedPrice) {
+      state.sighPriceETH = updatedPrice;
     },
     updateBlocksRemainingForSIGHSpeedRefresh(state,blockRemaining_) {
       state.blocksRemainingForSIGHSpeedRefresh = blockRemaining_;
@@ -707,12 +721,20 @@ const store = new Vuex.Store({
         let supportedInstrumentAddresses =  await store.dispatch("LendingPool_getInstruments"); ;
         commit("setSupportedInstrumentAddresses",supportedInstrumentAddresses);
     
-        // ETHEREUM PRICE (IN USD ) & PRICE DECIMALS
+        // ETH/USD : PRICE & PRICE DECIMALS
         let ethPriceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: state.EthereumPriceOracleAddress});   
         commit('setEthPriceDecimals',ethPriceDecimals);                  // ETH Price Decimals
         let ethPriceUSD = await store.dispatch("getInstrumentPrice",{_instrumentAddress: state.EthereumPriceOracleAddress}); 
-        commit('updateETHPrice',ethPriceUSD);                             // ETH Price 
+        commit('updateETHPrice',ethPriceUSD);                             // ETH/USD Price 
+
+        // SIGH/ETH : PRICE & PRICE DECIMALS
+        let sighPriceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: state.SIGHContractAddress});   
+        commit('setSIGHPriceDecimals',sighPriceDecimals);                  // SIGH/ETH Price Decimals
+        let sighPriceETH = await store.dispatch("getInstrumentPrice",{_instrumentAddress: state.EthereumPriceOracleAddress}); 
+        commit('updateSIGHPrice',sighPriceETH);                             // SIGH/ETH Price
         
+
+        sighPriceDecimals
         // INITIATE POLLING : ETH Price, Blocks Remaining, Transaction States
         store.dispatch('initiatePolling_ETHPrice_SpeedRefresh_Transactions');
         return true;
@@ -737,7 +759,15 @@ const store = new Vuex.Store({
         let updatedPrice_ = await store.dispatch('getInstrumentPrice', { _instrumentAddress : state.EthereumPriceOracleAddress } );
         if (updatedPrice_) {
           commit("updateETHPrice",updatedPrice_);
-          console.log( " ETH - current price is " + updatedPrice_);
+          console.log( " ETH / USD : $ " + updatedPrice_);
+        }
+      }
+      // POLLING SIGH/ETH PRICE
+      if (state.SIGHContractAddress) {
+        let updatedPrice_ = await store.dispatch('getInstrumentPrice', { _instrumentAddress : state.SIGHContractAddress } );
+        if (updatedPrice_) {
+          commit("updateSIGHPrice",updatedPrice_);
+          console.log( " SIGH / ETH : " + updatedPrice_ + " ETH");
         }
       }
       // POLLING BLOCKS REMAINING TO REFRESH $SIGH SPEEDS

@@ -19,9 +19,10 @@ export default {
 
   data() {
     return {
-      instruments: [],      
+      instruments: [], 
+      deltaBlocks:0,     
       showLoader:false,
-      speedRefreshed: true,
+      sighPriceInUSD: 0,
     };
   },
 
@@ -68,12 +69,9 @@ export default {
           let instruments_ = data.instruments;
           if (instruments_) {
             this.instruments = instruments_;
-            if (this.speedRefreshed) {
-              this.instruments = [];
-              this.instruments = instruments_;
-              this.speedRefreshed = false;
+            this.deltaBlocks =instruments_[0].present_DeltaBlocks;
+            this.calculateSIGHPriceInUSD();
             }
-          }
           }
         },
       },
@@ -114,6 +112,9 @@ export default {
       }
     },
 
+    calculateSIGHPriceInUSD() {
+       this.sighPriceInUSD = (Number(this.$store.state.sighPriceETH) / Math.pow(10,this.$store.state.sighPriceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)); 
+    },    
 
   },
 
