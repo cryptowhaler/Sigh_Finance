@@ -1,3 +1,30 @@
+type SIGH_FINANCE @entity {
+    id: ID!
+    creationBlockNumber: BigInt!
+    instrumentSupported: [Bytes]!
+
+    SIGH_MintSpeed_WEI: BigInt!
+    SIGH_MintSpeed: BigDecimal!
+    SIGH_BurnSpeed_WEI: BigInt!
+    SIGH_BurnSpeed: BigDecimal!
+
+    SIGH_Controller_Treasury_Speed_WEI: BigInt!
+    SIGH_Controller_Treasury_Speed: BigDecimal!
+
+    SIGH_Controller_Mechanism_Speed_WEI: BigInt!
+    SIGH_Controller_Mechanism_Speed: BigDecimal!
+
+    Volatility_Mechanim_SIGH_Speed_WEI: BigInt!
+    Volatility_Mechanim_SIGH_Speed: BigDecimal!
+
+    Volatility_Mechanim_SIGH_Speed_Used_WEI: BigInt!
+    Volatility_Mechanim_SIGH_Speed_Used: BigDecimal!
+
+    Volatility_Mechanim_IsUpperCheckActive: Boolean!
+    Volatility_Mechanim_UpperCheckPercent: Boolean!    
+}
+
+
 type SIGH_Instrument @entity {
     "ID is contract address"
     id: ID!

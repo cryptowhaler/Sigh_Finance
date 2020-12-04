@@ -47,10 +47,7 @@ export default {
                       variableBorrowInterestPercent
                       supplyInterestRatePercent
                       present_SIGH_Side
-                      present_percentTotalVolatility
-                      present_total24HrVolatilityUSD
-                      present_percentTotalVolatilityLimitAmount
-                      present_24HrVolatilityLimitAmountUSD
+                      present_DeltaBlocks
                       present_SIGH_Suppliers_Speed
                       present_SIGH_Borrowers_Speed
                       present_SIGH_Staking_Speed

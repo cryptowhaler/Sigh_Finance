@@ -165,7 +165,7 @@ export function handleInstrumentVolatilityCalculated(event: InstrumentVolatility
     let ETHPriceInUSD = ETH_PriceInUSD.div(  BigInt.fromI32(10).pow(ETH_PriceInUSDDecimals as u8).toBigDecimal() )
 
     instrumentState.present_total24HrVolatilityUSD = instrumentState.present_total24HrVolatilityETH.times(ETHPriceInUSD) 
-    instrumentState.present_24HrVolatilityLimitAmountUSD = instrumentState.present_total24HrVolatilityETH.times(ETHPriceInUSD) 
+    instrumentState.present_24HrVolatilityLimitAmountUSD = instrumentState.present_24HrVolatilityLimitAmountETH.times(ETHPriceInUSD) 
     instrumentState.save()
 }
 

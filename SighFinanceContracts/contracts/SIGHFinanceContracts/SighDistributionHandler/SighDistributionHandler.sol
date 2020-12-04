@@ -520,6 +520,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         ERC20Detailed sighContract = ERC20Detailed(address(Sigh_Address));
         uint priceDecimals = oracle.getAssetPriceDecimals(address(Sigh_Address));
         uint sighDecimals =  sighContract.decimals();
+        require(current_Sigh_PriceETH > 0,"Oracle returned invalid $SIGH Price!");
 
         // MAX Value that can be distributed per block through SIGH Distribution
         uint max_SIGHDistributionLimit = mul_( current_Sigh_PriceETH, SIGHSpeed );   

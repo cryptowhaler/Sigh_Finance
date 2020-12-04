@@ -1,13 +1,23 @@
-<div>
+<div id="MoneyMarketGlobalStates" style="border: aliceblue dotted 2px; padding: 14px 0px; margin-bottom: 24px;">
 
-    <div class="uk-panel">
+
+    <div class="uk-panel"  style="padding-bottom: 5px;">
         <!-- Live markets heading -->
-        <h3 class="uk-panel-title uk-text-center" style="padding-bottom: 15px; padding-left: 9%; font-size: 19px !important;">SUPPORTED MONEY MARKETS : GLOBAL STATE
+        <h3 class="uk-panel-title uk-text-center" style="font-weight: 700;  font-size: 24px !important;">
+            <span  style="font-weight: 700; padding-bottom: 1px; color: greenyellow; font-size: 24px !important;">SUPPORTED MONEY MARKETS </span> 
+            <!-- <span  style="font-weight: 700; padding-bottom: 1px; color: greenyellow; font-size: 24px !important;">FRACTIONAL BANKING</span>  -->
+
+            <span style="float:right; padding-right:10%;">               
                 <img v-if="showLoader" style="width: 7%; margin-left: 17%;" src="https://image.ibb.co/dc02hd/30.gif" />
-                <button v-if="!displayInUSD" class="uk-button " style="background-color: indianred; margin-left: 7%; "  @click="toggle()">Display (USD)</button>
-                <button v-if="displayInUSD" class="uk-button " style="background-color: indianred; margin-left: 7%; "  @click="toggle()">Display (Numbers)</button>
+                <button v-if="!displayInUSD" class="uk-button " style="background-color: darkblue; font-size: 13px; color: greenyellow;"  @click="toggle()">Display (USD)</button>
+                <button v-if="displayInUSD" class="uk-button " style="background-color: darkblue; font-size: 13px; color: greenyellow;"  @click="toggle()">Display (Numbers)</button>
+            </span>
         </h3>
-        
+
+        <div style="margin:17px; text-align: center;" >
+            <span style="color: ivory; padding-right:24px;" > <u>Read About How Money-Markets Work Here</u>  :  Medium Article  </span>  
+        </div>
+    
     </div>
     
     <!-- v-if="!showLoader" -->
@@ -19,47 +29,43 @@
                     <thead class="uk-visible">
                         <!-- live instruments Bar heading -->
                         <tr>
-                            <th class="uk-text-center">Instrument</th>
-                            <th class="uk-text-center">Total Supply</th>
-                            <th class="uk-text-center">Total Borrow</th>
+                            <th class="uk-text-center"> <span style="color: ivory;font-weight: 700; color:yellow; font-size: 15px !important;" > MARKETS </span>  </th>
+                            <th class="uk-text-center"> <span style="color:violet; font-weight: 700; font-size:14px;"> MARKET SIZE </span> </th>
+                            <th class="uk-text-center"> <span style="color:violet; font-weight: 700; font-size:14px;"> TOTAL BORROWS </span> </th>
                             <th class="uk-text-center">Utilization Rate</th>
-                            <th class="uk-text-center">Supply APY</th>
-                            <th class="uk-text-center">Borrow APY (Stable)</th>
-                            <th class="uk-text-center">Borrow APY (Variable)</th>
-                            <th class="uk-text-center"> $SIGH Yield (24 Hr)  </th>
+                            <th class="uk-text-center" style="color: darkturquoise;">SUPPLY APY</th>
+                            <th class="uk-text-center" style="color: darkturquoise;">BORROW APY (Stable)</th>
+                            <th class="uk-text-center" style="color: darkturquoise;">BORROW APY (Variable)</th>
+                            <th class="uk-text-center">  <span style="color:yellow; font-weight: 700; font-size:13px;"> $SIGH </span> <span style="color:red; font-weight: 700; font-size:13px;"> PAY </span>   </th>
+                            <th class="uk-text-center">  <span style="color:yellow; font-weight: 700; font-size:13px;"> $SIGH </span> <span style="color:chartreuse; font-weight: 700; font-size:14px;"> HARVESTS </span>   </th>
+                            <th class="uk-text-center" style="color: aquamarine;">  <span style="color:greenyellow; font-weight: 700; font-size:19px;"> ALPHA </span>   </th>
                         </tr>
                     </thead>
                     <tbody>
                         <!-- live instruments content -->
                         <tr v-if="!displayInUSD"  v-for="instrument in instruments">
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.underlyingInstrumentSymbol }}</td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" > {{ getBalanceString(instrument.totalCompoundedLiquidity) }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ getBalanceString(instrument.totalCompoundedBorrows) }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ Number(instrument.utilizationRatePercent).toFixed(2) }} % </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(instrument.supplyInterestRatePercent).toFixed(2)  }} % </td>
-                            <td class="uk-text-center c-red" style="line-height: 4;" >{{ Number(instrument.stableBorrowInterestPercent).toFixed(2)  }} % </td>
-                            <td class="uk-text-center c-red" style="line-height: 4;" >{{ Number(instrument.variableBorrowInterestPercent).toFixed(2)  }} %  </td>
-                            <!-- <td class="uk-text-center c-white" style="line-height: 4;" >$ {{ Number(instrument.present_total24HrVolatilityUSD).toFixed(2)  }}   ( {{ Number(instrument.present_percentTotalVolatility).toFixed(2) }} % ) </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(instrument.present_24HrVolatilityLimitAmountUSD).toFixed(2)  }} USD ( {{ Number(instrument.present_percentTotalVolatilityLimitAmount).toFixed(2) }} % ) </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" v-if="instrument.present_SIGH_Side=='inActive'"  > In-Active </td> -->
-                            <td class="uk-text-center c-green" style="line-height: 4;" v-if="instrument.present_SIGH_Side=='Suppliers'"  > {{ Number(instrument.present_SIGH_Suppliers_Speed)   }} $SIGH (Suppliers) </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" v-if="instrument.present_SIGH_Side=='Borrowers'"  > {{ Number(instrument.present_SIGH_Borrowers_Speed) }} $SIGH (Borrowers)</td> 
-                            <td class="uk-text-center c-green" style="line-height: 4;" v-if="instrument.present_SIGH_Side=='In-Active'"  > {{ Number(instrument.present_SIGH_Borrowers_Speed)   }} $SIGH (Staking)</td> 
+                            <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" >{{ instrument.underlyingInstrumentSymbol }}</td>
+                            <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" > {{ getBalanceString(instrument.totalCompoundedLiquidity) }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;"  > {{ getBalanceString(instrument.totalCompoundedBorrows) }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;"  > {{ Number(instrument.utilizationRatePercent).toFixed(2) }} % </td>
+                            <td class="uk-text-center" style="line-height: 2.9; color: orange; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.supplyInterestRatePercent).toFixed(2)  }} % </td>
+                            <td class="uk-text-center" style="line-height: 2.9; color: burlywood; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.stableBorrowInterestPercent).toFixed(2)  }} % </td>
+                            <td class="uk-text-center" style="line-height: 2.9; color: violet; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.variableBorrowInterestPercent).toFixed(2)  }} %  </td>
+                            <td class="uk-text-center c-green" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" v-if="instrument.present_SIGH_Side=='Suppliers' && Number(instrument.totalCompoundedLiquidity) > 0 "  > {{ (Number(instrument.present_SIGH_Suppliers_Speed) * Number(instrument.present_DeltaBlocks) * 365 / Number(instrument.totalCompoundedLiquidity)).toFixed(2) }} - <span style="color:#66ff00;"> LONG </span> </td>
+                            <td class="uk-text-center c-green" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" v-else-if="instrument.present_SIGH_Side=='Borrowers' && Number(instrument.totalCompoundedBorrows) > 0"  > {{ (Number(instrument.present_SIGH_Borrowers_Speed) * Number(instrument.present_DeltaBlocks) * 365 / Number(instrument.totalCompoundedBorrows)).toFixed(2) }} - <span style="color:red;"> SHORT </span></td> 
+                            <td class="uk-text-center c-green" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" v-else-if="Number(instrument.totalCompoundedLiquidity) > 0 "  > {{ Number(instrument.present_SIGH_Staking_Speed).toFixed(2)   }} - <span style="color:white;"> STAKING </span> </td> 
                         </tr>
                         <tr v-if="displayInUSD" v-for="instrument in instruments">
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.underlyingInstrumentSymbol }}</td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" > $ {{ getBalanceString(instrument.totalCompoundedLiquidityUSD) }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;"  > $ {{ getBalanceString(instrument.totalCompoundedBorrowsUSD) }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;"  > {{ Number(instrument.utilizationRatePercent).toFixed(2) }} % </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" >{{ Number(instrument.supplyInterestRatePercent).toFixed(2)  }} % </td>
-                            <td class="uk-text-center c-red" style="line-height: 4;" >{{ Number(instrument.stableBorrowInterestPercent).toFixed(2)  }} % </td>
-                            <td class="uk-text-center c-red" style="line-height: 4;" >{{ Number(instrument.variableBorrowInterestPercent).toFixed(2)  }} %  </td>
-                            <!-- <td class="uk-text-center c-white" style="line-height: 4;" >$ {{ Number(instrument.present_total24HrVolatilityUSD).toFixed(2)  }}   ( {{ Number(instrument.present_percentTotalVolatility).toFixed(2) }} % ) </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(instrument.present_24HrVolatilityLimitAmountUSD).toFixed(2)  }} USD ( {{ Number(instrument.present_percentTotalVolatilityLimitAmount).toFixed(2) }} % ) </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" v-if="instrument.present_SIGH_Side=='inActive'"  > In-Active </td> -->
-                            <td class="uk-text-center c-green" style="line-height: 4;" v-if="instrument.present_SIGH_Side=='Suppliers'"  > {{ Number(instrument.present_SIGH_Suppliers_Speed) }} $SIGH (Suppliers) </td>
-                            <td class="uk-text-center c-green" style="line-height: 4;" v-if="instrument.present_SIGH_Side=='Borrowers'"  > {{ Number(instrument.present_SIGH_Borrowers_Speed)   }} $SIGH (Borrowers)</td> 
-                            <td class="uk-text-center c-green" style="line-height: 4;" v-if="instrument.present_SIGH_Side=='In-Active'"  > {{ Number(instrument.present_SIGH_Borrowers_Speed)   }} $SIGH (Staking)</td> 
+                            <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" >{{ instrument.underlyingInstrumentSymbol }}</td>
+                            <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" > $ {{ getBalanceString(instrument.totalCompoundedLiquidityUSD) }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;"  > $ {{ getBalanceString(instrument.totalCompoundedBorrowsUSD) }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;"  > {{ Number(instrument.utilizationRatePercent).toFixed(2) }} % </td>
+                            <td class="uk-text-center" style="line-height: 2.9; color: orange; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.supplyInterestRatePercent).toFixed(2)  }} % </td>
+                            <td class="uk-text-center" style="line-height: 2.9; color: burlywood; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.stableBorrowInterestPercent).toFixed(2)  }} % </td>
+                            <td class="uk-text-center" style="line-height: 2.9; color: violet; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.variableBorrowInterestPercent).toFixed(2)  }} %  </td>
+                            <td class="uk-text-center c-green" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" v-if="instrument.present_SIGH_Side=='Suppliers' && Number(instrument.totalCompoundedLiquidity) > 0 "  > {{ (Number(instrument.present_SIGH_Suppliers_Speed) * Number(instrument.present_DeltaBlocks) * 365 / Number(instrument.totalCompoundedLiquidity)).toFixed(2) }} - <span style="color:#66ff00;"> LONG </span> </td>
+                            <td class="uk-text-center c-green" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" v-else-if="instrument.present_SIGH_Side=='Borrowers' && Number(instrument.totalCompoundedBorrows) > 0"  > {{ (Number(instrument.present_SIGH_Borrowers_Speed) * Number(instrument.present_DeltaBlocks) * 365 / Number(instrument.totalCompoundedBorrows)).toFixed(2) }} - <span style="color:red;"> SHORT </span></td>  
+                            <td class="uk-text-center c-green" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" v-else-if="Number(instrument.totalCompoundedLiquidity) > 0 "  > {{ Number(instrument.present_SIGH_Staking_Speed).toFixed(2) }} - <span style="color:white;"> STAKING </span></td> 
                         </tr>
 
                     </tbody>
