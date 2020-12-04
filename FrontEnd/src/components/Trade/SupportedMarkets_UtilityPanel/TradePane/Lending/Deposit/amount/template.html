@@ -64,13 +64,13 @@
             </tr>
             <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> BALANCES </h3>
             <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Deposit Allowance &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userAvailableAllowance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.userAvailableAllowanceWorth).toFixed(4)  }} USD ) </td> 
+                <td> >   {{ selectedInstrument.symbol  }} Deposit Allowance &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.userAvailableAllowance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.userAvailableAllowanceWorth).toFixed(4))  }} USD ) </td> 
             </tr>
             <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Balance &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.userBalanceWorth).toFixed(4)  }} USD )  </td> 
+                <td> >   {{ selectedInstrument.symbol  }} Balance &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.userBalance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.userBalanceWorth).toFixed(4))  }} USD )  </td> 
             </tr>
             <tr>
-                <td> >  {{ selectedInstrument.iTokenSymbol  }} Balance &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(4)  }} USD ) 
+                <td> >  {{ selectedInstrument.iTokenSymbol  }} Balance &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(4))  }} USD ) 
                     <p style="line-height: 18px; font-size: 11px; color: gold; padding-right: 15px; padding-bottom:10px; float: left;" > ----- You receive {{ selectedInstrument.iTokenSymbol  }}'s directly in your wallet against the {{ selectedInstrument.symbol  }} deposits made into SIGH Finance on a 1:1 basis. 
                         {{ selectedInstrument.iTokenSymbol  }}s farm Interest and $SIGH for you on a per Block basis!
                     </p> 

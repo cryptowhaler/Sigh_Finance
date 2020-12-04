@@ -68,6 +68,7 @@ export default {
                       present_SIGH_Suppliers_Speed
                       present_SIGH_Borrowers_Speed
                       present_SIGH_Staking_Speed
+                      isSIGHMechanismActivated
                     }
                   }`,
 
@@ -109,6 +110,7 @@ export default {
       for (let i=0;i<instruments.length;i++) {
         let currentInstrument = {};
         currentInstrument.symbol = instruments[i].underlyingInstrumentSymbol;
+        currentInstrument.isSIGHMechanismActivated = instruments[i].isSIGHMechanismActivated;
         currentInstrument.totalCompoundedLiquidity = instruments[i].totalCompoundedLiquidity;
         currentInstrument.totalCompoundedLiquidityUSD = instruments[i].totalCompoundedLiquidityUSD;
         currentInstrument.totalCompoundedBorrows = instruments[i].totalCompoundedBorrows;

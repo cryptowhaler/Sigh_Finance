@@ -65,14 +65,30 @@ export default {
             if (this.$store.state.supportedInstruments.length == 0 ) {
               this.addToSupportedInstruments(instruments_);
             }
-            setInterval(async () => {
-              this.commitConfigurations(this.instruments);
-            }, 5000);
+            if (!this.loopInitialized) {
+              this.loopInitialized = true;            
+              setInterval(async () => {
+                this.commitConfigurations(this.instruments);
+              }, 5000);
+            }
           }
           }
         },
       },
     },
+  },
+
+
+  created() {
+    if (this.$store.state.supportedInstruments.length == 0 ) {
+      this.addToSupportedInstruments(instruments_);
+    }
+    if (!this.loopInitialized) {
+      this.loopInitialized = true;            
+      setInterval(async () => {
+        this.commitConfigurations(this.instruments);
+      }, 5000);
+    }
   },
 
 

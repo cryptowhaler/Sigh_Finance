@@ -336,13 +336,6 @@
 				"increaseAllowance(address,uint256)": {
 					"details": "Atomically increases the allowance granted to `spender` by the caller.     * This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}.     * Emits an {Approval} event indicating the updated allowance.     * Requirements:     * - `spender` cannot be the zero address."
 				},
-				"mint(uint256)": {
-					"details": "Function to mint tokens",
-					"params": {
-						"value": "The amount of tokens to mint."
-					},
-					"return": "A boolean that indicates if the operation was successful."
-				},
 				"totalSupply()": {
 					"details": "See {IERC20-totalSupply}."
 				},
@@ -372,17 +365,17 @@
 	},
 	"sources": {
 		"localhost/contracts/LendingProtocolContracts/mocks/tokens/MintableERC20.sol": {
-			"keccak256": "0xd464ce8694df56c251043ed03b8b3dfded3e6e9f1f6bc2040c75770a56b21a22",
+			"keccak256": "0xe554651c58ed73eb41e2e58551ba3e2e4c2d8e45c8e532fe77d8b19fadba7b5a",
 			"urls": [
-				"bzz-raw://55217bc742604e76306bda9ce2e4fd193bdf5bc331e745e4f304ee6557529360",
-				"dweb:/ipfs/QmcFfRHW18MWgvxscaf2PLhAJKPTNixUmaswKHCwLoRRd4"
+				"bzz-raw://106bf83dda6a1768fe1c9d7ca3f1e246072deaa1d1ca8f547330a9145978804c",
+				"dweb:/ipfs/QmV61y5HAtkxdzMGMWEs52mMQBapR6dQzApfnaQnDuMQ47"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/mocks/tokens/MockUSDT.sol": {
-			"keccak256": "0xccbfa266cab95bb0281b4802b48ff4bc85b12fe7f2f3cb4a8cd3ae9d68418438",
+			"keccak256": "0x621ebe8519b52176954cecbd9cc66fdca894bfe9d74482cdb5a39c4de52792ee",
 			"urls": [
-				"bzz-raw://6ae7e43cb6d9cb990949f78826e8fda2ec7dba94bfc8ffab2662061d7b5c9f16",
-				"dweb:/ipfs/QmYWAaAo9GSZ8eEwXQHnYvtaFZvKz6Ah3JLGwHVPkmXcK5"
+				"bzz-raw://e7bcbd3262616abeced9457406fe0131bb1a3971f1eb7297595b2a5da888deb5",
+				"dweb:/ipfs/QmZqUp5h1HFHR7FxQKSZBZs7FMiKX1w3DarhU9V7r1ge7t"
 			]
 		},
 		"openzeppelin-solidity/contracts/GSN/Context.sol": {

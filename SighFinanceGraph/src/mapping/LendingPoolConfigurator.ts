@@ -54,7 +54,7 @@ export function handleInstrumentInitialized(event: InstrumentInitialized): void 
     instrumentState.variableBorrowIndex = BigInt.fromI32(10).pow(27  as u8)         // RAY = 1e27 (initialized in CoreLibrary's init() )
 
     instrumentState.save()
-    if (event.block.number > BigInt.fromI32(22388773) ) { 
+    if (event.block.number > BigInt.fromI32(22418593) ) { 
          updatePrice(instrumentId) 
     }   
 }
@@ -75,7 +75,7 @@ export function handleInstrumentEnabledAsCollateral(event: InstrumentEnabledAsCo
     instrumentState.liquidationBonus = event.params._liquidationBonus 
 
     instrumentState.save()
-    if (event.block.number > BigInt.fromI32(22388773)) { 
+    if (event.block.number > BigInt.fromI32(22418593)) { 
          updatePrice(instrumentId) 
     }    
 }
@@ -86,7 +86,7 @@ export function handleInstrumentDisabledAsCollateral(event: InstrumentDisabledAs
     let instrumentState = Instrument.load(instrumentId)
     instrumentState.usageAsCollateralEnabled = false
     instrumentState.save()
-    if (event.block.number >  BigInt.fromI32(22388773)) { 
+    if (event.block.number >  BigInt.fromI32(22418593)) { 
          updatePrice(instrumentId) 
     }    
 }
@@ -99,7 +99,7 @@ export function handleBorrowingOnInstrumentSwitched(event: BorrowingOnInstrument
     let instrumentState = Instrument.load(instrumentId)
     instrumentState.borrowingEnabled = event.params.switch_
     instrumentState.save()
-    if (event.block.number > BigInt.fromI32(22388773)) { 
+    if (event.block.number > BigInt.fromI32(22418593)) { 
          updatePrice(instrumentId) 
     }    
 }
@@ -112,7 +112,7 @@ export function handleStableRateOnInstrumentSwitched(event: StableRateOnInstrume
     let instrumentState = Instrument.load(instrumentId)
     instrumentState.isStableBorrowRateEnabled = event.params.isEnabled 
     instrumentState.save()
-    if (event.block.number >  BigInt.fromI32(22388773)) { 
+    if (event.block.number >  BigInt.fromI32(22418593)) { 
          updatePrice(instrumentId) 
     }    
 }
@@ -123,7 +123,7 @@ export function handleInstrumentActivationSwitched(event: InstrumentActivationSw
     let instrumentState = Instrument.load(instrumentId)
     instrumentState.isActive = event.params.switch_ 
     instrumentState.save()
-    if (event.block.number > BigInt.fromI32(22388773)) { 
+    if (event.block.number > BigInt.fromI32(22418593)) { 
          updatePrice(instrumentId) 
     }    
 }
@@ -135,7 +135,7 @@ export function handleInstrumentFreezeSwitched(event: InstrumentFreezeSwitched):
     let instrumentState = Instrument.load(instrumentId)
     instrumentState.isFreezed = event.params.isFreezed 
     instrumentState.save()
-    if (event.block.number >  BigInt.fromI32(22388773)) { 
+    if (event.block.number >  BigInt.fromI32(22418593)) { 
          updatePrice(instrumentId) 
     }
 }

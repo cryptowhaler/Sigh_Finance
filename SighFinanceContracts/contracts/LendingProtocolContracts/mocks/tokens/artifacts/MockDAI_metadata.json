@@ -336,13 +336,6 @@
 				"increaseAllowance(address,uint256)": {
 					"details": "Atomically increases the allowance granted to `spender` by the caller.     * This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}.     * Emits an {Approval} event indicating the updated allowance.     * Requirements:     * - `spender` cannot be the zero address."
 				},
-				"mint(uint256)": {
-					"details": "Function to mint tokens",
-					"params": {
-						"value": "The amount of tokens to mint."
-					},
-					"return": "A boolean that indicates if the operation was successful."
-				},
 				"totalSupply()": {
 					"details": "See {IERC20-totalSupply}."
 				},
@@ -365,24 +358,24 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"localhost/contracts/LendingProtocolContracts/mocks/tokens/MintableERC20.sol": {
-			"keccak256": "0xd464ce8694df56c251043ed03b8b3dfded3e6e9f1f6bc2040c75770a56b21a22",
+			"keccak256": "0xe554651c58ed73eb41e2e58551ba3e2e4c2d8e45c8e532fe77d8b19fadba7b5a",
 			"urls": [
-				"bzz-raw://55217bc742604e76306bda9ce2e4fd193bdf5bc331e745e4f304ee6557529360",
-				"dweb:/ipfs/QmcFfRHW18MWgvxscaf2PLhAJKPTNixUmaswKHCwLoRRd4"
+				"bzz-raw://106bf83dda6a1768fe1c9d7ca3f1e246072deaa1d1ca8f547330a9145978804c",
+				"dweb:/ipfs/QmV61y5HAtkxdzMGMWEs52mMQBapR6dQzApfnaQnDuMQ47"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/mocks/tokens/MockDAI.sol": {
-			"keccak256": "0x057e9b445dbd77e7a4cb4cf08d208ca1e67dc1fa25c2a54ef60df9a0047532fc",
+			"keccak256": "0xbb2b66ec9b55d09fb6ead7f98a87ec4a9aba2c3251fb59678b3c05a80d577f16",
 			"urls": [
-				"bzz-raw://bb596817d4709400c1652b22ff321879a8287d1b9f183ae327892814dd379e66",
-				"dweb:/ipfs/QmerfgQyfcV6DTE3JrxoKvmTrjbuM8vsWxTtjy6SU46AxB"
+				"bzz-raw://604768ee926b00da3b2e3614f2287709e4316449b94d44749510bda044d7b87d",
+				"dweb:/ipfs/QmWFcCXeE7XaFPE9qdgcPJTwmYEwpRM3oPQZDq3sxBW3iv"
 			]
 		},
 		"openzeppelin-solidity/contracts/GSN/Context.sol": {

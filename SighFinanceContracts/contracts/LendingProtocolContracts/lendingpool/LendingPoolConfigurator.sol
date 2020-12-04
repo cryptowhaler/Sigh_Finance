@@ -254,7 +254,7 @@ contract LendingPoolConfigurator is VersionedInitializable  {
         emit sighStreamImplUpdated(instrumentAddress,newSighStreamImpl );
     }
 
-    function getSighStreamAddress(address instrumentAddress) external returns (address sighStreamProxyAddress) {
+    function getSighStreamAddress(address instrumentAddress) external view returns (address sighStreamProxyAddress) {
         return sighStreamProxies[instrumentAddress];
     }
 

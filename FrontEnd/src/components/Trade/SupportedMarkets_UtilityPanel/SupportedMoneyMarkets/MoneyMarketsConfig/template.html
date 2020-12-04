@@ -13,7 +13,7 @@
     
     <!-- v-if="!showLoader" -->
     <template >   
-        <div class="noShow noHorizontal"> 
+        <div class="noShow noHorizontal scrollit"> 
             <!-- <div id="hello" data-simplebar data-simplebar-auto-hide="uk-text-center" > -->
                 <!-- :style="{ height: tableHeight } -->
                 <table >
@@ -23,9 +23,9 @@
                             <th class="uk-text-center"> <span style="color: ivory;color:yellow; font-size: 15px !important;" > MARKETS </span>  </th>
                             <th class="uk-text-center"> <span style="color:violet; font-size:14px;"> Is Active </span> </th>
                             <th class="uk-text-center"> <span style="color:violet; font-size:14px;"> Is Freezed </span> </th>
+                            <th class="uk-text-center" style="color: darkturquoise;">Usage as Collateral Enabled</th>
                             <th class="uk-text-center" style="color: darkturquoise;">Borrowing Enabled</th>
                             <th class="uk-text-center" style="color: darkturquoise;">Stable Borrow Enabled</th>
-                            <th class="uk-text-center" style="color: darkturquoise;">Usage as Collateral Enabled</th>
                             <th class="uk-text-center" style="color: mediumvioletred; font-size:14px;" > LTV </th>
                             <th class="uk-text-center" style="color: mediumvioletred; font-size:14px;">Liquidation Threshold</th>
                             <th class="uk-text-center" style="color: mediumvioletred; font-size:14px;">Liquidation Bonus</th>
@@ -40,10 +40,10 @@
                             <td v-if="!instrument.isActive" class="uk-text-center c-red" style="line-height: 4;" > {{ instrument.isActive }} </td>
                             <td v-if="instrument.isFreezed" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.isFreezed }} </td>
                             <td v-if="!instrument.isFreezed" class="uk-text-center c-red" style="line-height: 4;" > {{ instrument.isFreezed }} </td>
-                            <td v-if="instrument.borrowingEnabled" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.borrowingEnabled }} </td>
-                            <td v-if="!instrument.borrowingEnabled" class="uk-text-center c-red" style="line-height: 4;" > {{ instrument.borrowingEnabled }} </td>
                             <td v-if="instrument.usageAsCollateralEnabled" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.usageAsCollateralEnabled }} </td>
                             <td v-if="!instrument.usageAsCollateralEnabled" class="uk-text-center c-red" style="line-height: 4;" > {{ instrument.usageAsCollateralEnabled }} </td>
+                            <td v-if="instrument.borrowingEnabled" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.borrowingEnabled }} </td>
+                            <td v-if="!instrument.borrowingEnabled" class="uk-text-center c-red" style="line-height: 4;" > {{ instrument.borrowingEnabled }} </td>
                             <td v-if="instrument.isStableBorrowRateEnabled" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.isStableBorrowRateEnabled }} </td>
                             <td v-if="!instrument.isStableBorrowRateEnabled" class="uk-text-center c-red" style="line-height: 4;" > {{ instrument.isStableBorrowRateEnabled }} </td>
                             <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.baseLTVasCollateral  }} %  </td>

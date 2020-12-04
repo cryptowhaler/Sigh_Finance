@@ -503,9 +503,9 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
             Instrument_Sigh_Mechansim_States[_currentInstrument].percentTotalVolatilityLimitAmount = mul_(10**9, limitVolatilityRatio);                                              // STATE UPDATE (LOss Ratio is instrumentVolatility/totalVolatility * 100000 )
             Instrument_Sigh_Mechansim_States[_currentInstrument].percentTotalVolatility = mul_(10**9, totalVolatilityRatio);                                              // STATE UPDATE (LOss Ratio is instrumentVolatility/totalVolatility * 100000 )
+            emit refreshingSighSpeeds( _currentInstrument, Instrument_Sigh_Mechansim_States[_currentInstrument].side,  Instrument_Sigh_Mechansim_States[_currentInstrument].suppliers_Speed, Instrument_Sigh_Mechansim_States[_currentInstrument].borrowers_Speed, Instrument_Sigh_Mechansim_States[_currentInstrument].percentTotalVolatilityLimitAmount, Instrument_Sigh_Mechansim_States[_currentInstrument].percentTotalVolatility );
 
         }
-        emit refreshingSighSpeeds( _currentInstrument, Instrument_Sigh_Mechansim_States[_currentInstrument].side,  Instrument_Sigh_Mechansim_States[_currentInstrument].suppliers_Speed, Instrument_Sigh_Mechansim_States[_currentInstrument].borrowers_Speed, Instrument_Sigh_Mechansim_States[_currentInstrument].percentTotalVolatilityLimitAmount, Instrument_Sigh_Mechansim_States[_currentInstrument].percentTotalVolatility );
 
     }
 

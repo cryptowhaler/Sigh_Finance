@@ -25,7 +25,7 @@
     
     <!-- v-if="!showLoader" -->
     <template >   
-        <div class="noShow noHorizontal"> 
+        <div class="noShow noHorizontal scrollit"> 
             <!-- <div id="hello" data-simplebar data-simplebar-auto-hide="uk-text-center" > -->
                 <!-- :style="{ height: tableHeight } -->
                 <table >
@@ -55,7 +55,8 @@
                             <td v-if="instrument.isSIGHMechanismActivated" class="uk-text-center c-white" style="line-height: 4;" > {{ Number(instrument.present_maxVolatilityLimitBorrowersPercent).toFixed(2) }} % </td>
                             <td v-if="!instrument.isSIGHMechanismActivated" class="uk-text-center c-red" style="line-height: 4;" > In-Active </td>
                             <!-- Previous Price -->
-                            <td  class="uk-text-center c-white" style="line-height: 4;" > $ {{  Number(instrument.present_PrevPrice_USD).toFixed(2) }} </td>
+                            <td  class="uk-text-center c-white" v-if="Number(instrument.present_PrevPrice_USD) > 0" style="line-height: 4;" > $ {{  Number(instrument.present_PrevPrice_USD).toFixed(2) }} </td>
+                            <td  class="uk-text-center c-red" v-else style="line-height: 4;"  > In-Active </td>
                             <!-- Current Price (Increase[$SIGH Farmed against Short Positions] / Decrease[$SIGH Farmed against Long Positions] -->
                             <td v-if="Number(instrument.present_OpeningPrice_USD) > Number(instrument.present_PrevPrice_USD)" class="uk-text-center c-white" style="line-height: 1.4;" > $ {{  Number(instrument.present_OpeningPrice_USD).toFixed(2) }} <br> <span style="color:#66ff00; font-size:inherit;">  (+ {{ Number(Number(instrument.present_OpeningPrice_USD) - Number(instrument.present_PrevPrice_USD)).toFixed(2) }}) </span> </td>
                             <td  v-else class="uk-text-center c-white" style="line-height: 1.4;" > $ {{  Number(instrument.present_OpeningPrice_USD).toFixed(2) }}  <br> <span style="color:red; font-size:inherit; "> ({{ Number(Number(instrument.present_OpeningPrice_USD) - Number(instrument.present_PrevPrice_USD)).toFixed(2) }}) </span> </td>

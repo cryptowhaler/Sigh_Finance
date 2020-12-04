@@ -343,7 +343,7 @@
 				"type": "function"
 			},
 			{
-				"constant": false,
+				"constant": true,
 				"inputs": [
 					{
 						"internalType": "address",
@@ -360,7 +360,7 @@
 					}
 				],
 				"payable": false,
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -719,10 +719,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolConfigurator.sol": {
-			"keccak256": "0xd8064274a372efc2ada23859c96fbf13a5af522a5a2534e15e0f5df109be7359",
+			"keccak256": "0xcb96000177109d3c9149fcdc204de195f1f728474c8cb089e1371514e227a397",
 			"urls": [
-				"bzz-raw://b22ac4f985f2c0650504b3be6731439065def38b4a1c52fb84923013f66ac18b",
-				"dweb:/ipfs/QmULsofvUmiKHBcGAg3JSuq2kUTxfTVAYBKcjRy7nNcLFr"
+				"bzz-raw://18277312b05e9add1dc0620c8b3d54e98e3cb881b342cb514b9aaa2e173a027e",
+				"dweb:/ipfs/QmeHaxxkPVGFr6sQ1pyeWkcsh99V63UxSWA8ncxdDozFsg"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
