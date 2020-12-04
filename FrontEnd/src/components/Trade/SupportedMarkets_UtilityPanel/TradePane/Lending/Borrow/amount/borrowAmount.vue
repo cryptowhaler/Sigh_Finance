@@ -99,16 +99,15 @@ export default {
         this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
       } 
       else  {       
-        let instrumentGlobalState = this.$store.state.supportedInstrumentGlobalStates.get(this.selectedInstrument.instrumentAddress);
-        let instrumentGlobalStateConfig = this.$store.state.supportedInstrumentGlobalStates.get(this.selectedInstrument.instrumentAddress);
+        let instrumentGlobalStateConfig = this.$store.state.supportedInstrumentConfigs.get(this.selectedInstrument.instrumentAddress);
         if ( !instrumentGlobalStateConfig.borrowingEnabled  ) {
           this.$showErrorMsg({message: " Borrowing is currently disabled for the selected Instrument. Contact our Team at contact@sigh.finance in case you have any queries! "}); 
         }
         else if ( this.formData.interestRateMode == 'Stable' && !instrumentGlobalStateConfig.stableBorrowRateEnabled) {
           this.$showErrorMsg({message: " Stable borrow rate is currently disabled for the selected Instrument. Try borrowing at variable rate. Contact our Team at contact@sigh.finance in case you have any queries! "}); 
         }
-        else if ( Number(quantity) > Number(instrumentGlobalState.availableLiquidity ) ) {
-          this.$showErrorMsg({message: " SIGH Finance currently doesn't have the needed Liquidity to process this Loan. Available Liquidity =  " + instrumentGlobalState.availableLiquidity + " " + this.selectedInstrument.symbol + ". Try again after some time! "}); 
+        else if ( Number(quantity) > Number(instrumentGlobalStateConfig.availableLiquidity ) ) {
+          this.$showErrorMsg({message: " SIGH Finance currently doesn't have the needed Liquidity to process this Loan. Available Liquidity =  " + instrumentGlobalStateConfig.availableLiquidity + " ( " +  this.getBalanceString(instrumentGlobalStateConfig.availableLiquidity) + " " + this.selectedInstrument.symbol + ". Try again after some time! "}); 
         }
         else {
           console.log('Selected Instrument - ' + this.selectedInstrument.symbol);

@@ -1,12 +1,12 @@
 thead {
-  width: calc(100% - 51px);
+  width: 100%;
   display: table;
-  text-align: left;
+  text-align: center;
 }
 tbody {
-  width: calc(100% - 51px);
+  width: 100%;
   display: table;
-  text-align: left;
+  text-align: center;
 }
 // thead tr {
 //   width: 100%;
@@ -20,8 +20,8 @@ thead tr {
 }
 
 #simpleBarContainer {
-  max-height: 200px;
-  min-height: 150px;
+  max-height: 100vh;
+  min-height: 50vh;
   height: fit-content;
 }
 table {

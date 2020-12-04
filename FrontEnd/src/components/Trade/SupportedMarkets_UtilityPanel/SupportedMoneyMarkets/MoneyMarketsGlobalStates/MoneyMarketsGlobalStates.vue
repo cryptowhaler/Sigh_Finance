@@ -68,7 +68,6 @@ export default {
                       present_SIGH_Suppliers_Speed
                       present_SIGH_Borrowers_Speed
                       present_SIGH_Staking_Speed
-                      isSIGHMechanismActivated
                     }
                   }`,
 

@@ -97,7 +97,6 @@ export default {
         this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
       } 
       else  {       
-        let instrumentGlobalState = this.$store.state.supportedInstrumentGlobalStates.get(this.selectedInstrument.instrumentAddress);
         let instrumentGlobalStateConfig = this.$store.state.supportedInstrumentConfigs.get(this.selectedInstrument.instrumentAddress);
         console.log(instrumentGlobalStateConfig);
         if ( !instrumentGlobalStateConfig.borrowingEnabled  ) {
@@ -106,8 +105,8 @@ export default {
         else if ( this.formData.interestRateMode == 'Stable' && !instrumentGlobalStateConfig.stableBorrowRateEnabled) {
           this.$showErrorMsg({message: " Stable borrow rate is currently disabled for the selected Instrument. Try borrowing at variable rate. Contact our Team at contact@sigh.finance in case you have any queries! "}); 
         }
-        else if ( Number(this.formData.borrowQuantity) > Number(instrumentGlobalState.availableLiquidity ) ) {
-          this.$showErrorMsg({message: " SIGH Finance currently doesn't have the needed Liquidity to process this Loan. Available Liquidity =  " + instrumentGlobalState.availableLiquidity + " " + this.selectedInstrument.symbol + ". Try again after some time! "}); 
+        else if ( Number(this.formData.borrowQuantity) > Number(instrumentGlobalStateConfig.availableLiquidity ) ) {
+          this.$showErrorMsg({message: " SIGH Finance currently doesn't have the needed Liquidity to process this Loan. Available Liquidity =  " + + instrumentGlobalStateConfig.availableLiquidity + " ( " +  this.getBalanceString(instrumentGlobalStateConfig.availableLiquidityUSD) + " USD ) " + this.selectedInstrument.symbol + ". Try again after some time! "}); 
         }
         else {
           let value =  (Number(this.formData.borrowQuantity) * ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) ;

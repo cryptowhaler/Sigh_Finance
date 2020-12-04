@@ -117,7 +117,6 @@ const store = new Vuex.Store({
     // SESSION DATA 
     supportedInstrumentAddresses: null,    //          INSTRUMENT                    // Array of Addresses
     supportedInstruments : [],             //          INSTRUMENT                    // INSTRUMENTS SUPPORTED BY THE PROTOCOL (FOR LENDING - ITOKEN & INSTRUMENT ADDRESSES + SYMBOL/NAME WILL BE STORED)
-    supportedInstrumentGlobalStates: new Map(),   //   INSTRUMENT                    // Instrument Address -> Instrument GLOBAL STATES (APY, SIGH YIELDS, TOTAL LIQUIDITY ETC) MAPPING  
     supportedInstrumentSIGHStates: new Map(),       //   INSTRUMENT                    // SIGH Speeds etc
     supportedInstrumentConfigs: new Map(),        //   INSTRUMENT                    // Instrument Address -> Instrument Config  MAPPING  (instrument's liquidation threshold etc)
     walletInstrumentStates: new Map(),            //   WALLET - INSTRUMENT           // CONNECTED WALLET --> "EACH INSTRUMENT" STATE MAPPING ( deposited, balance, borrowed, fee, etc )
@@ -260,13 +259,6 @@ const store = new Vuex.Store({
     },
     getSupportedInstruments(state) {
       return state.supportedInstruments;
-    },
-    // SUPPRTED INSTRUMENTS - GLOBAL STATE
-    getsupportedInstrumentGlobalStates(state) {
-      return state.supportedInstrumentGlobalStates;
-    },
-    getsupportedInstrumentGlobalState(state,instrumentAddress) {
-      return state.supportedInstrumentGlobalStates.get(instrumentAddress);
     },
     // SUPPRTED INSTRUMENTS - SIGH STATE
     getsupportedInstrumentSIGHStates(state) {
@@ -483,16 +475,6 @@ const store = new Vuex.Store({
       state.supportedInstruments = [];
       console.log('In resetSupportedInstrumentsArray -');
     },
-    // SUPPRTED INSTRUMENTS - GLOBAL STATE (MAP)
-    addToSupportedInstrumentGlobalStates(state,{instrumentAddress, instrumentGlobalState}) {
-      state.supportedInstrumentGlobalStates.set(instrumentAddress,instrumentGlobalState);
-      console.log('In addToSupportedInstrumentGlobalStates (MUTATION)');
-      console.log(instrumentGlobalState);
-    },
-    resetSupportedInstrumentGlobalStates(state) {
-      state.supportedInstrumentGlobalStates = new Map();
-      console.log('In resetSupportedInstrumentGlobalStates -');
-    },
     // SUPPRTED INSTRUMENTS - SIGH STATE (MAP)
     addToSupportedInstrumentSIGHStates(state,{instrumentAddress, instrumentSIGHState}) {
       state.supportedInstrumentSIGHStates.set(instrumentAddress,instrumentSIGHState);
@@ -501,7 +483,7 @@ const store = new Vuex.Store({
     },
     resetSupportedInstrumentSIGHStates(state) {
       state.supportedInstrumentSIGHStates = new Map();
-      console.log('In resetSupportedInstrumentGlobalStates -');
+      console.log('In resetSupportedInstrumentSIGHStates -');
     },
     // SUPPRTED INSTRUMENTS - CONFIG STATE (MAP)    
     addToSupportedInstrumentConfigs(state,{instrumentAddress, instrumentConfig}) {
@@ -534,12 +516,6 @@ const store = new Vuex.Store({
       state.walletSIGHState =  walletSIGHState_;
       console.log('In setWalletSIGHState -');
       console.log(state.walletSIGHState);
-    },
-    // UPDATE INSTRUMENT PRICE
-    updateInstrumentPrice(state,{instrumentAddress,updatedPrice}) {               // UPDATES THE CURRENT INSTRUMENT PRICE. CONSTANTLY CALLED BY THE PRICE POLLING FUNCTION
-      let instrumentConfig = state.supportedInstrumentConfigs.get(instrumentAddress); 
-      instrumentConfig.price = updatedPrice;      
-      state.supportedInstrumentConfigs.set(instrumentAddress,instrumentConfig);
     },
     // UPDATE SELECTED INSTRUMENT
     updateSelectedInstrument(state, selectedInstrument_) {
@@ -1641,7 +1617,7 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => { 
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
         try {
-          let symbol = state.supportedInstrumentGlobalStates.get(_instrument).symbol;                    
+          let symbol = state.supportedInstrumentConfigs.get(_instrument).symbol;                    
           const response = await lendingPoolContract.methods.swapBorrowRateMode(_instrument).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
             let transaction = {hash : hash, function : 'Swap Borrow Rate Mode : ' + symbol , amount : null}; 
             commit('addToSessionPendingTransactions',transaction);
@@ -1664,7 +1640,7 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => { 
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
         try {
-          let symbol = state.supportedInstrumentGlobalStates.get(_instrument).symbol;                    
+          let symbol = state.supportedInstrumentConfigs.get(_instrument).symbol;                    
           const response = await lendingPoolContract.methods.rebalanceStableBorrowRate(_instrument,_user).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
             let transaction = {hash : hash, function : 'Rebalance Stable borrow Rate :' + symbol, amount : null}; 
             commit('addToSessionPendingTransactions',transaction);
@@ -1687,7 +1663,7 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => { 
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
         try {
-          let symbol = state.supportedInstrumentGlobalStates.get(_instrument).symbol;                    
+          let symbol = state.supportedInstrumentConfigs.get(_instrument).symbol;                    
           const response = await lendingPoolContract.methods.setUserUseInstrumentAsCollateral(_instrument,_useAsCollateral).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
             let transaction = {hash : hash, function : 'Use As Collateral : ' + symbol , amount : null}; 
             commit('addToSessionPendingTransactions',transaction);

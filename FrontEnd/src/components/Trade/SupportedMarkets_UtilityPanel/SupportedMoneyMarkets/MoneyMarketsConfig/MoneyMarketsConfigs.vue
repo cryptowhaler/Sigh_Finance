@@ -46,6 +46,9 @@ export default {
                       isStableBorrowRateEnabled
                       isSIGHMechanismActivated
 
+                      availableLiquidity
+                      availableLiquidityUSD
+
                       baseLTVasCollateral
                       liquidationThreshold
                       liquidationBonus
@@ -65,13 +68,8 @@ export default {
             if (this.$store.state.supportedInstruments.length == 0 ) {
               this.addToSupportedInstruments(instruments_);
             }
-            if (!this.loopInitialized) {
-              this.loopInitialized = true;            
-              setInterval(async () => {
-                this.commitConfigurations(this.instruments);
-              }, 5000);
+            this.commitConfigurations(this.instruments);
             }
-          }
           }
         },
       },
@@ -82,6 +80,7 @@ export default {
   created() {
     if (this.$store.state.supportedInstruments.length == 0 ) {
       this.addToSupportedInstruments(instruments_);
+        this.commitConfigurations(this.instruments);
     }
     if (!this.loopInitialized) {
       this.loopInitialized = true;            
@@ -108,6 +107,7 @@ export default {
         instrumentState.priceDecimals = instruments[i].priceDecimals;
         instrumentState.iTokenName = instruments[i].name;
         instrumentState.iTokenSymbol = instruments[i].symbol;
+        
         this.$store.commit( "addToSupportedInstrumentsArray",instrumentState );
         if (i==1) {
           this.$store.commit('updateSelectedInstrument',instrumentState); // THE FIRST INSTRUMENT IS BY DEFAULT THE SELECTED INSTRUMENT
@@ -121,13 +121,15 @@ export default {
         let instrumentState = {};
         instrumentState.instrumentAddress = instruments[i].instrumentAddress;
         instrumentState.iTokenAddress = instruments[i].iTokenAddress;
-        instrumentState.name = instruments[i].underlyingInstrumentName;
         instrumentState.symbol = instruments[i].underlyingInstrumentSymbol;
-        instrumentState.decimals = instruments[i].decimals;
-        instrumentState.priceETH = instruments[i].priceETH;
-        instrumentState.priceDecimals = instruments[i].priceDecimals;
-        instrumentState.iTokenName = instruments[i].name;
-        instrumentState.iTokenSymbol = instruments[i].symbol;
+        instrumentState.stableBorrowRateEnabled = instruments[i].isStableBorrowRateEnabled;
+        instrumentState.borrowingEnabled = instruments[i].borrowingEnabled;
+        instrumentState.isActive = instruments[i].isActive;
+        instrumentState.isFreezed = instruments[i].isFreezed;
+        instrumentState.usageAsCollateralEnabled = instruments[i].usageAsCollateralEnabled;
+        instrumentState.isSIGHMechanismActivated = instruments[i].isSIGHMechanismActivated;
+        instrumentState.availableLiquidity = instruments[i].availableLiquidity;
+        instrumentState.availableLiquidityUSD = instruments[i].availableLiquidityUSD;
         this.$store.commit("addToSupportedInstrumentConfigs",{instrumentAddress: instrumentState.instrumentAddress, instrumentConfig: instrumentState });
       }
     }

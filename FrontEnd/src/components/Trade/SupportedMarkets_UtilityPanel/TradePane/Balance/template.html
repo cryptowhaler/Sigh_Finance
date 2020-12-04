@@ -1,7 +1,7 @@
 <div id="lending-trade-tab"  class="tikertab-content"> 
     <div class="sv-table-wrapper ticker-table cs-table-1">
 
-        <table class="sv-table display nowrap" style="width:100%" data-scroll-y="21px">
+        <table class="sv-table display nowrap" style="width:100% border: aliceblue solid 1px;" data-scroll-y="21px">
             <thead class="uk-visible">
                 <tr>
                     <th class="uk-text-center">Instrument</th>
@@ -10,10 +10,10 @@
                     <th class="uk-text-center">Supply APY</th>
                     <th class="uk-text-center">Borrow APY</th>
                     <th class="uk-text-center">$SIGH Yield</th>
-                    <th class="uk-text-center">Net Performance (24 Hr)</th>
+                    <!-- <th class="uk-text-center">Net Performance (24 Hr)</th> -->
                 </tr>
             </thead>
-            <div id="simpleBarContainer" data-simplebar data-simplebar-auto-hide="false">
+            <div id="simpleBarContainer" style="border: aliceblue solid 1px;" data-simplebar data-simplebar-auto-hide="false">
             <tbody>
             <tr v-if="!displayInUSD" v-for="userInstrumentBalance in walletInstrumentStatesArray ">
                 <td class="uk-text-center c-white" style="line-height: 4;" >{{ userInstrumentBalance.symbol }}</td>
@@ -22,7 +22,7 @@
                 <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.liquidityRate).toFixed(2)  }}</td>
                 <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.borrowRate).toFixed(2) }}</td>
                 <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.SighSpeedForUser).toFixed(2) }}</td>
-                <td class="uk-text-center c-white" style="line-height: 4;" > {{ Number(userInstrumentBalance.netPerformance).toFixed(2) }} </td>
+                <!-- <td class="uk-text-center c-white" style="line-height: 4;" > {{ Number(userInstrumentBalance.netPerformance).toFixed(2) }} </td> -->
             </tr>
             <tr v-if="displayInUSD" v-for="userInstrumentBalance in walletInstrumentStatesArray ">
                 <td class="uk-text-center c-white" style="line-height: 4;" >{{ userInstrumentBalance.symbol }}</td>
@@ -31,7 +31,7 @@
                 <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.liquidityRate).toFixed(2)  }}</td>
                 <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.borrowRate).toFixed(2) }}</td>
                 <td class="uk-text-center c-white" style="line-height: 4;" >{{ Number(userInstrumentBalance.SighSpeedForUser).toFixed(2) }}</td>
-                <td class="uk-text-center c-white" style="line-height: 4;" > {{ Number(userInstrumentBalance.netPerformance).toFixed(2) }} </td>
+                <!-- <td class="uk-text-center c-white" style="line-height: 4;" > {{ Number(userInstrumentBalance.netPerformance).toFixed(2) }} </td> -->
             </tr>
             </tbody>
             </div>
