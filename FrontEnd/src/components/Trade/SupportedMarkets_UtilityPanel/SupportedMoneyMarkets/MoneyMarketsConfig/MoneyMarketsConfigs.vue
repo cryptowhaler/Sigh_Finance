@@ -52,6 +52,11 @@ export default {
                       baseLTVasCollateral
                       liquidationThreshold
                       liquidationBonus
+
+                      stableBorrowInterestPercent
+                      variableBorrowInterestPercent
+                      supplyInterestRatePercent
+
                     }
                   }`,
 
@@ -107,7 +112,14 @@ export default {
         instrumentState.priceDecimals = instruments[i].priceDecimals;
         instrumentState.iTokenName = instruments[i].name;
         instrumentState.iTokenSymbol = instruments[i].symbol;
-        
+        instrumentState.stableBorrowInterestPercent = instruments[i].stableBorrowInterestPercent;
+        instrumentState.variableBorrowInterestPercent = instruments[i].variableBorrowInterestPercent;
+        instrumentState.supplyInterestRatePercent = instruments[i].supplyInterestRatePercent;
+        instrumentState.stableBorrowRateEnabled = instruments[i].isStableBorrowRateEnabled;
+        instrumentState.borrowingEnabled = instruments[i].borrowingEnabled;
+        instrumentState.usageAsCollateralEnabled = instruments[i].usageAsCollateralEnabled;
+        instrumentState.isSIGHMechanismActivated = instruments[i].isSIGHMechanismActivated;
+                              
         this.$store.commit( "addToSupportedInstrumentsArray",instrumentState );
         if (i==1) {
           this.$store.commit('updateSelectedInstrument',instrumentState); // THE FIRST INSTRUMENT IS BY DEFAULT THE SELECTED INSTRUMENT

@@ -140,7 +140,7 @@ export default {
         if (Number(instruments[i].present_SIGH_Suppliers_Speed) > 0) {
           currentInstrument.SIGH_Harvests_Speed = Number(instruments[i].present_SIGH_Suppliers_Speed);
         }
-        else if (Number(instruments[i].present_SIGH_Suppliers_Speed) > 0) {
+        else if (Number(instruments[i].present_SIGH_Borrowers_Speed) > 0) {
           currentInstrument.SIGH_Harvests_Speed = Number(instruments[i].present_SIGH_Borrowers_Speed);
         }
         else {
@@ -156,14 +156,14 @@ export default {
         if ( Number(currentInstrument.SIGH_Harvests_Amount_Year_USD) == 0) {
           currentInstrument.SIGH_Harvests_APY = 0;
         }
-        else if (instruments[i].side == 'Suppliers'  && Number(currentInstrument.totalCompoundedLiquidityUSD) > 0) {
-          currentInstrument.SIGH_Harvests_APY =  Number(currentInstrument.SIGH_Harvests_Amount_Year_USD) / Number(currentInstrument.totalCompoundedLiquidityUSD);
+        else if (Number(instruments[i].present_SIGH_Suppliers_Speed) > 0  && Number(currentInstrument.totalCompoundedLiquidityUSD) > 0) {
+          currentInstrument.SIGH_Harvests_APY = 100 *  Number(currentInstrument.SIGH_Harvests_Amount_Year_USD) / Number(currentInstrument.totalCompoundedLiquidityUSD);
         }
-        else if (instruments[i].side == 'Borrowers'  && Number(currentInstrument.totalCompoundedBorrowsUSD) > 0) {
-          currentInstrument.SIGH_Harvests_APY =  Number(currentInstrument.SIGH_Harvests_Amount_Year_USD) / Number(currentInstrument.totalCompoundedBorrowsUSD);
+        else if (Number(instruments[i].present_SIGH_Borrowers_Speed) > 0  && Number(currentInstrument.totalCompoundedBorrowsUSD) > 0) {
+          currentInstrument.SIGH_Harvests_APY = 100 *  Number(currentInstrument.SIGH_Harvests_Amount_Year_USD) / Number(currentInstrument.totalCompoundedBorrowsUSD);
         }
         else if ( (Number(currentInstrument.totalCompoundedLiquidityUSD) > 0) || (Number(currentInstrument.totalCompoundedBorrowsUSD) > 0) ) {
-          currentInstrument.SIGH_Harvests_APY =  Number(currentInstrument.SIGH_Harvests_Amount_Year_USD) / (Number(currentInstrument.totalCompoundedBorrowsUSD) + Number(currentInstrument.totalCompoundedLiquidityUS))  ;
+          currentInstrument.SIGH_Harvests_APY =  100 *  Number(currentInstrument.SIGH_Harvests_Amount_Year_USD) / (Number(currentInstrument.totalCompoundedBorrowsUSD) + Number(currentInstrument.totalCompoundedLiquidityUSD))  ;
         }
         else {
           currentInstrument.SIGH_Harvests_APY =  0;
@@ -178,14 +178,14 @@ export default {
         if ( Number(currentInstrument.alpha_perYear_USD) == 0) {
           currentInstrument.alpha_APY = 0;
         }
-        else if (instruments[i].side == 'Suppliers'  && Number(currentInstrument.totalCompoundedLiquidityUSD) > 0) {
-          currentInstrument.alpha_APY =  Number(currentInstrument.alpha_perYear_USD) / Number(currentInstrument.totalCompoundedLiquidityUSD);
+        else if (Number(instruments[i].present_SIGH_Suppliers_Speed) > 0  && Number(currentInstrument.totalCompoundedLiquidityUSD) > 0) {
+          currentInstrument.alpha_APY =  100* Number(currentInstrument.alpha_perYear_USD) / Number(currentInstrument.totalCompoundedLiquidityUSD);
         }
-        else if (instruments[i].side == 'Borrowers'  && Number(currentInstrument.totalCompoundedBorrowsUSD) > 0) {
-          currentInstrument.alpha_APY =  Number(currentInstrument.alpha_perYear_USD) / Number(currentInstrument.totalCompoundedBorrowsUSD);
+        else if (Number(instruments[i].present_SIGH_Borrowers_Speed) > 0  && Number(currentInstrument.totalCompoundedBorrowsUSD) > 0) {
+          currentInstrument.alpha_APY =  100* Number(currentInstrument.alpha_perYear_USD) / Number(currentInstrument.totalCompoundedBorrowsUSD);
         }
         else if ( (Number(currentInstrument.totalCompoundedLiquidityUSD) > 0) || (Number(currentInstrument.totalCompoundedLiquidityUSD) > 0) ) {
-          currentInstrument.alpha_APY =  Number(currentInstrument.alpha_perYear_USD) / (Number(currentInstrument.totalCompoundedBorrowsUSD) + Number(currentInstrument.totalCompoundedLiquidityUS))  ;
+          currentInstrument.alpha_APY =  100* Number(currentInstrument.alpha_perYear_USD) / (Number(currentInstrument.totalCompoundedBorrowsUSD) + Number(currentInstrument.totalCompoundedLiquidityUSD))  ;
         }
         else {
           currentInstrument.alpha_APY =  0;

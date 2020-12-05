@@ -68,7 +68,7 @@
                             <td class="uk-text-center" style="line-height: 2.9; color: red; font-size: 13px !important; font-weight: 400;" >  {{ Number(instrument.SIGH_Pay_Rate).toFixed(2) }} %   </td>
                             <td class="uk-text-center c-green" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" v-if="instrument.isSIGHMechanismActivated && instrument.side=='Suppliers'"  >  {{ Number(instrument.SIGH_Harvests_APY ).toFixed(2) }} % <span style="color:#66ff00;"> (LONG) </span> </td>
                             <td class="uk-text-center c-green" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" v-if="instrument.isSIGHMechanismActivated && instrument.side=='Borrowers'"  >  {{ Number( instrument.SIGH_Harvests_APY ).toFixed(2) }} % <span style="color:red;"> (SHORT) </span></td>  
-                            <td class="uk-text-center c-green" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" v-if="!instrument.isSIGHMechanismActivated || instrument.side=='In-Active'">   {{ Number(instrument.SIGH_Harvests_APY).toFixed(2) }} <span style="color:white;"> (STAKE) </span></td> 
+                            <td class="uk-text-center c-green" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" v-if="!instrument.isSIGHMechanismActivated || instrument.side=='In-Active'">   {{ Number(instrument.SIGH_Harvests_APY).toFixed(2) }} % <span style="color:white;"> (STAKE) </span></td> 
                             <td class="uk-text-center c-green" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" >  {{ Number(instrument.alpha_APY).toFixed(2) }} % <span style="color:white;">  </span></td> 
                         </tr>
                     </tbody>

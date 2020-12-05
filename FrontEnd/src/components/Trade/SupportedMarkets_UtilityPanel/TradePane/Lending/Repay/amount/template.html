@@ -2,10 +2,16 @@
     <div class="f1-form-grid" style="position: relative;">
     </div> 
 
+    <span style="line-height: 24px; margin-bottom: 20px; font-size: 12px; padding: 2px 2px; border: aliceblue solid 0.1px; color: gold; text-align: center;" > You currently have a borrowed position of <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" >  {{ Number(selectedInstrumentWalletState.currentBorrowBalance).toFixed(4)  }} {{selectedInstrument.symbol}} </span> ( <span style="line-height: 24px;font-size: 12px; color:aliceblue; display: contents;" >  {{ Number(selectedInstrumentWalletState.currentBorrowBalanceWorth).toFixed(4)  }} USD </span> ), having    
+      an Interest Rate of <span style="line-height: 24px;font-size: 12px; color:coral; display: contents;" >  {{ Number(selectedInstrumentWalletState.borrowRate).toFixed(4)  }} % ({{ selectedInstrumentWalletState.borrowRateMode == 1 ? 'STABLE' : 'VARIABLE' }}) </span> , <span style="line-height: 24px;font-size: 12px; color:chartreuse; display: contents;" >  farming $SIGH &#127806; </span> for you!  
+      <br>
+      Read how it works here :-
+    </span>
+
     <div class="repay-amount-form" style="padding-top: 15px;">
         <!-- Amount to be entered -->    
         <div class="uk-grid uk-grid-small f1-form-grid">
-            <div class="uk-width-1-1" style=" width: 51%; margin-left: 104px;">
+            <div class="uk-width-1-1" style=" width: 100%; margin: 5px;">
                 <div class="form-grp">
                     <div class="form-elm">
                         <input style="text-align: center;"  class="form-ctrl" type="text" placeholder=" Amount (USD)" v-model="formData.repayValue">
@@ -17,7 +23,7 @@
 
         <!-- Displays the symbol of the selected Instrument -->
         <div class="uk-grid uk-grid-small f1-form-grid">
-            <div class="uk-width-1-1" style=" width: 51%; margin-left: 104px;">
+            <div class="uk-width-1-1" style=" width: 100%; margin: 5px;">
                 <div class="form-grp">
                     <div class="form-elm">
                         <input style="text-align: center;" class="form-ctrl" type="text" placeholder="Number of tokens" readonly :value="calculatedQuantity">
@@ -28,7 +34,7 @@
         </div>
         
         <div class="uk-grid uk-grid-small f1-form-grid">
-            <div class="uk-width-1-1" style=" width: 51%; margin-left: 104px;">
+            <div class="uk-width-1-1" style=" width: 100%; margin: 5px;">
                 <div class="form-grp">
                     <div class="form-elm">
                         <input style="text-align: right;"  class="form-ctrl" type="text" placeholder="Address (Optional)" v-model="formData.onBehalfOf">
@@ -38,7 +44,9 @@
             </div>
         </div>
 
-        <div class="uk-grid uk-grid-small f1-form-grid">
+        <span style=" padding-top:5px; margin: 2px; line-height: 22px; font-size: 13.5px; color: mintcream; float: left;">  >   {{ selectedInstrument.symbol  }} Price &nbsp; : &nbsp;{{  ( ( Number(selectedInstrumentPriceETH) / Math.pow(10,selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) }} USD   </span> 
+
+        <div class="uk-grid uk-grid-small f1-form-grid"  style="margin-top:33px;" >
             <!-- Loading image -->    
             <div v-if="showLoader" class="uk-width-1-1 center">
                 <img src="https://image.ibb.co/dc02hd/30.gif" />
@@ -50,15 +58,13 @@
                     <button class="uk-button uk-button-green"  @click="repay()">Repay</button>
                 </div>
             </div>        
-        </div>    
+        </div>  
+        <span style=" width:100%; margin-top: 11px; font-size: 15px; padding: 1px; border: aquamarine dotted 0.1px; text-align: center; float: center; color: chartreuse;">  $SIGH FARMS Looks forward to Serving You Again! &#127806; &#127780;  </span> 
     </div>
 
-    <div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 20px; margin-bottom: 20px;" >
+    <div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 79px; margin-bottom: 20px;" >
         <table v-if="!displayInString" style="color: white;" >
-            <tr>
-                <td > >   {{ selectedInstrument.symbol  }} Price &nbsp; : &nbsp;{{  ( ( Number(selectedInstrumentPriceETH) / Math.pow(10,selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) }} USD   </td> 
-            </tr>
-            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> CONTRACT ADDRESSES </h3>
+            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px;  "> CONTRACT ADDRESSES </h3>
             <tr>
                 <td> >   {{ selectedInstrument.symbol  }} &nbsp; : &nbsp;{{ selectedInstrumentWalletState.instrumentAddress  }}   </td> 
             </tr>
@@ -114,10 +120,7 @@
 
 
         <table v-if="displayInString" style="color: white;" >
-            <tr>
-                <td > >   {{ selectedInstrument.symbol  }} Price &nbsp; : &nbsp;{{  ( ( Number(selectedInstrumentPriceETH) / Math.pow(10,selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) }} USD   </td> 
-            </tr>
-            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> CONTRACT ADDRESSES </h3>
+            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px;"> CONTRACT ADDRESSES </h3>
             <tr>
                 <td> >   {{ selectedInstrument.symbol  }} &nbsp; : &nbsp;{{ selectedInstrumentWalletState.instrumentAddress  }}   </td> 
             </tr>

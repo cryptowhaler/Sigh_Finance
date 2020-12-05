@@ -2,10 +2,61 @@
     <div class="f1-form-grid" style="position: relative;">
     </div> 
     
+    <!-- If borrowing DISBALED -->
+    <div v-if="!selectedInstrument.borrowingEnabled" style="height: 157px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
+        <p style="line-height: 24px; font-size: 12px; color: gold; text-align: center; " >Borrowing is currently disabled for '{{ selectedInstrument.symbol }}'!  
+        </p>         
+    </div>
+
+    <!-- If borrowing ENABLED, stable borrowing ENABLED  & SIGH Mechanism ENABLED -->
+    <div v-if="selectedInstrument.borrowingEnabled && selectedInstrument.stableBorrowRateEnabled && selectedInstrument.isSIGHMechanismActivated" style="height: 151px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
+        <p style="line-height: 24px; font-size: 12px; color: gold;" > You can Borrow '{{ selectedInstrument.symbol }}'  at <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" >{{ Number(selectedInstrument.stableBorrowInterestPercent).toFixed(2) }}  % </span> <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" > (STABLE) </span> and <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" >{{ Number(selectedInstrument.variableBorrowInterestPercent).toFixed(2) }} % </span> 
+            <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" > (VARIABLE) </span> Interest Rates!
+            <br> <br>
+            <span  style="line-height: 24px;font-size: 14.2px; color:greenyellow; display: contents; font-weight: 500;" > &#x1F69C; $SIGH BORROWING STREAM  :  </span>  You  <span style="line-height: 24px;font-size: 12px; color:chartreuse; display: contents;" > Farm $SIGH &#127806; </span> whenever the price of '{{ selectedInstrument.symbol }}' <span style="line-height: 24px;font-size: 12px; color:lawngreen; display: contents;" >INCREASES (+)</span> over a 24 Hr period to hedge Volatility Risks against your Borrowed <span style="line-height: 24px;font-size: 12px; color:red; display: contents;" >(SHORT)</span> Position! 
+            <br> 
+             Read more about it here :-  
+        </p>         
+    </div>
+
+    <!-- If borrowing ENABLED, stable borrowing ENABLED  & SIGH Mechanism DISABLED -->
+    <div v-if="selectedInstrument.borrowingEnabled && selectedInstrument.stableBorrowRateEnabled && !selectedInstrument.isSIGHMechanismActivated" style="height: 147px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
+        <p style="line-height: 24px; font-size: 12px; color: gold;" > You can Borrow '{{ selectedInstrument.symbol }}'  at <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" >{{ Number(selectedInstrument.stableBorrowInterestPercent).toFixed(2) }}  % </span> <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" > (STABLE) </span> and <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" >{{ Number(selectedInstrument.variableBorrowInterestPercent).toFixed(2) }} % </span> 
+            <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" > (VARIABLE) </span> Interest Rates!
+            <br> <br>
+            <span  style="line-height: 24px;font-size: 14.2px; color:greenyellow; display: contents; font-weight: 500;" > &#x1F69C; $SIGH BORROWING STREAM :  </span>  You  <span style="line-height: 24px;font-size: 12px; color:chartreuse; display: contents;" > Farm $SIGH &#127806; </span> as Staking Rewards over your Borrowed '{{ selectedInstrument.symbol }}' Amount!
+            <br> 
+             Read more about it here :-  
+        </p>         
+    </div>
+
+    <!-- If borrowing enabled, stable borrowing DISABLED  & SIGH Mechanism ENABLED -->
+    <div v-if="selectedInstrument.borrowingEnabled && !selectedInstrument.stableBorrowRateEnabled && selectedInstrument.isSIGHMechanismActivated" style="height: 147px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
+        <p style="line-height: 24px; font-size: 12px; color: gold;" > You can Borrow '{{ selectedInstrument.symbol }}'  at <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" >{{ Number(selectedInstrument.variableBorrowInterestPercent).toFixed(2) }} % </span> 
+            <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" > (VARIABLE) </span> Interest Rate!
+            <br> <br>
+            <span  style="line-height: 24px;font-size: 14.2px; color:greenyellow; display: contents; font-weight: 500;" > &#x1F69C; $SIGH BORROWING STREAM :  </span>  You  <span style="line-height: 24px;font-size: 12px; color:chartreuse; display: contents;" > Farm $SIGH &#127806; </span> whenever the price of '{{ selectedInstrument.symbol }}' <span style="line-height: 24px;font-size: 12px; color:lawngreen; display: contents;" >INCREASES (+)</span> over a 24 Hr period to hedge Volatility Risks against your Borrowed <span style="line-height: 24px;font-size: 12px; color:red; display: contents;" >(SHORT)</span> Position! 
+            <br> 
+             Read more about it here :-  
+        </p>         
+    </div>
+
+    <!-- If borrowing enabled, stable borrowing DISABLED   & SIGH Mechanism DISABLED  -->
+    <div v-if="selectedInstrument.borrowingEnabled && !selectedInstrument.stableBorrowRateEnabled && !selectedInstrument.isSIGHMechanismActivated" style="height: 124px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
+        <p style="line-height: 24px; font-size: 12px; color: gold;" > You can Borrow '{{ selectedInstrument.symbol }}'  at <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" >{{ Number(selectedInstrument.variableBorrowInterestPercent).toFixed(2) }} % </span> 
+            <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" > (VARIABLE) </span> Interest Rate!
+            <br> <br>
+            <span  style="line-height: 24px;font-size: 14.2px; color:greenyellow; display: contents; font-weight: 500;" > &#x1F69C; $SIGH BORROWING STREAM :  </span>  You  <span style="line-height: 24px;font-size: 12px; color:chartreuse; display: contents;" > Farm $SIGH &#127806; </span> as Staking Rewards over your Borrowed '{{ selectedInstrument.symbol }}' Amount!
+            <br> 
+             Read more about it here :-  
+        </p>         
+    </div>  
+
+
     <div class="borrow-quantity-form" style="padding-top: 15px;" >
         <!-- Displays the symbol of the selected Instrument -->
         <div class="uk-grid uk-grid-small f1-form-grid">
-            <div class="uk-width-1-1" style=" width: 51%; margin-left: 104px;" >
+            <div class="uk-width-1-1" style=" width: 100%; margin: 5px;" >
                 <div class="form-grp">
                     <div class="form-elm">
                         <input style="text-align: center;" class="form-ctrl" type="text" placeholder="Number of tokens" v-model="formData.borrowQuantity">
@@ -16,7 +67,7 @@
         </div>
         
         <div class="uk-grid uk-grid-small f1-form-grid">
-            <div class="uk-width-1-1" style=" width: 51%; margin-left: 104px;">
+            <div class="uk-width-1-1" style=" width: 100%; margin: 5px;">
                 <div class="form-grp">
                     <div class="form-elm">
                         <input style="text-align: center;"  class="form-ctrl" type="text" placeholder="Estimated Value " readonly :value="calculatedValue">
@@ -28,11 +79,11 @@
 
 
         <div class="uk-grid uk-grid-small f1-form-grid">
-            <div class="uk-width-1-1" style=" width: 51%; margin-left: 104px;">
+            <div class="uk-width-1-1" style=" width: 100%; margin: 5px;">
                 <div class="form-grp">
                     <div class="form-elm">
                         <span style='color:antiquewhite; font-size: 13px; font-weight: 400; margin-right: 9%;'>  Interest Mode  </span>
-                        <select class="form-ctrl select2-single" style="width:45%; padding-left: 20px;" v-model=formData.interestRateMode>
+                        <select class="form-ctrl select2-single" style="width:69%; padding-left: 20px;" v-model=formData.interestRateMode>
                             <option v-for="option in interestRateModes" :key=option :value=option>
                                 {{ option }}
                             </option>
@@ -42,8 +93,10 @@
             </div>
         </div>
         
+        <span style=" padding-top:5px; margin: 2px; line-height: 22px; font-size: 13.5px; color: mintcream; float: left;">  >   {{ selectedInstrument.symbol  }} Price &nbsp; : &nbsp;{{  ( ( Number(selectedInstrumentPriceETH) / Math.pow(10,selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) }} USD   </span> 
+        <span style="padding-top:5px; margin: 2px; line-height: 22px; font-size: 11px; font-weight: 300; color: bisque; float: right;"> Borrow Fee : 0.05% </span>         
 
-        <div class="uk-grid uk-grid-small f1-form-grid">
+        <div class="uk-grid uk-grid-small f1-form-grid" style="margin-top: 31px;" >  
             <!-- Loading image -->    
             <div v-if="showLoader" class="uk-width-1-1 center">
                 <img src="https://image.ibb.co/dc02hd/30.gif" />
@@ -55,16 +108,16 @@
                 </div>
             </div>        
         </div>    
+        <span style=" line-height:24px; width:100%; margin-top: 11px; font-size: 15px; padding: 1px; border: aquamarine dotted 0.1px; text-align: center; float: center; color: chartreuse;">  
+            Thank You for Choosing $SIGH Finance to Farm your Volatility Risks! &#x1F69C;	&#128104;&#8205;&#127806;
+        </span> 
     </div>
 
 
-    <div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 20px; margin-bottom: 20px;" >
+    <div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 79px; margin-bottom: 20px;" >
 
         <table  v-if="!displayInString"  style="color: white;" >
-            <tr>
-                <td > >   {{ selectedInstrument.symbol  }} Price &nbsp; : &nbsp;{{  ( ( Number(selectedInstrumentPriceETH) / Math.pow(10,selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) }} USD   </td> 
-            </tr>
-            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> CONTRACT ADDRESSES </h3>
+            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px;"> CONTRACT ADDRESSES </h3>
             <tr>
                 <td> >   {{ selectedInstrument.symbol  }} &nbsp; : &nbsp;{{ selectedInstrumentWalletState.instrumentAddress  }}   </td> 
             </tr>
@@ -119,10 +172,7 @@
 
 
         <table v-if="displayInString" style="color: white;" >
-            <tr>
-                <td > >   {{ selectedInstrument.symbol  }} Price &nbsp; : &nbsp;{{  ( ( Number(selectedInstrumentPriceETH) / Math.pow(10,selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) }} USD   </td> 
-            </tr>
-            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> CONTRACT ADDRESSES </h3>
+            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px;"> CONTRACT ADDRESSES </h3>
             <tr>
                 <td> >   {{ selectedInstrument.symbol  }} &nbsp; : &nbsp;{{ selectedInstrumentWalletState.instrumentAddress  }}   </td> 
             </tr>

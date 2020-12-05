@@ -1,15 +1,35 @@
 <div class= "Deposit">
     <div class="f1-form-grid" style="position: relative;">
     </div> 
+
+    <div v-if="selectedInstrument.isSIGHMechanismActivated" style="height: 175px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
+        <p style="line-height: 24px; font-size: 12px; color: gold;" > For each '{{ selectedInstrument.symbol  }}' deposited, '{{ selectedInstrument.iTokenSymbol }}'  (ITokens) on a 1:1 basis are transferred directly into your Wallet which 
+            <span style="line-height: 24px;font-size: 12px; color:chartreuse; display: contents;" > Farm $SIGH &#127806; and INTEREST  </span> 
+             for you! 
+            <br> 
+            <br>
+            <span  style="line-height: 24px;font-size: 14.2px; color:greenyellow; display: contents; font-weight: 500;" > &#x1F69C; $SIGH LIQUIDITY STREAM  :  </span>  You  <span style="line-height: 24px;font-size: 12px; color:chartreuse; display: contents;" > Farm $SIGH &#127806; </span> whenever the price of '{{ selectedInstrument.symbol }}' <span style="line-height: 24px;font-size: 12px; color:red; display: contents;" >DECREASES (-)</span> over a 24 Hr period to hedge Volatility Risks against your Deposited <span style="line-height: 24px;font-size: 12px; color:lawngreen; display: contents;" >(LONG)</span> Position! 
+            <br>
+             Read more about it here :-  
+        </p>         
+    </div>
     
-    <span style="line-height: 24px; margin-bottom: 20px; font-size: 12px; padding: 2px 2px; border: aliceblue solid 0.1px; color: gold; text-align: center;" > For each '{{ selectedInstrument.symbol  }}' deposited, 
-        ITokens on a 1:1 basis are transferred directly into your Wallet which farm $SIGH and Interest for you. Read more about it here :- 
-    </span>
+    <div v-if="!selectedInstrument.isSIGHMechanismActivated" style="height: 155px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
+        <p style="line-height: 24px; font-size: 12px; color: gold;" > For each '{{ selectedInstrument.symbol  }}' deposited, '{{ selectedInstrument.iTokenSymbol }}'  (ITokens) on a 1:1 basis are transferred directly into your Wallet which 
+            <span style="line-height: 24px;font-size: 12px; color:chartreuse; display: contents;" > Farm $SIGH &#127806; and INTEREST  </span> 
+             for you!
+            <br> 
+            <br>
+            <span  style="line-height: 24px;font-size: 14.2px; color:greenyellow; display: contents; font-weight: 500;" > &#x1F69C; $SIGH LIQUIDITY STREAM :  </span>  You  <span style="line-height: 24px;font-size: 12px; color:chartreuse; display: contents;" > Farm $SIGH &#127806; </span> as Staking Rewards over your Deposited '{{ selectedInstrument.symbol }}' Amount!
+            <br>
+             Read more about it here :-  
+        </p>         
+    </div>
 
     <div class="deposit-quantity-form" style="padding-top: 15px;" >
         <!-- Displays the symbol of the selected Instrument -->
         <div class="uk-grid uk-grid-small f1-form-grid">
-            <div class="uk-width-1-1" style=" width: 51%; margin-left: 104px;" >
+            <div class="uk-width-1-1" style=" width: 100%; margin: 5px;" >
                 <div class="form-grp">
                     <div class="form-elm">
                         <input style="text-align: center;" class="form-ctrl" type="text" placeholder="Number of tokens" v-model="formData.depositQuantity">
@@ -20,7 +40,7 @@
         </div>
         
         <div class="uk-grid uk-grid-small f1-form-grid">
-            <div class="uk-width-1-1" style=" width: 51%; margin-left: 104px;">
+            <div class="uk-width-1-1" style=" width: 100%; margin: 5px;">
                 <div class="form-grp">
                     <div class="form-elm">
                         <input style="text-align: center;"  class="form-ctrl" type="text" placeholder="Estimated Value " readonly :value="calculatedValue">
@@ -30,29 +50,32 @@
             </div>
         </div> 
 
-        <div class="uk-grid uk-grid-small f1-form-grid">
-            <!-- Loading image -->    
+        <span style=" padding-top:5px; margin: 2px; line-height: 22px; font-size: 13.5px; color: mintcream; float: left;">  >   {{ selectedInstrument.symbol  }} Price &nbsp; : &nbsp;{{  ( ( Number(selectedInstrumentPriceETH) / Math.pow(10,selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) }} USD   </span> 
+        <span style="padding-top:5px; margin: 2px; line-height: 22px; font-size: 11px; font-weight: 300; color: bisque; float: right;"> Deposit Fee : 0.05% </span>         
+
+        <div class="uk-grid uk-grid-small f1-form-grid" style="margin-top: 31px;" >  
+        <!-- Loading image -->
             <div v-if="showLoader" class="uk-width-1-1 center">
                 <img src="https://image.ibb.co/dc02hd/30.gif" />
             </div>
             <!-- Buttons (Approve/Deposit) -->
-            <div v-else class="uk-width-1-1" style="margin-bottom: 15px; margin-top: 15px;" >
+            <div v-else class="uk-width-1-1" style="margin-bottom: 15px; margin-top: 31px;" >
                 <div class="center">
                     <button class="uk-button uk-button-green"  @click="mint()">Mint</button>
                     <button class="uk-button uk-button-green"  @click="approve()">Approve</button>
                     <button class="uk-button uk-button-green"  @click="deposit()">Deposit</button>
                 </div>
-            </div>        
-        </div>    
+            </div>
+        </div>
+        <span style=" line-height:24px; width:100%; margin-top: 11px; font-size: 15px; padding: 1px; border: aquamarine dotted 0.1px; text-align: center; float: center; color: chartreuse;">  
+            Thank You for Choosing $SIGH Finance to Farm your Volatility Risks! &#x1F69C;	&#128104;&#8205;&#127806;
+        </span> 
     </div>
 
 
-    <div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 20px; margin-bottom: 20px;" >
+    <div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 79px; margin-bottom: 20px;" >
         <table v-if="!displayInString" style="color: white;" >
-            <tr>
-                <td > >   {{ selectedInstrument.symbol  }} Price &nbsp; : &nbsp;{{  ( ( Number(selectedInstrumentPriceETH) / Math.pow(10,selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) }} USD   </td> 
-            </tr>
-            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> CONTRACT ADDRESSES </h3>
+            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px;"> CONTRACT ADDRESSES </h3>
             <tr>
                 <td> >   {{ selectedInstrument.symbol  }} &nbsp; : &nbsp;{{ selectedInstrument.instrumentAddress  }}   </td> 
             </tr>
@@ -68,9 +91,9 @@
             </tr>
             <tr>
                 <td> >  {{ selectedInstrument.iTokenSymbol  }} Balance &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(4)  }} USD ) 
-                    <p style="line-height: 18px; font-size: 11px; color: gold; padding-right: 15px; padding-bottom:10px; float: left;" > ----- You receive {{ selectedInstrument.iTokenSymbol  }}'s directly in your wallet against the {{ selectedInstrument.symbol  }} deposits made into SIGH Finance on a 1:1 basis. 
+                    <!-- <p style="line-height: 18px; font-size: 11px; color: gold; padding-right: 15px; padding-bottom:10px; float: left;" > ----- You receive {{ selectedInstrument.iTokenSymbol  }}'s directly in your wallet against the {{ selectedInstrument.symbol  }} deposits made into SIGH Finance on a 1:1 basis. 
                         {{ selectedInstrument.iTokenSymbol  }}s farm Interest and $SIGH for you on a per Block basis!
-                    </p> 
+                    </p>  -->
                 </td> 
             </tr>
             <tr>
@@ -112,10 +135,7 @@
 
 
         <table v-if="displayInString" style="color: white;" >
-            <tr>
-                <td > >   {{ selectedInstrument.symbol  }} Price &nbsp; : &nbsp;{{  ( ( Number(selectedInstrumentPriceETH) / Math.pow(10,selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) }} USD   </td> 
-            </tr>
-            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> CONTRACT ADDRESSES </h3>
+            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; "> CONTRACT ADDRESSES </h3>
             <tr>
                 <td> >   {{ selectedInstrument.symbol  }} &nbsp; : &nbsp;{{ selectedInstrumentWalletState.instrumentAddress  }}   </td> 
             </tr>
@@ -131,9 +151,9 @@
             </tr>
             <tr>
                 <td> >  {{ selectedInstrument.iTokenSymbol  }} Balance &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(4))  }} USD ) 
-                    <p style="line-height: 18px; font-size: 11px; color: gold; padding-right: 15px; padding-bottom:10px; float: left;" > ----- You receive {{ selectedInstrument.iTokenSymbol  }}'s directly in your wallet against the {{ selectedInstrument.symbol  }} deposits made into SIGH Finance on a 1:1 basis. 
+                    <!-- <p style="line-height: 18px; font-size: 11px; color: gold; padding-right: 15px; padding-bottom:10px; float: left;" > ----- You receive {{ selectedInstrument.iTokenSymbol  }}'s directly in your wallet against the {{ selectedInstrument.symbol  }} deposits made into SIGH Finance on a 1:1 basis. 
                         {{ selectedInstrument.iTokenSymbol  }}s farm Interest and $SIGH for you on a per Block basis!
-                    </p> 
+                    </p>  -->
                 </td> 
             </tr>
             <tr>
