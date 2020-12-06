@@ -16,7 +16,7 @@ export default {
       selectedInstrumentWalletState: {},
       formData : {
         depositQuantity: null,
-        depositValue: null,
+        depositValue : null,
         enteredReferralCode: 0,
       },
       selectedInstrumentPriceETH: null,  // PRICE CONSTANTLY UPDATED

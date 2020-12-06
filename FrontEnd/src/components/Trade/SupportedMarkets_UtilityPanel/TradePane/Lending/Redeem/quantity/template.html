@@ -52,127 +52,160 @@
 
 
 
+<div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 99px; margin-bottom: 20px;" >
+    <table v-if="!displayInString" style="color: white;" >
+        <!-- WALLET CONNECTED -->
+        <tr>
+            <td style="font-size: 12.5px !important;">  <span style="line-height: 24px;font-size: 12px; color:dodgerblue; display: contents; font-weight: 500;" >  WALLET : </span>  {{ this.$store.state.connectedWallet  }} &nbsp;  </td> 
+        </tr>
+        <!-- CONTRACT ADDRESSES -->
+        <h3 style="font-size: 19px; color: aquamarine; margin-bottom: 4px; margin-top: 24px;"> CONTRACT ADDRESSES </h3>
+        <tr>
+            <td style="font-size: 12.5px !important;"> <span style="line-height: 24px;font-size: 12px; color:lawngreen; display: contents; font-weight: 500; " > {{ selectedInstrument.symbol  }} &nbsp; :  </span>   &nbsp;{{ selectedInstrumentWalletState.instrumentAddress  }}   </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important;"> <span style="line-height: 24px;font-size: 12px; color:lawngreen; display: contents; font-weight: 500;" > {{ selectedInstrument.iTokenName  }}&nbsp; :  </span>   &nbsp;{{ selectedInstrumentWalletState.iTokenAddress  }} </td> 
+        </tr>
+        <!-- BALANCES -->
+        <h3 style="font-size: 17px; color: aquamarine; margin-bottom: 4px; margin-top: 24px; "> BALANCE : <span style="line-height: 24px;font-size: 17px; color:yellow; display: contents; font-weight: 500;" > {{ selectedInstrument.symbol  }} </span> </h3>
+        <tr>
+            <td style="font-size: 12.5px !important;" > >   {{ selectedInstrument.symbol  }} Deposit Allowance &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.userAvailableAllowance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.userAvailableAllowanceWorth).toFixed(4))  }} USD ) </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important; padding-top: 4px;" >  >   {{ selectedInstrument.symbol  }} Balance &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.userBalance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.userBalanceWorth).toFixed(4))  }} USD )  </td> 
+        </tr>
+        <!-- DEPOSIT BALANCE -->
+        <h3 style="font-size: 17px; color: aquamarine; margin-bottom: 4px; margin-top: 24px; "> {{ selectedInstrument.symbol  }} DEPOSIT BALANCE : <span style="line-height: 24px;font-size: 17px; color:yellow; display: contents; font-weight: 500;" > {{ selectedInstrument.iTokenName  }} &#127806; </span> </h3>
+        <tr>
+            <td style="font-size: 12.5px !important;" > >  {{ selectedInstrument.iTokenSymbol  }} Compounded Balance &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(4))  }} USD )  </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important; padding-top: 4px; padding-bottom: 4px;"> >  &nbsp;SUPPLY APY &nbsp; : &nbsp; <span style="line-height: 24px;font-size: 12.5px; color:greenyellow; display: contents; font-weight: 500;" > {{ Number(selectedInstrumentWalletState.liquidityRate).toFixed(4)  }} % </span> </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important; padding-bottom: 4px;"> >  Enabled As Collateral &nbsp; : &nbsp; <span v-if="selectedInstrumentWalletState.usageAsCollateralEnabled" style="line-height: 24px;font-size: 12.5px; color:green; display: contents; font-weight: 500;" > {{ selectedInstrumentWalletState.usageAsCollateralEnabled }} </span> <span v-if="!selectedInstrumentWalletState.usageAsCollateralEnabled" style="line-height: 24px;font-size: 12.5px; color:red; display: contents; font-weight: 500;" > {{ selectedInstrumentWalletState.usageAsCollateralEnabled }} </span>  </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important;"> >  Deposit Fee (Due) &nbsp; : &nbsp; 0 </td> 
+        </tr>
+        <!-- ACTIVE BORROWS -->
+        <h3 style="font-size: 17px; color: aquamarine; margin-bottom: 4px; margin-top: 24px; "> ACTIVE BORROWS : <span style="line-height: 24px;font-size: 17px; color:yellow; display: contents; font-weight: 500;" > {{ selectedInstrument.symbol  }} </span> </h3>
+        <tr>
+            <td style="font-size: 12.5px !important;"> > Borrow Amount (Principal) &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.principalBorrowBalance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.principalBorrowBalanceWorth).toFixed(4))  }} USD ) </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important; padding-top: 4px; padding-bottom: 4px;"> > Borrow Amount (Compounded) &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.currentBorrowBalance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.currentBorrowBalanceWorth).toFixed(4))  }} USD ) </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important; padding-bottom: 1px;"> > Interest Accured &nbsp; : &nbsp;{{Number( Number(selectedInstrumentWalletState.currentBorrowBalance).toFixed(4) - Number(selectedInstrumentWalletState.principalBorrowBalance).toFixed(4) ).toFixed(4) }} ( {{ Number( Number(selectedInstrumentWalletState.currentBorrowBalanceWorth).toFixed(4) - Number(selectedInstrumentWalletState.principalBorrowBalanceWorth).toFixed(4) ).toFixed(4) }} USD ) </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important; padding-bottom: 2px;" > > Borrow APY &nbsp; : &nbsp; <span style="line-height: 24px;font-size: 12.5px; color:red; display: contents; font-weight: 500;" > {{ Number(selectedInstrumentWalletState.borrowRate).toFixed(4)  }} % </span> </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important; padding-bottom: 2px;"> >  Borrow Type  &nbsp; : <span style="line-height: 24px;font-size: 12.5px; color:navajowhite; display: contents; font-weight: 500;" > &nbsp;{{ selectedInstrumentWalletState.borrowRateMode == 1 ? 'Stable' : 'Variable' }} </span> </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important;"> >  Borrow Fee (Due) &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.originationFee).toFixed(4)  }}  ( {{ Number(selectedInstrumentWalletState.originationFeeWorth).toFixed(4)  }} USD ) </td> 
+        </tr>
+        <!-- $SIGH STREAMING -->
+
+        <h3 style="font-size: 17px; color: aquamarine; margin-bottom: 4px; margin-top: 24px; "> <span style="line-height: 24px;font-size: 17px; color:yellow; display: contents; font-weight: 500;" > &#127806; $SIGH &#127806; </span> <span style="line-height: 24px;font-size: 17px; color:greenyellow; display: contents; font-weight: 500;" > FARMING YIELDS </span>  &#x1F69C;	&#128104;&#8205;&#127806; </h3>
+        <tr>
+            <td style="font-size: 12.5px !important;  padding-bottom: 2px;"> >  $SIGH LIQUIDITY STREAM (per Block) : &nbsp; : &nbsp; 0 </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important; padding-bottom: 7px;"> >  $SIGH LIQUIDITY STREAM (Yearly APY) : &nbsp; : &nbsp; 0 </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important;  padding-bottom: 2px;"> >  $SIGH BORROWING STREAM (per Block) : &nbsp; : &nbsp; 0 </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important;  padding-bottom: 2px;"> >  $SIGH BORROWING STREAM (Yearly APY) : &nbsp; : &nbsp; 0 </td> 
+        </tr>
+    </table>
 
 
 
-    <div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 79px; margin-bottom: 20px;" >
-        <table v-if="!displayInString" style="color: white;" >
-            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px;"> CONTRACT ADDRESSES </h3>
-            <tr>
-                <td> >   {{ selectedInstrument.symbol  }} &nbsp; : &nbsp;{{ selectedInstrumentWalletState.instrumentAddress  }}   </td> 
-            </tr>
-            <tr>
-                <td> >   {{ selectedInstrument.iTokenName  }}&nbsp; : &nbsp;{{ selectedInstrumentWalletState.iTokenAddress  }} </td> 
-            </tr>
-            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> BALANCES </h3>
-            <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Balance &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.userBalanceWorth).toFixed(4)  }} USD )  </td> 
-            </tr>
-            <tr>
-                <td> >  {{ selectedInstrument.iTokenSymbol  }} Balance &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(4)  }} USD ) </td> 
-            </tr>
-            <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Deposit Allowance &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userAvailableAllowance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.userAvailableAllowanceWorth).toFixed(4)  }} USD ) </td> 
-            </tr>
-            <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Principal Borrowed &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.principalBorrowBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.principalBorrowBalanceWorth).toFixed(4)  }} USD ) </td> 
-            </tr>
-            <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Compounded Borrowed &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.currentBorrowBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.currentBorrowBalanceWorth).toFixed(4)  }} USD ) </td> 
-            </tr>
-            <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Origination Fee &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.originationFee).toFixed(4)  }}  ( {{ Number(selectedInstrumentWalletState.originationFeeWorth).toFixed(4)  }} USD ) </td> 
-            </tr>
-            <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Borrow Type &nbsp; : &nbsp;{{ selectedInstrumentWalletState.borrowRateMode == 1 ? 'Stable' : 'Variable' }}</td> 
-            </tr>
-            <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Enabled As Collateral &nbsp; : &nbsp;{{ selectedInstrumentWalletState.usageAsCollateralEnabled }}</td> 
-            </tr>
-            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> PARAMETERS </h3>
-            <tr>
-                <td> >  &nbsp; Supply APY &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.liquidityRate).toFixed(4)  }} %</td> 
-            </tr>
-            <tr>
-                <td> >  &nbsp; Borrow APY &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.borrowRate).toFixed(4)  }} %</td> 
-            </tr>
-            <tr>
-                <td> >  &nbsp; Average Volatility (30 days) &nbsp; : &nbsp; 0 % </td> 
-            </tr>
-            <tr>
-                <td> >  &nbsp; $SIGH Yield vs Loss Ratio (Suppliers) &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.suppliedSighSpeedForUser).toFixed(4) }} % </td> 
-            </tr>
-            <tr>
-                <td> >  &nbsp; $SIGH Yield vs Loss Ratio (Borrowers) &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.borrowedSighSpeedForUser).toFixed(4) }}  % </td> 
-            </tr>
-            <tr>
-                <td> >  &nbsp; Your $SIGH Yield  &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.SighSpeedForUser).toFixed(4) }} % </td> 
-            </tr>
-        </table>
+    <table v-if="displayInString" style="color: white;" >
+        <!-- WALLET CONNECTED -->
+        <tr>
+            <td style="font-size: 12.5px !important;">  <span style="line-height: 24px;font-size: 12px; color:dodgerblue; display: contents; font-weight: 500;" >  WALLET : </span>  {{ this.$store.state.connectedWallet  }} &nbsp;  </td> 
+        </tr>
+        <!-- CONTRACT ADDRESSES -->
+        <h3 style="font-size: 19px; color: aquamarine; margin-bottom: 4px; margin-top: 24px;"> CONTRACT ADDRESSES </h3>
+        <tr>
+            <td style="font-size: 12.5px !important;"> <span style="line-height: 24px;font-size: 12px; color:lawngreen; display: contents; font-weight: 500; " > {{ selectedInstrument.symbol  }} &nbsp; :  </span>   &nbsp;{{ selectedInstrumentWalletState.instrumentAddress  }}   </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important;"> <span style="line-height: 24px;font-size: 12px; color:lawngreen; display: contents; font-weight: 500;" > {{ selectedInstrument.iTokenName  }}&nbsp; :  </span>   &nbsp;{{ selectedInstrumentWalletState.iTokenAddress  }} </td> 
+        </tr>
+        <!-- BALANCES -->
+        <h3 style="font-size: 17px; color: aquamarine; margin-bottom: 4px; margin-top: 24px; "> BALANCE : <span style="line-height: 24px;font-size: 17px; color:yellow; display: contents; font-weight: 500;" > {{ selectedInstrument.symbol  }} </span> </h3>
+        <tr>
+            <td style="font-size: 12.5px !important;" > >   {{ selectedInstrument.symbol  }} Deposit Allowance &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userAvailableAllowance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.userAvailableAllowanceWorth).toFixed(4)  }} USD ) </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important; padding-top: 4px;" >  >   {{ selectedInstrument.symbol  }} Balance &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.userBalanceWorth).toFixed(4)  }} USD )  </td> 
+        </tr>
+        <!-- DEPOSIT BALANCE -->
+        <h3 style="font-size: 17px; color: aquamarine; margin-bottom: 4px; margin-top: 24px; "> {{ selectedInstrument.symbol  }} DEPOSIT BALANCE : <span style="line-height: 24px;font-size: 17px; color:yellow; display: contents; font-weight: 500;" > {{ selectedInstrument.iTokenName  }} &#127806; </span> </h3>
+        <tr>
+            <td style="font-size: 12.5px !important;" > >  {{ selectedInstrument.iTokenSymbol  }} Compounded Balance &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(4)  }} USD )  </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important; padding-top: 4px; padding-bottom: 4px;"> >  &nbsp;SUPPLY APY &nbsp; : &nbsp; <span style="line-height: 24px;font-size: 12.5px; color:greenyellow; display: contents; font-weight: 500;" > {{ Number(selectedInstrumentWalletState.liquidityRate).toFixed(4)  }} % </span> </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important; padding-bottom: 4px;"> >  Enabled As Collateral &nbsp; : &nbsp; <span v-if="selectedInstrumentWalletState.usageAsCollateralEnabled" style="line-height: 24px;font-size: 12.5px; color:green; display: contents; font-weight: 500;" > {{ selectedInstrumentWalletState.usageAsCollateralEnabled }} </span> <span v-if="!selectedInstrumentWalletState.usageAsCollateralEnabled" style="line-height: 24px;font-size: 12.5px; color:red; display: contents; font-weight: 500;" > {{ selectedInstrumentWalletState.usageAsCollateralEnabled }} </span>  </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important;"> >  Deposit Fee (Due) &nbsp; : &nbsp; 0 </td> 
+        </tr>
+        <!-- ACTIVE BORROWS -->
+        <h3 style="font-size: 17px; color: aquamarine; margin-bottom: 4px; margin-top: 24px; "> ACTIVE BORROWS : <span style="line-height: 24px;font-size: 17px; color:yellow; display: contents; font-weight: 500;" > {{ selectedInstrument.symbol  }} </span> </h3>
+        <tr>
+            <td style="font-size: 12.5px !important;"> > Borrow Amount (Principal) &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.principalBorrowBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.principalBorrowBalanceWorth).toFixed(4)  }} USD ) </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important; padding-top: 4px; padding-bottom: 4px;"> > Borrow Amount (Compounded) &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.currentBorrowBalance).toFixed(4)  }} ( {{ Number(selectedInstrumentWalletState.currentBorrowBalanceWorth).toFixed(4)  }} USD ) </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important; padding-bottom: 1px;"> > Interest Accured &nbsp; : &nbsp;{{Number( Number(selectedInstrumentWalletState.currentBorrowBalance).toFixed(4) - Number(selectedInstrumentWalletState.principalBorrowBalance).toFixed(4) ).toFixed(4) }} ( {{ Number( Number(selectedInstrumentWalletState.currentBorrowBalanceWorth).toFixed(4) - Number(selectedInstrumentWalletState.principalBorrowBalanceWorth).toFixed(4) ).toFixed(4) }} USD ) </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important; padding-bottom: 2px;" > > Borrow APY &nbsp; : &nbsp; <span style="line-height: 24px;font-size: 12.5px; color:red; display: contents; font-weight: 500;" > {{ Number(selectedInstrumentWalletState.borrowRate).toFixed(4)  }} % </span> </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important; padding-bottom: 2px;"> >  Borrow Type  &nbsp; : <span style="line-height: 24px;font-size: 12.5px; color:navajowhite; display: contents; font-weight: 500;" > &nbsp;{{ selectedInstrumentWalletState.borrowRateMode == 1 ? 'Stable' : 'Variable' }} </span> </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important;"> >  Borrow Fee (Due) &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.originationFee).toFixed(4)  }}  ( {{ Number(selectedInstrumentWalletState.originationFeeWorth).toFixed(4)  }} USD ) </td> 
+        </tr>
+        <!-- $SIGH STREAMING -->
 
-
-
-        <table v-if="displayInString" style="color: white;" >
-            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px;"> CONTRACT ADDRESSES </h3>
-            <tr>
-                <td> >   {{ selectedInstrument.symbol  }} &nbsp; : &nbsp;{{ selectedInstrumentWalletState.instrumentAddress  }}   </td> 
-            </tr>
-            <tr>
-                <td> >   {{ selectedInstrument.iTokenName  }}&nbsp; : &nbsp;{{ selectedInstrumentWalletState.iTokenAddress  }} </td> 
-            </tr>
-            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> BALANCES </h3>
-            <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Balance &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.userBalance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.userBalanceWorth).toFixed(4))  }} USD )  </td> 
-            </tr>
-            <tr>
-                <td> >  {{ selectedInstrument.iTokenSymbol  }} Balance &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(4))  }} USD ) </td> 
-            </tr>
-            <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Deposit Allowance &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.userAvailableAllowance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.userAvailableAllowanceWorth).toFixed(4))  }} USD ) </td> 
-            </tr>
-            <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Principal Borrowed &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.principalBorrowBalance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.principalBorrowBalanceWorth).toFixed(4))  }} USD ) </td> 
-            </tr>
-            <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Compounded Borrowed &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.currentBorrowBalance).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.currentBorrowBalanceWorth).toFixed(4))  }} USD ) </td> 
-            </tr>
-            <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Origination Fee &nbsp; : &nbsp;{{ getBalanceString(Number(selectedInstrumentWalletState.originationFee).toFixed(4))  }} ( {{ getBalanceString(Number(selectedInstrumentWalletState.originationFeeWorth).toFixed(4))  }} USD ) </td> 
-            </tr>
-            <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Borrow Type &nbsp; : &nbsp;{{ selectedInstrumentWalletState.borrowRateMode == 1 ? 'Stable' : 'Variable' }}</td> 
-            </tr>
-            <tr>
-                <td> >   {{ selectedInstrument.symbol  }} Enabled As Collateral &nbsp; : &nbsp;{{ selectedInstrumentWalletState.usageAsCollateralEnabled }}</td> 
-            </tr>
-            <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> PARAMETERS </h3>
-            <tr>
-                <td> >  &nbsp; Supply APY &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.liquidityRate).toFixed(4)  }} %</td> 
-            </tr>
-            <tr>
-                <td> >  &nbsp; Borrow APY &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.borrowRate).toFixed(4)  }} %</td> 
-            </tr>
-            <tr>
-                <td> >  &nbsp; Average Volatility (30 days) &nbsp; : &nbsp; 0 % </td> 
-            </tr>
-            <tr>
-                <td> >  &nbsp; $SIGH Yield vs Loss Ratio (Suppliers) &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.suppliedSighSpeedForUser).toFixed(4) }} % </td> 
-            </tr>
-            <tr>
-                <td> >  &nbsp; $SIGH Yield vs Loss Ratio (Borrowers) &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.borrowedSighSpeedForUser).toFixed(4) }}  % </td> 
-            </tr>
-            <tr>
-                <td> >  &nbsp; Your $SIGH Yield  &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.SighSpeedForUser).toFixed(4) }} % </td> 
-            </tr>
-        </table>
+        <h3 style="font-size: 17px; color: aquamarine; margin-bottom: 4px; margin-top: 24px; "> <span style="line-height: 24px;font-size: 17px; color:yellow; display: contents; font-weight: 500;" > &#127806; $SIGH &#127806;  </span> <span style="line-height: 24px;font-size: 17px; color:greenyellow; display: contents; font-weight: 500;" > FARMING YIELDS </span>  &#x1F69C;	&#128104;&#8205;&#127806; </h3>
+        <tr>
+            <td style="font-size: 12.5px !important;  padding-bottom: 2px;"> >  $SIGH LIQUIDITY STREAM (per Block) : &nbsp; : &nbsp; 0 </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important; padding-bottom: 7px;"> >  $SIGH LIQUIDITY STREAM (Yearly APY) : &nbsp; : &nbsp; 0 </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important;  padding-bottom: 2px;"> >  $SIGH BORROWING STREAM (per Block) : &nbsp; : &nbsp; 0 </td> 
+        </tr>
+        <tr>
+            <td style="font-size: 12.5px !important;  padding-bottom: 2px;"> >  $SIGH BORROWING STREAM (Yearly APY) : &nbsp; : &nbsp; 0 </td> 
+        </tr>       
+    </table>
 
 
     </div>
 
     <div class="center">
         <img  v-if="showLoaderRefresh" src="https://image.ibb.co/dc02hd/30.gif" />
-        <button v-else class="uk-button uk-button-black"  @click="refreshCurrentInstrumentWalletState(true)">Refresh</button>
-        <button v-if="displayInString" class="uk-button uk-button-black"  @click="toggle(true)">Display Numbers</button>
-        <button v-if="!displayInString" class="uk-button uk-button-black"  @click="toggle(true)">Display Strings</button>
+        <button style="background: darkblue;" v-else class="uk-button uk-button-black"  @click="refreshCurrentInstrumentWalletState(true)">Refresh</button>
+        <button style="background: darkblue;" v-if="displayInString" class="uk-button uk-button-black"  @click="toggle(true)">Display Numbers</button>
+        <button style="background: darkblue;" v-if="!displayInString" class="uk-button uk-button-black"  @click="toggle(true)">Display Strings</button>
     </div>
 </div>

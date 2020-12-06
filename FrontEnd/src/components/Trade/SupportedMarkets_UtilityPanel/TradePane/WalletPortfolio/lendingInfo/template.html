@@ -1,0 +1,236 @@
+<div class= "lendingInfo" style="color:white; border: dotted 1px white; padding: 10px 10px;">
+    <div class="uk-grid uk-grid-small f1-form-grid" style="position: relative;">
+    </div> 
+    
+    <div> 
+
+        <fieldset>
+
+            <table v-if="!displayInUSD && !displayInString">
+                <!-- WALLET CONNECTED -->
+                <tr>
+                    <td style="font-size: 12.5px !important;">  <span style="line-height: 24px;font-size: 12px; color:dodgerblue; display: contents; font-weight: 500;" >  WALLET : </span>  {{ this.$store.state.connectedWallet  }} &nbsp;  </td> 
+                </tr>
+                <!-- SIGH FINANCE : LENDING BALANCES -->
+                <h3 style="font-size: 19px; color: aquamarine; margin-bottom: 4px; margin-top: 42px;"> SIGH FINANCE : LENDING BALANCES </h3>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:11px;"> >  &nbsp; Total Liquidity Provided &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalLiquidityETH).toFixed(4) }} ETH </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;" > >  &nbsp; Total Collateral &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalCollateralETH).toFixed(4) }} ETH &nbsp; <span style="line-height: 24px;font-size: 14.5px; color:darkorange; display: contents; font-weight: 500;" >( LTV &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.ltv).toFixed(2) }} % ) </span>
+                        <p style="line-height: 18px; font-size: 13px; color: lawngreen; padding-bottom: 5px; float: left; margin-top: 2px; " > : Maximum <span style="line-height: 24px;font-size: 14.5px; color:dodgerblue; display: contents; font-weight: 500;" > {{  Number(walletLendingProtocolState.ltv).toFixed(2)  }} % </span> of your 
+                            current total {{ Number(walletLendingProtocolState.totalCollateralETH).toFixed(4) }} ETH  Collateral Balance, i.e total <span style="line-height: 24px;font-size: 14.5px; color:dodgerblue; display: contents; font-weight: 500;" >{{ (Number(walletLendingProtocolState.ltv) * Number(walletLendingProtocolState.totalCollateralETH) / 100).toFixed(4) }} ETH </span>
+                            can be Borrowed from SIGH Finance!  
+                        </p> 
+                    </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;"> >  &nbsp; Deposit Fee &nbsp; : &nbsp; 0 </td> 
+                </tr>
+                <!-- SIGH FINANCE : BORROWED BALANCES -->
+                <h3 style="font-size: 19px; color: aquamarine; margin-bottom: 4px; margin-top: 42px;"> SIGH FINANCE : BORROWED BALANCES </h3>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;"> >  &nbsp; Available Borrows &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.availableBorrowsETH).toFixed(4) }} ETH </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;" > >  &nbsp; Total Value Borrowed &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalBorrowsETH).toFixed(4) }} ETH </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;"> >  &nbsp; Borrowing Fee &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalFeesETH).toFixed(4) }} ETH </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;"> >  &nbsp; Liquidation Threshold &nbsp; : &nbsp; <span style="line-height: 24px;font-size: 13.5px; color:darkorange; display: contents; font-weight: 500;" > {{ Number(walletLendingProtocolState.currentLiquidationThreshold).toFixed(2) }} % </span>
+                        <p style="line-height: 18px; font-size: 13px; color: lawngreen; padding-bottom: 5px; float: left; margin-top: 2px; " > : The Value of your borrowed balances should not cross <span style="line-height: 24px;font-size: 13.5px; color:red; display: contents; font-weight: 400;" >  {{  Number(walletLendingProtocolState.currentLiquidationThreshold).toFixed(2)  }} % </span> of your 
+                            current total <span style="line-height: 24px;font-size: 13.5px; color:lawngreen; display: contents; font-weight: 400;" >  {{ Number(walletLendingProtocolState.totalCollateralETH).toFixed(4) }} ETH  Collateral Balance </span>,  i.e total <span style="line-height: 24px;font-size: 13.5px; color:red; display: contents; font-weight: 400;" >  {{ (Number(walletLendingProtocolState.currentLiquidationThreshold) * Number(walletLendingProtocolState.totalCollateralETH) / 100).toFixed(4) }} ETH </span>
+                            or else you can be Liquidated!  
+                        </p> 
+                    </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;">>  &nbsp; Health Factor &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.healthFactor).toFixed(4) }} 
+                        <p style="line-height: 18px; font-size: 13px; color: gold; padding-right: 15px; float: left;" > 
+                            : Health Factor is calculated as the fraction between your Liquidation Threshold and your current active borrows! <br>
+                            : It Should <span style="line-height: 24px;font-size: 13.5px; color:red; display: contents; font-weight: 400;" > never be less than 1 </span> or else you will be subject to Liquidations!
+                        </p>     
+                    </td>
+            </tr>
+            </table>
+
+
+
+            
+            <table v-if="!displayInUSD && displayInString">
+                <!-- WALLET CONNECTED -->
+                <tr>
+                    <td style="font-size: 12.5px !important;">  <span style="line-height: 24px;font-size: 12px; color:dodgerblue; display: contents; font-weight: 500;" >  WALLET : </span>  {{ this.$store.state.connectedWallet  }} &nbsp;  </td> 
+                </tr>
+                <!-- SIGH FINANCE : LENDING BALANCES -->
+                <h3 style="font-size: 19px; color: aquamarine; margin-bottom: 4px; margin-top: 42px;"> SIGH FINANCE : LENDING BALANCES </h3>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:11px;"> >  &nbsp; Total Liquidity Provided &nbsp; : &nbsp; {{ getBalanceString(Number(walletLendingProtocolState.totalLiquidityETH).toFixed(4)) }} ETH </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;" > >  &nbsp; Total Collateral &nbsp; : &nbsp; {{ getBalanceString(Number(walletLendingProtocolState.totalCollateralETH).toFixed(4)) }} ETH &nbsp; <span style="line-height: 24px;font-size: 14.5px; color:darkorange; display: contents; font-weight: 500;" >( LTV &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.ltv).toFixed(2) }} % ) </span>
+                        <p style="line-height: 18px; font-size: 13px; color: lawngreen; padding-bottom: 5px; float: left; margin-top: 2px; " > : Maximum <span style="line-height: 24px;font-size: 14.5px; color:dodgerblue; display: contents; font-weight: 500;" > {{  Number(walletLendingProtocolState.ltv).toFixed(2)  }} % </span> of your 
+                            current total {{ Number(walletLendingProtocolState.totalCollateralETH).toFixed(4) }} ETH  Collateral Balance, i.e total <span style="line-height: 24px;font-size: 14.5px; color:dodgerblue; display: contents; font-weight: 500;" >{{ (Number(walletLendingProtocolState.ltv) * Number(walletLendingProtocolState.totalCollateralETH) / 100).toFixed(4) }} ETH </span>
+                            can be Borrowed from SIGH Finance!  
+                        </p> 
+                    </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;"> >  &nbsp; Deposit Fee &nbsp; : &nbsp; 0 </td> 
+                </tr>
+                <!-- SIGH FINANCE : BORROWED BALANCES -->
+                <h3 style="font-size: 19px; color: aquamarine; margin-bottom: 4px; margin-top: 42px;"> SIGH FINANCE : BORROWED BALANCES </h3>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;"> >  &nbsp; Available Borrows &nbsp; : &nbsp; {{ getBalanceString(Number(walletLendingProtocolState.availableBorrowsETH).toFixed(4)) }} ETH </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;" > >  &nbsp; Total Value Borrowed &nbsp; : &nbsp; {{ getBalanceString(Number(walletLendingProtocolState.totalBorrowsETH).toFixed(4)) }} ETH </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;"> >  &nbsp; Borrowing Fee &nbsp; : &nbsp; {{ getBalanceString(Number(walletLendingProtocolState.totalFeesETH).toFixed(4)) }} ETH </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;"> >  &nbsp; Liquidation Threshold &nbsp; : &nbsp; <span style="line-height: 24px;font-size: 13.5px; color:darkorange; display: contents; font-weight: 500;" > {{ Number(walletLendingProtocolState.currentLiquidationThreshold).toFixed(2) }} % </span>
+                        <p style="line-height: 18px; font-size: 13px; color: lawngreen; padding-bottom: 5px; float: left; margin-top: 2px; " > : The Value of your borrowed balances should not cross <span style="line-height: 24px;font-size: 13.5px; color:red; display: contents; font-weight: 400;" >  {{  Number(walletLendingProtocolState.currentLiquidationThreshold).toFixed(2)  }} % </span> of your 
+                            current total <span style="line-height: 24px;font-size: 13.5px; color:lawngreen; display: contents; font-weight: 400;" >  {{ Number(walletLendingProtocolState.totalCollateralETH).toFixed(4) }} ETH  Collateral Balance </span>,  i.e total <span style="line-height: 24px;font-size: 13.5px; color:red; display: contents; font-weight: 400;" >  {{ (Number(walletLendingProtocolState.currentLiquidationThreshold) * Number(walletLendingProtocolState.totalCollateralETH) / 100).toFixed(4) }} ETH </span>
+                            or else you can be Liquidated!  
+                        </p> 
+                    </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;">>  &nbsp; Health Factor &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.healthFactor).toFixed(4) }} 
+                        <p style="line-height: 18px; font-size: 13px; color: gold; padding-right: 15px; float: left;" > 
+                            : Health Factor is calculated as the fraction between your Liquidation Threshold and your current active borrows! <br>
+                            : It Should <span style="line-height: 24px;font-size: 13.5px; color:red; display: contents; font-weight: 400;" > never be less than 1 </span> or else you will be subject to Liquidations!
+                        </p>     
+                    </td>
+            </tr>
+            </table>
+
+
+
+
+            <table v-if="displayInUSD  && !displayInString">
+                <!-- WALLET CONNECTED -->
+                <tr>
+                    <td style="font-size: 12.5px !important;">  <span style="line-height: 24px;font-size: 12px; color:dodgerblue; display: contents; font-weight: 500;" >  WALLET : </span>  {{ this.$store.state.connectedWallet  }} &nbsp;  </td> 
+                </tr>
+                <!-- SIGH FINANCE : LENDING BALANCES -->
+                <h3 style="font-size: 19px; color: aquamarine; margin-bottom: 4px; margin-top: 42px;"> SIGH FINANCE : LENDING BALANCES </h3>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:11px;"> >  &nbsp; Total Liquidity Provided &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalLiquidityUSD).toFixed(4) }} USD </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;" > >  &nbsp; Total Collateral &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalCollateralUSD).toFixed(4) }} USD &nbsp; <span style="line-height: 24px;font-size: 14.5px; color:darkorange; display: contents; font-weight: 500;" >( LTV &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.ltv).toFixed(2) }} % ) </span>
+                        <p style="line-height: 18px; font-size: 13px; color: lawngreen; padding-bottom: 5px; float: left; margin-top: 2px; " > : Maximum <span style="line-height: 24px;font-size: 14.5px; color:dodgerblue; display: contents; font-weight: 500;" > {{  Number(walletLendingProtocolState.ltv).toFixed(2)  }} % </span> of your 
+                            current total {{ Number(walletLendingProtocolState.totalCollateralUSD).toFixed(4) }} USD  Collateral Balance, i.e total <span style="line-height: 24px;font-size: 14.5px; color:dodgerblue; display: contents; font-weight: 500;" >{{ (Number(walletLendingProtocolState.ltv) * Number(walletLendingProtocolState.totalCollateralUSD) / 100).toFixed(4) }} USD </span>
+                            can be Borrowed from SIGH Finance!  
+                        </p> 
+                    </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;"> >  &nbsp; Deposit Fee &nbsp; : &nbsp; 0 </td> 
+                </tr>
+                <!-- SIGH FINANCE : BORROWED BALANCES -->
+                <h3 style="font-size: 19px; color: aquamarine; margin-bottom: 4px; margin-top: 42px;"> SIGH FINANCE : BORROWED BALANCES </h3>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;"> >  &nbsp; Available Borrows &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.availableBorrowsUSD).toFixed(4) }} USD </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;" > >  &nbsp; Total Value Borrowed &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalBorrowsUSD).toFixed(4) }} USD </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;"> >  &nbsp; Borrowing Fee &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.totalFeesUSD).toFixed(4) }} USD </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;"> >  &nbsp; Liquidation Threshold &nbsp; : &nbsp; <span style="line-height: 24px;font-size: 13.5px; color:darkorange; display: contents; font-weight: 500;" > {{ Number(walletLendingProtocolState.currentLiquidationThreshold).toFixed(2) }} % </span>
+                        <p style="line-height: 18px; font-size: 13px; color: lawngreen; padding-bottom: 5px; float: left; margin-top: 2px; " > : The Value of your borrowed balances should not cross <span style="line-height: 24px;font-size: 13.5px; color:red; display: contents; font-weight: 400;" >  {{  Number(walletLendingProtocolState.currentLiquidationThreshold).toFixed(2)  }} % </span> of your 
+                            current total <span style="line-height: 24px;font-size: 13.5px; color:lawngreen; display: contents; font-weight: 400;" >  {{ Number(walletLendingProtocolState.totalCollateralUSD).toFixed(4) }} USD  Collateral Balance </span>,  i.e total <span style="line-height: 24px;font-size: 13.5px; color:red; display: contents; font-weight: 400;" >  {{ (Number(walletLendingProtocolState.currentLiquidationThreshold) * Number(walletLendingProtocolState.totalCollateralUSD) / 100).toFixed(4) }} USD </span>
+                            or else you can be Liquidated!  
+                        </p> 
+                    </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;">>  &nbsp; Health Factor &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.healthFactor).toFixed(4) }} 
+                        <p style="line-height: 18px; font-size: 13px; color: gold; padding-right: 15px; float: left;" > 
+                            : Health Factor is calculated as the fraction between your Liquidation Threshold and your current active borrows! <br>
+                            : It Should <span style="line-height: 24px;font-size: 13.5px; color:red; display: contents; font-weight: 400;" > never be less than 1 </span> or else you will be subject to Liquidations!
+                        </p>     
+                    </td>
+            </tr>
+            </table>
+
+
+
+
+            
+            <table v-if="displayInUSD && displayInString">
+                <!-- WALLET CONNECTED -->
+                <tr>
+                    <td style="font-size: 12.5px !important;">  <span style="line-height: 24px;font-size: 12px; color:dodgerblue; display: contents; font-weight: 500;" >  WALLET : </span>  {{ this.$store.state.connectedWallet  }} &nbsp;  </td> 
+                </tr>
+                <!-- SIGH FINANCE : LENDING BALANCES -->
+                <h3 style="font-size: 19px; color: aquamarine; margin-bottom: 4px; margin-top: 42px;"> SIGH FINANCE : LENDING BALANCES </h3>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:11px;"> >  &nbsp; Total Liquidity Provided &nbsp; : &nbsp; {{ getBalanceString(Number(walletLendingProtocolState.totalLiquidityUSD).toFixed(4)) }} USD </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;" > >  &nbsp; Total Collateral &nbsp; : &nbsp; {{ getBalanceString(Number(walletLendingProtocolState.totalCollateralUSD).toFixed(4)) }} USD &nbsp; <span style="line-height: 24px;font-size: 14.5px; color:darkorange; display: contents; font-weight: 500;" >( LTV &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.ltv).toFixed(2) }} % ) </span>
+                        <p style="line-height: 18px; font-size: 13px; color: lawngreen; padding-bottom: 5px; float: left; margin-top: 2px; " > : Maximum <span style="line-height: 24px;font-size: 14.5px; color:dodgerblue; display: contents; font-weight: 500;" > {{  Number(walletLendingProtocolState.ltv).toFixed(2)  }} % </span> of your 
+                            current total {{ Number(walletLendingProtocolState.totalCollateralUSD).toFixed(4) }} USD  Collateral Balance, i.e total <span style="line-height: 24px;font-size: 14.5px; color:dodgerblue; display: contents; font-weight: 500;" >{{ (Number(walletLendingProtocolState.ltv) * Number(walletLendingProtocolState.totalCollateralUSD) / 100).toFixed(4) }} USD </span>
+                            can be Borrowed from SIGH Finance!  
+                        </p> 
+                    </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;"> >  &nbsp; Deposit Fee &nbsp; : &nbsp; 0 </td> 
+                </tr>
+                <!-- SIGH FINANCE : BORROWED BALANCES -->
+                <h3 style="font-size: 19px; color: aquamarine; margin-bottom: 4px; margin-top: 42px;"> SIGH FINANCE : BORROWED BALANCES </h3>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;"> >  &nbsp; Available Borrows &nbsp; : &nbsp; {{ getBalanceString(Number(walletLendingProtocolState.availableBorrowsUSD).toFixed(4)) }} USD </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;" > >  &nbsp; Total Value Borrowed &nbsp; : &nbsp; {{ getBalanceString(Number(walletLendingProtocolState.totalBorrowsUSD).toFixed(4)) }} USD </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;"> >  &nbsp; Borrowing Fee &nbsp; : &nbsp; {{ getBalanceString(Number(walletLendingProtocolState.totalFeesUSD).toFixed(4)) }} USD </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;"> >  &nbsp; Liquidation Threshold &nbsp; : &nbsp; <span style="line-height: 24px;font-size: 13.5px; color:darkorange; display: contents; font-weight: 500;" > {{ Number(walletLendingProtocolState.currentLiquidationThreshold).toFixed(2) }} % </span>
+                        <p style="line-height: 18px; font-size: 13px; color: lawngreen; padding-bottom: 5px; float: left; margin-top: 2px; " > : The Value of your borrowed balances should not cross <span style="line-height: 24px;font-size: 13.5px; color:red; display: contents; font-weight: 400;" >  {{  Number(walletLendingProtocolState.currentLiquidationThreshold).toFixed(2)  }} % </span> of your 
+                            current total <span style="line-height: 24px;font-size: 13.5px; color:lawngreen; display: contents; font-weight: 400;" >  {{ Number(walletLendingProtocolState.totalCollateralUSD).toFixed(4) }} USD  Collateral Balance </span>,  i.e total <span style="line-height: 24px;font-size: 13.5px; color:red; display: contents; font-weight: 400;" >  {{ (Number(walletLendingProtocolState.currentLiquidationThreshold) * Number(walletLendingProtocolState.totalCollateralUSD) / 100).toFixed(4) }} USD </span>
+                            or else you can be Liquidated!  
+                        </p> 
+                    </td> 
+                </tr>
+                <tr>
+                    <td style="font-size: 14px !important; padding-top:5px;">>  &nbsp; Health Factor &nbsp; : &nbsp; {{ Number(walletLendingProtocolState.healthFactor).toFixed(4) }} 
+                        <p style="line-height: 18px; font-size: 13px; color: gold; padding-right: 15px; float: left;" > 
+                            : Health Factor is calculated as the fraction between your Liquidation Threshold and your current active borrows! <br>
+                            : It Should <span style="line-height: 24px;font-size: 13.5px; color:red; display: contents; font-weight: 400;" > never be less than 1 </span> or else you will be subject to Liquidations!
+                        </p>     
+                    </td>
+            </tr>
+            </table>
+
+
+        </fieldset>
+    </div>
+
+
+
+    
+    <!-- Buttons -->
+        <div class="center" style=" margin: 10px auto; display: block;" >
+            <img v-if="showLoader" style="width: 11%; padding-right:11px" src="https://image.ibb.co/dc02hd/30.gif" />
+            <button v-else class="uk-button " style="background-color: darkred;"  @click="refresh()">Refresh</button>
+            <button class="uk-button " v-if="displayInUSD" style="background-color: darkblue;" @click="toggleTable()">Toggle To ETH </button>
+            <button class="uk-button " v-if="!displayInUSD" style="background-color: darkblue;" @click="toggleTable()">Toggle To USD </button>
+            <button class="uk-button " v-if="!displayInString" style="background-color: darkblue;" @click="toggleTableString()">Display as String </button>
+            <button class="uk-button " v-if="displayInString" style="background-color: darkblue;" @click="toggleTableString()">Display as Numbers </button>
+        </div>
+
+</div>

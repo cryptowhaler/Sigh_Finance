@@ -7,7 +7,7 @@ import TabBar from '@/components/TabBar/TabBar.vue';
 import EventBus, { EventNames, } from '@/eventBuses/default';
 
 // INDIVIDUAL TABS 
-import Balance from './Balance/Balance.vue';
+import WalletPortfolio from './WalletPortfolio/WalletPortfolio.vue';
 import Lending from './Lending/Lending.vue';
 import Streaming from './Streaming/Streaming.vue';
 import InterestRates from './InterestRates/InterestRates.vue';
@@ -19,7 +19,7 @@ export default {
 
   components: {
     TabBar,           // TAB-BAR : We emit events on tabBarEventBus (defined as vue component below in data() ) to change the tab
-    Balance,
+    WalletPortfolio,
     Lending,         
     Streaming,
     InterestRates,
@@ -30,8 +30,8 @@ export default {
     return {
       activeTab: 'Lending',
       tabs: {
-        walletNotConnectedTabs: ['Lending','Streaming','Stake SIGH','Balance'], // ,'Interest Rates'
-        walletConnectedTabs: ['Lending','Streaming','Stake SIGH','Balance'],    // ,'Interest Rates'
+        walletNotConnectedTabs: ['Lending','Streaming','Stake SIGH','Portfolio'], // ,'Interest Rates'
+        walletConnectedTabs: ['Lending','Streaming','Stake SIGH','Portfolio'],    // ,'Interest Rates'
       },
       height: 0,
       tabBarEventBus: new Vue(),
@@ -48,7 +48,7 @@ export default {
 
   mounted() {
     // We emit an event for Tab Bar event Bus, to change the Tab
-    EventBus.$on(EventNames.userWalletConnected, () => this.tabBarEventBus.$emit('change-active-tab', 'Balance'));
+    EventBus.$on(EventNames.userWalletConnected, () => this.tabBarEventBus.$emit('change-active-tab', 'Lending'));
     EventBus.$on(EventNames.userWalletDisconnected, this.userWalletDisconnectedListener);
     this.height = this.$refs.tradePane.clientHeight;
   },
@@ -57,7 +57,7 @@ export default {
     activeTabChange(activeTab) {
       this.activeTab = activeTab;
       let el = document.getElementsByClassName('trade-pane-content')[0];
-      if (activeTab === 'Balance') {
+      if (activeTab === 'Portfolio') {
         el.style.height = 'calc(100%)';
       } 
       else {

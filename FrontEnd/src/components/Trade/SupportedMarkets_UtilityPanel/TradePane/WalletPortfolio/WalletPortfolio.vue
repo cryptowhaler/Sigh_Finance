@@ -22,13 +22,14 @@ export default {
 
   data() {
     return {
-      activeTab: 'Total Balance (Lending)',
-      tabs: [ 'Total Balance (Lending)','Your SIGH Balances'],
+      activeTab: 'Portfolio Balances',
+      tabs: [ 'Portfolio Balances','Your SIGH Balances'],
       height: 0,
-      preActive:'Total Balance (Lending)',
+      preActive:'Portfolio Balances',
 
       walletInstrumentStatesArray: [],  // Wallet - Instrument States
       displayInUSD: false,
+      displayStrings: true,
       showLoader: false,
     };
   },
@@ -54,8 +55,12 @@ export default {
 
     ...mapActions(['refresh_User_Instrument_State']),
 
-    toggleTable() {
+    switchUSD() {
       this.displayInUSD = !this.displayInUSD;
+    },
+
+    switchStrings() {
+      this.displayStrings = !this.displayStrings;
     },
 
     activeTabChange(activeTab) {

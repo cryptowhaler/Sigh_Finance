@@ -1,0 +1,67 @@
+<div id="lending-trade-tab"  class="tikertab-content"> 
+    <div class="sv-table-wrapper ticker-table cs-table-1">
+
+        <table class="sv-table display nowrap" style="width:100% border: aliceblue solid 1px; margin-top: 51px; margin-bottom: 15px;" data-scroll-y="21px">
+            <thead class="uk-visible">
+                <tr>
+                    <th class="uk-text-center">  <span style="color:tomato; font-weight: 700; font-size:14px;"> MARKET </span> </th>
+                    <th class="uk-text-center"> <span style="color:lawngreen; font-weight: 700; font-size:14px;"> DEPOSITS </span> </th>
+                    <th class="uk-text-center"> <span style="color:darkturquoise; font-weight: 700; font-size:14px;"> BORROWS </span> </th>
+                    <th class="uk-text-center"> <span style="color:yellow; font-weight: 700; font-size:14px;"> &#127806; $SIGH  &#127806; </span> </th>
+                </tr>
+            </thead>
+            <div id="simpleBarContainer" style="border: aliceblue solid 1px;" data-simplebar data-simplebar-auto-hide="false">
+            <tbody>
+            <tr v-if="!displayInUSD && displayStrings" v-for="userInstrumentBalance in walletInstrumentStatesArray ">
+                <td class="uk-text-center c-white" style="line-height: 2.4; font-size: 15px !important; font-weight: 500 !important;" >{{ userInstrumentBalance.symbol }}</td>
+                <td class="uk-text-center c-white" style="line-height: 1.9; font-size: 13.5px !important; font-weight: 400 !important; padding-bottom: 5px; padding-top: 5px;" >{{ getBalanceString(Number(userInstrumentBalance.userDepositedBalance).toFixed(2)) }} <br> <span style="color:lawngreen; font-weight: 400; font-size:13.5px;"> {{ Number(userInstrumentBalance.liquidityRate).toFixed(2) }} % APY </span> </td>
+                <td class="uk-text-center c-white" style="line-height: 1.9;  font-size: 13.5px !important; font-weight: 400 !important;" >{{ getBalanceString(Number(userInstrumentBalance.currentBorrowBalance).toFixed(2))  }}  <br> <span style="color:darkturquoise; font-weight: 400; font-size:13.5px;"> {{ Number(userInstrumentBalance.borrowRate).toFixed(2) }} % APY </span> </td>
+                <td class="uk-text-center c-white" style="line-height: 1.9; font-size: 13.5px !important; font-weight: 400 !important;" > 0 <br> <span style="color:yellow; font-weight: 500; font-size:13.5px;">  0 % APY &#127806; </span>  </td>
+            </tr>
+            <tr v-if="displayInUSD && displayStrings" v-for="userInstrumentBalance in walletInstrumentStatesArray ">
+                <td class="uk-text-center c-white" style="line-height: 2.4; font-size: 15px !important; font-weight: 500 !important;" >{{ userInstrumentBalance.symbol }}</td>
+                <td class="uk-text-center c-white" style="line-height: 1.9; font-size: 13.5px !important; font-weight: 400 !important; padding-bottom: 5px; padding-top: 5px;" >{{ getBalanceString(Number(userInstrumentBalance.userDepositedBalanceWorth).toFixed(2)) }} USD  <br> <span style="color:lawngreen; font-weight: 400; font-size:13.5px;"> {{ Number(userInstrumentBalance.liquidityRate).toFixed(2) }} % APY </span> </td>
+                <td class="uk-text-center c-white" style="line-height: 1.9;  font-size: 13.5px !important; font-weight: 400 !important;" >{{ getBalanceString(Number(userInstrumentBalance.currentBorrowBalanceWorth).toFixed(2)) }} USD  <br> <span style="color:darkturquoise; font-weight: 400; font-size:13.5px;"> {{ Number(userInstrumentBalance.borrowRate).toFixed(2) }} % APY </span> </td>
+                <td class="uk-text-center c-white" style="line-height: 1.9; font-size: 13.5px !important; font-weight: 400 !important;" > 0 <br> <span style="color:yellow; font-weight: 500; font-size:13.5px;"> 0 % APY &#127806; </span>  </td>
+            </tr>
+            <tr v-if="!displayInUSD && !displayStrings" v-for="userInstrumentBalance in walletInstrumentStatesArray ">
+                <td class="uk-text-center c-white" style="line-height: 2.4; font-size: 15px !important; font-weight: 500 !important;" >{{ userInstrumentBalance.symbol }}</td>
+                <td class="uk-text-center c-white" style="line-height: 1.9; font-size: 13.5px !important; font-weight: 400 !important; padding-bottom: 5px; padding-top: 5px;" >{{ getBalanceString(Number(userInstrumentBalance.userDepositedBalance).toFixed(2)) }} <br> <span style="color:lawngreen; font-weight: 400; font-size:13.5px;"> {{ Number(userInstrumentBalance.liquidityRate).toFixed(2) }} % APY </span> </td>
+                <td class="uk-text-center c-white" style="line-height: 1.9;  font-size: 13.5px !important; font-weight: 400 !important;" >{{ getBalanceString(Number(userInstrumentBalance.currentBorrowBalance).toFixed(2))  }}  <br> <span style="color:darkturquoise; font-weight: 400; font-size:13.5px;"> {{ Number(userInstrumentBalance.borrowRate).toFixed(2) }} % APY </span> </td>
+                <td class="uk-text-center c-white" style="line-height: 1.9; font-size: 13.5px !important; font-weight: 400 !important;" > 0 <br> <span style="color:yellow; font-weight: 500; font-size:13.5px;">  0 % APY &#127806; </span>  </td>
+            </tr>
+            <tr v-if="displayInUSD && !displayStrings" v-for="userInstrumentBalance in walletInstrumentStatesArray ">
+                <td class="uk-text-center c-white" style="line-height: 2.4; font-size: 15px !important; font-weight: 500 !important;" >{{ userInstrumentBalance.symbol }}</td>
+                <td class="uk-text-center c-white" style="line-height: 1.9; font-size: 13.5px !important; font-weight: 400 !important; padding-bottom: 5px; padding-top: 5px;" >{{ getBalanceString(Number(userInstrumentBalance.userDepositedBalanceWorth).toFixed(2)) }} USD  <br> <span style="color:lawngreen; font-weight: 400; font-size:13.5px;"> {{ Number(userInstrumentBalance.liquidityRate).toFixed(2) }} % APY </span> </td>
+                <td class="uk-text-center c-white" style="line-height: 1.9;  font-size: 13.5px !important; font-weight: 400 !important;" >{{ getBalanceString(Number(userInstrumentBalance.currentBorrowBalanceWorth).toFixed(2)) }} USD  <br> <span style="color:darkturquoise; font-weight: 400; font-size:13.5px;"> {{ Number(userInstrumentBalance.borrowRate).toFixed(2) }} % APY </span> </td>
+                <td class="uk-text-center c-white" style="line-height: 1.9; font-size: 13.5px !important; font-weight: 400 !important;" > 0 <br> <span style="color:yellow; font-weight: 500; font-size:13.5px;"> 0 % APY &#127806; </span>  </td>
+            </tr>
+
+            </tbody>
+            </div>
+        </table>
+
+        <div class="center" style="padding-top: 17px;">
+            <img v-if="showLoader" style="width: 17%; padding-right:24px;" src="https://image.ibb.co/dc02hd/30.gif" />
+            <button v-else class="uk-button uk-button-green" style="padding: 0 17px; background:darkblue; margin-right: 37px;"  @click="refresh()">Refresh</button>
+
+            <button v-if="!displayStrings" class="uk-button uk-button-green" style="padding: 0 17px; background:darkblue; margin-right: 37px;"  @click="switchStrings()">Display Strings</button>
+            <button v-if="displayStrings" class="uk-button uk-button-green" style="padding: 0 17px; background:darkblue; margin-right: 37px;"  @click="switchStrings()">Display Numbers</button>
+            <button v-if="!displayInUSD" class="uk-button uk-button-green" style="padding: 0 17px; background:darkblue;"  @click="switchUSD()">Switch To USD</button>
+            <button v-if="displayInUSD" class="uk-button uk-button-green" style="padding: 0 17px; background:darkblue;"  @click="switchUSD()">Switch To Quantity</button>
+        </div>
+
+        <br>
+
+
+        <div class="cs-tab-1 uk-position-relative" style=" padding-left: 30px; padding-right: 30px; padding-bottom: 30px;  padding-top: 30px;">
+            <tab-bar :mobileDropdown=false marketDropdown="false" :tabs=tabs @tab-change="activeTabChange" />
+        
+                <keep-alive>
+                    <lendingInfo v-if="activeTab === 'Portfolio Balances'" />
+                    <sighBalance v-if="activeTab === 'Your SIGH Balances'" />
+                </keep-alive>
+    
+        </div>
+    </div>
+</div>

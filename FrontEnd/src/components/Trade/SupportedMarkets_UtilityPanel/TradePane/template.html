@@ -13,10 +13,10 @@
             </div>
             
             <keep-alive>
-                <Balance v-if="activeTab === 'Balance'"  />
-                <Lending v-if="activeTab === 'Lending'"    />
-                <Streaming v-if="activeTab === 'Streaming'"   />
-                <StakeSIGH v-if="activeTab === 'Stake SIGH'"  />
+                <WalletPortfolio v-if="activeTab === 'Portfolio' "  />
+                <Lending v-if="activeTab === 'Lending' "/>
+                <Streaming v-if="activeTab === 'Streaming' "/>
+                <StakeSIGH v-if="activeTab === 'Stake SIGH' "/>
                 <!-- <InterestRates v-if="activeTab === 'Interest Rates'"  /> -->
             </keep-alive>
         </div>
