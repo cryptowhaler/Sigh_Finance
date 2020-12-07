@@ -54,7 +54,7 @@ contract DefaultInstrumentInterestRateStrategy is I_InstrumentInterestRateStrate
         variableRateSlope2 = _variableRateSlope2;
         stableRateSlope1 = _stableRateSlope1;
         stableRateSlope2 = _stableRateSlope2;
-        sighPayPercent = _sighPayPercent;                // 0.1 * 10^27 represents 10%
+        sighPayPercent = _sighPayPercent;                // 10 * 10^25 represents 10%
         // instrument = _instrument;
     }
 

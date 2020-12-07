@@ -53,7 +53,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
     * @param _referral the referral number of the action
     * @param _timestamp the timestamp of the action
     **/
-    event Deposit( address indexed _instrument, address indexed _user, uint256 _amount, uint16 _referral, uint256 _timestamp);
+    event Deposit( address indexed _instrument, address indexed _user, uint256 _amount, uint256 depositFee uint16 _referral, uint256 _timestamp);
 
     /**
     * @dev emitted during a redeem action.
@@ -262,12 +262,17 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
     {
         ITokenInterface iToken = ITokenInterface(core.getInstrumentITokenAddress(_instrument));
         bool isFirstDeposit = iToken.balanceOf(msg.sender) == 0;
+        bool isETH = EthAddressLib.ethAddress() == _instrument;
 
-        core.updateStateOnDeposit(_instrument, msg.sender, _amount, isFirstDeposit);
-        iToken.mintOnDeposit(msg.sender, _amount);                                          //minting IToken to user 1:1 with the specific exchange rate
-        core.transferToReserve.value(msg.value)(_instrument, msg.sender, _amount);          //transfer to the core contract
+        uint256 depositFee = feeProvider.calculateDepositFee(msg.sender, _amount);
+        require(depositFee > 0, "The amount to deposit is too small");
+        core.transferToFeeCollectionAddress.value( isETH ? depositFee : 0)( _instrument, msg.sender, depositFee,  addressesProvider.getSIGHFinanceFeeCollector() );
 
-        emit Deposit(_instrument, msg.sender, _amount, _referralCode, block.timestamp);
+        core.updateStateOnDeposit(_instrument, msg.sender, _amount.sub(depositFee), isFirstDeposit);
+        iToken.mintOnDeposit(msg.sender, _amount.sub(depositFee));                                          //minting IToken to user 1:1 with the specific exchange rate
+        core.transferToReserve.value(msg.value)(_instrument, msg.sender, _amount.sub(depositFee));          //transfer to the core contract
+
+        emit Deposit(_instrument, msg.sender, _amount.sub(depositFee), depositFee , _referralCode, block.timestamp);
 
     }
 
@@ -603,6 +608,12 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
         core.updateStateOnFlashLoan( _instrument, availableLiquidityBefore, amountFee.sub(protocolFee), protocolFee );
         emit FlashLoan(_receiver, _instrument, _amount, amountFee, protocolFee, block.timestamp);
     }
+
+    function transferSIGHPayToStakingContract()  public nonReentrant onlyActiveInstrument(_instrument) {
+            core.transferSIGHPayToStakingContract();
+    }
+
+
 
 // ####################################################################
 // ######  FUNCTIONS TO FETCH DATA FROM THE CORE CONTRACT  ############

@@ -178,23 +178,12 @@ interface ILendingPoolCore {
     function InstrumentActivationSwitch(address _instrument , bool toBeActivated) external ;
     function InstrumentFreezeSwitch(address _instrument , bool toBeActivated) external;
     function updateInstrumentCollateralParameters(address _instrument, uint256 _ltv, uint256 _threshold, uint256 _bonus) external;
-    
-    // function enableBorrowingOnInstrument(address _instrument)  external ;
-    // function disableBorrowingOnInstrument(address _instrument) external ;
-
-
-    // function enableInstrumentStableBorrowRate(address _instrument) external ;
-    // function disableInstrumentStableBorrowRate(address _instrument) external ;
-
-    // function activateInstrument(address _instrument) external ;
-    // function deactivateInstrument(address _instrument) external ;
-
-    // function freezeInstrument(address _instrument) external ;
-    // function unfreezeInstrument(address _instrument) external ;
-
-    // function setInstrumentBaseLTVasCollateral(address _instrument, uint256 _ltv) external ;
-    // function setInstrumentLiquidationThreshold(address _instrument, uint256 _threshold) external ;
-    // function setInstrumentLiquidationBonus(address _instrument, uint256 _bonus) external  ;
     function setInstrumentDecimals(address _instrument, uint256 _decimals) external ;
+
+// ############################################################################################################
+// ################   FUNCTION TO DISTRIBUTE COLLECTED INTEREST TO STAKING CONTRACT ADDRESS    ################
+// ############################################################################################################
+
+    function transferSIGHPayToStakingContract() external ;
 
 }

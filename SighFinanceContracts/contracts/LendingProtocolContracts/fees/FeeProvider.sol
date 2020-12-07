@@ -31,6 +31,7 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
     */
     function initialize(address _addressesProvider) public initializer {
         originationFeePercentage = 0.05 * 1e18;           /// origination fee is set as default as 500 basis points of the loan amount (0.05%)
+        depositFeePercentage = 0.05 * 1e18;           /// origination fee is set as default as 500 basis points of the loan amount (0.05%)
     }
 
 // ############################################################################################################################
@@ -47,6 +48,10 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
     **/
     function calculateLoanOriginationFee(address _user, uint256 _amount) external view returns (uint256) {
         return _amount.wadMul(originationFeePercentage);
+    }
+
+    function calculateDepositFee(address _user, uint256 _amount) external view returns (uint256) {
+        return _amount.wadMul(depositFeePercentage);
     }
 
     /**

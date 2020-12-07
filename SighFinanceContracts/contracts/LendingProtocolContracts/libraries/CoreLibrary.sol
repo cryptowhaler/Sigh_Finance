@@ -54,7 +54,8 @@ library CoreLibrary {
 
         uint256 lastVariableBorrowCumulativeIndex;      // Variable Borrow Index --> Expressed in ray
         uint256 lastLiquidityCumulativeIndex;           // Liquidity Index --> Expressed in ray
-        uint256 lastSIGHPayCumulativeIndex;           // Liquidity Index --> Expressed in ray
+        uint256 lastSIGHPayCumulativeIndex;             // SIGH PAY (Accured) Index --> Expressed in ray
+        uint256 lastSIGHPayPaidIndex;             // SIGH PAY (PAID) Index --> Expressed in ray
 
         uint256 baseLTVasCollateral;                    // LTV (Loan to Volume) of the instrument --> Expressed in percentage (0-100)
 
@@ -89,6 +90,7 @@ library CoreLibrary {
 
         if (_instrument.lastSIGHPayCumulativeIndex == 0) {
             _instrument.lastSIGHPayCumulativeIndex = WadRayMath.ray();
+            _instrument.lastSIGHPayPaidIndex =  WadRayMath.ray();
         }
 
         _instrument.iTokenAddress = _iTokenAddress;
@@ -175,12 +177,13 @@ library CoreLibrary {
             _instrument.lastLiquidityCumulativeIndex = cumulatedLiquidityInterest.rayMul( _instrument.lastLiquidityCumulativeIndex );
 
             uint256 cumulatedSIGHPayInterest = calculateLinearInterest(  _instrument.currentSighPayRate, _instrument.lastUpdateTimestamp );
-            _instrument.lastSIGHPayCumulativeIndex = cumulatedLiquidityInterest.rayMul( _instrument.lastSIGHPayCumulativeIndex );
+            _instrument.lastSIGHPayCumulativeIndex = cumulatedSIGHPayInterest.rayMul( _instrument.lastSIGHPayCumulativeIndex );
 
             uint256 cumulatedVariableBorrowInterest = calculateCompoundedInterest(_instrument.currentVariableBorrowRate, _instrument.lastUpdateTimestamp);
             _instrument.lastVariableBorrowCumulativeIndex = cumulatedVariableBorrowInterest.rayMul(_instrument.lastVariableBorrowCumulativeIndex );
         }
     }
+
 
     /**
     * @dev accumulates a predefined amount of asset to the instrument as a fixed, one time income. Used for example to accumulate the flashloan fee to the instrument, and spread it through the depositors.
@@ -297,13 +300,17 @@ library CoreLibrary {
         return compoundedBalance;
     }
 
-
-    // AMOUNT ACCURED FOR SIGH PAY 
+    /**
+    * @dev returns the ongoing normalized income for the instrument.
+    * a value of 1e27 means there is no income. As time passes, the income is accrued.
+    * A value of 2*1e27 means that the income of the instrument is double the initial amount.
+    * @param _instrument the instrument object
+    * @return the normalized income. expressed in ray
+    **/
     function getNormalizedSIGHPay(CoreLibrary.InstrumentData storage _instrument) internal view returns (uint256) {
         uint256 cumulated = calculateLinearInterest( _instrument.currentSighPayRate, _instrument.lastUpdateTimestamp).rayMul(_instrument.lastSIGHPayCumulativeIndex);
         return cumulated;
     }
-
     /**
     * @dev returns the ongoing normalized income for the instrument.
     * a value of 1e27 means there is no income. As time passes, the income is accrued.

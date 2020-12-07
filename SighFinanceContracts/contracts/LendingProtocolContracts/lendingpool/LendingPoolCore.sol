@@ -54,7 +54,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @param liquidityIndex the new liquidity index
     * @param variableBorrowIndex the new variable borrow index
     **/
-    event InstrumentUpdated(  address indexed instrument,  uint256 liquidityRate,  uint256 stableBorrowRate,  uint256 variableBorrowRate, uint256 newSighPayRate,uint256 liquidityIndex, uint256 variableBorrowIndex );
+    event InstrumentUpdated(  address indexed instrument,  uint256 liquidityRate,  uint256 stableBorrowRate,  uint256 variableBorrowRate, uint256 newSighPayRate, uint256 liquidityIndex, uint256 variableBorrowIndex, uint256 sighPayIndex );
 
 // #######################
 // ###### MODIFIERS ######
@@ -1007,6 +1007,21 @@ contract LendingPoolCore is VersionedInitializable {
         return instrument.lastVariableBorrowCumulativeIndex;
     }
 
+    function getInstrumentSIGHPayCumulativeIndex(address _instrument) external view returns (uint256) {
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.lastSIGHPayCumulativeIndex;
+    }
+
+    function getInstrumentSIGHPayPaidIndex(address _instrument) external view returns (uint256) {
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.lastSIGHPayPaidIndex;
+    }
+
+    function getInstrumentSIGHPayRate(address _instrument) external view returns (uint256) {
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+        return instrument.currentSighPayRate;
+    }
+
     /**
     * @dev this function aggregates the configuration parameters of the instrument. It's used in the LendingPoolDataProvider specifically to save gas, and avoid multiple external contract calls to fetch the same data.
     * @param _instrument the _instrument address
@@ -1393,7 +1408,7 @@ contract LendingPoolCore is VersionedInitializable {
         instrument.currentSighPayRate = newSighPayRate;                 // SIGH PAY RATE
         instrument.lastUpdateTimestamp = uint40(block.timestamp);
 
-        emit InstrumentUpdated(  _instrument,  newLiquidityRate,  newStableRate,  newVariableRate, newSighPayRate, instrument.lastLiquidityCumulativeIndex,  instrument.lastVariableBorrowCumulativeIndex );
+        emit InstrumentUpdated(  _instrument,  newLiquidityRate,  newStableRate,  newVariableRate, newSighPayRate, instrument.lastLiquidityCumulativeIndex,  instrument.lastVariableBorrowCumulativeIndex, instrument.lastSIGHPayCumulativeIndex );
     }
 
     /**
@@ -1410,4 +1425,37 @@ contract LendingPoolCore is VersionedInitializable {
             receiver.transfer(_amount);
         }
     }
+
+// ############################################################################################################
+// ################   FUNCTION TO DISTRIBUTE COLLECTED INTEREST TO STAKING CONTRACT ADDRESS    ################
+// ############################################################################################################
+
+    /**
+    * @dev transfers to the $SIGH Staking Contract 
+    * @param _token the address of the token being transferred
+    * @param _amount the amount being transferred
+    **/
+    function transferSIGHPayToStakingContract() external onlyLendingPool { // address will be changed later
+        address payable receiver = address(uint160(addressesProvider.getSIGHFinanceFeeCollector()));
+        CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
+
+        // Cumulates the indexes
+        instrument.updateCumulativeIndexes();
+
+        uint256 totalLiquidity = getInstrumentTotalLiquidity();
+        uint256 _sighPayAccured = totalLiquidity.wadToRay().rayMul( instrument.getNormalizedSIGHPay() ).rayDiv( instrument.lastSIGHPayPaidIndex ).rayToWad();
+        // Update the SIGH PAY : Paid Index
+        instrument.lastSIGHPayPaidIndex = instrument.lastSIGHPayCumulativeIndex
+
+        if (_token != EthAddressLib.ethAddress()) {
+            ERC20(_token).safeTransfer(receiver, _sighPayAccured);
+        } else {
+            receiver.transfer(_sighPayAccured);
+        }
+
+        emit SIGH_PAY_Amount_Transferred( address(receiver), totalLiquidity, _sighPayAccured, instrument.lastSIGHPayPaidIndex , instrument.lastSIGHPayCumulativeIndex );
+    }
+
+
+
 }
