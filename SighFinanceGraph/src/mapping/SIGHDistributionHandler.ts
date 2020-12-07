@@ -92,10 +92,8 @@ export function handleInstrumentAdded(event: InstrumentAdded): void {
     // log.info('handleInstrumentAdded: 5st ',[])
 
     instrumentState.present_SIGH_Side = 'In-Active'
-    instrumentState.present_maxVolatilityLimitSuppliers = BigInt.fromI32(10).pow(18 as u8) 
-    instrumentState.present_maxVolatilityLimitSuppliersPercent = instrumentState.present_maxVolatilityLimitSuppliers.toBigDecimal().div( BigInt.fromI32(10).pow(16 as u8).toBigDecimal() )  
-    instrumentState.present_maxVolatilityLimitBorrowers = BigInt.fromI32(10).pow(18 as u8)
-    instrumentState.present_maxVolatilityLimitBorrowersPercent = instrumentState.present_maxVolatilityLimitBorrowers.toBigDecimal().div( BigInt.fromI32(10).pow(16 as u8).toBigDecimal() )  
+    instrumentState.maxVolatilityLimitSuppliersPercent = BigInt.fromI32(100).pow(18 as u8).toBigDecimal()
+    instrumentState.maxVolatilityLimitBorrowersPercent = BigInt.fromI32(100).pow(18 as u8).toBigDecimal()
 
     instrumentState.save()
 }
@@ -135,17 +133,17 @@ export function handlePriceSnapped(event: PriceSnapped): void {
     let instrumentState = Instrument.load(instrumentId)
 
     // CALCULATING TOTAL SIGH ACCURED FOR THE SNAPSHOT THAT JUST GOT COMPLETED
-    if (instrumentState.totalSIGHDistributionSnapshotsTaken > 0) {
-        let prevSighDistributionSnapshot = SIGH_Distribution_SnapShot.load( instrumentState.totalSIGHDistributionSnapshotsTaken.sub(1) )
+    if (instrumentState.totalSIGHDistributionSnapshotsTaken > BigInt.fromI32(0) ) {
+        let prevSighDistributionSnapshot = SIGH_Distribution_SnapShot.load( instrumentState.totalSIGHDistributionSnapshotsTaken.minus(BigInt.fromI32(1)).toString() )
         if (prevSighDistributionSnapshot.distribution_Side == 'In-Active' ) {
-            prevSighDistributionSnapshot.BorrowingSIGHAccuredDuringThisSnapshot = instrumentState.totalBorrowingSIGHAccured.sub(prevSighDistributionSnapshot.totalBorrowingSIGHAccuredBeforeThisSnapshot)
-            prevSighDistributionSnapshot.LiquiditySIGHAccuredDuringThisSnapshot = instrumentState.totalLiquiditySIGHAccured.sub(prevSighDistributionSnapshot.totalLiquiditySIGHAccuredBeforeThisSnapshot)
+            prevSighDistributionSnapshot.BorrowingSIGHAccuredDuringThisSnapshot = instrumentState.totalBorrowingSIGHAccured.minus(prevSighDistributionSnapshot.totalBorrowingSIGHAccuredBeforeThisSnapshot)
+            prevSighDistributionSnapshot.LiquiditySIGHAccuredDuringThisSnapshot = instrumentState.totalLiquiditySIGHAccured.minus(prevSighDistributionSnapshot.totalLiquiditySIGHAccuredBeforeThisSnapshot)
         }
         if (prevSighDistributionSnapshot.distribution_Side == 'Suppliers' ) {
-            prevSighDistributionSnapshot.LiquiditySIGHAccuredDuringThisSnapshot = instrumentState.totalLiquiditySIGHAccured.sub(prevSighDistributionSnapshot.totalLiquiditySIGHAccuredBeforeThisSnapshot)
+            prevSighDistributionSnapshot.LiquiditySIGHAccuredDuringThisSnapshot = instrumentState.totalLiquiditySIGHAccured.minus(prevSighDistributionSnapshot.totalLiquiditySIGHAccuredBeforeThisSnapshot)
         }
         if (prevSighDistributionSnapshot.distribution_Side == 'Borrowers' ) {
-            prevSighDistributionSnapshot.BorrowingSIGHAccuredDuringThisSnapshot = instrumentState.totalBorrowingSIGHAccured.sub(prevSighDistributionSnapshot.totalBorrowingSIGHAccuredBeforeThisSnapshot)
+            prevSighDistributionSnapshot.BorrowingSIGHAccuredDuringThisSnapshot = instrumentState.totalBorrowingSIGHAccured.minus(prevSighDistributionSnapshot.totalBorrowingSIGHAccuredBeforeThisSnapshot)
         }
         prevSighDistributionSnapshot.toBlockNumber = event.block.number
         prevSighDistributionSnapshot.save()
@@ -154,7 +152,7 @@ export function handlePriceSnapped(event: PriceSnapped): void {
     // CREATING AND CALCULATING VALUES FOR THE NEW (CURRENT) SNAPSHOT
     let sighDistributionSnapshot = create_SIGH_Distribution_SnapShot( instrumentState.totalSIGHDistributionSnapshotsTaken )
     sighDistributionSnapshot.instrumentAddress = instrumentId
-    instrumentState.totalSIGHDistributionSnapshotsTaken = instrumentState.totalSIGHDistributionSnapshotsTaken.plus(1);
+    instrumentState.totalSIGHDistributionSnapshotsTaken = instrumentState.totalSIGHDistributionSnapshotsTaken.plus(BigInt.fromI32(1));
 
     sighDistributionSnapshot.fromBlockNumber = event.block.number
     sighDistributionSnapshot.toBlockNumber = new BigInt(0)
@@ -179,7 +177,7 @@ export function handlePriceSnapped(event: PriceSnapped): void {
     sighDistributionSnapshot.prevPrice_USD = sighDistributionSnapshot.prevPrice_ETH.times(ETHPriceInUSD)
     sighDistributionSnapshot.openingPrice_USD = sighDistributionSnapshot.openingPrice_ETH.times(ETHPriceInUSD)
 
-    sighDistributionSnapshot.priceDifferenceETH = sighDistributionSnapshot.openingPrice_ETH.sub(sighDistributionSnapshot.prevPrice_ETH)
+    sighDistributionSnapshot.priceDifferenceETH = sighDistributionSnapshot.openingPrice_ETH.minus(sighDistributionSnapshot.prevPrice_ETH)
     sighDistributionSnapshot.priceDifferenceUSD = sighDistributionSnapshot.priceDifferenceETH.times(ETHPriceInUSD)
 
     sighDistributionSnapshot.maxVolatilityLimitSuppliersPercent = instrumentState.maxVolatilityLimitSuppliersPercent
@@ -202,7 +200,7 @@ export function handlePriceSnapped(event: PriceSnapped): void {
 export function handleInstrumentVolatilityCalculated(event: InstrumentVolatilityCalculated): void { 
     let instrumentId = event.params._Instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
-    let currentSighDistributionSnapshot = SIGH_Distribution_SnapShot.load( instrumentState.totalSIGHDistributionSnapshotsTaken.sub(1) ) 
+    let currentSighDistributionSnapshot = SIGH_Distribution_SnapShot.load( instrumentState.totalSIGHDistributionSnapshotsTaken.minus(BigInt.fromI32(1)).toString() ) 
 
     //  UPDATING $SIGH DISTRIBUTION SNAPSHOT
     currentSighDistributionSnapshot.total24HrVolatilityETH = event.params._total24HrVolatility.toBigDecimal().div(  (BigInt.fromI32(10).pow(18 as u8).toBigDecimal())  )
@@ -226,7 +224,7 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
     log.info("handleRefreshingSighSpeeds",[])
     let instrumentId = event.params._Instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
-    let currentSighDistributionSnapshot = SIGH_Distribution_SnapShot.load( instrumentState.totalSIGHDistributionSnapshotsTaken.sub(1) ) 
+    let currentSighDistributionSnapshot = SIGH_Distribution_SnapShot.load( instrumentState.totalSIGHDistributionSnapshotsTaken.minus(BigInt.fromI32(1)).toString() ) 
     
     instrumentState.present_SIGH_Suppliers_Speed_WEI = event.params.supplierSpeed
     instrumentState.present_SIGH_Suppliers_Speed = instrumentState.present_SIGH_Suppliers_Speed_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
@@ -262,30 +260,41 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
     log.info("handleRefreshingSighSpeeds : {} : {} : {} ",[instrumentState.name.toString(),instrumentState.present_SIGH_Side.toString(), BigInt.fromI32(event.params.side).toString() ] )
 
     // GETTING INSTRUMENT & SIGH PRICE IN ETH
-    let oracleAddress = instrumentState.oracle as Address
-    let oracleContract = PriceOracleGetter.bind( oracleAddress)
-    let InstrumentPriceETH = oracleContract.getAssetPrice( instrumentState.instrumentAddress as Address ).toBigDecimal()
-    let InstrumentPriceETHDecimals = oracleContract.getAssetPriceDecimals( instrumentState.instrumentAddress as Address ))
-    let InstrumentPriceETH = InstrumentPriceETH.div(  BigInt.fromI32(10).pow(InstrumentPriceETHDecimals as u8).toBigDecimal() )
-    let SIGHPriceETH = oracleContract.getAssetPrice(Address.fromString('0x6378a83c510ef3868b2e197da4a3245a05c1ecbe')).toBigDecimal()
-    let SIGHPriceETHDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x6378a83c510ef3868b2e197da4a3245a05c1ecbe'))
-    let SIGHPriceETH = SIGHPriceETH.div(  BigInt.fromI32(10).pow(SIGHPriceETHDecimals as u8).toBigDecimal() )
+        let oracleAddress = instrumentState.oracle as Address
+        let oracleContract = PriceOracleGetter.bind( oracleAddress)
+        let InstrumentPriceETH = BigDecimal.fromString('1')
+        if ( instrumentState.instrumentAddress as Address ==  Address.fromString('0x0000000000000000000000000000000000000000') ) {
+            InstrumentPriceETH = BigDecimal.fromString('1')
+        }
+        else {
+            InstrumentPriceETH = oracleContract.getAssetPrice( instrumentState.instrumentAddress as Address ).toBigDecimal()
+            let InstrumentPriceETHDecimals = oracleContract.getAssetPriceDecimals( instrumentState.instrumentAddress as Address )
+            InstrumentPriceETH = InstrumentPriceETH.div(  BigInt.fromI32(10).pow(InstrumentPriceETHDecimals as u8).toBigDecimal() )    
+        }
+        let SIGHPriceETH = BigDecimal.fromString('1')
+        if (event.block.number > BigInt.fromI32(22388773) ) {
+            log.info('if (event.block.number > BigInt.fromI32(22388773) )',[])
+            let SIGHPriceETH = oracleContract.getAssetPrice(Address.fromString('0x6378a83c510ef3868b2e197da4a3245a05c1ecbe')).toBigDecimal()
+            log.info('if (event.block.number > BigInt.fromI32(22388773) ) ::: {}',[SIGHPriceETH.toString()])
+            let SIGHPriceETHDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x6378a83c510ef3868b2e197da4a3245a05c1ecbe'))
+            SIGHPriceETH = SIGHPriceETH.div(  BigInt.fromI32(10).pow(SIGHPriceETHDecimals as u8).toBigDecimal() )    
+        }
 
     currentSighDistributionSnapshot.harvestValuePerBlockETH = currentSighDistributionSnapshot.harvestSpeedPerBlock.times(SIGHPriceETH)
     currentSighDistributionSnapshot.harvestValuePerBlockUSD = currentSighDistributionSnapshot.harvestValuePerBlockETH.times(instrumentState.ETHPriceInUSD)
 
-    currentSighDistributionSnapshot.harvestSpeedPerDay = currentSighDistributionSnapshot.harvestSpeedPerBlock.times(currentSighDistributionSnapshot.deltaBlocks24Hrs)
+    currentSighDistributionSnapshot.harvestSpeedPerDay = currentSighDistributionSnapshot.harvestSpeedPerBlock.times(currentSighDistributionSnapshot.deltaBlocks24Hrs.toBigDecimal())
     currentSighDistributionSnapshot.harvestValuePerDayETH = currentSighDistributionSnapshot.harvestSpeedPerDay.times(SIGHPriceETH)
     currentSighDistributionSnapshot.harvestValuePerDayUSD = currentSighDistributionSnapshot.harvestValuePerDayETH.times(instrumentState.ETHPriceInUSD)
 
-    currentSighDistributionSnapshot.harvestSpeedPerYear = currentSighDistributionSnapshot.harvestSpeedPerDay.times(BigInt.fromI32(365))
+    currentSighDistributionSnapshot.harvestSpeedPerYear = currentSighDistributionSnapshot.harvestSpeedPerDay.times(BigInt.fromI32(365).toBigDecimal())
     currentSighDistributionSnapshot.harvestValuePerYearETH = currentSighDistributionSnapshot.harvestSpeedPerYear.times(SIGHPriceETH)
     currentSighDistributionSnapshot.harvestValuePerYearUSD = currentSighDistributionSnapshot.harvestValuePerYearETH.times(instrumentState.ETHPriceInUSD)
 
     // Calculating Harvest APY : In-Active
     if (currentSighDistributionSnapshot.distribution_Side == 'In-Active' ) {
         if ( instrumentState.availableLiquidityUSD > BigDecimal.fromString('1') || instrumentState.totalCompoundedBorrowsUSD > BigDecimal.fromString('1') ) {
-            currentSighDistributionSnapshot.harvestAPY = currentSighDistributionSnapshot.harvestValuePerYearUSD.div( instrumentState.availableLiquidityUSD.add(instrumentState.totalCompoundedBorrowsUSD) )
+            currentSighDistributionSnapshot.harvestAPY = currentSighDistributionSnapshot.harvestValuePerYearUSD.div( instrumentState.availableLiquidityUSD.plus(instrumentState.totalCompoundedBorrowsUSD) )
         }
         else {
             currentSighDistributionSnapshot.harvestAPY = BigDecimal.fromString('0')
@@ -340,6 +349,17 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
     instrumentState.instrumentHarvestAdjustedPriceSuppliersUSD = instrumentState.instrumentHarvestAdjustedPriceSuppliersETH.times(instrumentState.ETHPriceInUSD)
     instrumentState.instrumentHarvestAdjustedPriceBorrowersUSD = instrumentState.instrumentHarvestAdjustedPriceBorrowersETH.times(instrumentState.ETHPriceInUSD)
 
+    instrumentState.present_harvestSpeedPerBlock = currentSighDistributionSnapshot.harvestSpeedPerBlock
+    instrumentState.present_harvestValuePerBlockUSD = currentSighDistributionSnapshot.harvestValuePerBlockUSD
+    instrumentState.present_harvestSpeedPerDay = currentSighDistributionSnapshot.harvestSpeedPerDay
+    instrumentState.present_harvestValuePerDayUSD = currentSighDistributionSnapshot.harvestValuePerDayUSD
+    instrumentState.present_harvestSpeedPerYear = currentSighDistributionSnapshot.harvestSpeedPerYear
+    instrumentState.present_harvestValuePerYearUSD = currentSighDistributionSnapshot.harvestValuePerYearUSD
+
+    instrumentState.present_harvestAPY = currentSighDistributionSnapshot.harvestAPY
+    instrumentState.present_suppliersHarvestAPY = currentSighDistributionSnapshot.suppliersHarvestAPY
+    instrumentState.present_borrowersHarvestAPY = currentSighDistributionSnapshot.borrowersHarvestAPY
+
     currentSighDistributionSnapshot.save()
 
     updateInstrumentHarvestAverages(instrumentId)
@@ -375,8 +395,8 @@ export function handleMaxSIGHSpeedCalculated(event: MaxSIGHSpeedCalculated): voi
 // ###########   UPDATING HARVEST METRICS FOR INSTRUMENT   ##########
 // ##################################################################
 
-function updateInstrumentHarvestAverages(ID: BigInt): void {
-    let instrumentState = Instrument.load(instrumentId)
+function updateInstrumentHarvestAverages(ID: string): void {
+    let instrumentState = Instrument.load(ID)
 
     if (instrumentState.totalSIGHDistributionSnapshotsTaken == BigInt.fromI32(1) ) {
         // DAILY AVERAGES
@@ -410,32 +430,32 @@ function updateInstrumentHarvestAverages(ID: BigInt): void {
     }
     else {
         // DAILY AVERAGES
-        instrumentState.average24SnapsHarvestSpeedPerBlock = instrumentState.average24SnapsHarvestSpeedPerBlock.times(BigInt.fromString('23')).plus(instrumentState.present_harvestSpeedPerBlock).div(BigInt.fromString('24'))
-        instrumentState.average24SnapsHarvestValuePerBlockUSD = instrumentState.average24SnapsHarvestValuePerBlockUSD.times(BigInt.fromString('23')).plus(instrumentState.present_harvestValuePerBlockUSD).div(BigInt.fromString('24'))
+        instrumentState.average24SnapsHarvestSpeedPerBlock = instrumentState.average24SnapsHarvestSpeedPerBlock.times(BigInt.fromI32(23).toBigDecimal()).plus(instrumentState.present_harvestSpeedPerBlock).div(BigInt.fromI32(24).toBigDecimal())
+        instrumentState.average24SnapsHarvestValuePerBlockUSD = instrumentState.average24SnapsHarvestValuePerBlockUSD.times(BigInt.fromI32(23).toBigDecimal()).plus(instrumentState.present_harvestValuePerBlockUSD).div(BigInt.fromI32(24).toBigDecimal())
 
-        instrumentState.average24SnapsHarvestSpeedPerDay = instrumentState.average24SnapsHarvestSpeedPerDay.times(BigInt.fromString('23')).plus(instrumentState.present_harvestSpeedPerDay).div(BigInt.fromString('24'))
-        instrumentState.average24SnapsHarvestValuePerDayUSD = instrumentState.average24SnapsHarvestValuePerDayUSD.times(BigInt.fromString('23')).plus(instrumentState.present_harvestValuePerDayUSD).div(BigInt.fromString('24'))
+        instrumentState.average24SnapsHarvestSpeedPerDay = instrumentState.average24SnapsHarvestSpeedPerDay.times(BigInt.fromI32(23).toBigDecimal()).plus(instrumentState.present_harvestSpeedPerDay).div(BigInt.fromI32(24).toBigDecimal())
+        instrumentState.average24SnapsHarvestValuePerDayUSD = instrumentState.average24SnapsHarvestValuePerDayUSD.times(BigInt.fromI32(23).toBigDecimal()).plus(instrumentState.present_harvestValuePerDayUSD).div(BigInt.fromI32(24).toBigDecimal())
 
-        instrumentState.average24SnapsHarvestSpeedPerYear = instrumentState.average24SnapsHarvestSpeedPerYear.times(BigInt.fromString('23')).plus(instrumentState.present_harvestSpeedPerYear).div(BigInt.fromString('24'))
-        instrumentState.average24SnapsHarvestValuePerYearUSD = instrumentState.average24SnapsHarvestValuePerYearUSD.times(BigInt.fromString('23')).plus(instrumentState.present_harvestValuePerYearUSD).div(BigInt.fromString('24'))
+        instrumentState.average24SnapsHarvestSpeedPerYear = instrumentState.average24SnapsHarvestSpeedPerYear.times(BigInt.fromI32(23).toBigDecimal()).plus(instrumentState.present_harvestSpeedPerYear).div(BigInt.fromI32(24).toBigDecimal())
+        instrumentState.average24SnapsHarvestValuePerYearUSD = instrumentState.average24SnapsHarvestValuePerYearUSD.times(BigInt.fromI32(23).toBigDecimal()).plus(instrumentState.present_harvestValuePerYearUSD).div(BigInt.fromI32(24).toBigDecimal())
 
-        instrumentState.average24SnapsHarvestAPY = instrumentState.average24SnapsHarvestAPY.times(BigInt.fromString('23')).plus(instrumentState.present_harvestAPY).div(BigInt.fromString('24'))
-        instrumentState.average24SnapsSuppliersHarvestAPY = instrumentState.average24SnapsSuppliersHarvestAPY.times(BigInt.fromString('23')).plus(instrumentState.present_suppliersHarvestAPY).div(BigInt.fromString('24'))
-        instrumentState.average24SnapsBorrowersHarvestAPY = instrumentState.average24SnapsBorrowersHarvestAPY.times(BigInt.fromString('23')).plus(instrumentState.present_borrowersHarvestAPY).div(BigInt.fromString('24'))
+        instrumentState.average24SnapsHarvestAPY = instrumentState.average24SnapsHarvestAPY.times(BigInt.fromI32(23).toBigDecimal()).plus(instrumentState.present_harvestAPY).div(BigInt.fromI32(24).toBigDecimal())
+        instrumentState.average24SnapsSuppliersHarvestAPY = instrumentState.average24SnapsSuppliersHarvestAPY.times(BigInt.fromI32(23).toBigDecimal()).plus(instrumentState.present_suppliersHarvestAPY).div(BigInt.fromI32(24).toBigDecimal())
+        instrumentState.average24SnapsBorrowersHarvestAPY = instrumentState.average24SnapsBorrowersHarvestAPY.times(BigInt.fromI32(23).toBigDecimal()).plus(instrumentState.present_borrowersHarvestAPY).div(BigInt.fromI32(24).toBigDecimal())
 
         // MONTHLY AVERAGES
-        instrumentState.averageMonthlySnapsHarvestSpeedPerBlock = instrumentState.averageMonthlySnapsHarvestSpeedPerBlock.times(BigInt.fromString('743')).plus(instrumentState.present_harvestSpeedPerBlock).div(BigInt.fromString('744'))
-        instrumentState.averageMonthlySnapsHarvestValuePerBlockUSD = instrumentState.averageMonthlySnapsHarvestValuePerBlockUSD.times(BigInt.fromString('743')).plus(instrumentState.present_harvestValuePerBlockUSD).div(BigInt.fromString('744'))
+        instrumentState.averageMonthlySnapsHarvestSpeedPerBlock = instrumentState.averageMonthlySnapsHarvestSpeedPerBlock.times(BigInt.fromI32(743).toBigDecimal()).plus(instrumentState.present_harvestSpeedPerBlock).div(BigInt.fromI32(744).toBigDecimal())
+        instrumentState.averageMonthlySnapsHarvestValuePerBlockUSD = instrumentState.averageMonthlySnapsHarvestValuePerBlockUSD.times(BigInt.fromI32(743).toBigDecimal()).plus(instrumentState.present_harvestValuePerBlockUSD).div(BigInt.fromI32(744).toBigDecimal())
 
-        instrumentState.averageMonthlySnapsHarvestSpeedPerDay = instrumentState.averageMonthlySnapsHarvestSpeedPerDay.times(BigInt.fromString('743')).plus(instrumentState.present_harvestSpeedPerDay).div(BigInt.fromString('744'))
-        instrumentState.averageMonthlySnapsHarvestValuePerDayUSD = instrumentState.averageMonthlySnapsHarvestValuePerDayUSD.times(BigInt.fromString('743')).plus(instrumentState.present_harvestValuePerDayUSD).div(BigInt.fromString('744'))
+        instrumentState.averageMonthlySnapsHarvestSpeedPerDay = instrumentState.averageMonthlySnapsHarvestSpeedPerDay.times(BigInt.fromI32(743).toBigDecimal()).plus(instrumentState.present_harvestSpeedPerDay).div(BigInt.fromI32(744).toBigDecimal())
+        instrumentState.averageMonthlySnapsHarvestValuePerDayUSD = instrumentState.averageMonthlySnapsHarvestValuePerDayUSD.times(BigInt.fromI32(743).toBigDecimal()).plus(instrumentState.present_harvestValuePerDayUSD).div(BigInt.fromI32(744).toBigDecimal())
 
-        instrumentState.averageMonthlySnapsHarvestSpeedPerYear = instrumentState.averageMonthlySnapsHarvestSpeedPerYear.times(BigInt.fromString('743')).plus(instrumentState.present_harvestSpeedPerYear).div(BigInt.fromString('744'))
-        instrumentState.averageMonthlySnapsHarvestValuePerYearUSD = instrumentState.averageMonthlySnapsHarvestValuePerYearUSD.times(BigInt.fromString('743')).plus(instrumentState.present_harvestValuePerYearUSD).div(BigInt.fromString('744'))
+        instrumentState.averageMonthlySnapsHarvestSpeedPerYear = instrumentState.averageMonthlySnapsHarvestSpeedPerYear.times(BigInt.fromI32(743).toBigDecimal()).plus(instrumentState.present_harvestSpeedPerYear).div(BigInt.fromI32(744).toBigDecimal())
+        instrumentState.averageMonthlySnapsHarvestValuePerYearUSD = instrumentState.averageMonthlySnapsHarvestValuePerYearUSD.times(BigInt.fromI32(743).toBigDecimal()).plus(instrumentState.present_harvestValuePerYearUSD).div(BigInt.fromI32(744).toBigDecimal())
 
-        instrumentState.averageMonthlySnapsHarvestAPY = instrumentState.averageMonthlySnapsHarvestAPY.times(BigInt.fromString('743')).plus(instrumentState.present_harvestAPY).div(BigInt.fromString('744'))
-        instrumentState.averageMonthlySnapsSuppliersHarvestAPY = instrumentState.averageMonthlySnapsSuppliersHarvestAPY.times(BigInt.fromString('743')).plus(instrumentState.present_suppliersHarvestAPY).div(BigInt.fromString('744'))
-        instrumentState.averageMonthlySnapsBorrowersHarvestAPY = instrumentState.averageMonthlySnapsBorrowersHarvestAPY.times(BigInt.fromString('743')).plus(instrumentState.present_borrowersHarvestAPY).div(BigInt.fromString('744'))
+        instrumentState.averageMonthlySnapsHarvestAPY = instrumentState.averageMonthlySnapsHarvestAPY.times(BigInt.fromI32(743).toBigDecimal()).plus(instrumentState.present_harvestAPY).div(BigInt.fromI32(744).toBigDecimal())
+        instrumentState.averageMonthlySnapsSuppliersHarvestAPY = instrumentState.averageMonthlySnapsSuppliersHarvestAPY.times(BigInt.fromI32(743).toBigDecimal()).plus(instrumentState.present_suppliersHarvestAPY).div(BigInt.fromI32(744).toBigDecimal())
+        instrumentState.averageMonthlySnapsBorrowersHarvestAPY = instrumentState.averageMonthlySnapsBorrowersHarvestAPY.times(BigInt.fromI32(743).toBigDecimal()).plus(instrumentState.present_borrowersHarvestAPY).div(BigInt.fromI32(744).toBigDecimal())
     }
     instrumentState.save()
 }
@@ -448,9 +468,9 @@ function updateInstrumentHarvestAverages(ID: BigInt): void {
 // ############################################ 
 
 function create_SIGH_Distribution_SnapShot(ID: BigInt): SIGH_Distribution_SnapShot {
-    let sighDistributionSnapshotInitiailized = new SIGH_Distribution_SnapShot(ID)
+    let sighDistributionSnapshotInitiailized = new SIGH_Distribution_SnapShot(ID.toString())
 
-    sighDistributionSnapshotInitiailized.instrumentAddress = Address.fromString('0x0000000000000000000000000000000000000000')
+    sighDistributionSnapshotInitiailized.instrumentAddress = '0x0000000000000000000000000000000000000000'
     sighDistributionSnapshotInitiailized.fromBlockNumber = new BigInt(0)
     sighDistributionSnapshotInitiailized.toBlockNumber = new BigInt(0)
     sighDistributionSnapshotInitiailized.deltaBlocks24Hrs = new BigInt(0)

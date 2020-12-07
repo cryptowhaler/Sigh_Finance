@@ -114,11 +114,6 @@ type Instrument @entity {
     priceDecimals: BigInt!
     ETHPriceInUSD: BigDecimal!
 
-    harvestAdjustedSuppliersPriceETH: BigDecimal!
-    harvestAdjustedBorrowersPriceETH: BigDecimal!
-    harvestAdjustedSuppliersPriceUSD: BigDecimal!
-    harvestAdjustedBorrowersPriceUSD: BigDecimal!
-
     name: String!
     symbol: String!
     underlyingInstrumentName: String!

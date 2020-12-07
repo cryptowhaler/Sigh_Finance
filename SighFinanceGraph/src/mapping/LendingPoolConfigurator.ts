@@ -352,6 +352,16 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.availableLiquidityETH = BigDecimal.fromString('0')
     instrument_state_initialized.availableLiquidityUSD = BigDecimal.fromString('0')
 
+    instrument_state_initialized.depositFeeDue_WEI = new BigInt(0)
+    instrument_state_initialized.depositFeeDue = BigDecimal.fromString('0')
+    instrument_state_initialized.depositFeeDueETH = BigDecimal.fromString('0')
+    instrument_state_initialized.depositFeeDueUSD = BigDecimal.fromString('0')
+
+    instrument_state_initialized.depositFeeEarned_WEI = new BigInt(0)
+    instrument_state_initialized.depositFeeEarned = BigDecimal.fromString('0')
+    instrument_state_initialized.depositFeeEarnedETH = BigDecimal.fromString('0')
+    instrument_state_initialized.depositFeeEarnedUSD = BigDecimal.fromString('0')
+
     instrument_state_initialized.borrowFeeDue_WEI = new BigInt(0)
     instrument_state_initialized.borrowFeeDue = BigDecimal.fromString('0')
     instrument_state_initialized.borrowFeeDueETH = BigDecimal.fromString('0')
@@ -437,7 +447,6 @@ export function createInstrument(addressID: string): Instrument {
 
     instrument_state_initialized.currentBorrowingSIGHAccuredWEI = new BigInt(0)
     instrument_state_initialized.currentBorrowingSIGHAccured = BigDecimal.fromString('0')
-    instrument_state_initialized.creationBlockNumber = new BigInt(0)
     
 
     // SIGH DISTRIBUTION RELATED
@@ -448,6 +457,7 @@ export function createInstrument(addressID: string): Instrument {
 
     instrument_state_initialized.isListedWithSIGH_Mechanism = false
     instrument_state_initialized.isSIGHMechanismActivated = false
+    instrument_state_initialized.totalSIGHDistributionSnapshotsTaken = new BigInt(0)
 
     instrument_state_initialized.SIGH_Supply_Index = new BigInt(0)
     instrument_state_initialized.SIGH_Supply_Index_lastUpdatedBlock = new BigInt(0)
@@ -525,13 +535,18 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.averageMonthlySnapsBorrowersHarvestAPY = BigDecimal.fromString('0')
 
     // HARVEST ADJUSTED PRICES 
+    instrument_state_initialized.instrumentActualPriceETH = BigDecimal.fromString('0')
+    instrument_state_initialized.instrumentHarvestAdjustedPriceSuppliersETH = BigDecimal.fromString('0')
+    instrument_state_initialized.instrumentHarvestAdjustedPriceBorrowersETH = BigDecimal.fromString('0')
+
     instrument_state_initialized.instrumentActualPriceUSD = BigDecimal.fromString('0')
     instrument_state_initialized.instrumentHarvestAdjustedPriceSuppliersUSD = BigDecimal.fromString('0')
     instrument_state_initialized.instrumentHarvestAdjustedPriceBorrowersUSD = BigDecimal.fromString('0')
 
     instrument_state_initialized.SIGHPriceUSD = BigDecimal.fromString('0')
     instrument_state_initialized.timeStamp =  new BigInt(0)
-   
+    instrument_state_initialized.creationBlockNumber = new BigInt(0)
+
     instrument_state_initialized.save()
     return instrument_state_initialized as Instrument
   }

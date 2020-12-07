@@ -825,42 +825,6 @@ export class Instrument extends Entity {
     this.set("ETHPriceInUSD", Value.fromBigDecimal(value));
   }
 
-  get harvestAdjustedSuppliersPriceETH(): BigDecimal {
-    let value = this.get("harvestAdjustedSuppliersPriceETH");
-    return value.toBigDecimal();
-  }
-
-  set harvestAdjustedSuppliersPriceETH(value: BigDecimal) {
-    this.set("harvestAdjustedSuppliersPriceETH", Value.fromBigDecimal(value));
-  }
-
-  get harvestAdjustedBorrowersPriceETH(): BigDecimal {
-    let value = this.get("harvestAdjustedBorrowersPriceETH");
-    return value.toBigDecimal();
-  }
-
-  set harvestAdjustedBorrowersPriceETH(value: BigDecimal) {
-    this.set("harvestAdjustedBorrowersPriceETH", Value.fromBigDecimal(value));
-  }
-
-  get harvestAdjustedSuppliersPriceUSD(): BigDecimal {
-    let value = this.get("harvestAdjustedSuppliersPriceUSD");
-    return value.toBigDecimal();
-  }
-
-  set harvestAdjustedSuppliersPriceUSD(value: BigDecimal) {
-    this.set("harvestAdjustedSuppliersPriceUSD", Value.fromBigDecimal(value));
-  }
-
-  get harvestAdjustedBorrowersPriceUSD(): BigDecimal {
-    let value = this.get("harvestAdjustedBorrowersPriceUSD");
-    return value.toBigDecimal();
-  }
-
-  set harvestAdjustedBorrowersPriceUSD(value: BigDecimal) {
-    this.set("harvestAdjustedBorrowersPriceUSD", Value.fromBigDecimal(value));
-  }
-
   get name(): string {
     let value = this.get("name");
     return value.toString();
