@@ -68,6 +68,8 @@ const store = new Vuex.Store({
     networkId: null,
     ethBalance: null,
     isNetworkSupported: false,
+    sighFinancePollingInitiated: false,
+    networkNotSupportedMessage: 'SIGH Finance Currently only supports KOVAN Test-net (Network: 42).',
 // ######################################################
 // ############ PROTOCOL CONTRACT ADDRESSES  ############
 // ######################################################
@@ -125,7 +127,7 @@ const store = new Vuex.Store({
     SIGHFinanceState: {},                       //   SIGH FINANCE                  // SIGH's STATE (totalSupply, mintSpeed, burnSpeed, totalMinted, price, Sigh Global Trade Volume, bonding Curve Health)
     SIGHState: {},                              //   SIGH                          // SIGH's STATE (totalSupply, mintSpeed, burnSpeed, totalMinted, price, Sigh Global Trade Volume, bonding Curve Health)
 
-    currentlySelectedInstrument : {symbol:'WBTC',instrumentAddress: '0x0000000000000000000000000000000000000000' , name: 'Wrapped Bitcoin', symbol: 'WBTC', decimals: 18, iTokenAddress: '0x0000000000000000000000000000000000000000' , priceDecimals: 8, price: 0 },  // Currently Selected Instrument
+    currentlySelectedInstrument : {symbol:'WBTC',instrumentAddress: '0x0000000000000000000000000000000000000000' , name: 'Wrapped Bitcoin', decimals: 18, iTokenAddress: '0x0000000000000000000000000000000000000000' , priceDecimals: 8, price: 0 },  // Currently Selected Instrument
 
     // TRANSACTIONS HISTORY FOR THE CURRENT SESSION
     sessionPendingTransactions : [],
@@ -693,6 +695,7 @@ const store = new Vuex.Store({
 
     if (state.GlobalAddressesProviderAddress) {
       try {  
+        // state.sighFinancePollingInitiated = true;
         // FETCHING "SUPPRTED INSTRUMENT ADDRESSES" 
         let supportedInstrumentAddresses =  await store.dispatch("LendingPool_getInstruments"); ;
         commit("setSupportedInstrumentAddresses",supportedInstrumentAddresses);
@@ -709,8 +712,6 @@ const store = new Vuex.Store({
         let sighPriceETH = await store.dispatch("getInstrumentPrice",{_instrumentAddress: state.EthereumPriceOracleAddress}); 
         commit('updateSIGHPrice',sighPriceETH);                             // SIGH/ETH Price
         
-
-        sighPriceDecimals
         // INITIATE POLLING : ETH Price, Blocks Remaining, Transaction States
         store.dispatch('initiatePolling_ETHPrice_SpeedRefresh_Transactions');
         return true;
@@ -967,6 +968,7 @@ const store = new Vuex.Store({
         cur_user_instrument_state.principalBorrowBalance =  BigNumber(response.principalBorrowBalance).shiftedBy((-1)*Number(cur_instrument.decimals)).toNumber() ; 
         cur_user_instrument_state.currentBorrowBalance =   BigNumber(response.currentBorrowBalance).shiftedBy((-1)*Number(cur_instrument.decimals)).toNumber()  ;
         cur_user_instrument_state.originationFee =  BigNumber(response.originationFee).shiftedBy((-1)*Number(cur_instrument.decimals)).toNumber() ;
+
         cur_user_instrument_state.userBalance = await store.dispatch("ERC20_balanceOf",{tokenAddress: cur_instrument.instrumentAddress , account: state.connectedWallet});
         cur_user_instrument_state.userAvailableAllowance = await store.dispatch("ERC20_getAllowance",{tokenAddress: cur_instrument.instrumentAddress , owner: state.connectedWallet, spender: state.LendingPoolCoreContractAddress });
 
@@ -984,22 +986,28 @@ const store = new Vuex.Store({
         cur_user_instrument_state.usageAsCollateralEnabled = response.usageAsCollateralEnabled ;       
   
         // INTEREST STREAM 
+        cur_user_instrument_state.interestRedirectionAddress =  await store.dispatch("IToken_getInterestRedirectionAddress",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
         cur_user_instrument_state.redirectedBalance =  await store.dispatch("IToken_getRedirectedBalance",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet, decimals: cur_user_instrument_state.decimals }) ;
         cur_user_instrument_state.interestRedirectionAllowance =  await store.dispatch("IToken_getinterestRedirectionAllowances",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
-        cur_user_instrument_state.interestRedirectionAddress =  await store.dispatch("IToken_getInterestRedirectionAddress",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
 
-        // SIGH STREAM 
-        cur_user_instrument_state.sighAccured =  await store.dispatch("IToken_getSighAccured",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
+        // $SIGH STREAMS 
         response =  await store.dispatch("IToken_getSIGHStreamsRedirectedTo",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
         cur_user_instrument_state.liquiditySIGHStreamRedirectedTo = response.liquiditySIGHStreamRedirectionAddress
-        cur_user_instrument_state.liquiditySIGHStreamRedirectedTo = response.BorrowingSIGHStreamRedirectionAddress
+        cur_user_instrument_state.borrowingSIGHStreamRedirectedTo = response.BorrowingSIGHStreamRedirectionAddress
         response =  await store.dispatch("IToken_getSIGHStreamsAllowances",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
         cur_user_instrument_state.liquiditySIGHStreamRedirectionAllowance = response.liquiditySIGHStreamRedirectionAllowance
-        cur_user_instrument_state.BorrowingSIGHStreamRedirectionAllowance = response.BorrowingSIGHStreamRedirectionAllowance
-        response =  await store.dispatch("IToken_getSIGHStreamsRedirectedBalances",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
+        cur_user_instrument_state.borrowingSIGHStreamRedirectionAllowance = response.BorrowingSIGHStreamRedirectionAllowance
+        response =  await store.dispatch("IToken_getSIGHStreamsRedirectedBalances",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet,  decimals: cur_user_instrument_state.decimals  }) ;
         cur_user_instrument_state.liquiditySIGHStreamRedirectedBalance = response.liquiditySIGHStreamRedirectedBalance
         cur_user_instrument_state.borrowingSIGHStreamRedirectedBalance = response.borrowingSIGHStreamRedirectedBalance
+        cur_user_instrument_state.sighAccured =  await store.dispatch("IToken_getSighAccured",{iTokenAddress: cur_user_instrument_state.iTokenAddress , _user: state.connectedWallet }) ;
 
+        cur_user_instrument_state.liquiditySIGHStreamRedirectedBalanceWorth = await  store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.liquiditySIGHStreamRedirectedBalance) * Number(cur_user_instrument_state.priceETH) });
+        cur_user_instrument_state.borrowingSIGHStreamRedirectedBalanceWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.borrowingSIGHStreamRedirectedBalance) * Number(cur_user_instrument_state.priceETH) }); 
+        cur_user_instrument_state.redirectedBalanceWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.redirectedBalance) * Number(cur_user_instrument_state.priceETH) }); 
+
+        console.log("refresh_User_Instrument_State");
+        console.log(cur_user_instrument_state);
         return cur_user_instrument_state;
       }
       catch (error) {
@@ -1967,13 +1975,13 @@ IToken_redirectInterestStreamOf: async ({commit,state},{iTokenAddress,_from,_to,
   }
 },
 
-IToken_redirectSighStream: async ({commit,state},{iTokenAddress,_to,symbol}) => {
+IToken_redirectLiquiditySIGHStream: async ({commit,state},{iTokenAddress,_to,symbol}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
     try {
-      const response = await iTokenContract.methods.redirectSighStream(_to).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
-        let transaction = {hash : hash, function : symbol + ' $SIGH Stream Re-direction' , amount : null}; 
+      const response = await iTokenContract.methods.redirectLiquiditySIGHStream(_to).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : symbol + ' $SIGH LIQUIDITY Stream Re-direction' , amount : null}; 
         commit('addToSessionPendingTransactions',transaction);
         });
       console.log(response);
@@ -1990,13 +1998,13 @@ IToken_redirectSighStream: async ({commit,state},{iTokenAddress,_to,symbol}) => 
   }
 },
 
-IToken_redirectSighStreamOf: async ({commit,state},{iTokenAddress,_from,_to,symbol}) => {
+IToken_redirectBorrowingSIGHStream: async ({commit,state},{iTokenAddress,_to,symbol}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     console.log(iTokenContract);
     try {
-      const response = await iTokenContract.methods.redirectSighStreamOf(_from,_to).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
-        let transaction = {hash : hash, function : symbol + ' $SIGH Stream Re-direction (OF)' , amount : null}; 
+      const response = await iTokenContract.methods.redirectBorrowingSIGHStream(_to).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : symbol + ' $SIGH BORROWING Stream Re-direction' , amount : null}; 
         commit('addToSessionPendingTransactions',transaction);
         });
       console.log(response);
@@ -2013,13 +2021,82 @@ IToken_redirectSighStreamOf: async ({commit,state},{iTokenAddress,_from,_to,symb
   }
 },
 
-IToken_allowSighRedirectionTo: async ({commit,state},{iTokenAddress,_to,symbol}) => {
+IToken_redirectLiquiditySIGHStreamOf: async ({commit,state},{iTokenAddress,_from,_to,symbol}) => {
+  if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
+    console.log(iTokenContract);
+    try {
+      const response = await iTokenContract.methods.redirectLiquiditySIGHStreamOf(_from,_to).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : symbol + ' $SIGH Liquidity Stream Re-direction (OF)' , amount : null}; 
+        commit('addToSessionPendingTransactions',transaction);
+        });
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+  else {
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
+    return "This particular Instrument is currently not supported by SIGH Finance on ";
+  }
+},
+
+IToken_redirectBorrowingSIGHStreamOf: async ({commit,state},{iTokenAddress,_from,_to,symbol}) => {
+  if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
+    console.log(iTokenContract);
+    try {
+      const response = await iTokenContract.methods.redirectBorrowingSIGHStreamOf(_from,_to).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : symbol + ' $SIGH Borrowing Stream Re-direction (OF)' , amount : null}; 
+        commit('addToSessionPendingTransactions',transaction);
+        });
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+  else {
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
+    return "This particular Instrument is currently not supported by SIGH Finance on ";
+  }
+},
+
+IToken_allowLiquiditySIGHRedirectionTo: async ({commit,state},{iTokenAddress,_to,symbol}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     // console.log(iTokenContract);
     try {
-      const response = await iTokenContract.methods.allowSighRedirectionTo(_to).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
-        let transaction = {hash : hash, function : symbol + ' $SIGH Stream Allowance' , amount : null}; 
+      const response = await iTokenContract.methods.allowLiquiditySIGHRedirectionTo(_to).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : symbol + ' $SIGH Liquidity Stream Allowance' , amount : null}; 
+        commit('addToSessionPendingTransactions',transaction);
+        });
+      console.log(response);
+      return response;  
+    }
+    catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+  else {
+    console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);
+    return "This particular Instrument is currently not supported by SIGH Finance on ";
+  }
+},
+
+IToken_allowBorrowingSIGHRedirectionTo: async ({commit,state},{iTokenAddress,_to,symbol}) => {
+  if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
+    const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
+    // console.log(iTokenContract);
+    try {
+      const response = await iTokenContract.methods.allowBorrowingSIGHRedirectionTo(_to).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+        let transaction = {hash : hash, function : symbol + ' $SIGH Liquidity Stream Allowance' , amount : null}; 
         commit('addToSessionPendingTransactions',transaction);
         });
       console.log(response);
@@ -2094,7 +2171,7 @@ IToken_getInterestRedirectionAddress: async ({commit,state},{iTokenAddress,_user
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     const response = await iTokenContract.methods.getInterestRedirectionAddress(_user).call();
-    console.log('IToken_getInterestRedirectionAddress ' + response);
+    // console.log('IToken_getInterestRedirectionAddress ' + response);
     return response;  
   }
   else {
@@ -2110,7 +2187,7 @@ IToken_getinterestRedirectionAllowances: async ({commit,state},{iTokenAddress,_u
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     try {
       const response = await iTokenContract.methods.interestRedirectionAllowances(_user).call();
-      console.log('IToken_getinterestRedirectionAllowances - ' + response);
+      // console.log('IToken_getinterestRedirectionAllowances - ' + response);
       return response;  
     }
     catch (error) {
@@ -2130,10 +2207,10 @@ IToken_getRedirectedBalance: async ({commit,state},{iTokenAddress,_user, decimal
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     const response = await iTokenContract.methods.getRedirectedBalance(_user).call();
-    console.log('IToken_getRedirectedBalance - ' + response);
+    // console.log('IToken_getRedirectedBalance - ' + response);
     let redirectedBalance = BigNumber(response);
     redirectedBalance = redirectedBalance.shiftedBy((-1) * Number(decimals));
-    console.log('IToken_getRedirectedBalance (DECIMAL ADJUSTED) ' + redirectedBalance);
+    // console.log('IToken_getRedirectedBalance (DECIMAL ADJUSTED) ' + redirectedBalance);
     return redirectedBalance;  
   }
   else {
@@ -2163,7 +2240,7 @@ IToken_getSIGHStreamsRedirectedTo: async ({commit,state},{iTokenAddress,_user}) 
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     const response = await iTokenContract.methods.getSIGHStreamsRedirectedTo(_user).call();
-    console.log('IToken_getSIGHStreamsRedirectedTo ' + response);
+    // console.log('IToken_getSIGHStreamsRedirectedTo ' + response);
     return response;
   }
   else {
@@ -2176,7 +2253,7 @@ IToken_getSIGHStreamsAllowances: async ({commit,state},{iTokenAddress,_user}) =>
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     const response = await iTokenContract.methods.getSIGHStreamsAllowances(_user).call();
-    console.log('IToken_getSIGHStreamsAllowances ' + response );
+    // console.log('IToken_getSIGHStreamsAllowances ' + response );
     return response;
   }
   else {
@@ -2185,12 +2262,17 @@ IToken_getSIGHStreamsAllowances: async ({commit,state},{iTokenAddress,_user}) =>
   }
 },
 
-IToken_getSIGHStreamsRedirectedBalances: async ({commit,state},{iTokenAddress,_user}) => {
+IToken_getSIGHStreamsRedirectedBalances: async ({commit,state},{iTokenAddress,_user, decimals}) => {
   if (state.web3 && iTokenAddress && iTokenAddress!= "0x0000000000000000000000000000000000000000" ) {
     const iTokenContract = new state.web3.eth.Contract(IToken.abi, iTokenAddress );
     const response = await iTokenContract.methods.getSIGHStreamsRedirectedBalances(_user).call();
-    console.log('IToken_getSIGHStreamsRedirectedBalances ' + response );
-    return response;
+    // console.log('IToken_getSIGHStreamsRedirectedBalances ' + response );
+    let adjustedResponse = {};
+    adjustedResponse.liquiditySIGHStreamRedirectedBalance = BigNumber(response.liquiditySIGHStreamRedirectedBalance);
+    adjustedResponse.liquiditySIGHStreamRedirectedBalance = adjustedResponse.liquiditySIGHStreamRedirectedBalance.shiftedBy((-1) * Number(decimals));
+    adjustedResponse.borrowingSIGHStreamRedirectedBalance = BigNumber(response.borrowingSIGHStreamRedirectedBalance);
+    adjustedResponse.borrowingSIGHStreamRedirectedBalance = adjustedResponse.borrowingSIGHStreamRedirectedBalance.shiftedBy((-1) * Number(decimals));
+    return adjustedResponse;
   }
   else {
     console.log("This particular Instrument is currently not supported by SIGH Finance on " + getters.networkName);

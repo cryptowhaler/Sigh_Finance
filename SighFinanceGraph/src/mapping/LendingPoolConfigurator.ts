@@ -329,7 +329,8 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.priceETH = BigDecimal.fromString('0')
     instrument_state_initialized.priceUSD = BigDecimal.fromString('0')
     instrument_state_initialized.priceDecimals = new BigInt(0)
-
+    instrument_state_initialized.ETHPriceInUSD = BigDecimal.fromString('0')
+    
     instrument_state_initialized.name = null
     instrument_state_initialized.symbol = null
     instrument_state_initialized.underlyingInstrumentName = null
@@ -454,25 +455,25 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.SIGH_Borrow_Index = new BigInt(0)
     instrument_state_initialized.SIGH_Borrow_Index_lastUpdatedBlock = new BigInt(0)
 
-    instrument_state_initialized.fromBlockNumber = new BigInt(0)
-    instrument_state_initialized.toBlockNumber = new BigInt(0)
+    instrument_state_initialized.maxVolatilityLimitSuppliersPercent = BigDecimal.fromString('0')
+    instrument_state_initialized.maxVolatilityLimitBorrowersPercent = BigDecimal.fromString('0')
+
+    instrument_state_initialized.present_PrevPrice_ETH = BigDecimal.fromString('0')
+    instrument_state_initialized.present_PrevPrice_USD = BigDecimal.fromString('0')
+
+    instrument_state_initialized.present_OpeningPrice_ETH = BigDecimal.fromString('0')
+    instrument_state_initialized.present_OpeningPrice_USD = BigDecimal.fromString('0')
 
     instrument_state_initialized.present_SIGH_Side = null
     instrument_state_initialized.present_DeltaBlocks = new BigInt(0)
-    instrument_state_initialized.present_Clock = new BigInt(0)
 
-    instrument_state_initialized.present_maxVolatilityLimitSuppliers = new BigInt(0)
-    instrument_state_initialized.present_maxVolatilityLimitSuppliersPercent = BigDecimal.fromString('0')
-    instrument_state_initialized.present_maxVolatilityLimitBorrowers = new BigInt(0)
-    instrument_state_initialized.present_maxVolatilityLimitBorrowersPercent = BigDecimal.fromString('0')
-
-    instrument_state_initialized.present_percentTotalVolatility = BigDecimal.fromString('0')
     instrument_state_initialized.present_total24HrVolatilityETH = BigDecimal.fromString('0')
     instrument_state_initialized.present_total24HrVolatilityUSD = BigDecimal.fromString('0')
+    instrument_state_initialized.present_percentTotalVolatility = BigDecimal.fromString('0')
 
-    instrument_state_initialized.present_percentTotalVolatilityLimitAmount = BigDecimal.fromString('0')
     instrument_state_initialized.present_24HrVolatilityLimitAmountETH = BigDecimal.fromString('0')
     instrument_state_initialized.present_24HrVolatilityLimitAmountUSD = BigDecimal.fromString('0')
+    instrument_state_initialized.present_percentTotalVolatilityLimitAmount = BigDecimal.fromString('0')
 
     instrument_state_initialized.present_SIGH_Suppliers_Speed_WEI =  new BigInt(0)
     instrument_state_initialized.present_SIGH_Suppliers_Speed = BigDecimal.fromString('0')
@@ -481,12 +482,54 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.present_SIGH_Staking_Speed_WEI =  new BigInt(0)
     instrument_state_initialized.present_SIGH_Staking_Speed = BigDecimal.fromString('0')
 
-    instrument_state_initialized.present_PrevPrice_ETH = BigDecimal.fromString('0')
-    instrument_state_initialized.present_PrevPrice_USD = BigDecimal.fromString('0')
+    // HARVESTING METRICS : PRESENT LIVE VALUE FOR ON-GOING SIGH DISTRIBUTION
+    instrument_state_initialized.present_harvestSpeedPerBlock = BigDecimal.fromString('0')
+    instrument_state_initialized.present_harvestValuePerBlockUSD = BigDecimal.fromString('0')
 
-    instrument_state_initialized.present_OpeningPrice_ETH = BigDecimal.fromString('0')
-    instrument_state_initialized.present_OpeningPrice_USD = BigDecimal.fromString('0')
+    instrument_state_initialized.present_harvestSpeedPerDay =  BigDecimal.fromString('0')
+    instrument_state_initialized.present_harvestValuePerDayUSD =  BigDecimal.fromString('0')
 
+    instrument_state_initialized.present_harvestSpeedPerYear =  BigDecimal.fromString('0')
+    instrument_state_initialized.present_harvestValuePerYearUSD =  BigDecimal.fromString('0')
+
+    instrument_state_initialized.present_harvestAPY = BigDecimal.fromString('0')
+    instrument_state_initialized.present_suppliersHarvestAPY = BigDecimal.fromString('0')
+    instrument_state_initialized.present_borrowersHarvestAPY = BigDecimal.fromString('0')
+
+    // HARVESTING METRICS : DAILY AVERAGES
+    instrument_state_initialized.average24SnapsHarvestSpeedPerBlock = BigDecimal.fromString('0')
+    instrument_state_initialized.average24SnapsHarvestValuePerBlockUSD =  BigDecimal.fromString('0')
+
+    instrument_state_initialized.average24SnapsHarvestSpeedPerDay =  BigDecimal.fromString('0')
+    instrument_state_initialized.average24SnapsHarvestValuePerDayUSD =  BigDecimal.fromString('0')
+
+    instrument_state_initialized.average24SnapsHarvestSpeedPerYear = BigDecimal.fromString('0')
+    instrument_state_initialized.average24SnapsHarvestValuePerYearUSD =  BigDecimal.fromString('0')
+
+    instrument_state_initialized.average24SnapsHarvestAPY = BigDecimal.fromString('0')
+    instrument_state_initialized.average24SnapsSuppliersHarvestAPY =  BigDecimal.fromString('0')
+    instrument_state_initialized.average24SnapsBorrowersHarvestAPY = BigDecimal.fromString('0')
+
+    // HARVESTING METRICS : MONTHLY AVERAGES
+    instrument_state_initialized.averageMonthlySnapsHarvestSpeedPerBlock = BigDecimal.fromString('0')
+    instrument_state_initialized.averageMonthlySnapsHarvestValuePerBlockUSD = BigDecimal.fromString('0')
+
+    instrument_state_initialized.averageMonthlySnapsHarvestSpeedPerDay =  BigDecimal.fromString('0')
+    instrument_state_initialized.averageMonthlySnapsHarvestValuePerDayUSD =  BigDecimal.fromString('0')
+
+    instrument_state_initialized.averageMonthlySnapsHarvestSpeedPerYear =  BigDecimal.fromString('0')
+    instrument_state_initialized.averageMonthlySnapsHarvestValuePerYearUSD =  BigDecimal.fromString('0')
+
+    instrument_state_initialized.averageMonthlySnapsHarvestAPY = BigDecimal.fromString('0')
+    instrument_state_initialized.averageMonthlySnapsSuppliersHarvestAPY = BigDecimal.fromString('0')
+    instrument_state_initialized.averageMonthlySnapsBorrowersHarvestAPY = BigDecimal.fromString('0')
+
+    // HARVEST ADJUSTED PRICES 
+    instrument_state_initialized.instrumentActualPriceUSD = BigDecimal.fromString('0')
+    instrument_state_initialized.instrumentHarvestAdjustedPriceSuppliersUSD = BigDecimal.fromString('0')
+    instrument_state_initialized.instrumentHarvestAdjustedPriceBorrowersUSD = BigDecimal.fromString('0')
+
+    instrument_state_initialized.SIGHPriceUSD = BigDecimal.fromString('0')
     instrument_state_initialized.timeStamp =  new BigInt(0)
    
     instrument_state_initialized.save()

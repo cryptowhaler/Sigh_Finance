@@ -3,13 +3,13 @@
     </div> 
     
     <!-- If borrowing DISBALED -->
-    <div v-if="!selectedInstrument.borrowingEnabled" style="height: 157px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
+    <div v-if="!selectedInstrument.borrowingEnabled" style="height: 157px; margin-top: 20px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
         <p style="line-height: 24px; font-size: 12px; color: gold; text-align: center; " >Borrowing is currently disabled for '{{ selectedInstrument.symbol }}'!  
         </p>         
     </div>
 
     <!-- If borrowing ENABLED, stable borrowing ENABLED  & SIGH Mechanism ENABLED -->
-    <div v-if="selectedInstrument.borrowingEnabled && selectedInstrument.stableBorrowRateEnabled && selectedInstrument.isSIGHMechanismActivated" style="height: 171px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
+    <div v-if="selectedInstrument.borrowingEnabled && selectedInstrument.stableBorrowRateEnabled && selectedInstrument.isSIGHMechanismActivated" style="height: 171px; margin-top: 20px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
         <p style="line-height: 24px; font-size: 12px; color: gold;" > You can Borrow '{{ selectedInstrument.symbol }}'  at <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" >{{ Number(selectedInstrument.stableBorrowInterestPercent).toFixed(2) }}  % </span> <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" > (STABLE) </span> and <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" >{{ Number(selectedInstrument.variableBorrowInterestPercent).toFixed(2) }} % </span> 
             <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" > (VARIABLE) </span> Interest Rates!
             <br> <br>
@@ -20,7 +20,7 @@
     </div>
 
     <!-- If borrowing ENABLED, stable borrowing ENABLED  & SIGH Mechanism DISABLED -->
-    <div v-if="selectedInstrument.borrowingEnabled && selectedInstrument.stableBorrowRateEnabled && !selectedInstrument.isSIGHMechanismActivated" style="height: 147px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
+    <div v-if="selectedInstrument.borrowingEnabled && selectedInstrument.stableBorrowRateEnabled && !selectedInstrument.isSIGHMechanismActivated" style="height: 147px; margin-top: 20px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
         <p style="line-height: 24px; font-size: 12px; color: gold;" > You can Borrow '{{ selectedInstrument.symbol }}'  at <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" >{{ Number(selectedInstrument.stableBorrowInterestPercent).toFixed(2) }}  % </span> <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" > (STABLE) </span> and <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" >{{ Number(selectedInstrument.variableBorrowInterestPercent).toFixed(2) }} % </span> 
             <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" > (VARIABLE) </span> Interest Rates!
             <br> <br>
@@ -31,7 +31,7 @@
     </div>
 
     <!-- If borrowing enabled, stable borrowing DISABLED  & SIGH Mechanism ENABLED -->
-    <div v-if="selectedInstrument.borrowingEnabled && !selectedInstrument.stableBorrowRateEnabled && selectedInstrument.isSIGHMechanismActivated" style="height: 147px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
+    <div v-if="selectedInstrument.borrowingEnabled && !selectedInstrument.stableBorrowRateEnabled && selectedInstrument.isSIGHMechanismActivated" style="height: 147px; margin-top: 20px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
         <p style="line-height: 24px; font-size: 12px; color: gold;" > You can Borrow '{{ selectedInstrument.symbol }}'  at <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" >{{ Number(selectedInstrument.variableBorrowInterestPercent).toFixed(2) }} % </span> 
             <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" > (VARIABLE) </span> Interest Rate!
             <br> <br>
@@ -42,7 +42,7 @@
     </div>
 
     <!-- If borrowing enabled, stable borrowing DISABLED   & SIGH Mechanism DISABLED  -->
-    <div v-if="selectedInstrument.borrowingEnabled && !selectedInstrument.stableBorrowRateEnabled && !selectedInstrument.isSIGHMechanismActivated" style="height: 124px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
+    <div v-if="selectedInstrument.borrowingEnabled && !selectedInstrument.stableBorrowRateEnabled && !selectedInstrument.isSIGHMechanismActivated" style="height: 124px; margin-top: 20px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
         <p style="line-height: 24px; font-size: 12px; color: gold;" > You can Borrow '{{ selectedInstrument.symbol }}'  at <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" >{{ Number(selectedInstrument.variableBorrowInterestPercent).toFixed(2) }} % </span> 
             <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" > (VARIABLE) </span> Interest Rate!
             <br> <br>

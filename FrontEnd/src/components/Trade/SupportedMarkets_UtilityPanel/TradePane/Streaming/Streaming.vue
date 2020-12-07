@@ -5,7 +5,8 @@ import EventBus, {EventNames,} from '@/eventBuses/default';
 import TabBar from '@/components/TabBar/TabBar.vue';
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 
-import sighStream from './sighStream/sighStream.vue';
+import sighLiquidityStream from './sighLiquidityStream/sighLiquidityStream.vue';
+import sighBorrowingStream from './sighBorrowingStream/sighBorrowingStream.vue';
 import interestStream from './interestStream/interestStream.vue';
 
 export default {
@@ -13,14 +14,15 @@ export default {
 
   components: {
     TabBar,
-    sighStream,
+    sighLiquidityStream,
+    sighBorrowingStream,
     interestStream,
   },
 
   data() {
     return {
-      activeTab: '$SIGH Stream',
-      tabs: ['$SIGH Stream','Interest Stream'], 
+      activeTab: '$SIGH Liquidity Stream',
+      tabs: ['$SIGH Liquidity Stream','$SIGH Borrowing Stream','Interest Stream'], 
       preActive:'$SIGH Stream',
       selectedInstrument: {},
       height: 0,

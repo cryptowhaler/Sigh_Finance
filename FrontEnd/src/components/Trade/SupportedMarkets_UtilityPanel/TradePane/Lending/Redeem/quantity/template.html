@@ -2,11 +2,13 @@
     <div class="f1-form-grid" style="position: relative;">
     </div> 
     
-    <span style="line-height: 24px; margin-bottom: 20px; font-size: 12px; padding: 2px 2px; border: aliceblue solid 0.1px; color: gold; text-align: center;" > You currently have a deposit balance of <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" >  {{ Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(4) }} {{selectedInstrument.symbol}} </span> ( <span style="line-height: 24px;font-size: 12px; color:aliceblue; display: contents;" >  {{ Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(4)  }} USD </span> ), having    
-      an Interest Rate of <span style="line-height: 24px;font-size: 12px; color:aqua; display: contents;" >  {{ Number(selectedInstrumentWalletState.liquidityRate).toFixed(4)  }} % </span> , <span style="line-height: 24px;font-size: 12px; color:chartreuse; display: contents;" >  farming $SIGH &#127806; </span> for you!  
-      <br>
-      Read how it works here :-
-    </span>
+    <div style="height: 79px;  margin-top: 20px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
+        <p style="line-height: 24px;  margin-bottom: 20px; font-size: 12px; padding: 2px 2px; color: gold; text-align: center;" > You currently have a deposit balance of <span style="line-height: 24px;font-size: 12px; color:darkturquoise; display: contents;" >  {{ Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(4) }} {{selectedInstrument.symbol}} </span> ( <span style="line-height: 24px;font-size: 12px; color:aliceblue; display: contents;" >  {{ Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(4)  }} USD </span> ), having    
+            an Interest Rate of <span style="line-height: 24px;font-size: 12px; color:aqua; display: contents;" >  {{ Number(selectedInstrumentWalletState.liquidityRate).toFixed(4)  }} % </span> , <span style="line-height: 24px;font-size: 12px; color:chartreuse; display: contents;" >  farming $SIGH &#127806; </span> for you!  
+            <br>
+            Read how it works here :-
+        </p>
+    </div>
 
 
 <div class="redeem-quantity-form" style="padding-top: 15px;">

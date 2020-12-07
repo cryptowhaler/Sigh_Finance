@@ -19,7 +19,8 @@
         <tab-bar :mobileDropdown=false marketDropdown="false" :tabs=tabs @tab-change="activeTabChange" />            
         <br> <br> <br> <br>
         <keep-alive>
-            <sighStream v-if="activeTab === '$SIGH Stream'" />
+            <sighLiquidityStream v-if="activeTab === '$SIGH Liquidity Stream' " />
+            <sighBorrowingStream v-if="activeTab === '$SIGH Borrowing Stream' " />
             <interestStream v-if="activeTab === 'Interest Stream'" />
         </keep-alive>
     </div>

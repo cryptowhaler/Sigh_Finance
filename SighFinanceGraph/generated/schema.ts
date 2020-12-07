@@ -12,6 +12,268 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
+export class SIGH_FINANCE extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save SIGH_FINANCE entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save SIGH_FINANCE entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("SIGH_FINANCE", id.toString(), this);
+  }
+
+  static load(id: string): SIGH_FINANCE | null {
+    return store.get("SIGH_FINANCE", id) as SIGH_FINANCE | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get creationBlockNumber(): BigInt {
+    let value = this.get("creationBlockNumber");
+    return value.toBigInt();
+  }
+
+  set creationBlockNumber(value: BigInt) {
+    this.set("creationBlockNumber", Value.fromBigInt(value));
+  }
+
+  get instrumentSupported(): Array<Bytes | null> {
+    let value = this.get("instrumentSupported");
+    return value.toBytesArray();
+  }
+
+  set instrumentSupported(value: Array<Bytes | null>) {
+    this.set("instrumentSupported", Value.fromBytesArray(value));
+  }
+
+  get SIGH_MintSpeed_WEI(): BigInt {
+    let value = this.get("SIGH_MintSpeed_WEI");
+    return value.toBigInt();
+  }
+
+  set SIGH_MintSpeed_WEI(value: BigInt) {
+    this.set("SIGH_MintSpeed_WEI", Value.fromBigInt(value));
+  }
+
+  get SIGH_MintSpeed(): BigDecimal {
+    let value = this.get("SIGH_MintSpeed");
+    return value.toBigDecimal();
+  }
+
+  set SIGH_MintSpeed(value: BigDecimal) {
+    this.set("SIGH_MintSpeed", Value.fromBigDecimal(value));
+  }
+
+  get SIGH_BurnSpeed_WEI(): BigInt {
+    let value = this.get("SIGH_BurnSpeed_WEI");
+    return value.toBigInt();
+  }
+
+  set SIGH_BurnSpeed_WEI(value: BigInt) {
+    this.set("SIGH_BurnSpeed_WEI", Value.fromBigInt(value));
+  }
+
+  get SIGH_BurnSpeed(): BigDecimal {
+    let value = this.get("SIGH_BurnSpeed");
+    return value.toBigDecimal();
+  }
+
+  set SIGH_BurnSpeed(value: BigDecimal) {
+    this.set("SIGH_BurnSpeed", Value.fromBigDecimal(value));
+  }
+
+  get SIGH_Controller_Accumulation_Speed_WEI(): BigInt {
+    let value = this.get("SIGH_Controller_Accumulation_Speed_WEI");
+    return value.toBigInt();
+  }
+
+  set SIGH_Controller_Accumulation_Speed_WEI(value: BigInt) {
+    this.set("SIGH_Controller_Accumulation_Speed_WEI", Value.fromBigInt(value));
+  }
+
+  get SIGH_Controller_Accumulation_Speed(): BigDecimal {
+    let value = this.get("SIGH_Controller_Accumulation_Speed");
+    return value.toBigDecimal();
+  }
+
+  set SIGH_Controller_Accumulation_Speed(value: BigDecimal) {
+    this.set("SIGH_Controller_Accumulation_Speed", Value.fromBigDecimal(value));
+  }
+
+  get SIGH_Controller_Treasury_Speed_WEI(): BigInt {
+    let value = this.get("SIGH_Controller_Treasury_Speed_WEI");
+    return value.toBigInt();
+  }
+
+  set SIGH_Controller_Treasury_Speed_WEI(value: BigInt) {
+    this.set("SIGH_Controller_Treasury_Speed_WEI", Value.fromBigInt(value));
+  }
+
+  get SIGH_Controller_Treasury_Speed(): BigDecimal {
+    let value = this.get("SIGH_Controller_Treasury_Speed");
+    return value.toBigDecimal();
+  }
+
+  set SIGH_Controller_Treasury_Speed(value: BigDecimal) {
+    this.set("SIGH_Controller_Treasury_Speed", Value.fromBigDecimal(value));
+  }
+
+  get SIGH_Controller_Mechanism_Speed_WEI(): BigInt {
+    let value = this.get("SIGH_Controller_Mechanism_Speed_WEI");
+    return value.toBigInt();
+  }
+
+  set SIGH_Controller_Mechanism_Speed_WEI(value: BigInt) {
+    this.set("SIGH_Controller_Mechanism_Speed_WEI", Value.fromBigInt(value));
+  }
+
+  get SIGH_Controller_Mechanism_Speed(): BigDecimal {
+    let value = this.get("SIGH_Controller_Mechanism_Speed");
+    return value.toBigDecimal();
+  }
+
+  set SIGH_Controller_Mechanism_Speed(value: BigDecimal) {
+    this.set("SIGH_Controller_Mechanism_Speed", Value.fromBigDecimal(value));
+  }
+
+  get Volatility_Mechanim_SIGH_Speed_WEI(): BigInt {
+    let value = this.get("Volatility_Mechanim_SIGH_Speed_WEI");
+    return value.toBigInt();
+  }
+
+  set Volatility_Mechanim_SIGH_Speed_WEI(value: BigInt) {
+    this.set("Volatility_Mechanim_SIGH_Speed_WEI", Value.fromBigInt(value));
+  }
+
+  get Volatility_Mechanim_SIGH_Speed(): BigDecimal {
+    let value = this.get("Volatility_Mechanim_SIGH_Speed");
+    return value.toBigDecimal();
+  }
+
+  set Volatility_Mechanim_SIGH_Speed(value: BigDecimal) {
+    this.set("Volatility_Mechanim_SIGH_Speed", Value.fromBigDecimal(value));
+  }
+
+  get Volatility_Mechanim_SIGH_Speed_Used_WEI(): BigInt {
+    let value = this.get("Volatility_Mechanim_SIGH_Speed_Used_WEI");
+    return value.toBigInt();
+  }
+
+  set Volatility_Mechanim_SIGH_Speed_Used_WEI(value: BigInt) {
+    this.set(
+      "Volatility_Mechanim_SIGH_Speed_Used_WEI",
+      Value.fromBigInt(value)
+    );
+  }
+
+  get Volatility_Mechanim_SIGH_Speed_Used(): BigDecimal {
+    let value = this.get("Volatility_Mechanim_SIGH_Speed_Used");
+    return value.toBigDecimal();
+  }
+
+  set Volatility_Mechanim_SIGH_Speed_Used(value: BigDecimal) {
+    this.set(
+      "Volatility_Mechanim_SIGH_Speed_Used",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get Volatility_Mechanim_IsUpperCheckActive(): boolean {
+    let value = this.get("Volatility_Mechanim_IsUpperCheckActive");
+    return value.toBoolean();
+  }
+
+  set Volatility_Mechanim_IsUpperCheckActive(value: boolean) {
+    this.set(
+      "Volatility_Mechanim_IsUpperCheckActive",
+      Value.fromBoolean(value)
+    );
+  }
+
+  get Volatility_Mechanim_UpperCheckPercent(): boolean {
+    let value = this.get("Volatility_Mechanim_UpperCheckPercent");
+    return value.toBoolean();
+  }
+
+  set Volatility_Mechanim_UpperCheckPercent(value: boolean) {
+    this.set("Volatility_Mechanim_UpperCheckPercent", Value.fromBoolean(value));
+  }
+
+  get present_Total_Volatility(): BigInt {
+    let value = this.get("present_Total_Volatility");
+    return value.toBigInt();
+  }
+
+  set present_Total_Volatility(value: BigInt) {
+    this.set("present_Total_Volatility", Value.fromBigInt(value));
+  }
+
+  get present_Total_VolatilityETH(): BigDecimal {
+    let value = this.get("present_Total_VolatilityETH");
+    return value.toBigDecimal();
+  }
+
+  set present_Total_VolatilityETH(value: BigDecimal) {
+    this.set("present_Total_VolatilityETH", Value.fromBigDecimal(value));
+  }
+
+  get present_Total_VolatilityUSD(): BigDecimal {
+    let value = this.get("present_Total_VolatilityUSD");
+    return value.toBigDecimal();
+  }
+
+  set present_Total_VolatilityUSD(value: BigDecimal) {
+    this.set("present_Total_VolatilityUSD", Value.fromBigDecimal(value));
+  }
+
+  get present_Total_VolatilityLimitAmount(): BigInt {
+    let value = this.get("present_Total_VolatilityLimitAmount");
+    return value.toBigInt();
+  }
+
+  set present_Total_VolatilityLimitAmount(value: BigInt) {
+    this.set("present_Total_VolatilityLimitAmount", Value.fromBigInt(value));
+  }
+
+  get present_Total_VolatilityLimitAmountETH(): BigDecimal {
+    let value = this.get("present_Total_VolatilityLimitAmountETH");
+    return value.toBigDecimal();
+  }
+
+  set present_Total_VolatilityLimitAmountETH(value: BigDecimal) {
+    this.set(
+      "present_Total_VolatilityLimitAmountETH",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get present_Total_VolatilityLimitAmountUSD(): BigDecimal {
+    let value = this.get("present_Total_VolatilityLimitAmountUSD");
+    return value.toBigDecimal();
+  }
+
+  set present_Total_VolatilityLimitAmountUSD(value: BigDecimal) {
+    this.set(
+      "present_Total_VolatilityLimitAmountUSD",
+      Value.fromBigDecimal(value)
+    );
+  }
+}
+
 export class SIGH_Instrument extends Entity {
   constructor(id: string) {
     super();
@@ -554,6 +816,51 @@ export class Instrument extends Entity {
     this.set("priceDecimals", Value.fromBigInt(value));
   }
 
+  get ETHPriceInUSD(): BigDecimal {
+    let value = this.get("ETHPriceInUSD");
+    return value.toBigDecimal();
+  }
+
+  set ETHPriceInUSD(value: BigDecimal) {
+    this.set("ETHPriceInUSD", Value.fromBigDecimal(value));
+  }
+
+  get harvestAdjustedSuppliersPriceETH(): BigDecimal {
+    let value = this.get("harvestAdjustedSuppliersPriceETH");
+    return value.toBigDecimal();
+  }
+
+  set harvestAdjustedSuppliersPriceETH(value: BigDecimal) {
+    this.set("harvestAdjustedSuppliersPriceETH", Value.fromBigDecimal(value));
+  }
+
+  get harvestAdjustedBorrowersPriceETH(): BigDecimal {
+    let value = this.get("harvestAdjustedBorrowersPriceETH");
+    return value.toBigDecimal();
+  }
+
+  set harvestAdjustedBorrowersPriceETH(value: BigDecimal) {
+    this.set("harvestAdjustedBorrowersPriceETH", Value.fromBigDecimal(value));
+  }
+
+  get harvestAdjustedSuppliersPriceUSD(): BigDecimal {
+    let value = this.get("harvestAdjustedSuppliersPriceUSD");
+    return value.toBigDecimal();
+  }
+
+  set harvestAdjustedSuppliersPriceUSD(value: BigDecimal) {
+    this.set("harvestAdjustedSuppliersPriceUSD", Value.fromBigDecimal(value));
+  }
+
+  get harvestAdjustedBorrowersPriceUSD(): BigDecimal {
+    let value = this.get("harvestAdjustedBorrowersPriceUSD");
+    return value.toBigDecimal();
+  }
+
+  set harvestAdjustedBorrowersPriceUSD(value: BigDecimal) {
+    this.set("harvestAdjustedBorrowersPriceUSD", Value.fromBigDecimal(value));
+  }
+
   get name(): string {
     let value = this.get("name");
     return value.toString();
@@ -671,40 +978,76 @@ export class Instrument extends Entity {
     this.set("liquidationBonus", Value.fromBigInt(value));
   }
 
-  get availableLiquidity_WEI(): BigInt {
-    let value = this.get("availableLiquidity_WEI");
+  get depositFeeDue_WEI(): BigInt {
+    let value = this.get("depositFeeDue_WEI");
     return value.toBigInt();
   }
 
-  set availableLiquidity_WEI(value: BigInt) {
-    this.set("availableLiquidity_WEI", Value.fromBigInt(value));
+  set depositFeeDue_WEI(value: BigInt) {
+    this.set("depositFeeDue_WEI", Value.fromBigInt(value));
   }
 
-  get availableLiquidity(): BigDecimal {
-    let value = this.get("availableLiquidity");
+  get depositFeeDue(): BigDecimal {
+    let value = this.get("depositFeeDue");
     return value.toBigDecimal();
   }
 
-  set availableLiquidity(value: BigDecimal) {
-    this.set("availableLiquidity", Value.fromBigDecimal(value));
+  set depositFeeDue(value: BigDecimal) {
+    this.set("depositFeeDue", Value.fromBigDecimal(value));
   }
 
-  get availableLiquidityETH(): BigDecimal {
-    let value = this.get("availableLiquidityETH");
+  get depositFeeDueETH(): BigDecimal {
+    let value = this.get("depositFeeDueETH");
     return value.toBigDecimal();
   }
 
-  set availableLiquidityETH(value: BigDecimal) {
-    this.set("availableLiquidityETH", Value.fromBigDecimal(value));
+  set depositFeeDueETH(value: BigDecimal) {
+    this.set("depositFeeDueETH", Value.fromBigDecimal(value));
   }
 
-  get availableLiquidityUSD(): BigDecimal {
-    let value = this.get("availableLiquidityUSD");
+  get depositFeeDueUSD(): BigDecimal {
+    let value = this.get("depositFeeDueUSD");
     return value.toBigDecimal();
   }
 
-  set availableLiquidityUSD(value: BigDecimal) {
-    this.set("availableLiquidityUSD", Value.fromBigDecimal(value));
+  set depositFeeDueUSD(value: BigDecimal) {
+    this.set("depositFeeDueUSD", Value.fromBigDecimal(value));
+  }
+
+  get depositFeeEarned_WEI(): BigInt {
+    let value = this.get("depositFeeEarned_WEI");
+    return value.toBigInt();
+  }
+
+  set depositFeeEarned_WEI(value: BigInt) {
+    this.set("depositFeeEarned_WEI", Value.fromBigInt(value));
+  }
+
+  get depositFeeEarned(): BigDecimal {
+    let value = this.get("depositFeeEarned");
+    return value.toBigDecimal();
+  }
+
+  set depositFeeEarned(value: BigDecimal) {
+    this.set("depositFeeEarned", Value.fromBigDecimal(value));
+  }
+
+  get depositFeeEarnedETH(): BigDecimal {
+    let value = this.get("depositFeeEarnedETH");
+    return value.toBigDecimal();
+  }
+
+  set depositFeeEarnedETH(value: BigDecimal) {
+    this.set("depositFeeEarnedETH", Value.fromBigDecimal(value));
+  }
+
+  get depositFeeEarnedUSD(): BigDecimal {
+    let value = this.get("depositFeeEarnedUSD");
+    return value.toBigDecimal();
+  }
+
+  set depositFeeEarnedUSD(value: BigDecimal) {
+    this.set("depositFeeEarnedUSD", Value.fromBigDecimal(value));
   }
 
   get borrowFeeDue_WEI(): BigInt {
@@ -777,6 +1120,42 @@ export class Instrument extends Entity {
 
   set borrowFeeEarnedUSD(value: BigDecimal) {
     this.set("borrowFeeEarnedUSD", Value.fromBigDecimal(value));
+  }
+
+  get availableLiquidity_WEI(): BigInt {
+    let value = this.get("availableLiquidity_WEI");
+    return value.toBigInt();
+  }
+
+  set availableLiquidity_WEI(value: BigInt) {
+    this.set("availableLiquidity_WEI", Value.fromBigInt(value));
+  }
+
+  get availableLiquidity(): BigDecimal {
+    let value = this.get("availableLiquidity");
+    return value.toBigDecimal();
+  }
+
+  set availableLiquidity(value: BigDecimal) {
+    this.set("availableLiquidity", Value.fromBigDecimal(value));
+  }
+
+  get availableLiquidityETH(): BigDecimal {
+    let value = this.get("availableLiquidityETH");
+    return value.toBigDecimal();
+  }
+
+  set availableLiquidityETH(value: BigDecimal) {
+    this.set("availableLiquidityETH", Value.fromBigDecimal(value));
+  }
+
+  get availableLiquidityUSD(): BigDecimal {
+    let value = this.get("availableLiquidityUSD");
+    return value.toBigDecimal();
+  }
+
+  set availableLiquidityUSD(value: BigDecimal) {
+    this.set("availableLiquidityUSD", Value.fromBigDecimal(value));
   }
 
   get totalCompoundedLiquidityWEI(): BigInt {
@@ -1319,6 +1698,15 @@ export class Instrument extends Entity {
     this.set("isSIGHMechanismActivated", Value.fromBoolean(value));
   }
 
+  get totalSIGHDistributionSnapshotsTaken(): BigInt {
+    let value = this.get("totalSIGHDistributionSnapshotsTaken");
+    return value.toBigInt();
+  }
+
+  set totalSIGHDistributionSnapshotsTaken(value: BigInt) {
+    this.set("totalSIGHDistributionSnapshotsTaken", Value.fromBigInt(value));
+  }
+
   get SIGH_Supply_Index(): BigInt {
     let value = this.get("SIGH_Supply_Index");
     return value.toBigInt();
@@ -1355,22 +1743,58 @@ export class Instrument extends Entity {
     this.set("SIGH_Borrow_Index_lastUpdatedBlock", Value.fromBigInt(value));
   }
 
-  get fromBlockNumber(): BigInt {
-    let value = this.get("fromBlockNumber");
-    return value.toBigInt();
+  get maxVolatilityLimitSuppliersPercent(): BigDecimal {
+    let value = this.get("maxVolatilityLimitSuppliersPercent");
+    return value.toBigDecimal();
   }
 
-  set fromBlockNumber(value: BigInt) {
-    this.set("fromBlockNumber", Value.fromBigInt(value));
+  set maxVolatilityLimitSuppliersPercent(value: BigDecimal) {
+    this.set("maxVolatilityLimitSuppliersPercent", Value.fromBigDecimal(value));
   }
 
-  get toBlockNumber(): BigInt {
-    let value = this.get("toBlockNumber");
-    return value.toBigInt();
+  get maxVolatilityLimitBorrowersPercent(): BigDecimal {
+    let value = this.get("maxVolatilityLimitBorrowersPercent");
+    return value.toBigDecimal();
   }
 
-  set toBlockNumber(value: BigInt) {
-    this.set("toBlockNumber", Value.fromBigInt(value));
+  set maxVolatilityLimitBorrowersPercent(value: BigDecimal) {
+    this.set("maxVolatilityLimitBorrowersPercent", Value.fromBigDecimal(value));
+  }
+
+  get present_PrevPrice_ETH(): BigDecimal {
+    let value = this.get("present_PrevPrice_ETH");
+    return value.toBigDecimal();
+  }
+
+  set present_PrevPrice_ETH(value: BigDecimal) {
+    this.set("present_PrevPrice_ETH", Value.fromBigDecimal(value));
+  }
+
+  get present_PrevPrice_USD(): BigDecimal {
+    let value = this.get("present_PrevPrice_USD");
+    return value.toBigDecimal();
+  }
+
+  set present_PrevPrice_USD(value: BigDecimal) {
+    this.set("present_PrevPrice_USD", Value.fromBigDecimal(value));
+  }
+
+  get present_OpeningPrice_ETH(): BigDecimal {
+    let value = this.get("present_OpeningPrice_ETH");
+    return value.toBigDecimal();
+  }
+
+  set present_OpeningPrice_ETH(value: BigDecimal) {
+    this.set("present_OpeningPrice_ETH", Value.fromBigDecimal(value));
+  }
+
+  get present_OpeningPrice_USD(): BigDecimal {
+    let value = this.get("present_OpeningPrice_USD");
+    return value.toBigDecimal();
+  }
+
+  set present_OpeningPrice_USD(value: BigDecimal) {
+    this.set("present_OpeningPrice_USD", Value.fromBigDecimal(value));
   }
 
   get present_SIGH_Side(): string {
@@ -1391,66 +1815,6 @@ export class Instrument extends Entity {
     this.set("present_DeltaBlocks", Value.fromBigInt(value));
   }
 
-  get present_Clock(): BigInt {
-    let value = this.get("present_Clock");
-    return value.toBigInt();
-  }
-
-  set present_Clock(value: BigInt) {
-    this.set("present_Clock", Value.fromBigInt(value));
-  }
-
-  get present_maxVolatilityLimitSuppliers(): BigInt {
-    let value = this.get("present_maxVolatilityLimitSuppliers");
-    return value.toBigInt();
-  }
-
-  set present_maxVolatilityLimitSuppliers(value: BigInt) {
-    this.set("present_maxVolatilityLimitSuppliers", Value.fromBigInt(value));
-  }
-
-  get present_maxVolatilityLimitSuppliersPercent(): BigDecimal {
-    let value = this.get("present_maxVolatilityLimitSuppliersPercent");
-    return value.toBigDecimal();
-  }
-
-  set present_maxVolatilityLimitSuppliersPercent(value: BigDecimal) {
-    this.set(
-      "present_maxVolatilityLimitSuppliersPercent",
-      Value.fromBigDecimal(value)
-    );
-  }
-
-  get present_maxVolatilityLimitBorrowers(): BigInt {
-    let value = this.get("present_maxVolatilityLimitBorrowers");
-    return value.toBigInt();
-  }
-
-  set present_maxVolatilityLimitBorrowers(value: BigInt) {
-    this.set("present_maxVolatilityLimitBorrowers", Value.fromBigInt(value));
-  }
-
-  get present_maxVolatilityLimitBorrowersPercent(): BigDecimal {
-    let value = this.get("present_maxVolatilityLimitBorrowersPercent");
-    return value.toBigDecimal();
-  }
-
-  set present_maxVolatilityLimitBorrowersPercent(value: BigDecimal) {
-    this.set(
-      "present_maxVolatilityLimitBorrowersPercent",
-      Value.fromBigDecimal(value)
-    );
-  }
-
-  get present_percentTotalVolatility(): BigDecimal {
-    let value = this.get("present_percentTotalVolatility");
-    return value.toBigDecimal();
-  }
-
-  set present_percentTotalVolatility(value: BigDecimal) {
-    this.set("present_percentTotalVolatility", Value.fromBigDecimal(value));
-  }
-
   get present_total24HrVolatilityETH(): BigDecimal {
     let value = this.get("present_total24HrVolatilityETH");
     return value.toBigDecimal();
@@ -1469,16 +1833,13 @@ export class Instrument extends Entity {
     this.set("present_total24HrVolatilityUSD", Value.fromBigDecimal(value));
   }
 
-  get present_percentTotalVolatilityLimitAmount(): BigDecimal {
-    let value = this.get("present_percentTotalVolatilityLimitAmount");
+  get present_percentTotalVolatility(): BigDecimal {
+    let value = this.get("present_percentTotalVolatility");
     return value.toBigDecimal();
   }
 
-  set present_percentTotalVolatilityLimitAmount(value: BigDecimal) {
-    this.set(
-      "present_percentTotalVolatilityLimitAmount",
-      Value.fromBigDecimal(value)
-    );
+  set present_percentTotalVolatility(value: BigDecimal) {
+    this.set("present_percentTotalVolatility", Value.fromBigDecimal(value));
   }
 
   get present_24HrVolatilityLimitAmountETH(): BigDecimal {
@@ -1501,6 +1862,18 @@ export class Instrument extends Entity {
   set present_24HrVolatilityLimitAmountUSD(value: BigDecimal) {
     this.set(
       "present_24HrVolatilityLimitAmountUSD",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get present_percentTotalVolatilityLimitAmount(): BigDecimal {
+    let value = this.get("present_percentTotalVolatilityLimitAmount");
+    return value.toBigDecimal();
+  }
+
+  set present_percentTotalVolatilityLimitAmount(value: BigDecimal) {
+    this.set(
+      "present_percentTotalVolatilityLimitAmount",
       Value.fromBigDecimal(value)
     );
   }
@@ -1559,40 +1932,85 @@ export class Instrument extends Entity {
     this.set("present_SIGH_Staking_Speed", Value.fromBigDecimal(value));
   }
 
-  get present_PrevPrice_ETH(): BigDecimal {
-    let value = this.get("present_PrevPrice_ETH");
+  get present_harvestSpeedPerBlock(): BigDecimal {
+    let value = this.get("present_harvestSpeedPerBlock");
     return value.toBigDecimal();
   }
 
-  set present_PrevPrice_ETH(value: BigDecimal) {
-    this.set("present_PrevPrice_ETH", Value.fromBigDecimal(value));
+  set present_harvestSpeedPerBlock(value: BigDecimal) {
+    this.set("present_harvestSpeedPerBlock", Value.fromBigDecimal(value));
   }
 
-  get present_PrevPrice_USD(): BigDecimal {
-    let value = this.get("present_PrevPrice_USD");
+  get present_harvestValuePerBlockUSD(): BigDecimal {
+    let value = this.get("present_harvestValuePerBlockUSD");
     return value.toBigDecimal();
   }
 
-  set present_PrevPrice_USD(value: BigDecimal) {
-    this.set("present_PrevPrice_USD", Value.fromBigDecimal(value));
+  set present_harvestValuePerBlockUSD(value: BigDecimal) {
+    this.set("present_harvestValuePerBlockUSD", Value.fromBigDecimal(value));
   }
 
-  get present_OpeningPrice_ETH(): BigDecimal {
-    let value = this.get("present_OpeningPrice_ETH");
+  get present_harvestSpeedPerDay(): BigDecimal {
+    let value = this.get("present_harvestSpeedPerDay");
     return value.toBigDecimal();
   }
 
-  set present_OpeningPrice_ETH(value: BigDecimal) {
-    this.set("present_OpeningPrice_ETH", Value.fromBigDecimal(value));
+  set present_harvestSpeedPerDay(value: BigDecimal) {
+    this.set("present_harvestSpeedPerDay", Value.fromBigDecimal(value));
   }
 
-  get present_OpeningPrice_USD(): BigDecimal {
-    let value = this.get("present_OpeningPrice_USD");
+  get present_harvestValuePerDayUSD(): BigDecimal {
+    let value = this.get("present_harvestValuePerDayUSD");
     return value.toBigDecimal();
   }
 
-  set present_OpeningPrice_USD(value: BigDecimal) {
-    this.set("present_OpeningPrice_USD", Value.fromBigDecimal(value));
+  set present_harvestValuePerDayUSD(value: BigDecimal) {
+    this.set("present_harvestValuePerDayUSD", Value.fromBigDecimal(value));
+  }
+
+  get present_harvestSpeedPerYear(): BigDecimal {
+    let value = this.get("present_harvestSpeedPerYear");
+    return value.toBigDecimal();
+  }
+
+  set present_harvestSpeedPerYear(value: BigDecimal) {
+    this.set("present_harvestSpeedPerYear", Value.fromBigDecimal(value));
+  }
+
+  get present_harvestValuePerYearUSD(): BigDecimal {
+    let value = this.get("present_harvestValuePerYearUSD");
+    return value.toBigDecimal();
+  }
+
+  set present_harvestValuePerYearUSD(value: BigDecimal) {
+    this.set("present_harvestValuePerYearUSD", Value.fromBigDecimal(value));
+  }
+
+  get present_harvestAPY(): BigDecimal {
+    let value = this.get("present_harvestAPY");
+    return value.toBigDecimal();
+  }
+
+  set present_harvestAPY(value: BigDecimal) {
+    this.set("present_harvestAPY", Value.fromBigDecimal(value));
+  }
+
+  get present_suppliersHarvestAPY(): BigDecimal {
+    let value = this.get("present_suppliersHarvestAPY");
+    return value.toBigDecimal();
+  }
+
+  set present_suppliersHarvestAPY(value: BigDecimal) {
+    this.set("present_suppliersHarvestAPY", Value.fromBigDecimal(value));
+  }
+
+  get present_borrowersHarvestAPY(): BigDecimal {
+    let value = this.get("present_borrowersHarvestAPY");
+    return value.toBigDecimal();
+  }
+
+  set present_borrowersHarvestAPY(value: BigDecimal) {
+    this.set("present_borrowersHarvestAPY", Value.fromBigDecimal(value));
   }
 
   get SIGH_Distribution_History(): Array<string> {
@@ -1602,6 +2020,267 @@ export class Instrument extends Entity {
 
   set SIGH_Distribution_History(value: Array<string>) {
     this.set("SIGH_Distribution_History", Value.fromStringArray(value));
+  }
+
+  get average24SnapsHarvestSpeedPerBlock(): BigDecimal {
+    let value = this.get("average24SnapsHarvestSpeedPerBlock");
+    return value.toBigDecimal();
+  }
+
+  set average24SnapsHarvestSpeedPerBlock(value: BigDecimal) {
+    this.set("average24SnapsHarvestSpeedPerBlock", Value.fromBigDecimal(value));
+  }
+
+  get average24SnapsHarvestValuePerBlockUSD(): BigDecimal {
+    let value = this.get("average24SnapsHarvestValuePerBlockUSD");
+    return value.toBigDecimal();
+  }
+
+  set average24SnapsHarvestValuePerBlockUSD(value: BigDecimal) {
+    this.set(
+      "average24SnapsHarvestValuePerBlockUSD",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get average24SnapsHarvestSpeedPerDay(): BigDecimal {
+    let value = this.get("average24SnapsHarvestSpeedPerDay");
+    return value.toBigDecimal();
+  }
+
+  set average24SnapsHarvestSpeedPerDay(value: BigDecimal) {
+    this.set("average24SnapsHarvestSpeedPerDay", Value.fromBigDecimal(value));
+  }
+
+  get average24SnapsHarvestValuePerDayUSD(): BigDecimal {
+    let value = this.get("average24SnapsHarvestValuePerDayUSD");
+    return value.toBigDecimal();
+  }
+
+  set average24SnapsHarvestValuePerDayUSD(value: BigDecimal) {
+    this.set(
+      "average24SnapsHarvestValuePerDayUSD",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get average24SnapsHarvestSpeedPerYear(): BigDecimal {
+    let value = this.get("average24SnapsHarvestSpeedPerYear");
+    return value.toBigDecimal();
+  }
+
+  set average24SnapsHarvestSpeedPerYear(value: BigDecimal) {
+    this.set("average24SnapsHarvestSpeedPerYear", Value.fromBigDecimal(value));
+  }
+
+  get average24SnapsHarvestValuePerYearUSD(): BigDecimal {
+    let value = this.get("average24SnapsHarvestValuePerYearUSD");
+    return value.toBigDecimal();
+  }
+
+  set average24SnapsHarvestValuePerYearUSD(value: BigDecimal) {
+    this.set(
+      "average24SnapsHarvestValuePerYearUSD",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get average24SnapsHarvestAPY(): BigDecimal {
+    let value = this.get("average24SnapsHarvestAPY");
+    return value.toBigDecimal();
+  }
+
+  set average24SnapsHarvestAPY(value: BigDecimal) {
+    this.set("average24SnapsHarvestAPY", Value.fromBigDecimal(value));
+  }
+
+  get average24SnapsSuppliersHarvestAPY(): BigDecimal {
+    let value = this.get("average24SnapsSuppliersHarvestAPY");
+    return value.toBigDecimal();
+  }
+
+  set average24SnapsSuppliersHarvestAPY(value: BigDecimal) {
+    this.set("average24SnapsSuppliersHarvestAPY", Value.fromBigDecimal(value));
+  }
+
+  get average24SnapsBorrowersHarvestAPY(): BigDecimal {
+    let value = this.get("average24SnapsBorrowersHarvestAPY");
+    return value.toBigDecimal();
+  }
+
+  set average24SnapsBorrowersHarvestAPY(value: BigDecimal) {
+    this.set("average24SnapsBorrowersHarvestAPY", Value.fromBigDecimal(value));
+  }
+
+  get averageMonthlySnapsHarvestSpeedPerBlock(): BigDecimal {
+    let value = this.get("averageMonthlySnapsHarvestSpeedPerBlock");
+    return value.toBigDecimal();
+  }
+
+  set averageMonthlySnapsHarvestSpeedPerBlock(value: BigDecimal) {
+    this.set(
+      "averageMonthlySnapsHarvestSpeedPerBlock",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get averageMonthlySnapsHarvestValuePerBlockUSD(): BigDecimal {
+    let value = this.get("averageMonthlySnapsHarvestValuePerBlockUSD");
+    return value.toBigDecimal();
+  }
+
+  set averageMonthlySnapsHarvestValuePerBlockUSD(value: BigDecimal) {
+    this.set(
+      "averageMonthlySnapsHarvestValuePerBlockUSD",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get averageMonthlySnapsHarvestSpeedPerDay(): BigDecimal {
+    let value = this.get("averageMonthlySnapsHarvestSpeedPerDay");
+    return value.toBigDecimal();
+  }
+
+  set averageMonthlySnapsHarvestSpeedPerDay(value: BigDecimal) {
+    this.set(
+      "averageMonthlySnapsHarvestSpeedPerDay",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get averageMonthlySnapsHarvestValuePerDayUSD(): BigDecimal {
+    let value = this.get("averageMonthlySnapsHarvestValuePerDayUSD");
+    return value.toBigDecimal();
+  }
+
+  set averageMonthlySnapsHarvestValuePerDayUSD(value: BigDecimal) {
+    this.set(
+      "averageMonthlySnapsHarvestValuePerDayUSD",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get averageMonthlySnapsHarvestSpeedPerYear(): BigDecimal {
+    let value = this.get("averageMonthlySnapsHarvestSpeedPerYear");
+    return value.toBigDecimal();
+  }
+
+  set averageMonthlySnapsHarvestSpeedPerYear(value: BigDecimal) {
+    this.set(
+      "averageMonthlySnapsHarvestSpeedPerYear",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get averageMonthlySnapsHarvestValuePerYearUSD(): BigDecimal {
+    let value = this.get("averageMonthlySnapsHarvestValuePerYearUSD");
+    return value.toBigDecimal();
+  }
+
+  set averageMonthlySnapsHarvestValuePerYearUSD(value: BigDecimal) {
+    this.set(
+      "averageMonthlySnapsHarvestValuePerYearUSD",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get averageMonthlySnapsHarvestAPY(): BigDecimal {
+    let value = this.get("averageMonthlySnapsHarvestAPY");
+    return value.toBigDecimal();
+  }
+
+  set averageMonthlySnapsHarvestAPY(value: BigDecimal) {
+    this.set("averageMonthlySnapsHarvestAPY", Value.fromBigDecimal(value));
+  }
+
+  get averageMonthlySnapsSuppliersHarvestAPY(): BigDecimal {
+    let value = this.get("averageMonthlySnapsSuppliersHarvestAPY");
+    return value.toBigDecimal();
+  }
+
+  set averageMonthlySnapsSuppliersHarvestAPY(value: BigDecimal) {
+    this.set(
+      "averageMonthlySnapsSuppliersHarvestAPY",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get averageMonthlySnapsBorrowersHarvestAPY(): BigDecimal {
+    let value = this.get("averageMonthlySnapsBorrowersHarvestAPY");
+    return value.toBigDecimal();
+  }
+
+  set averageMonthlySnapsBorrowersHarvestAPY(value: BigDecimal) {
+    this.set(
+      "averageMonthlySnapsBorrowersHarvestAPY",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get instrumentActualPriceETH(): BigDecimal {
+    let value = this.get("instrumentActualPriceETH");
+    return value.toBigDecimal();
+  }
+
+  set instrumentActualPriceETH(value: BigDecimal) {
+    this.set("instrumentActualPriceETH", Value.fromBigDecimal(value));
+  }
+
+  get instrumentHarvestAdjustedPriceSuppliersETH(): BigDecimal {
+    let value = this.get("instrumentHarvestAdjustedPriceSuppliersETH");
+    return value.toBigDecimal();
+  }
+
+  set instrumentHarvestAdjustedPriceSuppliersETH(value: BigDecimal) {
+    this.set(
+      "instrumentHarvestAdjustedPriceSuppliersETH",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get instrumentHarvestAdjustedPriceBorrowersETH(): BigDecimal {
+    let value = this.get("instrumentHarvestAdjustedPriceBorrowersETH");
+    return value.toBigDecimal();
+  }
+
+  set instrumentHarvestAdjustedPriceBorrowersETH(value: BigDecimal) {
+    this.set(
+      "instrumentHarvestAdjustedPriceBorrowersETH",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get instrumentActualPriceUSD(): BigDecimal {
+    let value = this.get("instrumentActualPriceUSD");
+    return value.toBigDecimal();
+  }
+
+  set instrumentActualPriceUSD(value: BigDecimal) {
+    this.set("instrumentActualPriceUSD", Value.fromBigDecimal(value));
+  }
+
+  get instrumentHarvestAdjustedPriceSuppliersUSD(): BigDecimal {
+    let value = this.get("instrumentHarvestAdjustedPriceSuppliersUSD");
+    return value.toBigDecimal();
+  }
+
+  set instrumentHarvestAdjustedPriceSuppliersUSD(value: BigDecimal) {
+    this.set(
+      "instrumentHarvestAdjustedPriceSuppliersUSD",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get instrumentHarvestAdjustedPriceBorrowersUSD(): BigDecimal {
+    let value = this.get("instrumentHarvestAdjustedPriceBorrowersUSD");
+    return value.toBigDecimal();
+  }
+
+  set instrumentHarvestAdjustedPriceBorrowersUSD(value: BigDecimal) {
+    this.set(
+      "instrumentHarvestAdjustedPriceBorrowersUSD",
+      Value.fromBigDecimal(value)
+    );
   }
 
   get timeStamp(): BigInt {
@@ -1621,9 +2300,18 @@ export class Instrument extends Entity {
   set creationBlockNumber(value: BigInt) {
     this.set("creationBlockNumber", Value.fromBigInt(value));
   }
+
+  get SIGHPriceUSD(): BigDecimal {
+    let value = this.get("SIGHPriceUSD");
+    return value.toBigDecimal();
+  }
+
+  set SIGHPriceUSD(value: BigDecimal) {
+    this.set("SIGHPriceUSD", Value.fromBigDecimal(value));
+  }
 }
 
-export class SIGH_Distribution extends Entity {
+export class SIGH_Distribution_SnapShot extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -1631,17 +2319,23 @@ export class SIGH_Distribution extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id !== null, "Cannot save SIGH_Distribution entity without an ID");
+    assert(
+      id !== null,
+      "Cannot save SIGH_Distribution_SnapShot entity without an ID"
+    );
     assert(
       id.kind == ValueKind.STRING,
-      "Cannot save SIGH_Distribution entity with non-string ID. " +
+      "Cannot save SIGH_Distribution_SnapShot entity with non-string ID. " +
         'Considering using .toHex() to convert the "id" to a string.'
     );
-    store.set("SIGH_Distribution", id.toString(), this);
+    store.set("SIGH_Distribution_SnapShot", id.toString(), this);
   }
 
-  static load(id: string): SIGH_Distribution | null {
-    return store.get("SIGH_Distribution", id) as SIGH_Distribution | null;
+  static load(id: string): SIGH_Distribution_SnapShot | null {
+    return store.get(
+      "SIGH_Distribution_SnapShot",
+      id
+    ) as SIGH_Distribution_SnapShot | null;
   }
 
   get id(): string {
@@ -1680,22 +2374,158 @@ export class SIGH_Distribution extends Entity {
     this.set("toBlockNumber", Value.fromBigInt(value));
   }
 
-  get distribution_Side(): string {
-    let value = this.get("distribution_Side");
-    return value.toString();
-  }
-
-  set distribution_Side(value: string) {
-    this.set("distribution_Side", Value.fromString(value));
-  }
-
-  get suppliers_Speed_WEI(): BigInt {
-    let value = this.get("suppliers_Speed_WEI");
+  get deltaBlocks24Hrs(): BigInt {
+    let value = this.get("deltaBlocks24Hrs");
     return value.toBigInt();
   }
 
-  set suppliers_Speed_WEI(value: BigInt) {
-    this.set("suppliers_Speed_WEI", Value.fromBigInt(value));
+  set deltaBlocks24Hrs(value: BigInt) {
+    this.set("deltaBlocks24Hrs", Value.fromBigInt(value));
+  }
+
+  get clock(): BigInt {
+    let value = this.get("clock");
+    return value.toBigInt();
+  }
+
+  set clock(value: BigInt) {
+    this.set("clock", Value.fromBigInt(value));
+  }
+
+  get prevPrice_ETH(): BigDecimal {
+    let value = this.get("prevPrice_ETH");
+    return value.toBigDecimal();
+  }
+
+  set prevPrice_ETH(value: BigDecimal) {
+    this.set("prevPrice_ETH", Value.fromBigDecimal(value));
+  }
+
+  get prevPrice_USD(): BigDecimal {
+    let value = this.get("prevPrice_USD");
+    return value.toBigDecimal();
+  }
+
+  set prevPrice_USD(value: BigDecimal) {
+    this.set("prevPrice_USD", Value.fromBigDecimal(value));
+  }
+
+  get openingPrice_ETH(): BigDecimal {
+    let value = this.get("openingPrice_ETH");
+    return value.toBigDecimal();
+  }
+
+  set openingPrice_ETH(value: BigDecimal) {
+    this.set("openingPrice_ETH", Value.fromBigDecimal(value));
+  }
+
+  get openingPrice_USD(): BigDecimal {
+    let value = this.get("openingPrice_USD");
+    return value.toBigDecimal();
+  }
+
+  set openingPrice_USD(value: BigDecimal) {
+    this.set("openingPrice_USD", Value.fromBigDecimal(value));
+  }
+
+  get priceDifferenceETH(): BigDecimal {
+    let value = this.get("priceDifferenceETH");
+    return value.toBigDecimal();
+  }
+
+  set priceDifferenceETH(value: BigDecimal) {
+    this.set("priceDifferenceETH", Value.fromBigDecimal(value));
+  }
+
+  get priceDifferenceUSD(): BigDecimal {
+    let value = this.get("priceDifferenceUSD");
+    return value.toBigDecimal();
+  }
+
+  set priceDifferenceUSD(value: BigDecimal) {
+    this.set("priceDifferenceUSD", Value.fromBigDecimal(value));
+  }
+
+  get maxVolatilityLimitSuppliersPercent(): BigDecimal {
+    let value = this.get("maxVolatilityLimitSuppliersPercent");
+    return value.toBigDecimal();
+  }
+
+  set maxVolatilityLimitSuppliersPercent(value: BigDecimal) {
+    this.set("maxVolatilityLimitSuppliersPercent", Value.fromBigDecimal(value));
+  }
+
+  get maxVolatilityLimitBorrowersPercent(): BigDecimal {
+    let value = this.get("maxVolatilityLimitBorrowersPercent");
+    return value.toBigDecimal();
+  }
+
+  set maxVolatilityLimitBorrowersPercent(value: BigDecimal) {
+    this.set("maxVolatilityLimitBorrowersPercent", Value.fromBigDecimal(value));
+  }
+
+  get total24HrVolatilityETH(): BigDecimal {
+    let value = this.get("total24HrVolatilityETH");
+    return value.toBigDecimal();
+  }
+
+  set total24HrVolatilityETH(value: BigDecimal) {
+    this.set("total24HrVolatilityETH", Value.fromBigDecimal(value));
+  }
+
+  get total24HrVolatilityUSD(): BigDecimal {
+    let value = this.get("total24HrVolatilityUSD");
+    return value.toBigDecimal();
+  }
+
+  set total24HrVolatilityUSD(value: BigDecimal) {
+    this.set("total24HrVolatilityUSD", Value.fromBigDecimal(value));
+  }
+
+  get total24HrVolatilityLimitAmountETH(): BigDecimal {
+    let value = this.get("total24HrVolatilityLimitAmountETH");
+    return value.toBigDecimal();
+  }
+
+  set total24HrVolatilityLimitAmountETH(value: BigDecimal) {
+    this.set("total24HrVolatilityLimitAmountETH", Value.fromBigDecimal(value));
+  }
+
+  get total24HrVolatilityLimitAmountUSD(): BigDecimal {
+    let value = this.get("total24HrVolatilityLimitAmountUSD");
+    return value.toBigDecimal();
+  }
+
+  set total24HrVolatilityLimitAmountUSD(value: BigDecimal) {
+    this.set("total24HrVolatilityLimitAmountUSD", Value.fromBigDecimal(value));
+  }
+
+  get totalVolatilityAsPercentOfTotalProtocolVolatility(): BigDecimal {
+    let value = this.get("totalVolatilityAsPercentOfTotalProtocolVolatility");
+    return value.toBigDecimal();
+  }
+
+  set totalVolatilityAsPercentOfTotalProtocolVolatility(value: BigDecimal) {
+    this.set(
+      "totalVolatilityAsPercentOfTotalProtocolVolatility",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get instrumentLimitVolatilityAsPercentOflimitProtocolVolatility(): BigDecimal {
+    let value = this.get(
+      "instrumentLimitVolatilityAsPercentOflimitProtocolVolatility"
+    );
+    return value.toBigDecimal();
+  }
+
+  set instrumentLimitVolatilityAsPercentOflimitProtocolVolatility(
+    value: BigDecimal
+  ) {
+    this.set(
+      "instrumentLimitVolatilityAsPercentOflimitProtocolVolatility",
+      Value.fromBigDecimal(value)
+    );
   }
 
   get suppliers_Speed(): BigDecimal {
@@ -1707,15 +2537,6 @@ export class SIGH_Distribution extends Entity {
     this.set("suppliers_Speed", Value.fromBigDecimal(value));
   }
 
-  get borrowers_Speed_WEI(): BigInt {
-    let value = this.get("borrowers_Speed_WEI");
-    return value.toBigInt();
-  }
-
-  set borrowers_Speed_WEI(value: BigInt) {
-    this.set("borrowers_Speed_WEI", Value.fromBigInt(value));
-  }
-
   get borrowers_Speed(): BigDecimal {
     let value = this.get("borrowers_Speed");
     return value.toBigDecimal();
@@ -1725,15 +2546,6 @@ export class SIGH_Distribution extends Entity {
     this.set("borrowers_Speed", Value.fromBigDecimal(value));
   }
 
-  get staking_Speed_WEI(): BigInt {
-    let value = this.get("staking_Speed_WEI");
-    return value.toBigInt();
-  }
-
-  set staking_Speed_WEI(value: BigInt) {
-    this.set("staking_Speed_WEI", Value.fromBigInt(value));
-  }
-
   get staking_Speed(): BigDecimal {
     let value = this.get("staking_Speed");
     return value.toBigDecimal();
@@ -1741,5 +2553,170 @@ export class SIGH_Distribution extends Entity {
 
   set staking_Speed(value: BigDecimal) {
     this.set("staking_Speed", Value.fromBigDecimal(value));
+  }
+
+  get distribution_Side(): string {
+    let value = this.get("distribution_Side");
+    return value.toString();
+  }
+
+  set distribution_Side(value: string) {
+    this.set("distribution_Side", Value.fromString(value));
+  }
+
+  get harvestSpeedPerBlock(): BigDecimal {
+    let value = this.get("harvestSpeedPerBlock");
+    return value.toBigDecimal();
+  }
+
+  set harvestSpeedPerBlock(value: BigDecimal) {
+    this.set("harvestSpeedPerBlock", Value.fromBigDecimal(value));
+  }
+
+  get harvestValuePerBlockETH(): BigDecimal {
+    let value = this.get("harvestValuePerBlockETH");
+    return value.toBigDecimal();
+  }
+
+  set harvestValuePerBlockETH(value: BigDecimal) {
+    this.set("harvestValuePerBlockETH", Value.fromBigDecimal(value));
+  }
+
+  get harvestValuePerBlockUSD(): BigDecimal {
+    let value = this.get("harvestValuePerBlockUSD");
+    return value.toBigDecimal();
+  }
+
+  set harvestValuePerBlockUSD(value: BigDecimal) {
+    this.set("harvestValuePerBlockUSD", Value.fromBigDecimal(value));
+  }
+
+  get harvestSpeedPerDay(): BigDecimal {
+    let value = this.get("harvestSpeedPerDay");
+    return value.toBigDecimal();
+  }
+
+  set harvestSpeedPerDay(value: BigDecimal) {
+    this.set("harvestSpeedPerDay", Value.fromBigDecimal(value));
+  }
+
+  get harvestValuePerDayETH(): BigDecimal {
+    let value = this.get("harvestValuePerDayETH");
+    return value.toBigDecimal();
+  }
+
+  set harvestValuePerDayETH(value: BigDecimal) {
+    this.set("harvestValuePerDayETH", Value.fromBigDecimal(value));
+  }
+
+  get harvestValuePerDayUSD(): BigDecimal {
+    let value = this.get("harvestValuePerDayUSD");
+    return value.toBigDecimal();
+  }
+
+  set harvestValuePerDayUSD(value: BigDecimal) {
+    this.set("harvestValuePerDayUSD", Value.fromBigDecimal(value));
+  }
+
+  get harvestSpeedPerYear(): BigDecimal {
+    let value = this.get("harvestSpeedPerYear");
+    return value.toBigDecimal();
+  }
+
+  set harvestSpeedPerYear(value: BigDecimal) {
+    this.set("harvestSpeedPerYear", Value.fromBigDecimal(value));
+  }
+
+  get harvestValuePerYearETH(): BigDecimal {
+    let value = this.get("harvestValuePerYearETH");
+    return value.toBigDecimal();
+  }
+
+  set harvestValuePerYearETH(value: BigDecimal) {
+    this.set("harvestValuePerYearETH", Value.fromBigDecimal(value));
+  }
+
+  get harvestValuePerYearUSD(): BigDecimal {
+    let value = this.get("harvestValuePerYearUSD");
+    return value.toBigDecimal();
+  }
+
+  set harvestValuePerYearUSD(value: BigDecimal) {
+    this.set("harvestValuePerYearUSD", Value.fromBigDecimal(value));
+  }
+
+  get harvestAPY(): BigDecimal {
+    let value = this.get("harvestAPY");
+    return value.toBigDecimal();
+  }
+
+  set harvestAPY(value: BigDecimal) {
+    this.set("harvestAPY", Value.fromBigDecimal(value));
+  }
+
+  get suppliersHarvestAPY(): BigDecimal {
+    let value = this.get("suppliersHarvestAPY");
+    return value.toBigDecimal();
+  }
+
+  set suppliersHarvestAPY(value: BigDecimal) {
+    this.set("suppliersHarvestAPY", Value.fromBigDecimal(value));
+  }
+
+  get borrowersHarvestAPY(): BigDecimal {
+    let value = this.get("borrowersHarvestAPY");
+    return value.toBigDecimal();
+  }
+
+  set borrowersHarvestAPY(value: BigDecimal) {
+    this.set("borrowersHarvestAPY", Value.fromBigDecimal(value));
+  }
+
+  get totalBorrowingSIGHAccuredBeforeThisSnapshot(): BigDecimal {
+    let value = this.get("totalBorrowingSIGHAccuredBeforeThisSnapshot");
+    return value.toBigDecimal();
+  }
+
+  set totalBorrowingSIGHAccuredBeforeThisSnapshot(value: BigDecimal) {
+    this.set(
+      "totalBorrowingSIGHAccuredBeforeThisSnapshot",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get BorrowingSIGHAccuredDuringThisSnapshot(): BigDecimal {
+    let value = this.get("BorrowingSIGHAccuredDuringThisSnapshot");
+    return value.toBigDecimal();
+  }
+
+  set BorrowingSIGHAccuredDuringThisSnapshot(value: BigDecimal) {
+    this.set(
+      "BorrowingSIGHAccuredDuringThisSnapshot",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get totalLiquiditySIGHAccuredBeforeThisSnapshot(): BigDecimal {
+    let value = this.get("totalLiquiditySIGHAccuredBeforeThisSnapshot");
+    return value.toBigDecimal();
+  }
+
+  set totalLiquiditySIGHAccuredBeforeThisSnapshot(value: BigDecimal) {
+    this.set(
+      "totalLiquiditySIGHAccuredBeforeThisSnapshot",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get LiquiditySIGHAccuredDuringThisSnapshot(): BigDecimal {
+    let value = this.get("LiquiditySIGHAccuredDuringThisSnapshot");
+    return value.toBigDecimal();
+  }
+
+  set LiquiditySIGHAccuredDuringThisSnapshot(value: BigDecimal) {
+    this.set(
+      "LiquiditySIGHAccuredDuringThisSnapshot",
+      Value.fromBigDecimal(value)
+    );
   }
 }

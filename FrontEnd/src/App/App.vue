@@ -107,7 +107,7 @@ export default {
           this.$showSuccessMsg({message:"  Successfully connected to the Ethereum Network : " + this.$store.getters.networkName + "! Welcome to SIGH Finance!" });
       }
       if (isWeb3loaded == 'EthereumNotEnabled') {
-          this.$showErrorMsg({message:'  Permission to connect your wallet denied. In case you have security concerns or are facing any issues, reach out to our support team at support@sigh.finance. '});
+          this.$showErrorMsg({message:'  Permission to connect your wallet denied. In case you have security concerns or are facing any issues, reach out to our support team at contact@sigh.finance. '});
       }
       if (isWeb3loaded == 'BSCConnected') {
         this.$showSuccessMsg({message:"  Successfully connected to the Binance Smart Chain : " + this.$store.getters.networkName + "! Welcome to SIGH Finance!"});
@@ -116,7 +116,7 @@ export default {
         this.$showSuccessMsg({message:"  Successfully connected to the Ethereum Network's " + this.$store.getters.networkName  + " (not a Metamask wallet) !"});
       }
       if (isWeb3loaded == 'false') {
-        this.$showErrorMsg({message:'  No Web3 Object injected into browser. Read-only access. Please install MetaMask browser extension or connect our support team at support@sigh.finance. '});
+        this.$showErrorMsg({message:'  No Web3 Object injected into browser. Read-only access. Please install MetaMask browser extension or connect our support team at contact@sigh.finance. '});
       }
 
       // FETCHING CONTRACTS AND STATE FOR SIGH FINANCE
@@ -147,7 +147,7 @@ export default {
           }
         }
         else {
-          this.$showErrorMsg({message: " Something went wrong when fetching SIGH Finance Contracts for the network - " + this.$store.getters.networkName + ". Please connect to either Kovan Testnet or Ethereum Main-net or reach out to our Support Team at support@sigh.finance" });
+          this.$showErrorMsg({message: " Something went wrong when fetching SIGH Finance Contracts for the network - " + this.$store.getters.networkName + ". Please connect to either Kovan Testnet or Ethereum Main-net or reach out to our Support Team at contact@sigh.finance" });
           return false;
         }
       }

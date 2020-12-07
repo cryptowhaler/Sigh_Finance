@@ -22,10 +22,10 @@ library CoreLibrary {
 
     struct UserInstrumentData {
         bool useAsCollateral;                         //defines if a specific deposit should or not be used as a collateral in borrows        
-        uint256 principalBorrowBalance;                  //principal amount borrowed by the user.
+        uint256 principalBorrowBalance;                 // principal amount borrowed by the user.
         uint256 stableBorrowRate;                       // stable borrow rate at which the user has borrowed. Expressed in ray                
-        uint256 lastVariableBorrowCumulativeIndex;      //cumulated variable borrow index for the user. Expressed in ray
-        uint256 originationFee;                         //origination fee cumulated by the user
+        uint256 lastVariableBorrowCumulativeIndex;      // cumulated variable borrow index for the user. Expressed in ray
+        uint256 borrowFee;                              // borrow fee cumulated by the user
         uint40 lastUpdateTimestamp;
     }   
 
@@ -45,6 +45,7 @@ library CoreLibrary {
         uint256 currentVariableBorrowRate;              //the current variable borrow rate. Expressed in ray
         uint256 currentStableBorrowRate;                //the current stable borrow rate. Expressed in ray
         uint256 currentLiquidityRate;                   //the current supply rate. Expressed in ray
+        uint256 currentSighPayRate;                     //the current SIGH Pay rate. Expressed in ray
 
         uint256 totalBorrowsStable;                     //the total borrows at stable rate. Expressed in the currency decimals
         uint256 totalBorrowsVariable;                   //the total borrows at variable rate. Expressed in the currency decimals
@@ -53,6 +54,7 @@ library CoreLibrary {
 
         uint256 lastVariableBorrowCumulativeIndex;      // Variable Borrow Index --> Expressed in ray
         uint256 lastLiquidityCumulativeIndex;           // Liquidity Index --> Expressed in ray
+        uint256 lastSIGHPayCumulativeIndex;           // Liquidity Index --> Expressed in ray
 
         uint256 baseLTVasCollateral;                    // LTV (Loan to Volume) of the instrument --> Expressed in percentage (0-100)
 
@@ -83,6 +85,10 @@ library CoreLibrary {
 
         if (_instrument.lastVariableBorrowCumulativeIndex == 0) {
             _instrument.lastVariableBorrowCumulativeIndex = WadRayMath.ray();
+        }
+
+        if (_instrument.lastSIGHPayCumulativeIndex == 0) {
+            _instrument.lastSIGHPayCumulativeIndex = WadRayMath.ray();
         }
 
         _instrument.iTokenAddress = _iTokenAddress;
@@ -167,6 +173,9 @@ library CoreLibrary {
         if (totalBorrows > 0) {     //only cumulating if there is any income being produced
             uint256 cumulatedLiquidityInterest = calculateLinearInterest(  _instrument.currentLiquidityRate, _instrument.lastUpdateTimestamp );
             _instrument.lastLiquidityCumulativeIndex = cumulatedLiquidityInterest.rayMul( _instrument.lastLiquidityCumulativeIndex );
+
+            uint256 cumulatedSIGHPayInterest = calculateLinearInterest(  _instrument.currentSighPayRate, _instrument.lastUpdateTimestamp );
+            _instrument.lastSIGHPayCumulativeIndex = cumulatedLiquidityInterest.rayMul( _instrument.lastSIGHPayCumulativeIndex );
 
             uint256 cumulatedVariableBorrowInterest = calculateCompoundedInterest(_instrument.currentVariableBorrowRate, _instrument.lastUpdateTimestamp);
             _instrument.lastVariableBorrowCumulativeIndex = cumulatedVariableBorrowInterest.rayMul(_instrument.lastVariableBorrowCumulativeIndex );
@@ -286,6 +295,13 @@ library CoreLibrary {
         }
 
         return compoundedBalance;
+    }
+
+
+    // AMOUNT ACCURED FOR SIGH PAY 
+    function getNormalizedSIGHPay(CoreLibrary.InstrumentData storage _instrument) internal view returns (uint256) {
+        uint256 cumulated = calculateLinearInterest( _instrument.currentSighPayRate, _instrument.lastUpdateTimestamp).rayMul(_instrument.lastSIGHPayCumulativeIndex);
+        return cumulated;
     }
 
     /**

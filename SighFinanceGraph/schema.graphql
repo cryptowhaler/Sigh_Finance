@@ -8,6 +8,10 @@ type SIGH_FINANCE @entity {
     SIGH_BurnSpeed_WEI: BigInt!
     SIGH_BurnSpeed: BigDecimal!
 
+    "Mint Speed - Burn Speed - Mechanism Distribution Speed - Treasury Distribution Speed"
+    SIGH_Controller_Accumulation_Speed_WEI: BigInt!
+    SIGH_Controller_Accumulation_Speed: BigDecimal!
+
     SIGH_Controller_Treasury_Speed_WEI: BigInt!
     SIGH_Controller_Treasury_Speed: BigDecimal!
 
@@ -21,7 +25,16 @@ type SIGH_FINANCE @entity {
     Volatility_Mechanim_SIGH_Speed_Used: BigDecimal!
 
     Volatility_Mechanim_IsUpperCheckActive: Boolean!
-    Volatility_Mechanim_UpperCheckPercent: Boolean!    
+    Volatility_Mechanim_UpperCheckPercent: Boolean!   
+
+    present_Total_Volatility: BigInt! 
+    present_Total_VolatilityETH: BigDecimal!    
+    present_Total_VolatilityUSD: BigDecimal!
+
+    present_Total_VolatilityLimitAmount: BigInt! 
+    present_Total_VolatilityLimitAmountETH: BigDecimal!    
+    present_Total_VolatilityLimitAmountUSD: BigDecimal!
+
 }
 
 
@@ -99,6 +112,12 @@ type Instrument @entity {
     priceETH: BigDecimal! 
     priceUSD: BigDecimal! 
     priceDecimals: BigInt!
+    ETHPriceInUSD: BigDecimal!
+
+    harvestAdjustedSuppliersPriceETH: BigDecimal!
+    harvestAdjustedBorrowersPriceETH: BigDecimal!
+    harvestAdjustedSuppliersPriceUSD: BigDecimal!
+    harvestAdjustedBorrowersPriceUSD: BigDecimal!
 
     name: String!
     symbol: String!
@@ -116,11 +135,15 @@ type Instrument @entity {
     liquidationThreshold: BigInt!
     liquidationBonus: BigInt!
 
-    "availableLiquidity_WEI : totalLiquidity_WEI - totalPrincipalBorrows_WEI, present tokenized instrument quantity available with SIGH Finance's Lending Pool for borrowing. (not adjusted by decimal)"    
-    availableLiquidity_WEI: BigInt!
-    availableLiquidity: BigDecimal!
-    availableLiquidityETH: BigDecimal!
-    availableLiquidityUSD: BigDecimal!
+    depositFeeDue_WEI: BigInt! 
+    depositFeeDue: BigDecimal! 
+    depositFeeDueETH: BigDecimal!
+    depositFeeDueUSD: BigDecimal!
+
+    depositFeeEarned_WEI: BigInt! 
+    depositFeeEarned: BigDecimal! 
+    depositFeeEarnedETH: BigDecimal!
+    depositFeeEarnedUSD: BigDecimal!
 
     borrowFeeDue_WEI: BigInt! 
     borrowFeeDue: BigDecimal! 
@@ -131,6 +154,12 @@ type Instrument @entity {
     borrowFeeEarned: BigDecimal! 
     borrowFeeEarnedETH: BigDecimal!
     borrowFeeEarnedUSD: BigDecimal!
+
+    "availableLiquidity_WEI : totalLiquidity_WEI - totalPrincipalBorrows_WEI, present tokenized instrument quantity available with SIGH Finance's Lending Pool for borrowing. (not adjusted by decimal)"    
+    availableLiquidity_WEI: BigInt!
+    availableLiquidity: BigDecimal!
+    availableLiquidityETH: BigDecimal!
+    availableLiquidityUSD: BigDecimal!
 
     totalCompoundedLiquidityWEI: BigInt!
     totalCompoundedLiquidity: BigDecimal!
@@ -160,14 +189,11 @@ type Instrument @entity {
 
     "stableBorrowInterestRate : Current Stable Borrow Interest Rate (not adjusted by decimal)"    
     stableBorrowInterestRate: BigInt!
-    "stableBorrowInterestPercent : Current Stable Borrow Interest Rate (Adjusted by decimal)"    
     stableBorrowInterestPercent: BigDecimal!
 
     "variableBorrowInterestRate : Current Variable Borrow Interest Rate (not adjusted by decimal)"    
     variableBorrowInterestRate: BigInt!
-    "variableBorrowInterestPercent : Current Variable Borrow Interest Rate (Adjusted by decimal)"        
     variableBorrowInterestPercent: BigDecimal!
-    "supplyIndex : Index for Accuring instrument quantity as Supply Interest"    
     variableBorrowIndex: BigInt!
 
     utilizationRate: BigDecimal!
@@ -175,9 +201,7 @@ type Instrument @entity {
 
     "supplyInterestRate : Current Supply Interest Rate (not adjusted by decimal)"    
     supplyInterestRate: BigInt!
-    "supplyInterestRate : Current Supply Interest Rate (Adjusted by decimal, i.e Interest APY )"    
     supplyInterestRatePercent: BigDecimal!
-    "supplyIndex : Index for Accuring instrument quantity as Supply Interest"    
     supplyIndex: BigInt!
 
 
@@ -221,10 +245,9 @@ type Instrument @entity {
 
 
 
-
-
     isListedWithSIGH_Mechanism: Boolean!
     isSIGHMechanismActivated: Boolean!
+    totalSIGHDistributionSnapshotsTaken: BigInt!
 
     SIGH_Supply_Index: BigInt!
     SIGH_Supply_Index_lastUpdatedBlock: BigInt!
@@ -232,29 +255,27 @@ type Instrument @entity {
     SIGH_Borrow_Index: BigInt!
     SIGH_Borrow_Index_lastUpdatedBlock: BigInt!
 
+    maxVolatilityLimitSuppliersPercent: BigDecimal!
+    maxVolatilityLimitBorrowersPercent: BigDecimal!
 
-    fromBlockNumber: BigInt!
-    toBlockNumber: BigInt!
+    present_PrevPrice_ETH: BigDecimal! 
+    present_PrevPrice_USD: BigDecimal! 
+
+    present_OpeningPrice_ETH: BigDecimal! 
+    present_OpeningPrice_USD: BigDecimal! 
 
     present_SIGH_Side: String!
     present_DeltaBlocks: BigInt!
-    present_Clock: BigInt!
 
-    present_maxVolatilityLimitSuppliers: BigInt!
-    present_maxVolatilityLimitSuppliersPercent: BigDecimal!
-    present_maxVolatilityLimitBorrowers: BigInt!
-    present_maxVolatilityLimitBorrowersPercent: BigDecimal!
-
-    "% of total Protocol Protocol Volatility"
-    present_percentTotalVolatility: BigDecimal! 
     "Instrument volatility in 24 hrs"
     present_total24HrVolatilityETH: BigDecimal!    
     present_total24HrVolatilityUSD: BigDecimal!
+    present_percentTotalVolatility: BigDecimal! 
 
-    present_percentTotalVolatilityLimitAmount: BigDecimal!
     "Instrument volatility * maxVolatilityLimit"
     present_24HrVolatilityLimitAmountETH: BigDecimal!  
     present_24HrVolatilityLimitAmountUSD: BigDecimal!
+    present_percentTotalVolatilityLimitAmount: BigDecimal!
 
     present_SIGH_Suppliers_Speed_WEI: BigInt!
     present_SIGH_Suppliers_Speed: BigDecimal!
@@ -265,35 +286,117 @@ type Instrument @entity {
     present_SIGH_Staking_Speed_WEI: BigInt!
     present_SIGH_Staking_Speed: BigDecimal!
 
+    present_harvestSpeedPerBlock: BigDecimal!
+    present_harvestValuePerBlockUSD: BigDecimal!
 
-    present_PrevPrice_ETH: BigDecimal! 
-    present_PrevPrice_USD: BigDecimal! 
+    present_harvestSpeedPerDay: BigDecimal!
+    present_harvestValuePerDayUSD: BigDecimal!
 
-    present_OpeningPrice_ETH: BigDecimal! 
-    present_OpeningPrice_USD: BigDecimal! 
+    present_harvestSpeedPerYear: BigDecimal!
+    present_harvestValuePerYearUSD: BigDecimal!
+
+    present_harvestAPY: BigDecimal!
+    present_suppliersHarvestAPY: BigDecimal!
+    present_borrowersHarvestAPY: BigDecimal!
+
+    SIGH_Distribution_History: [SIGH_Distribution_SnapShot!]! @derivedFrom(field:"instrumentAddress")
+
+    average24SnapsHarvestSpeedPerBlock: BigDecimal!
+    average24SnapsHarvestValuePerBlockUSD: BigDecimal!
+
+    average24SnapsHarvestSpeedPerDay: BigDecimal!
+    average24SnapsHarvestValuePerDayUSD: BigDecimal!
+
+    average24SnapsHarvestSpeedPerYear: BigDecimal!
+    average24SnapsHarvestValuePerYearUSD: BigDecimal!
+
+    average24SnapsHarvestAPY: BigDecimal!
+    average24SnapsSuppliersHarvestAPY: BigDecimal!
+    average24SnapsBorrowersHarvestAPY: BigDecimal!
+
+    averageMonthlySnapsHarvestSpeedPerBlock: BigDecimal!
+    averageMonthlySnapsHarvestValuePerBlockUSD: BigDecimal!
+
+    averageMonthlySnapsHarvestSpeedPerDay: BigDecimal!
+    averageMonthlySnapsHarvestValuePerDayUSD: BigDecimal!
+
+    averageMonthlySnapsHarvestSpeedPerYear: BigDecimal!
+    averageMonthlySnapsHarvestValuePerYearUSD: BigDecimal!
+
+    averageMonthlySnapsHarvestAPY: BigDecimal!
+    averageMonthlySnapsSuppliersHarvestAPY: BigDecimal!
+    averageMonthlySnapsBorrowersHarvestAPY: BigDecimal!
 
 
-    SIGH_Distribution_History: [SIGH_Distribution!]! @derivedFrom(field:"instrumentAddress")
+    instrumentActualPriceETH: BigDecimal!
+    instrumentHarvestAdjustedPriceSuppliersETH: BigDecimal!
+    instrumentHarvestAdjustedPriceBorrowersETH: BigDecimal!
+
+    instrumentActualPriceUSD: BigDecimal!
+    instrumentHarvestAdjustedPriceSuppliersUSD: BigDecimal!
+    instrumentHarvestAdjustedPriceBorrowersUSD: BigDecimal!
 
     timeStamp: BigInt!
-    creationBlockNumber : BigInt!
+    creationBlockNumber: BigInt!
+    SIGHPriceUSD:  BigDecimal!
 }
 
 
 
-type SIGH_Distribution @entity {
+type SIGH_Distribution_SnapShot @entity {
     id: ID!
     instrumentAddress: Instrument! 
+
     fromBlockNumber: BigInt!
     toBlockNumber: BigInt!
-    distribution_Side: String!
-    suppliers_Speed_WEI: BigInt!
+    deltaBlocks24Hrs: BigInt!
+    clock: BigInt!
+
+    prevPrice_ETH: BigDecimal! 
+    prevPrice_USD: BigDecimal! 
+    openingPrice_ETH: BigDecimal! 
+    openingPrice_USD: BigDecimal! 
+    priceDifferenceETH: BigDecimal!
+    priceDifferenceUSD: BigDecimal!
+
+    maxVolatilityLimitSuppliersPercent: BigDecimal!
+    maxVolatilityLimitBorrowersPercent: BigDecimal!
+
+    total24HrVolatilityETH: BigDecimal!
+    total24HrVolatilityUSD: BigDecimal!
+    total24HrVolatilityLimitAmountETH: BigDecimal!
+    total24HrVolatilityLimitAmountUSD: BigDecimal!
+
+    totalVolatilityAsPercentOfTotalProtocolVolatility: BigDecimal!
+    instrumentLimitVolatilityAsPercentOflimitProtocolVolatility: BigDecimal!
+
     suppliers_Speed: BigDecimal!
-    borrowers_Speed_WEI: BigInt!
     borrowers_Speed: BigDecimal!
-    staking_Speed_WEI: BigInt!
     staking_Speed: BigDecimal!    
 
+    distribution_Side: String!
+
+    harvestSpeedPerBlock: BigDecimal!
+    harvestValuePerBlockETH: BigDecimal!
+    harvestValuePerBlockUSD: BigDecimal!
+
+    harvestSpeedPerDay: BigDecimal!
+    harvestValuePerDayETH: BigDecimal!
+    harvestValuePerDayUSD: BigDecimal!
+
+    harvestSpeedPerYear: BigDecimal!
+    harvestValuePerYearETH: BigDecimal!
+    harvestValuePerYearUSD: BigDecimal!
+
+    harvestAPY: BigDecimal!
+    suppliersHarvestAPY: BigDecimal!
+    borrowersHarvestAPY: BigDecimal!
+
+    totalBorrowingSIGHAccuredBeforeThisSnapshot: BigDecimal!
+    BorrowingSIGHAccuredDuringThisSnapshot: BigDecimal!
+
+    totalLiquiditySIGHAccuredBeforeThisSnapshot: BigDecimal!
+    LiquiditySIGHAccuredDuringThisSnapshot: BigDecimal!
 }
 
 

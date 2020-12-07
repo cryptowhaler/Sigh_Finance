@@ -108,7 +108,7 @@
 
 
                             <div >
-                                <a href="javascript:undefined" style="color: chartreuse;" v-if=" $store.getters.themeMode === 'default' " @click="refreshWalletConnected()"><span>{{ getServerStatus }}</span></a>
+                                <a href="javascript:undefined" style="color: chartreuse;" v-if=" $store.getters.themeMode === 'default' " @click="fetchSessionUserStateData()"><span>{{ getServerStatus }}</span></a>
                             </div>
 
                         </div>

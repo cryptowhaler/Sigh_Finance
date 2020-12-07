@@ -1,7 +1,9 @@
 <div class='home-page'>
     <div class="flex-col-vertical-bottom top-title">
     <div style = "padding-top: 24px; padding-bottom: 24px; width: 91%; color: white; text-align: center; font-size: 24px; border: 3px solid white;">
-        "SIGH FINANCE is currently in Beta!"      
+        "SIGH FINANCE is currently in Beta!"    
+        <br>  
+        <span v-if="!this.$store.state.isNetworkSupported" style="color:red; display:contents; font-size:17px !important; " > SIGH FINANCE currently only works on Ethereum's KOVAN Test-net. Please connect to Kovan test-net and refresh the website to interact with SIGH Finance! </span>
                             <!-- DRIP SIGH FROM SIGH SPEED CONTROLLER -->
                             <div >
                                 <a href="javascript:undefined" style="color: chartreuse;" @click="drip_SIGH" ><span> Distribute SIGH </span></a>

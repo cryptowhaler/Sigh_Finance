@@ -2,7 +2,7 @@
     <div class="f1-form-grid" style="position: relative;">
     </div> 
 
-    <div v-if="selectedInstrument.isSIGHMechanismActivated" style="height: 175px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
+    <div v-if="selectedInstrument.isSIGHMechanismActivated" style="height: 175px;  margin-top: 20px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
         <p style="line-height: 24px; font-size: 12px; color: gold;" > For each '{{ selectedInstrument.symbol  }}' deposited, '{{ selectedInstrument.iTokenSymbol }}'  (ITokens) on a 1:1 basis are transferred directly into your Wallet which 
             <span style="line-height: 24px;font-size: 12px; color:chartreuse; display: contents;" > Farm $SIGH &#127806; and INTEREST  </span> 
              for you! 
@@ -14,7 +14,7 @@
         </p>         
     </div>
     
-    <div v-if="!selectedInstrument.isSIGHMechanismActivated" style="height: 155px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
+    <div v-if="!selectedInstrument.isSIGHMechanismActivated" style="height: 155px; margin-top: 20px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
         <p style="line-height: 24px; font-size: 12px; color: gold;" > For each '{{ selectedInstrument.symbol  }}' deposited, '{{ selectedInstrument.iTokenSymbol }}'  (ITokens) on a 1:1 basis are transferred directly into your Wallet which 
             <span style="line-height: 24px;font-size: 12px; color:chartreuse; display: contents;" > Farm $SIGH &#127806; and INTEREST  </span> 
              for you!

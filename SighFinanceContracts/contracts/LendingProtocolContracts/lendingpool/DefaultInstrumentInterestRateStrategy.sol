@@ -35,6 +35,7 @@ contract DefaultInstrumentInterestRateStrategy is I_InstrumentInterestRateStrate
     uint256 public variableRateSlope2;              //slope of the variable interest curve when utilization rate > OPTIMAL_UTILIZATION_RATE. Expressed in ray
     uint256 public stableRateSlope1;                //slope of the stable interest curve when utilization rate > 0 and <= OPTIMAL_UTILIZATION_RATE. Expressed in ray
     uint256 public stableRateSlope2;                //slope of the stable interest curve when utilization rate > OPTIMAL_UTILIZATION_RATE. Expressed in ray
+    uint256 public sighPayPercent;
     // address public instrument;
 
     /**
@@ -46,13 +47,14 @@ contract DefaultInstrumentInterestRateStrategy is I_InstrumentInterestRateStrate
     }
 
 
-    constructor( GlobalAddressesProvider _provider, uint256 _baseVariableBorrowRate, uint256 _variableRateSlope1,uint256 _variableRateSlope2, uint256 _stableRateSlope1, uint256 _stableRateSlope2 ) public {
+    constructor( GlobalAddressesProvider _provider, uint256 _baseVariableBorrowRate, uint256 _variableRateSlope1,uint256 _variableRateSlope2, uint256 _stableRateSlope1, uint256 _stableRateSlope2, uint256 _sighPayPercent ) public {
         addressesProvider = _provider;
         baseVariableBorrowRate = _baseVariableBorrowRate;
         variableRateSlope1 = _variableRateSlope1;
         variableRateSlope2 = _variableRateSlope2;
         stableRateSlope1 = _stableRateSlope1;
         stableRateSlope2 = _stableRateSlope2;
+        sighPayPercent = _sighPayPercent;                // 0.1 * 10^27 represents 10%
         // instrument = _instrument;
     }
 
@@ -60,42 +62,26 @@ contract DefaultInstrumentInterestRateStrategy is I_InstrumentInterestRateStrate
     // ####### VIEW FUNCTIONS TO GET CONSTANTS   ############
     // ################################################ #####
 
-    function getBaseVariableBorrowRate() external view returns (uint256) {
-        return baseVariableBorrowRate;
-    }
-    
-    function setBaseVariableBorrowRate(uint256 newBorrowRate) external onlyLendingPoolManager {
-        baseVariableBorrowRate = newBorrowRate;
+    function setSighPayPercent(uint256 newSighPayPercent) external onlyLendingPoolManager {
+        sighPayPercent = newSighPayPercent;
     }
 
-    function getVariableRateSlope1() external view returns (uint256) {
-        return variableRateSlope1;
+    function setBaseVariableBorrowRate(uint256 newBorrowRate) external onlyLendingPoolManager {
+        baseVariableBorrowRate = newBorrowRate;
     }
 
     function setVariableRateSlope1(uint256 newVariableRateSlope1) external onlyLendingPoolManager {
         variableRateSlope1 = newVariableRateSlope1;
     }
 
-    function getVariableRateSlope2() external view returns (uint256) {
-        return variableRateSlope2;
-    }
-    
     function setVariableRateSlope2(uint256 newVariableRateSlope2) external onlyLendingPoolManager {
         variableRateSlope2 = newVariableRateSlope2;
-    }
-
-    function getStableRateSlope1() external view returns (uint256) {
-        return stableRateSlope1;
     }
 
     function setStableRateSlope1(uint256 newstableRateSlope1) external onlyLendingPoolManager {
         stableRateSlope1 = newstableRateSlope1;
     }
     
-    function getStableRateSlope2() external view returns (uint256) {
-        return stableRateSlope2;
-    }
-
     function setStableRateSlope2(uint256 newstableRateSlope2) external onlyLendingPoolManager {
         stableRateSlope2 = newstableRateSlope2;
     }
@@ -116,7 +102,7 @@ contract DefaultInstrumentInterestRateStrategy is I_InstrumentInterestRateStrate
     * @return the liquidity rate, stable borrow rate and variable borrow rate calculated from the input parameters
     **/
     function calculateInterestRates(  address _instrument,  uint256 _availableLiquidity,  uint256 _totalBorrowsStable,  uint256 _totalBorrowsVariable,  uint256 _averageStableBorrowRate ) external view
-        returns ( uint256 currentLiquidityRate, uint256 currentStableBorrowRate, uint256 currentVariableBorrowRate ) {
+        returns ( uint256 currentLiquidityRate, uint256 currentStableBorrowRate, uint256 currentVariableBorrowRate, uint256 currentSighPayRate ) {
         uint256 totalBorrows = _totalBorrowsStable.add(_totalBorrowsVariable); // TOTAL BORROWS = STABLE BORROWS + VARIABLE BORROWS
         uint256 utilizationRate = (totalBorrows == 0 && _availableLiquidity == 0) ? 0 : totalBorrows.rayDiv(_availableLiquidity.add(totalBorrows));   // UTILIZATION RATE = TOTAL BORROWS / (AVAILABLE LIQUIDITY + TOTAL BORROWS)
 
@@ -132,7 +118,10 @@ contract DefaultInstrumentInterestRateStrategy is I_InstrumentInterestRateStrate
             currentVariableBorrowRate = baseVariableBorrowRate.add( variableRateSlope1.rayMul( utilizationRate.rayDiv(OPTIMAL_UTILIZATION_RATE) ) );
         }
 
-        currentLiquidityRate = getOverallBorrowRateInternal( _totalBorrowsStable, _totalBorrowsVariable, currentVariableBorrowRate, _averageStableBorrowRate ).rayMul(utilizationRate);
+        uint256 totalLiquidityRate = getOverallBorrowRateInternal( _totalBorrowsStable, _totalBorrowsVariable, currentVariableBorrowRate, _averageStableBorrowRate ).rayMul(utilizationRate);
+        currentSighPayRate = totalLiquidityRate.rayMul(sighPayPercent);
+        require(totalLiquidityRate > currentSighPayRate,"Invalid SIGH Pay Rate percent set. Administrator needs to set it correctly so that the protocol can function properly again");
+        currentLiquidityRate = totalLiquidityRate.sub(currentSighPayRate);
     }
 
 // ###################################

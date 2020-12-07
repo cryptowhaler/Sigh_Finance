@@ -54,7 +54,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @param liquidityIndex the new liquidity index
     * @param variableBorrowIndex the new variable borrow index
     **/
-    event InstrumentUpdated(  address indexed instrument,  uint256 liquidityRate,  uint256 stableBorrowRate,  uint256 variableBorrowRate, uint256 liquidityIndex, uint256 variableBorrowIndex );
+    event InstrumentUpdated(  address indexed instrument,  uint256 liquidityRate,  uint256 stableBorrowRate,  uint256 variableBorrowRate, uint256 newSighPayRate,uint256 liquidityIndex, uint256 variableBorrowIndex );
 
 // #######################
 // ###### MODIFIERS ######
@@ -244,12 +244,12 @@ contract LendingPoolCore is VersionedInitializable {
             revert("Invalid borrow rate mode");
         }
 
-        //increase the principal borrows and the origination fee
+        //increase the principal borrows and the Borrow fee
         user.principalBorrowBalance = user.principalBorrowBalance.add(_amountBorrowed).add( _balanceIncrease );
         ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
         iToken.updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(_user, _amountBorrowed.add( _balanceIncrease ), 0 );                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
+        user.borrowFee = user.borrowFee.add(_fee);
 
-        user.originationFee = user.originationFee.add(_fee);
         user.lastUpdateTimestamp = uint40(block.timestamp);
     }
 
@@ -297,18 +297,18 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _instrument the address of the instrument on which the user is repaying
     * @param _user the address of the borrower
     * @param _paybackAmountMinusFees the amount being paid back minus fees
-    * @param _originationFeeRepaid the fee on the amount that is being repaid
+    * @param _borrowFeeRepaid the fee on the amount that is being repaid
     * @param _balanceIncrease the accrued interest on the borrowed amount
     * @param _repaidWholeLoan true if the user is repaying the whole loan
     **/
-    function updateStateOnRepay(  address _instrument,  address _user, uint256 _paybackAmountMinusFees,  uint256 _originationFeeRepaid,  uint256 _balanceIncrease,  bool _repaidWholeLoan ) external onlyLendingPool {
+    function updateStateOnRepay(  address _instrument,  address _user, uint256 _paybackAmountMinusFees,  uint256 _borrowFeeRepaid,  uint256 _balanceIncrease,  bool _repaidWholeLoan ) external onlyLendingPool {
         sighMechanism.updateSIGHBorrowIndex(_instrument);              // ADDED BY SIGH FINANCE (Instrument Index is updated)        
 
         ITokenInterface iToken = ITokenInterface( reserves[_instrument].iTokenAddress );  // ITOKEN ADDRESS
         iToken.accure_SIGH_For_BorrowingStream(_user);                        // SIGH ACCURED FOR THE USER BEFORE BORROW BALANCE IS UPDATED ( ADDED BY SIGH FINANCE )
 
         updateInstrumentStateOnRepayInternal(  _instrument, _user, _paybackAmountMinusFees,  _balanceIncrease );
-        updateUserStateOnRepayInternal(  _instrument, _user, _paybackAmountMinusFees,  _originationFeeRepaid, _balanceIncrease, _repaidWholeLoan  );
+        updateUserStateOnRepayInternal(  _instrument, _user, _paybackAmountMinusFees,  _borrowFeeRepaid, _balanceIncrease, _repaidWholeLoan  );
         updateInstrumentInterestRatesAndTimestampInternal(_instrument, _paybackAmountMinusFees, 0);
     }
 
@@ -342,11 +342,11 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _instrument the address of the instrument on which the user is repaying
     * @param _user the address of the borrower
     * @param _paybackAmountMinusFees the amount being paid back minus fees
-    * @param _originationFeeRepaid the fee on the amount that is being repaid
+    * @param _borrowFeeRepaid the fee on the amount that is being repaid
     * @param _balanceIncrease the accrued interest on the borrowed amount
     * @param _repaidWholeLoan true if the user is repaying the whole loan
     **/
-    function updateUserStateOnRepayInternal( address _instrument, address _user, uint256 _paybackAmountMinusFees, uint256 _originationFeeRepaid, uint256 _balanceIncrease, bool _repaidWholeLoan ) internal {
+    function updateUserStateOnRepayInternal( address _instrument, address _user, uint256 _paybackAmountMinusFees, uint256 _borrowFeeRepaid, uint256 _balanceIncrease, bool _repaidWholeLoan ) internal {
         CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
         CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
 
@@ -362,7 +362,7 @@ contract LendingPoolCore is VersionedInitializable {
             user.stableBorrowRate = 0;
             user.lastVariableBorrowCumulativeIndex = 0;
         }
-        user.originationFee = user.originationFee.sub(_originationFeeRepaid);
+        user.borrowFee = user.borrowFee.sub(_borrowFeeRepaid);
         user.lastUpdateTimestamp = uint40(block.timestamp);
     }
 
@@ -638,7 +638,7 @@ contract LendingPoolCore is VersionedInitializable {
             user.lastVariableBorrowCumulativeIndex = instrument.lastVariableBorrowCumulativeIndex;
         }
         if(_feeLiquidated > 0){
-            user.originationFee = user.originationFee.sub(_feeLiquidated);
+            user.borrowFee = user.borrowFee.sub(_feeLiquidated);
         }
         user.lastUpdateTimestamp = uint40(block.timestamp);
     }
@@ -868,7 +868,7 @@ contract LendingPoolCore is VersionedInitializable {
             return (underlyingBalance, 0, 0, user.useAsCollateral);
         }
 
-        return ( underlyingBalance, user.getCompoundedBorrowBalance(instrument), user.originationFee, user.useAsCollateral );
+        return ( underlyingBalance, user.getCompoundedBorrowBalance(instrument), user.borrowFee, user.useAsCollateral );
     }
 
     /**
@@ -1121,11 +1121,11 @@ contract LendingPoolCore is VersionedInitializable {
     /**
     * @param _instrument the address of the instrument for which the information is needed
     * @param _user the address of the user for which the information is needed
-    * @return the origination fee for the user
+    * @return the Borrow fee for the user
     **/
-    function getUserOriginationFee(address _instrument, address _user) external view returns (uint256) {
+    function getUserBorrowFee(address _instrument, address _user) external view returns (uint256) {
         CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
-        return user.originationFee;
+        return user.borrowFee;
     }
 
     /**
@@ -1385,14 +1385,15 @@ contract LendingPoolCore is VersionedInitializable {
     **/
     function updateInstrumentInterestRatesAndTimestampInternal( address _instrument, uint256 _liquidityAdded, uint256 _liquidityTaken ) internal {
         CoreLibrary.InstrumentData storage instrument = reserves[_instrument];
-        (uint256 newLiquidityRate, uint256 newStableRate, uint256 newVariableRate) = I_InstrumentInterestRateStrategy(instrument.interestRateStrategyAddress).calculateInterestRates( _instrument, getInstrumentAvailableLiquidity(_instrument).add(_liquidityAdded).sub(_liquidityTaken),    instrument.totalBorrowsStable, instrument.totalBorrowsVariable, instrument.currentAverageStableBorrowRate   );
+        (uint256 newLiquidityRate, uint256 newStableRate, uint256 newVariableRate, uint256 newSighPayRate) = I_InstrumentInterestRateStrategy(instrument.interestRateStrategyAddress).calculateInterestRates( _instrument, getInstrumentAvailableLiquidity(_instrument).add(_liquidityAdded).sub(_liquidityTaken),    instrument.totalBorrowsStable, instrument.totalBorrowsVariable, instrument.currentAverageStableBorrowRate   );
 
         instrument.currentLiquidityRate = newLiquidityRate;
         instrument.currentStableBorrowRate = newStableRate;
         instrument.currentVariableBorrowRate = newVariableRate;
+        instrument.currentSighPayRate = newSighPayRate;                 // SIGH PAY RATE
         instrument.lastUpdateTimestamp = uint40(block.timestamp);
 
-        emit InstrumentUpdated(  _instrument,  newLiquidityRate,  newStableRate,  newVariableRate,  instrument.lastLiquidityCumulativeIndex,  instrument.lastVariableBorrowCumulativeIndex );
+        emit InstrumentUpdated(  _instrument,  newLiquidityRate,  newStableRate,  newVariableRate, newSighPayRate, instrument.lastLiquidityCumulativeIndex,  instrument.lastVariableBorrowCumulativeIndex );
     }
 
     /**
@@ -1401,7 +1402,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @param _amount the amount being transferred
     **/
     function transferFlashLoanProtocolFeeInternal(address _token, uint256 _amount) internal {
-        address payable receiver = address(uint160(addressesProvider.getSIGHStaking()));
+        address payable receiver = address(uint160(addressesProvider.getSIGHFinanceFeeCollector()));
 
         if (_token != EthAddressLib.ethAddress()) {
             ERC20(_token).safeTransfer(receiver, _amount);

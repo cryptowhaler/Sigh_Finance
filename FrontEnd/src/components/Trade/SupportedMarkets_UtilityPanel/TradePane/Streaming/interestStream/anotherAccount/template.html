@@ -2,6 +2,12 @@
     <div class="f1-form-grid" style="position: relative;">
     </div> 
 
+    <div style="height: 51px;  margin-top: 20px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
+        <p style="line-height: 24px; font-size: 12px; color: gold;" > You can Re-direct the <span style="line-height: 24px;font-size: 12px; color:chartreuse; display: contents; font-weight: 500;" >  INTEREST STREAMS &#x1F69C; </span> for accounts for which you hold Administrator Rights!
+             <!-- Read more about it here :-   -->
+        </p>         
+    </div>
+
     <div class="interest-yourAccount-form" style="padding-top: 15px;" >
         <div class="uk-grid uk-grid-small f1-form-grid">
             <div class="uk-width-1-1">
@@ -33,66 +39,68 @@
             <!-- Buttons (Re-Direct SIGH Stream / Transfer Administrator Priviledges) -->
             <div v-else class="uk-width-1-1" style="margin-bottom: 15px; margin-top: 15px;"  >
                 <div class="center">
-                    <button class="uk-button uk-button-green"  @click="redirectInterestStreamOf()">Re-Direct INTEREST Stream  </button>
+                    <button class="uk-button uk-button-green"  style="background:darkblue;"  @click="redirectInterestStreamOf()">Re-Direct INTEREST Stream  </button>
                 </div>
             </div>
         </div>
+        <span style=" line-height:24px; width:100%; margin-top: 11px; font-size: 15px; padding: 1px; border: aquamarine dotted 0.1px; text-align: center; float: center; color: chartreuse;">  
+            Join our Discord channel to Trade Interest streams with other participants in the Network! &#127906;
+         </span>  
     </div>
 
 
 
 
-<div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 20px; margin-bottom: 20px;" >
-    <table style="color: white;" >
-        <tr>
-            <td > >   {{ selectedInstrument.symbol  }} Price &nbsp; : &nbsp;{{  ( ( Number(selectedInstrumentPriceETH) / Math.pow(10,selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ).toFixed(4) }} USD   </td> 
-        </tr>
+    <div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 79px; margin-bottom: 10px;" >
+        <table style="color: white;" >
+            <!-- 👨‍🌾 INTEREST STREAM 👨‍🌾 -->
+            <h1 > <span style="line-height: 24px;font-size: 17px; color:springgreen; font-weight: 500; padding-bottom:10px; padding-left:15%;" > &#128104;&#8205;&#127806; {{ selectedInstrument.symbol }} : </span> <span style="line-height: 24px;font-size: 17px; color:yellow; font-weight: 500; padding-bottom:10px;" > INTEREST STREAM &#128104;&#8205;&#127806;  </span>  </h1> 
+            <!-- WALLET :  -->
+            <tr style="padding-bottom:10px;" >
+                <td>  <span style="line-height: 24px;font-size: 12px; color:dodgerblue; display: contents; font-weight: 500; padding-bottom:10px;" >  WALLET  : </span>  {{ this.$store.state.connectedWallet  }} &nbsp;  </td> 
+            </tr>
+            <br> 
+            <!-- INTEREST STREAM currently re-directed To   :  -->
+            <tr>
+                <td style="font-size: 12.5px !important;" >  <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents; font-weight: 500;" > INTEREST STREAM &#x1F69C; </span> currently re-directed To &nbsp; : &nbsp; 
+                    <br> 
+                    > &nbsp;  {{  selectedInstrumentWalletState.interestRedirectionAddress == '0x0000000000000000000000000000000000000000' ? 'Currently Not being re-directed!' :  selectedInstrumentWalletState.interestRedirectionAddress   }} </td> 
+            </tr>
+            <br>
+            <!-- INTEREST STREAMTransfer Administrator  :  -->
+            <tr>
+                <td style="font-size: 12.5px !important;" >  <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents; font-weight: 500;" > INTEREST STREAM &#x1F69C; </span> Transfer Administrator &nbsp; : &nbsp; 
+                    <br> 
+                    > &nbsp;  {{  selectedInstrumentWalletState.interestRedirectionAllowance == '0x0000000000000000000000000000000000000000' ? 'Transfer Rights haven\'t been assigned to anyone yet!' :  selectedInstrumentWalletState.interestRedirectionAllowance   }} </td> 
+            </tr>
+            <br> 
+            <!-- TOTAL LIQUIDITY (USDT) FARMING INTEREST:    -->
+            <tr v-if="selectedInstrumentWalletState.interestRedirectionAddress == '0x0000000000000000000000000000000000000000'">                
+                <td > <span style="line-height: 24px;font-size: 12px; color:springgreen; display: contents; font-weight: 500;" >  TOTAL LIQUIDITY ({{ selectedInstrument.symbol }}) FARMING </span> <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents; font-weight: 500;" >  INTEREST </span> : &nbsp; {{  Number(selectedInstrumentWalletState.redirectedBalance).toFixed(3) }} (  {{ Number(selectedInstrumentWalletState.redirectedBalanceWorth).toFixed(3) }} USD ) </td> 
+            </tr>
+            <tr v-else >                
+                <td > <span style="line-height: 24px;font-size: 12px; color:springgreen; display: contents; font-weight: 500;" >  TOTAL LIQUIDITY ({{ selectedInstrument.symbol  }}) FARMING </span> <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents; font-weight: 500;" > INTEREST </span> : &nbsp; {{  Number( Number(selectedInstrumentWalletState.redirectedBalance) + Number(selectedInstrumentWalletState.userDepositedBalance)  ).toFixed(3) }} (  {{  Number(  Number(selectedInstrumentWalletState.redirectedBalanceWorth) +  Number(selectedInstrumentWalletState.userDepositedBalanceWorth)  ).toFixed(3) }} USD ) </td> 
+            </tr>
+            <tr>                
+                <td > <span style="line-height: 24px;font-size: 12px; color:skyblue; display: contents; font-weight: 500;" > > Deposited Balance ({{ selectedInstrument.symbol  }}) </span> : &nbsp; {{ Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(3) }} (  {{ Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(3) }} USD ) </td> 
+            </tr>
+            <tr>                
+                <td > <span style="line-height: 24px;font-size: 12px; color:skyblue; display: contents; font-weight: 500;" > > Re-directed Balance ({{ selectedInstrument.symbol  }}) </span> : &nbsp; {{ Number(selectedInstrumentWalletState.redirectedBalance).toFixed(3) }} (  {{ Number(selectedInstrumentWalletState.redirectedBalance).toFixed(3) }} USD ) </td> 
+            </tr>
+            <br> 
+            <!-- HARVEST METRICS    -->
+            <tr>                
+                <td > <span style="line-height: 24px;font-size: 13.5px; color:springgreen; display: contents; font-weight: 500;" > {{ selectedInstrument.symbol }} : </span> <span style="line-height: 24px;font-size: 13.5px; color:yellow; display: contents; font-weight: 500;" > INTEREST HARVEST METRICS &#x1F69C; </span>  </td> 
+            </tr>
+            <!-- <tr >                
+                <td > <span style="line-height: 24px;font-size: 12px; color:springgreen; display: contents; font-weight: 500;" >  TOTAL BORROWS ({{ selectedInstrument.symbol  }}) FARMING </span> <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents; font-weight: 500;" >  $SIGH &#127806; </span> : &nbsp; {{  Number( Number(selectedInstrumentWalletState.borrowingSIGHStreamRedirectedBalance) + Number(selectedInstrumentWalletState.currentBorrowBalance)  ).toFixed(3) }} (  {{  Number(  Number(selectedInstrumentWalletState.borrowingSIGHStreamRedirectedBalanceWorth) +  Number(selectedInstrumentWalletState.currentBorrowBalanceWorth)  ).toFixed(3) }} USD ) </td> 
+            </tr> -->
+            <tr>                
+                <td > <span style="line-height: 24px;font-size: 12px; color:palegreen; display: contents; font-weight: 500;" > > Interest APY </span> : &nbsp; {{ Number(selectedInstrumentWalletState.liquidityRate).toFixed(4) }} %  </td> 
+            </tr>
+        </table>
+    </div>
 
-
-        <h3 style="font-size: 13px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> INTEREST STREAMING : {{ selectedInstrument.symbol }} INSTRUMENT  </h3>
-        <tr>
-            <td> >  &nbsp; Balance Redirected To Your Account &nbsp; : &nbsp; {{ selectedInstrumentWalletState.redirectedBalance }} </td> 
-        </tr>
-        <tr>
-            <td> >  &nbsp; Streaming To &nbsp; : &nbsp; {{ selectedInstrumentWalletState.interestRedirectionAddress }} </td> 
-        </tr>
-        <tr>
-            <td> >  &nbsp; Allowance Holder &nbsp; : &nbsp; {{ selectedInstrumentWalletState.interestRedirectionAllowance }} </td> 
-        </tr>
-
-
-        <h3 style="font-size: 13px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; ">  {{ selectedInstrument.symbol  }} APYs : "{{ this.$store.state.connectedWallet }} : {{ selectedInstrument.symbol }}"   </h3>
-        <tr>
-            <td> >  &nbsp; Supply APY &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.liquidityRate).toFixed(4)  }} %</td> 
-        </tr>
-        <tr>
-            <td> >  &nbsp; Borrow APY (Stable) &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.borrowRate).toFixed(4)  }} %</td> 
-        </tr>
-        <tr>
-            <td> >  &nbsp; Borrow APY (Variable) &nbsp; : &nbsp; {{ Number(selectedInstrumentWalletState.variableBorrowIndex).toFixed(4)  }} %</td> 
-        </tr>
-        <tr>
-            <td> >  &nbsp; $SIGH Yield vs Loss Ratio (Suppliers) &nbsp; : &nbsp; 0 % </td> 
-        </tr>
-        <tr>
-            <td> >  &nbsp; $SIGH Yield vs Loss Ratio (Borrowers) &nbsp; : &nbsp; 0  % </td> 
-        </tr>
-        <tr>
-            <td> >    $SIGH Accured &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.sighAccured).toFixed(4)  }} </td> 
-        </tr>
-
-        
-        <h3 style="font-size: 15px; color: aquamarine; margin-bottom: 4px; margin-top: 11px; "> CONTRACT ADDRESSES </h3>
-        <tr>
-            <td> >   {{ selectedInstrument.symbol  }} &nbsp; : &nbsp;{{ selectedInstrumentWalletState.instrumentAddress  }}   </td> 
-        </tr>
-        <tr>
-            <td> >   {{ selectedInstrument.iTokenName  }}&nbsp; : &nbsp;{{ selectedInstrumentWalletState.iTokenAddress  }} </td> 
-        </tr>
-
-
-    </table>
-</div>
 
 
 <div class="uk-grid uk-grid-small f1-form-grid">
@@ -103,7 +111,7 @@
    <!-- REFRESH BUTTONS -->
    <div v-else class="uk-width-1-1" style="margin-bottom: 15px; margin-top: 15px;"  >
         <div class="center">
-            <button class="uk-button uk-button-black"  @click="refreshCurrentInstrumentWalletState(true)">Refresh</button>
+            <button class="uk-button uk-button-black"  style="background:darkblue;"  @click="refreshCurrentInstrumentWalletState(true)">Refresh</button>
         </div>    
     </div>    
 </div>    

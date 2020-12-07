@@ -1,0 +1,123 @@
+<div class= "yourAccount">
+    <div class="f1-form-grid" style="position: relative;">
+    </div> 
+
+
+    <div style="height: 101px; margin-top: 20px; margin-bottom: 20px; padding: 2px 2px; border: aliceblue solid 0.1px; ">
+        <p style="line-height: 24px; font-size: 12px; color: gold;" > You can now trade Volatility of <span style="line-height: 24px;font-size: 12px; color:chartreuse; display: contents;" >'{{ selectedInstrument.symbol}}' </span> by exchanging / selling / transferring <span style="line-height: 24px;font-size: 12px; color:chartreuse; display: contents; font-weight: 500;" > &#x1F69C; $SIGH LIQUIDITY STREAMS &#x1F69C; </span>, which represents <span style="line-height: 24px;font-size: 13px; color:yellow; display: contents; font-weight: 500;" > &#127806; $SIGH &#127806;  </span> being farmed by your deposited '{{ selectedInstrument.symbol}}' balance whenever the price of '{{ selectedInstrument.symbol }}' <span style="line-height: 24px;font-size: 12px; color:red; display: contents;" >DECREASES (-)</span> over a 24 Hr period!  
+            <br>
+             <!-- Read more about it here :-   -->
+        </p>         
+    </div>
+
+
+
+    <div class="sighStream-yourAccount-form" style="padding-top: 15px;" >
+        <div class="uk-grid uk-grid-small f1-form-grid">
+            <div class="uk-width-1-1">
+                <div class="form-grp">
+                    <div class="form-elm">
+                        <input style="text-align: center;" class="form-ctrl" type="text" placeholder="To Account (Address)" v-model="formData.toAccount">
+                        <span   style='color:antiquewhite; padding-left:10px;'>  TO ACCOUNT :  </span>
+                    </div>
+                </div>
+            </div>
+            <span style=" padding-top:5px; margin: 2px; line-height: 22px; font-size: 11.5px; color: mintcream; float: left;">  >   $SIGH Liquidity Stream (Average Per Day) &nbsp; : &nbsp; 0 USD   </span> 
+        </div>
+    
+        <div class="uk-grid uk-grid-small f1-form-grid">
+             <!-- Loading image -->        
+            <div v-if="showLoader" class="uk-width-1-1 center">
+                <img src="https://image.ibb.co/dc02hd/30.gif" />
+            </div>
+            <!-- Buttons (Re-Direct SIGH Stream / Transfer Administrator Priviledges) -->
+            <div v-else class="uk-width-1-1" style="margin-bottom: 15px; margin-top: 15px;"  >
+                <div class="center">
+                    <button class="uk-button uk-button-green" style="background:darkblue;"  @click="redirectLiquiditySIGHStream()">Re-Direct Stream</button>
+                    <button class="uk-button uk-button-green" style="background:darkblue;"  @click="allowLiquiditySIGHRedirectionTo()">Transfer Rights</button>
+                    <!-- <button class="uk-button uk-button-green" style="background:darkblue;"  @click="claimMySIGH()">Claim SIGH</button> -->
+                </div>
+            </div>
+        </div>
+        <span style=" line-height:24px; width:100%; margin-top: 11px; font-size: 15px; padding: 1px; border: aquamarine dotted 0.1px; text-align: center; float: center; color: chartreuse;">  
+           Join our Discord channel to Trade Volatility streams with other participants in the Network! &#x1F69C;	&#128104;&#8205;&#127806; &#127906;
+        </span> 
+    </div>
+
+
+    <div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 79px; margin-bottom: 10px;" >
+        <table style="color: white;" >
+            <!-- 👨‍🌾 $SIGH LIQUIDITY STREAM 👨‍🌾 -->
+            <h1 > <span style="line-height: 24px;font-size: 17px; color:springgreen; font-weight: 500; padding-bottom:10px; padding-left:10%;" > &#128104;&#8205;&#127806; {{ selectedInstrument.symbol }} : </span> <span style="line-height: 24px;font-size: 17px; color:yellow; font-weight: 500; padding-bottom:10px;" > $SIGH LIQUIDITY STREAM &#128104;&#8205;&#127806;  </span>  </h1> 
+            <!-- WALLET :  -->
+            <tr style="padding-bottom:10px;" >
+                <td>  <span style="line-height: 24px;font-size: 12px; color:dodgerblue; display: contents; font-weight: 500; padding-bottom:10px;" >  WALLET  : </span>  {{ this.$store.state.connectedWallet  }} &nbsp;  </td> 
+            </tr>
+            <br> 
+            <!-- 🚜 $SIGH 🌾 Liquidity Stream 🚜 currently re-directed To   :  -->
+            <tr>
+                <td style="font-size: 12.5px !important;" >  <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents; font-weight: 500;" > &#x1F69C; $SIGH &#127806; Liquidity Stream &#x1F69C; </span> currently re-directed To &nbsp; : &nbsp; 
+                    <br> 
+                    > &nbsp;  {{  selectedInstrumentWalletState.liquiditySIGHStreamRedirectedTo == '0x0000000000000000000000000000000000000000' ? 'Currently Not being re-directed!' :  selectedInstrumentWalletState.liquiditySIGHStreamRedirectedTo   }} </td> 
+            </tr>
+            <br>
+            <!-- 🚜 $SIGH 🌾 Liquidity Stream 🚜 Transfer Administrator  :  -->
+            <tr>
+                <td style="font-size: 12.5px !important;" >  <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents; font-weight: 500;" > &#x1F69C; $SIGH &#127806; Liquidity Stream &#x1F69C; </span> Transfer Administrator &nbsp; : &nbsp; 
+                    <br> 
+                    > &nbsp;  {{  selectedInstrumentWalletState.liquiditySIGHStreamRedirectionAllowance == '0x0000000000000000000000000000000000000000' ? 'Transfer Rights haven\'t been assigned to anyone yet!' :  selectedInstrumentWalletState.liquiditySIGHStreamRedirectedTo   }} </td> 
+            </tr>
+            <br> 
+            <!-- TOTAL LIQUIDITY (USDT) FARMING $SIGH 🌾 :    -->
+            <tr v-if="selectedInstrumentWalletState.liquiditySIGHStreamRedirectedTo == '0x0000000000000000000000000000000000000000'">                
+                <td > <span style="line-height: 24px;font-size: 12px; color:springgreen; display: contents; font-weight: 500;" >  TOTAL LIQUIDITY ({{ selectedInstrument.symbol }}) FARMING </span> <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents; font-weight: 500;" >  $SIGH &#127806; </span> : &nbsp; {{  Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalance).toFixed(3) }} (  {{ Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalanceWorth).toFixed(3) }} USD ) </td> 
+            </tr>
+            <tr v-else >                
+                <td > <span style="line-height: 24px;font-size: 12px; color:springgreen; display: contents; font-weight: 500;" >  TOTAL LIQUIDITY ({{ selectedInstrument.symbol  }}) FARMING </span> <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents; font-weight: 500;" >  $SIGH &#127806; </span> : &nbsp; {{  Number( Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalance) + Number(selectedInstrumentWalletState.userDepositedBalance)  ).toFixed(3) }} (  {{  Number(  Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalanceWorth) +  Number(selectedInstrumentWalletState.userDepositedBalanceWorth)  ).toFixed(3) }} USD ) </td> 
+            </tr>
+            <tr>                
+                <td > <span style="line-height: 24px;font-size: 12px; color:skyblue; display: contents; font-weight: 500;" > > Deposited Balance ({{ selectedInstrument.symbol  }}) </span> : &nbsp; {{ Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(3) }} (  {{ Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(3) }} USD ) </td> 
+            </tr>
+            <tr>                
+                <td > <span style="line-height: 24px;font-size: 12px; color:skyblue; display: contents; font-weight: 500;" > > Re-directed Balance ({{ selectedInstrument.symbol  }}) </span> : &nbsp; {{ Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalance).toFixed(3) }} (  {{ Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalanceWorth).toFixed(3) }} USD ) </td> 
+            </tr>
+            <br> 
+            <!-- HARVEST METRICS    -->
+            <tr>                
+                <td > <span style="line-height: 24px;font-size: 13.5px; color:springgreen; display: contents; font-weight: 500;" > {{ selectedInstrument.symbol }} : </span> <span style="line-height: 24px;font-size: 13.5px; color:yellow; display: contents; font-weight: 500;" > &#127806; $SIGH &#127806; HARVEST METRICS &#x1F69C; &#x1F69C; &#x1F69C; </span>  </td> 
+            </tr>
+            <!-- <tr >                
+                <td > <span style="line-height: 24px;font-size: 12px; color:springgreen; display: contents; font-weight: 500;" >  TOTAL LIQUIDITY ({{ selectedInstrument.symbol  }}) FARMING </span> <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents; font-weight: 500;" >  $SIGH &#127806; </span> : &nbsp; {{  Number( Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalance) + Number(selectedInstrumentWalletState.userDepositedBalance)  ).toFixed(3) }} (  {{  Number(  Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalanceWorth) +  Number(selectedInstrumentWalletState.userDepositedBalanceWorth)  ).toFixed(3) }} USD ) </td> 
+            </tr> -->
+            <tr>                
+                <td > <span style="line-height: 24px;font-size: 12px; color:palegreen; display: contents; font-weight: 500;" > > Streaming Rate (current Hr) </span> : &nbsp;  </td> 
+            </tr>
+            <tr>                
+                <td > <span style="line-height: 24px;font-size: 12px; color:palegreen; display: contents; font-weight: 500;" > > Streaming Rate (24 Hr Average) </span> : &nbsp; </td> 
+            </tr>
+            <tr>                
+                <td > <span style="line-height: 24px;font-size: 12px; color:palegreen; display: contents; font-weight: 500;" > > Streaming Rate (APY) </span> : &nbsp; </td> 
+            </tr>
+            <br>
+            <tr>                
+                <td > <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents; font-weight: 500;" > TOTAL &#127806;$SIGH&#127806; ACCURED </span> : &nbsp; </td> 
+            </tr>
+        </table>
+    </div>
+
+
+    <div class="uk-grid uk-grid-small f1-form-grid">
+        <!-- Loading image -->        
+       <div v-if="showLoaderRefresh" class="uk-width-1-1 center">
+           <img src="https://image.ibb.co/dc02hd/30.gif" />
+       </div>
+       <!-- REFRESH BUTTONS -->
+       <div v-else class="uk-width-1-1" style="margin-bottom: 15px; margin-top: 15px;"  >
+            <div class="center">
+                <button class="uk-button uk-button-black" style="background:darkblue;"  @click="refreshCurrentInstrumentWalletState(true)">Refresh</button>
+                    <button class="uk-button uk-button-green" style="background:darkblue;"  @click="claimMySIGH()">Claim SIGH</button>
+                </div>    
+        </div>    
+    </div>    
+  
+</div>

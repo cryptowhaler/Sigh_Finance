@@ -71,12 +71,12 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
     * @param _amount the amount to be deposited
     * @param _borrowRateMode the rate mode, can be either 1-stable or 2-variable
     * @param _borrowRate the rate at which the user has borrowed
-    * @param _originationFee the origination fee to be paid by the user
+    * @param _borrowFee the origination fee to be paid by the user
     * @param _borrowBalanceIncrease the balance increase since the last borrow, 0 if it's the first time borrowing
     * @param _referral the referral number of the action
     * @param _timestamp the timestamp of the action
     **/
-    event Borrow( address indexed _instrument, address indexed _user, uint256 _amount, uint256 _borrowRateMode, uint256 _borrowRate, uint256 _originationFee, uint256 _borrowBalanceIncrease, uint16 _referral, uint256 _timestamp);
+    event Borrow( address indexed _instrument, address indexed _user, uint256 _amount, uint256 _borrowRateMode, uint256 _borrowRate, uint256 _borrowFee, uint256 _borrowBalanceIncrease, uint16 _referral, uint256 _timestamp);
 
     /**
     * @dev emitted on repay
@@ -392,7 +392,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
         uint256 paybackAmount;
         uint256 paybackAmountMinusFees;
         uint256 currentStableRate;
-        uint256 originationFee;
+        uint256 borrowFee;
     }
 
     function repay(address _instrument, uint256 _amount, address payable _onBehalfOf) external payable nonReentrant 
@@ -402,13 +402,13 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
         RepayLocalVars memory vars;     // Usage of a memory struct of vars to avoid "Stack too deep" errors due to local variables
         ( vars.principalBorrowBalance, vars.compoundedBorrowBalance, vars.borrowBalanceIncrease ) = core.getUserBorrowBalances(_instrument, _onBehalfOf);
 
-        vars.originationFee = core.getUserOriginationFee(_instrument, _onBehalfOf);
+        vars.borrowFee = core.getUserBorrowFee(_instrument, _onBehalfOf);
         vars.isETH = EthAddressLib.ethAddress() == _instrument;
 
         require(vars.compoundedBorrowBalance > 0, "The user does not have any borrow pending");
         require( _amount != UINT_MAX_VALUE || msg.sender == _onBehalfOf, "To repay on behalf of an user an explicit amount to repay is needed.");
 
-        vars.paybackAmount = vars.compoundedBorrowBalance.add(vars.originationFee);     //default to max amount
+        vars.paybackAmount = vars.compoundedBorrowBalance.add(vars.borrowFee);     //default to max amount
 
         if (_amount != UINT_MAX_VALUE && _amount < vars.paybackAmount) {
             vars.paybackAmount = _amount;
@@ -417,7 +417,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
         require( !vars.isETH || msg.value >= vars.paybackAmount, "Invalid msg.value sent for the repayment");
 
         //if the amount is smaller than the origination fee, just transfer the amount to the fee destination address
-        if (vars.paybackAmount <= vars.originationFee) {
+        if (vars.paybackAmount <= vars.borrowFee) {
             core.updateStateOnRepay( _instrument, _onBehalfOf, 0, vars.paybackAmount, vars.borrowBalanceIncrease, false);
             core.transferToFeeCollectionAddress.value( vars.isETH ? vars.paybackAmount : 0)( _instrument, _onBehalfOf, vars.paybackAmount,  addressesProvider.getSIGHFinanceFeeCollector() );
 
@@ -425,18 +425,18 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
             return;
         }
 
-        vars.paybackAmountMinusFees = vars.paybackAmount.sub(vars.originationFee);
-        core.updateStateOnRepay( _instrument, _onBehalfOf, vars.paybackAmountMinusFees, vars.originationFee, vars.borrowBalanceIncrease, vars.compoundedBorrowBalance == vars.paybackAmountMinusFees);
+        vars.paybackAmountMinusFees = vars.paybackAmount.sub(vars.borrowFee);
+        core.updateStateOnRepay( _instrument, _onBehalfOf, vars.paybackAmountMinusFees, vars.borrowFee, vars.borrowBalanceIncrease, vars.compoundedBorrowBalance == vars.paybackAmountMinusFees);
 
         //if the user didn't repay the origination fee, transfer the fee to the fee collection address
-        if(vars.originationFee > 0) {
-            core.transferToFeeCollectionAddress.value(vars.isETH ? vars.originationFee : 0)( _instrument, _onBehalfOf, vars.originationFee, addressesProvider.getSIGHFinanceFeeCollector() );
+        if(vars.borrowFee > 0) {
+            core.transferToFeeCollectionAddress.value(vars.isETH ? vars.borrowFee : 0)( _instrument, _onBehalfOf, vars.borrowFee, addressesProvider.getSIGHFinanceFeeCollector() );
         }
 
         //sending the total msg.value if the transfer is ETH.
         //the transferToReserve() function will take care of sending the excess ETH back to the caller
-        core.transferToReserve.value(vars.isETH ? msg.value.sub(vars.originationFee) : 0)( _instrument, msg.sender, vars.paybackAmountMinusFees );
-        emit Repay( _instrument, _onBehalfOf, msg.sender, vars.paybackAmountMinusFees, vars.originationFee, vars.borrowBalanceIncrease, block.timestamp);
+        core.transferToReserve.value(vars.isETH ? msg.value.sub(vars.borrowFee) : 0)( _instrument, msg.sender, vars.paybackAmountMinusFees );
+        emit Repay( _instrument, _onBehalfOf, msg.sender, vars.paybackAmountMinusFees, vars.borrowFee, vars.borrowBalanceIncrease, block.timestamp);
     }
 
 
@@ -582,8 +582,8 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
         require( availableLiquidityBefore >= _amount, "There is not enough liquidity available to borrow");
 
         (uint256 totalFeeBips, uint256 protocolFeeBips) = parametersProvider.getFlashLoanFeesInBips();
-        uint256 amountFee = _amount.mul(totalFeeBips).div(10000);           //calculate amount fee
-        uint256 protocolFee = amountFee.mul(protocolFeeBips).div(10000);    //protocol fee is the part of the amountFee reserved for the protocol - the rest goes to depositors
+        uint256 amountFee = _amount.mul(totalFeeBips).div(10000);           //calculate amount fee (0.5%)
+        uint256 protocolFee = amountFee.mul(protocolFeeBips).div(10000);    //protocol fee is the 50% of the amountFee, i.e 0.25%
         require( amountFee > 0 && protocolFee > 0, "The requested amount is too small for a flashLoan." );
 
         //get the FlashLoanReceiver instance
@@ -670,7 +670,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
             uint256 borrowRateMode,
             uint256 borrowRate,
             uint256 liquidityRate,
-            uint256 originationFee,
+            uint256 borrowFee,
             uint256 variableBorrowIndex,
             uint256 lastUpdateTimestamp,
             bool usageAsCollateralEnabled
