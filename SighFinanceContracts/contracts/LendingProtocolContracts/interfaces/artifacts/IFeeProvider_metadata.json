@@ -1,0 +1,107 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "calculateDepositFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "calculateLoanOriginationFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getLoanOriginationFeePercentage",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"methods": {},
+			"title": "IFeeProvider interface"
+		},
+		"userdoc": {
+			"methods": {},
+			"notice": "**********Interface for the SIGH Finance's Lending Protocol fee provider."
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/LendingProtocolContracts/interfaces/IFeeProvider.sol": "IFeeProvider"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/LendingProtocolContracts/interfaces/IFeeProvider.sol": {
+			"keccak256": "0x3cd7a7b585a53d125c730a79dbe8e0eed5e2910dcff87dd5451c578e7aac0972",
+			"urls": [
+				"bzz-raw://fae503d55caf63360e4a415c4154ce17ec74def417f426dbff166a2ee7b22219",
+				"dweb:/ipfs/QmQgxc2iEP8PML14aYhgnVXT9fLLDGktdNhiHfVJTsuGQY"
+			]
+		}
+	},
+	"version": 1
+}

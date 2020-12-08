@@ -7,7 +7,7 @@ import "../Configuration/IGlobalAddressesProvider.sol";
 import "./interfaces/ILendingPool.sol";
 import "./interfaces/ILendingPoolDataProvider.sol";
 import "./interfaces/ILendingPoolCore.sol";
-import "./interfaces/ISighStream.sol";
+import "./interfaces/ISighStream.sol";     
 
 import "./libraries/WadRayMath.sol";
 

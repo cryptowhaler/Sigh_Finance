@@ -58,7 +58,8 @@
 			"refreshConfig()": "7c55ccb3",
 			"repay(address,uint256,address)": "5ceae9c4",
 			"setUserUseInstrumentAsCollateral(address,bool)": "0c363982",
-			"swapBorrowRateMode(address)": "48ca1300"
+			"swapBorrowRateMode(address)": "48ca1300",
+			"transferSIGHPayToStakingContract(address)": "6f7dafcb"
 		}
 	},
 	"abi": [
@@ -575,6 +576,21 @@
 				}
 			],
 			"name": "swapBorrowRateMode",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_instrument",
+					"type": "address"
+				}
+			],
+			"name": "transferSIGHPayToStakingContract",
 			"outputs": [],
 			"payable": false,
 			"stateMutability": "nonpayable",

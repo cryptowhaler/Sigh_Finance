@@ -35,6 +35,12 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
+						"name": "newSighPayRate",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
 						"name": "liquidityIndex",
 						"type": "uint256"
 					},
@@ -43,9 +49,52 @@
 						"internalType": "uint256",
 						"name": "variableBorrowIndex",
 						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "sighPayIndex",
+						"type": "uint256"
 					}
 				],
 				"name": "InstrumentUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "instrument",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalLiquidity",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_sighPayAccured",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "lastSIGHPayPaidIndex",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "lastSIGHPayCumulativeIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "SIGH_PAY_Amount_Transferred",
 				"type": "event"
 			},
 			{
@@ -611,6 +660,69 @@
 						"type": "address"
 					}
 				],
+				"name": "getInstrumentSIGHPayCumulativeIndex",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					}
+				],
+				"name": "getInstrumentSIGHPayPaidIndex",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					}
+				],
+				"name": "getInstrumentSIGHPayRate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					}
+				],
 				"name": "getInstrumentTotalBorrows",
 				"outputs": [
 					{
@@ -834,6 +946,32 @@
 						"type": "address"
 					}
 				],
+				"name": "getUserBorrowFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
 				"name": "getUserCurrentBorrowRateMode",
 				"outputs": [
 					{
@@ -891,32 +1029,6 @@
 					{
 						"internalType": "uint256",
 						"name": "timestamp",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_user",
-						"type": "address"
-					}
-				],
-				"name": "getUserOriginationFee",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
 						"type": "uint256"
 					}
 				],
@@ -1280,6 +1392,21 @@
 				"inputs": [
 					{
 						"internalType": "address",
+						"name": "instrumentAddress",
+						"type": "address"
+					}
+				],
+				"name": "transferSIGHPayToStakingContract",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
 						"name": "_token",
 						"type": "address"
 					},
@@ -1627,7 +1754,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_originationFeeRepaid",
+						"name": "_borrowFeeRepaid",
 						"type": "uint256"
 					},
 					{
@@ -1910,6 +2037,13 @@
 					},
 					"return": "the principal borrow balance, the compounded balance and the balance increase since the last borrow/repay/swap/rebalance*"
 				},
+				"getUserBorrowFee(address,address)": {
+					"params": {
+						"_instrument": "the address of the instrument for which the information is needed",
+						"_user": "the address of the user for which the information is needed"
+					},
+					"return": "the Borrow fee for the user*"
+				},
 				"getUserCurrentBorrowRateMode(address,address)": {
 					"details": "users with no loans in progress have NONE as borrow rate mode",
 					"params": {
@@ -1933,13 +2067,6 @@
 						"_user": "the address of the user for which the information is needed"
 					},
 					"return": "the variable borrow index for the user*"
-				},
-				"getUserOriginationFee(address,address)": {
-					"params": {
-						"_instrument": "the address of the instrument for which the information is needed",
-						"_user": "the address of the user for which the information is needed"
-					},
-					"return": "the origination fee for the user*"
 				},
 				"getUserUnderlyingAssetBalance(address,address)": {
 					"details": "gets the underlying asset balance (including the interest accured) of a user based on the corresponding iToken balance.",
@@ -2032,6 +2159,12 @@
 						"_instrument": "the address of the principal instrument where the user deposited",
 						"_useAsCollateral": "true if the depositor wants to use the instrument as collateral*",
 						"_user": "the address of the depositor"
+					}
+				},
+				"transferSIGHPayToStakingContract(address)": {
+					"details": "transfers to the $SIGH Staking Contract ",
+					"params": {
+						"instrumentAddress": "the address of the Instrument for which SIGH PAY is being being transferred [to SIGH Staking Contract]*"
 					}
 				},
 				"transferToFeeCollectionAddress(address,address,uint256,address)": {
@@ -2129,8 +2262,8 @@
 					"details": "updates the state of the core as a consequence of a repay action.",
 					"params": {
 						"_balanceIncrease": "the accrued interest on the borrowed amount",
+						"_borrowFeeRepaid": "the fee on the amount that is being repaid",
 						"_instrument": "the address of the instrument on which the user is repaying",
-						"_originationFeeRepaid": "the fee on the amount that is being repaid",
 						"_paybackAmountMinusFees": "the amount being paid back minus fees",
 						"_repaidWholeLoan": "true if the user is repaying the whole loan*",
 						"_user": "the address of the borrower"
@@ -2196,24 +2329,24 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/I_InstrumentInterestRateStrategy.sol": {
-			"keccak256": "0x8a36fc5c3cea6f913fcd6248447157311a6ec22752aff7710bd58114bfd2840a",
+			"keccak256": "0xdef0a96e1ceb6b794bc6515d8762d333fd296798f69a725b08473a51acbd1254",
 			"urls": [
-				"bzz-raw://2e287714f3b6ffd0254d2832421faa1613c26e6192f301b28886466bb79e3471",
-				"dweb:/ipfs/QmfBhVBbzdnFyHuFdtndQDLfVC4TePLUEXhqDAWmbAgeJ6"
+				"bzz-raw://4d2ba30504f03e191ba30cea17594ffbd2557c1b5d56a04eb983acbf43c49999",
+				"dweb:/ipfs/QmSRUkFYdZugBBfiBiEYCh1LD9dsxRZbGDcrdAkBkfCAen"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolCore.sol": {
-			"keccak256": "0xe2b78539fc206a3f7c216cf0ea8e86a9f1a71ba8dc43332dcc3f29384c7bb1a9",
+			"keccak256": "0x054ccff1975fcfc15977298351b10df736e25fe391f7ba858135741fbd2214d4",
 			"urls": [
-				"bzz-raw://17ff22284cfaeaf8df521c9467018c4c2fad4ee182a8b64f975fe7902885f69c",
-				"dweb:/ipfs/QmfMfg4ty7wDGQ2WHm9EzwsEqZ2vzs3Pc7NxG3kyEWR9JY"
+				"bzz-raw://0f4642a536acf66e994bf3675d54c155175e7391b1d78cd169f47ea2e9de8b19",
+				"dweb:/ipfs/QmQix521Dn2rsRrVqAuvw49kH1pm3JTqwsjSkqXP3fGQuG"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
-			"keccak256": "0x3799446dff4f09de695bc46e555c50d47592d39b7d4bc0b41f5d046218b787f7",
+			"keccak256": "0xd3fe57263bcab96f887842d408d267494d03767132f9a2d06105278a4eae02b1",
 			"urls": [
-				"bzz-raw://ad7b33ac794daa623c0e47e78bf9430fc8470a67c8a593f065479173031133f1",
-				"dweb:/ipfs/QmTiP7TzYponrC9wCZ2SqzavzgYkBDmRRCHhErwWac5NDT"
+				"bzz-raw://e9073f82d5f6eab6617381567c972456e0437caee46664e6e5f4b9bc3c92bbb4",
+				"dweb:/ipfs/QmdFXZVpWvixJbGP6sFnXxeJxXhGj3rDfB7cmmGbj7QS6U"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/EthAddressLib.sol": {

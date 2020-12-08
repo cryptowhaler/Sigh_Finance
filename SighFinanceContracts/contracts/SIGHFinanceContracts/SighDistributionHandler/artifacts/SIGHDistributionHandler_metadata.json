@@ -1370,10 +1370,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
-			"keccak256": "0x1657a8a39266adbacbff83f7ae804eb22686150929e33874976a2398abf53f83",
+			"keccak256": "0x49c1c164a924f840dc7a35d1e0d5baa3ec93eb46c904b97c1c0af4f76370d97a",
 			"urls": [
-				"bzz-raw://9ad253e3c976e8a930a5a3747ba3831e393d7abf4bbab8bd4990453cb139a9ac",
-				"dweb:/ipfs/QmbVnNS3t5mh46s5d2C1HvZBUqHVdWzv2hSm2vdiP8GrL7"
+				"bzz-raw://531a842e810d839eaaddf7415bd877d41566f5a327e46c1ec2b10c010852bf0b",
+				"dweb:/ipfs/QmcCyWYhxzRhjHzV8Ln2WehGFh3SWra7FsXo5HJgQqWumJ"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/IPriceOracleGetter.sol": {
@@ -1384,10 +1384,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
-			"keccak256": "0x3799446dff4f09de695bc46e555c50d47592d39b7d4bc0b41f5d046218b787f7",
+			"keccak256": "0xd3fe57263bcab96f887842d408d267494d03767132f9a2d06105278a4eae02b1",
 			"urls": [
-				"bzz-raw://ad7b33ac794daa623c0e47e78bf9430fc8470a67c8a593f065479173031133f1",
-				"dweb:/ipfs/QmTiP7TzYponrC9wCZ2SqzavzgYkBDmRRCHhErwWac5NDT"
+				"bzz-raw://e9073f82d5f6eab6617381567c972456e0437caee46664e6e5f4b9bc3c92bbb4",
+				"dweb:/ipfs/QmdFXZVpWvixJbGP6sFnXxeJxXhGj3rDfB7cmmGbj7QS6U"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/WadRayMath.sol": {
@@ -1419,10 +1419,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighDistributionHandler/SighDistributionHandler.sol": {
-			"keccak256": "0xb9a568a0e410ad32d4d4a871ed5964bea36dee7985c43796cd350c370eb2d223",
+			"keccak256": "0xa8446e89a9ae0bc3b39a277d9b7b068dc588237b50776fce75002c86d6a795c0",
 			"urls": [
-				"bzz-raw://81e2258522058a87e72aeba0d53319a5b11235754df92a38e80e6ad543a06bd6",
-				"dweb:/ipfs/QmeSwdwa2mDJqLMsdex57vLHebPtJ19dKB9qDLdt37AfSx"
+				"bzz-raw://fc6f418461850897be0564ec084806320196ffc52fcb4e21b96e8fef23173e37",
+				"dweb:/ipfs/QmXDNSup5HkVQbo4Bmm6zsKJni5xFvpikUTBSoyALyJByK"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

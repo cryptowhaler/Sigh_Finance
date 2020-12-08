@@ -20,5 +20,5 @@ interface I_InstrumentInterestRateStrategy {
     *
     */
     function calculateInterestRates( address _instrument, uint256 _utilizationRate, uint256 _totalBorrowsStable, uint256 _totalBorrowsVariable, uint256 _averageStableBorrowRate) external view
-    returns (uint256 liquidityRate, uint256 stableBorrowRate, uint256 variableBorrowRate);
+    returns (uint256 liquidityRate, uint256 stableBorrowRate, uint256 variableBorrowRate,  uint256 currentSighPayRate );
 }

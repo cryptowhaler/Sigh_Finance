@@ -1,0 +1,175 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_utilizationRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_totalBorrowsStable",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_totalBorrowsVariable",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_averageStableBorrowRate",
+						"type": "uint256"
+					}
+				],
+				"name": "calculateInterestRates",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "liquidityRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "stableBorrowRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "variableBorrowRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "currentSighPayRate",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getBaseVariableBorrowRate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getStableRateSlope1",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getStableRateSlope2",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getVariableRateSlope1",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getVariableRateSlope2",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"methods": {
+				"calculateInterestRates(address,uint256,uint256,uint256,uint256)": {
+					"details": "calculates the liquidity, stable, and variable rates depending on the current utilization rate and the base parameters    "
+				}
+			},
+			"title": "I_InstrumentInterestRateStrategyInterface interface"
+		},
+		"userdoc": {
+			"methods": {},
+			"notice": "Interface for the calculation of the interest rates."
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/LendingProtocolContracts/interfaces/I_InstrumentInterestRateStrategy.sol": "I_InstrumentInterestRateStrategy"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/LendingProtocolContracts/interfaces/I_InstrumentInterestRateStrategy.sol": {
+			"keccak256": "0xdef0a96e1ceb6b794bc6515d8762d333fd296798f69a725b08473a51acbd1254",
+			"urls": [
+				"bzz-raw://4d2ba30504f03e191ba30cea17594ffbd2557c1b5d56a04eb983acbf43c49999",
+				"dweb:/ipfs/QmSRUkFYdZugBBfiBiEYCh1LD9dsxRZbGDcrdAkBkfCAen"
+			]
+		}
+	},
+	"version": 1
+}

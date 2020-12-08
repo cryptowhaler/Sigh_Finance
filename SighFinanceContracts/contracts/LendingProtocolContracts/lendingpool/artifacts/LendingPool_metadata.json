@@ -41,7 +41,7 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "_originationFee",
+						"name": "_borrowFee",
 						"type": "uint256"
 					},
 					{
@@ -85,6 +85,12 @@
 						"indexed": false,
 						"internalType": "uint256",
 						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "depositFee",
 						"type": "uint256"
 					},
 					{
@@ -879,7 +885,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "originationFee",
+						"name": "borrowFee",
 						"type": "uint256"
 					},
 					{
@@ -1085,6 +1091,21 @@
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					}
+				],
+				"name": "transferSIGHPayToStakingContract",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -1190,24 +1211,24 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/IFeeProvider.sol": {
-			"keccak256": "0x40a163478b768ca5639ccc04466e2667eec5e86582dc5b2a9b18496a5e9c2423",
+			"keccak256": "0x3cd7a7b585a53d125c730a79dbe8e0eed5e2910dcff87dd5451c578e7aac0972",
 			"urls": [
-				"bzz-raw://a021b7e9c79fd6053a0213e72ef307e58e1bb89392e9b24a6cc4063e49e5461a",
-				"dweb:/ipfs/QmNb5Uh8bbudTma2hxnDc6JSR6MKS1U5PGggstGZhnwiQn"
+				"bzz-raw://fae503d55caf63360e4a415c4154ce17ec74def417f426dbff166a2ee7b22219",
+				"dweb:/ipfs/QmQgxc2iEP8PML14aYhgnVXT9fLLDGktdNhiHfVJTsuGQY"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPool.sol": {
-			"keccak256": "0x9293968389a224ec42c1ce4b82cfd01f5c487dc632198472100eae41f1447da8",
+			"keccak256": "0xd6368546e797c0a73b473830bdffe2beab21ab48cec44867f65657048e3c169c",
 			"urls": [
-				"bzz-raw://3dc57e90f36750703617a69c0f24407b782a1b5b7ae81d332f20de5c4ec37454",
-				"dweb:/ipfs/QmchfrDX8WCX759DeDRGEmFLQrp3wuw3rGvjQons7AefzE"
+				"bzz-raw://3ac93ded85538104ea1852e04ea1611e746819ab6751db967a8e17d3ae4df243",
+				"dweb:/ipfs/QmTsPEatASEUdPWdFxZsywe4qUv28fcH7SfEjodyv3hN9E"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
-			"keccak256": "0x1657a8a39266adbacbff83f7ae804eb22686150929e33874976a2398abf53f83",
+			"keccak256": "0x7b4d14500a811e6100583ea4168f66567c7e842b3c3c7ca32704aca7323a513a",
 			"urls": [
-				"bzz-raw://9ad253e3c976e8a930a5a3747ba3831e393d7abf4bbab8bd4990453cb139a9ac",
-				"dweb:/ipfs/QmbVnNS3t5mh46s5d2C1HvZBUqHVdWzv2hSm2vdiP8GrL7"
+				"bzz-raw://ae5c84ca69f5ee77ca36804be244ff54e91f83457bc45c4d2c313ba313f0f5bd",
+				"dweb:/ipfs/QmeTtfXzSbTB9njMu9vN1m7vdpeNrEHsd81u34AK8WjMZL"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolDataProvider.sol": {
@@ -1239,10 +1260,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPool.sol": {
-			"keccak256": "0x932cd7fec545e26276f68127d0245971cbd7b40bdd412842166c9878acf42697",
+			"keccak256": "0x9057473ea78eeecdbc142dff76cc8c16936fe413111d68e68c300b85ff68b504",
 			"urls": [
-				"bzz-raw://04bbaea30ce391d30798135e3c0386e990faac448305e04ae58b920e60290c47",
-				"dweb:/ipfs/QmQ24HYXoWQzB2N5u7He7UocUHUeQvsFGxBf3zHcJmTn6w"
+				"bzz-raw://f1fdb0af432e3010c27d8f058341f3cf50e096775ed5d3a48ef9bd563ead664b",
+				"dweb:/ipfs/Qmd7yZ9tKoZ4PQGoVwFfBh9XSCLNB7dmpL3rGYyLgfzyGd"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolLiquidationManager.sol": {
@@ -1253,10 +1274,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
-			"keccak256": "0x3799446dff4f09de695bc46e555c50d47592d39b7d4bc0b41f5d046218b787f7",
+			"keccak256": "0xd3fe57263bcab96f887842d408d267494d03767132f9a2d06105278a4eae02b1",
 			"urls": [
-				"bzz-raw://ad7b33ac794daa623c0e47e78bf9430fc8470a67c8a593f065479173031133f1",
-				"dweb:/ipfs/QmTiP7TzYponrC9wCZ2SqzavzgYkBDmRRCHhErwWac5NDT"
+				"bzz-raw://e9073f82d5f6eab6617381567c972456e0437caee46664e6e5f4b9bc3c92bbb4",
+				"dweb:/ipfs/QmdFXZVpWvixJbGP6sFnXxeJxXhGj3rDfB7cmmGbj7QS6U"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/EthAddressLib.sol": {

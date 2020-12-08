@@ -59,8 +59,8 @@ contract Treasury is VersionedInitializable   {
     // SIGH TRANSFER RELATED FUNCTIONS
 
     uint private maxSIGHTransferLimit;                  // MAX SIGH that can be traded/transferred during a period
-    uint private totalSighTradedAndTransferred;      // SIGH that has been traded/transferred during the current period
-    uint public constant periodLength = 2;                      // Period Length
+    uint private totalSighTradedAndTransferred;         // SIGH that has been traded/transferred during the current period
+    uint public constant periodLength = 6500;              // Period Length
     uint private periodInitializationBlock;            
     
 

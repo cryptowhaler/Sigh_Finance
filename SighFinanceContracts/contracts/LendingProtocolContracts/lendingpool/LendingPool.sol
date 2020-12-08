@@ -53,7 +53,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
     * @param _referral the referral number of the action
     * @param _timestamp the timestamp of the action
     **/
-    event Deposit( address indexed _instrument, address indexed _user, uint256 _amount, uint256 depositFee uint16 _referral, uint256 _timestamp);
+    event Deposit( address indexed _instrument, address indexed _user, uint256 _amount, uint256 depositFee, uint16 _referral, uint256 _timestamp);
 
     /**
     * @dev emitted during a redeem action.
@@ -407,7 +407,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
         RepayLocalVars memory vars;     // Usage of a memory struct of vars to avoid "Stack too deep" errors due to local variables
         ( vars.principalBorrowBalance, vars.compoundedBorrowBalance, vars.borrowBalanceIncrease ) = core.getUserBorrowBalances(_instrument, _onBehalfOf);
 
-        vars.borrowFee = core.getUserBorrowFee(_instrument, _onBehalfOf);
+        vars.borrowFee = core.getUserOriginationFee(_instrument, _onBehalfOf);
         vars.isETH = EthAddressLib.ethAddress() == _instrument;
 
         require(vars.compoundedBorrowBalance > 0, "The user does not have any borrow pending");
@@ -609,8 +609,8 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
         emit FlashLoan(_receiver, _instrument, _amount, amountFee, protocolFee, block.timestamp);
     }
 
-    function transferSIGHPayToStakingContract()  public nonReentrant onlyActiveInstrument(_instrument) {
-            core.transferSIGHPayToStakingContract();
+    function transferSIGHPayToStakingContract(address _instrument)  public nonReentrant onlyActiveInstrument(_instrument) {
+            core.transferSIGHPayToStakingContract(_instrument);
     }
 
 

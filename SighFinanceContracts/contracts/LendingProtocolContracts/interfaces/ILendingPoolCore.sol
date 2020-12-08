@@ -184,6 +184,6 @@ interface ILendingPoolCore {
 // ################   FUNCTION TO DISTRIBUTE COLLECTED INTEREST TO STAKING CONTRACT ADDRESS    ################
 // ############################################################################################################
 
-    function transferSIGHPayToStakingContract() external ;
+    function transferSIGHPayToStakingContract(address instrument) external ;
 
 }

@@ -942,42 +942,6 @@ export class Instrument extends Entity {
     this.set("liquidationBonus", Value.fromBigInt(value));
   }
 
-  get depositFeeDue_WEI(): BigInt {
-    let value = this.get("depositFeeDue_WEI");
-    return value.toBigInt();
-  }
-
-  set depositFeeDue_WEI(value: BigInt) {
-    this.set("depositFeeDue_WEI", Value.fromBigInt(value));
-  }
-
-  get depositFeeDue(): BigDecimal {
-    let value = this.get("depositFeeDue");
-    return value.toBigDecimal();
-  }
-
-  set depositFeeDue(value: BigDecimal) {
-    this.set("depositFeeDue", Value.fromBigDecimal(value));
-  }
-
-  get depositFeeDueETH(): BigDecimal {
-    let value = this.get("depositFeeDueETH");
-    return value.toBigDecimal();
-  }
-
-  set depositFeeDueETH(value: BigDecimal) {
-    this.set("depositFeeDueETH", Value.fromBigDecimal(value));
-  }
-
-  get depositFeeDueUSD(): BigDecimal {
-    let value = this.get("depositFeeDueUSD");
-    return value.toBigDecimal();
-  }
-
-  set depositFeeDueUSD(value: BigDecimal) {
-    this.set("depositFeeDueUSD", Value.fromBigDecimal(value));
-  }
-
   get depositFeeEarned_WEI(): BigInt {
     let value = this.get("depositFeeEarned_WEI");
     return value.toBigInt();
@@ -1390,6 +1354,78 @@ export class Instrument extends Entity {
 
   set supplyIndex(value: BigInt) {
     this.set("supplyIndex", Value.fromBigInt(value));
+  }
+
+  get sighPayInterestRate(): BigInt {
+    let value = this.get("sighPayInterestRate");
+    return value.toBigInt();
+  }
+
+  set sighPayInterestRate(value: BigInt) {
+    this.set("sighPayInterestRate", Value.fromBigInt(value));
+  }
+
+  get sighPayInterestRatePercent(): BigDecimal {
+    let value = this.get("sighPayInterestRatePercent");
+    return value.toBigDecimal();
+  }
+
+  set sighPayInterestRatePercent(value: BigDecimal) {
+    this.set("sighPayInterestRatePercent", Value.fromBigDecimal(value));
+  }
+
+  get sighPayCumulativeIndex(): BigInt {
+    let value = this.get("sighPayCumulativeIndex");
+    return value.toBigInt();
+  }
+
+  set sighPayCumulativeIndex(value: BigInt) {
+    this.set("sighPayCumulativeIndex", Value.fromBigInt(value));
+  }
+
+  get sighPayPaidIndex(): BigInt {
+    let value = this.get("sighPayPaidIndex");
+    return value.toBigInt();
+  }
+
+  set sighPayPaidIndex(value: BigInt) {
+    this.set("sighPayPaidIndex", Value.fromBigInt(value));
+  }
+
+  get sighPayTransferredWEI(): BigInt {
+    let value = this.get("sighPayTransferredWEI");
+    return value.toBigInt();
+  }
+
+  set sighPayTransferredWEI(value: BigInt) {
+    this.set("sighPayTransferredWEI", Value.fromBigInt(value));
+  }
+
+  get sighPayTransferred(): BigDecimal {
+    let value = this.get("sighPayTransferred");
+    return value.toBigDecimal();
+  }
+
+  set sighPayTransferred(value: BigDecimal) {
+    this.set("sighPayTransferred", Value.fromBigDecimal(value));
+  }
+
+  get sighPayTransferredETH(): BigDecimal {
+    let value = this.get("sighPayTransferredETH");
+    return value.toBigDecimal();
+  }
+
+  set sighPayTransferredETH(value: BigDecimal) {
+    this.set("sighPayTransferredETH", Value.fromBigDecimal(value));
+  }
+
+  get sighPayTransferredUSD(): BigDecimal {
+    let value = this.get("sighPayTransferredUSD");
+    return value.toBigDecimal();
+  }
+
+  set sighPayTransferredUSD(value: BigDecimal) {
+    this.set("sighPayTransferredUSD", Value.fromBigDecimal(value));
   }
 
   get lifeTimeDeposits_WEI(): BigInt {

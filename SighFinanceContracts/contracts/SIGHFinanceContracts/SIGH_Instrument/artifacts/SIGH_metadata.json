@@ -73,6 +73,12 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
+						"name": "newDivisibilityFactor",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
 						"name": "blockNumber",
 						"type": "uint256"
 					},
@@ -816,17 +822,17 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"localhost/contracts/SIGHFinanceContracts/SIGH_Instrument/Sigh.sol": {
-			"keccak256": "0x8aaa68fb01bd35198e6add92958be60d9109158f82111667e024084ecb6c493d",
+			"keccak256": "0xb97b040738ec9c1345ba41e7e651708f55605c43c3c833265632e0c2937490f4",
 			"urls": [
-				"bzz-raw://947a73c7cabb5676b8209647ae7b306617c7d0f08dc13b8278f3517d417395fc",
-				"dweb:/ipfs/QmcbJ6WrQnDwpYoNWX8sWP71rfZP9d29abip4MNtGjhVew"
+				"bzz-raw://df7a93e55f75ccc794ebc2b66cecc4d84771c1997f5dffe0593b58c217d5a600",
+				"dweb:/ipfs/Qme5JKJiNabGX965LnP5R9Cn21mwpWepGKDvhWhLCRqz52"
 			]
 		},
 		"openzeppelin-solidity/contracts/GSN/Context.sol": {

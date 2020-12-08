@@ -94,6 +94,7 @@
 			"setInstrumentDecimals(address,uint256)": "cc9334b2",
 			"setInstrumentInterestRateStrategyAddress(address,address)": "5610992a",
 			"setUserUseInstrumentAsCollateral(address,address,bool)": "4375ddae",
+			"transferSIGHPayToStakingContract(address)": "6f7dafcb",
 			"transferToFeeCollectionAddress(address,address,uint256,address)": "c7d14237",
 			"transferToReserve(address,address,uint256)": "28fcf4d3",
 			"transferToUser(address,address,uint256)": "fa93b2a5",
@@ -1250,6 +1251,21 @@
 				}
 			],
 			"name": "setUserUseInstrumentAsCollateral",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "instrument",
+					"type": "address"
+				}
+			],
+			"name": "transferSIGHPayToStakingContract",
 			"outputs": [],
 			"payable": false,
 			"stateMutability": "nonpayable",

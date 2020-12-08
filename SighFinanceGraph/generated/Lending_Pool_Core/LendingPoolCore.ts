@@ -39,12 +39,54 @@ export class InstrumentUpdated__Params {
     return this._event.parameters[3].value.toBigInt();
   }
 
-  get liquidityIndex(): BigInt {
+  get newSighPayRate(): BigInt {
     return this._event.parameters[4].value.toBigInt();
   }
 
-  get variableBorrowIndex(): BigInt {
+  get liquidityIndex(): BigInt {
     return this._event.parameters[5].value.toBigInt();
+  }
+
+  get variableBorrowIndex(): BigInt {
+    return this._event.parameters[6].value.toBigInt();
+  }
+
+  get sighPayIndex(): BigInt {
+    return this._event.parameters[7].value.toBigInt();
+  }
+}
+
+export class SIGH_PAY_Amount_Transferred extends ethereum.Event {
+  get params(): SIGH_PAY_Amount_Transferred__Params {
+    return new SIGH_PAY_Amount_Transferred__Params(this);
+  }
+}
+
+export class SIGH_PAY_Amount_Transferred__Params {
+  _event: SIGH_PAY_Amount_Transferred;
+
+  constructor(event: SIGH_PAY_Amount_Transferred) {
+    this._event = event;
+  }
+
+  get instrument(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get totalLiquidity(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get _sighPayAccured(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get lastSIGHPayPaidIndex(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+
+  get lastSIGHPayCumulativeIndex(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
   }
 }
 
@@ -685,6 +727,81 @@ export class LendingPoolCore extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  getInstrumentSIGHPayCumulativeIndex(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentSIGHPayCumulativeIndex",
+      "getInstrumentSIGHPayCumulativeIndex(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentSIGHPayCumulativeIndex(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentSIGHPayCumulativeIndex",
+      "getInstrumentSIGHPayCumulativeIndex(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentSIGHPayPaidIndex(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentSIGHPayPaidIndex",
+      "getInstrumentSIGHPayPaidIndex(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentSIGHPayPaidIndex(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentSIGHPayPaidIndex",
+      "getInstrumentSIGHPayPaidIndex(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstrumentSIGHPayRate(_instrument: Address): BigInt {
+    let result = super.call(
+      "getInstrumentSIGHPayRate",
+      "getInstrumentSIGHPayRate(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getInstrumentSIGHPayRate(
+    _instrument: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getInstrumentSIGHPayRate",
+      "getInstrumentSIGHPayRate(address):(uint256)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   getInstrumentTotalBorrows(_instrument: Address): BigInt {
     let result = super.call(
       "getInstrumentTotalBorrows",
@@ -950,6 +1067,38 @@ export class LendingPoolCore extends ethereum.SmartContract {
     );
   }
 
+  getUserBorrowFee(_instrument: Address, _user: Address): BigInt {
+    let result = super.call(
+      "getUserBorrowFee",
+      "getUserBorrowFee(address,address):(uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getUserBorrowFee(
+    _instrument: Address,
+    _user: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getUserBorrowFee",
+      "getUserBorrowFee(address,address):(uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   getUserCurrentBorrowRateMode(_instrument: Address, _user: Address): i32 {
     let result = super.call(
       "getUserCurrentBorrowRateMode",
@@ -1034,38 +1183,6 @@ export class LendingPoolCore extends ethereum.SmartContract {
     let result = super.tryCall(
       "getUserLastUpdate",
       "getUserLastUpdate(address,address):(uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getUserOriginationFee(_instrument: Address, _user: Address): BigInt {
-    let result = super.call(
-      "getUserOriginationFee",
-      "getUserOriginationFee(address,address):(uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user)
-      ]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getUserOriginationFee(
-    _instrument: Address,
-    _user: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getUserOriginationFee",
-      "getUserOriginationFee(address,address):(uint256)",
       [
         ethereum.Value.fromAddress(_instrument),
         ethereum.Value.fromAddress(_user)
@@ -1934,6 +2051,36 @@ export class SetUserUseInstrumentAsCollateralCall__Outputs {
   }
 }
 
+export class TransferSIGHPayToStakingContractCall extends ethereum.Call {
+  get inputs(): TransferSIGHPayToStakingContractCall__Inputs {
+    return new TransferSIGHPayToStakingContractCall__Inputs(this);
+  }
+
+  get outputs(): TransferSIGHPayToStakingContractCall__Outputs {
+    return new TransferSIGHPayToStakingContractCall__Outputs(this);
+  }
+}
+
+export class TransferSIGHPayToStakingContractCall__Inputs {
+  _call: TransferSIGHPayToStakingContractCall;
+
+  constructor(call: TransferSIGHPayToStakingContractCall) {
+    this._call = call;
+  }
+
+  get instrumentAddress(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class TransferSIGHPayToStakingContractCall__Outputs {
+  _call: TransferSIGHPayToStakingContractCall;
+
+  constructor(call: TransferSIGHPayToStakingContractCall) {
+    this._call = call;
+  }
+}
+
 export class TransferToFeeCollectionAddressCall extends ethereum.Call {
   get inputs(): TransferToFeeCollectionAddressCall__Inputs {
     return new TransferToFeeCollectionAddressCall__Inputs(this);
@@ -2407,7 +2554,7 @@ export class UpdateStateOnRepayCall__Inputs {
     return this._call.inputValues[2].value.toBigInt();
   }
 
-  get _originationFeeRepaid(): BigInt {
+  get _borrowFeeRepaid(): BigInt {
     return this._call.inputValues[3].value.toBigInt();
   }
 

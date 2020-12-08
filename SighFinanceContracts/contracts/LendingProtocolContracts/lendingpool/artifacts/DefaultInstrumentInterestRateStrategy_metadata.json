@@ -36,6 +36,11 @@
 						"internalType": "uint256",
 						"name": "_stableRateSlope2",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_sighPayPercent",
+						"type": "uint256"
 					}
 				],
 				"payable": false,
@@ -147,6 +152,11 @@
 						"internalType": "uint256",
 						"name": "currentVariableBorrowRate",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "currentSighPayRate",
+						"type": "uint256"
 					}
 				],
 				"payable": false,
@@ -248,6 +258,21 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
+						"name": "newSighPayPercent",
+						"type": "uint256"
+					}
+				],
+				"name": "setSighPayPercent",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
 						"name": "newstableRateSlope1",
 						"type": "uint256"
 					}
@@ -301,6 +326,21 @@
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "sighPayPercent",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -408,17 +448,17 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/I_InstrumentInterestRateStrategy.sol": {
-			"keccak256": "0x8a36fc5c3cea6f913fcd6248447157311a6ec22752aff7710bd58114bfd2840a",
+			"keccak256": "0xdef0a96e1ceb6b794bc6515d8762d333fd296798f69a725b08473a51acbd1254",
 			"urls": [
-				"bzz-raw://2e287714f3b6ffd0254d2832421faa1613c26e6192f301b28886466bb79e3471",
-				"dweb:/ipfs/QmfBhVBbzdnFyHuFdtndQDLfVC4TePLUEXhqDAWmbAgeJ6"
+				"bzz-raw://4d2ba30504f03e191ba30cea17594ffbd2557c1b5d56a04eb983acbf43c49999",
+				"dweb:/ipfs/QmSRUkFYdZugBBfiBiEYCh1LD9dsxRZbGDcrdAkBkfCAen"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/DefaultInstrumentInterestRateStrategy.sol": {
-			"keccak256": "0xa564f85d5185cde1ef7f50e2c324164b8caac1b52e2b120cba700413a2bbab0c",
+			"keccak256": "0x5530a03474e02dbad18be13d420ae6564b9ceed1553deb2d87b22636266dcf94",
 			"urls": [
-				"bzz-raw://24d24df8aeed77544830bd8f071b247e8aecad5b0feba74d3f4196222de39b76",
-				"dweb:/ipfs/QmcZbYeMwgvMG64a4jEFNeCJADkNJUCKMhssA18bMYSww4"
+				"bzz-raw://9f70631df4b81f801bdb6ab06a325a4c8cbf28c5c7d74476ed44a636127c6da6",
+				"dweb:/ipfs/Qmdn6MaoU9CAsj1WcbhPtNwAJCxfCSahW6ZrwE8KQt86MC"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/WadRayMath.sol": {

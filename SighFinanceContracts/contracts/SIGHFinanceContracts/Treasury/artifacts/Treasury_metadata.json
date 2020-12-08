@@ -1117,7 +1117,7 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
@@ -1131,10 +1131,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Treasury/TreasuryV1Impl.sol": {
-			"keccak256": "0xb86ccd31cbbde061315b064473191132fd922add065b7e7bc664eb388e531892",
+			"keccak256": "0x0965645cee5a44d7757d860b0bb50ad7f2e539f5da8ad5565303746508ae4aef",
 			"urls": [
-				"bzz-raw://84a6f5602b05c9fc81502fa4ed180a7fc4db41a69a6a45dff8ece4b426a8d6c0",
-				"dweb:/ipfs/QmYhnNpoc4zdS6Vrgk32gc3pSUjjctGYSoH9k9SsZ7C1Fb"
+				"bzz-raw://38766bf07a468481ecd9de7fc903880bf4b2a56e7bdc0c617b4a5bb35acf09ce",
+				"dweb:/ipfs/Qmezgxsn8DUk3VGJ3Tqq8sduV1LKm7wViX4aoqJUfb3Yxc"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {

@@ -25,7 +25,7 @@ interface ILendingPool {
 
     function flashLoan(address _receiver, address _instrument, uint256 _amount, bytes calldata _params)  external;
 
-    function transferSIGHPayToStakingContract()  external;
+    function transferSIGHPayToStakingContract(address _instrument)  external;
 
 // ##############################
 // ######  VIEW FUNCTIONS  ######

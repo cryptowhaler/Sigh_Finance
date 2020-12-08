@@ -1,6 +1,7 @@
 import { Address, BigInt,BigDecimal, log } from "@graphprotocol/graph-ts"
 import { InstrumentInitialized,InstrumentRemoved, BorrowingOnInstrumentSwitched,InstrumentEnabledAsCollateral, InstrumentDisabledAsCollateral, StableRateOnInstrumentSwitched,
-    InstrumentActivationSwitched, InstrumentFreezeSwitched,InstrumentCollateralParametersUpdated, InstrumentInterestRateStrategyChanged, InstrumentDecimalsUpdated, sighStreamImplUpdated
+    InstrumentActivationSwitched, InstrumentFreezeSwitched,InstrumentCollateralParametersUpdated, InstrumentInterestRateStrategyChanged, InstrumentDecimalsUpdated, sighStreamImplUpdated, 
+    ProxyCreated
     } from "../../generated/Lending_Pool_Configurator/LendingPoolConfigurator"
 import { Instrument } from "../../generated/schema"
 import { ERC20Detailed } from '../../generated/Lending_Pool_Configurator/ERC20Detailed'
@@ -151,6 +152,7 @@ export function handleInstrumentCollateralParametersUpdated(event: InstrumentCol
     updatePrice(instrumentId)
 }
 
+// WORKS AS EXPECTED
 export function handleInstrumentInterestRateStrategyChanged(event: InstrumentInterestRateStrategyChanged): void {
     log.info('LENDINGPOOLCONFIGURATOR : handleInstrumentInterestRateStrategyChanged',[])                            
     let instrumentId = event.params._instrument.toHexString()
@@ -158,6 +160,18 @@ export function handleInstrumentInterestRateStrategyChanged(event: InstrumentInt
     instrumentState.interestRateStrategyAddress = event.params._strategy 
     instrumentState.save()
     updatePrice(instrumentId)
+}
+
+export function handleSIGHStreamProxyCreated(event: ProxyCreated) : void {
+    let instrumentId = event.params.instrument.toHexString()
+    let instrumentState = Instrument.load(instrumentId)
+    if (instrumentState == null) {
+        log.info('handleInstrumentAdded: createInstrument ',[])
+        instrumentState = createInstrument(instrumentId)
+        instrumentState.creationBlockNumber = event.block.number        
+    }
+    instrumentState.sighStreamStorageAddress = event.params.sighStreamProxyAddress
+    instrumentState.save()
 }
 
 // export function handleInstrumentDecimalsUpdated(event: InstrumentDecimalsUpdated): void {
@@ -238,14 +252,18 @@ export function updatePrice( ID: string ) : void {
     log.info('out of if statement: UPDATE PRICE - 1',[])
 
     // GETTING ETH PRICE IN USD
-    let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x757439a75088859958cD98D2E134C8d63a2aA10c')).toBigDecimal()
-    let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x757439a75088859958cD98D2E134C8d63a2aA10c'))
+    let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12')).toBigDecimal()
+    let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12'))
     let ETHPriceInUSD = ETH_PriceInUSD.div(  BigInt.fromI32(10).pow(ETH_PriceInUSDDecimals as u8).toBigDecimal() )
     instrument_state.priceUSD = instrument_state.priceETH.times(ETHPriceInUSD)
     
     // CURRENT AVAILABLE LIQUIDITY PRESENT IN THE POOL FOR BORROWING
     instrument_state.availableLiquidityETH = instrument_state.availableLiquidity.times(instrument_state.priceETH)
     instrument_state.availableLiquidityUSD = instrument_state.availableLiquidity.times(instrument_state.priceUSD)
+
+    // DEPOSIT FEE EARNED     
+    instrument_state.depositFeeEarnedETH = instrument_state.depositFeeEarned.times(instrument_state.priceETH)
+    instrument_state.depositFeeEarnedUSD = instrument_state.depositFeeEarned.times(instrument_state.priceUSD)
 
     // BORROW FEE DUE 
     instrument_state.borrowFeeDueETH = instrument_state.borrowFeeDue.times(instrument_state.priceETH)
@@ -254,6 +272,7 @@ export function updatePrice( ID: string ) : void {
     // BORROW FEE EARNED     
     instrument_state.borrowFeeEarnedETH = instrument_state.borrowFeeEarned.times(instrument_state.priceETH)
     instrument_state.borrowFeeEarnedUSD = instrument_state.borrowFeeEarned.times(instrument_state.priceUSD)
+
 
     // CURRENT COMPOUNDED LIQUIDITY IN THE POOL (Available + To be repaid by borrowers)
     instrument_state.totalCompoundedLiquidityETH = instrument_state.totalCompoundedLiquidity.times(instrument_state.priceETH)
@@ -284,6 +303,10 @@ export function updatePrice( ID: string ) : void {
     // LIFE-TIME BORROWS TAKEN FROM THE LENDING PROTOCOL
     instrument_state.lifeTimeBorrowsETH = instrument_state.lifeTimeBorrows.times(instrument_state.priceUSD)
     instrument_state.lifeTimeBorrowsUSD = instrument_state.lifeTimeBorrows.times(instrument_state.priceUSD)
+
+    // SIGH PAY TRANSFERRED (LENDING POOL CORE)
+    instrument_state.sighPayTransferredETH = instrument_state.sighPayTransferred.times(instrument_state.priceUSD)
+    instrument_state.sighPayTransferredUSD = instrument_state.sighPayTransferred.times(instrument_state.priceUSD)
 
 
     // LIFE-TIME "STABLE" BORROWS TAKEN FROM THE LENDING PROTOCOL
@@ -324,7 +347,7 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.sighStreamStorageAddress = Address.fromString('0x0000000000000000000000000000000000000000')
     instrument_state_initialized.sighStreamImplAddress = Address.fromString('0x0000000000000000000000000000000000000000')
 
-    instrument_state_initialized.oracle = Address.fromString('0xd378300a022215B41A08625aA849F9682fDda54d',) 
+    instrument_state_initialized.oracle = Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12',) 
 
     instrument_state_initialized.priceETH = BigDecimal.fromString('0')
     instrument_state_initialized.priceUSD = BigDecimal.fromString('0')
@@ -351,11 +374,6 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.availableLiquidity = BigDecimal.fromString('0')
     instrument_state_initialized.availableLiquidityETH = BigDecimal.fromString('0')
     instrument_state_initialized.availableLiquidityUSD = BigDecimal.fromString('0')
-
-    instrument_state_initialized.depositFeeDue_WEI = new BigInt(0)
-    instrument_state_initialized.depositFeeDue = BigDecimal.fromString('0')
-    instrument_state_initialized.depositFeeDueETH = BigDecimal.fromString('0')
-    instrument_state_initialized.depositFeeDueUSD = BigDecimal.fromString('0')
 
     instrument_state_initialized.depositFeeEarned_WEI = new BigInt(0)
     instrument_state_initialized.depositFeeEarned = BigDecimal.fromString('0')
@@ -461,6 +479,16 @@ export function createInstrument(addressID: string): Instrument {
 
     instrument_state_initialized.SIGH_Supply_Index = new BigInt(0)
     instrument_state_initialized.SIGH_Supply_Index_lastUpdatedBlock = new BigInt(0)
+
+    instrument_state_initialized.sighPayInterestRate = new BigInt(0)
+    instrument_state_initialized.sighPayInterestRatePercent = BigDecimal.fromString('0')
+    instrument_state_initialized.sighPayCumulativeIndex = new BigInt(0)
+    instrument_state_initialized.sighPayPaidIndex = new BigInt(0)
+
+    instrument_state_initialized.sighPayTransferredWEI = new BigInt(0)
+    instrument_state_initialized.sighPayTransferred = BigDecimal.fromString('0')
+    instrument_state_initialized.sighPayTransferredETH = BigDecimal.fromString('0')
+    instrument_state_initialized.sighPayTransferredUSD = BigDecimal.fromString('0')
 
     instrument_state_initialized.SIGH_Borrow_Index = new BigInt(0)
     instrument_state_initialized.SIGH_Borrow_Index_lastUpdatedBlock = new BigInt(0)

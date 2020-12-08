@@ -551,17 +551,17 @@
 	},
 	"sources": {
 		"localhost/contracts/LendingProtocolContracts/interfaces/IFeeProvider.sol": {
-			"keccak256": "0x40a163478b768ca5639ccc04466e2667eec5e86582dc5b2a9b18496a5e9c2423",
+			"keccak256": "0x3cd7a7b585a53d125c730a79dbe8e0eed5e2910dcff87dd5451c578e7aac0972",
 			"urls": [
-				"bzz-raw://a021b7e9c79fd6053a0213e72ef307e58e1bb89392e9b24a6cc4063e49e5461a",
-				"dweb:/ipfs/QmNb5Uh8bbudTma2hxnDc6JSR6MKS1U5PGggstGZhnwiQn"
+				"bzz-raw://fae503d55caf63360e4a415c4154ce17ec74def417f426dbff166a2ee7b22219",
+				"dweb:/ipfs/QmQgxc2iEP8PML14aYhgnVXT9fLLDGktdNhiHfVJTsuGQY"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
-			"keccak256": "0x1657a8a39266adbacbff83f7ae804eb22686150929e33874976a2398abf53f83",
+			"keccak256": "0x49c1c164a924f840dc7a35d1e0d5baa3ec93eb46c904b97c1c0af4f76370d97a",
 			"urls": [
-				"bzz-raw://9ad253e3c976e8a930a5a3747ba3831e393d7abf4bbab8bd4990453cb139a9ac",
-				"dweb:/ipfs/QmbVnNS3t5mh46s5d2C1HvZBUqHVdWzv2hSm2vdiP8GrL7"
+				"bzz-raw://531a842e810d839eaaddf7415bd877d41566f5a327e46c1ec2b10c010852bf0b",
+				"dweb:/ipfs/QmcCyWYhxzRhjHzV8Ln2WehGFh3SWra7FsXo5HJgQqWumJ"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/IPriceOracleGetter.sol": {
@@ -586,10 +586,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
-			"keccak256": "0x3799446dff4f09de695bc46e555c50d47592d39b7d4bc0b41f5d046218b787f7",
+			"keccak256": "0xd3fe57263bcab96f887842d408d267494d03767132f9a2d06105278a4eae02b1",
 			"urls": [
-				"bzz-raw://ad7b33ac794daa623c0e47e78bf9430fc8470a67c8a593f065479173031133f1",
-				"dweb:/ipfs/QmTiP7TzYponrC9wCZ2SqzavzgYkBDmRRCHhErwWac5NDT"
+				"bzz-raw://e9073f82d5f6eab6617381567c972456e0437caee46664e6e5f4b9bc3c92bbb4",
+				"dweb:/ipfs/QmdFXZVpWvixJbGP6sFnXxeJxXhGj3rDfB7cmmGbj7QS6U"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/WadRayMath.sol": {

@@ -522,6 +522,21 @@
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					}
+				],
+				"name": "transferSIGHPayToStakingContract",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -538,17 +553,17 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPool.sol": {
-			"keccak256": "0x9293968389a224ec42c1ce4b82cfd01f5c487dc632198472100eae41f1447da8",
+			"keccak256": "0xd6368546e797c0a73b473830bdffe2beab21ab48cec44867f65657048e3c169c",
 			"urls": [
-				"bzz-raw://3dc57e90f36750703617a69c0f24407b782a1b5b7ae81d332f20de5c4ec37454",
-				"dweb:/ipfs/QmchfrDX8WCX759DeDRGEmFLQrp3wuw3rGvjQons7AefzE"
+				"bzz-raw://3ac93ded85538104ea1852e04ea1611e746819ab6751db967a8e17d3ae4df243",
+				"dweb:/ipfs/QmTsPEatASEUdPWdFxZsywe4qUv28fcH7SfEjodyv3hN9E"
 			]
 		}
 	},

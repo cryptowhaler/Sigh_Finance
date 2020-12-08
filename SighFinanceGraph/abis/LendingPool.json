@@ -35,7 +35,7 @@
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "_originationFee",
+				"name": "_borrowFee",
 				"type": "uint256"
 			},
 			{
@@ -79,6 +79,12 @@
 				"indexed": false,
 				"internalType": "uint256",
 				"name": "_amount",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "depositFee",
 				"type": "uint256"
 			},
 			{
@@ -873,7 +879,7 @@
 			},
 			{
 				"internalType": "uint256",
-				"name": "originationFee",
+				"name": "borrowFee",
 				"type": "uint256"
 			},
 			{
@@ -1075,6 +1081,21 @@
 			}
 		],
 		"name": "swapBorrowRateMode",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_instrument",
+				"type": "address"
+			}
+		],
+		"name": "transferSIGHPayToStakingContract",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",

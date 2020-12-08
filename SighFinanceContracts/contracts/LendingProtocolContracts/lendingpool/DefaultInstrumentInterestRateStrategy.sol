@@ -61,6 +61,28 @@ contract DefaultInstrumentInterestRateStrategy is I_InstrumentInterestRateStrate
     // ######################################################
     // ####### VIEW FUNCTIONS TO GET CONSTANTS   ############
     // ################################################ #####
+    
+    function getBaseVariableBorrowRate() external view returns (uint256) {
+        return baseVariableBorrowRate;
+    }
+
+    function getVariableRateSlope1() external view returns (uint256) {
+        return variableRateSlope1;
+    }
+
+    function getVariableRateSlope2() external view returns (uint256) {
+        return variableRateSlope2;
+    }
+
+    function getStableRateSlope1() external view returns (uint256) {
+        return stableRateSlope1;
+    }
+
+    function getStableRateSlope2() external view returns (uint256) {
+        return stableRateSlope2;
+    }
+
+    
 
     function setSighPayPercent(uint256 newSighPayPercent) external onlyLendingPoolManager {
         sighPayPercent = newSighPayPercent;
@@ -120,7 +142,7 @@ contract DefaultInstrumentInterestRateStrategy is I_InstrumentInterestRateStrate
 
         uint256 totalLiquidityRate = getOverallBorrowRateInternal( _totalBorrowsStable, _totalBorrowsVariable, currentVariableBorrowRate, _averageStableBorrowRate ).rayMul(utilizationRate);
         currentSighPayRate = totalLiquidityRate.rayMul(sighPayPercent);
-        require(totalLiquidityRate > currentSighPayRate,"Invalid SIGH Pay Rate percent set. Administrator needs to set it correctly so that the protocol can function properly again");
+        require(totalLiquidityRate >= currentSighPayRate,"Invalid SIGH Pay Rate percent set. Administrator needs to set it correctly so that the protocol can function properly again");
         currentLiquidityRate = totalLiquidityRate.sub(currentSighPayRate);
     }
 

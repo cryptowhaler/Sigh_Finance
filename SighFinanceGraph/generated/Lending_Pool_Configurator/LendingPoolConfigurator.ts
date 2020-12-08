@@ -321,6 +321,29 @@ export class LendingPoolConfigurator extends ethereum.SmartContract {
     return new LendingPoolConfigurator("LendingPoolConfigurator", address);
   }
 
+  CONFIGURATOR_REVISION(): BigInt {
+    let result = super.call(
+      "CONFIGURATOR_REVISION",
+      "CONFIGURATOR_REVISION():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_CONFIGURATOR_REVISION(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "CONFIGURATOR_REVISION",
+      "CONFIGURATOR_REVISION():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   getSighStreamAddress(instrumentAddress: Address): Address {
     let result = super.call(
       "getSighStreamAddress",
@@ -344,29 +367,6 @@ export class LendingPoolConfigurator extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  CONFIGURATOR_REVISION(): BigInt {
-    let result = super.call(
-      "CONFIGURATOR_REVISION",
-      "CONFIGURATOR_REVISION():(uint256)",
-      []
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_CONFIGURATOR_REVISION(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "CONFIGURATOR_REVISION",
-      "CONFIGURATOR_REVISION():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   globalAddressesProvider(): Address {
@@ -465,70 +465,6 @@ export class EnableInstrumentAsCollateralCall__Outputs {
   }
 }
 
-export class GetSighStreamAddressCall extends ethereum.Call {
-  get inputs(): GetSighStreamAddressCall__Inputs {
-    return new GetSighStreamAddressCall__Inputs(this);
-  }
-
-  get outputs(): GetSighStreamAddressCall__Outputs {
-    return new GetSighStreamAddressCall__Outputs(this);
-  }
-}
-
-export class GetSighStreamAddressCall__Inputs {
-  _call: GetSighStreamAddressCall;
-
-  constructor(call: GetSighStreamAddressCall) {
-    this._call = call;
-  }
-
-  get instrumentAddress(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class GetSighStreamAddressCall__Outputs {
-  _call: GetSighStreamAddressCall;
-
-  constructor(call: GetSighStreamAddressCall) {
-    this._call = call;
-  }
-
-  get sighStreamProxyAddress(): Address {
-    return this._call.outputValues[0].value.toAddress();
-  }
-}
-
-export class InitializeCall extends ethereum.Call {
-  get inputs(): InitializeCall__Inputs {
-    return new InitializeCall__Inputs(this);
-  }
-
-  get outputs(): InitializeCall__Outputs {
-    return new InitializeCall__Outputs(this);
-  }
-}
-
-export class InitializeCall__Inputs {
-  _call: InitializeCall;
-
-  constructor(call: InitializeCall) {
-    this._call = call;
-  }
-
-  get _globalAddressesProvider(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class InitializeCall__Outputs {
-  _call: InitializeCall;
-
-  constructor(call: InitializeCall) {
-    this._call = call;
-  }
-}
-
 export class InitInstrumentCall extends ethereum.Call {
   get inputs(): InitInstrumentCall__Inputs {
     return new InitInstrumentCall__Inputs(this);
@@ -567,6 +503,36 @@ export class InitInstrumentCall__Outputs {
   _call: InitInstrumentCall;
 
   constructor(call: InitInstrumentCall) {
+    this._call = call;
+  }
+}
+
+export class InitializeCall extends ethereum.Call {
+  get inputs(): InitializeCall__Inputs {
+    return new InitializeCall__Inputs(this);
+  }
+
+  get outputs(): InitializeCall__Outputs {
+    return new InitializeCall__Outputs(this);
+  }
+}
+
+export class InitializeCall__Inputs {
+  _call: InitializeCall;
+
+  constructor(call: InitializeCall) {
+    this._call = call;
+  }
+
+  get _globalAddressesProvider(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class InitializeCall__Outputs {
+  _call: InitializeCall;
+
+  constructor(call: InitializeCall) {
     this._call = call;
   }
 }

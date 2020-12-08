@@ -15,6 +15,7 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
     using WadRayMath for uint256;
 
     uint256 public originationFeePercentage;        // percentage of the fee to be calculated on the loan amount
+    uint256 public depositFeePercentage;
 
 // ###############################
 // ###### PROXY RELATED ##########
@@ -30,8 +31,8 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
     * @param _addressesProvider the address of the GlobalAddressesProvider
     */
     function initialize(address _addressesProvider) public initializer {
-        originationFeePercentage = 0.05 * 1e18;           /// origination fee is set as default as 500 basis points of the loan amount (0.05%)
-        depositFeePercentage = 0.05 * 1e18;           /// origination fee is set as default as 500 basis points of the loan amount (0.05%)
+        originationFeePercentage = 0.05 * 1e18;           // borrow fee is set as default as 500 basis points of the loan amount (0.05%)
+        depositFeePercentage = 0.05 * 1e18;           // deposit fee is set as default as 500 basis points of the deposit amount (0.05%)
     }
 
 // ############################################################################################################################

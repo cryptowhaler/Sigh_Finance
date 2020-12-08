@@ -98,6 +98,9 @@ export function handleInstrumentAdded(event: InstrumentAdded): void {
     instrumentState.save()
 }
 
+
+
+
 export function handleInstrumentRemoved(event: InstrumentRemoved): void {
     let instrumentId = event.params._instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
@@ -169,8 +172,8 @@ export function handlePriceSnapped(event: PriceSnapped): void {
     // GETTING ETH PRICE IN USD
     let oracleAddress = instrumentState.oracle as Address
     let oracleContract = PriceOracleGetter.bind( oracleAddress)
-    let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x757439a75088859958cD98D2E134C8d63a2aA10c')).toBigDecimal()
-    let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x757439a75088859958cD98D2E134C8d63a2aA10c'))
+    let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12')).toBigDecimal()
+    let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12'))
     let ETHPriceInUSD = ETH_PriceInUSD.div(  BigInt.fromI32(10).pow(ETH_PriceInUSDDecimals as u8).toBigDecimal() )
     instrumentState.ETHPriceInUSD = ETHPriceInUSD
 
@@ -272,11 +275,11 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
             InstrumentPriceETH = InstrumentPriceETH.div(  BigInt.fromI32(10).pow(InstrumentPriceETHDecimals as u8).toBigDecimal() )    
         }
         let SIGHPriceETH = BigDecimal.fromString('1')
-        if (event.block.number > BigInt.fromI32(22388773) ) {
-            log.info('if (event.block.number > BigInt.fromI32(22388773) )',[])
-            let SIGHPriceETH = oracleContract.getAssetPrice(Address.fromString('0x6378a83c510ef3868b2e197da4a3245a05c1ecbe')).toBigDecimal()
-            log.info('if (event.block.number > BigInt.fromI32(22388773) ) ::: {}',[SIGHPriceETH.toString()])
-            let SIGHPriceETHDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x6378a83c510ef3868b2e197da4a3245a05c1ecbe'))
+        if (event.block.number > BigInt.fromI32(22482561) ) {
+            log.info('if (event.block.number > BigInt.fromI32(22482561) )',[])
+            let SIGHPriceETH = oracleContract.getAssetPrice(Address.fromString('0x4Ebc60b9d2efA92B9eB681BF5b26AEB11DE23BFd')).toBigDecimal()
+            log.info('if (event.block.number > BigInt.fromI32(22482561) ) ::: {}',[SIGHPriceETH.toString()])
+            let SIGHPriceETHDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x4Ebc60b9d2efA92B9eB681BF5b26AEB11DE23BFd'))
             SIGHPriceETH = SIGHPriceETH.div(  BigInt.fromI32(10).pow(SIGHPriceETHDecimals as u8).toBigDecimal() )    
         }
 

@@ -24,7 +24,11 @@ export function handleDeposit(event: Deposit): void {
     // We get Compounded Liquidity Till this deposit from SIGHSupplyIndexUpdated Event. So,
     // we add the current deposit amount to that value
     instrumentState.totalCompoundedLiquidityWEI = instrumentState.totalCompoundedLiquidityWEI.plus(event.params._amount)
-    instrumentState.totalCompoundedLiquidity = instrumentState.totalCompoundedLiquidityWEI.toBigDecimal().div(decimalAdj)     
+    instrumentState.totalCompoundedLiquidity = instrumentState.totalCompoundedLiquidityWEI.toBigDecimal().div(decimalAdj) 
+
+    instrumentState.depositFeeEarned_WEI = instrumentState.depositFeeEarned_WEI.plus(event.params.depositFee)
+    instrumentState.depositFeeEarned = instrumentState.depositFeeEarned_WEI.toBigDecimal().div(decimalAdj) 
+
     instrumentState.save()
 
     updatePrice(instrumentId)

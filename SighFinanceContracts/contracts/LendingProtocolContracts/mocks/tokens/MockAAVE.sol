@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+0x9326BFA02ADD2366b30bacB125260Af6410313310x9326BFA02ADD2366b30bacB125260Af641031331pragma solidity ^0.5.0;
 
 
 import "./MintableERC20.sol";

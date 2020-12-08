@@ -29,6 +29,12 @@
 			{
 				"indexed": false,
 				"internalType": "uint256",
+				"name": "newSighPayRate",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
 				"name": "liquidityIndex",
 				"type": "uint256"
 			},
@@ -37,9 +43,52 @@
 				"internalType": "uint256",
 				"name": "variableBorrowIndex",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "sighPayIndex",
+				"type": "uint256"
 			}
 		],
 		"name": "InstrumentUpdated",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "instrument",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "totalLiquidity",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_sighPayAccured",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "lastSIGHPayPaidIndex",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "lastSIGHPayCumulativeIndex",
+				"type": "uint256"
+			}
+		],
+		"name": "SIGH_PAY_Amount_Transferred",
 		"type": "event"
 	},
 	{
@@ -605,6 +654,69 @@
 				"type": "address"
 			}
 		],
+		"name": "getInstrumentSIGHPayCumulativeIndex",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_instrument",
+				"type": "address"
+			}
+		],
+		"name": "getInstrumentSIGHPayPaidIndex",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_instrument",
+				"type": "address"
+			}
+		],
+		"name": "getInstrumentSIGHPayRate",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_instrument",
+				"type": "address"
+			}
+		],
 		"name": "getInstrumentTotalBorrows",
 		"outputs": [
 			{
@@ -828,6 +940,32 @@
 				"type": "address"
 			}
 		],
+		"name": "getUserBorrowFee",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_instrument",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			}
+		],
 		"name": "getUserCurrentBorrowRateMode",
 		"outputs": [
 			{
@@ -885,32 +1023,6 @@
 			{
 				"internalType": "uint256",
 				"name": "timestamp",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_instrument",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_user",
-				"type": "address"
-			}
-		],
-		"name": "getUserOriginationFee",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
 				"type": "uint256"
 			}
 		],
@@ -1274,6 +1386,21 @@
 		"inputs": [
 			{
 				"internalType": "address",
+				"name": "instrumentAddress",
+				"type": "address"
+			}
+		],
+		"name": "transferSIGHPayToStakingContract",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "address",
 				"name": "_token",
 				"type": "address"
 			},
@@ -1621,7 +1748,7 @@
 			},
 			{
 				"internalType": "uint256",
-				"name": "_originationFeeRepaid",
+				"name": "_borrowFeeRepaid",
 				"type": "uint256"
 			},
 			{

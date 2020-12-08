@@ -43,7 +43,7 @@ export class Borrow__Params {
     return this._event.parameters[4].value.toBigInt();
   }
 
-  get _originationFee(): BigInt {
+  get _borrowFee(): BigInt {
     return this._event.parameters[5].value.toBigInt();
   }
 
@@ -85,12 +85,16 @@ export class Deposit__Params {
     return this._event.parameters[2].value.toBigInt();
   }
 
+  get depositFee(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+
   get _referral(): i32 {
-    return this._event.parameters[3].value.toI32();
+    return this._event.parameters[4].value.toI32();
   }
 
   get _timestamp(): BigInt {
-    return this._event.parameters[4].value.toBigInt();
+    return this._event.parameters[5].value.toBigInt();
   }
 }
 
@@ -1380,6 +1384,36 @@ export class SwapBorrowRateModeCall__Outputs {
   _call: SwapBorrowRateModeCall;
 
   constructor(call: SwapBorrowRateModeCall) {
+    this._call = call;
+  }
+}
+
+export class TransferSIGHPayToStakingContractCall extends ethereum.Call {
+  get inputs(): TransferSIGHPayToStakingContractCall__Inputs {
+    return new TransferSIGHPayToStakingContractCall__Inputs(this);
+  }
+
+  get outputs(): TransferSIGHPayToStakingContractCall__Outputs {
+    return new TransferSIGHPayToStakingContractCall__Outputs(this);
+  }
+}
+
+export class TransferSIGHPayToStakingContractCall__Inputs {
+  _call: TransferSIGHPayToStakingContractCall;
+
+  constructor(call: TransferSIGHPayToStakingContractCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class TransferSIGHPayToStakingContractCall__Outputs {
+  _call: TransferSIGHPayToStakingContractCall;
+
+  constructor(call: TransferSIGHPayToStakingContractCall) {
     this._call = call;
   }
 }
