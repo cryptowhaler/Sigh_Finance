@@ -56,7 +56,7 @@ export function handleRedeemUnderlying(event: RedeemUnderlying): void {
 }
 
 
-// event Borrow(uint256 _amount, uint256 _borrowRateMode, uint256 _borrowRate, uint256 _originationFee, uint256 _borrowBalanceIncrease, uint16 indexed _referral, uint256 _timestamp);
+// event Borrow(uint256 _amount, uint256 _borrowRateMode, uint256 _borrowRate, uint256 _borrowFee, uint256 _borrowBalanceIncrease, uint16 indexed _referral, uint256 _timestamp);
 // ADDED To lifeTimeBorrows, totalBorrows, borrowFee, lifetimeBorrowInterestAccured, totalStableBorrows || totalVariableBorrows
 // SUBTRACTED FROM availableLiquidity, 
 export function handleBorrow(event: Borrow): void {
@@ -74,7 +74,7 @@ export function handleBorrow(event: Borrow): void {
     instrumentState.availableLiquidity = instrumentState.availableLiquidity_WEI.toBigDecimal().div(decimalAdj)
 
     // BORROW FEE (Currently DUE)
-    instrumentState.borrowFeeDue_WEI = instrumentState.borrowFeeDue_WEI.plus(event.params._originationFee)
+    instrumentState.borrowFeeDue_WEI = instrumentState.borrowFeeDue_WEI.plus(event.params._borrowFee)
     instrumentState.borrowFeeDue = instrumentState.borrowFeeDue_WEI.toBigDecimal().div(decimalAdj)
 
     if (event.params._borrowRateMode == new BigInt(0) ) {

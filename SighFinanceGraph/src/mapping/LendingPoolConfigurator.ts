@@ -162,6 +162,7 @@ export function handleInstrumentInterestRateStrategyChanged(event: InstrumentInt
     updatePrice(instrumentId)
 }
 
+// WORKS AS EXPECTED
 export function handleSIGHStreamProxyCreated(event: ProxyCreated) : void {
     let instrumentId = event.params.instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)

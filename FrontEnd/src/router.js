@@ -16,7 +16,7 @@ const vueRouter = new Router({
   {
     path: '/',
     name: 'Landing Page',
-    component: mainPage,
+    component: TradePanel,
     meta: {
       pageTitle: 'SIGH Finance | Engineered to be Profitable!',
     },

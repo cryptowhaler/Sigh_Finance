@@ -21,7 +21,7 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
 // ###### PROXY RELATED ##########
 // ###############################
 
-    uint256 constant public FEE_PROVIDER_REVISION = 0x1;
+    uint256 constant public FEE_PROVIDER_REVISION = 0x2;
 
     function getRevision() internal pure returns(uint256) {
         return FEE_PROVIDER_REVISION;
@@ -31,8 +31,8 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
     * @param _addressesProvider the address of the GlobalAddressesProvider
     */
     function initialize(address _addressesProvider) public initializer {
-        originationFeePercentage = 0.05 * 1e18;           // borrow fee is set as default as 500 basis points of the loan amount (0.05%)
-        depositFeePercentage = 0.05 * 1e18;           // deposit fee is set as default as 500 basis points of the deposit amount (0.05%)
+        originationFeePercentage = 0.0005 * 1e18;           // borrow fee is set as default as 500 basis points of the loan amount (0.05%)
+        depositFeePercentage = 0.0005 * 1e18;           // deposit fee is set as default as 500 basis points of the deposit amount (0.05%)
     }
 
 // ############################################################################################################################

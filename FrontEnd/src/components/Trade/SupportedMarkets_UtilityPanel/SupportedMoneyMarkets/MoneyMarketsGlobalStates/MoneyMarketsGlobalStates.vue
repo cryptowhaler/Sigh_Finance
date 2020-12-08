@@ -58,11 +58,10 @@ export default {
                       totalCompoundedLiquidityUSD
                       totalCompoundedBorrows
                       totalCompoundedBorrowsUSD
-                      utilizationRatePercent
                       stableBorrowInterestPercent
                       variableBorrowInterestPercent
                       supplyInterestRatePercent
-                      # sighRewardsInterestRatePercent
+                      sighPayInterestRatePercent
                       present_SIGH_Side
                       present_DeltaBlocks
                       present_SIGH_Suppliers_Speed
@@ -115,7 +114,6 @@ export default {
         currentInstrument.totalCompoundedLiquidityUSD = instruments[i].totalCompoundedLiquidityUSD;
         currentInstrument.totalCompoundedBorrows = instruments[i].totalCompoundedBorrows;
         currentInstrument.totalCompoundedBorrowsUSD = instruments[i].totalCompoundedBorrowsUSD;
-        currentInstrument.utilizationRatePercent = instruments[i].utilizationRatePercent;
         currentInstrument.stableBorrowInterestPercent = instruments[i].stableBorrowInterestPercent;
         currentInstrument.variableBorrowInterestPercent = instruments[i].variableBorrowInterestPercent;
         currentInstrument.supplyInterestRatePercent = instruments[i].supplyInterestRatePercent;
@@ -125,7 +123,7 @@ export default {
         // Get AMOUNT & VALUE OF TOKENS BEING PAID AS $SIGH REWARDS AGAINST $SIGH STAKING
         // Get AMOUNT & VALUE OF TOKENS BEING PAID AS $SIGH REWARDS AGAINST $SIGH STAKING
         // Get AMOUNT & VALUE OF TOKENS BEING PAID AS $SIGH REWARDS AGAINST $SIGH STAKING                
-        currentInstrument.SIGH_Pay_Rate =  0; //instruments[i].sighRewardsInterestRatePercent;
+        currentInstrument.SIGH_Pay_Rate =  instruments[i].sighPayInterestRatePercent;
         currentInstrument.SIGH_Pay_Amount_Year = currentInstrument.SIGH_Pay_Rate * Number(currentInstrument.totalCompoundedLiquidity) ;
         currentInstrument.SIGH_Pay_Amount_Day = Number(currentInstrument.SIGH_Pay_Amount_Year) / 365;
         currentInstrument.SIGH_Pay_Amount_Block = Number(currentInstrument.SIGH_Pay_Amount_Day) / Number(currentInstrument.deltaBlocks);

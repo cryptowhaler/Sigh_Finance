@@ -174,10 +174,10 @@
 	},
 	"sources": {
 		"localhost/contracts/LendingProtocolContracts/fees/FeeProvider.sol": {
-			"keccak256": "0x6bf67c7e07f0f86d347a03748028e194827dfa4845d22b1bda6c2c2ee59e3d3f",
+			"keccak256": "0x4c766676b758825b2082941c4bbdf8ec667b1c7131a3bacc916790bff48896df",
 			"urls": [
-				"bzz-raw://e07846eeca0967fdd337d7a464a6e79fefb49519bd3a157286858c019f32954f",
-				"dweb:/ipfs/QmSowVksUS2nN6iFsUs5AryPtTuB2ctqeric2kQEr6gMCk"
+				"bzz-raw://3151f2a07622d4361bfd0e79e87ea1add6eaea100893bb1dbbac44aa4d0595ee",
+				"dweb:/ipfs/QmdBRzpCSKyZUnvbmjA8V7tAZnFq6dYcRb7QgbUtaAPB6o"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/IFeeProvider.sol": {

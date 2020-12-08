@@ -24,6 +24,11 @@ export function handleInstrumentUpdated(event: InstrumentUpdated): void {
     instrumentState.sighPayInterestRate = event.params.newSighPayRate  
     instrumentState.sighPayInterestRatePercent =  instrumentState.sighPayInterestRate.toBigDecimal().div( BigInt.fromI32(10).pow(25 as u8).toBigDecimal() )
 
+    if ( instrumentState.totalCompoundedBorrows > BigDecimal.fromString('0') ) {
+        instrumentState.utilizationRate = instrumentState.totalCompoundedBorrows.times( BigInt.fromI32(10).pow(25 as u8).toBigDecimal() ).div(instrumentState.availableLiquidity.plus(instrumentState.totalCompoundedBorrows))
+        instrumentState.utilizationRatePercent = instrumentState.utilizationRate.div( BigInt.fromI32(10).pow(23 as u8).toBigDecimal() )
+    }
+
     // Indexes tracking Interest Accumulation
     instrumentState.supplyIndex = event.params.liquidityIndex
     instrumentState.variableBorrowIndex = event.params.variableBorrowIndex

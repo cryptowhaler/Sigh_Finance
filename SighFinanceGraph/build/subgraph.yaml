@@ -59,8 +59,11 @@ dataSources:
         - name: ERC20Detailed
           file: Lending_Pool_Core/abis/ERC20Detailed.json
       eventHandlers:
-        - event: InstrumentUpdated(indexed address,uint256,uint256,uint256,uint256,uint256)
+        - event: InstrumentUpdated(indexed
+            address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleInstrumentUpdated
+        - event: SIGH_PAY_Amount_Transferred(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleSIGH_Pay_Amount_Transferred
   - kind: ethereum/contract
     name: Lending_Pool
     network: kovan
@@ -83,7 +86,7 @@ dataSources:
         - name: ERC20Detailed
           file: Lending_Pool/abis/ERC20Detailed.json
       eventHandlers:
-        - event: Deposit(indexed address,indexed address,uint256,uint16,uint256)
+        - event: Deposit(indexed address,indexed address,uint256,uint256,uint16,uint256)
           handler: handleDeposit
         - event: RedeemUnderlying(indexed address,indexed address,uint256,uint256)
           handler: handleRedeemUnderlying

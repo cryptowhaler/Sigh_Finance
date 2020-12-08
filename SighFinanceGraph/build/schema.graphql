@@ -130,11 +130,6 @@ type Instrument @entity {
     liquidationThreshold: BigInt!
     liquidationBonus: BigInt!
 
-    depositFeeDue_WEI: BigInt! 
-    depositFeeDue: BigDecimal! 
-    depositFeeDueETH: BigDecimal!
-    depositFeeDueUSD: BigDecimal!
-
     depositFeeEarned_WEI: BigInt! 
     depositFeeEarned: BigDecimal! 
     depositFeeEarnedETH: BigDecimal!
@@ -199,6 +194,15 @@ type Instrument @entity {
     supplyInterestRatePercent: BigDecimal!
     supplyIndex: BigInt!
 
+    sighPayInterestRate: BigInt!
+    sighPayInterestRatePercent: BigDecimal!
+    sighPayCumulativeIndex: BigInt!
+    sighPayPaidIndex: BigInt!
+
+    sighPayTransferredWEI: BigInt!
+    sighPayTransferred: BigDecimal!
+    sighPayTransferredETH: BigDecimal!
+    sighPayTransferredUSD: BigDecimal!
 
     lifeTimeDeposits_WEI: BigInt!
     lifeTimeDeposits: BigDecimal!

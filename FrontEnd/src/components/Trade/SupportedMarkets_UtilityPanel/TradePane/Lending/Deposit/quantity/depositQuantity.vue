@@ -80,49 +80,17 @@ export default {
 
 
     async initiatePriceLoop() {
+      if ( this.$store.state.isNetworkSupported && this.selectedInstrument.instrumentAddress ) {
         setInterval(async () => {
+          // console.log("IN SET PRICE : DEPOSIT / AMOUNT");
+          if (this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
             this.intervalActivated = true;
-            console.log("IN DEPOSIT QUANTITIY : initiatePriceLoop 1");
-            console.log(this.selectedInstrument);
-            console.log(this.selectedInstrumentWalletState);
-          if (!this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {
-            console.log("IN DEPOSIT QUANTITIY : initiatePriceLoop : !this.$store.state.web3 || !this.$store.state.isNetworkSupported ");
-            if (!this.selectedInstrumentWalletState) {
-              this.selectedInstrumentWalletState = this.createDummySelectedInstrumentWalletState();
-            }
-            if (!this.selectedInstrument) {
-              this.selectedInstrument = this.$store.state.currentlySelectedInstrument(); 
-              this.$store.commit("addToWalletInstrumentStates",{instrumentAddress: this.selectedInstrument.instrumentAddress, walletInstrumentState: this.selectedInstrumentWalletState});
-              ExchangeDataEventBus.$emit(EventNames.changeSelectedInstrument, {'instrument':this.selectedInstrument });    
-            }
-          }
-          else if (this.$store.state.isNetworkSupported && !this.$store.state.supportedInstrumentAddresses) {
-            console.log("IN DEPOSIT QUANTITIY : his.$store.state.isNetworkSupported && !this.$store.state.supportedInstrumentAddresses");
-            console.log(this.$store.state.supportedInstrumentAddresses);
-            await this.initiateSighFinancePolling();
-            await this.refresh_User_SIGH__State();
-            this.$store.commit("updateSelectedInstrument",this.$store.state.supportedInstruments[2]);
-            this.selectedInstrument = this.$store.state.currentlySelectedInstrument;  
-            await this.refreshCurrentInstrumentWalletState(false);
-          }
-          else if (this.selectedInstrument && this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000') {
-            console.log("IN DEPOSIT QUANTITIY : initiatePriceLoop : this.selectedInstrument && this.selectedInstrument.instrumentAddress != '0x0000000000000000000000000000000000000000'");
             this.selectedInstrumentPriceETH = await this.getInstrumentPrice({_instrumentAddress : this.selectedInstrument.instrumentAddress });
-            // this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);     
-            console.log(this.selectedInstrumentPriceETH);
-            console.log(this.selectedInstrumentWalletState);
-            if (Number(this.selectedInstrumentPriceETH) > 0 && !this.selectedInstrumentWalletState ) {
-              console.log("IN DEPOSIT QUANTITIY : initiatePriceLoop : !this.refreshCurrentInstrumentWalletState");
-              await this.refreshCurrentInstrumentWalletState(false);
-            }            
           }
-          else {
-            if (!this.selectedInstrument || this.selectedInstrument.instrumentAddress == '0x0000000000000000000000000000000000000000')
-            console.log("IN DEPOSIT QUANTITIY : initiatePriceLoop : else");
-            this.selectedInstrument = this.$store.state.currentlySelectedInstrument;            
-          }
-          // if ()
         },1000);
+        this.selectedInstrument = this.$store.state.currentlySelectedInstrument;
+        this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);        
+      }
     },
 
     async deposit() {   //DEPOSIT (WORKS PROPERLY)
