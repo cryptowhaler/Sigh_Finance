@@ -454,7 +454,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "originationFee",
+						"name": "borrowFee",
 						"type": "uint256"
 					},
 					{
@@ -558,10 +558,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
-			"keccak256": "0x49c1c164a924f840dc7a35d1e0d5baa3ec93eb46c904b97c1c0af4f76370d97a",
+			"keccak256": "0xd9c64ec38fa73c1666f8be7a689c5878e79ce5aac8711ca22d3db79526629724",
 			"urls": [
-				"bzz-raw://531a842e810d839eaaddf7415bd877d41566f5a327e46c1ec2b10c010852bf0b",
-				"dweb:/ipfs/QmcCyWYhxzRhjHzV8Ln2WehGFh3SWra7FsXo5HJgQqWumJ"
+				"bzz-raw://1c1ebd3f4b19a6e067aeb36441b4bbd7119e026e47606e5229ab34a507aa869d",
+				"dweb:/ipfs/QmWSKwTMfXHm1iLjiFamFTbUDASR1a8udFRF23UdDzTabX"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/IPriceOracleGetter.sol": {
@@ -579,10 +579,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolDataProvider.sol": {
-			"keccak256": "0x6fb1e346e85e60bdc787275d289be3bb503afe325eb7de4d7869c8948e6fc5ae",
+			"keccak256": "0xde1d74ad68040396d8087fffc1af763317c4196748ccccffb95858bc022c1dd5",
 			"urls": [
-				"bzz-raw://efa41424f20a87a8de5da3e80b44d751959524cde3128147eb1b35d43a58c33b",
-				"dweb:/ipfs/QmQxKRsHcBWnFsgsCVzfRMJsVuq6JUcKYLbqbt6yET1DiZ"
+				"bzz-raw://0c2c79cfe31932fb89b23272f9a94f3f7d9b2d495d19599d73c2ea628ee58924",
+				"dweb:/ipfs/QmUDrURpde2p563rhMuyNt6ZE9xtPkDWH4bJZwh8ugpmXg"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {

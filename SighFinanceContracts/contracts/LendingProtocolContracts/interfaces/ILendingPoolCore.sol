@@ -153,7 +153,7 @@ interface ILendingPoolCore {
     function getInstruments() external view returns (address[] memory) ;
 
     function isUserUseInstrumentAsCollateralEnabled(address _instrument, address _user) external view returns (bool) ;
-    function getUserOriginationFee(address _instrument, address _user) external view returns (uint256) ;
+    function getUserBorrowFee(address _instrument, address _user) external view returns (uint256) ;
     function getUserCurrentStableBorrowRate(address _instrument, address _user) external  view returns (uint256) ;
     function getUserVariableBorrowCumulativeIndex(address _instrument, address _user)  external view returns (uint256) ;
     function getUserLastUpdate(address _instrument, address _user) external view returns (uint256 timestamp) ;

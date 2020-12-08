@@ -26,7 +26,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
 
     //specifies the health factor threshold at which the user position is liquidated. 1e18 by default, if the health factor drops below 1e18, the loan can be liquidated.
     uint256 public constant HEALTH_FACTOR_LIQUIDATION_THRESHOLD = 1e18;
-    uint256 public constant DATA_PROVIDER_REVISION = 0x1;           // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
+    uint256 public constant DATA_PROVIDER_REVISION = 0x2;           // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
 
     function getRevision() internal pure returns (uint256) {
         return DATA_PROVIDER_REVISION;
@@ -53,7 +53,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
         uint256 instrumentDecimals;
         uint256 baseLtv;
         uint256 liquidationThreshold;
-        uint256 originationFee;
+        uint256 borrowFee;
         bool usageAsCollateralEnabled;
         bool userUsesInstrumentAsCollateral;
 
@@ -87,7 +87,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
 
             // fetch user's data for the current instrument
             vars.currentInstrument = instruments[i];
-            ( vars.compoundedLiquidityBalance, vars.compoundedBorrowBalance, vars.originationFee, vars.userUsesInstrumentAsCollateral ) = core.getUserBasicInstrumentData(vars.currentInstrument, _user);
+            ( vars.compoundedLiquidityBalance, vars.compoundedBorrowBalance, vars.borrowFee, vars.userUsesInstrumentAsCollateral ) = core.getUserBasicInstrumentData(vars.currentInstrument, _user);
             if (vars.compoundedLiquidityBalance == 0 && vars.compoundedBorrowBalance == 0) {
                 continue;
             }
@@ -111,7 +111,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
 
             if (vars.compoundedBorrowBalance > 0) {
                 totalBorrowBalanceETH = totalBorrowBalanceETH.add( vars.instrumentUnitPrice.mul(vars.compoundedBorrowBalance).div(vars.tokenUnit) );
-                totalFeesETH = totalFeesETH.add( vars.originationFee.mul(vars.instrumentUnitPrice).div(vars.tokenUnit) );
+                totalFeesETH = totalFeesETH.add( vars.borrowFee.mul(vars.instrumentUnitPrice).div(vars.tokenUnit) );
             }
         }
 
@@ -264,7 +264,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
             uint256 borrowRateMode,
             uint256 borrowRate,
             uint256 liquidityRate,
-            uint256 originationFee,
+            uint256 borrowFee,
             uint256 variableBorrowIndex,
             uint256 lastUpdateTimestamp,
             bool usageAsCollateralEnabled
@@ -284,7 +284,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
 
         borrowRateMode = uint256(mode);
         liquidityRate = core.getInstrumentCurrentLiquidityRate(_instrument);
-        originationFee = core.getUserOriginationFee(_instrument, _user);
+        borrowFee = core.getUserBorrowFee(_instrument, _user);
         variableBorrowIndex = core.getUserVariableBorrowCumulativeIndex(_instrument, _user);
         lastUpdateTimestamp = core.getUserLastUpdate(_instrument, _user);
         usageAsCollateralEnabled = core.isUserUseInstrumentAsCollateralEnabled(_instrument, _user);

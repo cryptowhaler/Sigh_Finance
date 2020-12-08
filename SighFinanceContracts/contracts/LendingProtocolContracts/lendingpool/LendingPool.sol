@@ -220,7 +220,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
 // ######  initialize() function called by proxy contract when LendingPool is added to AddressesProvider ######
 // ############################################################################################################
 
-    uint256 public constant LENDINGPOOL_REVISION = 0x1;             // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
+    uint256 public constant LENDINGPOOL_REVISION = 0x2;             // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
 
     function getRevision() internal pure returns (uint256) {        // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
         return LENDINGPOOL_REVISION;
@@ -407,7 +407,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
         RepayLocalVars memory vars;     // Usage of a memory struct of vars to avoid "Stack too deep" errors due to local variables
         ( vars.principalBorrowBalance, vars.compoundedBorrowBalance, vars.borrowBalanceIncrease ) = core.getUserBorrowBalances(_instrument, _onBehalfOf);
 
-        vars.borrowFee = core.getUserOriginationFee(_instrument, _onBehalfOf);
+        vars.borrowFee = core.getUserBorrowFee(_instrument, _onBehalfOf);
         vars.isETH = EthAddressLib.ethAddress() == _instrument;
 
         require(vars.compoundedBorrowBalance > 0, "The user does not have any borrow pending");

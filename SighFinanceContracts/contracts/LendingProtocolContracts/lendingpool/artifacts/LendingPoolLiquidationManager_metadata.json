@@ -221,10 +221,10 @@
 	},
 	"sources": {
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
-			"keccak256": "0x7b4d14500a811e6100583ea4168f66567c7e842b3c3c7ca32704aca7323a513a",
+			"keccak256": "0xd9c64ec38fa73c1666f8be7a689c5878e79ce5aac8711ca22d3db79526629724",
 			"urls": [
-				"bzz-raw://ae5c84ca69f5ee77ca36804be244ff54e91f83457bc45c4d2c313ba313f0f5bd",
-				"dweb:/ipfs/QmeTtfXzSbTB9njMu9vN1m7vdpeNrEHsd81u34AK8WjMZL"
+				"bzz-raw://1c1ebd3f4b19a6e067aeb36441b4bbd7119e026e47606e5229ab34a507aa869d",
+				"dweb:/ipfs/QmWSKwTMfXHm1iLjiFamFTbUDASR1a8udFRF23UdDzTabX"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolDataProvider.sol": {
@@ -256,10 +256,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolLiquidationManager.sol": {
-			"keccak256": "0x9bf9137bfb995105e661426a0681a79ec44f27c18590952d4b0af221717216b3",
+			"keccak256": "0xf47fc44457e530e30cd036f6249a40da10523dd0c2e1af5046045db1d5934470",
 			"urls": [
-				"bzz-raw://e98afd0b271c6cc0cbc56aa65d7368342cf57124c61dca97d966d306d416a5b4",
-				"dweb:/ipfs/Qmevqsd5cRPT2hmx9qnoRv8Tw254wc2amGC5UoL3ze7dYw"
+				"bzz-raw://102b04f8ce52e9dfbaf89dcd4eed00cabc73437a6b31ca52ce26f6997e250525",
+				"dweb:/ipfs/QmXfqvaKkEVGPRnqxW7SQWFsEYQ3cEzDhgK4uFELEbYHBP"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {

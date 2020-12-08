@@ -1,0 +1,3016 @@
+{
+  "contractName": "LibOrder",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGHFinanceContracts/Treasury/0xContracts/LibOrder.sol\":\"LibOrder\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGHFinanceContracts/Treasury/0xContracts/LibEIP712.sol\":{\"keccak256\":\"0xe19c3cbc71fbea0fdb45c1763306550015d940bea9dbec5f3fd2edfe2165d673\",\"urls\":[\"bzz-raw://267d263f0453352a1ac8d8085a13c4976fb8c964eff8d3aab0a84173d1438efb\",\"dweb:/ipfs/QmbaRw85MYYP3KTmQ68gYdEnFyMqD7frwjxxwsj4j4JCr1\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGHFinanceContracts/Treasury/0xContracts/LibOrder.sol\":{\"keccak256\":\"0xc7f3f4488ec75bd34fa0acf0c213d3076cdc30a6bb8a56958ca16475c08b59a9\",\"urls\":[\"bzz-raw://7d81dd68b6136765d49a53e8a67a2f4550001d20a142272afc0e9efd65d7193f\",\"dweb:/ipfs/Qmb4S8jZNkw6AB1ai91rHjCgWbtsqvxN5hLdBEYvfuNAeF\"]}},\"version\":1}",
+  "bytecode": "0x60556023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea265627a7a723158209810a51f6040e605c5d23f345ab25ca40cbd247420510fedcc886fd3fdfa060564736f6c63430005100032",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea265627a7a723158209810a51f6040e605c5d23f345ab25ca40cbd247420510fedcc886fd3fdfa060564736f6c63430005100032",
+  "sourceMap": "633:7281:88:-;;132:2:-1;166:7;155:9;146:7;137:37;255:7;249:14;246:1;241:23;235:4;232:33;222:2;;269:9;222:2;293:9;290:1;283:20;323:4;314:7;306:22;347:7;338;331:24",
+  "deployedSourceMap": "633:7281:88:-;;;;;;;;",
+  "source": "/*\n\n  Copyright 2019 ZeroEx Intl.\n\n  Licensed under the Apache License, Version 2.0 (the \"License\");\n  you may not use this file except in compliance with the License.\n  You may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\n  Unless required by applicable law or agreed to in writing, software\n  distributed under the License is distributed on an \"AS IS\" BASIS,\n  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n  See the License for the specific language governing permissions and\n  limitations under the License.\n\n*/\n\npragma solidity ^0.5.9;\n\nimport \"./LibEIP712.sol\";\n\n\nlibrary LibOrder {\n\n    using LibOrder for Order;\n\n    // Hash for the EIP712 Order Schema:\n    // keccak256(abi.encodePacked(\n    //     \"Order(\",\n    //     \"address makerAddress,\",\n    //     \"address takerAddress,\",\n    //     \"address feeRecipientAddress,\",\n    //     \"address senderAddress,\",\n    //     \"uint256 makerAssetAmount,\",\n    //     \"uint256 takerAssetAmount,\",\n    //     \"uint256 makerFee,\",\n    //     \"uint256 takerFee,\",\n    //     \"uint256 expirationTimeSeconds,\",\n    //     \"uint256 salt,\",\n    //     \"bytes makerAssetData,\",\n    //     \"bytes takerAssetData,\",\n    //     \"bytes makerFeeAssetData,\",\n    //     \"bytes takerFeeAssetData\",\n    //     \")\"\n    // ))\n    bytes32 constant internal _EIP712_ORDER_SCHEMA_HASH =\n        0xf80322eb8376aafb64eadf8f0d7623f22130fd9491a221e902b713cb984a7534;\n\n    // A valid order remains fillable until it is expired, fully filled, or cancelled.\n    // An order's status is unaffected by external factors, like account balances.\n    enum OrderStatus {\n        INVALID,                     // Default value\n        INVALID_MAKER_ASSET_AMOUNT,  // Order does not have a valid maker asset amount\n        INVALID_TAKER_ASSET_AMOUNT,  // Order does not have a valid taker asset amount\n        FILLABLE,                    // Order is fillable\n        EXPIRED,                     // Order has already expired\n        FULLY_FILLED,                // Order is fully filled\n        CANCELLED                    // Order has been cancelled\n    }\n\n    // solhint-disable max-line-length\n    /// @dev Canonical order structure.\n    struct Order {\n        address makerAddress;           // Address that created the order.\n        address takerAddress;           // Address that is allowed to fill the order. If set to 0, any address is allowed to fill the order.\n        address feeRecipientAddress;    // Address that will recieve fees when order is filled.\n        address senderAddress;          // Address that is allowed to call Exchange contract methods that affect this order. If set to 0, any address is allowed to call these methods.\n        uint256 makerAssetAmount;       // Amount of makerAsset being offered by maker. Must be greater than 0.\n        uint256 takerAssetAmount;       // Amount of takerAsset being bid on by maker. Must be greater than 0.\n        uint256 makerFee;               // Fee paid to feeRecipient by maker when order is filled.\n        uint256 takerFee;               // Fee paid to feeRecipient by taker when order is filled.\n        uint256 expirationTimeSeconds;  // Timestamp in seconds at which order expires.\n        uint256 salt;                   // Arbitrary number to facilitate uniqueness of the order's hash.\n        bytes makerAssetData;           // Encoded data that can be decoded by a specified proxy contract when transferring makerAsset. The leading bytes4 references the id of the asset proxy.\n        bytes takerAssetData;           // Encoded data that can be decoded by a specified proxy contract when transferring takerAsset. The leading bytes4 references the id of the asset proxy.\n        bytes makerFeeAssetData;        // Encoded data that can be decoded by a specified proxy contract when transferring makerFeeAsset. The leading bytes4 references the id of the asset proxy.\n        bytes takerFeeAssetData;        // Encoded data that can be decoded by a specified proxy contract when transferring takerFeeAsset. The leading bytes4 references the id of the asset proxy.\n    }\n    // solhint-enable max-line-length\n\n    /// @dev Order information returned by `getOrderInfo()`.\n    struct OrderInfo {\n        OrderStatus orderStatus;                    // Status that describes order's validity and fillability.\n        bytes32 orderHash;                    // EIP712 typed data hash of the order (see LibOrder.getTypedDataHash).\n        uint256 orderTakerAssetFilledAmount;  // Amount of order that has already been filled.\n    }\n\n    /// @dev Calculates the EIP712 typed data hash of an order with a given domain separator.\n    /// @param order The order structure.\n    /// @return EIP712 typed data hash of the order.\n    function getTypedDataHash(Order memory order, bytes32 eip712ExchangeDomainHash)\n        internal\n        pure\n        returns (bytes32 orderHash)\n    {\n        orderHash = LibEIP712.hashEIP712Message(\n            eip712ExchangeDomainHash,\n            order.getStructHash()\n        );\n        return orderHash;\n    }\n\n    /// @dev Calculates EIP712 hash of the order struct.\n    /// @param order The order structure.\n    /// @return EIP712 hash of the order struct.\n    function getStructHash(Order memory order)\n        internal\n        pure\n        returns (bytes32 result)\n    {\n        bytes32 schemaHash = _EIP712_ORDER_SCHEMA_HASH;\n        bytes memory makerAssetData = order.makerAssetData;\n        bytes memory takerAssetData = order.takerAssetData;\n        bytes memory makerFeeAssetData = order.makerFeeAssetData;\n        bytes memory takerFeeAssetData = order.takerFeeAssetData;\n\n        // Assembly for more efficiently computing:\n        // keccak256(abi.encodePacked(\n        //     EIP712_ORDER_SCHEMA_HASH,\n        //     uint256(order.makerAddress),\n        //     uint256(order.takerAddress),\n        //     uint256(order.feeRecipientAddress),\n        //     uint256(order.senderAddress),\n        //     order.makerAssetAmount,\n        //     order.takerAssetAmount,\n        //     order.makerFee,\n        //     order.takerFee,\n        //     order.expirationTimeSeconds,\n        //     order.salt,\n        //     keccak256(order.makerAssetData),\n        //     keccak256(order.takerAssetData),\n        //     keccak256(order.makerFeeAssetData),\n        //     keccak256(order.takerFeeAssetData)\n        // ));\n\n        assembly {\n            // Assert order offset (this is an internal error that should never be triggered)\n            if lt(order, 32) {\n                invalid()\n            }\n\n            // Calculate memory addresses that will be swapped out before hashing\n            let pos1 := sub(order, 32)\n            let pos2 := add(order, 320)\n            let pos3 := add(order, 352)\n            let pos4 := add(order, 384)\n            let pos5 := add(order, 416)\n\n            // Backup\n            let temp1 := mload(pos1)\n            let temp2 := mload(pos2)\n            let temp3 := mload(pos3)\n            let temp4 := mload(pos4)\n            let temp5 := mload(pos5)\n\n            // Hash in place\n            mstore(pos1, schemaHash)\n            mstore(pos2, keccak256(add(makerAssetData, 32), mload(makerAssetData)))        // store hash of makerAssetData\n            mstore(pos3, keccak256(add(takerAssetData, 32), mload(takerAssetData)))        // store hash of takerAssetData\n            mstore(pos4, keccak256(add(makerFeeAssetData, 32), mload(makerFeeAssetData)))  // store hash of makerFeeAssetData\n            mstore(pos5, keccak256(add(takerFeeAssetData, 32), mload(takerFeeAssetData)))  // store hash of takerFeeAssetData\n            result := keccak256(pos1, 480)\n\n            // Restore\n            mstore(pos1, temp1)\n            mstore(pos2, temp2)\n            mstore(pos3, temp3)\n            mstore(pos4, temp4)\n            mstore(pos5, temp5)\n        }\n        return result;\n    }\n}\n",
+  "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGHFinanceContracts/Treasury/0xContracts/LibOrder.sol",
+  "ast": {
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGHFinanceContracts/Treasury/0xContracts/LibOrder.sol",
+    "exportedSymbols": {
+      "LibOrder": [
+        28861
+      ]
+    },
+    "id": 28862,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 28752,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".9"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "580:23:88"
+      },
+      {
+        "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGHFinanceContracts/Treasury/0xContracts/LibEIP712.sol",
+        "file": "./LibEIP712.sol",
+        "id": 28753,
+        "nodeType": "ImportDirective",
+        "scope": 28862,
+        "sourceUnit": 27750,
+        "src": "605:25:88",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "library",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 28861,
+        "linearizedBaseContracts": [
+          28861
+        ],
+        "name": "LibOrder",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "id": 28756,
+            "libraryName": {
+              "contractScope": null,
+              "id": 28754,
+              "name": "LibOrder",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 28861,
+              "src": "663:8:88",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_LibOrder_$28861",
+                "typeString": "library LibOrder"
+              }
+            },
+            "nodeType": "UsingForDirective",
+            "src": "657:25:88",
+            "typeName": {
+              "contractScope": null,
+              "id": 28755,
+              "name": "Order",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 28796,
+              "src": "676:5:88",
+              "typeDescriptions": {
+                "typeIdentifier": "t_struct$_Order_$28796_storage_ptr",
+                "typeString": "struct LibOrder.Order"
+              }
+            }
+          },
+          {
+            "constant": true,
+            "id": 28759,
+            "name": "_EIP712_ORDER_SCHEMA_HASH",
+            "nodeType": "VariableDeclaration",
+            "scope": 28861,
+            "src": "1328:128:88",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bytes32",
+              "typeString": "bytes32"
+            },
+            "typeName": {
+              "id": 28757,
+              "name": "bytes32",
+              "nodeType": "ElementaryTypeName",
+              "src": "1328:7:88",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bytes32",
+                "typeString": "bytes32"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "307866383033323265623833373661616662363465616466386630643736323366323231333066643934393161323231653930326237313363623938346137353334",
+              "id": 28758,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "1390:66:88",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_rational_112179127998652384479658782050138692812774837050354146812378168026641797379380_by_1",
+                "typeString": "int_const 1121...(70 digits omitted)...9380"
+              },
+              "value": "0xf80322eb8376aafb64eadf8f0d7623f22130fd9491a221e902b713cb984a7534"
+            },
+            "visibility": "internal"
+          },
+          {
+            "canonicalName": "LibOrder.OrderStatus",
+            "id": 28767,
+            "members": [
+              {
+                "id": 28760,
+                "name": "INVALID",
+                "nodeType": "EnumValue",
+                "src": "1660:7:88"
+              },
+              {
+                "id": 28761,
+                "name": "INVALID_MAKER_ASSET_AMOUNT",
+                "nodeType": "EnumValue",
+                "src": "1714:26:88"
+              },
+              {
+                "id": 28762,
+                "name": "INVALID_TAKER_ASSET_AMOUNT",
+                "nodeType": "EnumValue",
+                "src": "1801:26:88"
+              },
+              {
+                "id": 28763,
+                "name": "FILLABLE",
+                "nodeType": "EnumValue",
+                "src": "1888:8:88"
+              },
+              {
+                "id": 28764,
+                "name": "EXPIRED",
+                "nodeType": "EnumValue",
+                "src": "1946:7:88"
+              },
+              {
+                "id": 28765,
+                "name": "FULLY_FILLED",
+                "nodeType": "EnumValue",
+                "src": "2012:12:88"
+              },
+              {
+                "id": 28766,
+                "name": "CANCELLED",
+                "nodeType": "EnumValue",
+                "src": "2074:9:88"
+              }
+            ],
+            "name": "OrderStatus",
+            "nodeType": "EnumDefinition",
+            "src": "1633:503:88"
+          },
+          {
+            "canonicalName": "LibOrder.Order",
+            "id": 28796,
+            "members": [
+              {
+                "constant": false,
+                "id": 28769,
+                "name": "makerAddress",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "2244:20:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 28768,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2244:7:88",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28771,
+                "name": "takerAddress",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "2319:20:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 28770,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2319:7:88",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28773,
+                "name": "feeRecipientAddress",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "2460:27:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 28772,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2460:7:88",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28775,
+                "name": "senderAddress",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "2556:21:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 28774,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2556:7:88",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28777,
+                "name": "makerAssetAmount",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "2740:24:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 28776,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2740:7:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28779,
+                "name": "takerAssetAmount",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "2852:24:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 28778,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2852:7:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28781,
+                "name": "makerFee",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "2963:16:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 28780,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2963:7:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28783,
+                "name": "takerFee",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "3062:16:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 28782,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3062:7:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28785,
+                "name": "expirationTimeSeconds",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "3161:29:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 28784,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3161:7:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28787,
+                "name": "salt",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "3249:12:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 28786,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3249:7:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28789,
+                "name": "makerAssetData",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "3355:20:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes_storage_ptr",
+                  "typeString": "bytes"
+                },
+                "typeName": {
+                  "id": 28788,
+                  "name": "bytes",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3355:5:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_storage_ptr",
+                    "typeString": "bytes"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28791,
+                "name": "takerAssetData",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "3548:20:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes_storage_ptr",
+                  "typeString": "bytes"
+                },
+                "typeName": {
+                  "id": 28790,
+                  "name": "bytes",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3548:5:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_storage_ptr",
+                    "typeString": "bytes"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28793,
+                "name": "makerFeeAssetData",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "3741:23:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes_storage_ptr",
+                  "typeString": "bytes"
+                },
+                "typeName": {
+                  "id": 28792,
+                  "name": "bytes",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3741:5:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_storage_ptr",
+                    "typeString": "bytes"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28795,
+                "name": "takerFeeAssetData",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "3937:23:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes_storage_ptr",
+                  "typeString": "bytes"
+                },
+                "typeName": {
+                  "id": 28794,
+                  "name": "bytes",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3937:5:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_storage_ptr",
+                    "typeString": "bytes"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "Order",
+            "nodeType": "StructDefinition",
+            "scope": 28861,
+            "src": "2221:1909:88",
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "LibOrder.OrderInfo",
+            "id": 28803,
+            "members": [
+              {
+                "constant": false,
+                "id": 28798,
+                "name": "orderStatus",
+                "nodeType": "VariableDeclaration",
+                "scope": 28803,
+                "src": "4262:23:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_enum$_OrderStatus_$28767",
+                  "typeString": "enum LibOrder.OrderStatus"
+                },
+                "typeName": {
+                  "contractScope": null,
+                  "id": 28797,
+                  "name": "OrderStatus",
+                  "nodeType": "UserDefinedTypeName",
+                  "referencedDeclaration": 28767,
+                  "src": "4262:11:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_OrderStatus_$28767",
+                    "typeString": "enum LibOrder.OrderStatus"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28800,
+                "name": "orderHash",
+                "nodeType": "VariableDeclaration",
+                "scope": 28803,
+                "src": "4373:17:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes32",
+                  "typeString": "bytes32"
+                },
+                "typeName": {
+                  "id": 28799,
+                  "name": "bytes32",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "4373:7:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28802,
+                "name": "orderTakerAssetFilledAmount",
+                "nodeType": "VariableDeclaration",
+                "scope": 28803,
+                "src": "4491:35:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 28801,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "4491:7:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "OrderInfo",
+            "nodeType": "StructDefinition",
+            "scope": 28861,
+            "src": "4235:348:88",
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 28824,
+              "nodeType": "Block",
+              "src": "4928:165:88",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 28820,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 28812,
+                      "name": "orderHash",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 28810,
+                      "src": "4938:9:88",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "arguments": [
+                        {
+                          "argumentTypes": null,
+                          "id": 28815,
+                          "name": "eip712ExchangeDomainHash",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 28807,
+                          "src": "4991:24:88",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        },
+                        {
+                          "argumentTypes": null,
+                          "arguments": [],
+                          "expression": {
+                            "argumentTypes": [],
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 28816,
+                              "name": "order",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 28805,
+                              "src": "5029:5:88",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_struct$_Order_$28796_memory_ptr",
+                                "typeString": "struct LibOrder.Order memory"
+                              }
+                            },
+                            "id": 28817,
+                            "isConstant": false,
+                            "isLValue": true,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "getStructHash",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": 28860,
+                            "src": "5029:19:88",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_internal_pure$_t_struct$_Order_$28796_memory_ptr_$returns$_t_bytes32_$bound_to$_t_struct$_Order_$28796_memory_ptr_$",
+                              "typeString": "function (struct LibOrder.Order memory) pure returns (bytes32)"
+                            }
+                          },
+                          "id": 28818,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "5029:21:88",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          },
+                          {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 28813,
+                          "name": "LibEIP712",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 27749,
+                          "src": "4950:9:88",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_contract$_LibEIP712_$27749_$",
+                            "typeString": "type(library LibEIP712)"
+                          }
+                        },
+                        "id": 28814,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "hashEIP712Message",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 27748,
+                        "src": "4950:27:88",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_internal_pure$_t_bytes32_$_t_bytes32_$returns$_t_bytes32_$",
+                          "typeString": "function (bytes32,bytes32) pure returns (bytes32)"
+                        }
+                      },
+                      "id": 28819,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "4950:110:88",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      }
+                    },
+                    "src": "4938:122:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "id": 28821,
+                  "nodeType": "ExpressionStatement",
+                  "src": "4938:122:88"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 28822,
+                    "name": "orderHash",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 28810,
+                    "src": "5077:9:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "functionReturnParameters": 28811,
+                  "id": 28823,
+                  "nodeType": "Return",
+                  "src": "5070:16:88"
+                }
+              ]
+            },
+            "documentation": "@dev Calculates the EIP712 typed data hash of an order with a given domain separator.\n @param order The order structure.\n @return EIP712 typed data hash of the order.",
+            "id": 28825,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTypedDataHash",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 28808,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 28805,
+                  "name": "order",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 28825,
+                  "src": "4804:18:88",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_Order_$28796_memory_ptr",
+                    "typeString": "struct LibOrder.Order"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 28804,
+                    "name": "Order",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 28796,
+                    "src": "4804:5:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Order_$28796_storage_ptr",
+                      "typeString": "struct LibOrder.Order"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 28807,
+                  "name": "eip712ExchangeDomainHash",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 28825,
+                  "src": "4824:32:88",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 28806,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4824:7:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4803:54:88"
+            },
+            "returnParameters": {
+              "id": 28811,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 28810,
+                  "name": "orderHash",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 28825,
+                  "src": "4905:17:88",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 28809,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4905:7:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4904:19:88"
+            },
+            "scope": 28861,
+            "src": "4778:315:88",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 28859,
+              "nodeType": "Block",
+              "src": "5357:2555:88",
+              "statements": [
+                {
+                  "assignments": [
+                    28833
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 28833,
+                      "name": "schemaHash",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 28859,
+                      "src": "5367:18:88",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      },
+                      "typeName": {
+                        "id": 28832,
+                        "name": "bytes32",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "5367:7:88",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 28835,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "id": 28834,
+                    "name": "_EIP712_ORDER_SCHEMA_HASH",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 28759,
+                    "src": "5388:25:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "5367:46:88"
+                },
+                {
+                  "assignments": [
+                    28837
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 28837,
+                      "name": "makerAssetData",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 28859,
+                      "src": "5423:27:88",
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes_memory_ptr",
+                        "typeString": "bytes"
+                      },
+                      "typeName": {
+                        "id": 28836,
+                        "name": "bytes",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "5423:5:88",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes_storage_ptr",
+                          "typeString": "bytes"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 28840,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 28838,
+                      "name": "order",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 28827,
+                      "src": "5453:5:88",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Order_$28796_memory_ptr",
+                        "typeString": "struct LibOrder.Order memory"
+                      }
+                    },
+                    "id": 28839,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberName": "makerAssetData",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": 28789,
+                    "src": "5453:20:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_memory",
+                      "typeString": "bytes memory"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "5423:50:88"
+                },
+                {
+                  "assignments": [
+                    28842
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 28842,
+                      "name": "takerAssetData",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 28859,
+                      "src": "5483:27:88",
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes_memory_ptr",
+                        "typeString": "bytes"
+                      },
+                      "typeName": {
+                        "id": 28841,
+                        "name": "bytes",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "5483:5:88",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes_storage_ptr",
+                          "typeString": "bytes"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 28845,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 28843,
+                      "name": "order",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 28827,
+                      "src": "5513:5:88",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Order_$28796_memory_ptr",
+                        "typeString": "struct LibOrder.Order memory"
+                      }
+                    },
+                    "id": 28844,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberName": "takerAssetData",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": 28791,
+                    "src": "5513:20:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_memory",
+                      "typeString": "bytes memory"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "5483:50:88"
+                },
+                {
+                  "assignments": [
+                    28847
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 28847,
+                      "name": "makerFeeAssetData",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 28859,
+                      "src": "5543:30:88",
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes_memory_ptr",
+                        "typeString": "bytes"
+                      },
+                      "typeName": {
+                        "id": 28846,
+                        "name": "bytes",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "5543:5:88",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes_storage_ptr",
+                          "typeString": "bytes"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 28850,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 28848,
+                      "name": "order",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 28827,
+                      "src": "5576:5:88",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Order_$28796_memory_ptr",
+                        "typeString": "struct LibOrder.Order memory"
+                      }
+                    },
+                    "id": 28849,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberName": "makerFeeAssetData",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": 28793,
+                    "src": "5576:23:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_memory",
+                      "typeString": "bytes memory"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "5543:56:88"
+                },
+                {
+                  "assignments": [
+                    28852
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 28852,
+                      "name": "takerFeeAssetData",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 28859,
+                      "src": "5609:30:88",
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes_memory_ptr",
+                        "typeString": "bytes"
+                      },
+                      "typeName": {
+                        "id": 28851,
+                        "name": "bytes",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "5609:5:88",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes_storage_ptr",
+                          "typeString": "bytes"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 28855,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 28853,
+                      "name": "order",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 28827,
+                      "src": "5642:5:88",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Order_$28796_memory_ptr",
+                        "typeString": "struct LibOrder.Order memory"
+                      }
+                    },
+                    "id": 28854,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberName": "takerFeeAssetData",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": 28795,
+                    "src": "5642:23:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_memory",
+                      "typeString": "bytes memory"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "5609:56:88"
+                },
+                {
+                  "externalReferences": [
+                    {
+                      "order": {
+                        "declaration": 28827,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "6703:5:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "order": {
+                        "declaration": 28827,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "6539:5:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "order": {
+                        "declaration": 28827,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "6742:5:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "order": {
+                        "declaration": 28827,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "6862:5:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "order": {
+                        "declaration": 28827,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "6782:5:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "order": {
+                        "declaration": 28827,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "6822:5:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "makerAssetData": {
+                        "declaration": 28837,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7215:14:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "takerAssetData": {
+                        "declaration": 28842,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7338:14:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "schemaHash": {
+                        "declaration": 28833,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7137:10:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "makerFeeAssetData": {
+                        "declaration": 28847,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7464:17:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "result": {
+                        "declaration": 28830,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7659:6:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "takerFeeAssetData": {
+                        "declaration": 28852,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7590:17:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "makerAssetData": {
+                        "declaration": 28837,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7188:14:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "takerAssetData": {
+                        "declaration": 28842,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7311:14:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "makerFeeAssetData": {
+                        "declaration": 28847,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7434:17:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "takerFeeAssetData": {
+                        "declaration": 28852,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7560:17:88",
+                        "valueSize": 1
+                      }
+                    }
+                  ],
+                  "id": 28856,
+                  "nodeType": "InlineAssembly",
+                  "operations": "{\n    if lt(order, 32) { invalid() }\n    let pos1 := sub(order, 32)\n    let pos2 := add(order, 320)\n    let pos3 := add(order, 352)\n    let pos4 := add(order, 384)\n    let pos5 := add(order, 416)\n    let temp1 := mload(pos1)\n    let temp2 := mload(pos2)\n    let temp3 := mload(pos3)\n    let temp4 := mload(pos4)\n    let temp5 := mload(pos5)\n    mstore(pos1, schemaHash)\n    mstore(pos2, keccak256(add(makerAssetData, 32), mload(makerAssetData)))\n    mstore(pos3, keccak256(add(takerAssetData, 32), mload(takerAssetData)))\n    mstore(pos4, keccak256(add(makerFeeAssetData, 32), mload(makerFeeAssetData)))\n    mstore(pos5, keccak256(add(takerFeeAssetData, 32), mload(takerFeeAssetData)))\n    result := keccak256(pos1, 480)\n    mstore(pos1, temp1)\n    mstore(pos2, temp2)\n    mstore(pos3, temp3)\n    mstore(pos4, temp4)\n    mstore(pos5, temp5)\n}",
+                  "src": "6416:1467:88"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 28857,
+                    "name": "result",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 28830,
+                    "src": "7899:6:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "functionReturnParameters": 28831,
+                  "id": 28858,
+                  "nodeType": "Return",
+                  "src": "7892:13:88"
+                }
+              ]
+            },
+            "documentation": "@dev Calculates EIP712 hash of the order struct.\n @param order The order structure.\n @return EIP712 hash of the order struct.",
+            "id": 28860,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getStructHash",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 28828,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 28827,
+                  "name": "order",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 28860,
+                  "src": "5270:18:88",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_Order_$28796_memory_ptr",
+                    "typeString": "struct LibOrder.Order"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 28826,
+                    "name": "Order",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 28796,
+                    "src": "5270:5:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Order_$28796_storage_ptr",
+                      "typeString": "struct LibOrder.Order"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5269:20:88"
+            },
+            "returnParameters": {
+              "id": 28831,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 28830,
+                  "name": "result",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 28860,
+                  "src": "5337:14:88",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 28829,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5337:7:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5336:16:88"
+            },
+            "scope": 28861,
+            "src": "5247:2665:88",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 28862,
+        "src": "633:7281:88"
+      }
+    ],
+    "src": "580:7335:88"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGHFinanceContracts/Treasury/0xContracts/LibOrder.sol",
+    "exportedSymbols": {
+      "LibOrder": [
+        28861
+      ]
+    },
+    "id": 28862,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 28752,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".9"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "580:23:88"
+      },
+      {
+        "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/SIGHFinanceContracts/Treasury/0xContracts/LibEIP712.sol",
+        "file": "./LibEIP712.sol",
+        "id": 28753,
+        "nodeType": "ImportDirective",
+        "scope": 28862,
+        "sourceUnit": 27750,
+        "src": "605:25:88",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "library",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 28861,
+        "linearizedBaseContracts": [
+          28861
+        ],
+        "name": "LibOrder",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "id": 28756,
+            "libraryName": {
+              "contractScope": null,
+              "id": 28754,
+              "name": "LibOrder",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 28861,
+              "src": "663:8:88",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_LibOrder_$28861",
+                "typeString": "library LibOrder"
+              }
+            },
+            "nodeType": "UsingForDirective",
+            "src": "657:25:88",
+            "typeName": {
+              "contractScope": null,
+              "id": 28755,
+              "name": "Order",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 28796,
+              "src": "676:5:88",
+              "typeDescriptions": {
+                "typeIdentifier": "t_struct$_Order_$28796_storage_ptr",
+                "typeString": "struct LibOrder.Order"
+              }
+            }
+          },
+          {
+            "constant": true,
+            "id": 28759,
+            "name": "_EIP712_ORDER_SCHEMA_HASH",
+            "nodeType": "VariableDeclaration",
+            "scope": 28861,
+            "src": "1328:128:88",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bytes32",
+              "typeString": "bytes32"
+            },
+            "typeName": {
+              "id": 28757,
+              "name": "bytes32",
+              "nodeType": "ElementaryTypeName",
+              "src": "1328:7:88",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bytes32",
+                "typeString": "bytes32"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "307866383033323265623833373661616662363465616466386630643736323366323231333066643934393161323231653930326237313363623938346137353334",
+              "id": 28758,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "1390:66:88",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_rational_112179127998652384479658782050138692812774837050354146812378168026641797379380_by_1",
+                "typeString": "int_const 1121...(70 digits omitted)...9380"
+              },
+              "value": "0xf80322eb8376aafb64eadf8f0d7623f22130fd9491a221e902b713cb984a7534"
+            },
+            "visibility": "internal"
+          },
+          {
+            "canonicalName": "LibOrder.OrderStatus",
+            "id": 28767,
+            "members": [
+              {
+                "id": 28760,
+                "name": "INVALID",
+                "nodeType": "EnumValue",
+                "src": "1660:7:88"
+              },
+              {
+                "id": 28761,
+                "name": "INVALID_MAKER_ASSET_AMOUNT",
+                "nodeType": "EnumValue",
+                "src": "1714:26:88"
+              },
+              {
+                "id": 28762,
+                "name": "INVALID_TAKER_ASSET_AMOUNT",
+                "nodeType": "EnumValue",
+                "src": "1801:26:88"
+              },
+              {
+                "id": 28763,
+                "name": "FILLABLE",
+                "nodeType": "EnumValue",
+                "src": "1888:8:88"
+              },
+              {
+                "id": 28764,
+                "name": "EXPIRED",
+                "nodeType": "EnumValue",
+                "src": "1946:7:88"
+              },
+              {
+                "id": 28765,
+                "name": "FULLY_FILLED",
+                "nodeType": "EnumValue",
+                "src": "2012:12:88"
+              },
+              {
+                "id": 28766,
+                "name": "CANCELLED",
+                "nodeType": "EnumValue",
+                "src": "2074:9:88"
+              }
+            ],
+            "name": "OrderStatus",
+            "nodeType": "EnumDefinition",
+            "src": "1633:503:88"
+          },
+          {
+            "canonicalName": "LibOrder.Order",
+            "id": 28796,
+            "members": [
+              {
+                "constant": false,
+                "id": 28769,
+                "name": "makerAddress",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "2244:20:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 28768,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2244:7:88",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28771,
+                "name": "takerAddress",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "2319:20:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 28770,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2319:7:88",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28773,
+                "name": "feeRecipientAddress",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "2460:27:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 28772,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2460:7:88",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28775,
+                "name": "senderAddress",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "2556:21:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 28774,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2556:7:88",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28777,
+                "name": "makerAssetAmount",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "2740:24:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 28776,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2740:7:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28779,
+                "name": "takerAssetAmount",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "2852:24:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 28778,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2852:7:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28781,
+                "name": "makerFee",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "2963:16:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 28780,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2963:7:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28783,
+                "name": "takerFee",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "3062:16:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 28782,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3062:7:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28785,
+                "name": "expirationTimeSeconds",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "3161:29:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 28784,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3161:7:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28787,
+                "name": "salt",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "3249:12:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 28786,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3249:7:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28789,
+                "name": "makerAssetData",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "3355:20:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes_storage_ptr",
+                  "typeString": "bytes"
+                },
+                "typeName": {
+                  "id": 28788,
+                  "name": "bytes",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3355:5:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_storage_ptr",
+                    "typeString": "bytes"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28791,
+                "name": "takerAssetData",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "3548:20:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes_storage_ptr",
+                  "typeString": "bytes"
+                },
+                "typeName": {
+                  "id": 28790,
+                  "name": "bytes",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3548:5:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_storage_ptr",
+                    "typeString": "bytes"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28793,
+                "name": "makerFeeAssetData",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "3741:23:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes_storage_ptr",
+                  "typeString": "bytes"
+                },
+                "typeName": {
+                  "id": 28792,
+                  "name": "bytes",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3741:5:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_storage_ptr",
+                    "typeString": "bytes"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28795,
+                "name": "takerFeeAssetData",
+                "nodeType": "VariableDeclaration",
+                "scope": 28796,
+                "src": "3937:23:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes_storage_ptr",
+                  "typeString": "bytes"
+                },
+                "typeName": {
+                  "id": 28794,
+                  "name": "bytes",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "3937:5:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_storage_ptr",
+                    "typeString": "bytes"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "Order",
+            "nodeType": "StructDefinition",
+            "scope": 28861,
+            "src": "2221:1909:88",
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "LibOrder.OrderInfo",
+            "id": 28803,
+            "members": [
+              {
+                "constant": false,
+                "id": 28798,
+                "name": "orderStatus",
+                "nodeType": "VariableDeclaration",
+                "scope": 28803,
+                "src": "4262:23:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_enum$_OrderStatus_$28767",
+                  "typeString": "enum LibOrder.OrderStatus"
+                },
+                "typeName": {
+                  "contractScope": null,
+                  "id": 28797,
+                  "name": "OrderStatus",
+                  "nodeType": "UserDefinedTypeName",
+                  "referencedDeclaration": 28767,
+                  "src": "4262:11:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_OrderStatus_$28767",
+                    "typeString": "enum LibOrder.OrderStatus"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28800,
+                "name": "orderHash",
+                "nodeType": "VariableDeclaration",
+                "scope": 28803,
+                "src": "4373:17:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes32",
+                  "typeString": "bytes32"
+                },
+                "typeName": {
+                  "id": 28799,
+                  "name": "bytes32",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "4373:7:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 28802,
+                "name": "orderTakerAssetFilledAmount",
+                "nodeType": "VariableDeclaration",
+                "scope": 28803,
+                "src": "4491:35:88",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 28801,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "4491:7:88",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "OrderInfo",
+            "nodeType": "StructDefinition",
+            "scope": 28861,
+            "src": "4235:348:88",
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 28824,
+              "nodeType": "Block",
+              "src": "4928:165:88",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 28820,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 28812,
+                      "name": "orderHash",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 28810,
+                      "src": "4938:9:88",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "arguments": [
+                        {
+                          "argumentTypes": null,
+                          "id": 28815,
+                          "name": "eip712ExchangeDomainHash",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 28807,
+                          "src": "4991:24:88",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        },
+                        {
+                          "argumentTypes": null,
+                          "arguments": [],
+                          "expression": {
+                            "argumentTypes": [],
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 28816,
+                              "name": "order",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 28805,
+                              "src": "5029:5:88",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_struct$_Order_$28796_memory_ptr",
+                                "typeString": "struct LibOrder.Order memory"
+                              }
+                            },
+                            "id": 28817,
+                            "isConstant": false,
+                            "isLValue": true,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "getStructHash",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": 28860,
+                            "src": "5029:19:88",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_internal_pure$_t_struct$_Order_$28796_memory_ptr_$returns$_t_bytes32_$bound_to$_t_struct$_Order_$28796_memory_ptr_$",
+                              "typeString": "function (struct LibOrder.Order memory) pure returns (bytes32)"
+                            }
+                          },
+                          "id": 28818,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "5029:21:88",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          },
+                          {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 28813,
+                          "name": "LibEIP712",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 27749,
+                          "src": "4950:9:88",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_contract$_LibEIP712_$27749_$",
+                            "typeString": "type(library LibEIP712)"
+                          }
+                        },
+                        "id": 28814,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "hashEIP712Message",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 27748,
+                        "src": "4950:27:88",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_internal_pure$_t_bytes32_$_t_bytes32_$returns$_t_bytes32_$",
+                          "typeString": "function (bytes32,bytes32) pure returns (bytes32)"
+                        }
+                      },
+                      "id": 28819,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "4950:110:88",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      }
+                    },
+                    "src": "4938:122:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "id": 28821,
+                  "nodeType": "ExpressionStatement",
+                  "src": "4938:122:88"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 28822,
+                    "name": "orderHash",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 28810,
+                    "src": "5077:9:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "functionReturnParameters": 28811,
+                  "id": 28823,
+                  "nodeType": "Return",
+                  "src": "5070:16:88"
+                }
+              ]
+            },
+            "documentation": "@dev Calculates the EIP712 typed data hash of an order with a given domain separator.\n @param order The order structure.\n @return EIP712 typed data hash of the order.",
+            "id": 28825,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTypedDataHash",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 28808,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 28805,
+                  "name": "order",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 28825,
+                  "src": "4804:18:88",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_Order_$28796_memory_ptr",
+                    "typeString": "struct LibOrder.Order"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 28804,
+                    "name": "Order",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 28796,
+                    "src": "4804:5:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Order_$28796_storage_ptr",
+                      "typeString": "struct LibOrder.Order"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 28807,
+                  "name": "eip712ExchangeDomainHash",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 28825,
+                  "src": "4824:32:88",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 28806,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4824:7:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4803:54:88"
+            },
+            "returnParameters": {
+              "id": 28811,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 28810,
+                  "name": "orderHash",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 28825,
+                  "src": "4905:17:88",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 28809,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4905:7:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4904:19:88"
+            },
+            "scope": 28861,
+            "src": "4778:315:88",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 28859,
+              "nodeType": "Block",
+              "src": "5357:2555:88",
+              "statements": [
+                {
+                  "assignments": [
+                    28833
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 28833,
+                      "name": "schemaHash",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 28859,
+                      "src": "5367:18:88",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      },
+                      "typeName": {
+                        "id": 28832,
+                        "name": "bytes32",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "5367:7:88",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 28835,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "id": 28834,
+                    "name": "_EIP712_ORDER_SCHEMA_HASH",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 28759,
+                    "src": "5388:25:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "5367:46:88"
+                },
+                {
+                  "assignments": [
+                    28837
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 28837,
+                      "name": "makerAssetData",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 28859,
+                      "src": "5423:27:88",
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes_memory_ptr",
+                        "typeString": "bytes"
+                      },
+                      "typeName": {
+                        "id": 28836,
+                        "name": "bytes",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "5423:5:88",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes_storage_ptr",
+                          "typeString": "bytes"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 28840,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 28838,
+                      "name": "order",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 28827,
+                      "src": "5453:5:88",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Order_$28796_memory_ptr",
+                        "typeString": "struct LibOrder.Order memory"
+                      }
+                    },
+                    "id": 28839,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberName": "makerAssetData",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": 28789,
+                    "src": "5453:20:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_memory",
+                      "typeString": "bytes memory"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "5423:50:88"
+                },
+                {
+                  "assignments": [
+                    28842
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 28842,
+                      "name": "takerAssetData",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 28859,
+                      "src": "5483:27:88",
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes_memory_ptr",
+                        "typeString": "bytes"
+                      },
+                      "typeName": {
+                        "id": 28841,
+                        "name": "bytes",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "5483:5:88",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes_storage_ptr",
+                          "typeString": "bytes"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 28845,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 28843,
+                      "name": "order",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 28827,
+                      "src": "5513:5:88",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Order_$28796_memory_ptr",
+                        "typeString": "struct LibOrder.Order memory"
+                      }
+                    },
+                    "id": 28844,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberName": "takerAssetData",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": 28791,
+                    "src": "5513:20:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_memory",
+                      "typeString": "bytes memory"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "5483:50:88"
+                },
+                {
+                  "assignments": [
+                    28847
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 28847,
+                      "name": "makerFeeAssetData",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 28859,
+                      "src": "5543:30:88",
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes_memory_ptr",
+                        "typeString": "bytes"
+                      },
+                      "typeName": {
+                        "id": 28846,
+                        "name": "bytes",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "5543:5:88",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes_storage_ptr",
+                          "typeString": "bytes"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 28850,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 28848,
+                      "name": "order",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 28827,
+                      "src": "5576:5:88",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Order_$28796_memory_ptr",
+                        "typeString": "struct LibOrder.Order memory"
+                      }
+                    },
+                    "id": 28849,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberName": "makerFeeAssetData",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": 28793,
+                    "src": "5576:23:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_memory",
+                      "typeString": "bytes memory"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "5543:56:88"
+                },
+                {
+                  "assignments": [
+                    28852
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 28852,
+                      "name": "takerFeeAssetData",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 28859,
+                      "src": "5609:30:88",
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes_memory_ptr",
+                        "typeString": "bytes"
+                      },
+                      "typeName": {
+                        "id": 28851,
+                        "name": "bytes",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "5609:5:88",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes_storage_ptr",
+                          "typeString": "bytes"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 28855,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 28853,
+                      "name": "order",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 28827,
+                      "src": "5642:5:88",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Order_$28796_memory_ptr",
+                        "typeString": "struct LibOrder.Order memory"
+                      }
+                    },
+                    "id": 28854,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberName": "takerFeeAssetData",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": 28795,
+                    "src": "5642:23:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_memory",
+                      "typeString": "bytes memory"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "5609:56:88"
+                },
+                {
+                  "externalReferences": [
+                    {
+                      "order": {
+                        "declaration": 28827,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "6703:5:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "order": {
+                        "declaration": 28827,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "6539:5:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "order": {
+                        "declaration": 28827,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "6742:5:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "order": {
+                        "declaration": 28827,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "6862:5:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "order": {
+                        "declaration": 28827,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "6782:5:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "order": {
+                        "declaration": 28827,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "6822:5:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "makerAssetData": {
+                        "declaration": 28837,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7215:14:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "takerAssetData": {
+                        "declaration": 28842,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7338:14:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "schemaHash": {
+                        "declaration": 28833,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7137:10:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "makerFeeAssetData": {
+                        "declaration": 28847,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7464:17:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "result": {
+                        "declaration": 28830,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7659:6:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "takerFeeAssetData": {
+                        "declaration": 28852,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7590:17:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "makerAssetData": {
+                        "declaration": 28837,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7188:14:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "takerAssetData": {
+                        "declaration": 28842,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7311:14:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "makerFeeAssetData": {
+                        "declaration": 28847,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7434:17:88",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "takerFeeAssetData": {
+                        "declaration": 28852,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "7560:17:88",
+                        "valueSize": 1
+                      }
+                    }
+                  ],
+                  "id": 28856,
+                  "nodeType": "InlineAssembly",
+                  "operations": "{\n    if lt(order, 32) { invalid() }\n    let pos1 := sub(order, 32)\n    let pos2 := add(order, 320)\n    let pos3 := add(order, 352)\n    let pos4 := add(order, 384)\n    let pos5 := add(order, 416)\n    let temp1 := mload(pos1)\n    let temp2 := mload(pos2)\n    let temp3 := mload(pos3)\n    let temp4 := mload(pos4)\n    let temp5 := mload(pos5)\n    mstore(pos1, schemaHash)\n    mstore(pos2, keccak256(add(makerAssetData, 32), mload(makerAssetData)))\n    mstore(pos3, keccak256(add(takerAssetData, 32), mload(takerAssetData)))\n    mstore(pos4, keccak256(add(makerFeeAssetData, 32), mload(makerFeeAssetData)))\n    mstore(pos5, keccak256(add(takerFeeAssetData, 32), mload(takerFeeAssetData)))\n    result := keccak256(pos1, 480)\n    mstore(pos1, temp1)\n    mstore(pos2, temp2)\n    mstore(pos3, temp3)\n    mstore(pos4, temp4)\n    mstore(pos5, temp5)\n}",
+                  "src": "6416:1467:88"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 28857,
+                    "name": "result",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 28830,
+                    "src": "7899:6:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "functionReturnParameters": 28831,
+                  "id": 28858,
+                  "nodeType": "Return",
+                  "src": "7892:13:88"
+                }
+              ]
+            },
+            "documentation": "@dev Calculates EIP712 hash of the order struct.\n @param order The order structure.\n @return EIP712 hash of the order struct.",
+            "id": 28860,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getStructHash",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 28828,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 28827,
+                  "name": "order",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 28860,
+                  "src": "5270:18:88",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_Order_$28796_memory_ptr",
+                    "typeString": "struct LibOrder.Order"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 28826,
+                    "name": "Order",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 28796,
+                    "src": "5270:5:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Order_$28796_storage_ptr",
+                      "typeString": "struct LibOrder.Order"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5269:20:88"
+            },
+            "returnParameters": {
+              "id": 28831,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 28830,
+                  "name": "result",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 28860,
+                  "src": "5337:14:88",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 28829,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5337:7:88",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5336:16:88"
+            },
+            "scope": 28861,
+            "src": "5247:2665:88",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 28862,
+        "src": "633:7281:88"
+      }
+    ],
+    "src": "580:7335:88"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.2.4",
+  "updatedAt": "2020-12-08T09:42:17.951Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

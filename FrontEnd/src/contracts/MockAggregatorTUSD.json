@@ -1,0 +1,411 @@
+{
+  "contractName": "MockAggregatorTUSD",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "int256",
+          "name": "_initialAnswer",
+          "type": "int256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "int256",
+          "name": "current",
+          "type": "int256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "roundId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "AnswerUpdated",
+      "type": "event"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "latestAnswer",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"int256\",\"name\":\"_initialAnswer\",\"type\":\"int256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"int256\",\"name\":\"current\",\"type\":\"int256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"roundId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"AnswerUpdated\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[],\"name\":\"latestAnswer\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"\",\"type\":\"int256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/mocks/oracle/CLAggregators/MockAggregatorTUSD.sol\":\"MockAggregatorTUSD\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/mocks/oracle/CLAggregators/MockAggregatorBase.sol\":{\"keccak256\":\"0x65a4c893e5321a989b11ecc7c8c2aa1320993d7a9eaa5730d81c2575fee4949e\",\"urls\":[\"bzz-raw://de798503a34c3c0c22ed29b32cf17c739bb880d8db09e7daa18221ffff219541\",\"dweb:/ipfs/QmVQV8z2Rn3whBw9KjN7PCHx5jvfCt9sW3b6ACb2hqTuGk\"]},\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/mocks/oracle/CLAggregators/MockAggregatorTUSD.sol\":{\"keccak256\":\"0x565234bcac9ec83c2f2561c9d6cfc75c7f45fe486ceb261cab0aa90c5a8d0d14\",\"urls\":[\"bzz-raw://f7a04f833d16cf7b59cc5113efa0992477896ff005a65051c7ad707479d5be2d\",\"dweb:/ipfs/Qmc9MegMhvmA6PrdnGu4X7ecFHfFosUbghGBB11nuwnbtu\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b506040516101023803806101028339818101604052602081101561003357600080fd5b5051600081815560408051428152905183929183917f0559884fd3a460db3073b7fc896cc77986f16e378210ded43186175bf646fc5f9181900360200190a350506080806100826000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c806350d25bcd14602d575b600080fd5b60336045565b60408051918252519081900360200190f35b6000549056fea265627a7a72315820f69fd45c862d79113e5fa8a05bf79967a6159c4ed4fecacb8ae7e07934e9eac664736f6c63430005100032",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c806350d25bcd14602d575b600080fd5b60336045565b60408051918252519081900360200190f35b6000549056fea265627a7a72315820f69fd45c862d79113e5fa8a05bf79967a6159c4ed4fecacb8ae7e07934e9eac664736f6c63430005100032",
+  "sourceMap": "61:138:46:-;;;117:80;8:9:-1;5:2;;;30:1;27;20:12;5:2;117:80:46;;;;;;;;;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;117:80:46;242:13:37;:30;;;287:37;;;320:3;287:37;;;;117:80:46;;242:13:37;117:80:46;;287:37:37;;;;;117:80:46;287:37:37;;;189:142;117:80:46;61:138;;;;;;",
+  "deployedSourceMap": "61:138:46:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;61:138:46;;;;;;;;;;;;;;;;;;;337:92:37;;;:::i;:::-;;;;;;;;;;;;;;;;;384:6;409:13;337:92;:::o",
+  "source": "pragma solidity ^0.5.0;\n\nimport \"./MockAggregatorBase.sol\";\n\ncontract MockAggregatorTUSD is MockAggregatorBase {\n    constructor (int256 _initialAnswer) public MockAggregatorBase(_initialAnswer) {}\n}",
+  "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/mocks/oracle/CLAggregators/MockAggregatorTUSD.sol",
+  "ast": {
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/mocks/oracle/CLAggregators/MockAggregatorTUSD.sol",
+    "exportedSymbols": {
+      "MockAggregatorTUSD": [
+        16303
+      ]
+    },
+    "id": 16304,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 16290,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:46"
+      },
+      {
+        "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/mocks/oracle/CLAggregators/MockAggregatorBase.sol",
+        "file": "./MockAggregatorBase.sol",
+        "id": 16291,
+        "nodeType": "ImportDirective",
+        "scope": 16304,
+        "sourceUnit": 16169,
+        "src": "25:34:46",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 16292,
+              "name": "MockAggregatorBase",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 16168,
+              "src": "92:18:46",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_MockAggregatorBase_$16168",
+                "typeString": "contract MockAggregatorBase"
+              }
+            },
+            "id": 16293,
+            "nodeType": "InheritanceSpecifier",
+            "src": "92:18:46"
+          }
+        ],
+        "contractDependencies": [
+          16168
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 16303,
+        "linearizedBaseContracts": [
+          16303,
+          16168
+        ],
+        "name": "MockAggregatorTUSD",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 16301,
+              "nodeType": "Block",
+              "src": "195:2:46",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 16302,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 16298,
+                    "name": "_initialAnswer",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 16295,
+                    "src": "179:14:46",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_int256",
+                      "typeString": "int256"
+                    }
+                  }
+                ],
+                "id": 16299,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 16297,
+                  "name": "MockAggregatorBase",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 16168,
+                  "src": "160:18:46",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_MockAggregatorBase_$16168_$",
+                    "typeString": "type(contract MockAggregatorBase)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "160:34:46"
+              }
+            ],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 16296,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 16295,
+                  "name": "_initialAnswer",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 16302,
+                  "src": "130:21:46",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_int256",
+                    "typeString": "int256"
+                  },
+                  "typeName": {
+                    "id": 16294,
+                    "name": "int256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "130:6:46",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_int256",
+                      "typeString": "int256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "129:23:46"
+            },
+            "returnParameters": {
+              "id": 16300,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "195:0:46"
+            },
+            "scope": 16303,
+            "src": "117:80:46",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 16304,
+        "src": "61:138:46"
+      }
+    ],
+    "src": "0:199:46"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/mocks/oracle/CLAggregators/MockAggregatorTUSD.sol",
+    "exportedSymbols": {
+      "MockAggregatorTUSD": [
+        16303
+      ]
+    },
+    "id": 16304,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 16290,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:46"
+      },
+      {
+        "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/LendingProtocolContracts/mocks/oracle/CLAggregators/MockAggregatorBase.sol",
+        "file": "./MockAggregatorBase.sol",
+        "id": 16291,
+        "nodeType": "ImportDirective",
+        "scope": 16304,
+        "sourceUnit": 16169,
+        "src": "25:34:46",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 16292,
+              "name": "MockAggregatorBase",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 16168,
+              "src": "92:18:46",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_MockAggregatorBase_$16168",
+                "typeString": "contract MockAggregatorBase"
+              }
+            },
+            "id": 16293,
+            "nodeType": "InheritanceSpecifier",
+            "src": "92:18:46"
+          }
+        ],
+        "contractDependencies": [
+          16168
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 16303,
+        "linearizedBaseContracts": [
+          16303,
+          16168
+        ],
+        "name": "MockAggregatorTUSD",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 16301,
+              "nodeType": "Block",
+              "src": "195:2:46",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 16302,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 16298,
+                    "name": "_initialAnswer",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 16295,
+                    "src": "179:14:46",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_int256",
+                      "typeString": "int256"
+                    }
+                  }
+                ],
+                "id": 16299,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 16297,
+                  "name": "MockAggregatorBase",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 16168,
+                  "src": "160:18:46",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_MockAggregatorBase_$16168_$",
+                    "typeString": "type(contract MockAggregatorBase)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "160:34:46"
+              }
+            ],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 16296,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 16295,
+                  "name": "_initialAnswer",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 16302,
+                  "src": "130:21:46",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_int256",
+                    "typeString": "int256"
+                  },
+                  "typeName": {
+                    "id": 16294,
+                    "name": "int256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "130:6:46",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_int256",
+                      "typeString": "int256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "129:23:46"
+            },
+            "returnParameters": {
+              "id": 16300,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "195:0:46"
+            },
+            "scope": 16303,
+            "src": "117:80:46",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 16304,
+        "src": "61:138:46"
+      }
+    ],
+    "src": "0:199:46"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.2.4",
+  "updatedAt": "2020-12-08T09:42:16.674Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

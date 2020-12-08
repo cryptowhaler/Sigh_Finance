@@ -1093,6 +1093,9 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => { 
   if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
     const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
     console.log('getUserInstrumentState');
+    console.log(_instrumentAddress);
+    console.log(_user);
+
     try {
       let response = await lendingPoolContract.methods.getUserInstrumentData(_instrumentAddress,_user).call();
       console.log(response);
