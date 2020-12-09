@@ -466,6 +466,15 @@ export class SIGH_Instrument extends Entity {
     this.set("currentInflation", Value.fromBigDecimal(value));
   }
 
+  get oracle(): Bytes {
+    let value = this.get("oracle");
+    return value.toBytes();
+  }
+
+  set oracle(value: Bytes) {
+    this.set("oracle", Value.fromBytes(value));
+  }
+
   get currentMintSpeed_WEI(): BigInt {
     let value = this.get("currentMintSpeed_WEI");
     return value.toBigInt();
@@ -502,6 +511,183 @@ export class SIGH_Instrument extends Entity {
     this.set("currentBurnSpeed", Value.fromBigDecimal(value));
   }
 
+  get maxSighVolatilityHarvestSpeedWEI(): BigDecimal {
+    let value = this.get("maxSighVolatilityHarvestSpeedWEI");
+    return value.toBigDecimal();
+  }
+
+  set maxSighVolatilityHarvestSpeedWEI(value: BigDecimal) {
+    this.set("maxSighVolatilityHarvestSpeedWEI", Value.fromBigDecimal(value));
+  }
+
+  get maxSighVolatilityHarvestSpeed(): BigDecimal {
+    let value = this.get("maxSighVolatilityHarvestSpeed");
+    return value.toBigDecimal();
+  }
+
+  set maxSighVolatilityHarvestSpeed(value: BigDecimal) {
+    this.set("maxSighVolatilityHarvestSpeed", Value.fromBigDecimal(value));
+  }
+
+  get blockNumberWhenSighVolatilityHarvestSpeedWasRefreshed(): BigInt {
+    let value = this.get(
+      "blockNumberWhenSighVolatilityHarvestSpeedWasRefreshed"
+    );
+    return value.toBigInt();
+  }
+
+  set blockNumberWhenSighVolatilityHarvestSpeedWasRefreshed(value: BigInt) {
+    this.set(
+      "blockNumberWhenSighVolatilityHarvestSpeedWasRefreshed",
+      Value.fromBigInt(value)
+    );
+  }
+
+  get minimumBlocksBeforeSpeedRefresh(): BigInt {
+    let value = this.get("minimumBlocksBeforeSpeedRefresh");
+    return value.toBigInt();
+  }
+
+  set minimumBlocksBeforeSpeedRefresh(value: BigInt) {
+    this.set("minimumBlocksBeforeSpeedRefresh", Value.fromBigInt(value));
+  }
+
+  get isUpperCheckForVolatilitySet(): boolean {
+    let value = this.get("isUpperCheckForVolatilitySet");
+    return value.toBoolean();
+  }
+
+  set isUpperCheckForVolatilitySet(value: boolean) {
+    this.set("isUpperCheckForVolatilitySet", Value.fromBoolean(value));
+  }
+
+  get percentHarvestableVolatilityBeingHarvested(): BigDecimal {
+    let value = this.get("percentHarvestableVolatilityBeingHarvested");
+    return value.toBigDecimal();
+  }
+
+  set percentHarvestableVolatilityBeingHarvested(value: BigDecimal) {
+    this.set(
+      "percentHarvestableVolatilityBeingHarvested",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get currentSighVolatilityHarvestSpeedWEI(): BigDecimal {
+    let value = this.get("currentSighVolatilityHarvestSpeedWEI");
+    return value.toBigDecimal();
+  }
+
+  set currentSighVolatilityHarvestSpeedWEI(value: BigDecimal) {
+    this.set(
+      "currentSighVolatilityHarvestSpeedWEI",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get currentSighVolatilityHarvestSpeed(): BigDecimal {
+    let value = this.get("currentSighVolatilityHarvestSpeed");
+    return value.toBigDecimal();
+  }
+
+  set currentSighVolatilityHarvestSpeed(value: BigDecimal) {
+    this.set("currentSighVolatilityHarvestSpeed", Value.fromBigDecimal(value));
+  }
+
+  get totalLendingProtocolVolatilityPerBlockETH(): BigDecimal {
+    let value = this.get("totalLendingProtocolVolatilityPerBlockETH");
+    return value.toBigDecimal();
+  }
+
+  set totalLendingProtocolVolatilityPerBlockETH(value: BigDecimal) {
+    this.set(
+      "totalLendingProtocolVolatilityPerBlockETH",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get totalLendingProtocolVolatilityPerBlockUSD(): BigDecimal {
+    let value = this.get("totalLendingProtocolVolatilityPerBlockUSD");
+    return value.toBigDecimal();
+  }
+
+  set totalLendingProtocolVolatilityPerBlockUSD(value: BigDecimal) {
+    this.set(
+      "totalLendingProtocolVolatilityPerBlockUSD",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get maxHarvestableProtocolVolatilityPerBlockETH(): BigDecimal {
+    let value = this.get("maxHarvestableProtocolVolatilityPerBlockETH");
+    return value.toBigDecimal();
+  }
+
+  set maxHarvestableProtocolVolatilityPerBlockETH(value: BigDecimal) {
+    this.set(
+      "maxHarvestableProtocolVolatilityPerBlockETH",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get maxHarvestableProtocolVolatilityPerBlockUSD(): BigDecimal {
+    let value = this.get("maxHarvestableProtocolVolatilityPerBlockUSD");
+    return value.toBigDecimal();
+  }
+
+  set maxHarvestableProtocolVolatilityPerBlockUSD(value: BigDecimal) {
+    this.set(
+      "maxHarvestableProtocolVolatilityPerBlockUSD",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get percentBasedHarvestableProtocolVolatilityPerBlockETH(): BigDecimal {
+    let value = this.get(
+      "percentBasedHarvestableProtocolVolatilityPerBlockETH"
+    );
+    return value.toBigDecimal();
+  }
+
+  set percentBasedHarvestableProtocolVolatilityPerBlockETH(value: BigDecimal) {
+    this.set(
+      "percentBasedHarvestableProtocolVolatilityPerBlockETH",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get percentBasedHarvestableProtocolVolatilityPerBlockUSD(): BigDecimal {
+    let value = this.get(
+      "percentBasedHarvestableProtocolVolatilityPerBlockUSD"
+    );
+    return value.toBigDecimal();
+  }
+
+  set percentBasedHarvestableProtocolVolatilityPerBlockUSD(value: BigDecimal) {
+    this.set(
+      "percentBasedHarvestableProtocolVolatilityPerBlockUSD",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get maxHarvestSizePossibleETH(): BigDecimal {
+    let value = this.get("maxHarvestSizePossibleETH");
+    return value.toBigDecimal();
+  }
+
+  set maxHarvestSizePossibleETH(value: BigDecimal) {
+    this.set("maxHarvestSizePossibleETH", Value.fromBigDecimal(value));
+  }
+
+  get maxHarvestSizePossibleUSD(): BigDecimal {
+    let value = this.get("maxHarvestSizePossibleUSD");
+    return value.toBigDecimal();
+  }
+
+  set maxHarvestSizePossibleUSD(value: BigDecimal) {
+    this.set("maxHarvestSizePossibleUSD", Value.fromBigDecimal(value));
+  }
+
   get mintSnapshots(): Array<string> {
     let value = this.get("mintSnapshots");
     return value.toStringArray();
@@ -509,15 +695,6 @@ export class SIGH_Instrument extends Entity {
 
   set mintSnapshots(value: Array<string>) {
     this.set("mintSnapshots", Value.fromStringArray(value));
-  }
-
-  get oracle(): Bytes {
-    let value = this.get("oracle");
-    return value.toBytes();
-  }
-
-  set oracle(value: Bytes) {
-    this.set("oracle", Value.fromBytes(value));
   }
 }
 

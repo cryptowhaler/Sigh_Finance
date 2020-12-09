@@ -17,6 +17,7 @@ export default {
       isConnected : this.$store.getters.isWalletConnected,
       statusCode: 'Connect Wallet',
       selectedTransaction: null,
+      sighInstrument: {},
     };
   },
 
@@ -27,6 +28,7 @@ export default {
 
   async created() {         //GETS WEB3
   },
+
 
   async mounted() {
     this.walletConnected = body => this.fetchConfigsWalletConnected(body.username);     //Wallet connected 

@@ -1,7 +1,17 @@
 <div class='home-page'>
     <div class="flex-col-vertical-bottom top-title">
     <div style = "padding-top: 24px; padding-bottom: 24px; width: 91%; color: white; text-align: center; font-size: 24px; border: 3px solid white;">
-        "SIGH FINANCE is currently in Beta!"    
+
+        <div>
+            <p>
+                <span style="line-height: 24px;font-size: 42px; color:white; display: contents;" > "SIGH FINANCE is currently in Beta!"  </span>
+                <br>
+                <br>
+                <span style=" margin-top:20px; line-height: 24px;font-size: 12px; color:chartreuse; display: contents;" >  &#x1F69C; $SIGH Harvest Rate (per Block) &#x1F69C; : </span> <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents;" > {{ Number(sighInstrument.currentMintSpeed).toFixed(4) }} $SIGH &#127806; </span> <span style="line-height: 24px;font-size: 12px; color:white; display: contents;" > : {{ Number(Number(sighInstrument.currentMintSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(4) }} USD  </span> 
+                <br> 
+                <span style=" padding-top:20px; line-height: 24px;font-size: 12px; color:red; display: contents;" >  &#x1F69C; $SIGH Burn Rate (per Block) &#x1F69C; : </span> <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents;" > {{ Number(sighInstrument.currentBurnSpeed).toFixed(4) }} $SIGH &#127806; </span> <span style="line-height: 24px;font-size: 12px; color:white; display: contents;" > : {{ Number(Number(sighInstrument.currentBurnSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(4) }} USD  </span>  
+            </p>
+        </div> 
         <br>  
         <span v-if="!this.$store.state.isNetworkSupported" style="color:red; display:contents; font-size:17px !important; " > SIGH FINANCE currently only works on Ethereum's KOVAN Test-net. Please connect to Kovan test-net and refresh the website to interact with SIGH Finance! </span>
                             <!-- DRIP SIGH FROM SIGH SPEED CONTROLLER -->

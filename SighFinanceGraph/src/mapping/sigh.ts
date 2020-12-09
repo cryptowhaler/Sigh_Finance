@@ -213,6 +213,31 @@ export function createSIGH(addressID: string): SIGH_Instrument {
 
   sigh_token_contract.oracle = Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12',) 
 
+  sigh_token_contract.maxSighVolatilityHarvestSpeedWEI = BigDecimal.fromString('0')
+  sigh_token_contract.maxSighVolatilityHarvestSpeed = BigDecimal.fromString('0')
+
+  sigh_token_contract.blockNumberWhenSighVolatilityHarvestSpeedWasRefreshed = new BigInt(0)
+  sigh_token_contract.minimumBlocksBeforeSpeedRefresh = new BigInt(0)
+
+  sigh_token_contract.isUpperCheckForVolatilitySet = false
+  sigh_token_contract.percentHarvestableVolatilityBeingHarvested = BigDecimal.fromString('0')
+
+  sigh_token_contract.currentSighVolatilityHarvestSpeedWEI = BigDecimal.fromString('0')
+  sigh_token_contract.currentSighVolatilityHarvestSpeed = BigDecimal.fromString('0')
+
+  sigh_token_contract.totalLendingProtocolVolatilityPerBlockETH = BigDecimal.fromString('0')
+  sigh_token_contract.totalLendingProtocolVolatilityPerBlockUSD = BigDecimal.fromString('0')
+
+  sigh_token_contract.maxHarvestableProtocolVolatilityPerBlockETH = BigDecimal.fromString('0')
+  sigh_token_contract.maxHarvestableProtocolVolatilityPerBlockUSD = BigDecimal.fromString('0')
+
+  sigh_token_contract.percentBasedHarvestableProtocolVolatilityPerBlockETH = BigDecimal.fromString('0')
+  sigh_token_contract.percentBasedHarvestableProtocolVolatilityPerBlockUSD = BigDecimal.fromString('0')
+
+  sigh_token_contract.maxHarvestSizePossibleETH = BigDecimal.fromString('0')
+  sigh_token_contract.maxHarvestSizePossibleUSD = BigDecimal.fromString('0')
+
+
   sigh_token_contract.save()
   return sigh_token_contract as SIGH_Instrument
 }

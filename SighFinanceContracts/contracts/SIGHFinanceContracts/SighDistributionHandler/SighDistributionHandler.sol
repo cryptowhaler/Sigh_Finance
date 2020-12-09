@@ -524,7 +524,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         uint max_SIGHDistributionLimit = mul_( current_Sigh_PriceETH, SIGHSpeed );   
         uint max_SIGHDistributionLimitDecimalsAdjusted = adjustForDecimalsInternal( max_SIGHDistributionLimit,sighDecimals , priceDecimals  );
 
-        // MAX Volatility that is allowed to be covered through SIGH Distribution
+        // MAX Volatility that is allowed to be covered through SIGH Distribution (% of the Harvestable Volatility)
         uint maxVolatilityToAddressPerBlock = mul_(totalVolatilityLimitPerBlock, maxVolatilityProtocolLimit ); // (a * b)/1e18 [b is in Exp Scale]
 
 
@@ -776,7 +776,19 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         }
         return uint(0);
     }
+
+    function getLast24HrsTotalProtocolVolatility() external view returns (uint) {
+        return last24HrsTotalProtocolVolatility;
+    }
+
+    function getLast24HrsTotalProtocolVolatilityLimit() external view returns (uint) {
+        return last24HrsTotalProtocolVolatilityLimit;
+    }
     
+    function getDeltaBlockslast24HrSession() external view returns (uint) {
+        return deltaBlockslast24HrSession;
+    }
+
     function getBlockNumber() public view returns (uint32) {
         return uint32(block.number);
     }

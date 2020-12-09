@@ -37,11 +37,6 @@ export default {
                       present_SIGH_Side
 
                       present_DeltaBlocks
-                      fromBlockNumber
-                      toBlockNumber
-
-                      present_maxVolatilityLimitSuppliersPercent 
-                      present_maxVolatilityLimitBorrowersPercent
 
                       present_PrevPrice_USD
                       present_OpeningPrice_USD
@@ -52,9 +47,18 @@ export default {
                       present_24HrVolatilityLimitAmountUSD
                       present_percentTotalVolatilityLimitAmount
 
-                      present_SIGH_Suppliers_Speed
-                      present_SIGH_Borrowers_Speed
-                      present_SIGH_Staking_Speed
+                      present_harvestSpeedPerBlock
+                      present_harvestSpeedPerDay
+                      present_harvestSpeedPerYear
+                      
+                      present_harvestValuePerBlockUSD
+                      present_harvestValuePerDayUSD
+                      present_harvestValuePerYearUSD
+                      
+                      present_harvestAPY
+                      present_suppliersHarvestAPY
+                      present_borrowersHarvestAPY
+
                     }
                   }`,
 

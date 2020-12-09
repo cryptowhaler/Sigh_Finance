@@ -7,9 +7,16 @@ import SupportedMarkets_UtilityPanel from './SupportedMarkets_UtilityPanel/Suppo
 import ExchangeDataEventBus from '@/eventBuses/exchangeData';
 import FAQs from '@/components/FaqsContainer';
 import {mapState,mapActions,} from 'vuex';
+import gql from 'graphql-tag';
 import Web3 from 'web3';
 
 export default {
+
+  data() {
+    return {
+      sighInstrument: {}, 
+    };
+  },
 
 
   components: {
@@ -22,6 +29,39 @@ export default {
 
   created() {  
     console.log('IN Created TradePanel File');
+  },
+
+
+    apollo: {
+    $subscribe: {
+      instruments: {
+        query: gql`subscription {
+                    sighInstruments {
+                      name
+                      priceUSD
+                      totalSupply
+                      currentCycle
+                      currentInflation
+                      currentMintSpeed
+                      currentBurnSpeed
+                    }
+                  }`,
+
+        result({data,loading,}) {
+          if (loading) {
+            console.log('loading');
+          }
+          else {
+            console.log("IN SUBSCRIPTIONS : HEADER");
+            console.log(data);
+            let _sighInstrument = data.sighInstruments[0];
+            if (_sighInstrument) {
+              this.sighInstrument = _sighInstrument;
+            }
+          }
+        },
+      },
+    },
   },
 
   methods: {
