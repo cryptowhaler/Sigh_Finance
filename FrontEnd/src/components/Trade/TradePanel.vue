@@ -44,6 +44,28 @@ export default {
                       currentInflation
                       currentMintSpeed
                       currentBurnSpeed
+
+                      isUpperCheckForVolatilitySet
+                      percentHarvestableVolatilityBeingHarvested
+                      
+                      maxSighVolatilityHarvestSpeed
+                      maxSighVolatilityHarvestSpeedWEI
+
+                      currentSighVolatilityHarvestSpeedWEI
+                      currentSighVolatilityHarvestSpeed
+                      
+                      totalLendingProtocolVolatilityPerBlockETH
+                      totalLendingProtocolVolatilityPerBlockUSD
+                      
+                      maxHarvestSizePossibleETH
+                      maxHarvestSizePossibleUSD
+                      
+                      
+                      maxHarvestableProtocolVolatilityPerBlockETH
+                      maxHarvestableProtocolVolatilityPerBlockUSD
+                      
+                      percentBasedHarvestableProtocolVolatilityPerBlockETH
+                      percentBasedHarvestableProtocolVolatilityPerBlockUSD
                     }
                   }`,
 

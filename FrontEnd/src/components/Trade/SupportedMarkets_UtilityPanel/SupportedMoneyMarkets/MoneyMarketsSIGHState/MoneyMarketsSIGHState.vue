@@ -36,6 +36,9 @@ export default {
                       isSIGHMechanismActivated
                       present_SIGH_Side
 
+                      maxVolatilityLimitSuppliersPercent
+                      maxVolatilityLimitBorrowersPercent
+
                       present_DeltaBlocks
 
                       present_PrevPrice_USD

@@ -692,6 +692,21 @@
 			},
 			{
 				"constant": true,
+				"inputs": [],
+				"name": "getDeltaBlockslast24HrSession",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
 				"inputs": [
 					{
 						"internalType": "address",
@@ -874,6 +889,36 @@
 					{
 						"internalType": "uint256",
 						"name": "percentTotalVolatility",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getLast24HrsTotalProtocolVolatility",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getLast24HrsTotalProtocolVolatilityLimit",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
 						"type": "uint256"
 					}
 				],
@@ -1370,10 +1415,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
-			"keccak256": "0x49c1c164a924f840dc7a35d1e0d5baa3ec93eb46c904b97c1c0af4f76370d97a",
+			"keccak256": "0xd9c64ec38fa73c1666f8be7a689c5878e79ce5aac8711ca22d3db79526629724",
 			"urls": [
-				"bzz-raw://531a842e810d839eaaddf7415bd877d41566f5a327e46c1ec2b10c010852bf0b",
-				"dweb:/ipfs/QmcCyWYhxzRhjHzV8Ln2WehGFh3SWra7FsXo5HJgQqWumJ"
+				"bzz-raw://1c1ebd3f4b19a6e067aeb36441b4bbd7119e026e47606e5229ab34a507aa869d",
+				"dweb:/ipfs/QmWSKwTMfXHm1iLjiFamFTbUDASR1a8udFRF23UdDzTabX"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/IPriceOracleGetter.sol": {
@@ -1419,10 +1464,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighDistributionHandler/SighDistributionHandler.sol": {
-			"keccak256": "0xa8446e89a9ae0bc3b39a277d9b7b068dc588237b50776fce75002c86d6a795c0",
+			"keccak256": "0x4e90efc0bd7356ff933962dfee53cbb7af8d255f517dacd3edb2ba2783f4f134",
 			"urls": [
-				"bzz-raw://fc6f418461850897be0564ec084806320196ffc52fcb4e21b96e8fef23173e37",
-				"dweb:/ipfs/QmXDNSup5HkVQbo4Bmm6zsKJni5xFvpikUTBSoyALyJByK"
+				"bzz-raw://ac7a31a256e43a9e0fb799a0e65dec2d4babbe5cd7fe6549fdb84e53d1fa73cc",
+				"dweb:/ipfs/QmY5Bfdi2MVr6s38v3TPMD8TgwZkcXFRUyZVa7gVvoHMhS"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

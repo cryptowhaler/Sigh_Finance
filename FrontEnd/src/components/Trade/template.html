@@ -10,6 +10,31 @@
                 <span style=" margin-top:20px; line-height: 24px;font-size: 12px; color:chartreuse; display: contents;" >  &#x1F69C; $SIGH Harvest Rate (per Block) &#x1F69C; : </span> <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents;" > {{ Number(sighInstrument.currentMintSpeed).toFixed(4) }} $SIGH &#127806; </span> <span style="line-height: 24px;font-size: 12px; color:white; display: contents;" > : {{ Number(Number(sighInstrument.currentMintSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(4) }} USD  </span> 
                 <br> 
                 <span style=" padding-top:20px; line-height: 24px;font-size: 12px; color:red; display: contents;" >  &#x1F69C; $SIGH Burn Rate (per Block) &#x1F69C; : </span> <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents;" > {{ Number(sighInstrument.currentBurnSpeed).toFixed(4) }} $SIGH &#127806; </span> <span style="line-height: 24px;font-size: 12px; color:white; display: contents;" > : {{ Number(Number(sighInstrument.currentBurnSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(4) }} USD  </span>  
+                <br> 
+                <span style=" padding-top:20px; line-height: 24px;font-size: 12px; color:red; display: contents;" >  &#x1F69C; $SIGH  Volatility Harvesting Rate (per Block) &#x1F69C; : </span> <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents;" > {{ Number(sighInstrument.currentBurnSpeed).toFixed(4) }} $SIGH &#127806; </span> <span style="line-height: 24px;font-size: 12px; color:white; display: contents;" > : {{ Number(Number(sighInstrument.currentBurnSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(4) }} USD  </span>  
+                isUpperCheckForVolatilitySet : {{ sighInstrument.isUpperCheckForVolatilitySet }}
+                <br> 
+                percentHarvestableVolatilityBeingHarvested : {{ Number(sighInstrument.percentHarvestableVolatilityBeingHarvested).toFixed(2) }}
+                <br>                 
+                maxSighVolatilityHarvestSpeed : {{ Number(sighInstrument.maxSighVolatilityHarvestSpeed).toFixed(2) }}
+                <br> 
+                currentSighVolatilityHarvestSpeed : {{ Number(sighInstrument.currentSighVolatilityHarvestSpeed).toFixed(2) }}
+                <br>                 
+                totalLendingProtocolVolatilityPerBlockETH : {{ Number(sighInstrument.totalLendingProtocolVolatilityPerBlockETH).toFixed(2) }}
+                <br> 
+                totalLendingProtocolVolatilityPerBlockUSD : {{ Number(sighInstrument.totalLendingProtocolVolatilityPerBlockUSD).toFixed(2) }}
+                <br>                 
+                maxHarvestSizePossibleETH : {{ Number(sighInstrument.maxHarvestSizePossibleETH).toFixed(2) }}
+                <br> 
+                maxHarvestSizePossibleUSD : {{ Number(sighInstrument.maxHarvestSizePossibleUSD).toFixed(2) }}
+                <br>                 
+                maxHarvestableProtocolVolatilityPerBlockETH : {{ Number(sighInstrument.maxHarvestableProtocolVolatilityPerBlockETH).toFixed(2) }}
+                <br> 
+                maxHarvestableProtocolVolatilityPerBlockUSD : {{ Number(sighInstrument.maxHarvestableProtocolVolatilityPerBlockUSD).toFixed(2) }}
+                <br>                 
+                percentBasedHarvestableProtocolVolatilityPerBlockETH : {{ Number(sighInstrument.percentBasedHarvestableProtocolVolatilityPerBlockETH).toFixed(2) }}
+                <br> 
+                percentBasedHarvestableProtocolVolatilityPerBlockUSD : {{ Number(sighInstrument.percentBasedHarvestableProtocolVolatilityPerBlockUSD).toFixed(2) }}
             </p>
         </div> 
         <br>  

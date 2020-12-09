@@ -93,8 +93,8 @@ export function handleInstrumentAdded(event: InstrumentAdded): void {
     // log.info('handleInstrumentAdded: 5st ',[])
 
     instrumentState.present_SIGH_Side = 'In-Active'
-    instrumentState.maxVolatilityLimitSuppliersPercent = BigInt.fromI32(100).pow(18 as u8).toBigDecimal()
-    instrumentState.maxVolatilityLimitBorrowersPercent = BigInt.fromI32(100).pow(18 as u8).toBigDecimal()
+    instrumentState.maxVolatilityLimitSuppliersPercent = BigInt.fromI32(100).toBigDecimal()
+    instrumentState.maxVolatilityLimitBorrowersPercent = BigInt.fromI32(100).toBigDecimal()
 
     instrumentState.save()
 }
@@ -136,9 +136,14 @@ export function handlePriceSnapped(event: PriceSnapped): void {
     let instrumentId = event.params.instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
 
+    log.info("handlePriceSnapped 1 : {} ",[instrumentState.name])
+
     // CALCULATING TOTAL SIGH ACCURED FOR THE SNAPSHOT THAT JUST GOT COMPLETED
     if (instrumentState.totalSIGHDistributionSnapshotsTaken > BigInt.fromI32(0) ) {
-        let prevSighDistributionSnapshot = SIGH_Distribution_SnapShot.load( instrumentState.totalSIGHDistributionSnapshotsTaken.minus(BigInt.fromI32(1)).toString() )
+        log.info("handlePriceSnapped 2 : {} ",[instrumentState.name])
+        let snapShotID = instrumentState.totalSIGHDistributionSnapshotsTaken.minus(BigInt.fromI32(1)).toString() + instrumentId 
+        let prevSighDistributionSnapshot = SIGH_Distribution_SnapShot.load( snapShotID )
+        log.info("handlePriceSnapped 3 : {} ",[instrumentState.name])
         if (prevSighDistributionSnapshot.distribution_Side == 'In-Active' ) {
             prevSighDistributionSnapshot.BorrowingSIGHAccuredDuringThisSnapshot = instrumentState.totalBorrowingSIGHAccured.minus(prevSighDistributionSnapshot.totalBorrowingSIGHAccuredBeforeThisSnapshot)
             prevSighDistributionSnapshot.LiquiditySIGHAccuredDuringThisSnapshot = instrumentState.totalLiquiditySIGHAccured.minus(prevSighDistributionSnapshot.totalLiquiditySIGHAccuredBeforeThisSnapshot)
@@ -149,14 +154,21 @@ export function handlePriceSnapped(event: PriceSnapped): void {
         if (prevSighDistributionSnapshot.distribution_Side == 'Borrowers' ) {
             prevSighDistributionSnapshot.BorrowingSIGHAccuredDuringThisSnapshot = instrumentState.totalBorrowingSIGHAccured.minus(prevSighDistributionSnapshot.totalBorrowingSIGHAccuredBeforeThisSnapshot)
         }
+        log.info("handlePriceSnapped 4 : {} ",[instrumentState.name])
+        log.info("handlePriceSnapped 4 :  : totalVolatilityAsPercentOfTotalProtocolVolatility {}",[prevSighDistributionSnapshot.totalVolatilityAsPercentOfTotalProtocolVolatility.toString()])
+        log.info("handlePriceSnapped 4 :  : instrumentLimitVolatilityAsPercentOflimitProtocolVolatility {} ",[prevSighDistributionSnapshot.instrumentLimitVolatilityAsPercentOflimitProtocolVolatility.toString()])
         prevSighDistributionSnapshot.toBlockNumber = event.block.number
         prevSighDistributionSnapshot.save()
     }
 
-    // CREATING AND CALCULATING VALUES FOR THE NEW (CURRENT) SNAPSHOT
-    let sighDistributionSnapshot = create_SIGH_Distribution_SnapShot( instrumentState.totalSIGHDistributionSnapshotsTaken )
+    // CREATING AND CALCULATING VALUES FOR THE NEW (CURRENT) 
+    let snapShotID = instrumentState.totalSIGHDistributionSnapshotsTaken.toString() + instrumentId 
+    log.info("handlePriceSnapped 5 : {} ",[instrumentState.name])
+    log.info("SNAPSHOT ID : {} : {}",[instrumentState.name,snapShotID])
+    let sighDistributionSnapshot = create_SIGH_Distribution_SnapShot( snapShotID)
     sighDistributionSnapshot.instrumentAddress = instrumentId
     instrumentState.totalSIGHDistributionSnapshotsTaken = instrumentState.totalSIGHDistributionSnapshotsTaken.plus(BigInt.fromI32(1));
+    log.info("handlePriceSnapped 6 : {} ",[instrumentState.name])
 
     sighDistributionSnapshot.fromBlockNumber = event.block.number
     sighDistributionSnapshot.toBlockNumber = new BigInt(0)
@@ -166,6 +178,7 @@ export function handlePriceSnapped(event: PriceSnapped): void {
 
     sighDistributionSnapshot.prevPrice_ETH = event.params.prevPrice.toBigDecimal().div(  (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
     sighDistributionSnapshot.openingPrice_ETH = event.params.currentPrice.toBigDecimal().div(  (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
+    log.info("handlePriceSnapped 7 : {} ",[instrumentState.name])
 
     sighDistributionSnapshot.totalLiquiditySIGHAccuredBeforeThisSnapshot = instrumentState.totalLiquiditySIGHAccured
     sighDistributionSnapshot.totalBorrowingSIGHAccuredBeforeThisSnapshot = instrumentState.totalBorrowingSIGHAccured
@@ -186,6 +199,7 @@ export function handlePriceSnapped(event: PriceSnapped): void {
 
     sighDistributionSnapshot.maxVolatilityLimitSuppliersPercent = instrumentState.maxVolatilityLimitSuppliersPercent
     sighDistributionSnapshot.maxVolatilityLimitBorrowersPercent = instrumentState.maxVolatilityLimitBorrowersPercent
+    log.info("handlePriceSnapped 8 : {} ",[instrumentState.name])
 
     sighDistributionSnapshot.save()
 
@@ -204,19 +218,29 @@ export function handlePriceSnapped(event: PriceSnapped): void {
 export function handleInstrumentVolatilityCalculated(event: InstrumentVolatilityCalculated): void { 
     let instrumentId = event.params._Instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
-    let currentSighDistributionSnapshot = SIGH_Distribution_SnapShot.load( instrumentState.totalSIGHDistributionSnapshotsTaken.minus(BigInt.fromI32(1)).toString() ) 
+    let snapShotID = instrumentState.totalSIGHDistributionSnapshotsTaken.minus(BigInt.fromI32(1)).toString() + instrumentId 
+    let currentSighDistributionSnapshot = SIGH_Distribution_SnapShot.load( snapShotID ) 
 
+    log.info("handleInstrumentVolatilityCalculated 1 : {} ",[instrumentState.name])
     //  UPDATING $SIGH DISTRIBUTION SNAPSHOT
     currentSighDistributionSnapshot.total24HrVolatilityETH = event.params._total24HrVolatility.toBigDecimal().div(  (BigInt.fromI32(10).pow(18 as u8).toBigDecimal())  )
+    log.info("handleInstrumentVolatilityCalculated 2 : {} ",[instrumentState.name])
     currentSighDistributionSnapshot.total24HrVolatilityUSD = currentSighDistributionSnapshot.total24HrVolatilityETH.times(instrumentState.ETHPriceInUSD)
+    log.info("handleInstrumentVolatilityCalculated 3 : {} ",[instrumentState.name])
     currentSighDistributionSnapshot.total24HrVolatilityLimitAmountETH = event.params._24HrVolatilityLimitAmount.toBigDecimal().div(  (BigInt.fromI32(10).pow(18 as u8).toBigDecimal())  )
+    log.info("handleInstrumentVolatilityCalculated 4 : {} ",[instrumentState.name])
     currentSighDistributionSnapshot.total24HrVolatilityLimitAmountUSD = currentSighDistributionSnapshot.total24HrVolatilityLimitAmountETH.times(instrumentState.ETHPriceInUSD)
+    log.info("handleInstrumentVolatilityCalculated 5 : {} ",[instrumentState.name])
 
     //  UPDATING INSTRUMENT STATE FOR ON-GOING $SIGH DISTRIBUTION SNAPSHOT    
     instrumentState.present_total24HrVolatilityETH = currentSighDistributionSnapshot.total24HrVolatilityETH
+    log.info("handleInstrumentVolatilityCalculated 6 : {} ",[instrumentState.name])
     instrumentState.present_24HrVolatilityLimitAmountETH = currentSighDistributionSnapshot.total24HrVolatilityLimitAmountETH
+    log.info("handleInstrumentVolatilityCalculated 7 : {} ",[instrumentState.name])
     instrumentState.present_total24HrVolatilityUSD = instrumentState.present_total24HrVolatilityETH.times(instrumentState.ETHPriceInUSD) 
+    log.info("handleInstrumentVolatilityCalculated 8 : {} ",[instrumentState.name])
     instrumentState.present_24HrVolatilityLimitAmountUSD = instrumentState.present_24HrVolatilityLimitAmountETH.times(instrumentState.ETHPriceInUSD) 
+    log.info("handleInstrumentVolatilityCalculated 9 : {} ",[instrumentState.name])
 
     currentSighDistributionSnapshot.save()
     instrumentState.save()
@@ -231,33 +255,40 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
 
     // SIGH INSTRUMENT PARAMTERS : 
     let sighInstrument = SIGH_Instrument.load('0x4ebc60b9d2efa92b9eb681bf5b26aeb11de23bfd')
-    let sighDistributionHandlerAddress = Address.fromString('0x3FB401042D520c49E753cC449A032C56c87f36C6') 
-    let sighDistributionHandlerContract = SIGHDistributionHandler.bind(sighDistributionHandlerAddress)
-    let deltaBlockslast24HrSession = sighDistributionHandlerContract.getDeltaBlockslast24HrSession()
-    let totalLendingProtocolVolatilityETH = sighDistributionHandlerContract.getLast24HrsTotalProtocolVolatility()
-    sighInstrument.totalLendingProtocolVolatilityPerBlockETH = totalLendingProtocolVolatilityETH.divDecimal(deltaBlockslast24HrSession).divDecimal( BigInt.fromI32(10).pow(18 as u8).toBigDecimal() ) 
-    sighInstrument.totalLendingProtocolVolatilityPerBlockUSD = sighInstrument.totalLendingProtocolVolatilityPerBlockETH.times(instrumentState.ETHPriceInUSD)
+    if (event.block.number > BigInt.fromI32(22496079) ) {
+        let sighDistributionHandlerAddress = Address.fromString('0x3FB401042D520c49E753cC449A032C56c87f36C6') 
+        let sighDistributionHandlerContract = SIGHDistributionHandler.bind(sighDistributionHandlerAddress)
+        let deltaBlockslast24HrSession = sighDistributionHandlerContract.getDeltaBlockslast24HrSession()
 
-    if ( sighInstrument.blockNumberWhenSighVolatilityHarvestSpeedWasRefreshed < event.block.number   ) {
-        sighInstrument.blockNumberWhenSighVolatilityHarvestSpeedWasRefreshed = event.block.number
-
-        let limitLendingProtocolVolatilityETH = sighDistributionHandlerContract.getLast24HrsTotalProtocolVolatilityLimit()
-        let sighSpeedUsed = sighDistributionHandlerContract.getSIGHSpeedUsed()
-
-        sighInstrument.currentSighVolatilityHarvestSpeedWEI = sighSpeedUsed
-        sighInstrument.currentSighVolatilityHarvestSpeed =  sighInstrument.currentSighVolatilityHarvestSpeedWEI.divDecimal( BigInt.fromI32(10).pow(18 as u8).toBigDecimal() ) 
-    
-        sighInstrument.maxHarvestableProtocolVolatilityPerBlockETH = limitLendingProtocolVolatilityETH.divDecimal(deltaBlockslast24HrSession.toBigDecimal()).divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
-        sighInstrument.percentBasedHarvestableProtocolVolatilityPerBlockETH = sighInstrument.maxHarvestableProtocolVolatilityPerBlockETH
-        sighInstrument.maxHarvestSizePossibleETH = sighSpeedUsed.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) ).times(sighInstrument.priceETH)
-
-        sighInstrument.maxHarvestableProtocolVolatilityPerBlockUSD = sighInstrument.maxHarvestableProtocolVolatilityPerBlockETH.times(instrumentState.ETHPriceInUSD)
-        sighInstrument.percentBasedHarvestableProtocolVolatilityPerBlockUSD = sighInstrument.percentBasedHarvestableProtocolVolatilityPerBlockETH.times(instrumentState.ETHPriceInUSD)
-        sighInstrument.maxHarvestSizePossibleUSD = sighInstrument.maxHarvestSizePossibleETH.times(instrumentState.ETHPriceInUSD)
+        if (deltaBlockslast24HrSession > BigInt.fromI32(0) ) {
+            let totalLendingProtocolVolatilityETH = sighDistributionHandlerContract.getLast24HrsTotalProtocolVolatility()
+            sighInstrument.totalLendingProtocolVolatilityPerBlockETH = totalLendingProtocolVolatilityETH.div(deltaBlockslast24HrSession).divDecimal( BigInt.fromI32(10).pow(18 as u8).toBigDecimal() ) 
+            sighInstrument.totalLendingProtocolVolatilityPerBlockUSD = sighInstrument.totalLendingProtocolVolatilityPerBlockETH.times(instrumentState.ETHPriceInUSD)
+        
+            if ( sighInstrument.blockNumberWhenSighVolatilityHarvestSpeedWasRefreshed < event.block.number   ) {
+                sighInstrument.blockNumberWhenSighVolatilityHarvestSpeedWasRefreshed = event.block.number
+        
+                let limitLendingProtocolVolatilityETH = sighDistributionHandlerContract.getLast24HrsTotalProtocolVolatilityLimit()
+                let sighSpeedUsed = sighDistributionHandlerContract.getSIGHSpeedUsed()
+        
+                sighInstrument.currentSighVolatilityHarvestSpeedWEI = sighSpeedUsed.toBigDecimal()
+                sighInstrument.currentSighVolatilityHarvestSpeed =  sighInstrument.currentSighVolatilityHarvestSpeedWEI.div( BigInt.fromI32(10).pow(18 as u8).toBigDecimal() ) 
+            
+                sighInstrument.maxHarvestableProtocolVolatilityPerBlockETH = limitLendingProtocolVolatilityETH.divDecimal(deltaBlockslast24HrSession.toBigDecimal()) 
+                sighInstrument.maxHarvestableProtocolVolatilityPerBlockETH = sighInstrument.maxHarvestableProtocolVolatilityPerBlockETH.div( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
+                sighInstrument.percentBasedHarvestableProtocolVolatilityPerBlockETH = sighInstrument.maxHarvestableProtocolVolatilityPerBlockETH
+                sighInstrument.maxHarvestSizePossibleETH = sighSpeedUsed.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) ).times(sighInstrument.priceETH)
+        
+                sighInstrument.maxHarvestableProtocolVolatilityPerBlockUSD = sighInstrument.maxHarvestableProtocolVolatilityPerBlockETH.times(instrumentState.ETHPriceInUSD)
+                sighInstrument.percentBasedHarvestableProtocolVolatilityPerBlockUSD = sighInstrument.percentBasedHarvestableProtocolVolatilityPerBlockETH.times(instrumentState.ETHPriceInUSD)
+                sighInstrument.maxHarvestSizePossibleUSD = sighInstrument.maxHarvestSizePossibleETH.times(instrumentState.ETHPriceInUSD)
+            }
+        }
     }
-    sighInstrument.save()
+    sighInstrument.save()        
 
-    let currentSighDistributionSnapshot = SIGH_Distribution_SnapShot.load( instrumentState.totalSIGHDistributionSnapshotsTaken.minus(BigInt.fromI32(1)).toString() ) 
+    let snapShotID = instrumentState.totalSIGHDistributionSnapshotsTaken.minus(BigInt.fromI32(1)).toString() + instrumentId 
+    let currentSighDistributionSnapshot = SIGH_Distribution_SnapShot.load(snapShotID) 
     
     instrumentState.present_SIGH_Suppliers_Speed_WEI = event.params.supplierSpeed
     instrumentState.present_SIGH_Suppliers_Speed = instrumentState.present_SIGH_Suppliers_Speed_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
@@ -265,12 +296,15 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
     instrumentState.present_SIGH_Borrowers_Speed = instrumentState.present_SIGH_Borrowers_Speed_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
     instrumentState.present_percentTotalVolatility = event.params._percentTotalVolatility.toBigDecimal().div(BigDecimal.fromString('10000000'))
     instrumentState.present_percentTotalVolatilityLimitAmount = event.params._percentTotalVolatilityLimitAmount.toBigDecimal().div(BigDecimal.fromString('10000000'))
-
+    log.info("present_percentTotalVolatility : {} : {}",[instrumentState.name,instrumentState.present_percentTotalVolatility.toString() ])
+    log.info("present_percentTotalVolatilityLimitAmount : {} : {} ",[instrumentState.name,instrumentState.present_percentTotalVolatilityLimitAmount.toString() ])
     currentSighDistributionSnapshot.suppliers_Speed = instrumentState.present_SIGH_Suppliers_Speed
     currentSighDistributionSnapshot.borrowers_Speed = instrumentState.present_SIGH_Borrowers_Speed
     currentSighDistributionSnapshot.staking_Speed = instrumentState.present_SIGH_Staking_Speed
-    currentSighDistributionSnapshot.totalVolatilityAsPercentOfTotalProtocolVolatility = instrumentState.present_percentTotalVolatility
-    currentSighDistributionSnapshot.instrumentLimitVolatilityAsPercentOflimitProtocolVolatility = instrumentState.present_percentTotalVolatilityLimitAmount
+    currentSighDistributionSnapshot.totalVolatilityAsPercentOfTotalProtocolVolatility = instrumentState.present_percentTotalVolatility > BigDecimal.fromString('0') ? instrumentState.present_percentTotalVolatility : BigDecimal.fromString('0')  
+    currentSighDistributionSnapshot.instrumentLimitVolatilityAsPercentOflimitProtocolVolatility = instrumentState.present_percentTotalVolatilityLimitAmount > BigDecimal.fromString('0') ? instrumentState.present_percentTotalVolatilityLimitAmount : BigDecimal.fromString('0')  
+    log.info("totalVolatilityAsPercentOfTotalProtocolVolatility : {} : {}",[instrumentState.name,currentSighDistributionSnapshot.totalVolatilityAsPercentOfTotalProtocolVolatility.toString() ])
+    log.info("instrumentLimitVolatilityAsPercentOflimitProtocolVolatility : {} : {} ",[instrumentState.name,currentSighDistributionSnapshot.instrumentLimitVolatilityAsPercentOflimitProtocolVolatility .toString() ])
 
     if ( BigInt.fromI32(event.params.side).toString()  == '0' ) {
         instrumentState.present_SIGH_Side = 'In-Active'
@@ -306,9 +340,9 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
         }
         let SIGHPriceETH = BigDecimal.fromString('1')
         if (event.block.number > BigInt.fromI32(22482561) ) {
-            log.info('if (event.block.number > BigInt.fromI32(22482561) )',[])
+            // log.info('if (event.block.number > BigInt.fromI32(22482561) )',[])
             let SIGHPriceETH = oracleContract.getAssetPrice(Address.fromString('0x4Ebc60b9d2efA92B9eB681BF5b26AEB11DE23BFd')).toBigDecimal()
-            log.info('if (event.block.number > BigInt.fromI32(22482561) ) ::: {}',[SIGHPriceETH.toString()])
+            // log.info('if (event.block.number > BigInt.fromI32(22482561) ) ::: {}',[SIGHPriceETH.toString()])
             let SIGHPriceETHDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x4Ebc60b9d2efA92B9eB681BF5b26AEB11DE23BFd'))
             SIGHPriceETH = SIGHPriceETH.div(  BigInt.fromI32(10).pow(SIGHPriceETHDecimals as u8).toBigDecimal() )    
         }
@@ -411,8 +445,8 @@ export function handleAccuredSIGHTransferredToTheUser(event: AccuredSIGHTransfer
 
 export function handleSIGHSpeedUpdated(event: SIGHSpeedUpdated): void {
     let sighInstrument = SIGH_Instrument.load('0x4ebc60b9d2efa92b9eb681bf5b26aeb11de23bfd')
-    sighInstrument.maxSighVolatilityHarvestSpeedWEI =  event.params.newSIGHSpeed
-    sighInstrument.maxSighVolatilityHarvestSpeed =  sighInstrument.maxSighVolatilityHarvestSpeedWEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
+    sighInstrument.maxSighVolatilityHarvestSpeedWEI =  event.params.newSIGHSpeed.toBigDecimal()
+    sighInstrument.maxSighVolatilityHarvestSpeed =  sighInstrument.maxSighVolatilityHarvestSpeedWEI.div( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
 
     sighInstrument.save()
 }
@@ -427,7 +461,7 @@ export function handleSpeedUpperCheckSwitched(event: SpeedUpperCheckSwitched): v
 }
 
 
-
+// WORKS AS EXPECTED
 export function handleMinimumBlocksForSpeedRefreshUpdated(event: minimumBlocksForSpeedRefreshUpdated): void {
     let sighInstrument = SIGH_Instrument.load('0x4ebc60b9d2efa92b9eb681bf5b26aeb11de23bfd')
     sighInstrument.minimumBlocksBeforeSpeedRefresh = event.params.newDeltaBlocksForSpeed
@@ -441,8 +475,8 @@ export function handleMaxSIGHSpeedCalculated(event: MaxSIGHSpeedCalculated): voi
 
     sighInstrument.blockNumberWhenSighVolatilityHarvestSpeedWasRefreshed = event.block.number
 
-    sighInstrument.currentSighVolatilityHarvestSpeedWEI = event.params._SIGHSpeedUsed
-    sighInstrument.currentSighVolatilityHarvestSpeed =  sighInstrument.currentSighVolatilityHarvestSpeedWEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
+    sighInstrument.currentSighVolatilityHarvestSpeedWEI = event.params._SIGHSpeedUsed.toBigDecimal()
+    sighInstrument.currentSighVolatilityHarvestSpeed =  sighInstrument.currentSighVolatilityHarvestSpeedWEI.div( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
 
     sighInstrument.maxHarvestableProtocolVolatilityPerBlockETH = event.params._totalVolatilityLimitPerBlock.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
     sighInstrument.percentBasedHarvestableProtocolVolatilityPerBlockETH = event.params._totalVolatilityLimitPerBlock.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
@@ -541,8 +575,8 @@ function updateInstrumentHarvestAverages(ID: string): void {
 // ###########   CREATING ENTITIES   ##########
 // ############################################ 
 
-function create_SIGH_Distribution_SnapShot(ID: BigInt): SIGH_Distribution_SnapShot {
-    let sighDistributionSnapshotInitiailized = new SIGH_Distribution_SnapShot(ID.toString())
+function create_SIGH_Distribution_SnapShot(ID: string): SIGH_Distribution_SnapShot {
+    let sighDistributionSnapshotInitiailized = new SIGH_Distribution_SnapShot(ID)
 
     sighDistributionSnapshotInitiailized.instrumentAddress = '0x0000000000000000000000000000000000000000'
     sighDistributionSnapshotInitiailized.fromBlockNumber = new BigInt(0)

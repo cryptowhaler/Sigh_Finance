@@ -63,13 +63,50 @@ type SIGH_Instrument @entity {
     currentSchedule: BigInt!
     currentInflation: BigDecimal!
 
+    oracle: Bytes!
+
+    "Per Block Speed at which $SIGH is being Minted!"
     currentMintSpeed_WEI: BigInt!
     currentMintSpeed: BigDecimal!
+
+    "Per Block Speed at which $SIGH is being Burned!"
     currentBurnSpeed_WEI: BigInt!
     currentBurnSpeed: BigDecimal!
 
+    "Maximum Speed at which $SIGH can be distributed to harvest Volatility of the Supported Markets!"
+    maxSighVolatilityHarvestSpeedWEI: BigDecimal!
+    maxSighVolatilityHarvestSpeed: BigDecimal!
+    
+    "block Number when $SIGH Volatility harvest speed was last calculated"
+    blockNumberWhenSighVolatilityHarvestSpeedWasRefreshed: BigInt!
+    minimumBlocksBeforeSpeedRefresh: BigInt!
+
+    isUpperCheckForVolatilitySet: Boolean!
+    "Percent of the Harvestable Volatility currently being harvested!"
+    percentHarvestableVolatilityBeingHarvested: BigDecimal!
+
+    "Current Speed at which $SIGH is being distributed to harvest Volatility of the Supported Markets!"
+    currentSighVolatilityHarvestSpeedWEI: BigDecimal!
+    currentSighVolatilityHarvestSpeed: BigDecimal!
+
+    "Total Volatility of the Lending Protocol : Per Block"
+    totalLendingProtocolVolatilityPerBlockETH: BigDecimal!
+    totalLendingProtocolVolatilityPerBlockUSD: BigDecimal!
+
+    "Maximum Volatility that can be harvested : Per Block"
+    maxHarvestableProtocolVolatilityPerBlockETH: BigDecimal!
+    maxHarvestableProtocolVolatilityPerBlockUSD: BigDecimal!
+
+    "part of the maximum Volatility that can be harvested : Per Block"
+    percentBasedHarvestableProtocolVolatilityPerBlockETH: BigDecimal!
+    percentBasedHarvestableProtocolVolatilityPerBlockUSD: BigDecimal!
+
+    "Maximum Value of $SIGH that can be harvested : Per Block"
+    maxHarvestSizePossibleETH: BigDecimal!
+    maxHarvestSizePossibleUSD: BigDecimal!                
+
+
     mintSnapshots: [MintSnapshot!]! @derivedFrom(field:"instrument_sigh")
-    oracle: Bytes!
 }
 
 type MintSnapshot @entity {
