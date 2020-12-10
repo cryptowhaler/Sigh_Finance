@@ -117,7 +117,7 @@
         <div v-else style="text-align:center;"> 
             <button v-if="(Number(selectedInstrumentWalletState.borrowRateMode) == 1) && Number(selectedInstrumentWalletState.currentBorrowBalance) > 0" style="background: darkblue;" class="uk-button uk-button-black margin-bottom: 15px;"  @click="swapBorrowRateMode('variable')">Switch to Variable Borrow Rate</button>
             <button v-else-if="selectedInstrument.stableBorrowRateEnabled && (selectedInstrumentWalletState.borrowRateMode == 2) && Number(selectedInstrumentWalletState.currentBorrowBalance) > 0" style="background: darkblue; margin-bottom: 15px;" class="uk-button uk-button-black"  @click="swapBorrowRateMode('stable')">Switch to Stable Borrow Rate</button>
-            <span v-else style="display: contents; color: yellow; font-size: 20px;"> &#127806; &#127806; &#127806; &#127806; </span>
+            <span v-else style="display: contents; color: yellow; font-size: 20px;"> &#127806; &#127806; <a href="https://discord.com/invite/HTrsKeWaZu" target="_blank"> Click to Enter Discord Server! </a> &#127806; &#127806; </span>
         </div>
     </div>
 

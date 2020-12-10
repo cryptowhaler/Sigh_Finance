@@ -77,7 +77,7 @@
         <div v-else style="text-align:center;"> 
             <button v-if="!selectedInstrumentWalletState.usageAsCollateralEnabled && Number(selectedInstrumentWalletState.userDepositedBalance) > 0" style="background: darkblue;" class="uk-button uk-button-black"  @click="switchInstrumentAsCollateral(true)">Enable as Collateral</button>
             <button v-if="selectedInstrumentWalletState.usageAsCollateralEnabled && Number(selectedInstrumentWalletState.userDepositedBalance) > 0" style="background: darkblue;" class="uk-button uk-button-black"  @click="switchInstrumentAsCollateral(false)">Disable as Collateral</button>
-            <span v-if="Number(selectedInstrumentWalletState.userDepositedBalance) == 0" style="display: contents; color: yellow; font-size: 20px;"> &#127806; &#127806; &#127806; &#127806; </span>
+            <span v-if="Number(selectedInstrumentWalletState.userDepositedBalance) == 0" style="display: contents; color: yellow; font-size: 20px;">  &#127806; &#127806; <a href="https://discord.com/invite/HTrsKeWaZu" target="_blank"> Click to Enter Discord Server! </a> &#127806; &#127806; </span>
         </div>
     </div>
 

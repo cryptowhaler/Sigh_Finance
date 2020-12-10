@@ -222,7 +222,7 @@ export function createSIGH(addressID: string): SIGH_Instrument {
   sigh_token_contract.minimumBlocksBeforeSpeedRefresh = new BigInt(0)
 
   sigh_token_contract.isUpperCheckForVolatilitySet = false
-  sigh_token_contract.percentHarvestableVolatilityBeingHarvested = BigDecimal.fromString('0')
+  sigh_token_contract.cryptoMarketSentiment = BigDecimal.fromString('0')
 
   sigh_token_contract.currentSighVolatilityHarvestSpeedWEI = BigDecimal.fromString('0')
   sigh_token_contract.currentSighVolatilityHarvestSpeed = BigDecimal.fromString('0')

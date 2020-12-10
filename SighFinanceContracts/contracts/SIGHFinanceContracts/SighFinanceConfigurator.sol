@@ -101,9 +101,9 @@ contract SighFinanceConfigurator is VersionedInitializable {
         sigh_distribution_mechanism.refreshConfig() ;
     }
 
-    function instrument__SIGH_StateUpdated_Distribution_Handler(address instrument_,  uint _maxVolatilityLimitSuppliers,uint _maxVolatilityLimitBorrowers, bool _isSIGHMechanismActivated ) external onlySIGHFinanceManager returns (bool) { 
+    function instrument__SIGH_StateUpdated_Distribution_Handler(address instrument_,  uint _bearSentiment,uint _bullSentiment, bool _isSIGHMechanismActivated ) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
-        require(sigh_distribution_mechanism.Instrument_SIGH_StateUpdated( instrument_, _maxVolatilityLimitSuppliers, _maxVolatilityLimitBorrowers, _isSIGHMechanismActivated ), "Instrument_SIGH_StateUpdated() execution failed." );
+        require(sigh_distribution_mechanism.Instrument_SIGH_StateUpdated( instrument_, _bearSentiment, _bullSentiment, _isSIGHMechanismActivated ), "Instrument_SIGH_StateUpdated() execution failed." );
         return true;
     }
 
@@ -120,9 +120,9 @@ contract SighFinanceConfigurator is VersionedInitializable {
         return true;
     }        
 
-    function SpeedUpperCheckSwitch_In_SIGH_Distribution_Handler(bool isActivated, uint maxVolatilityProtocolLimit_) external onlySIGHFinanceManager returns (bool) { 
+    function UpdateCryptoMarketSentiment_In_SIGH_Distribution_Handler(bool isActivated, uint maxVolatilityProtocolLimit_) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
-        require(sigh_distribution_mechanism.updateSIGHSpeedUpperCheck( isActivated, maxVolatilityProtocolLimit_ ), "updateSIGHSpeedUpperCheck() execution failed." );
+        require(sigh_distribution_mechanism.updateCryptoMarketSentiment( isActivated, maxVolatilityProtocolLimit_ ), "updateCryptoMarketSentiment() execution failed." );
         return true;
     }        
 

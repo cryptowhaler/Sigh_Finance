@@ -94,8 +94,8 @@ type SIGH_Instrument @entity {
     minimumBlocksBeforeSpeedRefresh: BigInt!
 
     isUpperCheckForVolatilitySet: Boolean!
-    "Percent of the Harvestable Volatility currently being harvested!"
-    percentHarvestableVolatilityBeingHarvested: BigDecimal!
+    "Captures the current overall Bull / Bear sentiment of the crypto-currencies Market. Is the percent of the Harvestable Volatility currently being harvested through $SIGH Farming!"
+    cryptoMarketSentiment: BigDecimal!
 
     "Current Speed at which $SIGH is being distributed to harvest Volatility of the Supported Markets!"
     currentSighVolatilityHarvestSpeedWEI: BigDecimal!
@@ -303,8 +303,8 @@ type Instrument @entity {
     SIGH_Borrow_Index: BigInt!
     SIGH_Borrow_Index_lastUpdatedBlock: BigInt!
 
-    maxVolatilityLimitSuppliersPercent: BigDecimal!
-    maxVolatilityLimitBorrowersPercent: BigDecimal!
+    bearSentimentPercent: BigDecimal!
+    bullSentimentPercent: BigDecimal!
 
     present_PrevPrice_ETH: BigDecimal! 
     present_PrevPrice_USD: BigDecimal! 
@@ -407,8 +407,8 @@ type SIGH_Distribution_SnapShot @entity {
     priceDifferenceETH: BigDecimal!
     priceDifferenceUSD: BigDecimal!
 
-    maxVolatilityLimitSuppliersPercent: BigDecimal!
-    maxVolatilityLimitBorrowersPercent: BigDecimal!
+    bearSentimentPercent: BigDecimal!
+    bullSentimentPercent: BigDecimal!
 
     total24HrVolatilityETH: BigDecimal!
     total24HrVolatilityUSD: BigDecimal!

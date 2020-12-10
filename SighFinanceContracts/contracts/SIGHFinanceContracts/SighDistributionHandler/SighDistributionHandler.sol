@@ -31,14 +31,14 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
     // SIGH Speed Upper Check
     bool private isSpeedUpperCheckAllowed = false;
-    Exp private maxVolatilityProtocolLimit = Exp({mantissa: 1e18 });  
+    Exp private cryptoMarketSentiment = Exp({mantissa: 1e18 });  
 
     // TOTAL Protocol Volatility Values (Current Session)
     uint256 private last24HrsTotalProtocolVolatility = 0;
     uint256 private last24HrsTotalProtocolVolatilityLimit = 0;
     uint256 private deltaBlockslast24HrSession = 0;
     
-    // SIGH Speed is set by SIGH Finance Manager. SIGH Speed Used = Calculated based on "maxVolatilityProtocolLimit" & "last24HrsTotalProtocolVolatilityLimit"
+    // SIGH Speed is set by SIGH Finance Manager. SIGH Speed Used = Calculated based on "cryptoMarketSentiment" & "last24HrsTotalProtocolVolatilityLimit"
     uint private SIGHSpeed;
     uint private SIGHSpeedUsed;
 
@@ -76,8 +76,8 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
     struct Instrument_Sigh_Mechansim_State {
         uint8 side;                                         // side = enum{Suppliers,Borrowers,inactive}
-        uint256 maxVolatilityLimitSuppliers;                 // Volatility Limit Ratio = maxVolatilityLimitSuppliers (if side == Suppliers)
-        uint256 maxVolatilityLimitBorrowers;                 // Volatility Limit Ratio = maxVolatilityLimitSuppliers (if side == Borrowers)
+        uint256 bearSentiment;                               // Volatility Limit Ratio = bearSentiment (if side == Suppliers)
+        uint256 bullSentiment;                 // Volatility Limit Ratio = bearSentiment (if side == Borrowers)
         uint256 _total24HrVolatility;                        // TOTAL VOLATILITY = Total Compounded Balance * Price Difference
         uint256 _24HrVolatilityLimitAmount;                  // Volatility Limit Amount = TOTAL VOLATILITY * (Volatility Limit Ratio) / 1e18
         uint256 percentTotalVolatility;                      // TOTAL VOLATILITY / last24HrsTotalProtocolVolatility
@@ -98,10 +98,10 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
     event InstrumentAdded (address instrumentAddress_, address iTokenAddress, address sighStreamAddress,  uint decimals , uint blockNumber); 
     event InstrumentRemoved(address _instrument, uint blockNumber); 
-    event InstrumentSIGHStateUpdated( address instrument_, bool isSIGHMechanismActivated, uint maxVolatilityLimitSuppliers, uint maxVolatilityLimitBorrowers );
+    event InstrumentSIGHStateUpdated( address instrument_, bool isSIGHMechanismActivated, uint bearSentiment, uint bullSentiment );
 
     event SIGHSpeedUpdated(uint oldSIGHSpeed, uint newSIGHSpeed, uint blockNumber_);     /// Emitted when SIGH speed is changed
-    event SpeedUpperCheckSwitched(bool previsSpeedUpperCheckAllowed, uint maxVolatilityProtocolLimit );
+    event CryptoMarketSentimentUpdated(bool previsSpeedUpperCheckAllowed, uint cryptoMarketSentiment );
     event minimumBlocksForSpeedRefreshUpdated( uint prevDeltaBlocksForSpeed,uint newDeltaBlocksForSpeed, uint blockNumber );
 
     event StakingSpeedUpdated(address instrumentAddress_ , uint prevStakingSpeed, uint new_staking_Speed, uint blockNumber );
@@ -201,8 +201,8 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         // STATE UPDATED : INITITALIZE INSTRUMENT SPEEDS
         Instrument_Sigh_Mechansim_States[_instrument] = Instrument_Sigh_Mechansim_State({ 
                                                             side: uint8(0) ,
-                                                            maxVolatilityLimitSuppliers : uint(1e18),
-                                                            maxVolatilityLimitBorrowers: uint(1e18),
+                                                            bearSentiment : uint(1e18),
+                                                            bullSentiment: uint(1e18),
                                                             suppliers_Speed: uint(0),
                                                             borrowers_Speed: uint(0),
                                                             staking_Speed: uint(0),
@@ -259,19 +259,19 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     * can call this function through the Sigh Finance Configurator
     * @param instrument_ the instrument object
     **/
-    function Instrument_SIGH_StateUpdated(address instrument_, uint _maxVolatilityLimitSuppliers,uint _maxVolatilityLimitBorrowers, bool _isSIGHMechanismActivated  ) external onlySighFinanceConfigurator returns (bool) {                   // 
+    function Instrument_SIGH_StateUpdated(address instrument_, uint _bearSentiment,uint _bullSentiment, bool _isSIGHMechanismActivated  ) external onlySighFinanceConfigurator returns (bool) {                   // 
         require(financial_instruments[instrument_].isListed ,"Instrument not supported.");
-        require( _maxVolatilityLimitSuppliers >= 0.01e18, 'The new Volatility Limit for Suppliers must be greater than 0.01e18 (1%)');
-        require( _maxVolatilityLimitSuppliers <= 10e18, 'The new Volatility Limit for Suppliers must be less than 10e18 (10x)');
-        require( _maxVolatilityLimitBorrowers >= 0.01e18, 'The new Volatility Limit for Borrowers must be greater than 0.01e18 (1%)');
-        require( _maxVolatilityLimitBorrowers <= 10e18, 'The new Volatility Limit for Borrowers must be less than 10e18 (10x)');
+        require( _bearSentiment >= 0.01e18, 'The new Volatility Limit for Suppliers must be greater than 0.01e18 (1%)');
+        require( _bearSentiment <= 10e18, 'The new Volatility Limit for Suppliers must be less than 10e18 (10x)');
+        require( _bullSentiment >= 0.01e18, 'The new Volatility Limit for Borrowers must be greater than 0.01e18 (1%)');
+        require( _bullSentiment <= 10e18, 'The new Volatility Limit for Borrowers must be less than 10e18 (10x)');
         refreshSIGHSpeeds(); 
         
         financial_instruments[instrument_].isSIGHMechanismActivated = _isSIGHMechanismActivated;                       // STATE UPDATED
-        Instrument_Sigh_Mechansim_States[instrument_].maxVolatilityLimitSuppliers = _maxVolatilityLimitSuppliers;      // STATE UPDATED
-        Instrument_Sigh_Mechansim_States[instrument_].maxVolatilityLimitBorrowers = _maxVolatilityLimitBorrowers;      // STATE UPDATED
+        Instrument_Sigh_Mechansim_States[instrument_].bearSentiment = _bearSentiment;      // STATE UPDATED
+        Instrument_Sigh_Mechansim_States[instrument_].bullSentiment = _bullSentiment;      // STATE UPDATED
         
-        emit InstrumentSIGHStateUpdated( instrument_, financial_instruments[instrument_].isSIGHMechanismActivated, Instrument_Sigh_Mechansim_States[instrument_].maxVolatilityLimitSuppliers, Instrument_Sigh_Mechansim_States[instrument_].maxVolatilityLimitBorrowers );
+        emit InstrumentSIGHStateUpdated( instrument_, financial_instruments[instrument_].isSIGHMechanismActivated, Instrument_Sigh_Mechansim_States[instrument_].bearSentiment, Instrument_Sigh_Mechansim_States[instrument_].bullSentiment );
         return true;
     }
     
@@ -326,13 +326,13 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         return true;
     }
 
-    function updateSIGHSpeedUpperCheck (bool isSpeedUpperCheckAllowed_ , uint maxVolatilityProtocolLimit_ ) external onlySighFinanceConfigurator returns (bool) {
-        require( maxVolatilityProtocolLimit_ >= 0.01e18, 'The new Volatility Limit for Borrowers must be greater than 0.01e18 (1%)');
-        require( maxVolatilityProtocolLimit_ <= 10e18, 'The new Volatility Limit for Borrowers must be less than 10e18 (10x)');
+    function updateCryptoMarketSentiment (bool isSpeedUpperCheckAllowed_ , uint cryptoMarketSentiment_ ) external onlySighFinanceConfigurator returns (bool) {
+        require( cryptoMarketSentiment_ >= 0.01e18, 'The new Volatility Limit for Borrowers must be greater than 0.01e18 (1%)');
+        require( cryptoMarketSentiment_ <= 10e18, 'The new Volatility Limit for Borrowers must be less than 10e18 (10x)');
         
         isSpeedUpperCheckAllowed = isSpeedUpperCheckAllowed_;
-        maxVolatilityProtocolLimit = Exp({mantissa: maxVolatilityProtocolLimit_ });  
-        emit SpeedUpperCheckSwitched( isSpeedUpperCheckAllowed, maxVolatilityProtocolLimit.mantissa );
+        cryptoMarketSentiment = Exp({mantissa: cryptoMarketSentiment_ });  
+        emit CryptoMarketSentimentUpdated( isSpeedUpperCheckAllowed, cryptoMarketSentiment.mantissa );
         return true;
     }
 
@@ -415,7 +415,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
                     uint totalCompoundedLiquidity = IERC20(financial_instruments[_currentInstrument].iTokenAddress).totalSupply(); // Total Compounded Liquidity
                     ( error, lossPerInstrument) = subExp( previousPriceETH , currentPriceETH );       
                     ( error, volatility ) = mulScalar( lossPerInstrument, totalCompoundedLiquidity );
-                    instrumentVolatilityLimit = Exp({mantissa: Instrument_Sigh_Mechansim_States[_currentInstrument].maxVolatilityLimitSuppliers });
+                    instrumentVolatilityLimit = Exp({mantissa: Instrument_Sigh_Mechansim_States[_currentInstrument].bearSentiment });
                     // STATE UPDATE
                     Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility =  adjustForDecimalsInternal(volatility.mantissa, financial_instruments[_currentInstrument].decimals , oracle.getAssetPriceDecimals(_currentInstrument) );
                     Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatilityLimitAmount =  mul_(Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility , instrumentVolatilityLimit );
@@ -427,7 +427,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
                     uint totalCompoundedBorrows =  add_(totalVariableBorrows,totalStableBorrows,'Compounded Borrows Addition gave error'); 
                     ( error, lossPerInstrument) = subExp( currentPriceETH, previousPriceETH );       
                     ( error, volatility ) = mulScalar( lossPerInstrument, totalCompoundedBorrows );
-                    instrumentVolatilityLimit = Exp({mantissa: Instrument_Sigh_Mechansim_States[_currentInstrument].maxVolatilityLimitBorrowers });
+                    instrumentVolatilityLimit = Exp({mantissa: Instrument_Sigh_Mechansim_States[_currentInstrument].bullSentiment });
                     // STATE UPDATE
                     Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility = adjustForDecimalsInternal(volatility.mantissa , financial_instruments[_currentInstrument].decimals , oracle.getAssetPriceDecimals(_currentInstrument) );
                     Instrument_Sigh_Mechansim_States[_currentInstrument]._24HrVolatilityLimitAmount =  mul_(Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility , instrumentVolatilityLimit );
@@ -525,7 +525,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         uint max_SIGHDistributionLimitDecimalsAdjusted = adjustForDecimalsInternal( max_SIGHDistributionLimit,sighDecimals , priceDecimals  );
 
         // MAX Volatility that is allowed to be covered through SIGH Distribution (% of the Harvestable Volatility)
-        uint maxVolatilityToAddressPerBlock = mul_(totalVolatilityLimitPerBlock, maxVolatilityProtocolLimit ); // (a * b)/1e18 [b is in Exp Scale]
+        uint maxVolatilityToAddressPerBlock = mul_(totalVolatilityLimitPerBlock, cryptoMarketSentiment ); // (a * b)/1e18 [b is in Exp Scale]
 
 
         if ( max_SIGHDistributionLimitDecimalsAdjusted >  maxVolatilityToAddressPerBlock ) {
@@ -705,8 +705,8 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
                 );
     }    
 
-    function getInstrumentSighLimits(address instrument) external view returns ( uint _maxVolatilityLimitSuppliers , uint _maxVolatilityLimitBorrowers ) {
-    return ( Instrument_Sigh_Mechansim_States[instrument].maxVolatilityLimitSuppliers, Instrument_Sigh_Mechansim_States[instrument].maxVolatilityLimitBorrowers );
+    function getInstrumentSighLimits(address instrument) external view returns ( uint _bearSentiment , uint _bullSentiment ) {
+    return ( Instrument_Sigh_Mechansim_States[instrument].bearSentiment, Instrument_Sigh_Mechansim_States[instrument].bullSentiment );
     }
 
     function getAllPriceSnapshots(address instrument_ ) external view returns (uint256[24] memory) {
@@ -749,8 +749,8 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     }
 
 
-    function getMaxVolatilityProtocolLimit () external view returns (uint) {
-        return maxVolatilityProtocolLimit.mantissa;
+    function getCryptoMarketSentiment () external view returns (uint) {
+        return cryptoMarketSentiment.mantissa;
     } 
 
     function checkPriceSnapshots(address instrument_, uint clock) external view returns (uint256) {

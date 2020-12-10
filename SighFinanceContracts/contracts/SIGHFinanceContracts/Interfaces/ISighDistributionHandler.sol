@@ -14,11 +14,11 @@ interface ISighDistributionHandler {
     function addInstrument( address _instrument, address _iTokenAddress, address _sighStreamAddress, uint256 _decimals ) external returns (bool);   // onlyLendingPoolCore
     function removeInstrument( address _instrument ) external returns (bool);   // 
 
-    function Instrument_SIGH_StateUpdated(address instrument_, uint _maxVolatilityLimitSuppliers,uint _maxVolatilityLimitBorrowers, bool _isSIGHMechanismActivated  ) external returns (bool); // onlySighFinanceConfigurator
+    function Instrument_SIGH_StateUpdated(address instrument_, uint _bearSentiment,uint _bullSentiment, bool _isSIGHMechanismActivated  ) external returns (bool); // onlySighFinanceConfigurator
 
     function updateSIGHSpeed(uint SIGHSpeed_) external returns (bool);                                                      // onlySighFinanceConfigurator
     function updateStakingSpeedForAnInstrument(address instrument_, uint newStakingSpeed) external returns (bool);          // onlySighFinanceConfigurator
-    function updateSIGHSpeedUpperCheck( bool isActivated, uint maxVolatilityProtocolLimit_ ) external returns (bool);                      // onlySighFinanceConfigurator
+    function updateCryptoMarketSentiment( bool isActivated, uint cryptoMarketSentiment_ ) external returns (bool);                      // onlySighFinanceConfigurator
     function updateDeltaBlocksForSpeedRefresh(uint deltaBlocksLimit) external returns (bool);                               // onlySighFinanceConfigurator
 
     function refreshSIGHSpeeds() external returns (bool);
@@ -36,7 +36,7 @@ interface ISighDistributionHandler {
 
     function getInstrumentSpeeds(address instrument) external view returns (uint8 side, uint suppliers_speed, uint borrowers_speed, uint staking_speed );    
     function getInstrumentVolatilityStates(address instrument) external view returns ( uint8 side, uint _24HrVolatilityLimitAmount, uint percentTotalVolatilityLimitAmount, uint _total24HrVolatility, uint percentTotalVolatility  );    
-    function getInstrumentSighLimits(address instrument) external view returns ( uint _maxVolatilityLimitSuppliers , uint _maxVolatilityLimitBorrowers  );    
+    function getInstrumentSighLimits(address instrument) external view returns ( uint _bearSentiment , uint _bullSentiment  );    
 
     function getAllPriceSnapshots(address instrument_ ) external view returns (uint256[24] memory);    
     function getBlockNumbersForPriceSnapshots() external view returns (uint256[24] memory);    
@@ -50,7 +50,7 @@ interface ISighDistributionHandler {
     function getInstrumentSupplyIndex(address instrument_) external view returns (uint);
     function getInstrumentBorrowIndex(address instrument_) external view returns (uint);
 
-    function getMaxVolatilityProtocolLimit () external view returns (uint);
+    function getCryptoMarketSentiment () external view returns (uint);
     function checkPriceSnapshots(address instrument_, uint clock) external view returns (uint256);
     function checkinitializationCounter(address instrument_) external view returns (uint32);
 

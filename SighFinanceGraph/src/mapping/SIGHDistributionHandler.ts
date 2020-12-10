@@ -1,5 +1,5 @@
 import { Address, BigInt,BigDecimal, log } from "@graphprotocol/graph-ts"
-import { InstrumentAdded, InstrumentRemoved, InstrumentSIGHStateUpdated, SIGHSpeedUpdated, StakingSpeedUpdated, SpeedUpperCheckSwitched
+import { InstrumentAdded, InstrumentRemoved, InstrumentSIGHStateUpdated, SIGHSpeedUpdated, StakingSpeedUpdated, CryptoMarketSentimentUpdated
  , minimumBlocksForSpeedRefreshUpdated , PriceSnapped, SIGHBorrowIndexUpdated, AccuredSIGHTransferredToTheUser, InstrumentVolatilityCalculated,
  MaxSIGHSpeedCalculated, refreshingSighSpeeds , SIGHSupplyIndexUpdated } from "../../generated/Sigh_Distribution_Handler/SIGHDistributionHandler"
 import { SIGH_Instrument, Instrument,SIGH_Distribution_SnapShot } from "../../generated/schema"
@@ -93,8 +93,8 @@ export function handleInstrumentAdded(event: InstrumentAdded): void {
     // log.info('handleInstrumentAdded: 5st ',[])
 
     instrumentState.present_SIGH_Side = 'In-Active'
-    instrumentState.maxVolatilityLimitSuppliersPercent = BigInt.fromI32(100).toBigDecimal()
-    instrumentState.maxVolatilityLimitBorrowersPercent = BigInt.fromI32(100).toBigDecimal()
+    instrumentState.bearSentimentPercent = BigInt.fromI32(100).toBigDecimal()
+    instrumentState.bullSentimentPercent = BigInt.fromI32(100).toBigDecimal()
 
     instrumentState.save()
 }
@@ -114,10 +114,10 @@ export function handleInstrumentSIGHStateUpdated(event: InstrumentSIGHStateUpdat
     let instrumentId = event.params.instrument_.toHexString()
     let instrumentState = Instrument.load(instrumentId)
     instrumentState.isSIGHMechanismActivated = event.params.isSIGHMechanismActivated
-    let maxVolatilityLimitSuppliers = event.params.maxVolatilityLimitSuppliers
-    instrumentState.maxVolatilityLimitSuppliersPercent = maxVolatilityLimitSuppliers.toBigDecimal().div( BigInt.fromI32(10).pow(16 as u8).toBigDecimal() )  
-    let maxVolatilityLimitBorrowers = event.params.maxVolatilityLimitBorrowers
-    instrumentState.maxVolatilityLimitBorrowersPercent = maxVolatilityLimitBorrowers.toBigDecimal().div( BigInt.fromI32(10).pow(16 as u8).toBigDecimal() )  
+    let bearSentiment = event.params.bearSentiment
+    instrumentState.bearSentimentPercent = bearSentiment.toBigDecimal().div( BigInt.fromI32(10).pow(16 as u8).toBigDecimal() )  
+    let bullSentiment = event.params.bullSentiment
+    instrumentState.bullSentimentPercent = bullSentiment.toBigDecimal().div( BigInt.fromI32(10).pow(16 as u8).toBigDecimal() )  
     instrumentState.save()
 }
 
@@ -199,8 +199,8 @@ export function handlePriceSnapped(event: PriceSnapped): void {
     sighDistributionSnapshot.priceDifferenceETH = sighDistributionSnapshot.openingPrice_ETH.minus(sighDistributionSnapshot.prevPrice_ETH)
     sighDistributionSnapshot.priceDifferenceUSD = sighDistributionSnapshot.priceDifferenceETH.times(ETHPriceInUSD)
 
-    sighDistributionSnapshot.maxVolatilityLimitSuppliersPercent = instrumentState.maxVolatilityLimitSuppliersPercent
-    sighDistributionSnapshot.maxVolatilityLimitBorrowersPercent = instrumentState.maxVolatilityLimitBorrowersPercent
+    sighDistributionSnapshot.bearSentimentPercent = instrumentState.bearSentimentPercent
+    sighDistributionSnapshot.bullSentimentPercent = instrumentState.bullSentimentPercent
     log.info("handlePriceSnapped 8 : {} ",[instrumentState.name])
 
     sighDistributionSnapshot.save()
@@ -470,10 +470,10 @@ export function handleSIGHSpeedUpdated(event: SIGHSpeedUpdated): void {
 
 
 
-export function handleSpeedUpperCheckSwitched(event: SpeedUpperCheckSwitched): void {
+export function handleCryptoMarketSentimentUpdated(event: CryptoMarketSentimentUpdated): void {
     let sighInstrument = SIGH_Instrument.load('0x4ebc60b9d2efa92b9eb681bf5b26aeb11de23bfd')
     sighInstrument.isUpperCheckForVolatilitySet = event.params.previsSpeedUpperCheckAllowed
-    sighInstrument.percentHarvestableVolatilityBeingHarvested =  event.params.maxVolatilityProtocolLimit.divDecimal( (BigInt.fromI32(10).pow(16 as u8).toBigDecimal()) )
+    sighInstrument.cryptoMarketSentiment =  event.params.cryptoMarketSentiment.divDecimal( (BigInt.fromI32(10).pow(16 as u8).toBigDecimal()) )
     sighInstrument.save()
 }
 
@@ -618,8 +618,8 @@ function create_SIGH_Distribution_SnapShot(ID: string): SIGH_Distribution_SnapSh
     sighDistributionSnapshotInitiailized.priceDifferenceETH = BigDecimal.fromString('0')
     sighDistributionSnapshotInitiailized.priceDifferenceUSD = BigDecimal.fromString('0')
 
-    sighDistributionSnapshotInitiailized.maxVolatilityLimitSuppliersPercent = BigDecimal.fromString('0')
-    sighDistributionSnapshotInitiailized.maxVolatilityLimitBorrowersPercent = BigDecimal.fromString('0')
+    sighDistributionSnapshotInitiailized.bearSentimentPercent = BigDecimal.fromString('0')
+    sighDistributionSnapshotInitiailized.bullSentimentPercent = BigDecimal.fromString('0')
 
     sighDistributionSnapshotInitiailized.total24HrVolatilityETH = BigDecimal.fromString('0')
     sighDistributionSnapshotInitiailized.total24HrVolatilityUSD = BigDecimal.fromString('0')

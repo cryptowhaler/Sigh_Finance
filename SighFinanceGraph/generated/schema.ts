@@ -610,16 +610,13 @@ export class SIGH_Instrument extends Entity {
     this.set("isUpperCheckForVolatilitySet", Value.fromBoolean(value));
   }
 
-  get percentHarvestableVolatilityBeingHarvested(): BigDecimal {
-    let value = this.get("percentHarvestableVolatilityBeingHarvested");
+  get cryptoMarketSentiment(): BigDecimal {
+    let value = this.get("cryptoMarketSentiment");
     return value.toBigDecimal();
   }
 
-  set percentHarvestableVolatilityBeingHarvested(value: BigDecimal) {
-    this.set(
-      "percentHarvestableVolatilityBeingHarvested",
-      Value.fromBigDecimal(value)
-    );
+  set cryptoMarketSentiment(value: BigDecimal) {
+    this.set("cryptoMarketSentiment", Value.fromBigDecimal(value));
   }
 
   get currentSighVolatilityHarvestSpeedWEI(): BigDecimal {
@@ -1969,22 +1966,22 @@ export class Instrument extends Entity {
     this.set("SIGH_Borrow_Index_lastUpdatedBlock", Value.fromBigInt(value));
   }
 
-  get maxVolatilityLimitSuppliersPercent(): BigDecimal {
-    let value = this.get("maxVolatilityLimitSuppliersPercent");
+  get bearSentimentPercent(): BigDecimal {
+    let value = this.get("bearSentimentPercent");
     return value.toBigDecimal();
   }
 
-  set maxVolatilityLimitSuppliersPercent(value: BigDecimal) {
-    this.set("maxVolatilityLimitSuppliersPercent", Value.fromBigDecimal(value));
+  set bearSentimentPercent(value: BigDecimal) {
+    this.set("bearSentimentPercent", Value.fromBigDecimal(value));
   }
 
-  get maxVolatilityLimitBorrowersPercent(): BigDecimal {
-    let value = this.get("maxVolatilityLimitBorrowersPercent");
+  get bullSentimentPercent(): BigDecimal {
+    let value = this.get("bullSentimentPercent");
     return value.toBigDecimal();
   }
 
-  set maxVolatilityLimitBorrowersPercent(value: BigDecimal) {
-    this.set("maxVolatilityLimitBorrowersPercent", Value.fromBigDecimal(value));
+  set bullSentimentPercent(value: BigDecimal) {
+    this.set("bullSentimentPercent", Value.fromBigDecimal(value));
   }
 
   get present_PrevPrice_ETH(): BigDecimal {
@@ -2672,22 +2669,22 @@ export class SIGH_Distribution_SnapShot extends Entity {
     this.set("priceDifferenceUSD", Value.fromBigDecimal(value));
   }
 
-  get maxVolatilityLimitSuppliersPercent(): BigDecimal {
-    let value = this.get("maxVolatilityLimitSuppliersPercent");
+  get bearSentimentPercent(): BigDecimal {
+    let value = this.get("bearSentimentPercent");
     return value.toBigDecimal();
   }
 
-  set maxVolatilityLimitSuppliersPercent(value: BigDecimal) {
-    this.set("maxVolatilityLimitSuppliersPercent", Value.fromBigDecimal(value));
+  set bearSentimentPercent(value: BigDecimal) {
+    this.set("bearSentimentPercent", Value.fromBigDecimal(value));
   }
 
-  get maxVolatilityLimitBorrowersPercent(): BigDecimal {
-    let value = this.get("maxVolatilityLimitBorrowersPercent");
+  get bullSentimentPercent(): BigDecimal {
+    let value = this.get("bullSentimentPercent");
     return value.toBigDecimal();
   }
 
-  set maxVolatilityLimitBorrowersPercent(value: BigDecimal) {
-    this.set("maxVolatilityLimitBorrowersPercent", Value.fromBigDecimal(value));
+  set bullSentimentPercent(value: BigDecimal) {
+    this.set("bullSentimentPercent", Value.fromBigDecimal(value));
   }
 
   get total24HrVolatilityETH(): BigDecimal {
