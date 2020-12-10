@@ -35,7 +35,7 @@ interface ISighDistributionHandler {
     function getInstrumentData (address instrument_) external view returns (string memory name, address iTokenAddress, uint decimals, bool isSIGHMechanismActivated,uint256 supplyindex, uint256 borrowindex  );
 
     function getInstrumentSpeeds(address instrument) external view returns (uint8 side, uint suppliers_speed, uint borrowers_speed, uint staking_speed );    
-    function getInstrumentVolatilityStates(address instrument) external view returns ( uint8 side, uint _24HrVolatilityLimitAmount, uint percentTotalVolatilityLimitAmount, uint _total24HrVolatility, uint percentTotalVolatility  );    
+    function getInstrumentVolatilityStates(address instrument) external view returns ( uint8 side, uint _total24HrSentimentVolatility, uint percentTotalSentimentVolatility, uint _total24HrVolatility, uint percentTotalVolatility  );    
     function getInstrumentSighLimits(address instrument) external view returns ( uint _bearSentiment , uint _bullSentiment  );    
 
     function getAllPriceSnapshots(address instrument_ ) external view returns (uint256[24] memory);    

@@ -72,7 +72,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "SpeedUpperCheckSwitch_In_SIGH_Distribution_Handler",
+				"name": "UpdateCryptoMarketSentiment_In_SIGH_Distribution_Handler",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -220,12 +220,12 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_maxVolatilityLimitSuppliers",
+						"name": "_bearSentiment",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_maxVolatilityLimitBorrowers",
+						"name": "_bullSentiment",
 						"type": "uint256"
 					},
 					{
@@ -548,10 +548,10 @@
 	},
 	"sources": {
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0xe1edaef7749162d1423d5e5b68c5022d6a444102ca1f5fd3d05250527e508a7c",
+			"keccak256": "0xbdc7e8bdbc66cefb781558eb416b45b187217b20bfa4a6d06f8d0682f1eac7c1",
 			"urls": [
-				"bzz-raw://9ca93c68f2e1be89d5bbc8f5cb662c793924cb7f28ea67698e54e382e255f746",
-				"dweb:/ipfs/QmX1MK2H5gWGtLqipxqfdEVuywe2ZDtaaSgqnkuMaPuEDQ"
+				"bzz-raw://d3d584a429b4a5d148b5d08353024c38b1440253409d191cff5ad273f732ad24",
+				"dweb:/ipfs/Qme1Z7rvf8dJR4kvvzXDdvfMwyCagYx8YJ5wg2orhd9pqD"
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighSpeedController.sol": {
@@ -576,10 +576,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighFinanceConfigurator.sol": {
-			"keccak256": "0x437a3bbaaf0eab6cbce271fa5f6329bd4db106af164fc85c70cb863640cae122",
+			"keccak256": "0xee67983796725cd4ca7bf417f440f8243c4ebe903b769bffeb9dfd294711a875",
 			"urls": [
-				"bzz-raw://110495a799b8a9ffc414787370096cb6854f5c267b63e77da164eebf66b66018",
-				"dweb:/ipfs/QmQJeMJsLn4PMgkgFGzCDucHA9HS4BfcqG4P1qSBRtg4U2"
+				"bzz-raw://a87c332431ff48bfd9a55213f0f7b8ad9a82273807f8427aebc8cd727ba91ec0",
+				"dweb:/ipfs/QmUpmVdSCor4khe7sC2D96usURyeJPzZKZ12wZYvbXkWcG"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {

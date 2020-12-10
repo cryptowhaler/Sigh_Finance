@@ -513,9 +513,9 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.present_total24HrVolatilityUSD = BigDecimal.fromString('0')
     instrument_state_initialized.present_percentTotalVolatility = BigDecimal.fromString('0')
 
-    instrument_state_initialized.present_24HrVolatilityLimitAmountETH = BigDecimal.fromString('0')
-    instrument_state_initialized.present_24HrVolatilityLimitAmountUSD = BigDecimal.fromString('0')
-    instrument_state_initialized.present_percentTotalVolatilityLimitAmount = BigDecimal.fromString('0')
+    instrument_state_initialized.present_total24HrSentimentVolatilityETH = BigDecimal.fromString('0')
+    instrument_state_initialized.present_total24HrSentimentVolatilityUSD = BigDecimal.fromString('0')
+    instrument_state_initialized.present_percentTotalSentimentVolatility = BigDecimal.fromString('0')
 
     instrument_state_initialized.present_SIGH_Suppliers_Speed_WEI =  new BigInt(0)
     instrument_state_initialized.present_SIGH_Suppliers_Speed = BigDecimal.fromString('0')

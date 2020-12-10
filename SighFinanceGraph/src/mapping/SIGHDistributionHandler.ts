@@ -155,8 +155,8 @@ export function handlePriceSnapped(event: PriceSnapped): void {
             prevSighDistributionSnapshot.BorrowingSIGHAccuredDuringThisSnapshot = instrumentState.totalBorrowingSIGHAccured.minus(prevSighDistributionSnapshot.totalBorrowingSIGHAccuredBeforeThisSnapshot)
         }
         log.info("handlePriceSnapped 4 : {} ",[instrumentState.name])
-        log.info("handlePriceSnapped 4-1 : instrumentState.present_percentTotalVolatilityLimitAmount {} ",[instrumentState.present_percentTotalVolatilityLimitAmount.toString()])        
-        prevSighDistributionSnapshot.instrumentLimitVolatilityAsPercentOflimitProtocolVolatility = instrumentState.present_percentTotalVolatilityLimitAmount
+        log.info("handlePriceSnapped 4-1 : instrumentState.present_percentTotalSentimentVolatility {} ",[instrumentState.present_percentTotalSentimentVolatility.toString()])        
+        prevSighDistributionSnapshot.instrumentLimitVolatilityAsPercentOflimitProtocolVolatility = instrumentState.present_percentTotalSentimentVolatility
         log.info("handlePriceSnapped 4-2 :  : totalVolatilityAsPercentOfTotalProtocolVolatility {}",[prevSighDistributionSnapshot.totalVolatilityAsPercentOfTotalProtocolVolatility.toString()])
         log.info("handlePriceSnapped 4-3 :  : instrumentLimitVolatilityAsPercentOflimitProtocolVolatility {} ",[prevSighDistributionSnapshot.instrumentLimitVolatilityAsPercentOflimitProtocolVolatility.toString()])
         prevSighDistributionSnapshot.toBlockNumber = event.block.number
@@ -229,19 +229,19 @@ export function handleInstrumentVolatilityCalculated(event: InstrumentVolatility
     log.info("handleInstrumentVolatilityCalculated 2 : {} ",[instrumentState.name])
     currentSighDistributionSnapshot.total24HrVolatilityUSD = currentSighDistributionSnapshot.total24HrVolatilityETH.times(instrumentState.ETHPriceInUSD)
     log.info("handleInstrumentVolatilityCalculated 3 : {} ",[instrumentState.name])
-    currentSighDistributionSnapshot.total24HrVolatilityLimitAmountETH = event.params._24HrVolatilityLimitAmount.toBigDecimal().div(  (BigInt.fromI32(10).pow(18 as u8).toBigDecimal())  )
+    currentSighDistributionSnapshot.totaltotal24HrSentimentVolatilityETH = event.params._total24HrSentimentVolatility.toBigDecimal().div(  (BigInt.fromI32(10).pow(18 as u8).toBigDecimal())  )
     log.info("handleInstrumentVolatilityCalculated 4 : {} ",[instrumentState.name])
-    currentSighDistributionSnapshot.total24HrVolatilityLimitAmountUSD = currentSighDistributionSnapshot.total24HrVolatilityLimitAmountETH.times(instrumentState.ETHPriceInUSD)
+    currentSighDistributionSnapshot.totaltotal24HrSentimentVolatilityUSD = currentSighDistributionSnapshot.totaltotal24HrSentimentVolatilityETH.times(instrumentState.ETHPriceInUSD)
     log.info("handleInstrumentVolatilityCalculated 5 : {} ",[instrumentState.name])
 
     //  UPDATING INSTRUMENT STATE FOR ON-GOING $SIGH DISTRIBUTION SNAPSHOT    
     instrumentState.present_total24HrVolatilityETH = currentSighDistributionSnapshot.total24HrVolatilityETH
     log.info("handleInstrumentVolatilityCalculated 6 : {} ",[instrumentState.name])
-    instrumentState.present_24HrVolatilityLimitAmountETH = currentSighDistributionSnapshot.total24HrVolatilityLimitAmountETH
+    instrumentState.present_total24HrSentimentVolatilityETH = currentSighDistributionSnapshot.totaltotal24HrSentimentVolatilityETH
     log.info("handleInstrumentVolatilityCalculated 7 : {} ",[instrumentState.name])
     instrumentState.present_total24HrVolatilityUSD = instrumentState.present_total24HrVolatilityETH.times(instrumentState.ETHPriceInUSD) 
     log.info("handleInstrumentVolatilityCalculated 8 : {} ",[instrumentState.name])
-    instrumentState.present_24HrVolatilityLimitAmountUSD = instrumentState.present_24HrVolatilityLimitAmountETH.times(instrumentState.ETHPriceInUSD) 
+    instrumentState.present_total24HrSentimentVolatilityUSD = instrumentState.present_total24HrSentimentVolatilityETH.times(instrumentState.ETHPriceInUSD) 
     log.info("handleInstrumentVolatilityCalculated 9 : {} ",[instrumentState.name])
 
     currentSighDistributionSnapshot.save()
@@ -304,15 +304,15 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
     log.info("handleRefreshingSighSpeeds - 7 : {} ",[instrumentState.name])
     instrumentState.present_SIGH_Borrowers_Speed = instrumentState.present_SIGH_Borrowers_Speed_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
     instrumentState.present_percentTotalVolatility = event.params._percentTotalVolatility.toBigDecimal().div(BigDecimal.fromString('10000000'))
-    instrumentState.present_percentTotalVolatilityLimitAmount = event.params._percentTotalVolatilityLimitAmount.toBigDecimal().div(BigDecimal.fromString('10000000'))
+    instrumentState.present_percentTotalSentimentVolatility = event.params._percentTotalSentimentVolatility.toBigDecimal().div(BigDecimal.fromString('10000000'))
     log.info("handleRefreshingSighSpeeds - 8 : {} ",[instrumentState.name])
     log.info("present_percentTotalVolatility : {} : {}",[instrumentState.name,instrumentState.present_percentTotalVolatility.toString() ])
-    log.info("present_percentTotalVolatilityLimitAmount : {} : {} ",[instrumentState.name,instrumentState.present_percentTotalVolatilityLimitAmount.toString() ])
+    log.info("present_percentTotalSentimentVolatility : {} : {} ",[instrumentState.name,instrumentState.present_percentTotalSentimentVolatility.toString() ])
     currentSighDistributionSnapshot.suppliers_Speed = instrumentState.present_SIGH_Suppliers_Speed
     currentSighDistributionSnapshot.borrowers_Speed = instrumentState.present_SIGH_Borrowers_Speed
     currentSighDistributionSnapshot.staking_Speed = instrumentState.present_SIGH_Staking_Speed
     currentSighDistributionSnapshot.totalVolatilityAsPercentOfTotalProtocolVolatility = instrumentState.present_percentTotalVolatility > BigDecimal.fromString('0') ? instrumentState.present_percentTotalVolatility : BigDecimal.fromString('0')  
-    currentSighDistributionSnapshot.instrumentLimitVolatilityAsPercentOflimitProtocolVolatility = event.params._percentTotalVolatilityLimitAmount.toBigDecimal().div(BigDecimal.fromString('10000000'))
+    currentSighDistributionSnapshot.instrumentLimitVolatilityAsPercentOflimitProtocolVolatility = event.params._percentTotalSentimentVolatility.toBigDecimal().div(BigDecimal.fromString('10000000'))
     log.info("totalVolatilityAsPercentOfTotalProtocolVolatility : {} : {}",[instrumentState.name,currentSighDistributionSnapshot.totalVolatilityAsPercentOfTotalProtocolVolatility.toString() ])
     log.info("instrumentLimitVolatilityAsPercentOflimitProtocolVolatility : {} : {} ",[instrumentState.name,currentSighDistributionSnapshot.instrumentLimitVolatilityAsPercentOflimitProtocolVolatility.toString() ])
 
@@ -625,8 +625,8 @@ function create_SIGH_Distribution_SnapShot(ID: string): SIGH_Distribution_SnapSh
     sighDistributionSnapshotInitiailized.total24HrVolatilityUSD = BigDecimal.fromString('0')
     sighDistributionSnapshotInitiailized.totalVolatilityAsPercentOfTotalProtocolVolatility = BigDecimal.fromString('0')
 
-    sighDistributionSnapshotInitiailized.total24HrVolatilityLimitAmountETH = BigDecimal.fromString('0')
-    sighDistributionSnapshotInitiailized.total24HrVolatilityLimitAmountUSD = BigDecimal.fromString('0')
+    sighDistributionSnapshotInitiailized.totaltotal24HrSentimentVolatilityETH = BigDecimal.fromString('0')
+    sighDistributionSnapshotInitiailized.totaltotal24HrSentimentVolatilityUSD = BigDecimal.fromString('0')
     sighDistributionSnapshotInitiailized.instrumentLimitVolatilityAsPercentOflimitProtocolVolatility = BigDecimal.fromString('0')
 
 

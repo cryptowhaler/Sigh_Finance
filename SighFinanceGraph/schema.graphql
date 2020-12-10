@@ -321,9 +321,9 @@ type Instrument @entity {
     present_percentTotalVolatility: BigDecimal! 
 
     "Instrument volatility * maxVolatilityLimit"
-    present_24HrVolatilityLimitAmountETH: BigDecimal!  
-    present_24HrVolatilityLimitAmountUSD: BigDecimal!
-    present_percentTotalVolatilityLimitAmount: BigDecimal!
+    present_total24HrSentimentVolatilityETH: BigDecimal!  
+    present_total24HrSentimentVolatilityUSD: BigDecimal!
+    present_percentTotalSentimentVolatility: BigDecimal!
 
     present_SIGH_Suppliers_Speed_WEI: BigInt!
     present_SIGH_Suppliers_Speed: BigDecimal!

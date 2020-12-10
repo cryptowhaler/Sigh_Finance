@@ -52,6 +52,7 @@
 			"getAllPriceSnapshots(address)": "d6357063",
 			"getBlockNumbersForPriceSnapshots()": "659f73c5",
 			"getBlocksRemainingToNextSpeedRefresh()": "6f610c50",
+			"getCryptoMarketSentiment()": "693ebf7f",
 			"getDeltaBlocksForSpeed()": "be36810a",
 			"getInstrumentBorrowIndex(address)": "10fa61e6",
 			"getInstrumentData(address)": "4dc54a38",
@@ -59,7 +60,6 @@
 			"getInstrumentSpeeds(address)": "3e5eee46",
 			"getInstrumentSupplyIndex(address)": "9a717b24",
 			"getInstrumentVolatilityStates(address)": "c6486d30",
-			"getMaxVolatilityProtocolLimit()": "575bf04a",
 			"getPrevSpeedRefreshBlock()": "3e955265",
 			"getSIGHBalance()": "c6a6bfb1",
 			"getSIGHSpeed()": "570b39d0",
@@ -70,10 +70,10 @@
 			"removeInstrument(address)": "26562793",
 			"totalInstrumentsSupported()": "eeabe79f",
 			"transferSighTotheUser(address,address,uint256)": "b482e0d1",
+			"updateCryptoMarketSentiment(bool,uint256)": "d74d6d3f",
 			"updateDeltaBlocksForSpeedRefresh(uint256)": "1e7faed9",
 			"updateSIGHBorrowIndex(address)": "7c52b668",
 			"updateSIGHSpeed(uint256)": "2df0f9a9",
-			"updateSIGHSpeedUpperCheck(bool,uint256)": "c53b2997",
 			"updateSIGHSupplyIndex(address)": "4f425fbb",
 			"updateStakingSpeedForAnInstrument(address,uint256)": "04c66321"
 		}
@@ -89,12 +89,12 @@
 				},
 				{
 					"internalType": "uint256",
-					"name": "_maxVolatilityLimitSuppliers",
+					"name": "_bearSentiment",
 					"type": "uint256"
 				},
 				{
 					"internalType": "uint256",
-					"name": "_maxVolatilityLimitBorrowers",
+					"name": "_bullSentiment",
 					"type": "uint256"
 				},
 				{
@@ -267,6 +267,21 @@
 		{
 			"constant": true,
 			"inputs": [],
+			"name": "getCryptoMarketSentiment",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
 			"name": "getDeltaBlocksForSpeed",
 			"outputs": [
 				{
@@ -359,12 +374,12 @@
 			"outputs": [
 				{
 					"internalType": "uint256",
-					"name": "_maxVolatilityLimitSuppliers",
+					"name": "_bearSentiment",
 					"type": "uint256"
 				},
 				{
 					"internalType": "uint256",
-					"name": "_maxVolatilityLimitBorrowers",
+					"name": "_bullSentiment",
 					"type": "uint256"
 				}
 			],
@@ -447,12 +462,12 @@
 				},
 				{
 					"internalType": "uint256",
-					"name": "_24HrVolatilityLimitAmount",
+					"name": "_total24HrSentimentVolatility",
 					"type": "uint256"
 				},
 				{
 					"internalType": "uint256",
-					"name": "percentTotalVolatilityLimitAmount",
+					"name": "percentTotalSentimentVolatility",
 					"type": "uint256"
 				},
 				{
@@ -463,21 +478,6 @@
 				{
 					"internalType": "uint256",
 					"name": "percentTotalVolatility",
-					"type": "uint256"
-				}
-			],
-			"payable": false,
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"constant": true,
-			"inputs": [],
-			"name": "getMaxVolatilityProtocolLimit",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
 					"type": "uint256"
 				}
 			],
@@ -661,6 +661,32 @@
 			"constant": false,
 			"inputs": [
 				{
+					"internalType": "bool",
+					"name": "isActivated",
+					"type": "bool"
+				},
+				{
+					"internalType": "uint256",
+					"name": "cryptoMarketSentiment_",
+					"type": "uint256"
+				}
+			],
+			"name": "updateCryptoMarketSentiment",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
 					"internalType": "uint256",
 					"name": "deltaBlocksLimit",
 					"type": "uint256"
@@ -709,32 +735,6 @@
 				}
 			],
 			"name": "updateSIGHSpeed",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"payable": false,
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"constant": false,
-			"inputs": [
-				{
-					"internalType": "bool",
-					"name": "isActivated",
-					"type": "bool"
-				},
-				{
-					"internalType": "uint256",
-					"name": "maxVolatilityProtocolLimit_",
-					"type": "uint256"
-				}
-			],
-			"name": "updateSIGHSpeedUpperCheck",
 			"outputs": [
 				{
 					"internalType": "bool",

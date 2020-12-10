@@ -15,12 +15,12 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_maxVolatilityLimitSuppliers",
+						"name": "_bearSentiment",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_maxVolatilityLimitBorrowers",
+						"name": "_bullSentiment",
 						"type": "uint256"
 					},
 					{
@@ -193,6 +193,21 @@
 			{
 				"constant": true,
 				"inputs": [],
+				"name": "getCryptoMarketSentiment",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
 				"name": "getDeltaBlocksForSpeed",
 				"outputs": [
 					{
@@ -285,12 +300,12 @@
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "_maxVolatilityLimitSuppliers",
+						"name": "_bearSentiment",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_maxVolatilityLimitBorrowers",
+						"name": "_bullSentiment",
 						"type": "uint256"
 					}
 				],
@@ -373,12 +388,12 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_24HrVolatilityLimitAmount",
+						"name": "_total24HrSentimentVolatility",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
-						"name": "percentTotalVolatilityLimitAmount",
+						"name": "percentTotalSentimentVolatility",
 						"type": "uint256"
 					},
 					{
@@ -389,21 +404,6 @@
 					{
 						"internalType": "uint256",
 						"name": "percentTotalVolatility",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getMaxVolatilityProtocolLimit",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
 						"type": "uint256"
 					}
 				],
@@ -587,6 +587,32 @@
 				"constant": false,
 				"inputs": [
 					{
+						"internalType": "bool",
+						"name": "isActivated",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "cryptoMarketSentiment_",
+						"type": "uint256"
+					}
+				],
+				"name": "updateCryptoMarketSentiment",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
 						"internalType": "uint256",
 						"name": "deltaBlocksLimit",
 						"type": "uint256"
@@ -635,32 +661,6 @@
 					}
 				],
 				"name": "updateSIGHSpeed",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "bool",
-						"name": "isActivated",
-						"type": "bool"
-					},
-					{
-						"internalType": "uint256",
-						"name": "maxVolatilityProtocolLimit_",
-						"type": "uint256"
-					}
-				],
-				"name": "updateSIGHSpeedUpperCheck",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -745,10 +745,10 @@
 	},
 	"sources": {
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0xe1edaef7749162d1423d5e5b68c5022d6a444102ca1f5fd3d05250527e508a7c",
+			"keccak256": "0xbdc7e8bdbc66cefb781558eb416b45b187217b20bfa4a6d06f8d0682f1eac7c1",
 			"urls": [
-				"bzz-raw://9ca93c68f2e1be89d5bbc8f5cb662c793924cb7f28ea67698e54e382e255f746",
-				"dweb:/ipfs/QmX1MK2H5gWGtLqipxqfdEVuywe2ZDtaaSgqnkuMaPuEDQ"
+				"bzz-raw://d3d584a429b4a5d148b5d08353024c38b1440253409d191cff5ad273f732ad24",
+				"dweb:/ipfs/Qme1Z7rvf8dJR4kvvzXDdvfMwyCagYx8YJ5wg2orhd9pqD"
 			]
 		}
 	},

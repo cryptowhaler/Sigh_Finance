@@ -35,6 +35,25 @@
 				"inputs": [
 					{
 						"indexed": false,
+						"internalType": "bool",
+						"name": "previsSpeedUpperCheckAllowed",
+						"type": "bool"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "cryptoMarketSentiment",
+						"type": "uint256"
+					}
+				],
+				"name": "CryptoMarketSentimentUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
 						"internalType": "address",
 						"name": "instrumentAddress_",
 						"type": "address"
@@ -104,13 +123,13 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "maxVolatilityLimitSuppliers",
+						"name": "bearSentiment",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "maxVolatilityLimitBorrowers",
+						"name": "bullSentiment",
 						"type": "uint256"
 					}
 				],
@@ -135,7 +154,7 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "_24HrVolatilityLimitAmount",
+						"name": "_total24HrSentimentVolatility",
 						"type": "uint256"
 					}
 				],
@@ -332,25 +351,6 @@
 				"inputs": [
 					{
 						"indexed": false,
-						"internalType": "bool",
-						"name": "previsSpeedUpperCheckAllowed",
-						"type": "bool"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "maxVolatilityProtocolLimit",
-						"type": "uint256"
-					}
-				],
-				"name": "SpeedUpperCheckSwitched",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
 						"internalType": "address",
 						"name": "instrumentAddress_",
 						"type": "address"
@@ -432,7 +432,7 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "_percentTotalVolatilityLimitAmount",
+						"name": "_percentTotalSentimentVolatility",
 						"type": "uint256"
 					},
 					{
@@ -455,12 +455,12 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_maxVolatilityLimitSuppliers",
+						"name": "_bearSentiment",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_maxVolatilityLimitBorrowers",
+						"name": "_bullSentiment",
 						"type": "uint256"
 					},
 					{
@@ -678,6 +678,21 @@
 			{
 				"constant": true,
 				"inputs": [],
+				"name": "getCryptoMarketSentiment",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
 				"name": "getDeltaBlocksForSpeed",
 				"outputs": [
 					{
@@ -785,12 +800,12 @@
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "_maxVolatilityLimitSuppliers",
+						"name": "_bearSentiment",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_maxVolatilityLimitBorrowers",
+						"name": "_bullSentiment",
 						"type": "uint256"
 					}
 				],
@@ -873,12 +888,12 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_24HrVolatilityLimitAmount",
+						"name": "_total24HrSentimentVolatility",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
-						"name": "percentTotalVolatilityLimitAmount",
+						"name": "percentTotalSentimentVolatility",
 						"type": "uint256"
 					},
 					{
@@ -914,22 +929,7 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "getLast24HrsTotalProtocolVolatilityLimit",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "getMaxVolatilityProtocolLimit",
+				"name": "getLast24HrsTotalSentimentProtocolVolatility",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -1162,6 +1162,32 @@
 				"constant": false,
 				"inputs": [
 					{
+						"internalType": "bool",
+						"name": "isSpeedUpperCheckAllowed_",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "cryptoMarketSentiment_",
+						"type": "uint256"
+					}
+				],
+				"name": "updateCryptoMarketSentiment",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
 						"internalType": "uint256",
 						"name": "deltaBlocksLimit",
 						"type": "uint256"
@@ -1210,32 +1236,6 @@
 					}
 				],
 				"name": "updateSIGHSpeed",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "bool",
-						"name": "isSpeedUpperCheckAllowed_",
-						"type": "bool"
-					},
-					{
-						"internalType": "uint256",
-						"name": "maxVolatilityProtocolLimit_",
-						"type": "uint256"
-					}
-				],
-				"name": "updateSIGHSpeedUpperCheck",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -1464,10 +1464,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighDistributionHandler/SighDistributionHandler.sol": {
-			"keccak256": "0x4e90efc0bd7356ff933962dfee53cbb7af8d255f517dacd3edb2ba2783f4f134",
+			"keccak256": "0x197b6dbe8a7610f2a207b0cc939d930e507243a2956b35ce6946440ce54a926b",
 			"urls": [
-				"bzz-raw://ac7a31a256e43a9e0fb799a0e65dec2d4babbe5cd7fe6549fdb84e53d1fa73cc",
-				"dweb:/ipfs/QmY5Bfdi2MVr6s38v3TPMD8TgwZkcXFRUyZVa7gVvoHMhS"
+				"bzz-raw://ace85c6d87bf3c5963f3b5b415a5b02b5bbde006d2e7fe5aa9c54ce08bc5d5c1",
+				"dweb:/ipfs/QmVEwiSACDeGrYxBHVMhYSQBNg3pPSGwvxhfhztqWAV4Cd"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {
