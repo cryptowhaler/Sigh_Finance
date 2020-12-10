@@ -45,8 +45,12 @@
                         <!-- live instruments content -->
                         <tr v-if="!displayInUSD"  v-for="instrument in instruments">
                             <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" >{{ instrument.symbol }}</td>
-                            <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 15px !important; color: violet !important; font-weight: 400;" > {{ getBalanceString(instrument.totalCompoundedLiquidity) }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 15px !important; color: violet !important; font-weight: 400;"  > {{ getBalanceString(instrument.totalCompoundedBorrows) }} </td>                            <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;"  > {{ Number(instrument.utilizationRatePercent).toFixed(2) }} % </td>
+                            <td class="uk-text-center c-white" style="line-height: 1.5; font-size: 15px !important; color: violet !important; font-weight: 400;" > {{ getBalanceString(instrument.totalCompoundedLiquidity) }} 
+                                <br/> <span style="color:red; font-size:12px; font-weight: 300;"> bear: {{ Number(instrument.bearSentimentPercent).toFixed(2) }} % </span> 
+                            </td>
+                            <td class="uk-text-center c-white" style="line-height: 1.5; font-size: 15px !important; color: violet !important; font-weight: 400;"  > {{ getBalanceString(instrument.totalCompoundedBorrows) }}
+                                <br/> <span style="color:#66ff00; font-size:12px; font-weight: 300;"> bull: {{ Number(instrument.bullSentimentPercent).toFixed(2) }} % </span> 
+                            </td>                           
                             <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.supplyInterestRatePercent).toFixed(2)  }} % </td>
                             <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.stableBorrowInterestPercent).toFixed(2)  }} % </td>
                             <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.variableBorrowInterestPercent).toFixed(2)  }} %  </td>
@@ -58,8 +62,12 @@
                         </tr>
                         <tr v-if="displayInUSD" v-for="instrument in instruments">
                             <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" >{{ instrument.symbol }}</td>
-                            <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 15px !important; color: violet !important; font-weight: 400;" > $ {{ getBalanceString(instrument.totalCompoundedLiquidityUSD) }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 15px !important; color: violet !important; font-weight: 400;"  > $ {{ getBalanceString(instrument.totalCompoundedBorrowsUSD) }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 1.5; font-size: 15px !important; color: violet !important; font-weight: 400;" > $ {{ getBalanceString(instrument.totalCompoundedLiquidityUSD) }} 
+                                <br/> <span style="color:red; font-size:12px; font-weight: 300;"> bear: {{ Number(instrument.bearSentimentPercent).toFixed(2) }} % </span> 
+                            </td>
+                            <td class="uk-text-center c-white" style="line-height: 1.5; font-size: 15px !important; color: violet !important; font-weight: 400;"  > $ {{ getBalanceString(instrument.totalCompoundedBorrowsUSD) }} 
+                                <br/> <span style="color:#66ff00; font-size:12px; font-weight: 300;"> bull: {{ Number(instrument.bullSentimentPercent).toFixed(2) }} % </span> 
+                            </td>
                             <!-- <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;"  > {{ Number(instrument.utilizationRatePercent).toFixed(2) }} % </td> -->
                             <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.supplyInterestRatePercent).toFixed(2)  }} % </td>
                             <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.stableBorrowInterestPercent).toFixed(2)  }} % </td>

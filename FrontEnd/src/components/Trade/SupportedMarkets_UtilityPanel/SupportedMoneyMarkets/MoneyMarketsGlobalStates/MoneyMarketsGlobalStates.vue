@@ -54,6 +54,11 @@ export default {
                       underlyingInstrumentName
                       underlyingInstrumentSymbol
                       priceUSD
+
+                      bearSentimentPercent
+                      bullSentimentPercent
+                      isSIGHMechanismActivated
+
                       totalCompoundedLiquidity
                       totalCompoundedLiquidityUSD
                       totalCompoundedBorrows
@@ -108,8 +113,12 @@ export default {
 
       for (let i=0;i<instruments.length;i++) {
         let currentInstrument = {};
-        currentInstrument.symbol = instruments[i].underlyingInstrumentSymbol;
+        currentInstrument.symbol = instruments[i].underlyingInstrumentSymbol;    
+
+        currentInstrument.bearSentimentPercent = instruments[i].bearSentimentPercent;
+        currentInstrument.bullSentimentPercent = instruments[i].bullSentimentPercent;        
         currentInstrument.isSIGHMechanismActivated = instruments[i].isSIGHMechanismActivated;
+
         currentInstrument.totalCompoundedLiquidity = instruments[i].totalCompoundedLiquidity;
         currentInstrument.totalCompoundedLiquidityUSD = instruments[i].totalCompoundedLiquidityUSD;
         currentInstrument.totalCompoundedBorrows = instruments[i].totalCompoundedBorrows;

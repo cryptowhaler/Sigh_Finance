@@ -25,91 +25,23 @@
     "type": "event"
   },
   {
-    "constant": false,
+    "anonymous": false,
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
+        "indexed": false,
+        "internalType": "bool",
+        "name": "previsSpeedUpperCheckAllowed",
+        "type": "bool"
       },
       {
-        "internalType": "address",
-        "name": "_iTokenAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_sighStreamAddress",
-        "type": "address"
-      },
-      {
+        "indexed": false,
         "internalType": "uint256",
-        "name": "_decimals",
+        "name": "cryptoMarketSentiment",
         "type": "uint256"
       }
     ],
-    "name": "addInstrument",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "contract GlobalAddressesProvider",
-        "name": "addressesProvider_",
-        "type": "address"
-      }
-    ],
-    "name": "initialize",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "instrument_",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_maxVolatilityLimitSuppliers",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_maxVolatilityLimitBorrowers",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "_isSIGHMechanismActivated",
-        "type": "bool"
-      }
-    ],
-    "name": "Instrument_SIGH_StateUpdated",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "name": "CryptoMarketSentimentUpdated",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -185,13 +117,13 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "maxVolatilityLimitSuppliers",
+        "name": "bearSentiment",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "maxVolatilityLimitBorrowers",
+        "name": "bullSentiment",
         "type": "uint256"
       }
     ],
@@ -216,7 +148,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_24HrVolatilityLimitAmount",
+        "name": "_total24HrSentimentVolatility",
         "type": "uint256"
       }
     ],
@@ -296,30 +228,6 @@
     ],
     "name": "PriceSnapped",
     "type": "event"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "refreshConfig",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "refreshSIGHSpeeds",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
   },
   {
     "anonymous": false,
@@ -437,25 +345,6 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "bool",
-        "name": "previsSpeedUpperCheckAllowed",
-        "type": "bool"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "maxVolatilityProtocolLimit",
-        "type": "uint256"
-      }
-    ],
-    "name": "SpeedUpperCheckSwitched",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
         "internalType": "address",
         "name": "instrumentAddress_",
         "type": "address"
@@ -537,7 +426,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_percentTotalVolatilityLimitAmount",
+        "name": "_percentTotalSentimentVolatility",
         "type": "uint256"
       },
       {
@@ -555,178 +444,77 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_instrument",
-        "type": "address"
-      }
-    ],
-    "name": "removeInstrument",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "instrument",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "sigh_Amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "transferSighTotheUser",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "deltaBlocksLimit",
-        "type": "uint256"
-      }
-    ],
-    "name": "updateDeltaBlocksForSpeedRefresh",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "currentInstrument",
-        "type": "address"
-      }
-    ],
-    "name": "updateSIGHBorrowIndex",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "SIGHSpeed_",
-        "type": "uint256"
-      }
-    ],
-    "name": "updateSIGHSpeed",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "bool",
-        "name": "isSpeedUpperCheckAllowed_",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "maxVolatilityProtocolLimit_",
-        "type": "uint256"
-      }
-    ],
-    "name": "updateSIGHSpeedUpperCheck",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "currentInstrument",
-        "type": "address"
-      }
-    ],
-    "name": "updateSIGHSupplyIndex",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "instrument_",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "newStakingSpeed",
+        "name": "_bearSentiment",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_bullSentiment",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "_isSIGHMechanismActivated",
+        "type": "bool"
+      }
+    ],
+    "name": "Instrument_SIGH_StateUpdated",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "Sigh_Address",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_instrument",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_iTokenAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_sighStreamAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_decimals",
         "type": "uint256"
       }
     ],
-    "name": "updateStakingSpeedForAnInstrument",
+    "name": "addInstrument",
     "outputs": [
       {
         "internalType": "bool",
@@ -760,27 +548,6 @@
         "internalType": "address",
         "name": "instrument_",
         "type": "address"
-      }
-    ],
-    "name": "checkinitializationCounter",
-    "outputs": [
-      {
-        "internalType": "uint32",
-        "name": "",
-        "type": "uint32"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "instrument_",
-        "type": "address"
       },
       {
         "internalType": "uint256",
@@ -794,6 +561,27 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "instrument_",
+        "type": "address"
+      }
+    ],
+    "name": "checkinitializationCounter",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "",
+        "type": "uint32"
       }
     ],
     "payable": false,
@@ -870,6 +658,21 @@
     "constant": true,
     "inputs": [],
     "name": "getBlocksRemainingToNextSpeedRefresh",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getCryptoMarketSentiment",
     "outputs": [
       {
         "internalType": "uint256",
@@ -991,12 +794,12 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "_maxVolatilityLimitSuppliers",
+        "name": "_bearSentiment",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_maxVolatilityLimitBorrowers",
+        "name": "_bullSentiment",
         "type": "uint256"
       }
     ],
@@ -1079,12 +882,12 @@
       },
       {
         "internalType": "uint256",
-        "name": "_24HrVolatilityLimitAmount",
+        "name": "_total24HrSentimentVolatility",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "percentTotalVolatilityLimitAmount",
+        "name": "percentTotalSentimentVolatility",
         "type": "uint256"
       },
       {
@@ -1120,22 +923,7 @@
   {
     "constant": true,
     "inputs": [],
-    "name": "getLast24HrsTotalProtocolVolatilityLimit",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "getMaxVolatilityProtocolLimit",
+    "name": "getLast24HrsTotalSentimentProtocolVolatility",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1208,6 +996,21 @@
     "type": "function"
   },
   {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "contract GlobalAddressesProvider",
+        "name": "addressesProvider_",
+        "type": "address"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "constant": true,
     "inputs": [
       {
@@ -1259,18 +1062,48 @@
     "type": "function"
   },
   {
-    "constant": true,
+    "constant": false,
     "inputs": [],
-    "name": "Sigh_Address",
+    "name": "refreshConfig",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "refreshSIGHSpeeds",
     "outputs": [
       {
-        "internalType": "contract IERC20",
+        "internalType": "bool",
         "name": "",
-        "type": "address"
+        "type": "bool"
       }
     ],
     "payable": false,
-    "stateMutability": "view",
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_instrument",
+        "type": "address"
+      }
+    ],
+    "name": "removeInstrument",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1286,6 +1119,173 @@
     ],
     "payable": false,
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "instrument",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "sigh_Amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "transferSighTotheUser",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "isSpeedUpperCheckAllowed_",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "cryptoMarketSentiment_",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateCryptoMarketSentiment",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "deltaBlocksLimit",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateDeltaBlocksForSpeedRefresh",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "currentInstrument",
+        "type": "address"
+      }
+    ],
+    "name": "updateSIGHBorrowIndex",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "SIGHSpeed_",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateSIGHSpeed",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "currentInstrument",
+        "type": "address"
+      }
+    ],
+    "name": "updateSIGHSupplyIndex",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "instrument_",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "newStakingSpeed",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateStakingSpeedForAnInstrument",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

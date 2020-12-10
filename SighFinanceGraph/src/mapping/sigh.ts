@@ -222,7 +222,7 @@ export function createSIGH(addressID: string): SIGH_Instrument {
   sigh_token_contract.minimumBlocksBeforeSpeedRefresh = new BigInt(0)
 
   sigh_token_contract.isUpperCheckForVolatilitySet = false
-  sigh_token_contract.cryptoMarketSentiment = BigDecimal.fromString('0')
+  sigh_token_contract.cryptoMarketSentiment = BigDecimal.fromString('100')
 
   sigh_token_contract.currentSighVolatilityHarvestSpeedWEI = BigDecimal.fromString('0')
   sigh_token_contract.currentSighVolatilityHarvestSpeed = BigDecimal.fromString('0')
@@ -230,11 +230,11 @@ export function createSIGH(addressID: string): SIGH_Instrument {
   sigh_token_contract.totalLendingProtocolVolatilityPerBlockETH = BigDecimal.fromString('0')
   sigh_token_contract.totalLendingProtocolVolatilityPerBlockUSD = BigDecimal.fromString('0')
 
-  sigh_token_contract.maxHarvestableProtocolVolatilityPerBlockETH = BigDecimal.fromString('0')
-  sigh_token_contract.maxHarvestableProtocolVolatilityPerBlockUSD = BigDecimal.fromString('0')
+  sigh_token_contract.totalLendingProtocolSentimentVolatilityPerBlockETH = BigDecimal.fromString('0')
+  sigh_token_contract.totalLendingProtocolSentimentVolatilityPerBlockUSD = BigDecimal.fromString('0')
 
-  sigh_token_contract.percentBasedHarvestableProtocolVolatilityPerBlockETH = BigDecimal.fromString('0')
-  sigh_token_contract.percentBasedHarvestableProtocolVolatilityPerBlockUSD = BigDecimal.fromString('0')
+  sigh_token_contract.cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockETH = BigDecimal.fromString('0')
+  sigh_token_contract.cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockUSD = BigDecimal.fromString('0')
 
   sigh_token_contract.maxHarvestSizePossibleETH = BigDecimal.fromString('0')
   sigh_token_contract.maxHarvestSizePossibleUSD = BigDecimal.fromString('0')

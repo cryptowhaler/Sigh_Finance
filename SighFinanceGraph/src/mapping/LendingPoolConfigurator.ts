@@ -497,8 +497,8 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.SIGH_Borrow_Index = new BigInt(0)
     instrument_state_initialized.SIGH_Borrow_Index_lastUpdatedBlock = new BigInt(0)
 
-    instrument_state_initialized.maxVolatilityLimitSuppliersPercent = BigDecimal.fromString('0')
-    instrument_state_initialized.maxVolatilityLimitBorrowersPercent = BigDecimal.fromString('0')
+    instrument_state_initialized.bearSentimentPercent = BigDecimal.fromString('0')
+    instrument_state_initialized.bullSentimentPercent = BigDecimal.fromString('0')
 
     instrument_state_initialized.present_PrevPrice_ETH = BigDecimal.fromString('0')
     instrument_state_initialized.present_PrevPrice_USD = BigDecimal.fromString('0')

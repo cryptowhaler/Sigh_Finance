@@ -188,8 +188,8 @@ dataSources:
           handler: handleSIGHSpeedUpdated
         - event: StakingSpeedUpdated(address,uint256,uint256,uint256)
           handler: handleStakingSpeedUpdated
-        - event: SpeedUpperCheckSwitched(bool,uint256)
-          handler: handleSpeedUpperCheckSwitched
+        - event: CryptoMarketSentimentUpdated(bool,uint256)
+          handler: handleCryptoMarketSentimentUpdated
         - event: minimumBlocksForSpeedRefreshUpdated(uint256,uint256,uint256)
           handler: handleMinimumBlocksForSpeedRefreshUpdated
         - event: PriceSnapped(address,uint256,uint256,uint256,uint256)

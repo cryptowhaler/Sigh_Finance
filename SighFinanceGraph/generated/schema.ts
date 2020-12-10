@@ -664,54 +664,58 @@ export class SIGH_Instrument extends Entity {
     );
   }
 
-  get maxHarvestableProtocolVolatilityPerBlockETH(): BigDecimal {
-    let value = this.get("maxHarvestableProtocolVolatilityPerBlockETH");
+  get totalLendingProtocolSentimentVolatilityPerBlockETH(): BigDecimal {
+    let value = this.get("totalLendingProtocolSentimentVolatilityPerBlockETH");
     return value.toBigDecimal();
   }
 
-  set maxHarvestableProtocolVolatilityPerBlockETH(value: BigDecimal) {
+  set totalLendingProtocolSentimentVolatilityPerBlockETH(value: BigDecimal) {
     this.set(
-      "maxHarvestableProtocolVolatilityPerBlockETH",
+      "totalLendingProtocolSentimentVolatilityPerBlockETH",
       Value.fromBigDecimal(value)
     );
   }
 
-  get maxHarvestableProtocolVolatilityPerBlockUSD(): BigDecimal {
-    let value = this.get("maxHarvestableProtocolVolatilityPerBlockUSD");
+  get totalLendingProtocolSentimentVolatilityPerBlockUSD(): BigDecimal {
+    let value = this.get("totalLendingProtocolSentimentVolatilityPerBlockUSD");
     return value.toBigDecimal();
   }
 
-  set maxHarvestableProtocolVolatilityPerBlockUSD(value: BigDecimal) {
+  set totalLendingProtocolSentimentVolatilityPerBlockUSD(value: BigDecimal) {
     this.set(
-      "maxHarvestableProtocolVolatilityPerBlockUSD",
+      "totalLendingProtocolSentimentVolatilityPerBlockUSD",
       Value.fromBigDecimal(value)
     );
   }
 
-  get percentBasedHarvestableProtocolVolatilityPerBlockETH(): BigDecimal {
+  get cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockETH(): BigDecimal {
     let value = this.get(
-      "percentBasedHarvestableProtocolVolatilityPerBlockETH"
+      "cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockETH"
     );
     return value.toBigDecimal();
   }
 
-  set percentBasedHarvestableProtocolVolatilityPerBlockETH(value: BigDecimal) {
+  set cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockETH(
+    value: BigDecimal
+  ) {
     this.set(
-      "percentBasedHarvestableProtocolVolatilityPerBlockETH",
+      "cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockETH",
       Value.fromBigDecimal(value)
     );
   }
 
-  get percentBasedHarvestableProtocolVolatilityPerBlockUSD(): BigDecimal {
+  get cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockUSD(): BigDecimal {
     let value = this.get(
-      "percentBasedHarvestableProtocolVolatilityPerBlockUSD"
+      "cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockUSD"
     );
     return value.toBigDecimal();
   }
 
-  set percentBasedHarvestableProtocolVolatilityPerBlockUSD(value: BigDecimal) {
+  set cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockUSD(
+    value: BigDecimal
+  ) {
     this.set(
-      "percentBasedHarvestableProtocolVolatilityPerBlockUSD",
+      "cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockUSD",
       Value.fromBigDecimal(value)
     );
   }
@@ -2065,38 +2069,38 @@ export class Instrument extends Entity {
     this.set("present_percentTotalVolatility", Value.fromBigDecimal(value));
   }
 
-  get present_24HrVolatilityLimitAmountETH(): BigDecimal {
-    let value = this.get("present_24HrVolatilityLimitAmountETH");
+  get present_total24HrSentimentVolatilityETH(): BigDecimal {
+    let value = this.get("present_total24HrSentimentVolatilityETH");
     return value.toBigDecimal();
   }
 
-  set present_24HrVolatilityLimitAmountETH(value: BigDecimal) {
+  set present_total24HrSentimentVolatilityETH(value: BigDecimal) {
     this.set(
-      "present_24HrVolatilityLimitAmountETH",
+      "present_total24HrSentimentVolatilityETH",
       Value.fromBigDecimal(value)
     );
   }
 
-  get present_24HrVolatilityLimitAmountUSD(): BigDecimal {
-    let value = this.get("present_24HrVolatilityLimitAmountUSD");
+  get present_total24HrSentimentVolatilityUSD(): BigDecimal {
+    let value = this.get("present_total24HrSentimentVolatilityUSD");
     return value.toBigDecimal();
   }
 
-  set present_24HrVolatilityLimitAmountUSD(value: BigDecimal) {
+  set present_total24HrSentimentVolatilityUSD(value: BigDecimal) {
     this.set(
-      "present_24HrVolatilityLimitAmountUSD",
+      "present_total24HrSentimentVolatilityUSD",
       Value.fromBigDecimal(value)
     );
   }
 
-  get present_percentTotalVolatilityLimitAmount(): BigDecimal {
-    let value = this.get("present_percentTotalVolatilityLimitAmount");
+  get present_percentTotalSentimentVolatility(): BigDecimal {
+    let value = this.get("present_percentTotalSentimentVolatility");
     return value.toBigDecimal();
   }
 
-  set present_percentTotalVolatilityLimitAmount(value: BigDecimal) {
+  set present_percentTotalSentimentVolatility(value: BigDecimal) {
     this.set(
-      "present_percentTotalVolatilityLimitAmount",
+      "present_percentTotalSentimentVolatility",
       Value.fromBigDecimal(value)
     );
   }
@@ -2705,22 +2709,22 @@ export class SIGH_Distribution_SnapShot extends Entity {
     this.set("total24HrVolatilityUSD", Value.fromBigDecimal(value));
   }
 
-  get total24HrVolatilityLimitAmountETH(): BigDecimal {
-    let value = this.get("total24HrVolatilityLimitAmountETH");
+  get total24HrSentimentVolatilityETH(): BigDecimal {
+    let value = this.get("total24HrSentimentVolatilityETH");
     return value.toBigDecimal();
   }
 
-  set total24HrVolatilityLimitAmountETH(value: BigDecimal) {
-    this.set("total24HrVolatilityLimitAmountETH", Value.fromBigDecimal(value));
+  set total24HrSentimentVolatilityETH(value: BigDecimal) {
+    this.set("total24HrSentimentVolatilityETH", Value.fromBigDecimal(value));
   }
 
-  get total24HrVolatilityLimitAmountUSD(): BigDecimal {
-    let value = this.get("total24HrVolatilityLimitAmountUSD");
+  get total24HrSentimentVolatilityUSD(): BigDecimal {
+    let value = this.get("total24HrSentimentVolatilityUSD");
     return value.toBigDecimal();
   }
 
-  set total24HrVolatilityLimitAmountUSD(value: BigDecimal) {
-    this.set("total24HrVolatilityLimitAmountUSD", Value.fromBigDecimal(value));
+  set total24HrSentimentVolatilityUSD(value: BigDecimal) {
+    this.set("total24HrSentimentVolatilityUSD", Value.fromBigDecimal(value));
   }
 
   get totalVolatilityAsPercentOfTotalProtocolVolatility(): BigDecimal {
@@ -2735,18 +2739,18 @@ export class SIGH_Distribution_SnapShot extends Entity {
     );
   }
 
-  get instrumentLimitVolatilityAsPercentOflimitProtocolVolatility(): BigDecimal {
+  get instrumentSentimentVolatilityAsPercentOfProtocolSentimentVolatility(): BigDecimal {
     let value = this.get(
-      "instrumentLimitVolatilityAsPercentOflimitProtocolVolatility"
+      "instrumentSentimentVolatilityAsPercentOfProtocolSentimentVolatility"
     );
     return value.toBigDecimal();
   }
 
-  set instrumentLimitVolatilityAsPercentOflimitProtocolVolatility(
+  set instrumentSentimentVolatilityAsPercentOfProtocolSentimentVolatility(
     value: BigDecimal
   ) {
     this.set(
-      "instrumentLimitVolatilityAsPercentOflimitProtocolVolatility",
+      "instrumentSentimentVolatilityAsPercentOfProtocolSentimentVolatility",
       Value.fromBigDecimal(value)
     );
   }

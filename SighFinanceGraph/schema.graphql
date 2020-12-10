@@ -106,12 +106,12 @@ type SIGH_Instrument @entity {
     totalLendingProtocolVolatilityPerBlockUSD: BigDecimal!
 
     "Maximum Volatility that can be harvested : Per Block"
-    maxHarvestableProtocolVolatilityPerBlockETH: BigDecimal!
-    maxHarvestableProtocolVolatilityPerBlockUSD: BigDecimal!
+    totalLendingProtocolSentimentVolatilityPerBlockETH: BigDecimal!
+    totalLendingProtocolSentimentVolatilityPerBlockUSD: BigDecimal!
 
     "part of the maximum Volatility that can be harvested : Per Block"
-    percentBasedHarvestableProtocolVolatilityPerBlockETH: BigDecimal!
-    percentBasedHarvestableProtocolVolatilityPerBlockUSD: BigDecimal!
+    cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockETH: BigDecimal!
+    cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockUSD: BigDecimal!
 
     "Maximum Value of $SIGH that can be harvested : Per Block"
     maxHarvestSizePossibleETH: BigDecimal!
@@ -412,11 +412,11 @@ type SIGH_Distribution_SnapShot @entity {
 
     total24HrVolatilityETH: BigDecimal!
     total24HrVolatilityUSD: BigDecimal!
-    total24HrVolatilityLimitAmountETH: BigDecimal!
-    total24HrVolatilityLimitAmountUSD: BigDecimal!
+    total24HrSentimentVolatilityETH: BigDecimal!
+    total24HrSentimentVolatilityUSD: BigDecimal!
 
     totalVolatilityAsPercentOfTotalProtocolVolatility: BigDecimal!
-    instrumentLimitVolatilityAsPercentOflimitProtocolVolatility: BigDecimal!
+    instrumentSentimentVolatilityAsPercentOfProtocolSentimentVolatility: BigDecimal!
 
     suppliers_Speed: BigDecimal!
     borrowers_Speed: BigDecimal!
