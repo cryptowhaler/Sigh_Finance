@@ -67,15 +67,16 @@
                 </div>
             </div>
         </div>
-        <span style=" line-height:24px; width:100%; margin-top: 11px; font-size: 15px; padding: 1px; border: aquamarine dotted 0.1px; text-align: center; float: center; color: chartreuse;">  
+        <span style=" line-height:24px; width:100%; margin-top: 11px; margin-bottom: 11px; font-size: 15px; padding: 1px; border: aquamarine dotted 0.1px; text-align: center; float: center; color: chartreuse;">  
             Thank You for Choosing $SIGH Finance to Farm your Volatility Risks! &#x1F69C;	&#128104;&#8205;&#127806;
         </span>
         <div v-if="showLoaderCollateral" class="uk-width-1-1 center">
             <img style="margin-top: 22px;" src="https://image.ibb.co/dc02hd/30.gif" />
         </div>
         <div v-else style="text-align:center;"> 
-            <button v-if="!selectedInstrumentWalletState.usageAsCollateralEnabled && Number(selectedInstrumentWalletState.userDepositedBalance) > 0" style="background: darkblue; margin-top: 22px;" class="uk-button uk-button-black"  @click="switchInstrumentAsCollateral(true)">Enable as Collateral</button>
-            <button v-if="selectedInstrumentWalletState.usageAsCollateralEnabled && Number(selectedInstrumentWalletState.userDepositedBalance) > 0" style="background: darkblue; margin-top: 22px;" class="uk-button uk-button-black"  @click="switchInstrumentAsCollateral(false)">Disable as Collateral</button>
+            <button v-if="!selectedInstrumentWalletState.usageAsCollateralEnabled && Number(selectedInstrumentWalletState.userDepositedBalance) > 0" style="background: darkblue;" class="uk-button uk-button-black"  @click="switchInstrumentAsCollateral(true)">Enable as Collateral</button>
+            <button v-if="selectedInstrumentWalletState.usageAsCollateralEnabled && Number(selectedInstrumentWalletState.userDepositedBalance) > 0" style="background: darkblue;" class="uk-button uk-button-black"  @click="switchInstrumentAsCollateral(false)">Disable as Collateral</button>
+            <span v-if="Number(selectedInstrumentWalletState.userDepositedBalance) == 0" style="display: contents; color: yellow; font-size: 20px; "> &#127806; &#127806; &#127806; &#127806; </span>
         </div>
     </div>
 

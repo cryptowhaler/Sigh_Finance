@@ -25,6 +25,7 @@ export default {
       showLoaderRefresh: false,
       intervalActivated: false,
       displayInString: true,
+      showLoaderBorrowRateSwap: false,
     };
   },
   
@@ -63,7 +64,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['LendingPool_borrow','getInstrumentPrice','refresh_User_Instrument_State']),
+    ...mapActions(['LendingPool_borrow','getInstrumentPrice','refresh_User_Instrument_State','LendingPool_swapBorrowRateMode']),
     
     toggle() {
       this.displayInString = !this.displayInString;
@@ -136,6 +137,41 @@ export default {
       }
     }, 
       
+    async swapBorrowRateMode(rateType) {
+      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
+        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
+        return;
+      }
+      else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
+        this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
+        return;
+      } 
+      if (rateType == 'stable') {
+        let instrumentGlobalStateConfig = this.$store.state.supportedInstrumentConfigs.get(this.selectedInstrument.instrumentAddress);
+        if ( instrumentGlobalStateConfig.usageAsCollateralEnabled && this.selectedInstrumentWalletState.usageAsCollateralEnabled &&  (Number(this.selectedInstrumentWalletState.userDepositedBalance) > Number(this.selectedInstrumentWalletState.currentBorrowBalance))  ) {
+          this.$showErrorMsg({message: " The instrument needs to be disabled as collateral or the current borrow balance needs to be greater than the deposited " + this.selectedInstrument.symbol + " balance for it to be switched to the STABLE rate!"}); 
+          return;
+        }
+      }
+      this.showLoaderBorrowRateSwap = true;
+      let response =  await this.LendingPool_swapBorrowRateMode({_instrument: this.selectedInstrument.instrumentAddress, symbol: this.selectedInstrument.symbol  });
+      if (response.status) {    
+        if (rateType == 'stable') {
+          this.$showSuccessMsg({message: "BORROW position for the instrument "+ this.selectedInstrument.symbol + " successfully switched to STABLE Interest Rate! Gas used = " + response.gasUsed });
+        }
+        if (rateType == 'variable') {
+          this.$showSuccessMsg({message: "BORROW position for the instrument "+ this.selectedInstrument.symbol + " successfully switched to VARIABLE Interest Rate! Gas used = " + response.gasUsed });
+        }        
+        await this.refreshCurrentInstrumentWalletState(false);
+        console.log(this.selectedInstrumentWalletState);
+      }
+      else {
+        this.$showErrorMsg({message: "BORROW Rate Switch Failed : " + response.message  }); 
+        this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+      }
+      this.showLoaderBorrowRateSwap = false;
+    },
 
 
     async refreshCurrentInstrumentWalletState(toDisplay) {

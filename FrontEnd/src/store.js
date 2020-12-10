@@ -1624,11 +1624,10 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => { 
       }
     },
 
-    LendingPool_swapBorrowRateMode: async ({commit,state},{_instrument}) => {
+    LendingPool_swapBorrowRateMode: async ({commit,state},{_instrument, symbol}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
         try {
-          let symbol = state.supportedInstrumentConfigs.get(_instrument).symbol;                    
           const response = await lendingPoolContract.methods.swapBorrowRateMode(_instrument).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
             let transaction = {hash : hash, function : 'Swap Borrow Rate Mode : ' + symbol , amount : null}; 
             commit('addToSessionPendingTransactions',transaction);
