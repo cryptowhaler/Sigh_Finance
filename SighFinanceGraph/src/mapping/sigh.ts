@@ -208,6 +208,8 @@ export function createSIGH(addressID: string): SIGH_Instrument {
   sigh_token_contract.currentBurnSpeed_WEI = new BigInt(0)
   sigh_token_contract.currentBurnSpeed = BigDecimal.fromString('0')
 
+  sigh_token_contract.blocksPerCycle = new BigInt(6500)   // HARD-CODED
+
   sigh_token_contract.priceETH = BigDecimal.fromString('0')
   sigh_token_contract.priceUSD = BigDecimal.fromString('0')
 

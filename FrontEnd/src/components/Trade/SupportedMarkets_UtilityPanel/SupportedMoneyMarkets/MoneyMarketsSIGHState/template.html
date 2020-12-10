@@ -34,13 +34,13 @@
                         <tr>
                             <th class="uk-text-center"> <span style="color: ivory;font-weight: 700; color:yellow; font-size: 15px !important;" > $SIGH FARMS</span> </th>
                             <!-- <th class="uk-text-center">Instrument</th> -->
-                            <th class="uk-text-center"> <span style="color:aqua;">Harvest Limit - </span><span style="color:#66ff00;"> LONG </span> </th>
-                            <th class="uk-text-center"> <span style="color:aqua;">Harvest Limit - </span><span style="color:red;"> SHORT </span> </th>
                             <th class="uk-text-center">Previous Price</th>
                             <th class="uk-text-center">Harvest Price</th>
                             <th class="uk-text-center"><span style="color:mediumvioletred;">Volatility</span> (24Hr)</th>
                             <th class="uk-text-center"><span style="color:aqua;">Maximum Harvests </span></th>
                             <th class="uk-text-center"><span style="color:aqua;">Harvested  </span><span style="color:yellow; font-weight: 700; font-size:15px;"> $SIGH </span></th>
+                            <th class="uk-text-center"> <span style="color:aqua;">Harvest Limit - </span><span style="color:#66ff00;"> LONG </span> </th>
+                            <th class="uk-text-center"> <span style="color:aqua;">Harvest Limit - </span><span style="color:red;"> SHORT </span> </th>
                             <!-- <th class="uk-text-center"> $SIGH Yield </th> -->
                         </tr>
                     </thead>
@@ -49,11 +49,11 @@
                         <tr v-for="instrument in instruments">
                             <td class="uk-text-center c-white" style="line-height: 1;" >{{ instrument.name }}</td>
                             <!-- Active / In-Active (LONG) -->
-                            <td v-if="instrument.isSIGHMechanismActivated" class="uk-text-center c-white" style="line-height: 4;" > {{ Number(instrument.maxVolatilityLimitSuppliersPercent).toFixed(2) }} % </td>
-                            <td v-if="!instrument.isSIGHMechanismActivated" class="uk-text-center c-red" style="line-height: 4;" > In-Active </td>
+                            <!-- <td v-if="instrument.isSIGHMechanismActivated" class="uk-text-center c-white" style="line-height: 4;" > {{ Number(instrument.maxVolatilityLimitSuppliersPercent).toFixed(2) }} % </td>
+                            <td v-if="!instrument.isSIGHMechanismActivated" class="uk-text-center c-red" style="line-height: 4;" > In-Active </td> -->
                             <!-- Active / In-Active (SHORT) -->
-                            <td v-if="instrument.isSIGHMechanismActivated" class="uk-text-center c-white" style="line-height: 4;" > {{ Number(instrument.maxVolatilityLimitBorrowersPercent).toFixed(2) }} % </td>
-                            <td v-if="!instrument.isSIGHMechanismActivated" class="uk-text-center c-red" style="line-height: 4;" > In-Active </td>
+                            <!-- <td v-if="instrument.isSIGHMechanismActivated" class="uk-text-center c-white" style="line-height: 4;" > {{ Number(instrument.maxVolatilityLimitBorrowersPercent).toFixed(2) }} % </td>
+                            <td v-if="!instrument.isSIGHMechanismActivated" class="uk-text-center c-red" style="line-height: 4;" > In-Active </td> -->
                             <!-- Previous Price -->
                             <td  class="uk-text-center c-white" v-if="Number(instrument.present_PrevPrice_USD) > 0" style="line-height: 4;" > $ {{  Number(instrument.present_PrevPrice_USD).toFixed(2) }} </td>
                             <td  class="uk-text-center c-red" v-else style="line-height: 4;"  > In-Active </td>
@@ -65,13 +65,13 @@
                             <td v-if="instrument.isSIGHMechanismActivated && instrument.present_SIGH_Side=='Borrowers'" class="uk-text-center c-green" style="line-height: 1.4;" > $ {{ Number(instrument.present_total24HrVolatilityUSD).toFixed(2) }} <br> <span style="color:cornsilk; font-size:inherit;">({{ Number(instrument.present_percentTotalVolatility).toFixed(2) }}%)</span> </td>
                             <td v-if="!instrument.isSIGHMechanismActivated || instrument.present_SIGH_Side=='In-Active'" class="uk-text-center c-white" style="line-height: 4;" > In-Active </td>
                             <!-- MAXIMUM HARVESTS : Increase[$SIGH Farmed against Short Positions, i.e Borrowers Receive farmed $SIGH] / Decrease[$SIGH Farmed against Long Positions, i.e Suppliers Receive farmed $SIGH] / IN-Active -->
-                            <td v-if="instrument.isSIGHMechanismActivated && instrument.present_SIGH_Side=='Suppliers'" class="uk-text-center c-green" style="line-height: 1.4;" > $ {{ Number(instrument.present_24HrVolatilityLimitAmountUSD).toFixed(2) }} <br> <span style="color:cornsilk; font-size:inherit;">({{ Number(instrument.present_percentTotalVolatilityLimitAmount).toFixed(2) }}%)</span> </td>
-                            <td v-if="instrument.isSIGHMechanismActivated && instrument.present_SIGH_Side=='Borrowers'" class="uk-text-center c-green" style="line-height: 1.4;" > $ {{ Number(instrument.present_24HrVolatilityLimitAmountUSD).toFixed(2) }} <br> <span style="color:cornsilk; font-size:inherit;">({{ Number(instrument.present_percentTotalVolatilityLimitAmount).toFixed(2) }}%)</span> </td>
+                            <td v-if="instrument.isSIGHMechanismActivated && instrument.present_SIGH_Side=='Suppliers'" class="uk-text-center c-green" style="line-height: 1.4;" > $ {{ Number(instrument.present_24HrVolatilityLimitAmountUSD).toFixed(2) }} <br> <span style="color:cornsilk; font-size:inherit;">({{ Number(instrument.present_total24HrVolatilityUSD) > 0 ? Number( Number(instrument.present_24HrVolatilityLimitAmountUSD) / Number(instrument.present_total24HrVolatilityUSD) ).toFixed(4) * 100 : 100.00 }} %)</span> </td>
+                            <td v-if="instrument.isSIGHMechanismActivated && instrument.present_SIGH_Side=='Borrowers'" class="uk-text-center c-green" style="line-height: 1.4;" > $ {{ Number(instrument.present_24HrVolatilityLimitAmountUSD).toFixed(2) }} <br> <span style="color:cornsilk; font-size:inherit;">({{ Number(instrument.present_total24HrVolatilityUSD) > 0 ? Number( Number(instrument.present_24HrVolatilityLimitAmountUSD) / Number(instrument.present_total24HrVolatilityUSD) ).toFixed(4) * 100 : 100.00 }} %)</span> </td>
                             <td v-if="!instrument.isSIGHMechanismActivated || instrument.present_SIGH_Side=='In-Active'" class="uk-text-center c-white" style="line-height: 4;" > In-Active </td>
                             <!-- HARVESTED $SIGH : (Suppliers Speed * Delta Blocks * $SIGH Price) / (Borrowers Speed * Delta Blocks * $SIGH Price) / IN-Active -->
-                            <td v-if="instrument.isSIGHMechanismActivated && instrument.present_SIGH_Side=='Suppliers'" class="uk-text-center c-green" style="line-height: 1.4; font-size:12px !important; " > $ {{ Number( Number(instrument.present_SIGH_Suppliers_Speed) * Number(instrument.present_DeltaBlocks) * sighPriceInUSD ).toFixed(2) }} <span style="color:#66ff00;"> - Long </span> </td>
-                            <td v-if="instrument.isSIGHMechanismActivated && instrument.present_SIGH_Side=='Borrowers'" class="uk-text-center c-green" style="line-height: 1.4; font-size:12px !important;" > $ {{  Number( Number(instrument.present_SIGH_Borrowers_Speed) * Number(instrument.present_DeltaBlocks) * sighPriceInUSD ).toFixed(2) }} <span style="color:red;"> - Short </span> </td>
-                            <td v-if="!instrument.isSIGHMechanismActivated || instrument.present_SIGH_Side=='In-Active'" class="uk-text-center c-green" style="line-height: 1.4; font-size:12px !important;" > $ {{ Number( Number(instrument.present_SIGH_Staking_Speed)  * Number(instrument.present_DeltaBlocks) *sighPriceInUSD ).toFixed(2) }} <span style="color:white;"> - Stake </span>  </td>
+                            <td v-if="instrument.isSIGHMechanismActivated && instrument.present_SIGH_Side=='Suppliers'" class="uk-text-center c-green" style="line-height: 1.4; width: 18% !important; font-size:12px !important; " > $ {{ Number( Number(instrument.present_harvestSpeedPerDay) * sighPriceInUSD ).toFixed(2) }} <span style="color:#66ff00;"> - Long </span>  <br> <span style="color:cornsilk; font-size:inherit;">({{ Number(instrument.present_total24HrVolatilityUSD) > 0 ? Number( Number(instrument.present_harvestSpeedPerDay) * sighPriceInUSD / Number(instrument.present_total24HrVolatilityUSD) ).toFixed(4) * 100 : 100.00 }} %)</span> </td>
+                            <td v-if="instrument.isSIGHMechanismActivated && instrument.present_SIGH_Side=='Borrowers'" class="uk-text-center c-green" style="line-height: 1.4; width: 18% !important; font-size:12px !important;" > $ {{  Number( Number(instrument.present_harvestSpeedPerDay) * sighPriceInUSD ).toFixed(2) }} <span style="color:red;"> - Short </span>   <br> <span style="color:cornsilk; font-size:inherit;">({{ Number(instrument.present_total24HrVolatilityUSD) > 0 ? Number( Number(instrument.present_harvestSpeedPerDay) * sighPriceInUSD / Number(instrument.present_total24HrVolatilityUSD) ).toFixed(4) * 100 : 100.00 }} %)</span> </td>
+                            <td v-if="!instrument.isSIGHMechanismActivated || instrument.present_SIGH_Side=='In-Active'" class="uk-text-center c-green" style="line-height: 1.4; width: 18% !important; font-size:12px !important;" > $ {{ Number( Number(instrument.present_harvestSpeedPerDay) * sighPriceInUSD ).toFixed(2) }} <span style="color:white;"> - Stake </span>    <br> <span style="color:cornsilk; font-size:inherit;">({{ Number(instrument.present_total24HrVolatilityUSD) > 0 ? Number( Number(instrument.present_harvestSpeedPerDay) * sighPriceInUSD / Number(instrument.present_total24HrVolatilityUSD) ).toFixed(4) * 100 : 100.00 }} %)</span> </td>
                         </tr>
                     </tbody>
                 </table>

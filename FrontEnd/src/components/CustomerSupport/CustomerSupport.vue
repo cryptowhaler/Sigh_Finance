@@ -1,14 +1,6 @@
 <template>
   <div class="support">
-    <div
-      v-if="!mobileMenu"
-      :class="['support-content', !noIcon ? 'with-icon' : 'without-icon']"
-      @click="showModal"
-      style='padding-left: 22px;'
-    >
-      <div v-if="!noIcon" class="support-icon">
-        <img :alt="help_center" style="padding-left: 42px;" src="~@/assets/images/help-center.svg"/>
-      </div>
+    <div v-if="!mobileMenu"  :class="['support-content', !noIcon ? 'with-icon' : 'without-icon']" @click="showModal" style='padding-left: 12px;'>
       <div v-if="!noIcon" class="support-label">
         <h5 style="color: aqua">{{customer_support}}</h5>
       </div>

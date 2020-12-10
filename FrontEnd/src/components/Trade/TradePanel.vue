@@ -15,6 +15,7 @@ export default {
   data() {
     return {
       sighInstrument: {}, 
+      displayInNumbers: false,
     };
   },
 
@@ -45,13 +46,12 @@ export default {
                       currentMintSpeed
                       currentBurnSpeed
 
+                      # blocksPerCycle
+
                       isUpperCheckForVolatilitySet
                       percentHarvestableVolatilityBeingHarvested
                       
                       maxSighVolatilityHarvestSpeed
-                      maxSighVolatilityHarvestSpeedWEI
-
-                      currentSighVolatilityHarvestSpeedWEI
                       currentSighVolatilityHarvestSpeed
                       
                       totalLendingProtocolVolatilityPerBlockETH
@@ -79,6 +79,7 @@ export default {
             let _sighInstrument = data.sighInstruments[0];
             if (_sighInstrument) {
               this.sighInstrument = _sighInstrument;
+              this.$store.commit("updateSIGHPrice",this.sighInstrument.priceUSD);
             }
           }
         },
@@ -89,6 +90,9 @@ export default {
   methods: {
     ...mapActions(['SIGHSpeedController_drip']),
 
+    toggle() {
+      this.displayInNumbers = !this.displayInNumbers;
+    },
 
       async drip_SIGH() {
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
@@ -110,7 +114,21 @@ export default {
       }
     },
 
-
+    getBalanceString(number)  {
+      if ( Number(number) >= 1000000000 ) {
+        let inBil = (Number(number) / 1000000000).toFixed(2);
+        return inBil.toString() + ' B';
+      } 
+      if ( Number(number) >= 1000000 ) {
+        let inMil = (Number(number) / 1000000).toFixed(2);
+        return inMil.toString() + ' M';
+      } 
+      if ( Number(number) >= 1000 ) {
+        let inK = (Number(number) / 1000).toFixed(2);
+        return inK.toString() + ' K';
+      } 
+      return Number(number).toFixed(2);
+    },  
 
   }
 

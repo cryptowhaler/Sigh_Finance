@@ -1,4 +1,14 @@
-type SIGH_FINANCE @entity {
+type ContractAddresses @entity {
+    id: ID!
+
+    GlobalAddressesProviderContractAddress: Bytes!
+
+
+
+
+}
+
+type SIGH_FINANCE @entity {    
     id: ID!
     creationBlockNumber: BigInt!
     instrumentSupported: [Bytes]!
@@ -58,6 +68,8 @@ type SIGH_Instrument @entity {
     recentSIGHBurnt: BigDecimal!
     totalSIGHBurnt_WEI: BigInt!
     totalSIGHBurnt: BigDecimal!
+
+    blocksPerCycle: BigInt!
 
     currentCycle: BigInt!
     currentSchedule: BigInt!

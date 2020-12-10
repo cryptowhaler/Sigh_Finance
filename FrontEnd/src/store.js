@@ -139,7 +139,7 @@ const store = new Vuex.Store({
     ethereumPriceUSD: null,             // ETH Price in USD
 
     // SIGH / ETH : PRICE 
-    sighPriceETH: null,                  // SIGH Price in ETH
+    sighPriceUSD: null,                  // SIGH Price in ETH
     sighPriceDecimals: null,             // Decimals 
 
     // BLOCKS REMAINING FOR SIGH SPEED REFRESH
@@ -250,7 +250,7 @@ const store = new Vuex.Store({
       return state.ethPriceDecimals;
     },
     getSIGHPrice(state) {
-      return state.sighPriceETH;
+      return state.sighPriceUSD;
     },     
     getSIGHPriceDecimals(state) {
       return state.sighPriceDecimals;
@@ -444,7 +444,7 @@ const store = new Vuex.Store({
       state.sighPriceDecimals = decimals;
     },
     updateSIGHPrice(state, updatedPrice) {
-      state.sighPriceETH = updatedPrice;
+      state.sighPriceUSD = updatedPrice;
     },
     updateBlocksRemainingForSIGHSpeedRefresh(state,blockRemaining_) {
       state.blocksRemainingForSIGHSpeedRefresh = blockRemaining_;
@@ -707,10 +707,10 @@ const store = new Vuex.Store({
         commit('updateETHPrice',ethPriceUSD);                             // ETH/USD Price 
 
         // SIGH/ETH : PRICE & PRICE DECIMALS
-        let sighPriceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: state.SIGHContractAddress});   
-        commit('setSIGHPriceDecimals',sighPriceDecimals);                  // SIGH/ETH Price Decimals
-        let sighPriceETH = await store.dispatch("getInstrumentPrice",{_instrumentAddress: state.EthereumPriceOracleAddress}); 
-        commit('updateSIGHPrice',sighPriceETH);                             // SIGH/ETH Price
+        // let sighPriceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: state.SIGHContractAddress});   
+        // commit('setSIGHPriceDecimals',sighPriceDecimals);                  // SIGH/ETH Price Decimals
+        // let sighPriceETH = await store.dispatch("getInstrumentPrice",{_instrumentAddress: state.EthereumPriceOracleAddress}); 
+        // commit('updateSIGHPrice',sighPriceETH);                             // SIGH/ETH Price
         
         // INITIATE POLLING : ETH Price, Blocks Remaining, Transaction States
         store.dispatch('initiatePolling_ETHPrice_SpeedRefresh_Transactions');
@@ -740,13 +740,13 @@ const store = new Vuex.Store({
         }
       }
       // POLLING SIGH/ETH PRICE
-      if (state.SIGHContractAddress) {
-        let updatedPrice_ = await store.dispatch('getInstrumentPrice', { _instrumentAddress : state.SIGHContractAddress } );
-        if (updatedPrice_) {
-          commit("updateSIGHPrice",updatedPrice_);
-          console.log( " SIGH / ETH : " + updatedPrice_ + " ETH");
-        }
-      }
+      // if (state.SIGHContractAddress) {
+      //   let updatedPrice_ = await store.dispatch('getInstrumentPrice', { _instrumentAddress : state.SIGHContractAddress } );
+      //   if (updatedPrice_) {
+      //     commit("updateSIGHPrice",updatedPrice_);
+      //     console.log( " SIGH / ETH : " + updatedPrice_ + " ETH");
+      //   }
+      // }
       // POLLING BLOCKS REMAINING TO REFRESH $SIGH SPEEDS
       if (state.SIGHDistributionHandlerAddress) {
         let blocksRemaining_ = await store.dispatch('SIGHDistributionHandler_getBlocksRemainingToNextSpeedRefresh');

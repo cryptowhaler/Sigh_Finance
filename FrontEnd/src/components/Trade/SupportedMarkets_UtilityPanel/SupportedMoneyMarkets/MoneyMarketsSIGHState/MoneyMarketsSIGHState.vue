@@ -62,6 +62,14 @@ export default {
                       present_suppliersHarvestAPY
                       present_borrowersHarvestAPY
 
+                      average24SnapsSuppliersHarvestAPY
+                      average24SnapsBorrowersHarvestAPY
+
+                      averageMonthlySnapsSuppliersHarvestAPY
+                      averageMonthlySnapsBorrowersHarvestAPY
+
+
+
                     }
                   }`,
 
@@ -137,7 +145,7 @@ export default {
 
 
     calculateSIGHPriceInUSD() {
-       this.sighPriceInUSD = (Number(this.$store.state.sighPriceETH) / Math.pow(10,this.$store.state.sighPriceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)); 
+       this.sighPriceInUSD = Number(this.$store.state.sighPriceUSD) > 0 ? Number(this.$store.state.sighPriceUSD) : 0 ;
       //  console.log( "CALCULATED $SIGH PRICE FOR HARVEST CALCULATION : " + this.sighPriceInUSD)
     },    
 
