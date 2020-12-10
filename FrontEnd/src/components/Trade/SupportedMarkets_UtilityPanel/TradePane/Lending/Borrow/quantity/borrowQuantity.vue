@@ -17,9 +17,9 @@ export default {
       formData : {
         borrowQuantity: null,
         borrowValue: null,
-        interestRateMode: 'Stable',
+        interestRateMode: 'Variable',
       },
-      interestRateModes: ['Stable','Variable'],
+      interestRateModes: ['Variable','Stable'],
       selectedInstrumentPriceETH: null,
       showLoader: false,
       showLoaderRefresh: false,
@@ -104,6 +104,9 @@ export default {
         }
         else if ( this.formData.interestRateMode == 'Stable' && !instrumentGlobalStateConfig.stableBorrowRateEnabled) {
           this.$showErrorMsg({message: " Stable borrow rate is currently disabled for the selected Instrument. Try borrowing at variable rate. Contact our Team at contact@sigh.finance in case you have any queries! "}); 
+        }
+        else if ( this.formData.interestRateMode == 'Stable' && instrumentGlobalStateConfig.usageAsCollateralEnabled && this.selectedInstrumentWalletState.usageAsCollateralEnabled &&  (Number(this.selectedInstrumentWalletState.userDepositedBalance) > Number(quantity))  ) {
+          this.$showErrorMsg({message: " The amount to be borrowed needs to be greater than your deposited " + this.selectedInstrument.symbol + " balance for it to be issued at a STABLE rate!"}); 
         }
         else if ( Number(this.formData.borrowQuantity) > Number(instrumentGlobalStateConfig.availableLiquidity ) ) {
           this.$showErrorMsg({message: " SIGH Finance currently doesn't have the needed Liquidity to process this Loan. Available Liquidity =  " + + instrumentGlobalStateConfig.availableLiquidity + " ( " +  this.getBalanceString(instrumentGlobalStateConfig.availableLiquidityUSD) + " USD ) " + this.selectedInstrument.symbol + ". Try again after some time! "}); 

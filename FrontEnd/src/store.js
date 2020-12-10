@@ -967,7 +967,7 @@ const store = new Vuex.Store({
         cur_user_instrument_state.userDepositedBalance = BigNumber(response.currentITokenBalance).shiftedBy((-1)*Number(cur_instrument.decimals)).toNumber() ;
         cur_user_instrument_state.principalBorrowBalance =  BigNumber(response.principalBorrowBalance).shiftedBy((-1)*Number(cur_instrument.decimals)).toNumber() ; 
         cur_user_instrument_state.currentBorrowBalance =   BigNumber(response.currentBorrowBalance).shiftedBy((-1)*Number(cur_instrument.decimals)).toNumber()  ;
-        cur_user_instrument_state.originationFee =  BigNumber(response.originationFee).shiftedBy((-1)*Number(cur_instrument.decimals)).toNumber() ;
+        cur_user_instrument_state.originationFee =  BigNumber(response.borrowFee).shiftedBy((-1)*Number(cur_instrument.decimals)).toNumber() ;
 
         cur_user_instrument_state.userBalance = await store.dispatch("ERC20_balanceOf",{tokenAddress: cur_instrument.instrumentAddress , account: state.connectedWallet});
         cur_user_instrument_state.userAvailableAllowance = await store.dispatch("ERC20_getAllowance",{tokenAddress: cur_instrument.instrumentAddress , owner: state.connectedWallet, spender: state.LendingPoolCoreContractAddress });
@@ -1670,11 +1670,10 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => { 
       }
     },
 
-    LendingPool_setUserUseInstrumentAsCollateral: async ({commit,state},{_instrument,_useAsCollateral}) => {
+    LendingPool_setUserUseInstrumentAsCollateral: async ({commit,state},{_instrument,_useAsCollateral, symbol}) => {
       if (state.web3 && state.LendingPoolContractAddress && state.LendingPoolContractAddress!= "0x0000000000000000000000000000000000000000" ) {
         const lendingPoolContract = new state.web3.eth.Contract(LendingPool.abi, state.LendingPoolContractAddress );
         try {
-          let symbol = state.supportedInstrumentConfigs.get(_instrument).symbol;                    
           const response = await lendingPoolContract.methods.setUserUseInstrumentAsCollateral(_instrument,_useAsCollateral).send({from: state.connectedWallet}).on('transactionHash',function(hash) {
             let transaction = {hash : hash, function : 'Use As Collateral : ' + symbol , amount : null}; 
             commit('addToSessionPendingTransactions',transaction);

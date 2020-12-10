@@ -71,14 +71,23 @@
         <span style=" line-height:24px; width:100%; margin-top: 11px; font-size: 15px; padding: 1px; border: aquamarine dotted 0.1px; text-align: center; float: center; color: chartreuse;">  
             Thank You for Choosing $SIGH Finance to Farm your Volatility Risks! &#x1F69C;	&#128104;&#8205;&#127806;
         </span> 
+        <div v-if="showLoaderCollateral" class="uk-width-1-1 center">
+            <img style="margin-top: 22px;" src="https://image.ibb.co/dc02hd/30.gif" />
+        </div>
+        <div v-else style="text-align:center;"> 
+            <button v-if="!selectedInstrumentWalletState.usageAsCollateralEnabled && Number(selectedInstrumentWalletState.userDepositedBalance) > 0" style="background: darkblue; margin-top: 22px;" class="uk-button uk-button-black"  @click="switchInstrumentAsCollateral(true)">Enable as Collateral</button>
+            <button v-if="selectedInstrumentWalletState.usageAsCollateralEnabled && Number(selectedInstrumentWalletState.userDepositedBalance) > 0" style="background: darkblue; margin-top: 22px;" class="uk-button uk-button-black"  @click="switchInstrumentAsCollateral(false)">Disable as Collateral</button>
+        </div>
     </div>
 
-    <div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 99px; margin-bottom: 20px;" >
+    <div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 21px; margin-bottom: 20px;" >
 
         <table v-if="!displayInString" style="color: white;" >
+            <!-- 👨‍🌾 TOKEN : ACCOUNT BALANCES 👨‍🌾 -->
+            <h1 > <span style="line-height: 24px;font-size: 21px; color:springgreen; font-weight: 500; padding-bottom:10px; padding-left:5%;" > &#128104;&#8205;&#127806; {{ selectedInstrument.symbol }} : </span> <span style="line-height: 24px;font-size: 21px; color:lightcyan; font-weight: 500; padding-bottom:10px;" > &nbsp; ACCOUNT BALANCES &#128104;&#8205;&#127806;  </span>  </h1> 
             <!-- WALLET CONNECTED -->
             <tr>
-                <td>  <span style="line-height: 51px;font-size: 12px; color:dodgerblue; display: contents; font-weight: 500;" >  WALLET : </span>  {{ this.$store.state.connectedWallet  }} &nbsp;  </td> 
+                <td>  <span style="line-height: 24px; font-size: 12px; color:dodgerblue; display: contents; font-weight: 500;" >  WALLET : </span>  {{ this.$store.state.connectedWallet  }} &nbsp;  </td> 
             </tr>
             <!-- CONTRACT ADDRESSES -->
             <h3 style="font-size: 19px; color: aquamarine; margin-bottom: 4px; margin-top: 24px;"> CONTRACT ADDRESSES </h3>
@@ -150,6 +159,8 @@
 
 
         <table v-if="displayInString" style="color: white;" >
+            <!-- 👨‍🌾 TOKEN : ACCOUNT BALANCES 👨‍🌾 -->
+            <h1 > <span style="line-height: 24px;font-size: 21px; color:springgreen; font-weight: 500; padding-bottom:10px; padding-left:5%;" > &#128104;&#8205;&#127806; {{ selectedInstrument.symbol }} : </span> <span style="line-height: 24px;font-size: 21px; color:lightcyan; font-weight: 500; padding-bottom:10px;" > &nbsp; ACCOUNT BALANCES &#128104;&#8205;&#127806;  </span>  </h1> 
             <!-- WALLET CONNECTED -->
             <tr>
                 <td>  <span style="line-height: 24px;font-size: 12px; color:dodgerblue; display: contents; font-weight: 500;" >  WALLET : </span>  {{ this.$store.state.connectedWallet  }} &nbsp;  </td> 

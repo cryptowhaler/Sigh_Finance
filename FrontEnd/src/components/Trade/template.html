@@ -5,10 +5,14 @@
             <div>
                 <!-- "SIGH FINANCE is currently in Beta!"  -->
                 <div style="padding-top: 21px; padding-bottom: 14px; float:left; width: 100%; border-bottom: 3px solid white;">
-                    <span style="line-height: 24px; font-size: 42px; color:white; display: contents;" > "SIGH FINANCE is currently in Beta!"  </span>
-                    <span v-if="!this.$store.state.isNetworkSupported" style="color:red; display:contents; font-size:17px !important; " > SIGH FINANCE currently only works on Ethereum's KOVAN Test-net. Please connect to Kovan test-net and refresh the website to interact with SIGH Finance! </span>
+                    <div style="width:80%; float:left;" >
+                        <span style="line-height: 24px; font-size: 42px; color:white; display: contents;" > "SIGH FINANCE is currently in Beta!"  </span>
+                        <span v-if="!this.$store.state.isNetworkSupported" style="color:red; display:contents; font-size:17px !important; " > SIGH FINANCE currently only works on Ethereum's KOVAN Test-net. Please connect to Kovan test-net and refresh the website to interact with SIGH Finance! </span>
+                    </div>
                     <!-- DRIP SIGH FROM SIGH SPEED CONTROLLER -->
-                    <a href="javascript:undefined" style="color: chartreuse;" @click="drip_SIGH" ><span> Distribute SIGH </span></a>
+                    <div style="width:20%; float:right; padding-right:10%;" >
+                        <button style="background: darkblue;" class="uk-button uk-button-black"  @click="drip_SIGH(true)">Drip $SIGH</button>
+                    </div>
                 </div>
                 <!-- <div style="padding-top: 21px; float:right; width: 9%; border-bottom: 3px solid white; border-left: 3px solid white;">
                     <customer-support />

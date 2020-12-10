@@ -27,6 +27,7 @@ export default {
       showLoaderRefresh: false,
       intervalActivated: false,
       displayInString: true,
+      showLoaderCollateral: false,
     };
   },
   
@@ -72,7 +73,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['initiateSighFinancePolling','refresh_User_SIGH__State','ERC20_mint','LendingPool_deposit','ERC20_increaseAllowance','getInstrumentPrice','refresh_User_Instrument_State']),
+    ...mapActions(['refresh_User_SIGH__State','ERC20_mint','LendingPool_deposit','ERC20_increaseAllowance','getInstrumentPrice','refresh_User_Instrument_State','LendingPool_setUserUseInstrumentAsCollateral']),
     
     toggle() {
       this.displayInString = !this.displayInString;
@@ -198,6 +199,45 @@ export default {
         this.showLoader = false;
       }
     }, 
+
+
+    async switchInstrumentAsCollateral(_switch) {
+      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
+        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
+        return;
+      }
+      else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
+        this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
+        return;
+      }       
+      let instrumentGlobalStateConfig = this.$store.state.supportedInstrumentConfigs.get(this.selectedInstrument.instrumentAddress);      
+      if ( !instrumentGlobalStateConfig.usageAsCollateralEnabled ) {
+        this.$showErrorMsg({message: this.selectedInstrument.symbol + " is currently not Enabled to be used as Collateral!" });        
+      }
+      // USER DOES NOT HAVE ANY DEPOSITS
+      else if ( Number(this.selectedInstrumentWalletState.userDepositedBalance) == 0  ) {
+        this.$showErrorMsg({message: " You do not have any deposited  " + this.selectedInstrument.symbol +  ". You need to have some deposited balance before you can enable / disable it as Collateral! " });        
+      }
+      else {
+        this.showLoaderCollateral = true;
+        let response = await this.LendingPool_setUserUseInstrumentAsCollateral({_instrument: this.selectedInstrument.instrumentAddress, _useAsCollateral: _switch, symbol: this.selectedInstrument.symbol  });
+        if (response.status) { 
+          await this.refreshCurrentInstrumentWalletState(false);       
+          if (_switch) {
+            this.$showSuccessMsg({message: this.selectedInstrument.symbol  + " has been Enabled as Collateral! Gas used = " + response.gasUsed  });
+          } 
+          else {
+            this.$showSuccessMsg({message: this.selectedInstrument.symbol  + " has been Disabled as Collateral! Gas used = " + response.gasUsed  });
+          }
+        }
+        else {
+          this.$showErrorMsg({message: "Instrument usage as Collateral : Operation Failed. Response - " + response.message  }); 
+          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+        }
+        this.showLoaderCollateral = false;
+      }
+    },
 
 
 

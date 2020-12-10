@@ -98,6 +98,9 @@ export function handleBorrowingOnInstrumentSwitched(event: BorrowingOnInstrument
     log.info('LENDINGPOOLCONFIGURATOR : BorrowingOnInstrumentSwitched',[])
     let instrumentId = event.params._instrument.toHexString()
     let instrumentState = Instrument.load(instrumentId)
+    if (instrumentState == null) {
+        return
+    }
     instrumentState.borrowingEnabled = event.params.switch_
     instrumentState.save()
     if (event.block.number > BigInt.fromI32(22418593)) { 

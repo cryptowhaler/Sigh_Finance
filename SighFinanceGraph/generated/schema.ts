@@ -12,6 +12,46 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
+export class ContractAddresses extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save ContractAddresses entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save ContractAddresses entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("ContractAddresses", id.toString(), this);
+  }
+
+  static load(id: string): ContractAddresses | null {
+    return store.get("ContractAddresses", id) as ContractAddresses | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get GlobalAddressesProviderContractAddress(): Bytes {
+    let value = this.get("GlobalAddressesProviderContractAddress");
+    return value.toBytes();
+  }
+
+  set GlobalAddressesProviderContractAddress(value: Bytes) {
+    this.set("GlobalAddressesProviderContractAddress", Value.fromBytes(value));
+  }
+}
+
 export class SIGH_FINANCE extends Entity {
   constructor(id: string) {
     super();
@@ -437,6 +477,15 @@ export class SIGH_Instrument extends Entity {
 
   set totalSIGHBurnt(value: BigDecimal) {
     this.set("totalSIGHBurnt", Value.fromBigDecimal(value));
+  }
+
+  get blocksPerCycle(): BigInt {
+    let value = this.get("blocksPerCycle");
+    return value.toBigInt();
+  }
+
+  set blocksPerCycle(value: BigInt) {
+    this.set("blocksPerCycle", Value.fromBigInt(value));
   }
 
   get currentCycle(): BigInt {
