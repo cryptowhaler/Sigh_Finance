@@ -183,9 +183,11 @@ contract SighStream is ISighStream, VersionedInitializable {
         require(_to != currentRedirectionAddress, "Liquidity $SIGH Stream is already redirected to the provided account");
 
         // check 2
-        (,uint256 currentBalance , uint256 balanceIncrease, ) = iToken.cumulateBalance(_from);
-        require( iToken.balanceOf(_from) > 0, "Liquidity $SIGH Stream stream can only be redirected if there is a valid Liquidity Balance accuring $SIGH for the user");
-        
+        iToken.cumulateBalance(_from);
+        uint currentBalance = iToken.balanceOf(_from);
+        uint principalBalance = iToken.principalBalanceOf(_from);
+        uint balanceIncrease = currentBalance.sub(principalBalance);
+        require( currentBalance > 0, "Liquidity $SIGH Stream stream can only be redirected if there is a valid Liquidity Balance accuring $SIGH for the user");
 
         // if the user is already redirecting the Liquidity $SIGH Stream to someone, before changing the redirection address 
         // 1. Add the interest accured by From Account to the redirected address
@@ -193,7 +195,8 @@ contract SighStream is ISighStream, VersionedInitializable {
         // 2. We substract the redirected balance of the from account from that address
         if (currentRedirectionAddress != address(0)) { 
              updateRedirectedBalanceOfLiquiditySIGHStreamRedirectionAddressesInternal(_from, balanceIncrease, 0 );    
-            (,uint256 redirectionAddressAccountBalance, ,) = iToken.cumulateBalance(currentRedirectionAddress);    //cumulates the balance of the user being liquidated
+            iToken.cumulateBalance(currentRedirectionAddress);    //cumulates the balance of the user being liquidated
+            uint256 redirectionAddressAccountBalance = iToken.balanceOf(currentRedirectionAddress);
             accure_SIGH_For_LiquidityStream_Internal(currentRedirectionAddress, redirectionAddressAccountBalance );
             updateRedirectedBalanceOfLiquiditySIGHStreamRedirectionAddressesInternal(_from,0, currentBalance );
         }
@@ -257,7 +260,8 @@ contract SighStream is ISighStream, VersionedInitializable {
         else {
             address redirectionAddress = user_SIGH_States[supplier].userLiquiditySIGHStreamRedirectionAddress;
             if (user_SIGH_States[redirectionAddress].userLiquiditySIGHStreamRedirectionAddress == address(0) ) {
-                (,uint256 accountBalance, uint256 balanceIncrease, uint256 index) = iToken.cumulateBalance(redirectionAddress);    //cumulates the balance of the user being liquidated
+                iToken.cumulateBalance(redirectionAddress);    //cumulates the balance of the user being liquidated
+                uint256 accountBalance = iToken.balanceOf(redirectionAddress);
                 accure_SIGH_For_LiquidityStream_Internal(redirectionAddress,accountBalance.add(unaccountedBalanceIncrease) );
             }
             else {
@@ -489,8 +493,11 @@ contract SighStream is ISighStream, VersionedInitializable {
 
 
     function claimSighInternal(address user) internal {
-        (,uint256 currentBalance , uint256 balanceIncrease, ) = iToken.cumulateBalance(user);
-        accureLiquiditySighStreamInternal(user, balanceIncrease, iToken.balanceOf(user) );
+        uint256 principalBalance = iToken.principalBalanceOf(user);
+        uint256 currentBalance = iToken.balanceOf(user);
+        uint256 balanceIncrease = currentBalance.sub(principalBalance);
+
+        accureLiquiditySighStreamInternal(user, balanceIncrease, currentBalance );
         accureBorrowingSighStreamInternal(user);
         if (AccuredSighBalance[user] > 0) {
             AccuredSighBalance[user] = sighDistributionHandlerContract.transferSighTotheUser( underlyingInstrumentAddress, user, AccuredSighBalance[user] ); // Pending Amount Not Transferred is returned
@@ -547,7 +554,25 @@ contract SighStream is ISighStream, VersionedInitializable {
     function getSIGHStreamsRedirectedBalances(address user) external view returns (uint liquiditySIGHStreamRedirectedBalance, uint borrowingSIGHStreamRedirectedBalance ) {
         return (user_SIGH_States[user].userLiquiditySIGHStreamRedirectedBalance , user_SIGH_States[user].userBorrowingSIGHStreamRedirectedBalance);
     }    
+    
+    function returnIToken() external view returns (address iTokenAddress) {
+        return address(iToken);
+    }
 
+    function returnUserBalance(address _from) external view returns (address iTokenAddress, uint256 balance) {
+        return (address(iToken), iToken.balanceOf(_from));
+    }
+
+    function returnUserCumulateBalance(address _from) external returns (uint256 principal, uint256 compounded, uint256 increase) {
+        principal = iToken.principalBalanceOf(_from);
+        compounded = iToken.balanceOf(_from);
+        increase = compounded.sub(principal);
+    }
+
+
+    // function returnUserCumulateBalance() external returns (address iTokenAddress) {
+    //     return iToken.balanceOf(_from);
+    // }
 
 // ###### SAFE MATH ######
 

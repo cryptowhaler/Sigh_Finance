@@ -404,8 +404,8 @@ contract IToken is ERC20, ERC20Detailed {
 // ###  4. index : updated user Index (gets the value from the core lending pool contract)  #########################################
 // ##################################################################################################################################
 
-    function cumulateBalance(address _user) external onlySighStream returns(uint256, uint256, uint256, uint256) {
-     cumulateBalanceInternal(_user);
+    function cumulateBalance(address _user) external onlySighStream {
+        cumulateBalanceInternal(_user); 
     }
 
     /**
