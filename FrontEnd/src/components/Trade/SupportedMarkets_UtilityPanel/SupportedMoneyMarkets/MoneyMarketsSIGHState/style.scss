@@ -42,3 +42,10 @@ thead th {
   overflow:scroll;
   height:51vh;
 }
+
+th {
+  position: sticky;
+  background: black;
+  top: 0;
+  z-index: 2;
+}

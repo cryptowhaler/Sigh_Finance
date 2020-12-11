@@ -40,7 +40,7 @@ contract SighFinanceConfigurator is VersionedInitializable {
 // ####### PROXY RELATED #######
 // #############################
 
-    uint256 public constant CONFIGURATOR_REVISION = 0x2;
+    uint256 public constant CONFIGURATOR_REVISION = 0x1;
 
     function getRevision() internal pure returns (uint256) {
         return CONFIGURATOR_REVISION;
@@ -92,7 +92,7 @@ contract SighFinanceConfigurator is VersionedInitializable {
     }    
 
 
-// #####################################################
+// #####################################################_24HrVolatilityLimitAmount
 // ####### SIGH DISTRIBUTION HANDLER FUNCTIONS #########
 // #####################################################
 
