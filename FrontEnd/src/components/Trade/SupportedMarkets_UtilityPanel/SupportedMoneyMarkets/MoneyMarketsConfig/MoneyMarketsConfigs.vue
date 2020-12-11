@@ -57,6 +57,22 @@ export default {
                       variableBorrowInterestPercent
                       supplyInterestRatePercent
 
+                      average24SnapsSuppliersHarvestAPY
+                      average24SnapsBorrowersHarvestAPY
+
+                      averageMonthlySnapsSuppliersHarvestAPY
+                      averageMonthlySnapsBorrowersHarvestAPY
+
+                      isSIGHMechanismActivated
+                      present_SIGH_Side
+
+                      present_total24HrVolatilityUSD
+                      present_total24HrSentimentVolatilityUSD
+                      present_harvestValuePerDayUSD
+
+                      present_harvestSpeedPerBlock
+                      present_harvestValuePerBlockUSD
+                      present_harvestAPY
                     }
                   }`,
 
@@ -119,7 +135,24 @@ export default {
         instrumentState.borrowingEnabled = instruments[i].borrowingEnabled;
         instrumentState.usageAsCollateralEnabled = instruments[i].usageAsCollateralEnabled;
         instrumentState.isSIGHMechanismActivated = instruments[i].isSIGHMechanismActivated;
-                              
+
+        instrumentState.average24SnapsSuppliersHarvestAPY = instruments[i].average24SnapsSuppliersHarvestAPY;
+        instrumentState.average24SnapsBorrowersHarvestAPY = instruments[i].average24SnapsBorrowersHarvestAPY;
+
+        instrumentState.averageMonthlySnapsSuppliersHarvestAPY = instruments[i].averageMonthlySnapsSuppliersHarvestAPY;
+        instrumentState.averageMonthlySnapsBorrowersHarvestAPY = instruments[i].averageMonthlySnapsBorrowersHarvestAPY;
+
+        instrumentState.isSIGHMechanismActivated = instruments[i].isSIGHMechanismActivated;
+        instrumentState.present_SIGH_Side = instruments[i].present_SIGH_Side;
+
+        instrumentState.present_total24HrVolatilityUSD = instruments[i].present_total24HrVolatilityUSD;
+        instrumentState.present_total24HrSentimentVolatilityUSD = instruments[i].present_total24HrSentimentVolatilityUSD;
+        instrumentState.present_harvestValuePerDayUSD = instruments[i].present_harvestValuePerDayUSD;
+
+        instrumentState.present_harvestSpeedPerBlock = instruments[i].present_harvestSpeedPerBlock;
+        instrumentState.present_harvestValuePerBlockUSD = instruments[i].present_harvestValuePerBlockUSD;
+        instrumentState.present_harvestAPY = instruments[i].present_harvestAPY;
+                      
         this.$store.commit( "addToSupportedInstrumentsArray",instrumentState );
         if (i==1) {
           this.$store.commit('updateSelectedInstrument',instrumentState); // THE FIRST INSTRUMENT IS BY DEFAULT THE SELECTED INSTRUMENT

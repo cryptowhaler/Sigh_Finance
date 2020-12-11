@@ -12,11 +12,8 @@ export default {
 
   data() {
     return {
-      // Dummy 
-      dummyselectedInstrumentWalletState : this.createDummySelectedInstrumentWalletState(),
-      // Actual 
       selectedInstrument: this.$store.state.currentlySelectedInstrument,
-      selectedInstrumentWalletState: this.dummyselectedInstrumentWalletState,
+      selectedInstrumentWalletState: this.$store.state.dummyWalletInstrumentState,
       formData : {
         depositQuantity: null,
         depositValue: null,
@@ -101,7 +98,7 @@ export default {
         this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
       }
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
-        this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
+        this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance . Try re-connecting your Wallet or connect with our support team through our Discord Server in case of any queries! "}); 
       }       
       // USER BALANCE IS LESS THAN WHAT HE WANTS TO DEPOSIT
       else if ( Number(this.formData.depositQuantity) >  Number(this.selectedInstrumentWalletState.userBalance)  ) {
@@ -143,7 +140,7 @@ export default {
         this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
       }
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
-        this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
+        this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance . Try re-connecting your Wallet or connect with our support team through our Discord Server in case of any queries! "}); 
       }       
       else if (this.$store.state.networkId != '42' ) { 
         this.$showErrorMsg({message: " Mock tokens are not available for testing over the currently connected Network. "}); 
@@ -178,7 +175,7 @@ export default {
         this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
       }
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
-        this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
+        this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance . Try re-connecting your Wallet or connect with our support team through our Discord Server in case of any queries! "}); 
       }       
       else {       // WHEN ABOVE CONDITIONS ARE MET SO THE TRANSACTION GOES THROUGH
         this.showLoader = true;
@@ -208,7 +205,7 @@ export default {
         return;
       }
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
-        this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance ( check-sum check failed). Try re-connecting your Wallet or contact our support team at contact@sigh.finance in case of any queries! "}); 
+        this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance . Try re-connecting your Wallet or connect with our support team through our Discord Server in case of any queries! "}); 
         return;
       }       
       let instrumentGlobalStateConfig = this.$store.state.supportedInstrumentConfigs.get(this.selectedInstrument.instrumentAddress);      
@@ -292,41 +289,7 @@ export default {
         return inK.toString() + ' K';
       } 
       return Number(number).toFixed(2);
-    },      
-
-    createDummySelectedInstrumentWalletState() {
-        // Instrument Basic Info
-        let dummyInstrument = {}; 
-        dummyInstrument.symbol = 'WBTC';
-        dummyInstrument.instrumentAddress = '0x0000000000000000000000000000000000000000';      
-        dummyInstrument.iTokenAddress = '0x0000000000000000000000000000000000000000';          
-        dummyInstrument.decimals = 18;
-        dummyInstrument.priceETH =  0;
-        dummyInstrument.priceDecimals = 18;
-
-        dummyInstrument.userDepositedBalance = 0;
-        dummyInstrument.principalBorrowBalance =   0;
-        dummyInstrument.currentBorrowBalance =   0;
-        dummyInstrument.originationFee =  0;
-
-        dummyInstrument.userBalance =  0;
-        dummyInstrument.userAvailableAllowance = 0;
-
-        dummyInstrument.userBalanceWorth =  0;
-        dummyInstrument.userAvailableAllowanceWorth =  0;
-        dummyInstrument.userDepositedBalanceWorth =  0;
-        dummyInstrument.principalBorrowBalanceWorth =  0;
-        dummyInstrument.currentBorrowBalanceWorth =  0;
-        dummyInstrument.borrowRateMode =  0;
-        dummyInstrument.borrowRate =  0;
-        dummyInstrument.liquidityRate =  0;
-        dummyInstrument.originationFeeWorth =  0;
-        dummyInstrument.variableBorrowIndex =  0;
-        dummyInstrument.usageAsCollateralEnabled =  0;
-
-        return dummyInstrument;
     }
-
 
   },
 

@@ -55,7 +55,7 @@
 
 
 <div style="border: aliceblue dotted 0.3px; padding: 14px; margin-top: 99px; margin-bottom: 20px;" >
-    <table v-if="!displayInString" style="color: white;" >
+    <table v-if="displayInString" style="color: white;" >
         <!-- 👨‍🌾 TOKEN : ACCOUNT BALANCES 👨‍🌾 -->
         <h1 > <span style="line-height: 24px;font-size: 21px; color:springgreen; font-weight: 500; padding-bottom:10px; padding-left:5%;" > &#128104;&#8205;&#127806; {{ selectedInstrument.symbol }} : </span> <span style="line-height: 24px;font-size: 21px; color:lightcyan; font-weight: 500; padding-bottom:10px;" > &nbsp; ACCOUNT BALANCES &#128104;&#8205;&#127806;  </span>  </h1> 
         <!-- WALLET CONNECTED -->
@@ -89,9 +89,6 @@
         <tr>
             <td style="font-size: 12.5px !important; padding-bottom: 4px;"> >  Enabled As Collateral &nbsp; : &nbsp; <span v-if="selectedInstrumentWalletState.usageAsCollateralEnabled" style="line-height: 24px;font-size: 12.5px; color:green; display: contents; font-weight: 500;" > {{ selectedInstrumentWalletState.usageAsCollateralEnabled }} </span> <span v-if="!selectedInstrumentWalletState.usageAsCollateralEnabled" style="line-height: 24px;font-size: 12.5px; color:red; display: contents; font-weight: 500;" > {{ selectedInstrumentWalletState.usageAsCollateralEnabled }} </span>  </td> 
         </tr>
-        <tr>
-            <td style="font-size: 12.5px !important;"> >  Deposit Fee (Due) &nbsp; : &nbsp; 0 </td> 
-        </tr>
         <!-- ACTIVE BORROWS -->
         <h3 style="font-size: 17px; color: aquamarine; margin-bottom: 4px; margin-top: 24px; "> ACTIVE BORROWS : <span style="line-height: 24px;font-size: 17px; color:yellow; display: contents; font-weight: 500;" > {{ selectedInstrument.symbol  }} </span> </h3>
         <tr>
@@ -112,26 +109,76 @@
         <tr>
             <td style="font-size: 12.5px !important;"> >  Borrow Fee (Due) &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.originationFee).toFixed(4)  }}  ( {{ Number(selectedInstrumentWalletState.originationFeeWorth).toFixed(4)  }} USD ) </td> 
         </tr>
-        <!-- $SIGH STREAMING -->
+            <!-- 🌾 $SIGH 🌾 FARMING YIELDS 🚜 👨‍🌾 -->
+            <h3 style="font-size: 21px; color: aquamarine; margin-bottom: 4px; margin-top: 24px; "> {{selectedInstrument.symbol}} : <span style="line-height: 24px;font-size: 21px; color:yellow; display: contents; font-weight: 500;" > &#127806;  $SIGH &#127806; </span> <span style="line-height: 24px;font-size: 21px; color:greenyellow; display: contents; font-weight: 500;" > FARMING YIELDS </span>  &#x1F69C;	&#128104;&#8205;&#127806; </h3>
+            <!-- 🚜 🚜 $SIGH LIQUIDITY (LONG) STREAM -->
+            <tr>
+                <td style="font-size: 13.5px !important;  padding-top: 5px; color:yellow;"> &#x1F69C; &#x1F69C; $SIGH LIQUIDITY (<span style="color:rgb(102, 255, 0); display:contents;">LONG</span>)  STREAM  &nbsp; </td> 
+            </tr>
+            <tr>
+                <td style="font-size: 12.5px !important; padding-bottom: 3px;"> --- last 24 hr Average APY &nbsp; : &nbsp; <span style="line-height:1; font-size: 12.9px !important; color:springgreen; display:contents;">{{ Number(selectedInstrument.average24SnapsSuppliersHarvestAPY).toFixed(2)  }} %</span> </td> 
+            </tr>
+            <tr>
+                <td style="font-size: 12.5px !important; padding-bottom: 7px;"> --- last 30 days Average APY &nbsp; : &nbsp; <span style="line-height:1; font-size: 12.9px !important; color:springgreen; display:contents;">{{ Number(selectedInstrument.averageMonthlySnapsSuppliersHarvestAPY).toFixed(2)  }} %</span>  </td> 
+            </tr>
+            <!-- 🚜 🚜 $SIGH BORROWING (SHORT) STREAM -->
+            <tr>
+                <td style="font-size: 13.5px !important;  padding-top: 5px; color:yellow;"> &#x1F69C; &#x1F69C; $SIGH BORROWING (<span style="color:red; display:contents;">SHORT</span>)  STREAM  &nbsp; </td> 
+            </tr>
+            <tr>
+                <td style="font-size: 12.5px !important; padding-bottom: 3px;"> --- last 24 hr Average APY &nbsp; : &nbsp; <span style="line-height:1; font-size: 12.9px !important; color:springgreen; display:contents;">{{ Number(selectedInstrument.average24SnapsBorrowersHarvestAPY).toFixed(2)  }} %</span> </td> 
+            </tr>
+            <tr>
+                <td style="font-size: 12.5px !important; padding-bottom: 7px;"> --- last 30 days Average APY &nbsp; : &nbsp; <span style="line-height:1; font-size: 12.9px !important; color:springgreen; display:contents;">{{ Number(selectedInstrument.averageMonthlySnapsBorrowersHarvestAPY).toFixed(2)  }} %</span>  </td> 
+            </tr>
+            <!-- 🌾 🌾 $SIGH FARMING  :  PRESENT STATE -->
+            <tr>
+                <td style="font-size: 14px !important;  padding-top: 5px; color:yellow;"> &#127806; &#127806; $SIGH FARMING &nbsp;:&nbsp; <span style="color:violet; display:contents;">PRESENT STATE </span>  </td> 
+            </tr>
+            <tr>
+                <td style="color:violet; font-size: 12.9px !important; padding-top: 4px;"> > Total Volatility (24 hr) &nbsp; : &nbsp; 
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='In-Active' " style="line-height:1; font-size: 12.9px !important; color:white; display:contents;"> SIGH Mechanism not Activated</span>  
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='Suppliers' " style="line-height:1; font-size: 12.9px !important; color:red; display:contents;">{{ getBalanceString(Number(selectedInstrument.present_total24HrVolatilityUSD).toFixed(2))  }} USD ( - ) </span>  
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='Borrowers' " style="line-height:1; font-size: 12.9px !important; color:springgreen; display:contents;">{{ getBalanceString(Number(selectedInstrument.present_total24HrVolatilityUSD).toFixed(2))  }} USD ( + )</span>  
+                </td> 
+            </tr>
+            <tr>
+                <td style="color:violet; font-size: 12.9px !important; padding-top: 4px;"> > Accounted Volatility &nbsp; : &nbsp; 
+                <span v-if=" selectedInstrument.present_SIGH_Side=='In-Active' " style="line-height:1; font-size: 12.9px !important; color:white; display:contents;"> SIGH Mechanism not Activated</span>  
+                <span v-if=" selectedInstrument.present_SIGH_Side=='Suppliers' " style="line-height:1; font-size: 12.9px !important; color:red; display:contents;">{{ getBalanceString(Number(selectedInstrument.present_total24HrSentimentVolatilityUSD).toFixed(2))  }} USD <span style="line-height:1; font-size: 12.9px !important; color:paleturquoise; display:contents;"> (bear : {{  Number(selectedInstrument.present_total24HrVolatilityUSD) > 0 ? Number( 100 * Number(selectedInstrument.present_total24HrSentimentVolatilityUSD) / Number(selectedInstrument.present_total24HrVolatilityUSD)).toFixed(2) : 'In-Active'    }} %) </span>  </span>   
+                <span v-if=" selectedInstrument.present_SIGH_Side=='Borrowers' " style="line-height:1; font-size: 12.9px !important; color:springgreen; display:contents;">{{ getBalanceString(Number(selectedInstrument.present_total24HrSentimentVolatilityUSD).toFixed(2))  }} USD  <span style="line-height:1; font-size: 12.9px !important; color:paleturquoise; display:contents;"> (bull : {{  Number(selectedInstrument.present_total24HrVolatilityUSD) > 0 ? Number( 100 * Number(selectedInstrument.present_total24HrSentimentVolatilityUSD) / Number(selectedInstrument.present_total24HrVolatilityUSD)).toFixed(2) : 'In-Active'}} % ) </span>  </span>   
+                </td> 
+            </tr>
+            <tr>
+                <td style="color:springgreen; font-size: 12.9px!important; padding-top: 4px;"> > Harvested Volatility &nbsp; : &nbsp;
+                <span v-if=" selectedInstrument.present_SIGH_Side=='In-Active' " style="line-height:1; font-size: 12.9px !important; color:yellow; display:contents;">{{ getBalanceString(Number(selectedInstrument.present_harvestValuePerDayUSD).toFixed(2))  }} USD </span>  
+                <span v-if=" selectedInstrument.present_SIGH_Side=='Suppliers' " style="line-height:1; font-size: 12.9px !important; color:yellow; display:contents;">{{ getBalanceString(Number(selectedInstrument.present_harvestValuePerDayUSD).toFixed(2))  }} USD <span style="line-height:1; font-size: 12.9px !important; color:white; display:contents;"> (&nbsp;{{  Number(selectedInstrument.present_total24HrVolatilityUSD) > 0 ? Number( 100 * Number(selectedInstrument.present_harvestValuePerDayUSD) / Number(selectedInstrument.present_total24HrVolatilityUSD)).toFixed(2) : 100    }} %&nbsp;) </span>  </span>   
+                <span v-if=" selectedInstrument.present_SIGH_Side=='Borrowers' " style="line-height:1; font-size: 12.9px !important; color:yellow; display:contents;">{{ getBalanceString(Number(selectedInstrument.present_harvestValuePerDayUSD).toFixed(2))  }} USD  <span style="line-height:1; font-size: 12.9px !important; color:white; display:contents;"> (&nbsp;{{  Number(selectedInstrument.present_total24HrVolatilityUSD) > 0 ? Number( 100 * Number(selectedInstrument.present_harvestValuePerDayUSD) / Number(selectedInstrument.present_total24HrVolatilityUSD)).toFixed(2) : 100}} % &nbsp;) </span>  </span>   
+                </td> 
+            </tr>
 
-        <h3 style="font-size: 17px; color: aquamarine; margin-bottom: 4px; margin-top: 24px; "> <span style="line-height: 24px;font-size: 17px; color:yellow; display: contents; font-weight: 500;" > &#127806; $SIGH &#127806; </span> <span style="line-height: 24px;font-size: 17px; color:greenyellow; display: contents; font-weight: 500;" > FARMING YIELDS </span>  &#x1F69C;	&#128104;&#8205;&#127806; </h3>
-        <tr>
-            <td style="font-size: 12.5px !important;  padding-bottom: 2px;"> >  $SIGH LIQUIDITY STREAM (per Block) : &nbsp; : &nbsp; 0 </td> 
-        </tr>
-        <tr>
-            <td style="font-size: 12.5px !important; padding-bottom: 7px;"> >  $SIGH LIQUIDITY STREAM (Yearly APY) : &nbsp; : &nbsp; 0 </td> 
-        </tr>
-        <tr>
-            <td style="font-size: 12.5px !important;  padding-bottom: 2px;"> >  $SIGH BORROWING STREAM (per Block) : &nbsp; : &nbsp; 0 </td> 
-        </tr>
-        <tr>
-            <td style="font-size: 12.5px !important;  padding-bottom: 2px;"> >  $SIGH BORROWING STREAM (Yearly APY) : &nbsp; : &nbsp; 0 </td> 
-        </tr>
+            <tr>
+                <td style="font-size: 12.9px !important;  padding-top: 14px; color:aqua;"> > Current Stream Direction &nbsp; : &nbsp;  
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='In-Active' " style="line-height:1; font-size: 12.9px !important; color:white; display:contents;"> Both </span>
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='Suppliers' " style="line-height:1; font-size: 12.9px !important; color:rgb(102, 255, 0); display:contents;"> LONG : SUPPLIERS </span>
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='Borrowers' " style="line-height:1; font-size: 12.9px !important; color:red; display:contents;"> SHORT : BORROWERS </span>
+                </td> 
+            </tr>
+            <tr>
+                <td style="font-size: 12.9px !important;  padding-top: 5px; color:aqua;"> > Current Harvest Speed (per Block) :  <span style="line-height:1; font-size: 12.9px !important; color:yellow; display:contents;">{{ Number(selectedInstrument.present_harvestSpeedPerBlock).toFixed(4) }} SIGH &#127806;</span> <span style="line-height:1; font-size: 12.9px !important; color:white; display:contents;">({{ Number(selectedInstrument.present_harvestValuePerBlockUSD).toFixed(4) }} USD)</span>  </td> 
+            </tr>
+            <tr>
+                <td style="font-size: 12.9px !important;  padding-top: 5px; color:aqua;"> > Current Harvest APY&nbsp;:&nbsp;  <span style="line-height:1; font-size: 12.9px !important; color:springgreen; display:contents;">{{ Number(selectedInstrument.present_harvestAPY).toFixed(2) }} % &nbsp; - &nbsp; </span>   
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='In-Active' " style="line-height:1; font-size: 12.9px !important; color:white; display:contents;"> Both </span>
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='Suppliers' " style="line-height:1; font-size: 12.9px !important; color:rgb(102, 255, 0); display:contents;"> LONG : SUPPLIERS </span>
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='Borrowers' " style="line-height:1; font-size: 12.9px !important; color:red; display:contents;"> SHORT : BORROWERS </span>
+                </td> 
+            </tr>
     </table>
 
 
 
-    <table v-if="displayInString" style="color: white;" >
+    <table v-if="!displayInString" style="color: white;" >
         <!-- 👨‍🌾 TOKEN : ACCOUNT BALANCES 👨‍🌾 -->
         <h1 > <span style="line-height: 24px;font-size: 21px; color:springgreen; font-weight: 500; padding-bottom:10px; padding-left:5%;" > &#128104;&#8205;&#127806; {{ selectedInstrument.symbol }} : </span> <span style="line-height: 24px;font-size: 21px; color:lightcyan; font-weight: 500; padding-bottom:10px;" > &nbsp; ACCOUNT BALANCES &#128104;&#8205;&#127806;  </span>  </h1> 
         <!-- WALLET CONNECTED -->
@@ -165,9 +212,6 @@
         <tr>
             <td style="font-size: 12.5px !important; padding-bottom: 4px;"> >  Enabled As Collateral &nbsp; : &nbsp; <span v-if="selectedInstrumentWalletState.usageAsCollateralEnabled" style="line-height: 24px;font-size: 12.5px; color:green; display: contents; font-weight: 500;" > {{ selectedInstrumentWalletState.usageAsCollateralEnabled }} </span> <span v-if="!selectedInstrumentWalletState.usageAsCollateralEnabled" style="line-height: 24px;font-size: 12.5px; color:red; display: contents; font-weight: 500;" > {{ selectedInstrumentWalletState.usageAsCollateralEnabled }} </span>  </td> 
         </tr>
-        <tr>
-            <td style="font-size: 12.5px !important;"> >  Deposit Fee (Due) &nbsp; : &nbsp; 0 </td> 
-        </tr>
         <!-- ACTIVE BORROWS -->
         <h3 style="font-size: 17px; color: aquamarine; margin-bottom: 4px; margin-top: 24px; "> ACTIVE BORROWS : <span style="line-height: 24px;font-size: 17px; color:yellow; display: contents; font-weight: 500;" > {{ selectedInstrument.symbol  }} </span> </h3>
         <tr>
@@ -188,21 +232,71 @@
         <tr>
             <td style="font-size: 12.5px !important;"> >  Borrow Fee (Due) &nbsp; : &nbsp;{{ Number(selectedInstrumentWalletState.originationFee).toFixed(4)  }}  ( {{ Number(selectedInstrumentWalletState.originationFeeWorth).toFixed(4)  }} USD ) </td> 
         </tr>
-        <!-- $SIGH STREAMING -->
+            <!-- 🌾 $SIGH 🌾 FARMING YIELDS 🚜 👨‍🌾 -->
+            <h3 style="font-size: 21px; color: aquamarine; margin-bottom: 4px; margin-top: 24px; "> {{selectedInstrument.symbol}} : <span style="line-height: 24px;font-size: 21px; color:yellow; display: contents; font-weight: 500;" > &#127806;  $SIGH &#127806; </span> <span style="line-height: 24px;font-size: 21px; color:greenyellow; display: contents; font-weight: 500;" > FARMING YIELDS </span>  &#x1F69C;	&#128104;&#8205;&#127806; </h3>
+            <!-- 🚜 🚜 $SIGH LIQUIDITY (LONG) STREAM -->
+            <tr>
+                <td style="font-size: 13.5px !important;  padding-top: 5px; color:yellow;"> &#x1F69C; &#x1F69C; $SIGH LIQUIDITY (<span style="color:rgb(102, 255, 0); display:contents;">LONG</span>)  STREAM  &nbsp; </td> 
+            </tr>
+            <tr>
+                <td style="font-size: 12.5px !important; padding-bottom: 3px;"> --- last 24 hr Average APY &nbsp; : &nbsp; <span style="line-height:1; font-size: 12.9px !important; color:springgreen; display:contents;">{{ Number(selectedInstrument.average24SnapsSuppliersHarvestAPY).toFixed(2)  }} %</span> </td> 
+            </tr>
+            <tr>
+                <td style="font-size: 12.5px !important; padding-bottom: 7px;"> --- last 30 days Average APY &nbsp; : &nbsp; <span style="line-height:1; font-size: 12.9px !important; color:springgreen; display:contents;">{{ Number(selectedInstrument.averageMonthlySnapsSuppliersHarvestAPY).toFixed(2)  }} %</span>  </td> 
+            </tr>
+            <!-- 🚜 🚜 $SIGH BORROWING (SHORT) STREAM -->
+            <tr>
+                <td style="font-size: 13.5px !important;  padding-top: 5px; color:yellow;"> &#x1F69C; &#x1F69C; $SIGH BORROWING (<span style="color:red; display:contents;">SHORT</span>)  STREAM  &nbsp; </td> 
+            </tr>
+            <tr>
+                <td style="font-size: 12.5px !important; padding-bottom: 3px;"> --- last 24 hr Average APY &nbsp; : &nbsp; <span style="line-height:1; font-size: 12.9px !important; color:springgreen; display:contents;">{{ Number(selectedInstrument.average24SnapsBorrowersHarvestAPY).toFixed(2)  }} %</span> </td> 
+            </tr>
+            <tr>
+                <td style="font-size: 12.5px !important; padding-bottom: 7px;"> --- last 30 days Average APY &nbsp; : &nbsp; <span style="line-height:1; font-size: 12.9px !important; color:springgreen; display:contents;">{{ Number(selectedInstrument.averageMonthlySnapsBorrowersHarvestAPY).toFixed(2)  }} %</span>  </td> 
+            </tr>
+            <!-- 🌾 🌾 $SIGH FARMING  :  PRESENT STATE -->
+            <tr>
+                <td style="font-size: 14px !important;  padding-top: 5px; color:yellow;"> &#127806; &#127806; $SIGH FARMING &nbsp;:&nbsp; <span style="color:violet; display:contents;">PRESENT STATE </span>  </td> 
+            </tr>
+            <tr>
+                <td style="color:violet; font-size: 12.9px !important; padding-top: 4px;"> > Total Volatility (24 hr) &nbsp; : &nbsp; 
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='In-Active' " style="line-height:1; font-size: 12.9px !important; color:white; display:contents;"> SIGH Mechanism not Activated</span>  
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='Suppliers' " style="line-height:1; font-size: 12.9px !important; color:red; display:contents;">{{ Number(selectedInstrument.present_total24HrVolatilityUSD).toFixed(2)  }} USD ( - ) </span>  
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='Borrowers' " style="line-height:1; font-size: 12.9px !important; color:springgreen; display:contents;">{{ Number(selectedInstrument.present_total24HrVolatilityUSD).toFixed(2)  }} USD ( + )</span>  
+                </td> 
+            </tr>
+            <tr>
+                <td style="color:violet; font-size: 12.9px !important; padding-top: 4px;"> > Accounted Volatility &nbsp; : &nbsp; 
+                <span v-if=" selectedInstrument.present_SIGH_Side=='In-Active' " style="line-height:1; font-size: 12.9px !important; color:white; display:contents;"> SIGH Mechanism not Activated</span>  
+                <span v-if=" selectedInstrument.present_SIGH_Side=='Suppliers' " style="line-height:1; font-size: 12.9px !important; color:red; display:contents;">{{ Number(selectedInstrument.present_total24HrSentimentVolatilityUSD).toFixed(2)  }} USD <span style="line-height:1; font-size: 12.9px !important; color:paleturquoise; display:contents;"> (bear : {{  Number(selectedInstrument.present_total24HrVolatilityUSD) > 0 ? Number( 100 * Number(selectedInstrument.present_total24HrSentimentVolatilityUSD) / Number(selectedInstrument.present_total24HrVolatilityUSD)).toFixed(2) : 'In-Active'    }} %) </span>  </span>   
+                <span v-if=" selectedInstrument.present_SIGH_Side=='Borrowers' " style="line-height:1; font-size: 12.9px !important; color:springgreen; display:contents;">{{ Number(selectedInstrument.present_total24HrSentimentVolatilityUSD).toFixed(2)  }} USD  <span style="line-height:1; font-size: 12.9px !important; color:paleturquoise; display:contents;"> (bull : {{  Number(selectedInstrument.present_total24HrVolatilityUSD) > 0 ? Number( 100 * Number(selectedInstrument.present_total24HrSentimentVolatilityUSD) / Number(selectedInstrument.present_total24HrVolatilityUSD)).toFixed(2) : 'In-Active'}} % ) </span>  </span>   
+                </td> 
+            </tr>
+            <tr>
+                <td style="color:springgreen; font-size: 12.9px!important; padding-top: 4px;"> > Harvested Volatility &nbsp; : &nbsp;
+                <span v-if=" selectedInstrument.present_SIGH_Side=='In-Active' " style="line-height:1; font-size: 12.9px !important; color:yellow; display:contents;">{{ Number(selectedInstrument.present_harvestValuePerDayUSD).toFixed(2)  }} USD </span>  
+                <span v-if=" selectedInstrument.present_SIGH_Side=='Suppliers' " style="line-height:1; font-size: 12.9px !important; color:yellow; display:contents;">{{ Number(selectedInstrument.present_harvestValuePerDayUSD).toFixed(2)  }} USD <span style="line-height:1; font-size: 12.9px !important; color:white; display:contents;"> (&nbsp;{{  Number(selectedInstrument.present_total24HrVolatilityUSD) > 0 ? Number( 100 * Number(selectedInstrument.present_harvestValuePerDayUSD) / Number(selectedInstrument.present_total24HrVolatilityUSD)).toFixed(2) : 100    }} %&nbsp;) </span>  </span>   
+                <span v-if=" selectedInstrument.present_SIGH_Side=='Borrowers' " style="line-height:1; font-size: 12.9px !important; color:yellow; display:contents;">{{ Number(selectedInstrument.present_harvestValuePerDayUSD).toFixed(2)  }} USD  <span style="line-height:1; font-size: 12.9px !important; color:white; display:contents;"> (&nbsp;{{  Number(selectedInstrument.present_total24HrVolatilityUSD) > 0 ? Number( 100 * Number(selectedInstrument.present_harvestValuePerDayUSD) / Number(selectedInstrument.present_total24HrVolatilityUSD)).toFixed(2) : 100}} % &nbsp;) </span>  </span>   
+                </td> 
+            </tr>
 
-        <h3 style="font-size: 17px; color: aquamarine; margin-bottom: 4px; margin-top: 24px; "> <span style="line-height: 24px;font-size: 17px; color:yellow; display: contents; font-weight: 500;" > &#127806; $SIGH &#127806;  </span> <span style="line-height: 24px;font-size: 17px; color:greenyellow; display: contents; font-weight: 500;" > FARMING YIELDS </span>  &#x1F69C;	&#128104;&#8205;&#127806; </h3>
-        <tr>
-            <td style="font-size: 12.5px !important;  padding-bottom: 2px;"> >  $SIGH LIQUIDITY STREAM (per Block) : &nbsp; : &nbsp; 0 </td> 
-        </tr>
-        <tr>
-            <td style="font-size: 12.5px !important; padding-bottom: 7px;"> >  $SIGH LIQUIDITY STREAM (Yearly APY) : &nbsp; : &nbsp; 0 </td> 
-        </tr>
-        <tr>
-            <td style="font-size: 12.5px !important;  padding-bottom: 2px;"> >  $SIGH BORROWING STREAM (per Block) : &nbsp; : &nbsp; 0 </td> 
-        </tr>
-        <tr>
-            <td style="font-size: 12.5px !important;  padding-bottom: 2px;"> >  $SIGH BORROWING STREAM (Yearly APY) : &nbsp; : &nbsp; 0 </td> 
-        </tr>       
+            <tr>
+                <td style="font-size: 12.9px !important;  padding-top: 14px; color:aqua;"> > Current Stream Direction &nbsp; : &nbsp;  
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='In-Active' " style="line-height:1; font-size: 12.9px !important; color:white; display:contents;"> Both </span>
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='Suppliers' " style="line-height:1; font-size: 12.9px !important; color:rgb(102, 255, 0); display:contents;"> LONG : SUPPLIERS </span>
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='Borrowers' " style="line-height:1; font-size: 12.9px !important; color:red; display:contents;"> SHORT : BORROWERS </span>
+                </td> 
+            </tr>
+            <tr>
+                <td style="font-size: 12.9px !important;  padding-top: 5px; color:aqua;"> > Current Harvest Speed (per Block) :  <span style="line-height:1; font-size: 12.9px !important; color:yellow; display:contents;">{{ Number(selectedInstrument.present_harvestSpeedPerBlock).toFixed(4) }} SIGH &#127806;</span> <span style="line-height:1; font-size: 12.9px !important; color:white; display:contents;">({{ Number(selectedInstrument.present_harvestValuePerBlockUSD).toFixed(4) }} USD)</span>  </td> 
+            </tr>
+            <tr>
+                <td style="font-size: 12.9px !important;  padding-top: 5px; color:aqua;"> > Current Harvest APY&nbsp;:&nbsp;  <span style="line-height:1; font-size: 12.9px !important; color:springgreen; display:contents;">{{ Number(selectedInstrument.present_harvestAPY).toFixed(2) }} % &nbsp; - &nbsp; </span>   
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='In-Active' " style="line-height:1; font-size: 12.9px !important; color:white; display:contents;"> Both </span>
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='Suppliers' " style="line-height:1; font-size: 12.9px !important; color:rgb(102, 255, 0); display:contents;"> LONG : SUPPLIERS </span>
+                    <span v-if=" selectedInstrument.present_SIGH_Side=='Borrowers' " style="line-height:1; font-size: 12.9px !important; color:red; display:contents;"> SHORT : BORROWERS </span>
+                </td> 
+            </tr>      
     </table>
 
 

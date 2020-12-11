@@ -6,11 +6,13 @@
                 <!-- "SIGH FINANCE is currently in Beta!"  -->
                 <div style="padding-top: 21px; padding-bottom: 14px; float:left; width: 100%; border-bottom: 3px solid white;">
                     <div style="width:80%; float:left;" >
-                        <span style="line-height: 24px; font-size: 42px; color:white; display: contents;" > "SIGH FINANCE is currently in Beta!"  </span>
-                        <span v-if="!this.$store.state.isNetworkSupported" style="color:red; display:contents; font-size:17px !important; " > SIGH FINANCE currently only works on Ethereum's KOVAN Test-net. Please connect to Kovan test-net and refresh the website to interact with SIGH Finance! </span>
+                        <span style="line-height: 24px; font-size: 42px; color:white; display: contents;" > "SIGH FINANCE is currently in Beta!   </span>
+                        <span style="line-height: 24px; font-size: 24px; color:aqua; display: block; padding-top:11px;" >The numbers are simulated for testing purposes! </span>
+                        <span style="padding-top:9px; display: block; font-size: 20px;">  &#128104;&#8205;&#127806; <a href="https://discord.com/invite/HTrsKeWaZu" target="_blank" style="color:yellow;"> &nbsp; Click to Enter Discord Server! &nbsp; </a> &#128104;&#8205;&#127806;</span>
+                        <span v-if="!this.$store.state.isNetworkSupported" style="color:red; display:contents; font-size:19px !important; display: block; padding-top: 11px; padding-bottom: 11px; " > SIGH FINANCE currently only works on Ethereum's KOVAN Test-net. Please connect to Kovan test-net and refresh the website to interact with SIGH Finance! </span>
                     </div>
                     <!-- DRIP SIGH FROM SIGH SPEED CONTROLLER -->
-                    <div style="width:20%; float:right; padding-right:10%;" >
+                    <div style="width:20%; float:right; padding-right:10%; padding-top:1%;" >
                         <button style="background: darkblue;" class="uk-button uk-button-black"  @click="drip_SIGH(true)">Drip $SIGH</button>
                     </div>
                 </div>
@@ -27,7 +29,7 @@
                             </span>
                         </p>
                         <p style="margin-top: 14px !important;" >
-                            <span  style="padding-left:10px; line-height: 14px;font-size: 14px; color:bisque; display: block; text-align:center;" > Read more about $SIGHNOMICS here - Medium Article
+                            <span  style="padding-left:10px; line-height: 14px;font-size: 14px; color:bisque; display: block; text-align:center;" > Read more about $SIGHNOMICS here - <span style="color:yellow">Article Coming Soon </span>
                             </span>
                         </p>
                     </div>
@@ -121,7 +123,7 @@
                             </span>
                         </p>
                         <p style="margin-top: 14px !important;" >
-                            <span  style="padding-left:10px; line-height: 14px;font-size: 14px; color:bisque; display: block; text-align:center;" > Read more about VOLATILITY HARVESTS here - Medium Article
+                            <span  style="padding-left:10px; line-height: 14px;font-size: 14px; color:bisque; display: block; text-align:center;" > Read more about VOLATILITY HARVESTS here - <span style="color:yellow">Article Coming Soon </span>
                             </span>
                         </p>
                     </div>
@@ -235,12 +237,12 @@
      <SupportedMarkets_UtilityPanel /> 
     <!-- <Protocol_Infographics />  -->
 
-    <div style = "padding-top: 24px; padding-bottom: 24px; background-color: white; color: black; text-align: center; font-size: 24px; border: 3px solid blue;">
-        "Reach out to our Team at contact@sigh.finance if you are in interested in what we are building!"
+    <div style = "padding-top: 24px; padding-bottom: 24px; background-color: black; color: white; text-align: center; font-size: 24px; border: 3px solid blue;">
+        "Reach out to our Team at contact@sigh.finance if you are in interested in what we are building!" &#128104;&#8205;&#127806;
     </div>
 
 
-    <faqs /> 
+    <!-- <faqs />  -->
 
         <footer class="footer-classic-dark bg-black ">
             <div class="bg-black padding-50px-tb sm-padding-30px-tb">

@@ -70,6 +70,27 @@ const store = new Vuex.Store({
     isNetworkSupported: false,
     sighFinancePollingInitiated: false,
     networkNotSupportedMessage: 'SIGH Finance Currently only supports KOVAN Test-net (Network: 42).',
+
+    dummyWalletInstrumentState: { 
+      instrumentAddress: '0x0000000000000000000000000000000000000000',
+      iTokenAddress: '0x0000000000000000000000000000000000000000',
+      userAvailableAllowance: 0,
+      userAvailableAllowanceWorth: 0,
+      userBalance: 0,
+      userBalanceWorth: 0,
+      userDepositedBalance: 0,
+      userDepositedBalanceWorth: 0,
+      liquidityRate: 0,
+      usageAsCollateralEnabled: false,
+      principalBorrowBalance: 0,
+      principalBorrowBalanceWorth: 0,
+      currentBorrowBalance: 0,
+      currentBorrowBalanceWorth: 0,
+      borrowRate: 0,
+      borrowRateMode: 1,
+      originationFeeWorth: 0,
+    },
+    isDummyWalletInstrumentStateSet: true,
 // ######################################################
 // ############ PROTOCOL CONTRACT ADDRESSES  ############
 // ######################################################
@@ -127,7 +148,11 @@ const store = new Vuex.Store({
     SIGHFinanceState: {},                       //   SIGH FINANCE                  // SIGH's STATE (totalSupply, mintSpeed, burnSpeed, totalMinted, price, Sigh Global Trade Volume, bonding Curve Health)
     SIGHState: {},                              //   SIGH                          // SIGH's STATE (totalSupply, mintSpeed, burnSpeed, totalMinted, price, Sigh Global Trade Volume, bonding Curve Health)
 
-    currentlySelectedInstrument : {symbol:'WBTC',instrumentAddress: '0x0000000000000000000000000000000000000000' , name: 'Wrapped Bitcoin', decimals: 18, iTokenAddress: '0x0000000000000000000000000000000000000000' , priceDecimals: 8, price: 0 },  // Currently Selected Instrument
+    currentlySelectedInstrument : {symbol:'WBTC',instrumentAddress: '0x0000000000000000000000000000000000000000' , name: 'Wrapped Bitcoin', decimals: 18, iTokenAddress: '0x0000000000000000000000000000000000000000' , priceDecimals: 8, price: 0,
+    average24SnapsSuppliersHarvestAPY: 0, averageMonthlySnapsSuppliersHarvestAPY: 0,
+    average24SnapsBorrowersHarvestAPY: 0, averageMonthlySnapsBorrowersHarvestAPY: 0, 
+    present_total24HrVolatilityUSD: 0, present_total24HrSentimentVolatilityUSD: 0,
+    present_harvestValuePerDayUSD: 0 , present_harvestSpeedPerBlock: 0, present_harvestAPY: 0 },  // Currently Selected Instrument
 
     // TRANSACTIONS HISTORY FOR THE CURRENT SESSION
     sessionPendingTransactions : [],
