@@ -219,6 +219,7 @@ export function createSIGH(addressID: string): SIGH_Instrument {
   sigh_token_contract.maxSighVolatilityHarvestSpeed = BigDecimal.fromString('0')
 
   sigh_token_contract.blockNumberWhenSighVolatilityHarvestSpeedWasRefreshed = new BigInt(0)
+  sigh_token_contract.blockNumberWhenInstrumentVolatilityWasRefreshed = new BigInt(0)
   sigh_token_contract.minimumBlocksBeforeSpeedRefresh = new BigInt(0)
 
   sigh_token_contract.isUpperCheckForVolatilitySet = false
@@ -227,18 +228,36 @@ export function createSIGH(addressID: string): SIGH_Instrument {
   sigh_token_contract.currentSighVolatilityHarvestSpeedWEI = BigDecimal.fromString('0')
   sigh_token_contract.currentSighVolatilityHarvestSpeed = BigDecimal.fromString('0')
 
+  // TOTAL LENDING PROTOCOL VOTALITIY
   sigh_token_contract.totalLendingProtocolVolatilityPerBlockETH = BigDecimal.fromString('0')
   sigh_token_contract.totalLendingProtocolVolatilityPerBlockUSD = BigDecimal.fromString('0')
 
+  sigh_token_contract.bullTotalLendingProtocolVolatilityPerBlockETH = BigDecimal.fromString('0')
+  sigh_token_contract.bullTotalLendingProtocolVolatilityPerBlockUSD = BigDecimal.fromString('0')
+
+  sigh_token_contract.bearTotalLendingProtocolVolatilityPerBlockETH = BigDecimal.fromString('0')
+  sigh_token_contract.bearTotalLendingProtocolVolatilityPerBlockUSD = BigDecimal.fromString('0')
+
+  // TOTAL LENDING PROTOCOL SENTIMENT VOTALITIY
   sigh_token_contract.totalLendingProtocolSentimentVolatilityPerBlockETH = BigDecimal.fromString('0')
   sigh_token_contract.totalLendingProtocolSentimentVolatilityPerBlockUSD = BigDecimal.fromString('0')
 
-  sigh_token_contract.cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockETH = BigDecimal.fromString('0')
-  sigh_token_contract.cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockUSD = BigDecimal.fromString('0')
+  sigh_token_contract.bullTotalLendingProtocolSentimentVolatilityPerBlockETH = BigDecimal.fromString('0')
+  sigh_token_contract.bullTotalLendingProtocolSentimentVolatilityPerBlockUSD = BigDecimal.fromString('0')
+
+  sigh_token_contract.bearTotalLendingProtocolSentimentVolatilityPerBlockETH = BigDecimal.fromString('0')
+  sigh_token_contract.bearTotalLendingProtocolSentimentVolatilityPerBlockUSD = BigDecimal.fromString('0')
+
+  // cryptoMarketSentiment *  (TOTAL LENDING PROTOCOL SENTIMENT VOTALITIY)
+  sigh_token_contract.cryptoMarketSentimentFinalProtocolVolatilityPerBlockETH = BigDecimal.fromString('0')
+  sigh_token_contract.cryptoMarketSentimentFinalProtocolVolatilityPerBlockUSD = BigDecimal.fromString('0')
 
   sigh_token_contract.maxHarvestSizePossibleETH = BigDecimal.fromString('0')
   sigh_token_contract.maxHarvestSizePossibleUSD = BigDecimal.fromString('0')
 
+  sigh_token_contract.bullCurrentTotalSighHarvestSpeed = BigDecimal.fromString('0')
+  sigh_token_contract.bearCurrentTotalSighHarvestSpeed = BigDecimal.fromString('0')
+  sigh_token_contract.stakingCurrentTotalSighHarvestSpeed = BigDecimal.fromString('0')
 
   sigh_token_contract.save()
   return sigh_token_contract as SIGH_Instrument

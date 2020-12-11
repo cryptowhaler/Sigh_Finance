@@ -38,10 +38,8 @@ export default {
       instruments: {
         query: gql`subscription {
                     sighInstruments {
-                      name
+                      symbol
                       priceUSD
-                      totalSupply
-                      currentCycle
                       currentInflation
                       currentMintSpeed
                       currentBurnSpeed
@@ -49,23 +47,20 @@ export default {
                       # blocksPerCycle
 
                       isUpperCheckForVolatilitySet
-                      percentHarvestableVolatilityBeingHarvested
+                      cryptoMarketSentiment
                       
                       maxSighVolatilityHarvestSpeed
                       currentSighVolatilityHarvestSpeed
                       
-                      totalLendingProtocolVolatilityPerBlockETH
                       totalLendingProtocolVolatilityPerBlockUSD
+                      totalLendingProtocolSentimentVolatilityPerBlockUSD
+                      cryptoMarketSentimentFinalProtocolVolatilityPerBlockUSD
                       
                       maxHarvestSizePossibleETH
                       maxHarvestSizePossibleUSD
-                      
-                      
-                      maxHarvestableProtocolVolatilityPerBlockETH
-                      maxHarvestableProtocolVolatilityPerBlockUSD
-                      
-                      percentBasedHarvestableProtocolVolatilityPerBlockETH
-                      percentBasedHarvestableProtocolVolatilityPerBlockUSD
+
+                      bullCurrentTotalSighHarvestSpeed
+                      bearCurrentTotalSighHarvestSpeed
                     }
                   }`,
 

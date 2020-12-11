@@ -592,6 +592,18 @@ export class SIGH_Instrument extends Entity {
     );
   }
 
+  get blockNumberWhenInstrumentVolatilityWasRefreshed(): BigInt {
+    let value = this.get("blockNumberWhenInstrumentVolatilityWasRefreshed");
+    return value.toBigInt();
+  }
+
+  set blockNumberWhenInstrumentVolatilityWasRefreshed(value: BigInt) {
+    this.set(
+      "blockNumberWhenInstrumentVolatilityWasRefreshed",
+      Value.fromBigInt(value)
+    );
+  }
+
   get minimumBlocksBeforeSpeedRefresh(): BigInt {
     let value = this.get("minimumBlocksBeforeSpeedRefresh");
     return value.toBigInt();
@@ -664,6 +676,54 @@ export class SIGH_Instrument extends Entity {
     );
   }
 
+  get bullTotalLendingProtocolVolatilityPerBlockETH(): BigDecimal {
+    let value = this.get("bullTotalLendingProtocolVolatilityPerBlockETH");
+    return value.toBigDecimal();
+  }
+
+  set bullTotalLendingProtocolVolatilityPerBlockETH(value: BigDecimal) {
+    this.set(
+      "bullTotalLendingProtocolVolatilityPerBlockETH",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get bullTotalLendingProtocolVolatilityPerBlockUSD(): BigDecimal {
+    let value = this.get("bullTotalLendingProtocolVolatilityPerBlockUSD");
+    return value.toBigDecimal();
+  }
+
+  set bullTotalLendingProtocolVolatilityPerBlockUSD(value: BigDecimal) {
+    this.set(
+      "bullTotalLendingProtocolVolatilityPerBlockUSD",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get bearTotalLendingProtocolVolatilityPerBlockETH(): BigDecimal {
+    let value = this.get("bearTotalLendingProtocolVolatilityPerBlockETH");
+    return value.toBigDecimal();
+  }
+
+  set bearTotalLendingProtocolVolatilityPerBlockETH(value: BigDecimal) {
+    this.set(
+      "bearTotalLendingProtocolVolatilityPerBlockETH",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get bearTotalLendingProtocolVolatilityPerBlockUSD(): BigDecimal {
+    let value = this.get("bearTotalLendingProtocolVolatilityPerBlockUSD");
+    return value.toBigDecimal();
+  }
+
+  set bearTotalLendingProtocolVolatilityPerBlockUSD(value: BigDecimal) {
+    this.set(
+      "bearTotalLendingProtocolVolatilityPerBlockUSD",
+      Value.fromBigDecimal(value)
+    );
+  }
+
   get totalLendingProtocolSentimentVolatilityPerBlockETH(): BigDecimal {
     let value = this.get("totalLendingProtocolSentimentVolatilityPerBlockETH");
     return value.toBigDecimal();
@@ -688,34 +748,98 @@ export class SIGH_Instrument extends Entity {
     );
   }
 
-  get cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockETH(): BigDecimal {
+  get bullTotalLendingProtocolSentimentVolatilityPerBlockETH(): BigDecimal {
     let value = this.get(
-      "cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockETH"
+      "bullTotalLendingProtocolSentimentVolatilityPerBlockETH"
     );
     return value.toBigDecimal();
   }
 
-  set cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockETH(
+  set bullTotalLendingProtocolSentimentVolatilityPerBlockETH(
     value: BigDecimal
   ) {
     this.set(
-      "cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockETH",
+      "bullTotalLendingProtocolSentimentVolatilityPerBlockETH",
       Value.fromBigDecimal(value)
     );
   }
 
-  get cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockUSD(): BigDecimal {
+  get bullTotalLendingProtocolSentimentVolatilityPerBlockUSD(): BigDecimal {
     let value = this.get(
-      "cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockUSD"
+      "bullTotalLendingProtocolSentimentVolatilityPerBlockUSD"
     );
     return value.toBigDecimal();
   }
 
-  set cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockUSD(
+  set bullTotalLendingProtocolSentimentVolatilityPerBlockUSD(
     value: BigDecimal
   ) {
     this.set(
-      "cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockUSD",
+      "bullTotalLendingProtocolSentimentVolatilityPerBlockUSD",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get bearTotalLendingProtocolSentimentVolatilityPerBlockETH(): BigDecimal {
+    let value = this.get(
+      "bearTotalLendingProtocolSentimentVolatilityPerBlockETH"
+    );
+    return value.toBigDecimal();
+  }
+
+  set bearTotalLendingProtocolSentimentVolatilityPerBlockETH(
+    value: BigDecimal
+  ) {
+    this.set(
+      "bearTotalLendingProtocolSentimentVolatilityPerBlockETH",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get bearTotalLendingProtocolSentimentVolatilityPerBlockUSD(): BigDecimal {
+    let value = this.get(
+      "bearTotalLendingProtocolSentimentVolatilityPerBlockUSD"
+    );
+    return value.toBigDecimal();
+  }
+
+  set bearTotalLendingProtocolSentimentVolatilityPerBlockUSD(
+    value: BigDecimal
+  ) {
+    this.set(
+      "bearTotalLendingProtocolSentimentVolatilityPerBlockUSD",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get cryptoMarketSentimentFinalProtocolVolatilityPerBlockETH(): BigDecimal {
+    let value = this.get(
+      "cryptoMarketSentimentFinalProtocolVolatilityPerBlockETH"
+    );
+    return value.toBigDecimal();
+  }
+
+  set cryptoMarketSentimentFinalProtocolVolatilityPerBlockETH(
+    value: BigDecimal
+  ) {
+    this.set(
+      "cryptoMarketSentimentFinalProtocolVolatilityPerBlockETH",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get cryptoMarketSentimentFinalProtocolVolatilityPerBlockUSD(): BigDecimal {
+    let value = this.get(
+      "cryptoMarketSentimentFinalProtocolVolatilityPerBlockUSD"
+    );
+    return value.toBigDecimal();
+  }
+
+  set cryptoMarketSentimentFinalProtocolVolatilityPerBlockUSD(
+    value: BigDecimal
+  ) {
+    this.set(
+      "cryptoMarketSentimentFinalProtocolVolatilityPerBlockUSD",
       Value.fromBigDecimal(value)
     );
   }
@@ -736,6 +860,36 @@ export class SIGH_Instrument extends Entity {
 
   set maxHarvestSizePossibleUSD(value: BigDecimal) {
     this.set("maxHarvestSizePossibleUSD", Value.fromBigDecimal(value));
+  }
+
+  get bullCurrentTotalSighHarvestSpeed(): BigDecimal {
+    let value = this.get("bullCurrentTotalSighHarvestSpeed");
+    return value.toBigDecimal();
+  }
+
+  set bullCurrentTotalSighHarvestSpeed(value: BigDecimal) {
+    this.set("bullCurrentTotalSighHarvestSpeed", Value.fromBigDecimal(value));
+  }
+
+  get bearCurrentTotalSighHarvestSpeed(): BigDecimal {
+    let value = this.get("bearCurrentTotalSighHarvestSpeed");
+    return value.toBigDecimal();
+  }
+
+  set bearCurrentTotalSighHarvestSpeed(value: BigDecimal) {
+    this.set("bearCurrentTotalSighHarvestSpeed", Value.fromBigDecimal(value));
+  }
+
+  get stakingCurrentTotalSighHarvestSpeed(): BigDecimal {
+    let value = this.get("stakingCurrentTotalSighHarvestSpeed");
+    return value.toBigDecimal();
+  }
+
+  set stakingCurrentTotalSighHarvestSpeed(value: BigDecimal) {
+    this.set(
+      "stakingCurrentTotalSighHarvestSpeed",
+      Value.fromBigDecimal(value)
+    );
   }
 
   get mintSnapshots(): Array<string> {

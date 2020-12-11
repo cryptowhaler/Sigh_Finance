@@ -33,55 +33,80 @@
                     </div>
                     <!-- $SIGH HARVEST RATE -->
                     <div style="width:50%; float:left; border-right: 3px solid white; padding-bottom:10px;">
-                        <span style="font-weight:400; margin-top:10px; line-height: 24px;font-size: 17px; color:chartreuse; display: block; text-align:center;" >  &#x1F69C; $SIGH HARVEST RATE &#x1F69C; </span>
-                        <span style="margin-top:10px; line-height: 14px; font-size: 12px; color:white; display: block; text-align:center;" > Inflation : {{ Number(Number(sighInstrument.currentInflation) * 100 ).toFixed(4)}} % per Day </span>
+                        <span style="font-weight:400; margin-top:10px; line-height: 24px;font-size: 17px; color:chartreuse; display: block; text-align:center;" >  &#x1F69C; &#x1F69C; $SIGH HARVEST RATE &#x1F69C; &#x1F69C; </span>
+                        <span style="margin-top:3px; line-height: 14px; font-size: 11px; color:white; display: block; text-align:center;" > (Inflation : {{ Number(Number(sighInstrument.currentInflation) * 100 ).toFixed(4)}} % per Day) </span>
+                            <!-- Per Day -->
+                            <p v-if="displayInNumbers" style="margin-top: 9px !important;" >
+                                <span  style="padding-left:2px; line-height: 14px; font-size: 13.5px; color:whitesmoke; display: block; text-align:left;" >  &#x1F69C; Per Day : 
+                                    <span style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:yellow; font-weight:500; display: contents;" > &#127806; {{ Number(Number(sighInstrument.currentMintSpeed).toFixed(4) * 6500) }} SIGH &#127806; </span> <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > ( {{ Number(Number(sighInstrument.currentMintSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4) * 6500 ).toFixed(4)  }} USD )  </span>                         
+                                </span>
+                            </p>
+                            <p v-if="!displayInNumbers" style="margin-top: 9px !important;" >
+                                <span  style="padding-left:2px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: block; text-align:left;" >  &#x1F69C; Per Day : 
+                                    <span style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:yellow; font-weight:500; display: contents;" > &#127806; {{ getBalanceString(Number(Number(sighInstrument.currentMintSpeed).toFixed(4) * 6500)) }} SIGH &#127806; </span> <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > ( {{ getBalanceString(Number(Number(sighInstrument.currentMintSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4) * 6500 ).toFixed(4))  }} USD )  </span>                         
+                                </span>
+                            </p>
                             <!-- Per Block -->
                             <p v-if="displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:2px; line-height: 14px;font-size: 14px; color:whitesmoke; display: block; text-align:left;" > Per Block : 
-                                    <span style="padding-left:10px; line-height: 14px;font-size: 14px; color:yellow; font-weight:500; display: contents;" > &#127806; {{ Number(sighInstrument.currentMintSpeed).toFixed(4) }} $SIGH &#127806; </span> <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > ( {{ Number(Number(sighInstrument.currentMintSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(4) }} USD )  </span>                         
+                                <span  style="padding-left:2px; line-height: 14px;font-size: 14px; color:whitesmoke; display: block; text-align:left;" >  &#x1F69C; Per Block : 
+                                    <span style="padding-left:10px; line-height: 14px;font-size: 14px; color:yellow; font-weight:500; display: contents;" > &#127806; {{ Number(sighInstrument.currentMintSpeed).toFixed(4) }} SIGH &#127806; </span> <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > ( {{ Number(Number(sighInstrument.currentMintSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(4) }} USD )  </span>                         
                                 </span>
                             </p>
                             <p v-if="!displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:2px; line-height: 14px;font-size: 13.5px; color:whitesmoke;  display: block; text-align:left;" > Per Block : 
-                                    <span style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:yellow; font-weight:500; display: contents;" > &#127806; {{ getBalanceString(Number(sighInstrument.currentMintSpeed).toFixed(4)) }} $SIGH &#127806; </span> <span style="line-height: 14px; font-size: 13.5px;; color:aqua; display: contents;" > ( {{ getBalanceString(Number(Number(sighInstrument.currentMintSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(4)) }} USD )  </span>                         
+                                <span  style="padding-left:2px; line-height: 14px;font-size: 13.5px; color:whitesmoke;  display: block; text-align:left;" >  &#x1F69C; Per Block : 
+                                    <span style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:yellow; font-weight:500; display: contents;" > &#127806; {{ getBalanceString(Number(sighInstrument.currentMintSpeed).toFixed(4)) }} SIGH &#127806; </span> <span style="line-height: 14px; font-size: 13.5px;; color:aqua; display: contents;" > ( {{ getBalanceString(Number(Number(sighInstrument.currentMintSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(4)) }} USD )  </span>                         
                                 </span>
                             </p>
-                            <!-- Per Day -->
-                            <p v-if="displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:2px; line-height: 14px; font-size: 13.5px; color:whitesmoke; display: block; text-align:left;" > Per Day : 
-                                    <span style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:yellow; font-weight:500; display: contents;" > &#127806; {{ Number(Number(sighInstrument.currentMintSpeed).toFixed(4) * 6500) }} $SIGH &#127806; </span> <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > ( {{ Number(Number(sighInstrument.currentMintSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4) * 6500 ).toFixed(4)  }} USD )  </span>                         
+                            <!-- Volatility Harvest Drip -->
+                            <p style="margin-top: 14px !important;" >
+                                <span  style="padding-left:2px; line-height: 14px;font-size: 12.5px; color:chartreuse; display: block; text-align:left;" > &nbsp; --- Volatility Harvests : &nbsp;
+                                    <span style="padding-left:10px; line-height: 14px;font-size: 12.5px; color:yellow; font-weight:500; display: contents;" > &#127806; 0 SIGH &#127806; </span>                         
                                 </span>
                             </p>
-                            <p v-if="!displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:2px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: block; text-align:left;" > Per Day : 
-                                    <span style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:yellow; font-weight:500; display: contents;" > &#127806; {{ getBalanceString(Number(Number(sighInstrument.currentMintSpeed).toFixed(4) * 6500)) }} $SIGH &#127806; </span> <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > ( {{ getBalanceString(Number(Number(sighInstrument.currentMintSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4) * 6500 ).toFixed(4))  }} USD )  </span>                         
+                            <!-- Treasury Drip -->
+                            <p style="margin-top: 14px !important;" >
+                                <span  style="padding-left:2px; line-height: 14px;font-size: 12.5px; color:chartreuse; display: block; text-align:left;" > &nbsp; --- Treasury (Drip) : &nbsp;
+                                    <span style="padding-left:10px; line-height: 14px;font-size: 12.5px; color:yellow; font-weight:500; display: contents;" > &#127806; 0 SIGH &#127806; </span> 
                                 </span>
                             </p>
+
+
                     </div>
                     <!-- $SIGH BURN RATE -->
                     <div style="width:50%; float:left; padding-bottom:10px;">
                         <span style="padding-left:10px; font-weight:400; margin-top:10px; line-height: 24px;font-size: 17px; color:red; display: block; text-align:center;" >  &#x1F525; $SIGH BURN RATE &#x1F525; </span>
-                        <span style="margin-top:10px; line-height: 14px; font-size: 12px; color:white; display: block; text-align:center;" > TVL Treasury : 0 USD </span>
-                            <!-- Per Block -->
+                            <!-- BURN RATE (Per Block) -->
                             <p v-if="displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: flex;" > Per Block : 
-                                    <span style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:red; font-weight:500; display: contents;" > &#127806; {{ Number(sighInstrument.currentBurnSpeed).toFixed(4) }} $SIGH &#127806; </span> <span style="line-height: 14px; font-size: 13.5px; color:aqua; display: contents;" > ( {{ Number(Number(sighInstrument.currentBurnSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(4) }} USD )  </span>                         
+                                <span  style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: flex;" > &#x1F525;  Per Block : &nbsp;
+                                    <span style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:red; font-weight:500; display: contents;" > {{ Number(sighInstrument.currentBurnSpeed).toFixed(4) }} SIGH  </span> <span style="line-height: 14px; font-size: 13.5px; color:aqua; display: contents;" > ( {{ Number(Number(sighInstrument.currentBurnSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(4) }} USD )  </span>                         
                                 </span>
                             </p>
                             <p v-if="!displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: flex;" > Per Block : 
-                                    <span style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:red; font-weight:500; display: contents;" > &#127806; {{ getBalanceString(Number(sighInstrument.currentBurnSpeed).toFixed(4)) }} $SIGH &#127806; </span> <span style="line-height: 14px; font-size: 13.5px; color:aqua; display: contents;" > ( {{ getBalanceString(Number(Number(sighInstrument.currentBurnSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(4)) }} USD )  </span>                         
+                                <span  style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: flex;" > &#x1F525; Per Block : &nbsp;
+                                    <span style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:red; font-weight:500; display: contents;" > {{ getBalanceString(Number(sighInstrument.currentBurnSpeed).toFixed(4)) }} SIGH  </span> <span style="line-height: 14px; font-size: 13.5px; color:aqua; display: contents;" > ( {{ getBalanceString(Number(Number(sighInstrument.currentBurnSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(4)) }} USD )  </span>                         
                                 </span>
                             </p>
-                            <!-- Per Day -->
+                            <!-- BURN RATE (Per Day) -->
                             <p v-if="displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: flex;" > Per Day : 
-                                    <span style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:red; font-weight:500; display: contents;" > &#127806; {{ Number(Number(sighInstrument.currentBurnSpeed).toFixed(4) * 6500) }} $SIGH &#127806; </span> <span style="line-height: 14px; font-size: 13.5px; color:aqua; display: contents;" > ( {{ Number(Number(sighInstrument.currentBurnSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4) * 6500 ).toFixed(4)  }} USD )  </span>                         
+                                <span  style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: flex;" > &#x1F525; Per Day : &nbsp;
+                                    <span style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:red; font-weight:500; display: contents;" > {{ Number(Number(sighInstrument.currentBurnSpeed).toFixed(4) * 6500) }} SIGH  </span> <span style="line-height: 14px; font-size: 13.5px; color:aqua; display: contents;" > ( {{ Number(Number(sighInstrument.currentBurnSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4) * 6500 ).toFixed(4)  }} USD )  </span>                         
                                 </span>
                             </p>
                             <p v-if="!displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: flex;" > Per Day : 
-                                    <span style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:red; font-weight:500; display: contents;" > &#127806; {{ getBalanceString(Number(Number(sighInstrument.currentBurnSpeed).toFixed(4) * 6500)) }} $SIGH &#127806; </span> <span style="line-height: 14px; font-size: 13.5px; color:aqua; display: contents;" > ( {{ getBalanceString(Number(Number(sighInstrument.currentBurnSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4) * 6500 ).toFixed(4))  }} USD )  </span>                         
+                                <span  style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: flex;" > &#x1F525; Per Day : &nbsp;
+                                    <span style="padding-left:10px; line-height: 14px;font-size: 13.5px; color:red; font-weight:500; display: contents;" >{{ getBalanceString(Number(Number(sighInstrument.currentBurnSpeed).toFixed(4) * 6500)) }} SIGH  </span> <span style="line-height: 14px; font-size: 13.5px; color:aqua; display: contents;" > ( {{ getBalanceString(Number(Number(sighInstrument.currentBurnSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4) * 6500 ).toFixed(4))  }} USD )  </span>                         
+                                </span>
+                            </p>
+                            <!-- TVL Treasury -->
+                            <p style="margin-top: 19px !important;" >
+                                <span  style="padding-left:10px; line-height: 14px;font-size: 14px; color:yellow; display: block; text-align:center;" > &#127974; Treasury (TVL) : &nbsp;
+                                    <span style="padding-left:10px; line-height: 14px;font-size: 14px; color:white; font-weight:500; display: contents;" > 0.00 USD</span> 
+                                </span>
+                            </p>
+                            <!-- Treasury Performance -->
+                            <p style="margin-top: 14px !important; margin-bottom: 4px !important;" >
+                                <span  style="padding-left:10px; line-height: 14px;font-size: 14px; color:chartreuse; display: block; text-align:center;" > &#127974; Treasury Performance : &nbsp;
+                                    <span style="padding-left:10px; line-height: 14px;font-size: 14px; color:white; font-weight:500; display: contents;" > 0.00 %</span> 
                                 </span>
                             </p>
                     </div>
@@ -100,41 +125,43 @@
                             </span>
                         </p>
                     </div>
-                    <!-- TOTAL VOLATILITY (24 Hrs) -->
+                    <!-- TOTAL VOLATILITY (24 Hr,Av.Per Block) -->
                     <div style="width:50%; float:left; border-right: 3px solid white; padding-bottom:10px;">
-                        <span style="font-weight:400; margin-top:10px; line-height: 24px;font-size: 17px; color:red; display: block; text-align:center;" >  &#127906; TOTAL VOLATILITY (24 Hrs) &#127906; </span>
+                        <span style="font-weight:400; margin-top:10px; line-height: 24px;font-size: 17px; color:red; display: block; text-align:center;" >  &#127906; TOTAL VOLATILITY &#127906; </span>
+                        <span style="margin-top:3px; line-height: 9px; font-size: 11px; color:red; display: block; text-align:center;" > (24 Hrs, average Per Block) </span>                                                           
+                        <span style="margin-top:10px; line-height: 14px; font-size: 11px; color:white; display: block; text-align:center;" > Market Sentiment : {{ Number(sighInstrument.cryptoMarketSentiment).toFixed(2)  }} % </span>                                                           
                         <!-- <span style="margin-top:10px; line-height: 14px; font-size: 12px; color:white; display: block; text-align:center;" > Inflation : {{ Number(Number(sighInstrument.currentInflation) * 100 ).toFixed(4)}} % per Day </span> -->
                             <!-- Total Volatility (Avg. per Block) : -->
                             <p v-if="displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:5px; line-height: 14px; font-size: 13.5px; color:whitesmoke; display: block; text-align:center;" > Total Volatility (Avg. per Block) : 
-                                    <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > {{ Number(sighInstrument.totalLendingProtocolVolatilityPerBlockUSD).toFixed(4)  }} USD </span>                         
+                                <span  style="padding-left:11px; line-height: 14px; font-size: 13.5px; color:whitesmoke; display: flex;" > Total Volatility : &nbsp;
+                                    <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > {{ Number(sighInstrument.totalLendingProtocolVolatilityPerBlockUSD).toFixed(2)  }} USD </span>  
                                 </span>
                             </p>
                             <p v-if="!displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:5px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: block; text-align:center;" > Total Volatility (Avg. per Block) :
+                                <span  style="padding-left:11px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: flex;" > Total Volatility : &nbsp;
                                     <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > {{ getBalanceString(Number(sighInstrument.totalLendingProtocolVolatilityPerBlockUSD))  }} USD </span>                         
                                 </span>
                             </p>
                             <!-- Harvestable Volatility (Avg. per Block) : -->
                             <p v-if="displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:5px; line-height: 14px; font-size: 13.5px; color:whitesmoke; display: block; text-align:center;" > Accounted Volatility (Avg. per Block) : 
-                                    <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > {{ Number(sighInstrument.maxHarvestableProtocolVolatilityPerBlockUSD).toFixed(4)  }} USD </span>                         
+                                <span  style="padding-left:11px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: flex;" > Total (<span style="color:chartreuse;">Bull</span> + <span style="color:red;">Bear</span>) Volatility : 
+                                    <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > {{ Number(sighInstrument.totalLendingProtocolSentimentVolatilityPerBlockUSD).toFixed(4)  }} USD &nbsp; </span> <span style="color:yellow;"> ({{ Number(sighInstrument.totalLendingProtocolVolatilityPerBlockUSD) > 0 ? Number( 100* Number(sighInstrument.totalLendingProtocolSentimentVolatilityPerBlockUSD) / Number(sighInstrument.totalLendingProtocolVolatilityPerBlockUSD)).toFixed(2) : Number(sighInstrument.totalLendingProtocolSentimentVolatilityPerBlockUSD) }} %) </span>                         
                                 </span>
                             </p>
                             <p v-if="!displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:5px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: block; text-align:center;" > Accounted Volatility (Avg. per Block) :
-                                    <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > {{ getBalanceString(Number(sighInstrument.maxHarvestableProtocolVolatilityPerBlockUSD))  }} USD </span>                         
+                                <span  style="padding-left:11px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: flex;" > Total ((<span style="color:chartreuse;">Bull</span> + <span style="color:red;">Bear</span>) Volatility :
+                                    <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > {{ getBalanceString(Number(sighInstrument.totalLendingProtocolSentimentVolatilityPerBlockUSD))  }} USD &nbsp;</span> <span style="color:yellow;"> ({{ Number(sighInstrument.totalLendingProtocolVolatilityPerBlockUSD) > 0 ? Number( 100* Number(sighInstrument.totalLendingProtocolSentimentVolatilityPerBlockUSD) / Number(sighInstrument.totalLendingProtocolVolatilityPerBlockUSD)).toFixed(2) : Number(sighInstrument.totalLendingProtocolSentimentVolatilityPerBlockUSD) }} %) </span>                                                
                                 </span>
                             </p>
                             <!-- Harvestable Volatility (Avg. per Block) : -->
                             <p v-if="displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:5px; line-height: 14px; font-size: 13.5px; color:whitesmoke; display: block; text-align:center;" > Harvestable Volatility (Avg. per Block) : 
-                                    <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > {{ Number(sighInstrument.percentBasedHarvestableProtocolVolatilityPerBlockUSD).toFixed(4)  }} USD </span>                         
+                                <span  style="padding-left:11px; line-height: 14px;font-size: 13.5px; color:chartreuse; display: flex;" > Harvestable Volatility :  &nbsp;
+                                    <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > {{ Number(sighInstrument.cryptoMarketSentimentFinalProtocolVolatilityPerBlockUSD).toFixed(4)  }} USD  &nbsp; </span> <span style="color:yellow;"> ({{ Number(sighInstrument.totalLendingProtocolVolatilityPerBlockUSD) > 0 ? Number( 100* Number(sighInstrument.cryptoMarketSentimentFinalProtocolVolatilityPerBlockUSD) / Number(sighInstrument.totalLendingProtocolVolatilityPerBlockUSD)).toFixed(2) : Number(sighInstrument.cryptoMarketSentimentFinalProtocolVolatilityPerBlockUSD) }} %) </span>                                                 
                                 </span>
                             </p>
                             <p v-if="!displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:5px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: block; text-align:center;" > Harvestable Volatility (Avg. per Block) :
-                                    <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > {{ getBalanceString(Number(sighInstrument.percentBasedHarvestableProtocolVolatilityPerBlockUSD))  }} USD </span>                         
+                                <span  style="padding-left:11px; line-height: 14px;font-size: 13.5px; color:chartreuse; display: flex;" > Harvestable Volatility : &nbsp;
+                                    <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > {{ getBalanceString(Number(sighInstrument.cryptoMarketSentimentFinalProtocolVolatilityPerBlockUSD))  }} USD  &nbsp; </span> <span style="color:yellow;"> ({{ Number(sighInstrument.totalLendingProtocolVolatilityPerBlockUSD) > 0 ? Number( 100* Number(sighInstrument.cryptoMarketSentimentFinalProtocolVolatilityPerBlockUSD) / Number(sighInstrument.totalLendingProtocolVolatilityPerBlockUSD)).toFixed(2) : Number(sighInstrument.cryptoMarketSentimentFinalProtocolVolatilityPerBlockUSD) }} %) </span>                                                
                                 </span>
                             </p>
 
@@ -142,29 +169,42 @@
                     <!-- $SIGH FARMED -->
                     <div style="width:50%; float:right; padding-bottom:10px;">
                         <span style="font-weight:400; margin-top:10px; line-height: 24px;font-size: 17px; color:chartreuse; display: block; text-align:center;" >  &#127806; &#127806;$SIGH FARMS &#127806; &#127806; </span>
+                        <span style="margin-top:3px; line-height: 9px; font-size: 11px; color:chartreuse; display: block; text-align:center;" > (Average Per Block) </span>                                                           
+
                         <!-- <span style="margin-top:10px; line-height: 14px; font-size: 12px; color:white; display: block; text-align:center;" > Inflation : {{ Number(Number(sighInstrument.currentInflation) * 100 ).toFixed(4)}} % per Day </span> -->
                             <!-- last 24 hrs -->
                             <p v-if="displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:5px; line-height: 14px; font-size: 13.5px; color:whitesmoke; display: block; text-align:center;" > 24 hrs : 
-                                    <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > {{ Number(Number(sighInstrument.currentSighVolatilityHarvestSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4) ).toFixed(4)  }} USD </span>                         
+                                <span  style="padding-left:5px; line-height: 14px; font-size: 13.5px; color:whitesmoke; display: flex; padding-left:5px;"> &#x1F69C; Max Harvest Size : &nbsp;
+                                    <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > <span style="color:yellow;">  &#127806; {{Number(sighInstrument.maxSighVolatilityHarvestSpeed).toFixed(2)}} SIGH &#127806; </span> ({{ Number(Number(sighInstrument.maxSighVolatilityHarvestSpeed) * Number(sighInstrument.priceUSD)).toFixed(2) }} USD) </span>                         
                                 </span>
                             </p>
                             <p v-if="!displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:5px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: block; text-align:center;" > 24 hrs : 
-                                    <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > {{ getBalanceString(Number(Number(sighInstrument.currentSighVolatilityHarvestSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4) ).toFixed(4))  }} USD </span>                         
+                                <span  style="padding-left:5px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: flex; padding-left:5px;"> &#x1F69C; Max Harvest Size : &nbsp;
+                                    <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" >  <span style="color:yellow;"> &#127806; {{Number(sighInstrument.maxSighVolatilityHarvestSpeed).toFixed(2)}} SIGH &#127806; </span> ({{ getBalanceString(Number(Number(sighInstrument.maxSighVolatilityHarvestSpeed)* Number(sighInstrument.priceUSD) ).toFixed(2))  }} USD) </span>                         
                                 </span>
                             </p>
                             <!-- Per Block -->
                             <p v-if="displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:2px; line-height: 14px;font-size: 14px; color:whitesmoke; display: block; text-align:center;" > Avg. per Block : 
-                                    <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > {{ Number(Number(sighInstrument.currentMintSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(4) }} USD  </span>                         
+                                <span  style="padding-left:2px; line-height: 14px;font-size: 14px; color:whitesmoke; display: flex; padding-left:5px;">  &#x1F69C; Actual Harvests :
+                                    <span style="line-height: 14px; font-size: 14px; color:aqua; display: contents;" > <span style="color:yellow;"> &#127806; {{Number(sighInstrument.currentSighVolatilityHarvestSpeed).toFixed(2)}} SIGH &#127806; </span> &nbsp; ({{ Number(Number(sighInstrument.currentSighVolatilityHarvestSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(2) }}USD) </span>                         
                                 </span>
                             </p>
                             <p v-if="!displayInNumbers" style="margin-top: 14px !important;" >
-                                <span  style="padding-left:2px; line-height: 14px;font-size: 13.5px; color:whitesmoke;  display: block; text-align:center;" > Avg. per Block : 
-                                    <span style="line-height: 14px; font-size: 13.5px;; color:aqua; display: contents;" > {{ getBalanceString(Number(Number(sighInstrument.currentMintSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(4)) }} USD </span>                         
+                                <span  style="padding-left:2px; line-height: 14px;font-size: 13.5px; color:whitesmoke; display: flex; padding-left:5px;">  &#x1F69C; Actual Harvests :
+                                    <span style="line-height: 14px; font-size: 13.5px;; color:aqua; display: contents;" ><span style="color:yellow;"> &#127806; {{Number(sighInstrument.currentSighVolatilityHarvestSpeed).toFixed(2)}} SIGH &#127806; </span> &nbsp; ({{ getBalanceString(Number(Number(sighInstrument.currentSighVolatilityHarvestSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(2)) }} USD) </span>                         
                                 </span>
                             </p>
+                            <p style="margin-top: 14px !important;" >
+                                <span  style="padding-left:2px; line-height: 14px;font-size: 12.5px; color:chartreuse; display: flex; padding-left:5px;" > --- Suppliers Harvests :
+                                    <span style="line-height: 14px; font-size: 12.5px;; color:aqua; display: contents;"> <span style="color:yellow; font-size:12.5px;"> &#127806; {{Number(sighInstrument.bearCurrentTotalSighHarvestSpeed).toFixed(2)}} SIGH &#127806; </span> &nbsp; ({{ Number( Number(sighInstrument.bearCurrentTotalSighHarvestSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4) ).toFixed(2) }} USD) </span>                         
+                                </span>
+                            </p>
+                            <p style="margin-top: 14px !important;" >
+                                <span  style="padding-left:2px; line-height: 14px;font-size: 12.5px; color:chartreuse; display: flex; padding-left:5px;" > --- Borrower Harvests :
+                                    <span style="line-height: 14px; font-size: 12.5px;; color:aqua; display: contents;" > <span style="color:yellow; font-size:12.5px;"> &#127806; {{Number(sighInstrument.bullCurrentTotalSighHarvestSpeed).toFixed(2)}} SIGH &#127806; </span> &nbsp; ({{ Number( Number(sighInstrument.bullCurrentTotalSighHarvestSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4) ).toFixed(2) }} USD) </span>                         
+                                </span>
+                            </p>
+
 
                     </div>
 
@@ -174,7 +214,6 @@
                     <br> 
                     <span style=" padding-top:20px; line-height: 24px;font-size: 12px; color:red; display: contents;" >  &#x1F69C; Current $SIGH Volatility Harvest Rate (per Block) &#x1F69C; : </span> <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents;" >  {{ Number(sighInstrument.currentSighVolatilityHarvestSpeed).toFixed(2) }} $SIGH &#127806; </span> <span style="line-height: 24px;font-size: 12px; color:white; display: contents;" > : {{ Number(Number(sighInstrument.currentSighVolatilityHarvestSpeed).toFixed(4) * Number(sighInstrument.priceUSD).toFixed(4)).toFixed(4) }} USD  </span>  
                     <br> 
-                    percentHarvestableVolatilityBeingHarvested : {{ Number(sighInstrument.percentHarvestableVolatilityBeingHarvested).toFixed(2) }}
                     <br>                 
                     totalLendingProtocolVolatilityPerBlockETH : {{ Number(sighInstrument.totalLendingProtocolVolatilityPerBlockETH).toFixed(2) }}
                     <br> 

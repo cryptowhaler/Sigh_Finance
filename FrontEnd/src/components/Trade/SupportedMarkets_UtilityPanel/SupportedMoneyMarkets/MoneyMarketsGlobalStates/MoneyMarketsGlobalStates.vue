@@ -63,10 +63,18 @@ export default {
                       totalCompoundedLiquidityUSD
                       totalCompoundedBorrows
                       totalCompoundedBorrowsUSD
+
                       stableBorrowInterestPercent
                       variableBorrowInterestPercent
                       supplyInterestRatePercent
                       sighPayInterestRatePercent
+
+                      average24SnapsSuppliersHarvestAPY
+                      average24SnapsBorrowersHarvestAPY
+
+                      averageMonthlySnapsSuppliersHarvestAPY
+                      averageMonthlySnapsBorrowersHarvestAPY
+
                       present_SIGH_Side
                       present_DeltaBlocks
                       present_SIGH_Suppliers_Speed
@@ -198,8 +206,13 @@ export default {
           currentInstrument.alpha_APY =  0;
         }
 
+        currentInstrument.average24SnapsSuppliersHarvestAPY = instruments[i].average24SnapsSuppliersHarvestAPY
+        currentInstrument.average24SnapsBorrowersHarvestAPY = instruments[i].average24SnapsBorrowersHarvestAPY
+        currentInstrument.averageMonthlySnapsSuppliersHarvestAPY = instruments[i].averageMonthlySnapsSuppliersHarvestAPY
+        currentInstrument.averageMonthlySnapsBorrowersHarvestAPY = instruments[i].averageMonthlySnapsBorrowersHarvestAPY
+                            
         instrumentsArray.push(currentInstrument);
-      }
+      }      
       this.instruments = instrumentsArray;      // UPDATE THE STATE BEING DISPLAYED
       console.log("subscribeToInstruments");
       console.log(this.instruments);      

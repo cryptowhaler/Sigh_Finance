@@ -91,6 +91,10 @@ type SIGH_Instrument @entity {
     
     "block Number when $SIGH Volatility harvest speed was last calculated"
     blockNumberWhenSighVolatilityHarvestSpeedWasRefreshed: BigInt!
+
+    "block Number when INSTRUMENT Volatility were last calculated"
+    blockNumberWhenInstrumentVolatilityWasRefreshed: BigInt!
+
     minimumBlocksBeforeSpeedRefresh: BigInt!
 
     isUpperCheckForVolatilitySet: Boolean!
@@ -105,18 +109,41 @@ type SIGH_Instrument @entity {
     totalLendingProtocolVolatilityPerBlockETH: BigDecimal!
     totalLendingProtocolVolatilityPerBlockUSD: BigDecimal!
 
+    "Total Positive Volatility of the Lending Protocol : Per Block"
+    bullTotalLendingProtocolVolatilityPerBlockETH: BigDecimal!
+    bullTotalLendingProtocolVolatilityPerBlockUSD: BigDecimal!
+
+    "Total Negative Volatility of the Lending Protocol : Per Block"
+    bearTotalLendingProtocolVolatilityPerBlockETH: BigDecimal!
+    bearTotalLendingProtocolVolatilityPerBlockUSD: BigDecimal!
+
     "Maximum Volatility that can be harvested : Per Block"
     totalLendingProtocolSentimentVolatilityPerBlockETH: BigDecimal!
     totalLendingProtocolSentimentVolatilityPerBlockUSD: BigDecimal!
 
-    "part of the maximum Volatility that can be harvested : Per Block"
-    cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockETH: BigDecimal!
-    cryptoMarketSentimentBasedFinalProtocolVolatilityPerBlockUSD: BigDecimal!
+    "Total Positive Volatility of the Lending Protocol that can be harvested : Per Block"
+    bullTotalLendingProtocolSentimentVolatilityPerBlockETH: BigDecimal!
+    bullTotalLendingProtocolSentimentVolatilityPerBlockUSD: BigDecimal!
+
+    "Total Negative Volatility of the Lending Protocol that can be harvested : Per Block"
+    bearTotalLendingProtocolSentimentVolatilityPerBlockETH: BigDecimal!
+    bearTotalLendingProtocolSentimentVolatilityPerBlockUSD: BigDecimal!
+
+
+    "cryptoMarketSentiment * (Maximum Volatility that can be harvested) : Per Block"
+    cryptoMarketSentimentFinalProtocolVolatilityPerBlockETH: BigDecimal!
+    cryptoMarketSentimentFinalProtocolVolatilityPerBlockUSD: BigDecimal!
+
+
 
     "Maximum Value of $SIGH that can be harvested : Per Block"
     maxHarvestSizePossibleETH: BigDecimal!
-    maxHarvestSizePossibleUSD: BigDecimal!                
+    maxHarvestSizePossibleUSD: BigDecimal!           
 
+
+    bullCurrentTotalSighHarvestSpeed: BigDecimal!      
+    bearCurrentTotalSighHarvestSpeed: BigDecimal!      
+    stakingCurrentTotalSighHarvestSpeed: BigDecimal!
 
     mintSnapshots: [MintSnapshot!]! @derivedFrom(field:"instrument_sigh")
 }
