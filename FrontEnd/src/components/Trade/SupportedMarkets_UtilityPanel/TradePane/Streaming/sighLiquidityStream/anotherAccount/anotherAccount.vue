@@ -170,9 +170,23 @@ export default {
         this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
       }
       console.log(this.selectedInstrumentWalletState);
-    }
+    },
 
-
+    getBalanceString(number)  {
+      if ( Number(number) >= 1000000000 ) {
+        let inBil = (Number(number) / 1000000000).toFixed(2);
+        return inBil.toString() + ' B';
+      } 
+      if ( Number(number) >= 1000000 ) {
+        let inMil = (Number(number) / 1000000).toFixed(2);
+        return inMil.toString() + ' M';
+      } 
+      if ( Number(number) >= 1000 ) {
+        let inK = (Number(number) / 1000).toFixed(2);
+        return inK.toString() + ' K';
+      } 
+      return Number(number).toFixed(2);
+    }      
 
   },
 
