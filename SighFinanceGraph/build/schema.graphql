@@ -1,12 +1,52 @@
-type ContractAddresses @entity {
+type AddressesProvider @entity {
     id: ID!
 
-    GlobalAddressesProviderContractAddress: Bytes!
+    pending_SIGH_Finance_Manager: Bytes!
+    SIGH_Finance_Manager: Bytes!
 
+    Pending_Lending_Pool_Manager: Bytes!
+    Lending_Pool_Manager: Bytes!
 
+    Price_Oracle: Bytes!
+    SIGH_Finance_Fee_Collector: Bytes!
 
+    Lending_Pool_Configurator_Storage: Bytes!
+    Lending_Pool_Configurator_Impl: Bytes!
 
+    Lending_Pool_Storage: Bytes!
+    Lending_Pool_Impl: Bytes!
+
+    Lending_Pool_Core_Storage: Bytes!
+    Lending_Pool_Core_Impl: Bytes!
+
+    Lending_Pool_Paramters_Provider_Storage: Bytes!
+    Lending_Pool_Paramters_Provider_Impl: Bytes!
+
+    Lending_Pool_Data_Provider_Storage: Bytes!
+    Lending_Pool_Data_Provider_Impl: Bytes!
+
+    Lending_Pool_Liquidation_Manager: Bytes!
+    Lending_Rate_Oracle: Bytes!
+
+    Fee_Provider_Storage: Bytes!
+    Fee_Provider_Impl: Bytes!
+
+    SIGH_Instrument: Bytes!
+    SIGH_Speed_Controller: Bytes!
+    SIGH_Staking: Bytes!
+
+    SIGH_Finance_Configurator_Storage: Bytes!
+    SIGH_Finance_Configurator_Impl: Bytes!
+
+    SIGH_Mechanism_Handler_Storage: Bytes!
+    SIGH_Mechanism_Handler_Impl: Bytes!
+
+    SIGH_Treasury_Storage: Bytes!
+    SIGH_Treasury_Impl: Bytes!
 }
+
+
+
 
 type SIGH_FINANCE @entity {    
     id: ID!
@@ -46,6 +86,9 @@ type SIGH_FINANCE @entity {
     present_Total_VolatilityLimitAmountUSD: BigDecimal!
 
 }
+
+
+
 
 
 type SIGH_Instrument @entity {

@@ -55,7 +55,6 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
     bytes32 private constant LENDING_POOL = "LENDING_POOL";
     bytes32 private constant LENDING_POOL_LIQUIDATION_MANAGER = "LIQUIDATION_MANAGER";
     bytes32 private constant LENDING_POOL_PARAMETERS_PROVIDER = "PARAMETERS_PROVIDER";
-    bytes32 private constant LENDING_POOL_FLASHLOAN_PROVIDER = "FLASHLOAN_PROVIDER";
     bytes32 private constant DATA_PROVIDER = "DATA_PROVIDER";
     bytes32 private constant LENDING_RATE_ORACLE = "LENDING_RATE_ORACLE";
     bytes32 private constant FEE_PROVIDER = "FEE_PROVIDER";

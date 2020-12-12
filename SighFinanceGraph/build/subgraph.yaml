@@ -6,6 +6,66 @@ schema:
   file: schema.graphql
 dataSources:
   - kind: ethereum/contract
+    name: AddressesProvider
+    network: kovan
+    source:
+      address: "0x9f9A32c0F6Ee33c4558221675bB65c8Dad950A98"
+      abi: AddressesProvider
+      startBlock: 22305514
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: AddressesProvider/AddressesProvider.wasm
+      entities:
+        - AddressesProvider
+      abis:
+        - name: AddressesProvider
+          file: AddressesProvider/abis/AddressesProvider.json
+      eventHandlers:
+        - event: PendingSIGHFinanceManagerUpdated(address)
+          handler: handlePendingSIGHFinanceManagerUpdated
+        - event: SIGHFinanceManagerUpdated(address)
+          handler: handleSIGHFinanceManagerUpdated
+        - event: PendingLendingPoolManagerUpdated(address)
+          handler: handlePendingLendingPoolManagerUpdated
+        - event: LendingPoolManagerUpdated(address)
+          handler: handleLendingPoolManagerUpdated
+        - event: LendingPoolConfiguratorUpdated(indexed address)
+          handler: handleLendingPoolConfiguratorUpdated
+        - event: LendingPoolUpdated(indexed address)
+          handler: handleLendingPoolUpdated
+        - event: LendingPoolCoreUpdated(indexed address)
+          handler: handleLendingPoolCoreUpdated
+        - event: LendingPoolParametersProviderUpdated(indexed address)
+          handler: handleLendingPoolParametersProviderUpdated
+        - event: LendingPoolLiquidationManagerUpdated(indexed address)
+          handler: handleLendingPoolLiquidationManagerUpdated
+        - event: LendingPoolDataProviderUpdated(indexed address)
+          handler: handleLendingPoolDataProviderUpdated
+        - event: LendingRateOracleUpdated(indexed address)
+          handler: handleLendingRateOracleUpdated
+        - event: FeeProviderUpdated(indexed address)
+          handler: handleFeeProviderUpdated
+        - event: SIGHFinanceConfiguratorUpdated(indexed address)
+          handler: handleSIGHFinanceConfiguratorUpdated
+        - event: SIGHAddressUpdated(indexed address)
+          handler: handleSIGHAddressUpdated
+        - event: SIGHSpeedControllerUpdated(indexed address)
+          handler: handleSIGHSpeedControllerUpdated
+        - event: SIGHMechanismHandlerImplUpdated(indexed address)
+          handler: handleSIGHMechanismHandlerImplUpdated
+        - event: SIGHTreasuryImplUpdated(indexed address)
+          handler: handleSIGHTreasuryImplUpdated
+        - event: SIGHStakingImplUpdated(indexed address)
+          handler: handleSIGHStakingImplUpdated
+        - event: PriceOracleUpdated(indexed address)
+          handler: handlePriceOracleUpdated
+        - event: SIGHFinanceFeeCollectorUpdated(indexed address)
+          handler: handleSIGHFinanceFeeCollectorUpdated
+        - event: ProxyCreated(bytes32,indexed address)
+          handler: handleProxyCreated
+  - kind: ethereum/contract
     name: SIGH
     network: kovan
     source:

@@ -12,7 +12,7 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class ContractAddresses extends Entity {
+export class AddressesProvider extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -20,17 +20,17 @@ export class ContractAddresses extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id !== null, "Cannot save ContractAddresses entity without an ID");
+    assert(id !== null, "Cannot save AddressesProvider entity without an ID");
     assert(
       id.kind == ValueKind.STRING,
-      "Cannot save ContractAddresses entity with non-string ID. " +
+      "Cannot save AddressesProvider entity with non-string ID. " +
         'Considering using .toHex() to convert the "id" to a string.'
     );
-    store.set("ContractAddresses", id.toString(), this);
+    store.set("AddressesProvider", id.toString(), this);
   }
 
-  static load(id: string): ContractAddresses | null {
-    return store.get("ContractAddresses", id) as ContractAddresses | null;
+  static load(id: string): AddressesProvider | null {
+    return store.get("AddressesProvider", id) as AddressesProvider | null;
   }
 
   get id(): string {
@@ -42,13 +42,265 @@ export class ContractAddresses extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get GlobalAddressesProviderContractAddress(): Bytes {
-    let value = this.get("GlobalAddressesProviderContractAddress");
+  get pending_SIGH_Finance_Manager(): Bytes {
+    let value = this.get("pending_SIGH_Finance_Manager");
     return value.toBytes();
   }
 
-  set GlobalAddressesProviderContractAddress(value: Bytes) {
-    this.set("GlobalAddressesProviderContractAddress", Value.fromBytes(value));
+  set pending_SIGH_Finance_Manager(value: Bytes) {
+    this.set("pending_SIGH_Finance_Manager", Value.fromBytes(value));
+  }
+
+  get SIGH_Finance_Manager(): Bytes {
+    let value = this.get("SIGH_Finance_Manager");
+    return value.toBytes();
+  }
+
+  set SIGH_Finance_Manager(value: Bytes) {
+    this.set("SIGH_Finance_Manager", Value.fromBytes(value));
+  }
+
+  get Pending_Lending_Pool_Manager(): Bytes {
+    let value = this.get("Pending_Lending_Pool_Manager");
+    return value.toBytes();
+  }
+
+  set Pending_Lending_Pool_Manager(value: Bytes) {
+    this.set("Pending_Lending_Pool_Manager", Value.fromBytes(value));
+  }
+
+  get Lending_Pool_Manager(): Bytes {
+    let value = this.get("Lending_Pool_Manager");
+    return value.toBytes();
+  }
+
+  set Lending_Pool_Manager(value: Bytes) {
+    this.set("Lending_Pool_Manager", Value.fromBytes(value));
+  }
+
+  get Price_Oracle(): Bytes {
+    let value = this.get("Price_Oracle");
+    return value.toBytes();
+  }
+
+  set Price_Oracle(value: Bytes) {
+    this.set("Price_Oracle", Value.fromBytes(value));
+  }
+
+  get SIGH_Finance_Fee_Collector(): Bytes {
+    let value = this.get("SIGH_Finance_Fee_Collector");
+    return value.toBytes();
+  }
+
+  set SIGH_Finance_Fee_Collector(value: Bytes) {
+    this.set("SIGH_Finance_Fee_Collector", Value.fromBytes(value));
+  }
+
+  get Lending_Pool_Configurator_Storage(): Bytes {
+    let value = this.get("Lending_Pool_Configurator_Storage");
+    return value.toBytes();
+  }
+
+  set Lending_Pool_Configurator_Storage(value: Bytes) {
+    this.set("Lending_Pool_Configurator_Storage", Value.fromBytes(value));
+  }
+
+  get Lending_Pool_Configurator_Impl(): Bytes {
+    let value = this.get("Lending_Pool_Configurator_Impl");
+    return value.toBytes();
+  }
+
+  set Lending_Pool_Configurator_Impl(value: Bytes) {
+    this.set("Lending_Pool_Configurator_Impl", Value.fromBytes(value));
+  }
+
+  get Lending_Pool_Storage(): Bytes {
+    let value = this.get("Lending_Pool_Storage");
+    return value.toBytes();
+  }
+
+  set Lending_Pool_Storage(value: Bytes) {
+    this.set("Lending_Pool_Storage", Value.fromBytes(value));
+  }
+
+  get Lending_Pool_Impl(): Bytes {
+    let value = this.get("Lending_Pool_Impl");
+    return value.toBytes();
+  }
+
+  set Lending_Pool_Impl(value: Bytes) {
+    this.set("Lending_Pool_Impl", Value.fromBytes(value));
+  }
+
+  get Lending_Pool_Core_Storage(): Bytes {
+    let value = this.get("Lending_Pool_Core_Storage");
+    return value.toBytes();
+  }
+
+  set Lending_Pool_Core_Storage(value: Bytes) {
+    this.set("Lending_Pool_Core_Storage", Value.fromBytes(value));
+  }
+
+  get Lending_Pool_Core_Impl(): Bytes {
+    let value = this.get("Lending_Pool_Core_Impl");
+    return value.toBytes();
+  }
+
+  set Lending_Pool_Core_Impl(value: Bytes) {
+    this.set("Lending_Pool_Core_Impl", Value.fromBytes(value));
+  }
+
+  get Lending_Pool_Paramters_Provider_Storage(): Bytes {
+    let value = this.get("Lending_Pool_Paramters_Provider_Storage");
+    return value.toBytes();
+  }
+
+  set Lending_Pool_Paramters_Provider_Storage(value: Bytes) {
+    this.set("Lending_Pool_Paramters_Provider_Storage", Value.fromBytes(value));
+  }
+
+  get Lending_Pool_Paramters_Provider_Impl(): Bytes {
+    let value = this.get("Lending_Pool_Paramters_Provider_Impl");
+    return value.toBytes();
+  }
+
+  set Lending_Pool_Paramters_Provider_Impl(value: Bytes) {
+    this.set("Lending_Pool_Paramters_Provider_Impl", Value.fromBytes(value));
+  }
+
+  get Lending_Pool_Data_Provider_Storage(): Bytes {
+    let value = this.get("Lending_Pool_Data_Provider_Storage");
+    return value.toBytes();
+  }
+
+  set Lending_Pool_Data_Provider_Storage(value: Bytes) {
+    this.set("Lending_Pool_Data_Provider_Storage", Value.fromBytes(value));
+  }
+
+  get Lending_Pool_Data_Provider_Impl(): Bytes {
+    let value = this.get("Lending_Pool_Data_Provider_Impl");
+    return value.toBytes();
+  }
+
+  set Lending_Pool_Data_Provider_Impl(value: Bytes) {
+    this.set("Lending_Pool_Data_Provider_Impl", Value.fromBytes(value));
+  }
+
+  get Lending_Pool_Liquidation_Manager(): Bytes {
+    let value = this.get("Lending_Pool_Liquidation_Manager");
+    return value.toBytes();
+  }
+
+  set Lending_Pool_Liquidation_Manager(value: Bytes) {
+    this.set("Lending_Pool_Liquidation_Manager", Value.fromBytes(value));
+  }
+
+  get Lending_Rate_Oracle(): Bytes {
+    let value = this.get("Lending_Rate_Oracle");
+    return value.toBytes();
+  }
+
+  set Lending_Rate_Oracle(value: Bytes) {
+    this.set("Lending_Rate_Oracle", Value.fromBytes(value));
+  }
+
+  get Fee_Provider_Storage(): Bytes {
+    let value = this.get("Fee_Provider_Storage");
+    return value.toBytes();
+  }
+
+  set Fee_Provider_Storage(value: Bytes) {
+    this.set("Fee_Provider_Storage", Value.fromBytes(value));
+  }
+
+  get Fee_Provider_Impl(): Bytes {
+    let value = this.get("Fee_Provider_Impl");
+    return value.toBytes();
+  }
+
+  set Fee_Provider_Impl(value: Bytes) {
+    this.set("Fee_Provider_Impl", Value.fromBytes(value));
+  }
+
+  get SIGH_Instrument(): Bytes {
+    let value = this.get("SIGH_Instrument");
+    return value.toBytes();
+  }
+
+  set SIGH_Instrument(value: Bytes) {
+    this.set("SIGH_Instrument", Value.fromBytes(value));
+  }
+
+  get SIGH_Speed_Controller(): Bytes {
+    let value = this.get("SIGH_Speed_Controller");
+    return value.toBytes();
+  }
+
+  set SIGH_Speed_Controller(value: Bytes) {
+    this.set("SIGH_Speed_Controller", Value.fromBytes(value));
+  }
+
+  get SIGH_Staking(): Bytes {
+    let value = this.get("SIGH_Staking");
+    return value.toBytes();
+  }
+
+  set SIGH_Staking(value: Bytes) {
+    this.set("SIGH_Staking", Value.fromBytes(value));
+  }
+
+  get SIGH_Finance_Configurator_Storage(): Bytes {
+    let value = this.get("SIGH_Finance_Configurator_Storage");
+    return value.toBytes();
+  }
+
+  set SIGH_Finance_Configurator_Storage(value: Bytes) {
+    this.set("SIGH_Finance_Configurator_Storage", Value.fromBytes(value));
+  }
+
+  get SIGH_Finance_Configurator_Impl(): Bytes {
+    let value = this.get("SIGH_Finance_Configurator_Impl");
+    return value.toBytes();
+  }
+
+  set SIGH_Finance_Configurator_Impl(value: Bytes) {
+    this.set("SIGH_Finance_Configurator_Impl", Value.fromBytes(value));
+  }
+
+  get SIGH_Mechanism_Handler_Storage(): Bytes {
+    let value = this.get("SIGH_Mechanism_Handler_Storage");
+    return value.toBytes();
+  }
+
+  set SIGH_Mechanism_Handler_Storage(value: Bytes) {
+    this.set("SIGH_Mechanism_Handler_Storage", Value.fromBytes(value));
+  }
+
+  get SIGH_Mechanism_Handler_Impl(): Bytes {
+    let value = this.get("SIGH_Mechanism_Handler_Impl");
+    return value.toBytes();
+  }
+
+  set SIGH_Mechanism_Handler_Impl(value: Bytes) {
+    this.set("SIGH_Mechanism_Handler_Impl", Value.fromBytes(value));
+  }
+
+  get SIGH_Treasury_Storage(): Bytes {
+    let value = this.get("SIGH_Treasury_Storage");
+    return value.toBytes();
+  }
+
+  set SIGH_Treasury_Storage(value: Bytes) {
+    this.set("SIGH_Treasury_Storage", Value.fromBytes(value));
+  }
+
+  get SIGH_Treasury_Impl(): Bytes {
+    let value = this.get("SIGH_Treasury_Impl");
+    return value.toBytes();
+  }
+
+  set SIGH_Treasury_Impl(value: Bytes) {
+    this.set("SIGH_Treasury_Impl", Value.fromBytes(value));
   }
 }
 
