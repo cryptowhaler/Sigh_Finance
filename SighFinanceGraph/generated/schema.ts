@@ -3353,3 +3353,248 @@ export class SIGH_Distribution_SnapShot extends Entity {
     );
   }
 }
+
+export class StakingContract extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save StakingContract entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save StakingContract entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("StakingContract", id.toString(), this);
+  }
+
+  static load(id: string): StakingContract | null {
+    return store.get("StakingContract", id) as StakingContract | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get StakingRewards(): Array<string> {
+    let value = this.get("StakingRewards");
+    return value.toStringArray();
+  }
+
+  set StakingRewards(value: Array<string>) {
+    this.set("StakingRewards", Value.fromStringArray(value));
+  }
+}
+
+export class StakingRewards extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save StakingRewards entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save StakingRewards entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("StakingRewards", id.toString(), this);
+  }
+
+  static load(id: string): StakingRewards | null {
+    return store.get("StakingRewards", id) as StakingRewards | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    return value.toString();
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
+  get symbol(): string {
+    let value = this.get("symbol");
+    return value.toString();
+  }
+
+  set symbol(value: string) {
+    this.set("symbol", Value.fromString(value));
+  }
+
+  get decimals(): BigInt {
+    let value = this.get("decimals");
+    return value.toBigInt();
+  }
+
+  set decimals(value: BigInt) {
+    this.set("decimals", Value.fromBigInt(value));
+  }
+
+  get oracle(): Bytes {
+    let value = this.get("oracle");
+    return value.toBytes();
+  }
+
+  set oracle(value: Bytes) {
+    this.set("oracle", Value.fromBytes(value));
+  }
+
+  get priceETH(): BigDecimal {
+    let value = this.get("priceETH");
+    return value.toBigDecimal();
+  }
+
+  set priceETH(value: BigDecimal) {
+    this.set("priceETH", Value.fromBigDecimal(value));
+  }
+
+  get priceUSD(): BigDecimal {
+    let value = this.get("priceUSD");
+    return value.toBigDecimal();
+  }
+
+  set priceUSD(value: BigDecimal) {
+    this.set("priceUSD", Value.fromBigDecimal(value));
+  }
+
+  get stakingContract(): string {
+    let value = this.get("stakingContract");
+    return value.toString();
+  }
+
+  set stakingContract(value: string) {
+    this.set("stakingContract", Value.fromString(value));
+  }
+
+  get lifeTimeBalance(): BigDecimal {
+    let value = this.get("lifeTimeBalance");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeBalance(value: BigDecimal) {
+    this.set("lifeTimeBalance", Value.fromBigDecimal(value));
+  }
+
+  get lifeTimeBalanceETH(): BigDecimal {
+    let value = this.get("lifeTimeBalanceETH");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeBalanceETH(value: BigDecimal) {
+    this.set("lifeTimeBalanceETH", Value.fromBigDecimal(value));
+  }
+
+  get lifeTimeBalanceUSD(): BigDecimal {
+    let value = this.get("lifeTimeBalanceUSD");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeBalanceUSD(value: BigDecimal) {
+    this.set("lifeTimeBalanceUSD", Value.fromBigDecimal(value));
+  }
+
+  get currentBalance(): BigDecimal {
+    let value = this.get("currentBalance");
+    return value.toBigDecimal();
+  }
+
+  set currentBalance(value: BigDecimal) {
+    this.set("currentBalance", Value.fromBigDecimal(value));
+  }
+
+  get currentBalanceETH(): BigDecimal {
+    let value = this.get("currentBalanceETH");
+    return value.toBigDecimal();
+  }
+
+  set currentBalanceETH(value: BigDecimal) {
+    this.set("currentBalanceETH", Value.fromBigDecimal(value));
+  }
+
+  get currentBalanceUSD(): BigDecimal {
+    let value = this.get("currentBalanceUSD");
+    return value.toBigDecimal();
+  }
+
+  set currentBalanceUSD(value: BigDecimal) {
+    this.set("currentBalanceUSD", Value.fromBigDecimal(value));
+  }
+
+  get distributedBalance(): BigDecimal {
+    let value = this.get("distributedBalance");
+    return value.toBigDecimal();
+  }
+
+  set distributedBalance(value: BigDecimal) {
+    this.set("distributedBalance", Value.fromBigDecimal(value));
+  }
+
+  get distributedBalanceETH(): BigDecimal {
+    let value = this.get("distributedBalanceETH");
+    return value.toBigDecimal();
+  }
+
+  set distributedBalanceETH(value: BigDecimal) {
+    this.set("distributedBalanceETH", Value.fromBigDecimal(value));
+  }
+
+  get distributedBalanceUSD(): BigDecimal {
+    let value = this.get("distributedBalanceUSD");
+    return value.toBigDecimal();
+  }
+
+  set distributedBalanceUSD(value: BigDecimal) {
+    this.set("distributedBalanceUSD", Value.fromBigDecimal(value));
+  }
+
+  get lendingPool_SIGHPayInterestRatePercent(): BigDecimal {
+    let value = this.get("lendingPool_SIGHPayInterestRatePercent");
+    return value.toBigDecimal();
+  }
+
+  set lendingPool_SIGHPayInterestRatePercent(value: BigDecimal) {
+    this.set(
+      "lendingPool_SIGHPayInterestRatePercent",
+      Value.fromBigDecimal(value)
+    );
+  }
+
+  get lendingPool_lastSIGHPayPaidIndex(): BigInt {
+    let value = this.get("lendingPool_lastSIGHPayPaidIndex");
+    return value.toBigInt();
+  }
+
+  set lendingPool_lastSIGHPayPaidIndex(value: BigInt) {
+    this.set("lendingPool_lastSIGHPayPaidIndex", Value.fromBigInt(value));
+  }
+
+  get lendingPool_lastSIGHPayCumulativeIndex(): BigInt {
+    let value = this.get("lendingPool_lastSIGHPayCumulativeIndex");
+    return value.toBigInt();
+  }
+
+  set lendingPool_lastSIGHPayCumulativeIndex(value: BigInt) {
+    this.set("lendingPool_lastSIGHPayCumulativeIndex", Value.fromBigInt(value));
+  }
+}

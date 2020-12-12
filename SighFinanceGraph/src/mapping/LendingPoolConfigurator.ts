@@ -301,28 +301,28 @@ export function updatePrice( ID: string ) : void {
 
 
     // LIFE-TIME DEPOSITS MADE IN THE LENDING PROTOCOL
-    instrument_state.lifeTimeDepositsETH = instrument_state.lifeTimeDeposits.times(instrument_state.priceUSD)
+    instrument_state.lifeTimeDepositsETH = instrument_state.lifeTimeDeposits.times(instrument_state.priceETH)
     instrument_state.lifeTimeDepositsUSD = instrument_state.lifeTimeDeposits.times(instrument_state.priceUSD)
 
     // LIFE-TIME BORROWS TAKEN FROM THE LENDING PROTOCOL
-    instrument_state.lifeTimeBorrowsETH = instrument_state.lifeTimeBorrows.times(instrument_state.priceUSD)
+    instrument_state.lifeTimeBorrowsETH = instrument_state.lifeTimeBorrows.times(instrument_state.priceETH)
     instrument_state.lifeTimeBorrowsUSD = instrument_state.lifeTimeBorrows.times(instrument_state.priceUSD)
 
     // SIGH PAY TRANSFERRED (LENDING POOL CORE)
-    instrument_state.sighPayTransferredETH = instrument_state.sighPayTransferred.times(instrument_state.priceUSD)
+    instrument_state.sighPayTransferredETH = instrument_state.sighPayTransferred.times(instrument_state.priceETH)
     instrument_state.sighPayTransferredUSD = instrument_state.sighPayTransferred.times(instrument_state.priceUSD)
 
 
     // LIFE-TIME "STABLE" BORROWS TAKEN FROM THE LENDING PROTOCOL
-    instrument_state.lifeTimeStableBorrowsETH = instrument_state.lifeTimeStableBorrows.times(instrument_state.priceUSD)
+    instrument_state.lifeTimeStableBorrowsETH = instrument_state.lifeTimeStableBorrows.times(instrument_state.priceETH)
     instrument_state.lifeTimeStableBorrowsUSD = instrument_state.lifeTimeStableBorrows.times(instrument_state.priceUSD)
 
     // LIFE-TIME "VARIABLE" BORROWS TAKEN FROM THE LENDING PROTOCOL
-    instrument_state.lifeTimeVariableBorrowsETH = instrument_state.lifeTimeVariableBorrows.times(instrument_state.priceUSD)
+    instrument_state.lifeTimeVariableBorrowsETH = instrument_state.lifeTimeVariableBorrows.times(instrument_state.priceETH)
     instrument_state.lifeTimeVariableBorrowsUSD = instrument_state.lifeTimeVariableBorrows.times(instrument_state.priceUSD)
 
     // LIFE-TIME BORROW AMOUNT RE-PAID BACK TO THE LENDING PROTOCOL
-    instrument_state.lifeTimeBorrowsRepaidETH = instrument_state.lifeTimeBorrowsRepaid.times(instrument_state.priceUSD)
+    instrument_state.lifeTimeBorrowsRepaidETH = instrument_state.lifeTimeBorrowsRepaid.times(instrument_state.priceETH)
     instrument_state.lifeTimeBorrowsRepaidUSD = instrument_state.lifeTimeBorrowsRepaid.times(instrument_state.priceUSD)
 
 
@@ -484,16 +484,6 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.SIGH_Supply_Index = new BigInt(0)
     instrument_state_initialized.SIGH_Supply_Index_lastUpdatedBlock = new BigInt(0)
 
-    instrument_state_initialized.sighPayInterestRate = new BigInt(0)
-    instrument_state_initialized.sighPayInterestRatePercent = BigDecimal.fromString('0')
-    instrument_state_initialized.sighPayCumulativeIndex = new BigInt(0)
-    instrument_state_initialized.sighPayPaidIndex = new BigInt(0)
-
-    instrument_state_initialized.sighPayTransferredWEI = new BigInt(0)
-    instrument_state_initialized.sighPayTransferred = BigDecimal.fromString('0')
-    instrument_state_initialized.sighPayTransferredETH = BigDecimal.fromString('0')
-    instrument_state_initialized.sighPayTransferredUSD = BigDecimal.fromString('0')
-
     instrument_state_initialized.SIGH_Borrow_Index = new BigInt(0)
     instrument_state_initialized.SIGH_Borrow_Index_lastUpdatedBlock = new BigInt(0)
 
@@ -578,6 +568,19 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.SIGHPriceUSD = BigDecimal.fromString('0')
     instrument_state_initialized.timeStamp =  new BigInt(0)
     instrument_state_initialized.creationBlockNumber = new BigInt(0)
+
+    // SIGH PAY PARAMETERS
+    instrument_state_initialized.sighPayInterestRate = new BigInt(0)
+    instrument_state_initialized.sighPayInterestRatePercent = BigDecimal.fromString('0')
+    instrument_state_initialized.sighPayCumulativeIndex = new BigInt(0)
+    instrument_state_initialized.sighPayPaidIndex = new BigInt(0)
+
+    instrument_state_initialized.sighPayTransferredWEI = new BigInt(0)
+    instrument_state_initialized.sighPayTransferred = BigDecimal.fromString('0')
+    instrument_state_initialized.sighPayTransferredETH = BigDecimal.fromString('0')
+    instrument_state_initialized.sighPayTransferredUSD = BigDecimal.fromString('0')
+
+
 
     instrument_state_initialized.save()
     return instrument_state_initialized as Instrument

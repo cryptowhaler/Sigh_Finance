@@ -126,7 +126,7 @@ dataSources:
       eventHandlers:
         - event: InstrumentUpdated(indexed address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleInstrumentUpdated
-        - event: SIGH_PAY_Amount_Transferred(indexed address,uint256,uint256,uint256,uint256)
+        - event: SIGH_PAY_Amount_Transferred(indexed address,indexed address,uint256,uint256,uint256,uint256)
           handler: handleSIGH_Pay_Amount_Transferred
           
 

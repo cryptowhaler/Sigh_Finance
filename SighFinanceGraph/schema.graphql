@@ -457,6 +457,7 @@ type Instrument @entity {
     timeStamp: BigInt!
     creationBlockNumber: BigInt!
     SIGHPriceUSD:  BigDecimal!
+
 }
 
 
@@ -516,6 +517,55 @@ type SIGH_Distribution_SnapShot @entity {
     totalLiquiditySIGHAccuredBeforeThisSnapshot: BigDecimal!
     LiquiditySIGHAccuredDuringThisSnapshot: BigDecimal!
 }
+
+
+
+
+
+
+
+type StakingContract @entity {
+    id: ID!
+    StakingRewards: [StakingRewards!]! @derivedFrom(field:"stakingContract")
+}
+
+type StakingRewards @entity {
+    id: ID!
+
+    name: String!
+    symbol: String!
+    decimals: BigInt!
+
+    oracle: Bytes!
+    priceETH: BigDecimal!
+    priceUSD: BigDecimal!
+
+    stakingContract: StakingContract!
+    lifeTimeBalance: BigDecimal!
+    lifeTimeBalanceETH: BigDecimal!
+    lifeTimeBalanceUSD: BigDecimal!
+
+    currentBalance: BigDecimal!
+    currentBalanceETH: BigDecimal!
+    currentBalanceUSD: BigDecimal!
+
+    distributedBalance: BigDecimal!
+    distributedBalanceETH: BigDecimal!
+    distributedBalanceUSD: BigDecimal!
+
+    lendingPool_SIGHPayInterestRatePercent: BigDecimal!    
+    lendingPool_lastSIGHPayPaidIndex: BigInt!
+    lendingPool_lastSIGHPayCumulativeIndex: BigInt!    
+}
+
+
+
+
+
+
+
+
+
 
 
 # type SIGHSpeedController @entity {

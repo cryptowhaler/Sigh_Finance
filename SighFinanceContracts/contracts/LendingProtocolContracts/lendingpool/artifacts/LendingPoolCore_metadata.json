@@ -66,6 +66,12 @@
 					{
 						"indexed": true,
 						"internalType": "address",
+						"name": "stakingContract",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
 						"name": "instrument",
 						"type": "address"
 					},
@@ -849,6 +855,27 @@
 						"internalType": "address[]",
 						"name": "",
 						"type": "address[]"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "instrumentAddress",
+						"type": "address"
+					}
+				],
+				"name": "getNormalizedSIGHPay",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"payable": false,
@@ -2322,10 +2349,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ITokenInterface.sol": {
-			"keccak256": "0xa5496671da81524360364282a3eff338a0fb1719601e852218a78c864579c5a8",
+			"keccak256": "0x09a2d282d165d47ee92974987cc0bb6dc91a45b7f711521c363182fd5cab284c",
 			"urls": [
-				"bzz-raw://17cb99afb5f7d2f53280268129475f2b66e5cc4f828f9de521c84c5222ebe58e",
-				"dweb:/ipfs/QmYi2dQd18tGSXpzDVTFxviAHuXz82JGq9qaU85LM58yKC"
+				"bzz-raw://291ada200de9369914d68eb35879c0b534eac38d26894ca8fa8db2648e4c1048",
+				"dweb:/ipfs/QmaYiFwWbzkDEMqoG3wGGaNZYQWHwVbc5wBf8pYuM5oC4D"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/I_InstrumentInterestRateStrategy.sol": {
@@ -2336,10 +2363,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolCore.sol": {
-			"keccak256": "0x054ccff1975fcfc15977298351b10df736e25fe391f7ba858135741fbd2214d4",
+			"keccak256": "0xebb30d4d42c9f996536fd30d88830f5b04236e315e830eb9b16d53487aa94373",
 			"urls": [
-				"bzz-raw://0f4642a536acf66e994bf3675d54c155175e7391b1d78cd169f47ea2e9de8b19",
-				"dweb:/ipfs/QmQix521Dn2rsRrVqAuvw49kH1pm3JTqwsjSkqXP3fGQuG"
+				"bzz-raw://b35b979f60e72443ad5fab03d0245260013ba3110a7a3d31158a2a1a204352ab",
+				"dweb:/ipfs/QmTEpMStaSVhPjZ7aCQpHWSYXUbKAvxVAjiwyAPJeyUm6N"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
@@ -2364,10 +2391,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0xe1edaef7749162d1423d5e5b68c5022d6a444102ca1f5fd3d05250527e508a7c",
+			"keccak256": "0xbdc7e8bdbc66cefb781558eb416b45b187217b20bfa4a6d06f8d0682f1eac7c1",
 			"urls": [
-				"bzz-raw://9ca93c68f2e1be89d5bbc8f5cb662c793924cb7f28ea67698e54e382e255f746",
-				"dweb:/ipfs/QmX1MK2H5gWGtLqipxqfdEVuywe2ZDtaaSgqnkuMaPuEDQ"
+				"bzz-raw://d3d584a429b4a5d148b5d08353024c38b1440253409d191cff5ad273f732ad24",
+				"dweb:/ipfs/Qme1Z7rvf8dJR4kvvzXDdvfMwyCagYx8YJ5wg2orhd9pqD"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {
@@ -2378,10 +2405,10 @@
 			]
 		},
 		"localhost/contracts/configuration/GlobalAddressesProvider.sol": {
-			"keccak256": "0x5d6d5159c1496e67cd10809e40ed0d6f046d5fe754972297b9715406152cc59f",
+			"keccak256": "0x7212661ab967282a1020cd673c58fe003d4324aee365413406fd5e86071645c6",
 			"urls": [
-				"bzz-raw://dd074e6cd0e6d6f043ec82c55beade9e9daaaf3c0f1fd1153a278d77da8b2321",
-				"dweb:/ipfs/QmZWmVzdTBj9qvxb42H7nKfUSKuKXHpxGVQMQZRVxJovit"
+				"bzz-raw://dbc516c3b7d6b4b44cc373714e90817e8c6bac2a5ca089f49e0ea3a3b4ac764c",
+				"dweb:/ipfs/QmZGNCyZzfxEozzdUxi6E7ZqWX6cUjw6hvD4xyN2YNxcwD"
 			]
 		},
 		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {

@@ -76,6 +76,9 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
     constructor(address SIGHFinanceManagerAddress, address LendingPoolManagerAddress) public {
         _setAddress(SIGH_FINANCE_MANAGER, SIGHFinanceManagerAddress);
         _setAddress(LENDING_POOL_MANAGER, LendingPoolManagerAddress);
+
+        emit SIGHFinanceManagerUpdated( getAddress(SIGH_FINANCE_MANAGER) );
+        emit LendingPoolManagerUpdated( getAddress(LENDING_POOL_MANAGER) );
     }
 
 // ################################                                                  

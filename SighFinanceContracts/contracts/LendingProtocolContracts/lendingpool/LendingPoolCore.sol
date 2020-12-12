@@ -43,7 +43,7 @@ contract LendingPoolCore is VersionedInitializable {
     mapping(address => CoreLibrary.InstrumentData) internal reserves;
     mapping(address => mapping(address => CoreLibrary.UserInstrumentData)) internal usersInstrumentData;
 
-    uint256 public constant CORE_REVISION = 0x4;          // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
+    uint256 public constant CORE_REVISION = 0x11;          // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
 
     /**
     * @dev Emitted when the state of a instrument is updated
@@ -55,7 +55,7 @@ contract LendingPoolCore is VersionedInitializable {
     * @param variableBorrowIndex the new variable borrow index
     **/
     event InstrumentUpdated(  address indexed instrument,  uint256 liquidityRate,  uint256 stableBorrowRate,  uint256 variableBorrowRate, uint256 newSighPayRate, uint256 liquidityIndex, uint256 variableBorrowIndex, uint256 sighPayIndex );
-    event SIGH_PAY_Amount_Transferred( address indexed instrument, uint256 totalLiquidity, uint256 _sighPayAccured, uint256 lastSIGHPayPaidIndex , uint256 lastSIGHPayCumulativeIndex );
+    event SIGH_PAY_Amount_Transferred( address indexed stakingContract, address indexed instrument, uint256 totalLiquidity, uint256 _sighPayAccured, uint256 lastSIGHPayPaidIndex , uint256 lastSIGHPayCumulativeIndex );
 
 // #######################
 // ###### MODIFIERS ######
@@ -1444,9 +1444,12 @@ contract LendingPoolCore is VersionedInitializable {
         instrument.updateCumulativeIndexes();
 
         uint256 totalLiquidity = getInstrumentTotalLiquidity(instrumentAddress);
-        uint256 _sighPayAccured = totalLiquidity.wadToRay().rayMul( instrument.getNormalizedSIGHPay() ).rayDiv( instrument.lastSIGHPayPaidIndex ).rayToWad();
+        uint256 normalizedSIGHPay = instrument.getNormalizedSIGHPay();
+        uint256 interestAccuredBalance = totalLiquidity.wadToRay().rayMul( normalizedSIGHPay ).rayDiv( instrument.lastSIGHPayPaidIndex ).rayToWad();
+        instrument.lastSIGHPayPaidIndex = normalizedSIGHPay;
+
         // Update the SIGH PAY : Paid Index
-        instrument.lastSIGHPayPaidIndex = instrument.lastSIGHPayCumulativeIndex;
+        uint256 _sighPayAccured = interestAccuredBalance.sub(totalLiquidity);
 
         if (instrumentAddress != EthAddressLib.ethAddress()) {
             ERC20(instrumentAddress).safeTransfer(receiver, _sighPayAccured);
@@ -1454,9 +1457,13 @@ contract LendingPoolCore is VersionedInitializable {
             receiver.transfer(_sighPayAccured);
         }
 
-        emit SIGH_PAY_Amount_Transferred( address(instrumentAddress), totalLiquidity, _sighPayAccured, instrument.lastSIGHPayPaidIndex , instrument.lastSIGHPayCumulativeIndex );
+        emit SIGH_PAY_Amount_Transferred( address(receiver), address(instrumentAddress), totalLiquidity, _sighPayAccured, instrument.lastSIGHPayPaidIndex , instrument.lastSIGHPayCumulativeIndex );
     }
-
-
+    
+    function getNormalizedSIGHPay( address instrumentAddress ) external view returns (uint) {
+        CoreLibrary.InstrumentData storage instrument = reserves[instrumentAddress];
+        return instrument.getNormalizedSIGHPay();
+    }
+    
 
 }

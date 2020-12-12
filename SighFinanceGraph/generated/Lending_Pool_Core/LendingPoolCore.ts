@@ -69,24 +69,65 @@ export class SIGH_PAY_Amount_Transferred__Params {
     this._event = event;
   }
 
-  get instrument(): Address {
+  get stakingContract(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get totalLiquidity(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
+  get instrument(): Address {
+    return this._event.parameters[1].value.toAddress();
   }
 
-  get _sighPayAccured(): BigInt {
+  get totalLiquidity(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get lastSIGHPayPaidIndex(): BigInt {
+  get _sighPayAccured(): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
 
-  get lastSIGHPayCumulativeIndex(): BigInt {
+  get lastSIGHPayPaidIndex(): BigInt {
     return this._event.parameters[4].value.toBigInt();
+  }
+
+  get lastSIGHPayCumulativeIndex(): BigInt {
+    return this._event.parameters[5].value.toBigInt();
+  }
+}
+
+export class LendingPoolCore__updateStateOnBorrowResult {
+  value0: BigInt;
+  value1: BigInt;
+
+  constructor(value0: BigInt, value1: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    return map;
+  }
+}
+
+export class LendingPoolCore__updateStateOnSwapRateResult {
+  value0: i32;
+  value1: BigInt;
+
+  constructor(value0: i32, value1: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set(
+      "value0",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value0))
+    );
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    return map;
   }
 }
 
@@ -156,65 +197,162 @@ export class LendingPoolCore__getUserBorrowBalancesResult {
   }
 }
 
-export class LendingPoolCore__updateStateOnBorrowResult {
-  value0: BigInt;
-  value1: BigInt;
-
-  constructor(value0: BigInt, value1: BigInt) {
-    this.value0 = value0;
-    this.value1 = value1;
-  }
-
-  toMap(): TypedMap<string, ethereum.Value> {
-    let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
-    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    return map;
-  }
-}
-
-export class LendingPoolCore__updateStateOnSwapRateResult {
-  value0: i32;
-  value1: BigInt;
-
-  constructor(value0: i32, value1: BigInt) {
-    this.value0 = value0;
-    this.value1 = value1;
-  }
-
-  toMap(): TypedMap<string, ethereum.Value> {
-    let map = new TypedMap<string, ethereum.Value>();
-    map.set(
-      "value0",
-      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value0))
-    );
-    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    return map;
-  }
-}
-
 export class LendingPoolCore extends ethereum.SmartContract {
   static bind(address: Address): LendingPoolCore {
     return new LendingPoolCore("LendingPoolCore", address);
   }
 
-  CORE_REVISION(): BigInt {
-    let result = super.call("CORE_REVISION", "CORE_REVISION():(uint256)", []);
+  updateStateOnBorrow(
+    _instrument: Address,
+    _user: Address,
+    _amountBorrowed: BigInt,
+    _borrowFee: BigInt,
+    _rateMode: i32
+  ): LendingPoolCore__updateStateOnBorrowResult {
+    let result = super.call(
+      "updateStateOnBorrow",
+      "updateStateOnBorrow(address,address,uint256,uint256,uint8):(uint256,uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user),
+        ethereum.Value.fromUnsignedBigInt(_amountBorrowed),
+        ethereum.Value.fromUnsignedBigInt(_borrowFee),
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_rateMode))
+      ]
+    );
+
+    return new LendingPoolCore__updateStateOnBorrowResult(
+      result[0].toBigInt(),
+      result[1].toBigInt()
+    );
+  }
+
+  try_updateStateOnBorrow(
+    _instrument: Address,
+    _user: Address,
+    _amountBorrowed: BigInt,
+    _borrowFee: BigInt,
+    _rateMode: i32
+  ): ethereum.CallResult<LendingPoolCore__updateStateOnBorrowResult> {
+    let result = super.tryCall(
+      "updateStateOnBorrow",
+      "updateStateOnBorrow(address,address,uint256,uint256,uint8):(uint256,uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user),
+        ethereum.Value.fromUnsignedBigInt(_amountBorrowed),
+        ethereum.Value.fromUnsignedBigInt(_borrowFee),
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_rateMode))
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new LendingPoolCore__updateStateOnBorrowResult(
+        value[0].toBigInt(),
+        value[1].toBigInt()
+      )
+    );
+  }
+
+  updateStateOnRebalance(
+    _instrument: Address,
+    _user: Address,
+    _balanceIncrease: BigInt
+  ): BigInt {
+    let result = super.call(
+      "updateStateOnRebalance",
+      "updateStateOnRebalance(address,address,uint256):(uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user),
+        ethereum.Value.fromUnsignedBigInt(_balanceIncrease)
+      ]
+    );
 
     return result[0].toBigInt();
   }
 
-  try_CORE_REVISION(): ethereum.CallResult<BigInt> {
+  try_updateStateOnRebalance(
+    _instrument: Address,
+    _user: Address,
+    _balanceIncrease: BigInt
+  ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "CORE_REVISION",
-      "CORE_REVISION():(uint256)",
-      []
+      "updateStateOnRebalance",
+      "updateStateOnRebalance(address,address,uint256):(uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user),
+        ethereum.Value.fromUnsignedBigInt(_balanceIncrease)
+      ]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  updateStateOnSwapRate(
+    _instrument: Address,
+    _user: Address,
+    _principalBorrowBalance: BigInt,
+    _compoundedBorrowBalance: BigInt,
+    _balanceIncrease: BigInt,
+    _currentRateMode: i32
+  ): LendingPoolCore__updateStateOnSwapRateResult {
+    let result = super.call(
+      "updateStateOnSwapRate",
+      "updateStateOnSwapRate(address,address,uint256,uint256,uint256,uint8):(uint8,uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user),
+        ethereum.Value.fromUnsignedBigInt(_principalBorrowBalance),
+        ethereum.Value.fromUnsignedBigInt(_compoundedBorrowBalance),
+        ethereum.Value.fromUnsignedBigInt(_balanceIncrease),
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_currentRateMode))
+      ]
+    );
+
+    return new LendingPoolCore__updateStateOnSwapRateResult(
+      result[0].toI32(),
+      result[1].toBigInt()
+    );
+  }
+
+  try_updateStateOnSwapRate(
+    _instrument: Address,
+    _user: Address,
+    _principalBorrowBalance: BigInt,
+    _compoundedBorrowBalance: BigInt,
+    _balanceIncrease: BigInt,
+    _currentRateMode: i32
+  ): ethereum.CallResult<LendingPoolCore__updateStateOnSwapRateResult> {
+    let result = super.tryCall(
+      "updateStateOnSwapRate",
+      "updateStateOnSwapRate(address,address,uint256,uint256,uint256,uint8):(uint8,uint256)",
+      [
+        ethereum.Value.fromAddress(_instrument),
+        ethereum.Value.fromAddress(_user),
+        ethereum.Value.fromUnsignedBigInt(_principalBorrowBalance),
+        ethereum.Value.fromUnsignedBigInt(_compoundedBorrowBalance),
+        ethereum.Value.fromUnsignedBigInt(_balanceIncrease),
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_currentRateMode))
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new LendingPoolCore__updateStateOnSwapRateResult(
+        value[0].toI32(),
+        value[1].toBigInt()
+      )
+    );
   }
 
   addressesProvider(): Address {
@@ -238,6 +376,25 @@ export class LendingPoolCore extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  CORE_REVISION(): BigInt {
+    let result = super.call("CORE_REVISION", "CORE_REVISION():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_CORE_REVISION(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "CORE_REVISION",
+      "CORE_REVISION():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   getInstrumentAvailableLiquidity(_instrument: Address): BigInt {
@@ -477,31 +634,6 @@ export class LendingPoolCore extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getInstrumentITokenAddress(_instrument: Address): Address {
-    let result = super.call(
-      "getInstrumentITokenAddress",
-      "getInstrumentITokenAddress(address):(address)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-
-    return result[0].toAddress();
-  }
-
-  try_getInstrumentITokenAddress(
-    _instrument: Address
-  ): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "getInstrumentITokenAddress",
-      "getInstrumentITokenAddress(address):(address)",
-      [ethereum.Value.fromAddress(_instrument)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
   getInstrumentInterestRateStrategyAddress(_instrument: Address): Address {
     let result = super.call(
       "getInstrumentInterestRateStrategyAddress",
@@ -600,6 +732,31 @@ export class LendingPoolCore extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  getInstrumentITokenAddress(_instrument: Address): Address {
+    let result = super.call(
+      "getInstrumentITokenAddress",
+      "getInstrumentITokenAddress(address):(address)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_getInstrumentITokenAddress(
+    _instrument: Address
+  ): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "getInstrumentITokenAddress",
+      "getInstrumentITokenAddress(address):(address)",
+      [ethereum.Value.fromAddress(_instrument)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   getInstrumentLastUpdate(_instrument: Address): BigInt {
@@ -725,6 +882,29 @@ export class LendingPoolCore extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getInstruments(): Array<Address> {
+    let result = super.call(
+      "getInstruments",
+      "getInstruments():(address[])",
+      []
+    );
+
+    return result[0].toAddressArray();
+  }
+
+  try_getInstruments(): ethereum.CallResult<Array<Address>> {
+    let result = super.tryCall(
+      "getInstruments",
+      "getInstruments():(address[])",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddressArray());
   }
 
   getInstrumentSIGHPayCumulativeIndex(_instrument: Address): BigInt {
@@ -952,27 +1132,29 @@ export class LendingPoolCore extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getInstruments(): Array<Address> {
+  getNormalizedSIGHPay(instrumentAddress: Address): BigInt {
     let result = super.call(
-      "getInstruments",
-      "getInstruments():(address[])",
-      []
+      "getNormalizedSIGHPay",
+      "getNormalizedSIGHPay(address):(uint256)",
+      [ethereum.Value.fromAddress(instrumentAddress)]
     );
 
-    return result[0].toAddressArray();
+    return result[0].toBigInt();
   }
 
-  try_getInstruments(): ethereum.CallResult<Array<Address>> {
+  try_getNormalizedSIGHPay(
+    instrumentAddress: Address
+  ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getInstruments",
-      "getInstruments():(address[])",
-      []
+      "getNormalizedSIGHPay",
+      "getNormalizedSIGHPay(address):(uint256)",
+      [ethereum.Value.fromAddress(instrumentAddress)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddressArray());
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   getUserBasicInstrumentData(
@@ -1450,253 +1632,6 @@ export class LendingPoolCore extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
-
-  updateStateOnBorrow(
-    _instrument: Address,
-    _user: Address,
-    _amountBorrowed: BigInt,
-    _borrowFee: BigInt,
-    _rateMode: i32
-  ): LendingPoolCore__updateStateOnBorrowResult {
-    let result = super.call(
-      "updateStateOnBorrow",
-      "updateStateOnBorrow(address,address,uint256,uint256,uint8):(uint256,uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user),
-        ethereum.Value.fromUnsignedBigInt(_amountBorrowed),
-        ethereum.Value.fromUnsignedBigInt(_borrowFee),
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_rateMode))
-      ]
-    );
-
-    return new LendingPoolCore__updateStateOnBorrowResult(
-      result[0].toBigInt(),
-      result[1].toBigInt()
-    );
-  }
-
-  try_updateStateOnBorrow(
-    _instrument: Address,
-    _user: Address,
-    _amountBorrowed: BigInt,
-    _borrowFee: BigInt,
-    _rateMode: i32
-  ): ethereum.CallResult<LendingPoolCore__updateStateOnBorrowResult> {
-    let result = super.tryCall(
-      "updateStateOnBorrow",
-      "updateStateOnBorrow(address,address,uint256,uint256,uint8):(uint256,uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user),
-        ethereum.Value.fromUnsignedBigInt(_amountBorrowed),
-        ethereum.Value.fromUnsignedBigInt(_borrowFee),
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_rateMode))
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new LendingPoolCore__updateStateOnBorrowResult(
-        value[0].toBigInt(),
-        value[1].toBigInt()
-      )
-    );
-  }
-
-  updateStateOnRebalance(
-    _instrument: Address,
-    _user: Address,
-    _balanceIncrease: BigInt
-  ): BigInt {
-    let result = super.call(
-      "updateStateOnRebalance",
-      "updateStateOnRebalance(address,address,uint256):(uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user),
-        ethereum.Value.fromUnsignedBigInt(_balanceIncrease)
-      ]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_updateStateOnRebalance(
-    _instrument: Address,
-    _user: Address,
-    _balanceIncrease: BigInt
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "updateStateOnRebalance",
-      "updateStateOnRebalance(address,address,uint256):(uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user),
-        ethereum.Value.fromUnsignedBigInt(_balanceIncrease)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  updateStateOnSwapRate(
-    _instrument: Address,
-    _user: Address,
-    _principalBorrowBalance: BigInt,
-    _compoundedBorrowBalance: BigInt,
-    _balanceIncrease: BigInt,
-    _currentRateMode: i32
-  ): LendingPoolCore__updateStateOnSwapRateResult {
-    let result = super.call(
-      "updateStateOnSwapRate",
-      "updateStateOnSwapRate(address,address,uint256,uint256,uint256,uint8):(uint8,uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user),
-        ethereum.Value.fromUnsignedBigInt(_principalBorrowBalance),
-        ethereum.Value.fromUnsignedBigInt(_compoundedBorrowBalance),
-        ethereum.Value.fromUnsignedBigInt(_balanceIncrease),
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_currentRateMode))
-      ]
-    );
-
-    return new LendingPoolCore__updateStateOnSwapRateResult(
-      result[0].toI32(),
-      result[1].toBigInt()
-    );
-  }
-
-  try_updateStateOnSwapRate(
-    _instrument: Address,
-    _user: Address,
-    _principalBorrowBalance: BigInt,
-    _compoundedBorrowBalance: BigInt,
-    _balanceIncrease: BigInt,
-    _currentRateMode: i32
-  ): ethereum.CallResult<LendingPoolCore__updateStateOnSwapRateResult> {
-    let result = super.tryCall(
-      "updateStateOnSwapRate",
-      "updateStateOnSwapRate(address,address,uint256,uint256,uint256,uint8):(uint8,uint256)",
-      [
-        ethereum.Value.fromAddress(_instrument),
-        ethereum.Value.fromAddress(_user),
-        ethereum.Value.fromUnsignedBigInt(_principalBorrowBalance),
-        ethereum.Value.fromUnsignedBigInt(_compoundedBorrowBalance),
-        ethereum.Value.fromUnsignedBigInt(_balanceIncrease),
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_currentRateMode))
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new LendingPoolCore__updateStateOnSwapRateResult(
-        value[0].toI32(),
-        value[1].toBigInt()
-      )
-    );
-  }
-}
-
-export class DefaultCall extends ethereum.Call {
-  get inputs(): DefaultCall__Inputs {
-    return new DefaultCall__Inputs(this);
-  }
-
-  get outputs(): DefaultCall__Outputs {
-    return new DefaultCall__Outputs(this);
-  }
-}
-
-export class DefaultCall__Inputs {
-  _call: DefaultCall;
-
-  constructor(call: DefaultCall) {
-    this._call = call;
-  }
-}
-
-export class DefaultCall__Outputs {
-  _call: DefaultCall;
-
-  constructor(call: DefaultCall) {
-    this._call = call;
-  }
-}
-
-export class InstrumentActivationSwitchCall extends ethereum.Call {
-  get inputs(): InstrumentActivationSwitchCall__Inputs {
-    return new InstrumentActivationSwitchCall__Inputs(this);
-  }
-
-  get outputs(): InstrumentActivationSwitchCall__Outputs {
-    return new InstrumentActivationSwitchCall__Outputs(this);
-  }
-}
-
-export class InstrumentActivationSwitchCall__Inputs {
-  _call: InstrumentActivationSwitchCall;
-
-  constructor(call: InstrumentActivationSwitchCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get toBeActivated(): boolean {
-    return this._call.inputValues[1].value.toBoolean();
-  }
-}
-
-export class InstrumentActivationSwitchCall__Outputs {
-  _call: InstrumentActivationSwitchCall;
-
-  constructor(call: InstrumentActivationSwitchCall) {
-    this._call = call;
-  }
-}
-
-export class InstrumentFreezeSwitchCall extends ethereum.Call {
-  get inputs(): InstrumentFreezeSwitchCall__Inputs {
-    return new InstrumentFreezeSwitchCall__Inputs(this);
-  }
-
-  get outputs(): InstrumentFreezeSwitchCall__Outputs {
-    return new InstrumentFreezeSwitchCall__Outputs(this);
-  }
-}
-
-export class InstrumentFreezeSwitchCall__Inputs {
-  _call: InstrumentFreezeSwitchCall;
-
-  constructor(call: InstrumentFreezeSwitchCall) {
-    this._call = call;
-  }
-
-  get _instrument(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get toBeActivated(): boolean {
-    return this._call.inputValues[1].value.toBoolean();
-  }
-}
-
-export class InstrumentFreezeSwitchCall__Outputs {
-  _call: InstrumentFreezeSwitchCall;
-
-  constructor(call: InstrumentFreezeSwitchCall) {
-    this._call = call;
-  }
 }
 
 export class BorrowingOnInstrumentSwitchCall extends ethereum.Call {
@@ -1805,6 +1740,36 @@ export class EnableInstrumentAsCollateralCall__Outputs {
   }
 }
 
+export class InitializeCall extends ethereum.Call {
+  get inputs(): InitializeCall__Inputs {
+    return new InitializeCall__Inputs(this);
+  }
+
+  get outputs(): InitializeCall__Outputs {
+    return new InitializeCall__Outputs(this);
+  }
+}
+
+export class InitializeCall__Inputs {
+  _call: InitializeCall;
+
+  constructor(call: InitializeCall) {
+    this._call = call;
+  }
+
+  get _addressesProvider(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class InitializeCall__Outputs {
+  _call: InitializeCall;
+
+  constructor(call: InitializeCall) {
+    this._call = call;
+  }
+}
+
 export class InitInstrumentCall extends ethereum.Call {
   get inputs(): InitInstrumentCall__Inputs {
     return new InitInstrumentCall__Inputs(this);
@@ -1851,32 +1816,70 @@ export class InitInstrumentCall__Outputs {
   }
 }
 
-export class InitializeCall extends ethereum.Call {
-  get inputs(): InitializeCall__Inputs {
-    return new InitializeCall__Inputs(this);
+export class InstrumentActivationSwitchCall extends ethereum.Call {
+  get inputs(): InstrumentActivationSwitchCall__Inputs {
+    return new InstrumentActivationSwitchCall__Inputs(this);
   }
 
-  get outputs(): InitializeCall__Outputs {
-    return new InitializeCall__Outputs(this);
+  get outputs(): InstrumentActivationSwitchCall__Outputs {
+    return new InstrumentActivationSwitchCall__Outputs(this);
   }
 }
 
-export class InitializeCall__Inputs {
-  _call: InitializeCall;
+export class InstrumentActivationSwitchCall__Inputs {
+  _call: InstrumentActivationSwitchCall;
 
-  constructor(call: InitializeCall) {
+  constructor(call: InstrumentActivationSwitchCall) {
     this._call = call;
   }
 
-  get _addressesProvider(): Address {
+  get _instrument(): Address {
     return this._call.inputValues[0].value.toAddress();
+  }
+
+  get toBeActivated(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
   }
 }
 
-export class InitializeCall__Outputs {
-  _call: InitializeCall;
+export class InstrumentActivationSwitchCall__Outputs {
+  _call: InstrumentActivationSwitchCall;
 
-  constructor(call: InitializeCall) {
+  constructor(call: InstrumentActivationSwitchCall) {
+    this._call = call;
+  }
+}
+
+export class InstrumentFreezeSwitchCall extends ethereum.Call {
+  get inputs(): InstrumentFreezeSwitchCall__Inputs {
+    return new InstrumentFreezeSwitchCall__Inputs(this);
+  }
+
+  get outputs(): InstrumentFreezeSwitchCall__Outputs {
+    return new InstrumentFreezeSwitchCall__Outputs(this);
+  }
+}
+
+export class InstrumentFreezeSwitchCall__Inputs {
+  _call: InstrumentFreezeSwitchCall;
+
+  constructor(call: InstrumentFreezeSwitchCall) {
+    this._call = call;
+  }
+
+  get _instrument(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get toBeActivated(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class InstrumentFreezeSwitchCall__Outputs {
+  _call: InstrumentFreezeSwitchCall;
+
+  constructor(call: InstrumentFreezeSwitchCall) {
     this._call = call;
   }
 }
@@ -2195,6 +2198,32 @@ export class TransferToUserCall__Outputs {
   _call: TransferToUserCall;
 
   constructor(call: TransferToUserCall) {
+    this._call = call;
+  }
+}
+
+export class DefaultCall extends ethereum.Call {
+  get inputs(): DefaultCall__Inputs {
+    return new DefaultCall__Inputs(this);
+  }
+
+  get outputs(): DefaultCall__Outputs {
+    return new DefaultCall__Outputs(this);
+  }
+}
+
+export class DefaultCall__Inputs {
+  _call: DefaultCall;
+
+  constructor(call: DefaultCall) {
+    this._call = call;
+  }
+}
+
+export class DefaultCall__Outputs {
+  _call: DefaultCall;
+
+  constructor(call: DefaultCall) {
     this._call = call;
   }
 }
