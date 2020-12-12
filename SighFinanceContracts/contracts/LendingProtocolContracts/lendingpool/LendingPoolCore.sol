@@ -1442,6 +1442,7 @@ contract LendingPoolCore is VersionedInitializable {
 
         // Cumulates the indexes
         instrument.updateCumulativeIndexes();
+        sighMechanism.updateSIGHSupplyIndex(_instrument); 
 
         uint256 totalLiquidity = getInstrumentTotalLiquidity(instrumentAddress);
         uint256 normalizedSIGHPay = instrument.getNormalizedSIGHPay();
@@ -1457,6 +1458,7 @@ contract LendingPoolCore is VersionedInitializable {
             receiver.transfer(_sighPayAccured);
         }
 
+        updateInstrumentInterestRatesAndTimestampInternal(_instrument, 0, _amountRedeemed);
         emit SIGH_PAY_Amount_Transferred( address(receiver), address(instrumentAddress), totalLiquidity, _sighPayAccured, instrument.lastSIGHPayPaidIndex , instrument.lastSIGHPayCumulativeIndex );
     }
     
