@@ -57,7 +57,7 @@ interface ITokenInterface {
 // #####  SIGH RELATED FUNCTIONS  #####
 // ####################################
 
-    function cumulateBalance(address _user) external returns(uint256, uint256, uint256, uint256);
+    function cumulateBalance(address _user) external returns (uint,uint,uint,uint);
 
     function redirectLiquiditySIGHStream(address _to) external;
     function allowLiquiditySIGHRedirectionTo(address _to) external;

@@ -229,6 +229,37 @@
 				"type": "event"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "_from",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "principalBalance",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "currentBalance",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "balanceIncrease",
+						"type": "uint256"
+					}
+				],
+				"name": "check1",
+				"type": "event"
+			},
+			{
 				"constant": true,
 				"inputs": [],
 				"name": "CONFIGURATOR_REVISION",
@@ -308,7 +339,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "from",
+						"name": "_from",
 						"type": "address"
 					},
 					{
@@ -333,6 +364,21 @@
 					}
 				],
 				"name": "claimMySIGH",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "cumulateBalance",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -553,7 +599,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "from",
+						"name": "_from",
 						"type": "address"
 					},
 					{
@@ -595,13 +641,19 @@
 			},
 			{
 				"constant": true,
-				"inputs": [],
-				"name": "returnIToken",
-				"outputs": [
+				"inputs": [
 					{
 						"internalType": "address",
-						"name": "iTokenAddress",
+						"name": "user",
 						"type": "address"
+					}
+				],
+				"name": "returnPrincipalBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"payable": false,
@@ -635,7 +687,7 @@
 				"type": "function"
 			},
 			{
-				"constant": false,
+				"constant": true,
 				"inputs": [
 					{
 						"internalType": "address",
@@ -662,7 +714,7 @@
 					}
 				],
 				"payable": false,
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -847,10 +899,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/SighStream.sol": {
-			"keccak256": "0x5d5d1e2075d59bd3c3b49d07fb01b1f4c2a676b5be8a3e93644470581b446c41",
+			"keccak256": "0xe34143b5c333719e023ad2b375451736f6050e5055ffdeb9a23ccd1f1de759bc",
 			"urls": [
-				"bzz-raw://0a06896e5a1683584b526f9b2312e9d5fc96aeb4a55bcf7eced9aa16553c9770",
-				"dweb:/ipfs/QmSSXSaizPkxx63P92tH4ibPjjSKo9WD9WiGCVRarTJpBX"
+				"bzz-raw://460818e2d4acfe6f55b8ba8406de66c188bedd2d6819df3c693ec870baa9af9b",
+				"dweb:/ipfs/QmfXyb7bSpkabfvew68126VggEQPvSshfpQEWY39bKFY7o"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
@@ -868,10 +920,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ITokenInterface.sol": {
-			"keccak256": "0xa5496671da81524360364282a3eff338a0fb1719601e852218a78c864579c5a8",
+			"keccak256": "0x09a2d282d165d47ee92974987cc0bb6dc91a45b7f711521c363182fd5cab284c",
 			"urls": [
-				"bzz-raw://17cb99afb5f7d2f53280268129475f2b66e5cc4f828f9de521c84c5222ebe58e",
-				"dweb:/ipfs/QmYi2dQd18tGSXpzDVTFxviAHuXz82JGq9qaU85LM58yKC"
+				"bzz-raw://291ada200de9369914d68eb35879c0b534eac38d26894ca8fa8db2648e4c1048",
+				"dweb:/ipfs/QmaYiFwWbzkDEMqoG3wGGaNZYQWHwVbc5wBf8pYuM5oC4D"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {

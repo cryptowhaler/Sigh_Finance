@@ -33,8 +33,10 @@
             <!-- Buttons (Re-Direct SIGH Stream / Transfer Administrator Priviledges) -->
             <div v-else class="uk-width-1-1" style="margin-bottom: 15px; margin-top: 15px;"  >
                 <div class="center">
-                    <button class="uk-button uk-button-green" style="background:darkblue;"  @click="redirectLiquiditySIGHStream()">Re-Direct Stream</button>
-                    <button class="uk-button uk-button-green" style="background:darkblue;"  @click="allowLiquiditySIGHRedirectionTo()">Transfer Rights</button>
+                    <button class="uk-button" style="background:darkblue;"  @click="redirectLiquiditySIGHStream()">Re-Direct Stream</button>
+                    <button class="uk-button" style="background:darkblue;"  @click="allowLiquiditySIGHRedirectionTo()">Transfer Rights</button>
+                    <button v-if="selectedInstrumentWalletState.liquiditySIGHStreamRedirectedTo != '0x0000000000000000000000000000000000000000'" class="uk-button" style="background:darkgreen;"  @click="resetLiquiditySIGHStream()">Reset Stream</button>
+                    <button v-if="selectedInstrumentWalletState.liquiditySIGHStreamRedirectionAllowance != '0x0000000000000000000000000000000000000000'" class="uk-button" style="background:darkgreen;"  @click="resetLiquiditySIGHRedirection()">Reset Rights</button>
                     <!-- <button class="uk-button uk-button-green" style="background:darkblue;"  @click="claimMySIGH()">Claim SIGH</button> -->
                 </div>
             </div>
@@ -69,17 +71,20 @@
             </tr>
             <br> 
             <!-- TOTAL LIQUIDITY (USDT) FARMING $SIGH 🌾 :    -->
-            <tr v-if="selectedInstrumentWalletState.liquiditySIGHStreamRedirectedTo == '0x0000000000000000000000000000000000000000'">                
-                <td > <span style="line-height: 24px;font-size: 12px; color:springgreen; display: contents; font-weight: 500;" >  TOTAL LIQUIDITY ({{ selectedInstrument.symbol }}) FARMING </span> <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents; font-weight: 500;" >  $SIGH &#127806; </span> : &nbsp; {{  Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalance).toFixed(3) }} (  {{ Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalanceWorth).toFixed(3) }} USD ) </td> 
+            <tr v-if="selectedInstrumentWalletState.liquiditySIGHStreamRedirectedTo == '0x0000000000000000000000000000000000000000'"  >                
+                <td > <span style="line-height: 24px;font-size: 12px; color:springgreen; display: contents; font-weight: 500;" >  TOTAL LIQUIDITY ({{ selectedInstrument.symbol  }}) FARMING </span> <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents; font-weight: 500;" >  $SIGH &#127806; </span> : &nbsp; {{  getBalanceString(Number( Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalance) + Number(selectedInstrumentWalletState.userDepositedBalance)  ).toFixed(3)) }} (  {{  getBalanceString(Number(  Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalanceWorth) +  Number(selectedInstrumentWalletState.userDepositedBalanceWorth)  ).toFixed(3)) }} USD ) </td> 
             </tr>
             <tr v-else >                
-                <td > <span style="line-height: 24px;font-size: 12px; color:springgreen; display: contents; font-weight: 500;" >  TOTAL LIQUIDITY ({{ selectedInstrument.symbol  }}) FARMING </span> <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents; font-weight: 500;" >  $SIGH &#127806; </span> : &nbsp; {{  Number( Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalance) + Number(selectedInstrumentWalletState.userDepositedBalance)  ).toFixed(3) }} (  {{  Number(  Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalanceWorth) +  Number(selectedInstrumentWalletState.userDepositedBalanceWorth)  ).toFixed(3) }} USD ) </td> 
+                <td > <span style="line-height: 24px;font-size: 12px; color:springgreen; display: contents; font-weight: 500;" >  TOTAL LIQUIDITY ({{ selectedInstrument.symbol }}) FARMING </span> <span style="line-height: 24px;font-size: 12px; color:yellow; display: contents; font-weight: 500;" >  $SIGH &#127806; </span> : &nbsp; {{  getBalanceString(Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalance).toFixed(3)) }} (  {{ getBalanceString(Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalanceWorth).toFixed(3)) }} USD ) </td> 
+            </tr>
+            <tr v-if="selectedInstrumentWalletState.liquiditySIGHStreamRedirectedTo == '0x0000000000000000000000000000000000000000'"  >                
+                <td > <span style="line-height: 24px;font-size: 12px; color:skyblue; display: contents; font-weight: 500;" > > Deposited Balance ({{ selectedInstrument.symbol  }}) </span> : &nbsp; {{ getBalanceString(Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(3)) }} (  {{ getBalanceString(Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(3)) }} USD ) </td> 
+            </tr>
+            <tr v-else>                
+                <td > <span style="line-height: 24px;font-size: 12px; color:skyblue; display: contents; font-weight: 500;" > > Deposited Balance ({{ selectedInstrument.symbol  }}) </span> : &nbsp; {{ getBalanceString(Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(3)) }} (  {{ getBalanceString(Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(3)) }} USD ) <span style="color:red; display:contents;"> : Re-directed </span> </td> 
             </tr>
             <tr>                
-                <td > <span style="line-height: 24px;font-size: 12px; color:skyblue; display: contents; font-weight: 500;" > > Deposited Balance ({{ selectedInstrument.symbol  }}) </span> : &nbsp; {{ Number(selectedInstrumentWalletState.userDepositedBalance).toFixed(3) }} (  {{ Number(selectedInstrumentWalletState.userDepositedBalanceWorth).toFixed(3) }} USD ) </td> 
-            </tr>
-            <tr>                
-                <td > <span style="line-height: 24px;font-size: 12px; color:skyblue; display: contents; font-weight: 500;" > > Re-directed Balance ({{ selectedInstrument.symbol  }}) </span> : &nbsp; {{ Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalance).toFixed(3) }} (  {{ Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalanceWorth).toFixed(3) }} USD ) </td> 
+                <td > <span style="line-height: 24px;font-size: 12px; color:skyblue; display: contents; font-weight: 500;" > > Re-directed Balance ({{ selectedInstrument.symbol  }}) </span> : &nbsp; {{ getBalanceString(Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalance).toFixed(3)) }} (  {{ getBalanceString(Number(selectedInstrumentWalletState.liquiditySIGHStreamRedirectedBalanceWorth).toFixed(3)) }} USD ) </td> 
             </tr>
 
             <br> 

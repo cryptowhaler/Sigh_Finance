@@ -77,11 +77,12 @@ export default {
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
         this.$showInfoMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance . Try re-connecting your Wallet or connect with our support team through our Discord Server in case of any queries! "}); 
       }
-      else if (Number(this.selectedInstrumentWalletState.userDepositedBalance ) == 0 &&  Number(this.selectedInstrumentWalletState.currentBorrowBalance ) == 0  ) {
-        this.$showErrorMsg({message: " The Connected Account " + this.$store.state.connectedWallet + " doesn't have any supplied or Borrowed " + this.selectedInstrument.symbol + " balance accuring SIGH for itself. You need to deposit assets (accures $SIGH whenever the asset's price (USD) increases over 24 hrs period) or borrow assets ((accures $SIGH whenever the asset's price (USD) decreases over 24 hrs period) before you can Re-direct its SIGH stream. connect with our support team through our Discord Server in case of any queries! "}); 
+      else if ( Number(this.selectedInstrumentWalletState.userDepositedBalance ) == 0  ) {
+        this.$showErrorMsg({message: " The Connected Account " + this.$store.state.connectedWallet + " doesn't have any supplied " + this.selectedInstrument.symbol + " balance accuring SIGH for itself. You need to deposit assets (accures $SIGH whenever the asset's price (USD) decreases over 24 hrs period) before you can Re-direct its SIGH stream!"}); 
+        this.$showInfoMsg({message: " Connect with our support team through our Discord Server in case of any queries! "}); 
       }
       else if ( !Web3.utils.isAddress(this.formData.toAccount) ) {            // 'ToAccount' provided is not Valid
-        this.$showErrorMsg({message: " The Account Address provided is not valid . Check the address again or connect with our support team through our Discord Server in case of any queries! "}); 
+        this.$showErrorMsg({message: " The Account Address provided is not valid"}); 
       }
       else {                                  // EXECUTE THE TRANSACTION
         this.showLoader = true;
@@ -112,11 +113,12 @@ export default {
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
         this.$showInfoMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance . Try re-connecting your Wallet or connect with our support team through our Discord Server in case of any queries! "}); 
       }
-      else if (Number(this.selectedInstrumentWalletState.userDepositedBalance ) == 0 &&  Number(this.selectedInstrumentWalletState.currentBorrowBalance ) == 0  ) {
-        this.$showErrorMsg({message: " The Connected Account " + this.$store.state.connectedWallet + " doesn't have any supplied or Borrowed " + this.selectedInstrument.symbol + " balance accuring SIGH for itself. You need to deposit assets (accures $SIGH whenever the asset's price (USD) decreases over 24 hrs period) or borrow assets ((accures $SIGH whenever the asset's price (USD) increases over 24 hrs period) before you can Re-direct its SIGH stream. connect with our support team through our Discord Server in case of any queries! "}); 
+      else if (Number(this.selectedInstrumentWalletState.userDepositedBalance ) == 0 ) {
+        this.$showErrorMsg({message: " The Connected Account " + this.$store.state.connectedWallet + " doesn't have any supplied " + this.selectedInstrument.symbol + " balance accuring SIGH for itself. You need to deposit assets (accures $SIGH whenever the asset's price (USD) decreases over 24 hrs period) before you can Transfer its Administrator Rights!"}); 
+        this.$showInfoMsg({message: " Connect with our support team through our Discord Server in case of any queries! "}); 
       }
       else if ( !Web3.utils.isAddress(this.formData.toAccount) ) {            // 'ToAccount' provided is not Valid
-        this.$showErrorMsg({message: " The Account Address provided is not valid . Check the address again or connect with our support team through our Discord Server in case of any queries! "}); 
+        this.$showErrorMsg({message: " The Account Address provided is not valid! "}); 
       }
       else {                                  // EXECUTE THE TRANSACTION
         this.showLoader = true;
@@ -134,6 +136,55 @@ export default {
       }
     },
 
+    // RESETS THE CURRENT LIQUIDITY SIGH STREAM ADDRESS
+    async resetLiquiditySIGHStream() {       // RE-DIRECT SIGH STREAM
+      console.log('Addresses to which SIGH is to be re-directed to = ' + this.formData.toAccount);
+      
+      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
+        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
+      }
+      else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
+        this.$showInfoMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance . Try re-connecting your Wallet or connect with our support team through our Discord Server in case of any queries! "}); 
+      }
+      else {                                  // EXECUTE THE TRANSACTION
+        this.showLoader = true;
+        let response =  await this.IToken_redirectLiquiditySIGHStream( { iTokenAddress:  this.selectedInstrument.iTokenAddress, _to: this.$store.state.connectedWallet, symbol : this.selectedInstrument.symbol } );
+        if (response.status) {  
+          this.$showSuccessMsg({message: "LIQUIDITY SIGH STREAM for the instrument "  + this.selectedInstrument.symbol +  " have been successfully reset. Now it's not being re-directed to any another account! "});
+          await this.refreshCurrentInstrumentWalletState(true);
+        }
+        else {
+          this.$showErrorMsg({message: "RESET LIQUIDITY SIGH STREAM FAILED : " + response.message  });
+          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+        }
+        this.showLoader = false;
+      }
+    },
+
+    // RESETS THE CURRENT LIQUIDITY SIGH STREAM REDIRECTION ALLOWANCE
+    async resetLiquiditySIGHRedirection() {                           // RE-DIRECT SIGH STREAM
+      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
+        this.$showInfoMsg({message: " Networks currently supported by SIGH Finance - 1) Ethereum :  Kovan Testnet(42) " }); 
+      }      
+      else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
+        this.$showInfoMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance . Try re-connecting your Wallet or connect with our support team through our Discord Server in case of any queries! "}); 
+      }
+      else {                                  // EXECUTE THE TRANSACTION
+        this.showLoader = true;
+        let response =  await this.IToken_allowLiquiditySIGHRedirectionTo( { iTokenAddress:  this.selectedInstrument.iTokenAddress, _to: this.$store.state.connectedWallet, symbol : this.selectedInstrument.symbol } );
+        if (response.status) {  
+          this.$showSuccessMsg({message: "ADMINISTRATOR PRIVILEDGES have been revoked from the designated account. Now no other user holds Administrator rights over your Liquidity SIGH Stream!"});
+          await this.refreshCurrentInstrumentWalletState(true);          
+        }
+        else {
+          this.$showErrorMsg({message: "LIQUIDITY SIGH STREAM : ADMINISTRATOR PRIVILEDGES RESET FAILED: " + response.message  });
+          this.$showInfoMsg({message: "Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+        }
+        this.showLoader = false;
+      }
+    },
 
 
 
@@ -155,7 +206,7 @@ export default {
         this.showLoader = true;
         let response =  await this.IToken_claimMySIGH({iTokenAddress : this.selectedInstrument.iTokenAddress, symbol : this.selectedInstrument.symbol });
         if (response.status) {  
-          this.$showSuccessMsg({message: " Farmed $SIGH have been successfully harvested!" });
+          this.$showSuccessMsg({message: "Farmed $SIGH have been successfully harvested. Enjoy your farming yields!" });
           await this.refreshCurrentInstrumentWalletState(true);                    
         }
         else {
@@ -200,7 +251,23 @@ export default {
         this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
       }
       console.log(this.selectedInstrumentWalletState);
-    }
+    },
+
+    getBalanceString(number)  {
+      if ( Number(number) >= 1000000000 ) {
+        let inBil = (Number(number) / 1000000000).toFixed(2);
+        return inBil.toString() + ' B';
+      } 
+      if ( Number(number) >= 1000000 ) {
+        let inMil = (Number(number) / 1000000).toFixed(2);
+        return inMil.toString() + ' M';
+      } 
+      if ( Number(number) >= 1000 ) {
+        let inK = (Number(number) / 1000).toFixed(2);
+        return inK.toString() + ' K';
+      } 
+      return Number(number).toFixed(2);
+    }    
 
   },
 

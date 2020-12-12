@@ -518,7 +518,28 @@
 					}
 				],
 				"name": "cumulateBalance",
-				"outputs": [],
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -1328,10 +1349,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/IToken.sol": {
-			"keccak256": "0xfe1cecd3b895c6a4eea1218b38b992ed3307033119cf54bd5e4b5d6dc0e4c4ca",
+			"keccak256": "0x362558b86d1dfeebe4278312a0576e86a03f4cc180e0705cee732a0822c553e8",
 			"urls": [
-				"bzz-raw://1086938ba1c33b9724a5f23ca0d2189127388f238f6ce53b7f993ad5971122fa",
-				"dweb:/ipfs/QmTtFvwVNUgAqN14N1ePUuGcNBYU4Zt64JMbhCxRz8qY6c"
+				"bzz-raw://68a9f12ab2446038926b69884fc84d2c9ebe9ba1380c56da4daefd72281706f7",
+				"dweb:/ipfs/QmZTNHZEnvzgB9VdKewr1QmUZiqNRpWF9DKFkUmDeEUvFo"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPool.sol": {
