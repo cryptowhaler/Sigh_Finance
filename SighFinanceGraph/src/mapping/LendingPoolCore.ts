@@ -104,11 +104,13 @@ export function handleSIGH_Pay_Amount_Transferred(event: SIGH_PAY_Amount_Transfe
         stakingContract = createStakingContract(stakingContractID)
     }
 
+    stakingContract.save()
+    
     StakingReward.stakingContract = stakingContractID
 
     StakingReward.save()
     instrumentState.save()
-    stakingContract.save()
+
  }
 
 
@@ -127,6 +129,8 @@ export function createStakingReward(ID: string): StakingRewards {
     staking_reward.priceETH = BigDecimal.fromString('0')
     staking_reward.priceUSD = BigDecimal.fromString('0')
 
+    staking_reward.stakingContract = '0x0000000000000000000000000000000000000000'
+
     staking_reward.lifeTimeBalance = BigDecimal.fromString('0')
     staking_reward.lifeTimeBalanceETH = BigDecimal.fromString('0')
     staking_reward.lifeTimeBalanceUSD = BigDecimal.fromString('0')
@@ -139,7 +143,7 @@ export function createStakingReward(ID: string): StakingRewards {
     staking_reward.distributedBalanceETH = BigDecimal.fromString('0')
     staking_reward.distributedBalanceUSD = BigDecimal.fromString('0')
 
-    staking_reward.lendingPool_SIGHPayInterestRatePercent = BigInt.fromI32(0)
+    staking_reward.lendingPool_SIGHPayInterestRatePercent = BigDecimal.fromString('0')
     staking_reward.lendingPool_lastSIGHPayPaidIndex = BigInt.fromI32(0)
     staking_reward.lendingPool_lastSIGHPayCumulativeIndex = BigInt.fromI32(0)
 
@@ -152,5 +156,4 @@ export function createStakingContract(ID: string): StakingContract {
     let staking_contract = new StakingContract(ID)
     staking_contract.save()
     return staking_contract as StakingContract
-
 }
