@@ -31,19 +31,19 @@ const notificationComponent = new Vue({
 export default {
   install(Vue) {
     Vue.prototype.$showSuccessMsg = ({ title, message, timeout, } = {}) => {
-      return notificationComponent.showSuccessMsg( JSON.parse( JSON.stringify({ title, message,  timeout: timeout || 20000,}) ));
+      return notificationComponent.showSuccessMsg( JSON.parse( JSON.stringify({ title, message,  timeout: timeout || 10000,}) ));
     };
 
     Vue.prototype.$showInfoMsg = ({ title, message, timeout, } = {}) => {
-      return notificationComponent.showInfoMsg( JSON.parse( JSON.stringify({ title, message, timeout: timeout || 20000, }) ) );
+      return notificationComponent.showInfoMsg( JSON.parse( JSON.stringify({ title, message, timeout: timeout || 10000, }) ) );
     };
 
     Vue.prototype.$showWarningMsg = ({ title, message, timeout, } = {}) => {
-      return notificationComponent.showWarnMsg( JSON.parse(  JSON.stringify({ title, message, timeout: timeout || 20000, })));
+      return notificationComponent.showWarnMsg( JSON.parse(  JSON.stringify({ title, message, timeout: timeout || 10000, })));
     };
 
     Vue.prototype.$showErrorMsg = ({ title, message, timeout, } = {}) => {
-      return notificationComponent.showErrorMsg(JSON.parse( JSON.stringify({  title,  message,  timeout: timeout || 20000,  })  ) );
+      return notificationComponent.showErrorMsg(JSON.parse( JSON.stringify({  title,  message,  timeout: timeout || 10000,  })  ) );
     };
   },
 };

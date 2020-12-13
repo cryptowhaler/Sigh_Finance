@@ -15,7 +15,7 @@ export default {
   data() {
     return {
       isConnected : this.$store.getters.isWalletConnected,
-      statusCode: 'Connect Wallet',
+      statusCode: 'CONNECT WALLET',
       selectedTransaction: null,
       sighInstrument: {},
     };
@@ -31,7 +31,7 @@ export default {
 
 
   async mounted() {
-    this.walletConnected = body => this.fetchConfigsWalletConnected(body.username);     //Wallet connected 
+    this.walletConnected = body => this.connectToWeb3();     //Wallet connected 
     this.WalletDisconnectedListener = body => this.fetchConfigsWalletDisconnected();     //Wallet Disconnected   
 
     EventBus.$on(EventNames.userWalletConnected, this.walletConnected);           //WHENEVER A USER WALLET IS CONNECTED, WE 
@@ -46,11 +46,13 @@ export default {
   methods: {
     ...mapActions(['loadWeb3','getContractsBasedOnNetwork','initiateSighFinancePolling','getWalletConfig','getConnectedWalletState','SIGHDistributionHandler_refreshSighSpeeds','SIGHSpeedController_drip']),
 
-
-    async fetchConfigsWalletConnected() {
-      // await this.handleWeb3();   
-      await this.fetchSessionUserStateData(); 
+    async connectToWeb3() {
+      await this.handleWeb3();   
+      if (this.$store.state.isNetworkSupported) {
+        await this.fetchSessionUserStateData(); 
+      }
     },
+
 
     transactionClicked() {
       console.log(this.selectedTransaction);
@@ -61,11 +63,13 @@ export default {
     },
 
 
+
+
     onTriggerClick() {
       this.$store.commit('toggleSidebar');
     },
 
-    
+
     showContactModal() {        //Added
       this.$store.commit('closeSidebar');
       this.$emit('show-contact-modal');
@@ -96,23 +100,23 @@ export default {
 
     // Connects to WEB3, Wallet, and initiates balance polling
     async handleWeb3() {
-      console.log('handleWeb3() in APP');
+      console.log('handleWeb3() in Header');
       let isWeb3loaded = await this.loadWeb3();
 
       if (isWeb3loaded == 'EthereumEnabled') {
-          this.$showSuccessMsg({message:"  Successfully connected to the Ethereum Network : " + this.$store.getters.networkName + "! Welcome to SIGH Finance!" });
+          this.$showSuccessMsg({title:"Connection Successful", message:"  Successfully connected to the Ethereum Network : " + this.$store.getters.networkName, timeout: 3000 });
       }
       if (isWeb3loaded == 'EthereumNotEnabled') {
-          this.$showErrorMsg({message:'  Permission to connect your wallet denied. In case you have security concerns or are facing any issues, reach out to our support team at contact@sigh.finance. '});
+          this.$showErrorMsg({title:"Permission Denied", message:'  Permission to connect your wallet denied. In case you have security concerns or are facing any issues, connect with our Team through our Discord Server or write to us at contact@sigh.finance!', timeout: 17000 });
       }
       if (isWeb3loaded == 'BSCConnected') {
-        this.$showSuccessMsg({message:"  Successfully connected to the Binance Smart Chain : " + this.$store.getters.networkName + "! Welcome to SIGH Finance!"});
+        this.$showSuccessMsg({title:"Connection Successful", message:"  Successfully connected to the Binance Smart Chain : " + this.$store.getters.networkName, timeout: 3000 });
       }
       if (isWeb3loaded == 'Web3Connected') {
-        this.$showSuccessMsg({message:"  Successfully connected to the Ethereum Network's " + this.$store.getters.networkName  + " (not a Metamask wallet) !"});
+        this.$showSuccessMsg({title:"Connection Successful", message:"Successfully connected to the Ethereum Network's " + this.$store.getters.networkName  + " (not a Metamask wallet) !"});
       }
       if (isWeb3loaded == 'false') {
-        this.$showErrorMsg({message:'  No Web3 Object injected into browser. Read-only access. Please install MetaMask browser extension or connect our support team at contact@sigh.finance. '});
+        this.$showErrorMsg({title:"Install METAMASK", message:'  No Web3 Object injected into browser. Read-only access. Please install MetaMask browser extension to interact with SIGH Finance!'});
       }
 
       // FETCHING CONTRACTS AND STATE FOR SIGH FINANCE
@@ -122,19 +126,24 @@ export default {
           ExchangeDataEventBus.$emit(EventNames.connectedToSupportedNetwork);    
         }
       }
+      else if (this.$store.state.web3 && !this.$store.getters.isNetworkSupported ) {
+        this.$showErrorMsg({title:"Network Not Supported", message:" SIGH Finance is currently not available on the connected blockchain network!"});
+        this.$showInfoMsg({title:"Please Connect to Ethereum's KOVAN Test Network to interact with SIGH Finance!", message:"", timeout: 14000 });
+        this.$showInfoMsg({message:"Reach out to our team through our Discord Server in-case you need any help!", timeout: 10000 });
+      }
     },
 
     // Loads addresses of the contracts from the network
     async fetchSessionSIGHFinanceStateData() {
       let id = this.$store.getters.networkId;
-      console.log('fetchSessionSIGHFinanceStateData() in APP - ' + id);
+      console.log('fetchSessionSIGHFinanceStateData() in Header - ' + id);
       if ( this.$store.getters.getWeb3 && this.$store.getters.isNetworkSupported ) {
         let contractAddressesInitialized = await this.getContractsBasedOnNetwork();  // Fetches Addresses & Instrument states
         if (contractAddressesInitialized) {
-          this.$showInfoMsg({message: " SIGH Finance Contracts fetched successfully for the network " + id + " - " + this.$store.getters.networkName });
+          this.$showSuccessMsg({title:"Transactions now possible!", message: " SIGH Finance Contracts fetched successfully for the network " + id + " - " + this.$store.getters.networkName, timeout: 3000  });
           let response = await this.initiateSighFinancePolling();
           if (response) {
-            this.$showSuccessMsg({message:" SIGH Finance Current State fetched Successfully"});
+            this.$showInfoMsg({title:"Loading User Session..." , message:"Please wait a bit while we fetch your instrument balances from the Network!", timeout: 70000  });
             return true;
           }
           else {
@@ -148,17 +157,17 @@ export default {
         }
       }
       else {
-          this.$showErrorMsg({message: " SIGH Finance is currently not available on the connected blockchain network " });
+          this.$showErrorMsg({title:"Network Not Supported" , message: " SIGH Finance is currently not available on the connected blockchain network " });
           return false;
       }
     },
 
     async fetchSessionUserStateData() {
       if ( this.sighFinanceInitialized ) {
-        console.log("WALLET STATE FETCHING INITIATIATED IN APP.VUE");
+        console.log("WALLET STATE FETCHING INITIATIATED IN Header");
         let response = await this.getConnectedWalletState();
         if (response) {
-          this.$showSuccessMsg({message:"Successfully fetched SIGH Finance Session for the account : " + this.$store.state.connectedWallet });
+          this.$showSuccessMsg({title:"User Session Initiated", message:"Successfully fetched SIGH Finance Session for the account : " + this.$store.state.connectedWallet });
           ExchangeDataEventBus.$emit(EventNames.ConnectedWalletSesssionRefreshed);    
         }
         else if (this.$store.state.connectedWallet) {
@@ -171,10 +180,10 @@ export default {
       else {
         await this.handleWeb3();
         if ( this.sighFinanceInitialized ) {
-          console.log("WALLET STATE FETCHING INITIATIATED IN APP.VUE");
+          console.log("WALLET STATE FETCHING INITIATIATED IN Header");
           let response = await this.getConnectedWalletState();
           if (response) {
-            this.$showSuccessMsg({message:"Successfully fetched SIGH Finance Session for the account : " + this.$store.state.connectedWallet });
+            this.$showSuccessMsg({title:"User Session Initiated", message:"Successfully fetched SIGH Finance Session for the account : " + this.$store.state.connectedWallet });
             ExchangeDataEventBus.$emit(EventNames.ConnectedWalletSesssionRefreshed);    
           }
           else if (this.$store.state.connectedWallet) {

@@ -75,8 +75,9 @@ export default {
 
 
   async created() {         //GETS WEB3
-    await this.handleWeb3();   
-    await this.fetchSessionUserStateData(); 
+    this.displayWelcomeMessage();
+    // await this.handleWeb3();   
+    // await this.fetchSessionUserStateData(); 
   },
 
   async mounted() {
@@ -97,6 +98,11 @@ export default {
   methods: {
 
     ...mapActions(['loadWeb3','getContractsBasedOnNetwork','initiateSighFinancePolling','getWalletConfig','getConnectedWalletState']),
+
+    displayWelcomeMessage() {
+        this.$showSuccessMsg({title: 'Hey, Welcome to SIGH Finance!', message:"" });
+        this.$showInfoMsg({title: 'Onboarding Info :' ,message:"The protocol is currently Live on Ethereum's KOVAN Test Network. Please connect to the KOVAN Network to interact with SIGH Finance!" });
+    },
 
     // Connects to WEB3, Wallet, and initiates balance polling
     async handleWeb3() {
