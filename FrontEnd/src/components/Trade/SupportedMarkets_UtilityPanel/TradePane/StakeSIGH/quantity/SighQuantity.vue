@@ -109,7 +109,7 @@ export default {
         }
         else {
           this.$showErrorMsg({message: "SIGH STAKING  FAILED : " + response.message  });
-          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+          this.$showInfoMsg({title: "Contact our Support Team" , message: "Contact our Team through our Discord Server in case you need any help!", timeout: 4000 }); 
         }
         this.formData.sighQuantity = null;
         this.showLoader = false;
@@ -144,7 +144,7 @@ export default {
         }
         else {
           this.$showErrorMsg({message: "SIGH UN-STAKING FAILED : " + response.message  });
-          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+          this.$showInfoMsg({title: "Contact our Support Team" , message: "Contact our Team through our Discord Server in case you need any help!", timeout: 4000 }); 
           }
           this.showLoader = false;      
         }
@@ -177,7 +177,7 @@ export default {
         }
         else {
           this.$showErrorMsg({message: "APPROVAL FAILED : " + response.message  }); 
-          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+          this.$showInfoMsg({title: "Contact our Support Team" , message: "Contact our Team through our Discord Server in case you need any help!", timeout: 4000 }); 
         }
         this.showLoader = false;
       }

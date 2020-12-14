@@ -89,9 +89,14 @@ export default {
         quantity = Number(this.formData.redeemValue) / ( ( Number(this.selectedInstrumentPriceETH) / Math.pow(10,this.selectedInstrument.priceDecimals)) * (Number(this.$store.state.ethereumPriceUSD) / Math.pow(10,this.$store.state.ethPriceDecimals)) ) ;
       }
 
-      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
-        this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
-        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
+      if (!this.$store.state.web3) {
+        this.$showErrorMsg({title:"Not Connected to Web3", message: " You need to first connect to WEB3 (Ethereum Network) to interact with SIGH Finance!", timeout: 4000 });  
+        this.$showInfoMsg({message: "Please install METAMASK Wallet to interact with SIGH Finance!", timeout: 4000 }); 
+      }
+      else if (!this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        this.$showErrorMsg({title:"Network not Supported", message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName, timeout: 4000 }); 
+        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) ", timeout: 4000 }); 
+        return;
       }
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
         this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance . Try re-connecting your Wallet or connect with our support team through our Discord Server in case of any queries! "}); 
@@ -107,13 +112,14 @@ export default {
         this.showLoader = true;
         let response =  await this.IToken_redeem( { iTokenAddress: this.selectedInstrument.iTokenAddress , _amount:  quantity, symbol: this.selectedInstrument.symbol , decimals: this.selectedInstrument.decimals });
         if (response.status) {      
-          this.$showSuccessMsg({message: "REDEEM SUCCESS : " + Number(quantity).toFixed(4) + "  " +  this.selectedInstrument.symbol +  " worth " +  this.formData.redeemValue + " USD have been successfully redeemed from SIGH Finance. Gas used = " + response.gasUsed });
-          this.$showInfoMsg({message: " $SIGH FARMS Look forward to serving you again!"});
+          this.$showSuccessMsg({title:"REDEEM SUCCESSFUL" ,message:  Number(quantity).toFixed(4) + "  " +  this.selectedInstrument.symbol +  " worth " +  this.formData.redeemValue + " USD have been successfully redeemed from SIGH Finance. Gas used = " + response.gasUsed });
+          this.$showInfoMsg({title:"See ya soon!", message: " $SIGH FARMS look forward to serving you again!", timeout:4000});
+
           await this.refreshCurrentInstrumentWalletState(false);
         }
         else {
-          this.$showErrorMsg({message: "REDEEM FAILED : " + response.message  }); 
-          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+          this.$showErrorMsg({title:"REDEEM FAILED" ,message: Number(quantity).toFixed(4) + "  " +  this.selectedInstrument.symbol + " FAILED to be redeemed from SIGH Finance. Check Etherescan to undersand why and try again! ", timeout: 7000 }); 
+          this.$showInfoMsg({title: "Contact our Support Team" , message: "Contact our Team through our Discord Server in case you need any help!", timeout: 4000 }); 
         }
         this.formData.redeemQuantity = null;
         this.showLoader = false;
@@ -131,7 +137,7 @@ export default {
           this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
           ExchangeDataEventBus.$emit(EventNames.ConnectedWallet_Instrument_Refreshed, {'instrumentAddress': this.selectedInstrument.instrumentAddress });    
           if (toDisplay) {
-            this.$showInfoMsg({message: "Connected Wallet's " + this.selectedInstrument.symbol +  " Balances and Farming Yields have been refreshed! " });             
+            this.$showInfoMsg({title: this.selectedInstrument.symbol + ": Balances Refreshed", message: "Connected Wallet's " + this.selectedInstrument.symbol +  " Balances have been refreshed! ", timeout: 3000  });             
           }
         }
         catch(error) {

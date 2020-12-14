@@ -93,9 +93,14 @@ export default {
 
     async deposit() {   //DEPOSIT (WORKS PROPERLY)
       
-      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
-        this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
-        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
+      if (!this.$store.state.web3) {
+        this.$showErrorMsg({title:"Not Connected to Web3", message: " You need to first connect to WEB3 (Ethereum Network) to interact with SIGH Finance!", timeout: 4000 });  
+        this.$showInfoMsg({message: "Please install METAMASK Wallet to interact with SIGH Finance!", timeout: 4000 }); 
+      }
+      else if (!this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        this.$showErrorMsg({title:"Network not Supported", message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName, timeout: 4000 }); 
+        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) ", timeout: 4000 }); 
+        return;
       }
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
         this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance . Try re-connecting your Wallet or connect with our support team through our Discord Server in case of any queries! "}); 
@@ -119,13 +124,13 @@ export default {
 
         let response =  await this.LendingPool_deposit( { _instrument: this.selectedInstrument.instrumentAddress , _amount:  this.formData.depositQuantity, _referralCode: this.formData.enteredReferralCode, symbol: this.selectedInstrument.symbol, decimals: this.selectedInstrument.decimals  });
         if (response.status) {      
-          this.$showSuccessMsg({message: "DEPOSIT SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD have been successfully deposited to SIGH Finance. Enjoy your $SIGH farm yields." });
-          this.$showInfoMsg({message: " Interest & $SIGH bearing ITokens (ERC20) are issued as debt against the deposits made in the SIGH Finance Protocol on a 1:1 basis. You can read more about it at medium.com/SighFinance" });
+          this.$showSuccessMsg({title:"DEPOSIT SUCCESSFUL" , message: this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD have been successfully deposited to SIGH Finance. Enjoy your $SIGH farm yields." });
+          this.$showInfoMsg({title:"New I-" + this.selectedInstrument.symbol + " Minted : " , message: " Interest & $SIGH bearing ITokens (ERC20) are issued as debt against the deposits made in the SIGH Finance Protocol on a 1:1 basis. You can read more about it at medium.com/SighFinance", timeout: 4000 }); 
           await this.refreshCurrentInstrumentWalletState(false);
         }
         else {
-          this.$showErrorMsg({message: "DEPOSIT FAILED : " + response.message  }); // this.formData.depositQuantity + "  " + this.selectedInstrument.symbol +  " worth " + value + " USD approval failed. Try increasing Gas or contact our team at contact@sigh.finance in case of any queries." });        
-          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); // this.formData.depositQuantity + "  " + this.selectedInstrument.symbol +  " worth " + value + " USD approval failed. Try increasing Gas or contact our team at contact@sigh.finance in case of any queries." });        
+          this.$showErrorMsg({title:"DEPOSIT FAILED" ,message: this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol + " Deposit FAILED. Check Etherescan to undersand why and try again! ", timeout: 7000 }); 
+          this.$showInfoMsg({title: "Contact our Support Team" , message: "Contact our Team through our Discord Server in case you need any help!", timeout: 4000 });        
         }
         this.formData.depositQuantity = null;
         this.showLoader = false;
@@ -135,9 +140,14 @@ export default {
 
 
     async mint() {
-      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
-        this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
-        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
+      if (!this.$store.state.web3) {
+        this.$showErrorMsg({title:"Not Connected to Web3", message: " You need to first connect to WEB3 (Ethereum Network) to interact with SIGH Finance!", timeout: 4000 });  
+        this.$showInfoMsg({message: "Please install METAMASK Wallet to interact with SIGH Finance!", timeout: 4000 }); 
+      }
+      else if (!this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        this.$showErrorMsg({title:"Network not Supported", message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName, timeout: 4000 }); 
+        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) ", timeout: 4000 }); 
+        return;
       }
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
         this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance . Try re-connecting your Wallet or connect with our support team through our Discord Server in case of any queries! "}); 
@@ -155,12 +165,12 @@ export default {
         this.showLoader = true;
         let response = await this.ERC20_mint({tokenAddress: this.selectedInstrument.instrumentAddress , quantity: this.formData.depositQuantity, symbol: this.selectedInstrument.symbol, decimals: this.selectedInstrument.decimals  });
         if (response.status) {      
-          this.$showSuccessMsg({message: "DEPOSIT (MINT) SUCCESS : " + this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully minted for testing. Gas used = " + response.gasUsed });
+          this.$showSuccessMsg({title:"MINT SUCCESSFUL" ,message: this.formData.depositQuantity + "  " +  this.selectedInstrument.symbol +  " worth " + value + " USD was successfully minted for testing. Gas used = " + response.gasUsed });
           await this.refreshCurrentInstrumentWalletState(false);         // UPDATE THE STATE OF THE SELECTED INSTRUMENT
         }
         else {
-          this.$showErrorMsg({message: "DEPOSIT (MINT) FAILED : " + response.message  }); 
-          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+          this.$showErrorMsg({title:"MINT FAILED" ,message: this.formData.depositQuantity+ "  " +  this.selectedInstrument.symbol + " Mint FAILED. Check Etherescan to undersand why and try again! ", timeout: 7000 }); 
+          this.$showInfoMsg({title: "Contact our Support Team" , message: "Contact our Team through our Discord Server in case you need any help!", timeout: 4000 });             
         }
         this.formData.depositValue = null;
         this.showLoader = false;
@@ -170,9 +180,14 @@ export default {
 
 
     async approve() {   //APPROVE (WORKS PROPERLY) 
-      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
-        this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
-        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
+      if (!this.$store.state.web3) {
+        this.$showErrorMsg({title:"Not Connected to Web3", message: " You need to first connect to WEB3 (Ethereum Network) to interact with SIGH Finance!", timeout: 4000 });  
+        this.$showInfoMsg({message: "Please install METAMASK Wallet to interact with SIGH Finance!", timeout: 4000 }); 
+      }
+      else if (!this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        this.$showErrorMsg({title:"Network not Supported", message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName, timeout: 4000 }); 
+        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) ", timeout: 4000 }); 
+        return;
       }
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
         this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance . Try re-connecting your Wallet or connect with our support team through our Discord Server in case of any queries! "}); 
@@ -186,12 +201,12 @@ export default {
         let response = await this.ERC20_increaseAllowance( { tokenAddress: this.selectedInstrument.instrumentAddress, spender: this.$store.getters.LendingPoolCoreContractAddress , addedValue:  this.formData.depositQuantity , symbol :this.selectedInstrument.symbol, decimals: this.selectedInstrument.decimals  } );
         if (response.status) { 
           await this.refreshCurrentInstrumentWalletState(false);        
-          this.$showSuccessMsg({message: "APPROVAL SUCCESS : Maximum of " + this.selectedInstrumentWalletState.userAvailableAllowance + "  " +  this.selectedInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });
+          this.$showSuccessMsg({title:"APPROVAL SUCCESS" , message: "Maximum of " + this.selectedInstrumentWalletState.userAvailableAllowance + "  " +  this.selectedInstrument.symbol +  " can now be deposited to SIGH Finance. Gas used = " + response.gasUsed  });
           this.formData.depositQuantity = null;
         }
         else {
-          this.$showErrorMsg({message: "APPROVAL FAILED : " + response.message  }); 
-          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+          this.$showErrorMsg({title:"FAILED TO INCREASE ALLOWANCE" ,message: Number(this.formData.depositQuantity).toFixed(4) + "  " +  this.selectedInstrument.symbol + " FAILED to be Approved for further deposits into SIGH Finance. Check Etherescan to undersand why and try again! ", timeout: 7000 }); 
+          this.$showInfoMsg({title: "Contact our Support Team" , message: "Contact our Team through our Discord Server in case you need any help!", timeout: 4000 });             
         }
         this.showLoader = false;
       }
@@ -199,9 +214,13 @@ export default {
 
 
     async switchInstrumentAsCollateral(_switch) {
-      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
-        this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
-        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
+      if (!this.$store.state.web3) {
+        this.$showErrorMsg({title:"Not Connected to Web3", message: " You need to first connect to WEB3 (Ethereum Network) to interact with SIGH Finance!", timeout: 4000 });  
+        this.$showInfoMsg({message: "Please install METAMASK Wallet to interact with SIGH Finance!", timeout: 4000 }); 
+      }
+      else if (!this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        this.$showErrorMsg({title:"Network not Supported", message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName, timeout: 4000 }); 
+        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) ", timeout: 4000 }); 
         return;
       }
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
@@ -222,15 +241,21 @@ export default {
         if (response.status) { 
           await this.refreshCurrentInstrumentWalletState(false);       
           if (_switch) {
-            this.$showSuccessMsg({message: this.selectedInstrument.symbol  + " has been Enabled as Collateral! Gas used = " + response.gasUsed  });
+            this.$showSuccessMsg({title: this.selectedInstrument.symbol + "ENABLED AS COLLATERAL" ,message: this.selectedInstrument.symbol  + " has been Enabled as Collateral! Gas used = " + response.gasUsed  });
           } 
           else {
-            this.$showSuccessMsg({message: this.selectedInstrument.symbol  + " has been Disabled as Collateral! Gas used = " + response.gasUsed  });
+            this.$showSuccessMsg({title: this.selectedInstrument.symbol + "DISABLED AS COLLATERAL" ,message: this.selectedInstrument.symbol  + " has been Disabled as Collateral! Gas used = " + response.gasUsed  });
           }
         }
         else {
-          this.$showErrorMsg({message: "Instrument usage as Collateral : Operation Failed. Response - " + response.message  }); 
-          this.$showInfoMsg({message: " Reach out to our Team at contact@sigh.finance in case you are facing any problems!" }); 
+          if (_switch) {
+            this.$showErrorMsg({title:"FAILED TO ENABLE " + this.selectedInstrument.symbol + " AS COLLATERAL" ,message:  + "Check Etherescan to undersand why and try again! ", timeout: 7000 }); 
+            this.$showInfoMsg({title: "Contact our Support Team" , message: "Contact our Team through our Discord Server in case you need any help!", timeout: 4000 });             
+          }
+          else {
+            this.$showErrorMsg({title:"FAILED TO DISABLE " + this.selectedInstrument.symbol + " AS COLLATERAL" ,message:  + "Check Etherescan to undersand why and try again! ", timeout: 7000 }); 
+            this.$showInfoMsg({title: "Contact our Support Team" , message: "Contact our Team through our Discord Server in case you need any help!", timeout: 4000 });             
+          }
         }
         this.showLoaderCollateral = false;
       }
@@ -247,11 +272,11 @@ export default {
           this.selectedInstrumentWalletState = this.$store.state.walletInstrumentStates.get(this.selectedInstrument.instrumentAddress);
           ExchangeDataEventBus.$emit(EventNames.ConnectedWallet_Instrument_Refreshed, {'instrumentAddress': this.selectedInstrument.instrumentAddress });    
           if (toDisplay) {
-            this.$showInfoMsg({message: "Connected Wallet's " + this.selectedInstrument.symbol +  " Balances and Farming Yields have been refreshed! " });        
+            this.$showInfoMsg({title: this.selectedInstrument.symbol + ": Balances Refreshed", message: "Connected Wallet's " + this.selectedInstrument.symbol +  " Balances have been refreshed! ", timeout: 3000  });        
           }
         }
         catch(error) {
-          console.log( 'FAILED' );
+            this.$showInfoMsg({title: this.selectedInstrument.symbol + ": Balances Refresh FAILED", message: "", timeout: 3000  });               
         }
           this.showLoaderRefresh = false;
       }
