@@ -899,10 +899,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/SighStream.sol": {
-			"keccak256": "0xe34143b5c333719e023ad2b375451736f6050e5055ffdeb9a23ccd1f1de759bc",
+			"keccak256": "0x60833b4752c7c765a1023507f1034e6ebec3c0048f142de7258069d0de90beae",
 			"urls": [
-				"bzz-raw://460818e2d4acfe6f55b8ba8406de66c188bedd2d6819df3c693ec870baa9af9b",
-				"dweb:/ipfs/QmfXyb7bSpkabfvew68126VggEQPvSshfpQEWY39bKFY7o"
+				"bzz-raw://fb584cf5d724e34124c7803a249fd1e59f60024d7666002897de54cd3a063db3",
+				"dweb:/ipfs/QmV5Mea2ZK3NDYE4APW21Gbh3QsbM3QtqGWoZxnq38Hjfp"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {

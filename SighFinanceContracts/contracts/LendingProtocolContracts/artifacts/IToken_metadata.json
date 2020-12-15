@@ -1349,10 +1349,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/IToken.sol": {
-			"keccak256": "0x362558b86d1dfeebe4278312a0576e86a03f4cc180e0705cee732a0822c553e8",
+			"keccak256": "0xb2e56bee0c4e35f7942dc67d41a9fcc30c5214065e06da6a2537cf40e2e32cbe",
 			"urls": [
-				"bzz-raw://68a9f12ab2446038926b69884fc84d2c9ebe9ba1380c56da4daefd72281706f7",
-				"dweb:/ipfs/QmZTNHZEnvzgB9VdKewr1QmUZiqNRpWF9DKFkUmDeEUvFo"
+				"bzz-raw://c762052ae3de6d4f11809a799e22e00586c2412fe466bac0fba4008d281fb040",
+				"dweb:/ipfs/QmdZcmMt2aff8LdSQs12c1MpvQm4BQrJg6TUbwpj2csMJ2"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPool.sol": {

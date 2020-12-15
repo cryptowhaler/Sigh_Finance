@@ -112,7 +112,7 @@ contract IToken is ERC20, ERC20Detailed {
         _;
     }
 
-    /**
+    /**   
      * @dev Used to validate transfers before actually executing them.
      * @param _user address of the user to check
      * @param _amount the amount to check

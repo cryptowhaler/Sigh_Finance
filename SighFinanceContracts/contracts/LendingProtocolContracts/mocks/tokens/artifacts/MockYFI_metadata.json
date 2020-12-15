@@ -365,17 +365,17 @@
 	},
 	"sources": {
 		"localhost/contracts/LendingProtocolContracts/mocks/tokens/MintableERC20.sol": {
-			"keccak256": "0xe554651c58ed73eb41e2e58551ba3e2e4c2d8e45c8e532fe77d8b19fadba7b5a",
+			"keccak256": "0xfb610db4f7992959fc2e40acd464646a301b75e37b2f76a90e5d6287788491ac",
 			"urls": [
-				"bzz-raw://106bf83dda6a1768fe1c9d7ca3f1e246072deaa1d1ca8f547330a9145978804c",
-				"dweb:/ipfs/QmV61y5HAtkxdzMGMWEs52mMQBapR6dQzApfnaQnDuMQ47"
+				"bzz-raw://0e72113dba1f7c7522000c5c575f7ca5f68c2aa002862d526b19ad4c24e30e35",
+				"dweb:/ipfs/QmfTkt3Vax2KhajrqCoJDgJdswkTVSDgrM3LsaNvHvXGgA"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/mocks/tokens/MockYFI.sol": {
-			"keccak256": "0x8b7a175bac60c29935281d42f031db8f30d56823651d4a61d7544c069969a73c",
+			"keccak256": "0x5e9940aecf7b74ffbf348084224ddec09c130c9ee498926dc2bfeae43bd1a2e7",
 			"urls": [
-				"bzz-raw://74a49763c84911ba1011a68a3a5334eff6261ae177f9872417b95aa839995b3c",
-				"dweb:/ipfs/QmRFjDopp9CCJ7hk9D7fGD73MB4EsCxWK9WtWW854fiXyU"
+				"bzz-raw://a468470953149f6e764adcfcb986e10f83cf7b79b86d271c63daaafa570e54b3",
+				"dweb:/ipfs/QmUuL7icM8rM3RCBHE2C4uFZecUddH8j5d7PTqgVMeUW3n"
 			]
 		},
 		"openzeppelin-solidity/contracts/GSN/Context.sol": {
