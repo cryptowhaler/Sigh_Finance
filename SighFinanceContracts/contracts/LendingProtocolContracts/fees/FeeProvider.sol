@@ -21,7 +21,7 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
 // ###### PROXY RELATED ##########
 // ###############################
 
-    uint256 constant public FEE_PROVIDER_REVISION = 0x2;
+    uint256 constant public FEE_PROVIDER_REVISION = 0x1;
 
     function getRevision() internal pure returns(uint256) {
         return FEE_PROVIDER_REVISION;

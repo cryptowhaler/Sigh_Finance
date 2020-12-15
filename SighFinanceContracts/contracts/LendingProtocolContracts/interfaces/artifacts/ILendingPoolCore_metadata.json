@@ -756,6 +756,32 @@
 						"type": "address"
 					}
 				],
+				"name": "getUserBorrowFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
 				"name": "getUserCurrentBorrowRateMode",
 				"outputs": [
 					{
@@ -783,58 +809,6 @@
 					}
 				],
 				"name": "getUserCurrentStableBorrowRate",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_user",
-						"type": "address"
-					}
-				],
-				"name": "getUserLastUpdate",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "timestamp",
-						"type": "uint256"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_instrument",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_user",
-						"type": "address"
-					}
-				],
-				"name": "getUserOriginationFee",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -1634,10 +1608,10 @@
 	},
 	"sources": {
 		"localhost/contracts/LendingProtocolContracts/interfaces/ILendingPoolCore.sol": {
-			"keccak256": "0x7b4d14500a811e6100583ea4168f66567c7e842b3c3c7ca32704aca7323a513a",
+			"keccak256": "0x6de387748ce98d233937f02b63fea0445ed7d7d0fc6d06645bcb157d18af3c29",
 			"urls": [
-				"bzz-raw://ae5c84ca69f5ee77ca36804be244ff54e91f83457bc45c4d2c313ba313f0f5bd",
-				"dweb:/ipfs/QmeTtfXzSbTB9njMu9vN1m7vdpeNrEHsd81u34AK8WjMZL"
+				"bzz-raw://03dfa8c2a0a99f803cf4602d8c00fe472147b2cd11cd36e6d71412a9bd99570e",
+				"dweb:/ipfs/QmWhQ4ygvkeVKPdJaKKfpwgUR7tK57aFUHQEBzMAxn8GyV"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {

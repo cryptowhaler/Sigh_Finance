@@ -145,7 +145,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 // ##############        PROXY RELATED  & ADDRESSES INITIALIZATION        ###############
 // ######################################################################################
 
-    uint256 constant private SIGH_DISTRIBUTION_REVISION = 0x4;
+    uint256 constant private SIGH_DISTRIBUTION_REVISION = 0x1;
 
     function getRevision() internal pure returns(uint256) {
         return SIGH_DISTRIBUTION_REVISION;

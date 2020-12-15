@@ -59,10 +59,6 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
     // constructing  
     constructor () public {
         _owner = _msgSender();
-        _mint(_owner,INITIAL_SUPPLY);
-        mintSnapshot  memory currentMintSnapshot = mintSnapshot({ cycle:Current_Cycle, schedule:Current_Schedule, inflationRate: uint(0), mintedAmount:INITIAL_SUPPLY, mintSpeed:uint(0), newTotalSupply:totalSupply(), minter: msg.sender, blockNumber: block.number });
-        mintSnapshots.push(currentMintSnapshot);                                                    // MINT SNAPSHOT ADDED TO THE ARRAY
-        emit SIGHMinted(currentMintSnapshot.minter, currentMintSnapshot.cycle, currentMintSnapshot.schedule, currentMintSnapshot.inflationRate, currentMintSnapshot.mintedAmount, currentMintSnapshot.mintSpeed, currentMintSnapshot.newTotalSupply,currentMintSnapshot.blockNumber );
     }
 
     // ################################################
@@ -78,6 +74,12 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
         SpeedController = newSpeedController;
         treasury = _treasury;
         _initSchedules();
+
+        _mint(SpeedController,INITIAL_SUPPLY);
+        mintSnapshot  memory currentMintSnapshot = mintSnapshot({ cycle:Current_Cycle, schedule:Current_Schedule, inflationRate: uint(0), mintedAmount:INITIAL_SUPPLY, mintSpeed:uint(0), newTotalSupply:totalSupply(), minter: msg.sender, blockNumber: block.number });
+        mintSnapshots.push(currentMintSnapshot);                                                    // MINT SNAPSHOT ADDED TO THE ARRAY
+        emit SIGHMinted(currentMintSnapshot.minter, currentMintSnapshot.cycle, currentMintSnapshot.schedule, currentMintSnapshot.inflationRate, currentMintSnapshot.mintedAmount, currentMintSnapshot.mintSpeed, currentMintSnapshot.newTotalSupply,currentMintSnapshot.blockNumber );
+
         
         emit MintingInitialized(SpeedController, treasury, block.number );
         mintingActivated = true;
@@ -90,21 +92,6 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
         _schedules[3] = Schedule(829, 1194, 800 );          // 3rd Mint Schedule
         _schedules[4] = Schedule(1195, 1560, 1600 );        // 4th Mint Schedule
     }
-
-    // function _initSchedules() private {
-    //     _schedules[0] = Schedule(1, 96, 100 );           // Genesis Mint Schedule
-    //     _schedules[1] = Schedule(97, 462, 200 );         // 1st Mint Schedule
-    //     _schedules[2] = Schedule(463, 828, 400 );        // 2nd Mint Schedule
-    //     _schedules[3] = Schedule(829, 1194, 800 );       // 12nd Mint Schedule
-    //     _schedules[4] = Schedule(1195, 1560, 1600 );     // 2nd Mint Schedule
-    //     _schedules[5] = Schedule(1561, 1926, 3200 );     // 2nd Mint Schedule
-    //     _schedules[6] = Schedule(1927, 2292, 6400 );     // 2nd Mint Schedule
-    //     _schedules[7] = Schedule(2293, 2658, 12800 );    // 2nd Mint Schedule
-    //     _schedules[8] = Schedule(2659, 3024, 25600 );    // 2nd Mint Schedule
-    //     _schedules[9] = Schedule(3025, 3390, 51200 );    // 2nd Mint Schedule
-    //     _schedules[10] = Schedule(3391, 3756, 102400 );  // 2nd Mint Schedule
-    // }
-
 
 
     // ############################################################

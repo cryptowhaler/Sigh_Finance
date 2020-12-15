@@ -43,7 +43,7 @@ contract LendingPoolCore is VersionedInitializable {
     mapping(address => CoreLibrary.InstrumentData) internal reserves;
     mapping(address => mapping(address => CoreLibrary.UserInstrumentData)) internal usersInstrumentData;
 
-    uint256 public constant CORE_REVISION = 0x11;          // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
+    uint256 public constant CORE_REVISION = 0x1;          // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
 
     /**
     * @dev Emitted when the state of a instrument is updated
@@ -1166,16 +1166,11 @@ contract LendingPoolCore is VersionedInitializable {
         return user.lastVariableBorrowCumulativeIndex;
     }
 
-    /**
-    * @dev the variable borrow index of the user is 0 if the user is not borrowing or borrowing at stable
-    * @param _instrument the address of the _instrument for which the information is needed
-    * @param _user the address of the user for which the information is needed
-    * @return the variable borrow index for the user
-    **/
-    function getUserLastUpdate(address _instrument, address _user) external view returns (uint256 timestamp) {
-        CoreLibrary.UserInstrumentData storage user = usersInstrumentData[_user][_instrument];
-        timestamp = user.lastUpdateTimestamp;
-    }
+
+    function getNormalizedSIGHPay( address instrumentAddress ) external view returns (uint) {
+        CoreLibrary.InstrumentData storage instrument = reserves[instrumentAddress];
+        return instrument.getNormalizedSIGHPay();
+    }    
 
 // ###################################################################
 // ################     INTERNAL VIEW FUNCTIONS       ################
@@ -1442,7 +1437,7 @@ contract LendingPoolCore is VersionedInitializable {
 
         // Cumulates the indexes
         instrument.updateCumulativeIndexes();
-        sighMechanism.updateSIGHSupplyIndex(_instrument); 
+        sighMechanism.updateSIGHSupplyIndex(instrumentAddress); 
 
         uint256 totalLiquidity = getInstrumentTotalLiquidity(instrumentAddress);
         uint256 normalizedSIGHPay = instrument.getNormalizedSIGHPay();
@@ -1458,14 +1453,10 @@ contract LendingPoolCore is VersionedInitializable {
             receiver.transfer(_sighPayAccured);
         }
 
-        updateInstrumentInterestRatesAndTimestampInternal(_instrument, 0, _amountRedeemed);
+        updateInstrumentInterestRatesAndTimestampInternal(instrumentAddress, 0, _sighPayAccured);
         emit SIGH_PAY_Amount_Transferred( address(receiver), address(instrumentAddress), totalLiquidity, _sighPayAccured, instrument.lastSIGHPayPaidIndex , instrument.lastSIGHPayCumulativeIndex );
     }
     
-    function getNormalizedSIGHPay( address instrumentAddress ) external view returns (uint) {
-        CoreLibrary.InstrumentData storage instrument = reserves[instrumentAddress];
-        return instrument.getNormalizedSIGHPay();
-    }
     
 
 }

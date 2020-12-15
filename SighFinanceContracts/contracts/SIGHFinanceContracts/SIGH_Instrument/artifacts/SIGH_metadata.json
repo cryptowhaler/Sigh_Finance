@@ -829,10 +829,10 @@
 	},
 	"sources": {
 		"localhost/contracts/SIGHFinanceContracts/SIGH_Instrument/Sigh.sol": {
-			"keccak256": "0xb97b040738ec9c1345ba41e7e651708f55605c43c3c833265632e0c2937490f4",
+			"keccak256": "0x651d33cee2b9f691e112a3e86e0314d53de2ae8d7e2d483e9c958ef12a366733",
 			"urls": [
-				"bzz-raw://df7a93e55f75ccc794ebc2b66cecc4d84771c1997f5dffe0593b58c217d5a600",
-				"dweb:/ipfs/Qme5JKJiNabGX965LnP5R9Cn21mwpWepGKDvhWhLCRqz52"
+				"bzz-raw://ad1e540e13790981ec44b2224e1463e2f6232e6ed9ae3bde1a13fcb251be4037",
+				"dweb:/ipfs/QmVDHpEYf743u6XpnVix3CMoZBW3itvgqdmbT8J2cMXoHL"
 			]
 		},
 		"openzeppelin-solidity/contracts/GSN/Context.sol": {

@@ -576,10 +576,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighFinanceConfigurator.sol": {
-			"keccak256": "0xee67983796725cd4ca7bf417f440f8243c4ebe903b769bffeb9dfd294711a875",
+			"keccak256": "0xa3854d6a7252e66b486aa847465d92a81b74a78c7c7fda9d65e6aa74e93d6111",
 			"urls": [
-				"bzz-raw://a87c332431ff48bfd9a55213f0f7b8ad9a82273807f8427aebc8cd727ba91ec0",
-				"dweb:/ipfs/QmUpmVdSCor4khe7sC2D96usURyeJPzZKZ12wZYvbXkWcG"
+				"bzz-raw://3896059c149910b520f84e777284c92fc18bca76f84463df88c5bfe547c8d136",
+				"dweb:/ipfs/QmZAAFnESZBF616id7WUr61YFd6AB8GSCq8txc5vVW5ACB"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {
@@ -590,10 +590,10 @@
 			]
 		},
 		"localhost/contracts/configuration/GlobalAddressesProvider.sol": {
-			"keccak256": "0x5d6d5159c1496e67cd10809e40ed0d6f046d5fe754972297b9715406152cc59f",
+			"keccak256": "0x7212661ab967282a1020cd673c58fe003d4324aee365413406fd5e86071645c6",
 			"urls": [
-				"bzz-raw://dd074e6cd0e6d6f043ec82c55beade9e9daaaf3c0f1fd1153a278d77da8b2321",
-				"dweb:/ipfs/QmZWmVzdTBj9qvxb42H7nKfUSKuKXHpxGVQMQZRVxJovit"
+				"bzz-raw://dbc516c3b7d6b4b44cc373714e90817e8c6bac2a5ca089f49e0ea3a3b4ac764c",
+				"dweb:/ipfs/QmZGNCyZzfxEozzdUxi6E7ZqWX6cUjw6hvD4xyN2YNxcwD"
 			]
 		},
 		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {
