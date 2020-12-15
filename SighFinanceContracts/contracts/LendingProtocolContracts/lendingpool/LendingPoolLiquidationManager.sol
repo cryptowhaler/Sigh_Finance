@@ -90,7 +90,7 @@ contract LendingPoolLiquidationManager is ReentrancyGuard, VersionedInitializabl
     **/
     event LiquidationCall( address indexed _collateral, address indexed _instrument, address indexed _user, uint256 _purchaseAmount, uint256 _liquidatedCollateralAmount, uint256 _accruedBorrowInterest, address _liquidator, bool _receiveIToken, uint256 _timestamp );
     
-    uint256 public constant LIQUIDATIONMANAGERL_REVISION = 0x2;             // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
+    uint256 public constant LIQUIDATIONMANAGERL_REVISION = 0x1;             // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
 
 
     // as the contract extends the VersionedInitializable contract to match the state of the LendingPool contract, the getRevision() function is needed.

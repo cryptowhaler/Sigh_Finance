@@ -1051,6 +1051,32 @@
 						"type": "address"
 					}
 				],
+				"name": "getUserLastUpdate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instrument",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
 				"name": "getUserUnderlyingAssetBalance",
 				"outputs": [
 					{
@@ -2061,6 +2087,14 @@
 					},
 					"return": "the user stable rate*"
 				},
+				"getUserLastUpdate(address,address)": {
+					"details": "the variable borrow index of the user is 0 if the user is not borrowing or borrowing at stable",
+					"params": {
+						"_instrument": "the address of the _instrument for which the information is needed",
+						"_user": "the address of the user for which the information is needed"
+					},
+					"return": "the variable borrow index for the user*"
+				},
 				"getUserUnderlyingAssetBalance(address,address)": {
 					"details": "gets the underlying asset balance (including the interest accured) of a user based on the corresponding iToken balance.",
 					"params": {
@@ -2329,10 +2363,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolCore.sol": {
-			"keccak256": "0xbc54ab70fe85054c8a49cc17123607a70fddb751d7469e1c1976ac6adfb5749f",
+			"keccak256": "0x300a19309c7df49399101ecaac48a4fcd0edb408a85b786c9af72c72f150e767",
 			"urls": [
-				"bzz-raw://f4bfa83aba54761a275fdc511e102591dc3f6c3d60f7d2b7b250bc6ca23b1645",
-				"dweb:/ipfs/QmTf8DH3fiiiJuZiwajuy9MQnnEzWquPHqWj1URMNxcFAt"
+				"bzz-raw://d4f1c0715ccdad1e00aa24a138e455d6506519ceb0e97a8bf342b34079d4e69c",
+				"dweb:/ipfs/QmaiDoh1LLv6sPnf7Ku519RrmUdzRRxWsg2Dkj19REc9ht"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {

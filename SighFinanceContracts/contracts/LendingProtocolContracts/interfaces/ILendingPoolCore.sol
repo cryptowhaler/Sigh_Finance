@@ -156,6 +156,7 @@ interface ILendingPoolCore {
     function getUserBorrowFee(address _instrument, address _user) external view returns (uint256) ;
     function getUserCurrentStableBorrowRate(address _instrument, address _user) external  view returns (uint256) ;
     function getUserVariableBorrowCumulativeIndex(address _instrument, address _user)  external view returns (uint256) ;
+    function getUserLastUpdate(address _instrument, address _user) external view returns (uint256 timestamp) ;
 
 
 // ##############################################################################################

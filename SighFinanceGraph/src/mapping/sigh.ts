@@ -55,7 +55,7 @@ export function handleSIGHMinted(event: SIGHMinted): void {
   sigh_state.totalSupply  = mint_snapshot.totalSupply
   sigh_state.save()
 
-  if (event.block.number >  BigInt.fromI32(22482561) ) {
+  if (event.block.number >  BigInt.fromI32(22603091) ) {
     updateSIGHPrice(sighID)
   }
 
@@ -82,7 +82,7 @@ export function handleMintingInitialized(event: MintingInitialized): void {
   sigh_state.speedController = event.params.speedController
   sigh_state.save()
 
-  if (event.block.number >  BigInt.fromI32(22482561) ) {
+  if (event.block.number >  BigInt.fromI32(22603091) ) {
     updateSIGHPrice(sighID)
   }
 }
@@ -109,7 +109,7 @@ export function handleSIGHBurned(event: SIGHBurned): void {
   sigh_state.currentMintSpeed =  sigh_state.currentMintSpeed_WEI.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
   sigh_state.save()
 
-  if (event.block.number >  BigInt.fromI32(22482561) ) {
+  if (event.block.number >  BigInt.fromI32(22603091) ) {
     updateSIGHPrice(sighID)
   }
 }
@@ -128,7 +128,7 @@ export function handleNewSchedule(event: NewSchedule): void {
 
   sigh_state.save()
 
-  if (event.block.number >  BigInt.fromI32(22482561) ) {
+  if (event.block.number >  BigInt.fromI32(22603091) ) {
     updateSIGHPrice(sighID)
   }
 }
@@ -145,7 +145,7 @@ export function handleTransfer(event: Transfer): void {
   sigh_state.address = Address.fromString(sighID)
   sigh_state.save()
 
-  if (event.block.number >  BigInt.fromI32(22482561) ) {
+  if (event.block.number >  BigInt.fromI32(22603091) ) {
     updateSIGHPrice(sighID)
   }
 }
@@ -164,8 +164,8 @@ function updateSIGHPrice( ID: string ) : void {
   sigh_state.priceETH = priceInETH.div( BigInt.fromI32(10).pow(priceInETH_Decimals as u8).toBigDecimal() ) 
 
   // GETTING ETH PRICE IN USD
-  let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12')).toBigDecimal()
-  let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12'))
+  let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0xBFa39B812Cab46cf930fd50e0Cd868A06bFe60e0')).toBigDecimal()
+  let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0xBFa39B812Cab46cf930fd50e0Cd868A06bFe60e0'))
   let ETHPriceInUSD = ETH_PriceInUSD.div(  BigInt.fromI32(10).pow(ETH_PriceInUSDDecimals as u8).toBigDecimal() )
   sigh_state.priceUSD = sigh_state.priceETH.times(ETHPriceInUSD)
 
@@ -213,7 +213,7 @@ export function createSIGH(addressID: string): SIGH_Instrument {
   sigh_token_contract.priceETH = BigDecimal.fromString('0')
   sigh_token_contract.priceUSD = BigDecimal.fromString('0')
 
-  sigh_token_contract.oracle = Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12',) 
+  sigh_token_contract.oracle = Address.fromString('0x667Dc203721D94Ea30055E25477c89732aC1C030',) 
 
   sigh_token_contract.maxSighVolatilityHarvestSpeedWEI = BigDecimal.fromString('0')
   sigh_token_contract.maxSighVolatilityHarvestSpeed = BigDecimal.fromString('0')

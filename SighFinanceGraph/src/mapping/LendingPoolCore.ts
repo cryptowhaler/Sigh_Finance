@@ -88,8 +88,8 @@ export function handleSIGH_Pay_Amount_Transferred(event: SIGH_PAY_Amount_Transfe
     StakingReward.distributedBalanceETH = StakingReward.distributedBalance.times(StakingReward.priceETH)
 
     // GETTING ETH PRICE IN USD
-    let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12')).toBigDecimal()
-    let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12'))
+    let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0xBFa39B812Cab46cf930fd50e0Cd868A06bFe60e0')).toBigDecimal()
+    let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0xBFa39B812Cab46cf930fd50e0Cd868A06bFe60e0'))
     let ETHPriceInUSD = ETH_PriceInUSD.div(  BigInt.fromI32(10).pow(ETH_PriceInUSDDecimals as u8).toBigDecimal() )
 
     StakingReward.priceUSD = StakingReward.priceETH.times(ETHPriceInUSD)
@@ -125,7 +125,7 @@ export function createStakingReward(ID: string): StakingRewards {
     staking_reward.name = null
     staking_reward.symbol = null
     staking_reward.decimals = BigInt.fromI32(0)
-    staking_reward.oracle =  Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12',) 
+    staking_reward.oracle =  Address.fromString('0x667Dc203721D94Ea30055E25477c89732aC1C030',) 
     staking_reward.priceETH = BigDecimal.fromString('0')
     staking_reward.priceUSD = BigDecimal.fromString('0')
 

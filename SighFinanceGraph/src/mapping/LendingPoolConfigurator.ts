@@ -256,8 +256,8 @@ export function updatePrice( ID: string ) : void {
     log.info('out of if statement: UPDATE PRICE - 1',[])
 
     // GETTING ETH PRICE IN USD
-    let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12')).toBigDecimal()
-    let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12'))
+    let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0xBFa39B812Cab46cf930fd50e0Cd868A06bFe60e0')).toBigDecimal()
+    let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0xBFa39B812Cab46cf930fd50e0Cd868A06bFe60e0'))
     let ETHPriceInUSD = ETH_PriceInUSD.div(  BigInt.fromI32(10).pow(ETH_PriceInUSDDecimals as u8).toBigDecimal() )
     instrument_state.priceUSD = instrument_state.priceETH.times(ETHPriceInUSD)
     
@@ -351,7 +351,7 @@ export function createInstrument(addressID: string): Instrument {
     instrument_state_initialized.sighStreamStorageAddress = Address.fromString('0x0000000000000000000000000000000000000000')
     instrument_state_initialized.sighStreamImplAddress = Address.fromString('0x0000000000000000000000000000000000000000')
 
-    instrument_state_initialized.oracle = Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12',) 
+    instrument_state_initialized.oracle = Address.fromString('0x667Dc203721D94Ea30055E25477c89732aC1C030',) 
 
     instrument_state_initialized.priceETH = BigDecimal.fromString('0')
     instrument_state_initialized.priceUSD = BigDecimal.fromString('0')

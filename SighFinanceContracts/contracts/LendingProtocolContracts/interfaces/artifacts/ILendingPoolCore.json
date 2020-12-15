@@ -80,6 +80,7 @@
 			"getUserBorrowFee(address,address)": "6f0d264b",
 			"getUserCurrentBorrowRateMode(address,address)": "1ca19f19",
 			"getUserCurrentStableBorrowRate(address,address)": "6fffab0c",
+			"getUserLastUpdate(address,address)": "66d103f3",
 			"getUserUnderlyingAssetBalance(address,address)": "18a4dbca",
 			"getUserVariableBorrowCumulativeIndex(address,address)": "f6ea8d76",
 			"initInstrument(address,address,uint256,address,address)": "18f9749a",
@@ -917,6 +918,32 @@
 				{
 					"internalType": "uint256",
 					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_instrument",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_user",
+					"type": "address"
+				}
+			],
+			"name": "getUserLastUpdate",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "timestamp",
 					"type": "uint256"
 				}
 			],

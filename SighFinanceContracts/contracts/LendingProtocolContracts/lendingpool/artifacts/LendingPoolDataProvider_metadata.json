@@ -572,17 +572,17 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/interfaces/ITokenInterface.sol": {
-			"keccak256": "0xa5496671da81524360364282a3eff338a0fb1719601e852218a78c864579c5a8",
+			"keccak256": "0x09a2d282d165d47ee92974987cc0bb6dc91a45b7f711521c363182fd5cab284c",
 			"urls": [
-				"bzz-raw://17cb99afb5f7d2f53280268129475f2b66e5cc4f828f9de521c84c5222ebe58e",
-				"dweb:/ipfs/QmYi2dQd18tGSXpzDVTFxviAHuXz82JGq9qaU85LM58yKC"
+				"bzz-raw://291ada200de9369914d68eb35879c0b534eac38d26894ca8fa8db2648e4c1048",
+				"dweb:/ipfs/QmaYiFwWbzkDEMqoG3wGGaNZYQWHwVbc5wBf8pYuM5oC4D"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolDataProvider.sol": {
-			"keccak256": "0xde1d74ad68040396d8087fffc1af763317c4196748ccccffb95858bc022c1dd5",
+			"keccak256": "0x9501e117b22fd867615347b9736060ab613842b9c23d171ad738a89e6863160d",
 			"urls": [
-				"bzz-raw://0c2c79cfe31932fb89b23272f9a94f3f7d9b2d495d19599d73c2ea628ee58924",
-				"dweb:/ipfs/QmUDrURpde2p563rhMuyNt6ZE9xtPkDWH4bJZwh8ugpmXg"
+				"bzz-raw://74e0878014e8ecec7571b7374ca01de27490237dcb9d841ce0813909e125f120",
+				"dweb:/ipfs/Qmb3pfCSGq5jKKf8AWNLVG7htsJXapXdBNb855CCqpmVUB"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
@@ -607,10 +607,10 @@
 			]
 		},
 		"localhost/contracts/configuration/GlobalAddressesProvider.sol": {
-			"keccak256": "0x5d6d5159c1496e67cd10809e40ed0d6f046d5fe754972297b9715406152cc59f",
+			"keccak256": "0x7212661ab967282a1020cd673c58fe003d4324aee365413406fd5e86071645c6",
 			"urls": [
-				"bzz-raw://dd074e6cd0e6d6f043ec82c55beade9e9daaaf3c0f1fd1153a278d77da8b2321",
-				"dweb:/ipfs/QmZWmVzdTBj9qvxb42H7nKfUSKuKXHpxGVQMQZRVxJovit"
+				"bzz-raw://dbc516c3b7d6b4b44cc373714e90817e8c6bac2a5ca089f49e0ea3a3b4ac764c",
+				"dweb:/ipfs/QmZGNCyZzfxEozzdUxi6E7ZqWX6cUjw6hvD4xyN2YNxcwD"
 			]
 		},
 		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {

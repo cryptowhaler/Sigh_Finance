@@ -26,7 +26,7 @@ contract LendingPoolDataProvider is VersionedInitializable {
 
     //specifies the health factor threshold at which the user position is liquidated. 1e18 by default, if the health factor drops below 1e18, the loan can be liquidated.
     uint256 public constant HEALTH_FACTOR_LIQUIDATION_THRESHOLD = 1e18;
-    uint256 public constant DATA_PROVIDER_REVISION = 0x2;           // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
+    uint256 public constant DATA_PROVIDER_REVISION = 0x1;           // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
 
     function getRevision() internal pure returns (uint256) {
         return DATA_PROVIDER_REVISION;
