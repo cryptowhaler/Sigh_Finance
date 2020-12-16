@@ -111,6 +111,7 @@ dataSources:
       file: SIGHSpeedController/SIGHSpeedController.wasm
       entities:
         - SIGHSpeedControllerState
+        - SpeedControllerSupportedProtocols
       abis:
         - name: SIGHSpeedController
           file: SIGHSpeedController/abis/SIGHSpeedController.json
@@ -167,6 +168,7 @@ dataSources:
       file: Lending_Pool/Lending_Pool.wasm
       entities:
         - Instruments
+        - userInstrumentState
       abis:
         - name: LendingPool
           file: Lending_Pool/abis/LendingPool.json
@@ -259,6 +261,7 @@ dataSources:
       file: Sigh_Distribution_Handler/Sigh_Distribution_Handler.wasm
       entities:
         - Instruments
+        - userInstrumentState
       abis:
         - name: SIGHDistributionHandler
           file: Sigh_Distribution_Handler/abis/SIGHDistributionHandler.json

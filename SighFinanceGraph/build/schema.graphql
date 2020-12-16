@@ -52,16 +52,13 @@ type SIGHSpeedControllerState @entity {
     initializationBlockNumber: BigInt!
 
     currentSIGHbalance: BigDecimal!
-    currentSIGHbalanceETH: BigDecimal!
-    currentSIGHbalanceUSD: BigDecimal!
-
     totalProtocolsSupported: BigInt!
     totalSighDripSpeed: BigDecimal!
 
-    # supportNewProtocolTxHistory: [Bytes!]!
-    # removeProtocolTxHistory: [Bytes!]!
+    supportNewProtocolTxHistory: [Bytes!]!
+    removeProtocolTxHistory: [Bytes!]!
 
-    # supportedProtocols: [SpeedControllerSupportedProtocols!]! @derivedFrom(field:"speedController")
+    supportedProtocols: [SpeedControllerSupportedProtocols!]! @derivedFrom(field:"speedController")
 }
 
 type SpeedControllerSupportedProtocols @entity { 
@@ -72,12 +69,7 @@ type SpeedControllerSupportedProtocols @entity {
     isSupported: Boolean!
 
     sighSpeed: BigDecimal!
-    sighSpeedETH: BigDecimal!
-    sighSpeedUSD: BigDecimal!
-
     totalDistributedAmount: BigDecimal!
-    totalDistributedAmountETH: BigDecimal!
-    totalDistributedAmountUSD: BigDecimal!
 
     updateDripSpeedTxHistory: [Bytes!]!
     dripTxHistory: [Bytes!]!
@@ -495,6 +487,7 @@ type Instrument @entity {
     creationBlockNumber: BigInt!
     SIGHPriceUSD:  BigDecimal!
 
+    users: [userInstrumentState!]! @derivedFrom(field:"instrument")
 }
 
 
@@ -595,6 +588,15 @@ type StakingRewards @entity {
     lendingPool_lastSIGHPayCumulativeIndex: BigInt!    
 }
 
+type userInstrumentState @entity {
+    id: ID!
+    instrument: Instrument!
+    lifeTimeDeposits: BigDecimal!
+    lifeTimeBorrows: BigDecimal!
+
+    lifeTime_SIGH_Farmed: BigDecimal!
+    healthFactor: BigDecimal!
+}
 
 
 
@@ -605,20 +607,8 @@ type StakingRewards @entity {
 
 
 
-# type SIGHSpeedController @entity {
-#     "ID is contract address"
-#     id: ID!
-#     ProtocolAddress: Bytes!
-#     TreasuryAddress: Bytes!
-#     ProtocolDistributionSpeed: BigInt!
-#     TreasuryDistributionSpeed: BigInt!
-#     recentlyDrippedToProtocol: BigInt!
-#     totalAmountDrippedToProtocol: BigInt!
-#     recentlyDrippedToTreasury: BigInt!
-#     totalAmountDrippedToTreasury: BigInt!
-#     totalAmountDripped: BigInt!
-#     ReservoirBalance: BigInt!
-# }
+
+
 
 # type SIGHTreasury @entity {
 #     "ID is contract address"
@@ -636,121 +626,8 @@ type StakingRewards @entity {
 #     totalSIGHBurned: BigInt!
 # }
 
-# # Sightroller global variables
-# type Sightroller @entity {
-#     "ID is set to 1"
-#     id: ID!
-#     "Address of price oracle the Sightroller uses, NewPriceOracle event "
-#     priceOracle: Bytes
-#     "Factor used to determine repayAmount for liquidating, NewCloseFactor event"
-#     closeFactor: BigInt
-#     "The percent bonus liquidators get for liquidating, NewLiquidationIncentive event"
-#     liquidationIncentive: BigInt
-#     "Max assets a single user can enter, NewMaxAssets event"
-#     maxAssets: BigInt
-#     "NewPauseGuardian event"
-#     pauseGuardian: Bytes
-#     "NewGsighRate event"
-#     gsighRate: BigInt
-
-#     sighRate: BigInt
-# }
 
 
-
-
-
-
-# # Supported Markets
-# type Market @entity { 
-#     "CToken address"
-#     id: ID!
-#     symbol: String!
-#     name: String!
-#     "The cToken contract balance of underlying asset"
-#     cash: BigDecimal!
-#     "Exchange rate of tokens / cTokens"
-#     exchangeRate:  BigDecimal!
-
-#     underlyingAddress: Bytes!
-#     underlyingName: String!
-#     "Underlying price of token in ETH (ex. 0.007 DAI)"
-#     underlyingPrice: BigDecimal!
-#     underlyingSymbol: String!
-#     "Underlying token price in USD"
-#     underlyingPriceUSD: BigDecimal!
-#     "Underlying token decimal length"
-#     underlyingDecimals: Int!
-
-#     "CToken supply. CTokens have 8 decimals"
-#     totalSupply: BigDecimal!
-
-#     "Borrows (amount) in the market"
-#     totalBorrows: BigDecimal!
-
-#     "Reserves stored in the contract"
-#     reserves: BigDecimal!
-
-#     "Yearly borrow rate. With 2102400 blocks per year"
-#     borrowRate: BigDecimal!
-
-#     "Yearly supply rate. With 2104400 blocks per year"
-#     supplyRate: BigDecimal!
-
-#     "Collateral factor determining how much one can borrow"
-#     collateralFactor: BigDecimal!
-
-#     "Number of borrowers active in the market"
-#     numberOfBorrowers: Int!
-
-#     "Number of suppliers active in the market"
-#     numberOfSuppliers: Int!
-
-#     "Address of the interest rate model"
-#     interestRateModelAddress: Bytes!
-
-#     # Fields that are not in compounds api
-
-#     "Block the market is updated to"
-#     accrualBlockNumber: Int!
-
-#     "Timestamp the market was most recently updated"
-#     blockTimestamp: Int!
-
-#     "The history of the markets borrow index return (Think S&P 500)"
-#     borrowIndex: BigDecimal!
-
-#     "The factor determining interest that goes to reserves"
-#     reserveFactor: BigInt!
-
-#     "Gsigh Distribution Speed, GsighSpeedUpdated event "
-#     gsighSpeed: BigInt!
-
-#     "DistributedSupplierGsigh event"
-#     totalGsighDistributedToSuppliers: BigInt!
-
-#     "DistributedBorrowerGsigh event"
-#     totalGsighDistributedToBorrowers: BigInt!
-
-#     "NewPendingAdmin event"
-#     pendingAdmin: Bytes!
-
-#     "NewAdmin event"
-#     admin: Bytes!    
-
-#     "NewSightroller event"
-#     sightroller: Bytes!    
-
-#     "SIGH Distribution Speed, SIGHSpeedUpdated event "
-#     sighSpeed: BigInt!
-
-#     blockNumberWhenSpeedWasUpdated: Int!
-
-#     savePriceSnapshot: BigInt!
-
-#     sighAccuredInCurrentCycle: BigInt!
-
-# }
 
 
 

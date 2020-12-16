@@ -7,16 +7,15 @@ import { SIGHSpeedController } from '../../generated/SIGHSpeedController/SIGHSpe
 
 export function handleDistributionInitialized(event: DistributionInitialized): void {
   log.info("in handleDistributionInitialized-1,",[])
-  let  num = event.address as Address
   let Sigh_SpeedController = SIGHSpeedControllerState.load(event.address.toHexString())
   if (Sigh_SpeedController == null) {
     Sigh_SpeedController = createSigh_SpeedController(event.address.toHexString())
-    Sigh_SpeedController.address = event.address.toHexString() as Address 
+    Sigh_SpeedController.address = event.address as Address 
   }
-  log.info("in handleDistributionInitialized-2,",[])
+  log.info("in handleDistributionInitialized-2,{}",[event.address.toHexString()])
   Sigh_SpeedController.isDripAllowed = true
   Sigh_SpeedController.initializationBlockNumber = event.params.blockNumber
-  log.info("in handleDistributionInitialized-3,",[])
+  log.info("in handleDistributionInitialized-3: {},",[Sigh_SpeedController.initializationBlockNumber.toString()])
 
   Sigh_SpeedController.save()
   log.info("in handleDistributionInitialized-4,",[])

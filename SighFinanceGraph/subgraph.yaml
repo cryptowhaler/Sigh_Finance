@@ -173,6 +173,7 @@ dataSources:
       file: ./src/mapping/LendingPool.ts
       entities:
         - Instruments
+        - userInstrumentState
       abis:
       - name: LendingPool
         file: ./abis/LendingPool.json
@@ -265,6 +266,7 @@ dataSources:
       file: ./src/mapping/SIGHDistributionHandler.ts
       entities:
         - Instruments
+        - userInstrumentState
       abis:
       - name: SIGHDistributionHandler
         file: ./abis/SIGHDistributionHandler.json

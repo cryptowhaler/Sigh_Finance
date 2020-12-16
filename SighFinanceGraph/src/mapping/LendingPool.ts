@@ -2,7 +2,7 @@ import { Address, BigInt,BigDecimal, log } from "@graphprotocol/graph-ts"
 import { Deposit, RedeemUnderlying, Borrow, Repay, Swap, InstrumentUsedAsCollateralEnabled
  , InstrumentUsedAsCollateralDisabled , RebalanceStableBorrowRate, 
  FlashLoan, OriginationFeeLiquidated , LiquidationCall } from "../../generated/Lending_Pool/LendingPool"
-import { Instrument,userInstrumentState } from "../../generated/schema"
+import { Instrument, userInstrumentState } from "../../generated/schema"
 import {updatePrice } from "./LendingPoolConfigurator"
 
 // event Deposit( address indexed _instrument, address indexed _user, uint256 _amount, uint16 indexed _referral, uint256 _timestamp);

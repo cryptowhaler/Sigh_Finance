@@ -3178,6 +3178,15 @@ export class Instrument extends Entity {
   set SIGHPriceUSD(value: BigDecimal) {
     this.set("SIGHPriceUSD", Value.fromBigDecimal(value));
   }
+
+  get users(): Array<string> {
+    let value = this.get("users");
+    return value.toStringArray();
+  }
+
+  set users(value: Array<string>) {
+    this.set("users", Value.fromStringArray(value));
+  }
 }
 
 export class SIGH_Distribution_SnapShot extends Entity {
@@ -3832,5 +3841,81 @@ export class StakingRewards extends Entity {
 
   set lendingPool_lastSIGHPayCumulativeIndex(value: BigInt) {
     this.set("lendingPool_lastSIGHPayCumulativeIndex", Value.fromBigInt(value));
+  }
+}
+
+export class userInstrumentState extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save userInstrumentState entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save userInstrumentState entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("userInstrumentState", id.toString(), this);
+  }
+
+  static load(id: string): userInstrumentState | null {
+    return store.get("userInstrumentState", id) as userInstrumentState | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get instrument(): string {
+    let value = this.get("instrument");
+    return value.toString();
+  }
+
+  set instrument(value: string) {
+    this.set("instrument", Value.fromString(value));
+  }
+
+  get lifeTimeDeposits(): BigDecimal {
+    let value = this.get("lifeTimeDeposits");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeDeposits(value: BigDecimal) {
+    this.set("lifeTimeDeposits", Value.fromBigDecimal(value));
+  }
+
+  get lifeTimeBorrows(): BigDecimal {
+    let value = this.get("lifeTimeBorrows");
+    return value.toBigDecimal();
+  }
+
+  set lifeTimeBorrows(value: BigDecimal) {
+    this.set("lifeTimeBorrows", Value.fromBigDecimal(value));
+  }
+
+  get lifeTime_SIGH_Farmed(): BigDecimal {
+    let value = this.get("lifeTime_SIGH_Farmed");
+    return value.toBigDecimal();
+  }
+
+  set lifeTime_SIGH_Farmed(value: BigDecimal) {
+    this.set("lifeTime_SIGH_Farmed", Value.fromBigDecimal(value));
+  }
+
+  get healthFactor(): BigDecimal {
+    let value = this.get("healthFactor");
+    return value.toBigDecimal();
+  }
+
+  set healthFactor(value: BigDecimal) {
+    this.set("healthFactor", Value.fromBigDecimal(value));
   }
 }
