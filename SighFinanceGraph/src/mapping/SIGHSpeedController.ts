@@ -20,7 +20,7 @@ export function handleDistributionInitialized(event: DistributionInitialized): v
   Sigh_SpeedController.save()
   log.info("in handleDistributionInitialized-4,",[])
 
-  UpdateSIGHBalance(event.address.toHexString())  // Updates current SIGH Balance (for SIGH Speed Controller)
+  // UpdateSIGHBalance(event.address.toHexString())  // Updates current SIGH Balance (for SIGH Speed Controller)
 }
 
 
@@ -28,12 +28,12 @@ export function handleDistributionInitialized(event: DistributionInitialized): v
 export function handleNewProtocolSupported(event: NewProtocolSupported): void {
   log.info("in handleNewProtocolSupported-1, {}",[])
   let decimalAdj = BigInt.fromI32(10).pow(18 as u8).toBigDecimal()
-  log.info("in handleNewProtocolSupported-2, {}",[])
+  log.info("in handleNewProtocolSupported-2, {}",[decimalAdj.toString()])
 
   let Sigh_SpeedController = SIGHSpeedControllerState.load(event.address.toHexString())
   if (Sigh_SpeedController == null) {
     Sigh_SpeedController = createSigh_SpeedController(event.address.toHexString())
-    Sigh_SpeedController.address = event.address.toHexString() as Address 
+    Sigh_SpeedController.address = event.address as Address 
   }
   log.info("in handleNewProtocolSupported-3, {}",[])
   Sigh_SpeedController.supportNewProtocolTxHistory.push( event.transaction.hash )
@@ -43,6 +43,7 @@ export function handleNewProtocolSupported(event: NewProtocolSupported): void {
   let supportedProtocolState = SpeedControllerSupportedProtocols.load(supportedProtocolID)
   if (supportedProtocolState == null ) {
     supportedProtocolState = createSupportedProtocolState(supportedProtocolID)
+    supportedProtocolState.speedController = event.address.toHexString()
   }
   Sigh_SpeedController.totalSighDripSpeed = Sigh_SpeedController.totalSighDripSpeed.minus( supportedProtocolState.sighSpeed )
   log.info("in handleNewProtocolSupported-4, {}",[])
@@ -56,7 +57,8 @@ export function handleNewProtocolSupported(event: NewProtocolSupported): void {
 
   supportedProtocolState.save()
   Sigh_SpeedController.save()
-  UpdateSIGHBalance(event.address.toHexString())  // Updates current SIGH Balance (for SIGH Speed Controller)
+
+  // UpdateSIGHBalance(event.address.toHexString())  // Updates current SIGH Balance (for SIGH Speed Controller)
 }
 
 
@@ -132,9 +134,6 @@ function UpdateSIGHBalance( ID: string ) : void {
   log.info("in UpdateSIGHBalance-3, {}",[])
   Sigh_SpeedController.currentSIGHbalance = _SighSpeedControllerContract.getSIGHBalance().toBigDecimal().div(decimalAdj)  
   log.info("in UpdateSIGHBalance-4, {}",[Sigh_SpeedController.currentSIGHbalance.toString()])
-
-
-
 
   Sigh_SpeedController.save()
 }
