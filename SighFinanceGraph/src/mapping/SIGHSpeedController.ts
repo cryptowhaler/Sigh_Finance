@@ -26,7 +26,7 @@ export function handleDistributionInitialized(event: DistributionInitialized): v
 
 
 export function handleNewProtocolSupported(event: NewProtocolSupported): void {
-  log.info("in handleNewProtocolSupported - 1, {}",[])
+  log.info("in handleNewProtocolSupported - 1,",[])
   let decimalAdj = BigInt.fromI32(10).pow(18 as u8).toBigDecimal()
   log.info("in handleNewProtocolSupported-2, {}",[decimalAdj.toString()])
 
@@ -35,7 +35,7 @@ export function handleNewProtocolSupported(event: NewProtocolSupported): void {
     Sigh_SpeedController = createSigh_SpeedController(event.address.toHexString())
     Sigh_SpeedController.address = event.address as Address 
   }
-  log.info("in handleNewProtocolSupported-3, {}",[])
+  log.info("in handleNewProtocolSupported-3,",[])
   Sigh_SpeedController.supportNewProtocolTxHistory.push( event.transaction.hash )
   Sigh_SpeedController.totalProtocolsSupported = Sigh_SpeedController.totalProtocolsSupported.plus(BigInt.fromI32(1))
 
@@ -46,7 +46,7 @@ export function handleNewProtocolSupported(event: NewProtocolSupported): void {
     supportedProtocolState.speedController = event.address.toHexString()
   }
   Sigh_SpeedController.totalSighDripSpeed = Sigh_SpeedController.totalSighDripSpeed.minus( supportedProtocolState.sighSpeed )
-  log.info("in handleNewProtocolSupported-4, {}",[])
+  log.info("in handleNewProtocolSupported-4,",[])
 
   supportedProtocolState.isSupported = true
   supportedProtocolState.address = event.params.protocolAddress
