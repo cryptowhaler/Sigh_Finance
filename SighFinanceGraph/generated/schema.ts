@@ -304,6 +304,287 @@ export class AddressesProvider extends Entity {
   }
 }
 
+export class SIGHSpeedControllerState extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id !== null,
+      "Cannot save SIGHSpeedControllerState entity without an ID"
+    );
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save SIGHSpeedControllerState entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("SIGHSpeedControllerState", id.toString(), this);
+  }
+
+  static load(id: string): SIGHSpeedControllerState | null {
+    return store.get(
+      "SIGHSpeedControllerState",
+      id
+    ) as SIGHSpeedControllerState | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get address(): Bytes {
+    let value = this.get("address");
+    return value.toBytes();
+  }
+
+  set address(value: Bytes) {
+    this.set("address", Value.fromBytes(value));
+  }
+
+  get isDripAllowed(): boolean {
+    let value = this.get("isDripAllowed");
+    return value.toBoolean();
+  }
+
+  set isDripAllowed(value: boolean) {
+    this.set("isDripAllowed", Value.fromBoolean(value));
+  }
+
+  get initializationBlockNumber(): BigInt {
+    let value = this.get("initializationBlockNumber");
+    return value.toBigInt();
+  }
+
+  set initializationBlockNumber(value: BigInt) {
+    this.set("initializationBlockNumber", Value.fromBigInt(value));
+  }
+
+  get currentSIGHbalance(): BigDecimal {
+    let value = this.get("currentSIGHbalance");
+    return value.toBigDecimal();
+  }
+
+  set currentSIGHbalance(value: BigDecimal) {
+    this.set("currentSIGHbalance", Value.fromBigDecimal(value));
+  }
+
+  get currentSIGHbalanceETH(): BigDecimal {
+    let value = this.get("currentSIGHbalanceETH");
+    return value.toBigDecimal();
+  }
+
+  set currentSIGHbalanceETH(value: BigDecimal) {
+    this.set("currentSIGHbalanceETH", Value.fromBigDecimal(value));
+  }
+
+  get currentSIGHbalanceUSD(): BigDecimal {
+    let value = this.get("currentSIGHbalanceUSD");
+    return value.toBigDecimal();
+  }
+
+  set currentSIGHbalanceUSD(value: BigDecimal) {
+    this.set("currentSIGHbalanceUSD", Value.fromBigDecimal(value));
+  }
+
+  get totalProtocolsSupported(): BigInt {
+    let value = this.get("totalProtocolsSupported");
+    return value.toBigInt();
+  }
+
+  set totalProtocolsSupported(value: BigInt) {
+    this.set("totalProtocolsSupported", Value.fromBigInt(value));
+  }
+
+  get totalSighDripSpeed(): BigDecimal {
+    let value = this.get("totalSighDripSpeed");
+    return value.toBigDecimal();
+  }
+
+  set totalSighDripSpeed(value: BigDecimal) {
+    this.set("totalSighDripSpeed", Value.fromBigDecimal(value));
+  }
+
+  get supportNewProtocolTxHistory(): Array<string> {
+    let value = this.get("supportNewProtocolTxHistory");
+    return value.toStringArray();
+  }
+
+  set supportNewProtocolTxHistory(value: Array<string>) {
+    this.set("supportNewProtocolTxHistory", Value.fromStringArray(value));
+  }
+
+  get removeProtocolTxHistory(): Array<string> {
+    let value = this.get("removeProtocolTxHistory");
+    return value.toStringArray();
+  }
+
+  set removeProtocolTxHistory(value: Array<string>) {
+    this.set("removeProtocolTxHistory", Value.fromStringArray(value));
+  }
+
+  get supportedProtocols(): Array<string> {
+    let value = this.get("supportedProtocols");
+    return value.toStringArray();
+  }
+
+  set supportedProtocols(value: Array<string>) {
+    this.set("supportedProtocols", Value.fromStringArray(value));
+  }
+}
+
+export class SpeedControllerSupportedProtocols extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id !== null,
+      "Cannot save SpeedControllerSupportedProtocols entity without an ID"
+    );
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save SpeedControllerSupportedProtocols entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("SpeedControllerSupportedProtocols", id.toString(), this);
+  }
+
+  static load(id: string): SpeedControllerSupportedProtocols | null {
+    return store.get(
+      "SpeedControllerSupportedProtocols",
+      id
+    ) as SpeedControllerSupportedProtocols | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get speedController(): string {
+    let value = this.get("speedController");
+    return value.toString();
+  }
+
+  set speedController(value: string) {
+    this.set("speedController", Value.fromString(value));
+  }
+
+  get address(): Bytes {
+    let value = this.get("address");
+    return value.toBytes();
+  }
+
+  set address(value: Bytes) {
+    this.set("address", Value.fromBytes(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    return value.toString();
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
+  get isSupported(): boolean {
+    let value = this.get("isSupported");
+    return value.toBoolean();
+  }
+
+  set isSupported(value: boolean) {
+    this.set("isSupported", Value.fromBoolean(value));
+  }
+
+  get sighSpeed(): BigDecimal {
+    let value = this.get("sighSpeed");
+    return value.toBigDecimal();
+  }
+
+  set sighSpeed(value: BigDecimal) {
+    this.set("sighSpeed", Value.fromBigDecimal(value));
+  }
+
+  get sighSpeedETH(): BigDecimal {
+    let value = this.get("sighSpeedETH");
+    return value.toBigDecimal();
+  }
+
+  set sighSpeedETH(value: BigDecimal) {
+    this.set("sighSpeedETH", Value.fromBigDecimal(value));
+  }
+
+  get sighSpeedUSD(): BigDecimal {
+    let value = this.get("sighSpeedUSD");
+    return value.toBigDecimal();
+  }
+
+  set sighSpeedUSD(value: BigDecimal) {
+    this.set("sighSpeedUSD", Value.fromBigDecimal(value));
+  }
+
+  get totalDistributedAmount(): BigDecimal {
+    let value = this.get("totalDistributedAmount");
+    return value.toBigDecimal();
+  }
+
+  set totalDistributedAmount(value: BigDecimal) {
+    this.set("totalDistributedAmount", Value.fromBigDecimal(value));
+  }
+
+  get totalDistributedAmountETH(): BigDecimal {
+    let value = this.get("totalDistributedAmountETH");
+    return value.toBigDecimal();
+  }
+
+  set totalDistributedAmountETH(value: BigDecimal) {
+    this.set("totalDistributedAmountETH", Value.fromBigDecimal(value));
+  }
+
+  get totalDistributedAmountUSD(): BigDecimal {
+    let value = this.get("totalDistributedAmountUSD");
+    return value.toBigDecimal();
+  }
+
+  set totalDistributedAmountUSD(value: BigDecimal) {
+    this.set("totalDistributedAmountUSD", Value.fromBigDecimal(value));
+  }
+
+  get updateDripSpeedTxHistory(): Array<string> {
+    let value = this.get("updateDripSpeedTxHistory");
+    return value.toStringArray();
+  }
+
+  set updateDripSpeedTxHistory(value: Array<string>) {
+    this.set("updateDripSpeedTxHistory", Value.fromStringArray(value));
+  }
+
+  get dripTxHistory(): Array<string> {
+    let value = this.get("dripTxHistory");
+    return value.toStringArray();
+  }
+
+  set dripTxHistory(value: Array<string>) {
+    this.set("dripTxHistory", Value.fromStringArray(value));
+  }
+}
+
 export class SIGH_FINANCE extends Entity {
   constructor(id: string) {
     super();
@@ -1335,6 +1616,15 @@ export class MintSnapshot extends Entity {
 
   set blockNumber(value: BigInt) {
     this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get txHash(): string {
+    let value = this.get("txHash");
+    return value.toString();
+  }
+
+  set txHash(value: string) {
+    this.set("txHash", Value.fromString(value));
   }
 }
 

@@ -50,6 +50,7 @@ export function handleSIGHMinted(event: SIGHMinted): void {
   mint_snapshot.totalSighBurnt_WEI = sigh_state.totalSIGHBurnt_WEI
   mint_snapshot.totalSighBurnt  = sigh_state.totalSIGHBurnt 
   mint_snapshot.blockNumber = event.params.block_number
+  mint_snapshot.txHash = event.transaction.hash.toHex()
 
   sigh_state.totalSupply_WEI = mint_snapshot.totalSupply_WEI
   sigh_state.totalSupply  = mint_snapshot.totalSupply

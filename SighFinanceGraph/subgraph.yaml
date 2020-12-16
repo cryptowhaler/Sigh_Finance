@@ -4,7 +4,6 @@ repository : https://github.com/cryptowhaler/Sigh_Finance/SighFinanceGraph
 schema:
   file: ./schema.graphql
 dataSources:
-
   - kind: ethereum/contract
     name: AddressesProvider
     network: kovan
@@ -101,6 +100,35 @@ dataSources:
           handler: handleTransfer
           
 
+  - kind: ethereum/contract
+    name: SIGH_Speed_Controller
+    network: kovan
+    source:
+      address: "0x9384cc955D80A6bE5d3ca5f00565A0238994cf91"
+      abi: SIGHSpeedController
+      startBlock: 21040723
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping/SIGHSpeedController.ts
+      entities:
+        - SIGHSpeedControllerState
+        - SpeedControllerSupportedProtocols
+      abis:
+      - name: SIGHSpeedController
+        file: ./abis/SIGHSpeedController.json
+      eventHandlers:
+        - event: DistributionInitialized(uint256)
+          handler: handleDistributionInitialized
+        - event: NewProtocolSupported(address,uint256,uint256,uint256)
+          handler: handleNewProtocolSupported
+        - event: ProtocolRemoved(address,uint256,uint256)
+          handler: handleProtocolRemoved        
+        - event: DistributionSpeedChanged(address,uint256,uint256,uint256)
+          handler: handleDistributionSpeedChanged         
+        - event: Dripped(address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleDripped     
 
   - kind: ethereum/contract
     name: Lending_Pool_Core
@@ -285,34 +313,7 @@ dataSources:
 
 
 
-  # - kind: ethereum/contract
-  #   name: SIGH_SpeedController
-  #   network: kovan
-  #   source:
-  #     address: "0x9748692378cD832db750009BEF7Ea3f6862f9fD9"
-  #     abi: SIGHSpeedController
-  #     startBlock: 21040723
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.4
-  #     language: wasm/assemblyscript
-  #     file: ./src/mapping/SIGHSpeedController.ts
-  #     entities:
-  #       - SIGHSpeedController
-  #     abis:
-  #     - name: SIGHSpeedController
-  #       file: ./abis/SIGHSpeedController.json
-  #     eventHandlers:
-  #       - event: DistributionInitialized(address,address)
-  #         handler: handleDistributionInitialized
-  #       - event: ProtocolDistributionSpeedChanged(uint256,uint256)
-  #         handler: handleProtocolDistributionSpeedChanged
-  #       - event: TreasuryDistributionSpeedChanged(uint256,uint256)
-  #         handler: handleTreasuryDistributionSpeedChanged        
-  #       - event: DrippedToProtocol(uint256,uint256,uint256)
-  #         handler: handleDrippedToProtocol         
-  #       - event: DrippedToTreasury(uint256,uint256,uint256)
-  #         handler: handleDrippedToTreasury         
+    
 
   # - kind: ethereum/contract
   #   name: SIGH_Treasury

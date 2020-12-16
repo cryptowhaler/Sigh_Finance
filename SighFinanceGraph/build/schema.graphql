@@ -45,7 +45,43 @@ type AddressesProvider @entity {
     SIGH_Treasury_Impl: Bytes!
 }
 
+type SIGHSpeedControllerState @entity {
+    id: ID!
+    address: Bytes!
+    isDripAllowed: Boolean!
+    initializationBlockNumber: BigInt!
 
+    currentSIGHbalance: BigDecimal!
+    currentSIGHbalanceETH: BigDecimal!
+    currentSIGHbalanceUSD: BigDecimal!
+
+    totalProtocolsSupported: BigInt!
+    totalSighDripSpeed: BigDecimal!
+
+    supportNewProtocolTxHistory: [String!]!
+    removeProtocolTxHistory: [String!]!
+
+    supportedProtocols: [SpeedControllerSupportedProtocols!]! @derivedFrom(field:"speedController")
+}
+
+type SpeedControllerSupportedProtocols @entity { 
+    id: ID!
+    speedController: SIGHSpeedControllerState!
+    address: Bytes!
+    name: String!
+    isSupported: Boolean!
+
+    sighSpeed: BigDecimal!
+    sighSpeedETH: BigDecimal!
+    sighSpeedUSD: BigDecimal!
+
+    totalDistributedAmount: BigDecimal!
+    totalDistributedAmountETH: BigDecimal!
+    totalDistributedAmountUSD: BigDecimal!
+
+    updateDripSpeedTxHistory: [String!]!
+    dripTxHistory: [String!]!
+}
 
 
 type SIGH_FINANCE @entity {    
@@ -210,6 +246,7 @@ type MintSnapshot @entity {
     totalSighBurnt: BigDecimal!
     minter: Bytes!
     blockNumber: BigInt!
+    txHash: String!
 }
 
 

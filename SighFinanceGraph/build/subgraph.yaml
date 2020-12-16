@@ -98,6 +98,35 @@ dataSources:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
   - kind: ethereum/contract
+    name: SIGH_Speed_Controller
+    network: kovan
+    source:
+      address: "0x9384cc955D80A6bE5d3ca5f00565A0238994cf91"
+      abi: SIGHSpeedController
+      startBlock: 21040723
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: SIGH_Speed_Controller/SIGH_Speed_Controller.wasm
+      entities:
+        - SIGHSpeedControllerState
+        - SpeedControllerSupportedProtocols
+      abis:
+        - name: SIGHSpeedController
+          file: SIGH_Speed_Controller/abis/SIGHSpeedController.json
+      eventHandlers:
+        - event: DistributionInitialized(uint256)
+          handler: handleDistributionInitialized
+        - event: NewProtocolSupported(address,uint256,uint256,uint256)
+          handler: handleNewProtocolSupported
+        - event: ProtocolRemoved(address,uint256,uint256)
+          handler: handleProtocolRemoved
+        - event: DistributionSpeedChanged(address,uint256,uint256,uint256)
+          handler: handleDistributionSpeedChanged
+        - event: Dripped(address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleDripped
+  - kind: ethereum/contract
     name: Lending_Pool_Core
     network: kovan
     source:
