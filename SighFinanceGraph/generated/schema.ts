@@ -411,33 +411,6 @@ export class SIGHSpeedControllerState extends Entity {
   set totalSighDripSpeed(value: BigDecimal) {
     this.set("totalSighDripSpeed", Value.fromBigDecimal(value));
   }
-
-  get supportNewProtocolTxHistory(): Array<string> {
-    let value = this.get("supportNewProtocolTxHistory");
-    return value.toStringArray();
-  }
-
-  set supportNewProtocolTxHistory(value: Array<string>) {
-    this.set("supportNewProtocolTxHistory", Value.fromStringArray(value));
-  }
-
-  get removeProtocolTxHistory(): Array<string> {
-    let value = this.get("removeProtocolTxHistory");
-    return value.toStringArray();
-  }
-
-  set removeProtocolTxHistory(value: Array<string>) {
-    this.set("removeProtocolTxHistory", Value.fromStringArray(value));
-  }
-
-  get supportedProtocols(): Array<string> {
-    let value = this.get("supportedProtocols");
-    return value.toStringArray();
-  }
-
-  set supportedProtocols(value: Array<string>) {
-    this.set("supportedProtocols", Value.fromStringArray(value));
-  }
 }
 
 export class SpeedControllerSupportedProtocols extends Entity {
@@ -566,22 +539,22 @@ export class SpeedControllerSupportedProtocols extends Entity {
     this.set("totalDistributedAmountUSD", Value.fromBigDecimal(value));
   }
 
-  get updateDripSpeedTxHistory(): Array<string> {
+  get updateDripSpeedTxHistory(): Array<Bytes> {
     let value = this.get("updateDripSpeedTxHistory");
-    return value.toStringArray();
+    return value.toBytesArray();
   }
 
-  set updateDripSpeedTxHistory(value: Array<string>) {
-    this.set("updateDripSpeedTxHistory", Value.fromStringArray(value));
+  set updateDripSpeedTxHistory(value: Array<Bytes>) {
+    this.set("updateDripSpeedTxHistory", Value.fromBytesArray(value));
   }
 
-  get dripTxHistory(): Array<string> {
+  get dripTxHistory(): Array<Bytes> {
     let value = this.get("dripTxHistory");
-    return value.toStringArray();
+    return value.toBytesArray();
   }
 
-  set dripTxHistory(value: Array<string>) {
-    this.set("dripTxHistory", Value.fromStringArray(value));
+  set dripTxHistory(value: Array<Bytes>) {
+    this.set("dripTxHistory", Value.fromBytesArray(value));
   }
 }
 

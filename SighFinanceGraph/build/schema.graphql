@@ -58,10 +58,10 @@ type SIGHSpeedControllerState @entity {
     totalProtocolsSupported: BigInt!
     totalSighDripSpeed: BigDecimal!
 
-    supportNewProtocolTxHistory: [String!]!
-    removeProtocolTxHistory: [String!]!
+    # supportNewProtocolTxHistory: [Bytes!]!
+    # removeProtocolTxHistory: [Bytes!]!
 
-    supportedProtocols: [SpeedControllerSupportedProtocols!]! @derivedFrom(field:"speedController")
+    # supportedProtocols: [SpeedControllerSupportedProtocols!]! @derivedFrom(field:"speedController")
 }
 
 type SpeedControllerSupportedProtocols @entity { 
@@ -79,8 +79,8 @@ type SpeedControllerSupportedProtocols @entity {
     totalDistributedAmountETH: BigDecimal!
     totalDistributedAmountUSD: BigDecimal!
 
-    updateDripSpeedTxHistory: [String!]!
-    dripTxHistory: [String!]!
+    updateDripSpeedTxHistory: [Bytes!]!
+    dripTxHistory: [Bytes!]!
 }
 
 

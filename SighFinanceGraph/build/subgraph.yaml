@@ -11,7 +11,7 @@ dataSources:
     source:
       address: "0x8d25D2262D6c1a2486C633DD34E26e069E3647e7"
       abi: AddressesProvider
-      startBlock: 22305514
+      startBlock: 22601871
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -71,7 +71,7 @@ dataSources:
     source:
       address: "0x043906aB5a1bA7A5c52ff2eF839D2b0c2a19CeBa"
       abi: SIGH
-      startBlock: 22305514
+      startBlock: 22601871
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -98,23 +98,22 @@ dataSources:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
   - kind: ethereum/contract
-    name: SIGH_Speed_Controller
+    name: SIGHSpeedController
     network: kovan
     source:
       address: "0x9384cc955D80A6bE5d3ca5f00565A0238994cf91"
       abi: SIGHSpeedController
-      startBlock: 21040723
+      startBlock: 22601871
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: SIGH_Speed_Controller/SIGH_Speed_Controller.wasm
+      file: SIGHSpeedController/SIGHSpeedController.wasm
       entities:
         - SIGHSpeedControllerState
-        - SpeedControllerSupportedProtocols
       abis:
         - name: SIGHSpeedController
-          file: SIGH_Speed_Controller/abis/SIGHSpeedController.json
+          file: SIGHSpeedController/abis/SIGHSpeedController.json
       eventHandlers:
         - event: DistributionInitialized(uint256)
           handler: handleDistributionInitialized
@@ -132,7 +131,7 @@ dataSources:
     source:
       address: "0xfD7559E153f15A6E6343b2C3D77f2A7357D0e41b"
       abi: LendingPoolCore
-      startBlock: 22305514
+      startBlock: 22601871
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -160,7 +159,7 @@ dataSources:
     source:
       address: "0x25A661E733FD7aebC4788fc5D19624f40624247c"
       abi: LendingPool
-      startBlock: 22305514
+      startBlock: 22601871
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -208,7 +207,7 @@ dataSources:
     source:
       address: "0x28bD63C31242e2DaCf456b5636783463B8d639bd"
       abi: LendingPoolConfigurator
-      startBlock: 22305514
+      startBlock: 22601871
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -252,7 +251,7 @@ dataSources:
     source:
       address: "0xFEb7CF0eBa9A65Dc2977A85fAc38566C5bB9a679"
       abi: SIGHDistributionHandler
-      startBlock: 22305514
+      startBlock: 22601871
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
