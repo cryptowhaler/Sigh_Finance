@@ -26,7 +26,7 @@ export function handleDistributionInitialized(event: DistributionInitialized): v
 
 
 export function handleNewProtocolSupported(event: NewProtocolSupported): void {
-  log.info("in handleNewProtocolSupported-1, {}",[])
+  log.info("in handleNewProtocolSupported - 1, {}",[])
   let decimalAdj = BigInt.fromI32(10).pow(18 as u8).toBigDecimal()
   log.info("in handleNewProtocolSupported-2, {}",[decimalAdj.toString()])
 
