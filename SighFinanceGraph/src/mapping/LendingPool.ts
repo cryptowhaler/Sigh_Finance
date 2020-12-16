@@ -2,7 +2,7 @@ import { Address, BigInt,BigDecimal, log } from "@graphprotocol/graph-ts"
 import { Deposit, RedeemUnderlying, Borrow, Repay, Swap, InstrumentUsedAsCollateralEnabled
  , InstrumentUsedAsCollateralDisabled , RebalanceStableBorrowRate, 
  FlashLoan, OriginationFeeLiquidated , LiquidationCall } from "../../generated/Lending_Pool/LendingPool"
-import { Instrument } from "../../generated/schema"
+import { Instrument,userInstrumentState } from "../../generated/schema"
 import {updatePrice } from "./LendingPoolConfigurator"
 
 // event Deposit( address indexed _instrument, address indexed _user, uint256 _amount, uint16 indexed _referral, uint256 _timestamp);
@@ -32,6 +32,17 @@ export function handleDeposit(event: Deposit): void {
     instrumentState.save()
 
     updatePrice(instrumentId)
+
+    // USER'S STATE
+    let userInstrumentStateId = event.params._user.toHexString() + event.params._instrument.toHexString() 
+    let current_userInstrumentState = userInstrumentState.load(userInstrumentStateId)
+    if (current_userInstrumentState == null) {
+        current_userInstrumentState = createUser(userInstrumentStateId)
+        current_userInstrumentState.instrument = event.params._instrument.toHexString()
+    }
+    current_userInstrumentState.lifeTimeDeposits = current_userInstrumentState.lifeTimeDeposits.plus( event.params._amount.toBigDecimal().div(decimalAdj) )
+    current_userInstrumentState.save()
+
 }
 
 
@@ -109,6 +120,17 @@ export function handleBorrow(event: Borrow): void {
 
     instrumentState.save()    
     updatePrice(instrumentId)
+
+    // USER'S STATE
+    let userInstrumentStateId = event.params._user.toHexString() + event.params._instrument.toHexString() 
+    let current_userInstrumentState = userInstrumentState.load(userInstrumentStateId)
+    if (current_userInstrumentState == null) {
+        current_userInstrumentState = createUser(userInstrumentStateId)
+        current_userInstrumentState.instrument = event.params._instrument.toHexString()
+    }
+    current_userInstrumentState.lifeTimeBorrows = current_userInstrumentState.lifeTimeBorrows.plus( event.params._amount.toBigDecimal().div(decimalAdj) )
+    current_userInstrumentState.save()
+
 }
 
 
@@ -163,5 +185,24 @@ export function handleOriginationFeeLiquidated(event: OriginationFeeLiquidated):
 }
 
 export function handleLiquidationCall(event: LiquidationCall): void {
+}
+
+
+
+ // ############################################
+// ###########   CREATING ENTITIES   ##########
+// ############################################ 
+
+
+export function createUser(id: string) : userInstrumentState {
+   let newUser = new userInstrumentState(id)
+   newUser.instrument = '0x0000000000000000000000000000000000000000'
+   newUser.lifeTimeDeposits = BigDecimal.fromString('0')
+   newUser.lifeTimeBorrows = BigDecimal.fromString('0')
+   newUser.lifeTime_SIGH_Farmed = BigDecimal.fromString('0')
+   newUser.healthFactor = BigDecimal.fromString('0')
+
+   newUser.save()
+   return newUser as userInstrumentState
 }
 

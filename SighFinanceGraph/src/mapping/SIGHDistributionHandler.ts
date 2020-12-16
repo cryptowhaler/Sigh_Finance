@@ -2,11 +2,11 @@ import { Address, BigInt,BigDecimal, log } from "@graphprotocol/graph-ts"
 import { InstrumentAdded, InstrumentRemoved, InstrumentSIGHStateUpdated, SIGHSpeedUpdated, StakingSpeedUpdated, CryptoMarketSentimentUpdated
  , minimumBlocksForSpeedRefreshUpdated , PriceSnapped, SIGHBorrowIndexUpdated, AccuredSIGHTransferredToTheUser, InstrumentVolatilityCalculated,
  MaxSIGHSpeedCalculated, refreshingSighSpeeds , SIGHSupplyIndexUpdated } from "../../generated/Sigh_Distribution_Handler/SIGHDistributionHandler"
-import { SIGH_Instrument, Instrument,SIGH_Distribution_SnapShot } from "../../generated/schema"
+import { SIGH_Instrument, Instrument,SIGH_Distribution_SnapShot, userInstrumentState } from "../../generated/schema"
 import { createInstrument,updatePrice } from "./LendingPoolConfigurator"
 import { PriceOracleGetter } from '../../generated/Lending_Pool_Configurator/PriceOracleGetter'
 import { SIGHDistributionHandler } from '../../generated/Sigh_Distribution_Handler/SIGHDistributionHandler'
-
+import {createUser} from './LendingPool'
 
 // FINAL v0. To be Tested : WEI ONLY
 export function handleSIGHSupplyIndexUpdated(event: SIGHSupplyIndexUpdated): void {
@@ -463,9 +463,17 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
 
 
 export function handleAccuredSIGHTransferredToTheUser(event: AccuredSIGHTransferredToTheUser): void {
-    // let instrumentId = event.params.instrument.toHexString()
-    // let instrumentState = Instrument.load(instrumentId)
-    // instrumentState.save()
+    let decimalAdj = BigInt.fromI32(10).pow(18 as u8).toBigDecimal()
+ 
+    let userInstrumentStateId = event.params.user.toHexString() + event.params.instrument.toHexString() 
+    let current_userInstrumentState = userInstrumentState.load(userInstrumentStateId)
+    if (current_userInstrumentState == null) {
+        current_userInstrumentState = createUser(userInstrumentStateId)
+        current_userInstrumentState.instrument = event.params.instrument.toHexString()
+    }
+    current_userInstrumentState.lifeTime_SIGH_Farmed = current_userInstrumentState.lifeTime_SIGH_Farmed.plus( event.params.sigh_Amount.toBigDecimal().div(decimalAdj) )
+    current_userInstrumentState.save()
+
 }
 
 

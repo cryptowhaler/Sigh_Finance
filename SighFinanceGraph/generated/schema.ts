@@ -376,24 +376,6 @@ export class SIGHSpeedControllerState extends Entity {
     this.set("currentSIGHbalance", Value.fromBigDecimal(value));
   }
 
-  get currentSIGHbalanceETH(): BigDecimal {
-    let value = this.get("currentSIGHbalanceETH");
-    return value.toBigDecimal();
-  }
-
-  set currentSIGHbalanceETH(value: BigDecimal) {
-    this.set("currentSIGHbalanceETH", Value.fromBigDecimal(value));
-  }
-
-  get currentSIGHbalanceUSD(): BigDecimal {
-    let value = this.get("currentSIGHbalanceUSD");
-    return value.toBigDecimal();
-  }
-
-  set currentSIGHbalanceUSD(value: BigDecimal) {
-    this.set("currentSIGHbalanceUSD", Value.fromBigDecimal(value));
-  }
-
   get totalProtocolsSupported(): BigInt {
     let value = this.get("totalProtocolsSupported");
     return value.toBigInt();
@@ -410,6 +392,33 @@ export class SIGHSpeedControllerState extends Entity {
 
   set totalSighDripSpeed(value: BigDecimal) {
     this.set("totalSighDripSpeed", Value.fromBigDecimal(value));
+  }
+
+  get supportNewProtocolTxHistory(): Array<Bytes> {
+    let value = this.get("supportNewProtocolTxHistory");
+    return value.toBytesArray();
+  }
+
+  set supportNewProtocolTxHistory(value: Array<Bytes>) {
+    this.set("supportNewProtocolTxHistory", Value.fromBytesArray(value));
+  }
+
+  get removeProtocolTxHistory(): Array<Bytes> {
+    let value = this.get("removeProtocolTxHistory");
+    return value.toBytesArray();
+  }
+
+  set removeProtocolTxHistory(value: Array<Bytes>) {
+    this.set("removeProtocolTxHistory", Value.fromBytesArray(value));
+  }
+
+  get supportedProtocols(): Array<string> {
+    let value = this.get("supportedProtocols");
+    return value.toStringArray();
+  }
+
+  set supportedProtocols(value: Array<string>) {
+    this.set("supportedProtocols", Value.fromStringArray(value));
   }
 }
 
@@ -494,24 +503,6 @@ export class SpeedControllerSupportedProtocols extends Entity {
     this.set("sighSpeed", Value.fromBigDecimal(value));
   }
 
-  get sighSpeedETH(): BigDecimal {
-    let value = this.get("sighSpeedETH");
-    return value.toBigDecimal();
-  }
-
-  set sighSpeedETH(value: BigDecimal) {
-    this.set("sighSpeedETH", Value.fromBigDecimal(value));
-  }
-
-  get sighSpeedUSD(): BigDecimal {
-    let value = this.get("sighSpeedUSD");
-    return value.toBigDecimal();
-  }
-
-  set sighSpeedUSD(value: BigDecimal) {
-    this.set("sighSpeedUSD", Value.fromBigDecimal(value));
-  }
-
   get totalDistributedAmount(): BigDecimal {
     let value = this.get("totalDistributedAmount");
     return value.toBigDecimal();
@@ -519,24 +510,6 @@ export class SpeedControllerSupportedProtocols extends Entity {
 
   set totalDistributedAmount(value: BigDecimal) {
     this.set("totalDistributedAmount", Value.fromBigDecimal(value));
-  }
-
-  get totalDistributedAmountETH(): BigDecimal {
-    let value = this.get("totalDistributedAmountETH");
-    return value.toBigDecimal();
-  }
-
-  set totalDistributedAmountETH(value: BigDecimal) {
-    this.set("totalDistributedAmountETH", Value.fromBigDecimal(value));
-  }
-
-  get totalDistributedAmountUSD(): BigDecimal {
-    let value = this.get("totalDistributedAmountUSD");
-    return value.toBigDecimal();
-  }
-
-  set totalDistributedAmountUSD(value: BigDecimal) {
-    this.set("totalDistributedAmountUSD", Value.fromBigDecimal(value));
   }
 
   get updateDripSpeedTxHistory(): Array<Bytes> {

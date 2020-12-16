@@ -113,7 +113,7 @@ dataSources:
       file: ./src/mapping/SIGHSpeedController.ts
       entities:
         - SIGHSpeedControllerState
-        # - SpeedControllerSupportedProtocols
+        - SpeedControllerSupportedProtocols
       abis:
       - name: SIGHSpeedController
         file: ./abis/SIGHSpeedController.json
