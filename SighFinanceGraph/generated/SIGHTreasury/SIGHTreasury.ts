@@ -31,11 +31,11 @@ export class AmountDripped__Params {
     return this._event.parameters[1].value.toAddress();
   }
 
-  get currentBalance(): BigInt {
+  get AmountDripped(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get AmountDripped(): BigInt {
+  get currentBalance(): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
 
@@ -393,8 +393,12 @@ export class instrumentBeingDistributedChanged__Params {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get blockNumber(): BigInt {
+  get dripSpeed(): BigInt {
     return this._event.parameters[1].value.toBigInt();
+  }
+
+  get blockNumber(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
   }
 }
 

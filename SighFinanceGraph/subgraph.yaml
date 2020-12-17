@@ -134,7 +134,7 @@ dataSources:
     name: SIGHTreasury
     network: kovan
     source:
-      address: "0x9384cc955D80A6bE5d3ca5f00565A0238994cf91"
+      address: "0xcE0281E5F7d490aEB44296a4fc08C907Cf2De0BC"
       abi: SIGHTreasury
       startBlock: 22601871
     mapping:
@@ -162,7 +162,7 @@ dataSources:
           handler: handleInstrumentDistributionInitialized    
         - event: InstrumentDistributionReset(bool,address,address,uint256,uint256)
           handler: handleInstrumentDistributionReset   
-        - event: instrumentBeingDistributedChanged(address,uint256)
+        - event: instrumentBeingDistributedChanged(address,uint256,uint256)
           handler: handleinstrumentBeingDistributedChanged 
         - event: DripSpeedChanged(uint256,uint256,uint256)
           handler: handleDripSpeedChanged 

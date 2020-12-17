@@ -334,7 +334,8 @@ function createSighTreasury(addressID: string): SIGHTreasuryState {
     let Sigh_Treasury = new SIGHTreasuryState(addressID)
 
     Sigh_Treasury.address = Address.fromString('0x0000000000000000000000000000000000000000',)
-
+    Sigh_Treasury.sighBalance =  BigDecimal.fromString('0')  
+    
     Sigh_Treasury.sighMaxTransferLimit = BigDecimal.fromString('0')  
 
     Sigh_Treasury.isSIGHBurnAllowed = false

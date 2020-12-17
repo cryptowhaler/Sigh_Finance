@@ -17,13 +17,13 @@
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "currentBalance",
+				"name": "AmountDripped",
 				"type": "uint256"
 			},
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "AmountDripped",
+				"name": "currentBalance",
 				"type": "uint256"
 			},
 			{
@@ -492,6 +492,12 @@
 				"internalType": "address",
 				"name": "newInstrumentToBeDripped",
 				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "dripSpeed",
+				"type": "uint256"
 			},
 			{
 				"indexed": false,

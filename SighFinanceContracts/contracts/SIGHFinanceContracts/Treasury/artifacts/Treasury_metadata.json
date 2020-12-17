@@ -23,13 +23,13 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "currentBalance",
+						"name": "AmountDripped",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "AmountDripped",
+						"name": "currentBalance",
 						"type": "uint256"
 					},
 					{
@@ -380,6 +380,12 @@
 						"internalType": "address",
 						"name": "newInstrumentToBeDripped",
 						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "dripSpeed",
+						"type": "uint256"
 					},
 					{
 						"indexed": false,
@@ -1120,10 +1126,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Treasury/TreasuryV1Impl.sol": {
-			"keccak256": "0xea0d53746d819b88fd40d60b945ff53507aa9e1e15669d8e3b2dddd3a72ad9a2",
+			"keccak256": "0x2fea6fecd246bf2e625ca820f4b6e16eac58a22cc4dfe3916263857cb8c0aa4d",
 			"urls": [
-				"bzz-raw://05ece2f8695af39ed792735bfbe50cedcf8e04f00688b307eaeaff02cd87ebd2",
-				"dweb:/ipfs/QmQFoqLfkyAAcu2wnTHvMQcSbL1p4zCcjfsHvYgBTDMWNr"
+				"bzz-raw://2f15aadf6092003477618a4c52aaefa55fa2342e6f0882842a8ed0bf0a81994a",
+				"dweb:/ipfs/QmPNGGGcGLuoHZrsCGkrFM1YJub9JcVTZ957CjogKqQQhJ"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {
@@ -1208,6 +1214,13 @@
 			"urls": [
 				"bzz-raw://f060c6ee3ca16eb001823e2c0f8b642ecf3ead486721bab6f6be5220158d4421",
 				"dweb:/ipfs/QmWv1ms6aLAfjZ49dNnffbg49XiKmuEWHeu4wi6EinkEek"
+			]
+		},
+		"openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol": {
+			"keccak256": "0xe8319a13d4d3a9a518dafb829afffd958264b2675114abe5c322178cc6c3519f",
+			"urls": [
+				"bzz-raw://25e5847db15af6119dfadd8929642c20d731b61d11c8187dbf8064d3458cb094",
+				"dweb:/ipfs/QmQhu9fnpHXp7wDKmqbaK7BAs8zWxLShRUUEdYiPiytBww"
 			]
 		}
 	},
