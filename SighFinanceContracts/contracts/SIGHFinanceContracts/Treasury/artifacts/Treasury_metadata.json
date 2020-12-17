@@ -1126,10 +1126,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Treasury/TreasuryV1Impl.sol": {
-			"keccak256": "0x2fea6fecd246bf2e625ca820f4b6e16eac58a22cc4dfe3916263857cb8c0aa4d",
+			"keccak256": "0xb48902a095e1609697056b913d755f744ebfbd38ca899ab73c8781755fba4732",
 			"urls": [
-				"bzz-raw://2f15aadf6092003477618a4c52aaefa55fa2342e6f0882842a8ed0bf0a81994a",
-				"dweb:/ipfs/QmPNGGGcGLuoHZrsCGkrFM1YJub9JcVTZ957CjogKqQQhJ"
+				"bzz-raw://cf489fcb4ac089ec5c6efb7f6b674389dd03fd4f1cee4311299d77302b733c88",
+				"dweb:/ipfs/QmR5w7e7FbS8TAVESDtiqWNH4azZVVafJtbr8G35Ntnaa6"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {

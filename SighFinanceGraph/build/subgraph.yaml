@@ -144,6 +144,8 @@ dataSources:
       abis:
         - name: SIGHTreasury
           file: SIGHTreasury/abis/SIGHTreasury.json
+        - name: ERC20Detailed
+          file: SIGHTreasury/abis/ERC20Detailed.json
       eventHandlers:
         - event: SIGHBurnAllowedSwitched(bool,uint256)
           handler: handleSIGHBurnAllowedSwitched
@@ -153,8 +155,6 @@ dataSources:
           handler: handleSIGHBurnSpeedChanged
         - event: InstrumentInitialized(address,uint256,uint256,uint256)
           handler: handleInstrumentInitialized
-        - event: InstrumentDistributionInitialized(bool,address,address,uint256,uint256)
-          handler: handleInstrumentDistributionInitialized
         - event: InstrumentDistributionInitialized(bool,address,address,uint256,uint256)
           handler: handleInstrumentDistributionInitialized
         - event: InstrumentDistributionReset(bool,address,address,uint256,uint256)

@@ -5,22 +5,26 @@ import { InstrumentInitialized, InstrumentDistributionInitialized, InstrumentDis
 
   import { SIGHTreasuryState,TreasurySupportedInstruments, SIGH_Instrument } from "../../generated/schema"
   import { SIGHTreasury } from '../../generated/SIGHTreasury/SIGHTreasury'
-  import { ERC20Detailed } from '../../generated/Lending_Pool_Core/ERC20Detailed'
+  import { ERC20Detailed } from '../../generated/SIGHTreasury/ERC20Detailed'
 
 
 
 // NEW 'INSTRUMENT' BEING INITIALIZED BY THE TREASURY
   export function handleInstrumentInitialized(event: InstrumentInitialized): void {
     let SighTreasury = SIGHTreasuryState.load(event.address.toHexString())
+    log.info('handleInstrumentInitialized-1 : ',[])
     if (SighTreasury == null) {
       SighTreasury = createSighTreasury(event.address.toHexString())
       SighTreasury.address = event.address
     }
+    log.info('handleInstrumentInitialized-2 : ',[])
 
     // Storing Tx Hash
     let prevHashes = SighTreasury.instrumentInitializedTxHashes
     prevHashes.push( event.transaction.hash )
     SighTreasury.instrumentInitializedTxHashes = prevHashes
+    log.info('handleInstrumentInitialized-3 : ',[])
+    SighTreasury.save()
 
     let supportedInstrument = TreasurySupportedInstruments.load( event.params.instrument.toHexString() )
     if (supportedInstrument == null) {
@@ -30,18 +34,20 @@ import { InstrumentInitialized, InstrumentDistributionInitialized, InstrumentDis
 
       let instrumentContract = ERC20Detailed.bind(  event.params.instrument )
       supportedInstrument.name = instrumentContract.name()
+
       supportedInstrument.symbol = instrumentContract.symbol()
       supportedInstrument.decimals = BigInt.fromI32(instrumentContract.decimals())
     }
+    log.info('handleInstrumentInitialized - 4 : ',[])
     let decimalAdj = BigInt.fromI32(10).pow(supportedInstrument.decimals.toI32() as u8).toBigDecimal()
 
     supportedInstrument.isInitialized = true;
     supportedInstrument.balanceInTreasury = event.params.balance.toBigDecimal().div( decimalAdj ) ;
     supportedInstrument.totalAmountDripped = event.params.totalAmountDripped.toBigDecimal().div( decimalAdj ) ;
     supportedInstrument.totalAmountTransferred = event.params.totalAmountTransferred.toBigDecimal().div( decimalAdj ) ;
+    log.info('handleInstrumentInitialized-5 : ',[])
 
     supportedInstrument.save()
-    SighTreasury.save()
     UpdateSIGHBalance(event.address.toHexString())
   }
 
@@ -117,10 +123,13 @@ import { InstrumentInitialized, InstrumentDistributionInitialized, InstrumentDis
     let prevHashes = SighTreasury.instrumentForDistributionChangedTxHashes
     prevHashes.push( event.transaction.hash )
     SighTreasury.instrumentForDistributionChangedTxHashes = prevHashes
-         
-    let prevSupportedInstrument = TreasurySupportedInstruments.load( SighTreasury.instrumentBeingDrippedAddress.toHexString() )
-    prevSupportedInstrument.isBeingDripped = false
-    prevSupportedInstrument.DripSpeed = BigDecimal.fromString('0')
+    
+    if ( SighTreasury.instrumentBeingDrippedAddress.toHexString() != '0x0000000000000000000000000000000000000000' ) {
+      let prevSupportedInstrument = TreasurySupportedInstruments.load( SighTreasury.instrumentBeingDrippedAddress.toHexString() )
+      prevSupportedInstrument.isBeingDripped = false
+      prevSupportedInstrument.DripSpeed = BigDecimal.fromString('0')
+      prevSupportedInstrument.save()  
+    }
 
     let supportedInstrument = TreasurySupportedInstruments.load( event.params.newInstrumentToBeDripped.toHexString() )
     let decimalAdj = BigInt.fromI32(10).pow(supportedInstrument.decimals.toI32() as u8).toBigDecimal()
@@ -132,7 +141,6 @@ import { InstrumentInitialized, InstrumentDistributionInitialized, InstrumentDis
     supportedInstrument.isBeingDripped = true;
     supportedInstrument.DripSpeed = SighTreasury.DripSpeed;
 
-    prevSupportedInstrument.save()
     supportedInstrument.save()
     SighTreasury.save()
     UpdateSIGHBalance(event.address.toHexString())
@@ -264,6 +272,13 @@ export function handlemaxTransferAmountUpdated(event: maxTransferAmountUpdated):
     SighTreasury.isSIGHBurnAllowed = event.params.newBurnAllowed
     SighTreasury.save()
 
+    if (!SighTreasury.isSIGHBurnAllowed) {
+      let sighInstrument = SIGH_Instrument.load('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba')
+      sighInstrument.currentBurnSpeed_WEI = BigInt.fromI32(0)
+      sighInstrument.currentBurnSpeed = sighInstrument.currentBurnSpeed_WEI.toBigDecimal()
+      sighInstrument.save()  
+    }
+
     UpdateSIGHBalance(event.address.toHexString())
   }
 
@@ -306,7 +321,7 @@ export function handlemaxTransferAmountUpdated(event: maxTransferAmountUpdated):
     prevHashes.push( event.transaction.hash )
     SighTreasury.sighBurnedTxHashes = prevHashes
 
-    SighTreasury.totalBurntSIGH = event.params.amount.toBigDecimal().div(decimalAdj)
+    SighTreasury.totalBurntSIGH = event.params.totalSIGHBurned.toBigDecimal().div(decimalAdj)
     SighTreasury.save()
 
     UpdateSIGHBalance(event.address.toHexString())
@@ -315,12 +330,19 @@ export function handlemaxTransferAmountUpdated(event: maxTransferAmountUpdated):
 
 
   function UpdateSIGHBalance( ID: string ) : void {
+    log.info('UpdateSIGHBalance-1 : ',[])
     let decimalAdj = BigInt.fromI32(10).pow(18 as u8).toBigDecimal()
   
     let SighTreasury_ = SIGHTreasuryState.load(ID)
     let contractAddress = SighTreasury_.address as Address
     let _TreasuryContract = SIGHTreasury.bind(contractAddress)
+    log.info('UpdateSIGHBalance-2 : {} ',[contractAddress.toHexString()])
     SighTreasury_.sighBalance = _TreasuryContract.getSIGHBalance().toBigDecimal().div(decimalAdj)  
+    log.info('UpdateSIGHBalance-3 : {} ',[SighTreasury_.sighBalance.toString()])
+
+    let supportedInstrument = TreasurySupportedInstruments.load('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba')
+    supportedInstrument.balanceInTreasury = SighTreasury_.sighBalance
+
     SighTreasury_.save()
   }
 
@@ -335,7 +357,7 @@ function createSighTreasury(addressID: string): SIGHTreasuryState {
 
     Sigh_Treasury.address = Address.fromString('0x0000000000000000000000000000000000000000',)
     Sigh_Treasury.sighBalance =  BigDecimal.fromString('0')  
-    
+
     Sigh_Treasury.sighMaxTransferLimit = BigDecimal.fromString('0')  
 
     Sigh_Treasury.isSIGHBurnAllowed = false

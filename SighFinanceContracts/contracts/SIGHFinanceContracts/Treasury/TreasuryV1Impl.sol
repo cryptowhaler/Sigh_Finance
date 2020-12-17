@@ -107,7 +107,7 @@ contract Treasury is ReentrancyGuard, VersionedInitializable   {
 
     event SIGHTreasuryInitialized(address msgSender, address addressesProvider, address SIGH, address sighDistributionHandler);
 
-    uint256 constant private DATA_PROVIDER_REVISION = 0x4;
+    uint256 constant private DATA_PROVIDER_REVISION = 0x5;
 
     function getRevision() internal pure returns(uint256) {
         return DATA_PROVIDER_REVISION;
@@ -136,7 +136,7 @@ contract Treasury is ReentrancyGuard, VersionedInitializable   {
 // ###########   3. burnSIGHTokens() : Public Function. Allows anyone to burn SIGH Tokens. ########################
 // ################################################################################################################
 
-    function switchSIGHBurnAllowed() external onlySighFinanceConfigurator nonReentrant returns (bool) {
+    function switchSIGHBurnAllowed() external onlySighFinanceConfigurator returns (bool) {
         require( instrumentStates[address(sigh_Instrument)].initialized, "SIGH Instrument is not initialized yet" );        
         
         if (sighBurnState.is_SIGH_BurnAllowed) {
@@ -152,7 +152,7 @@ contract Treasury is ReentrancyGuard, VersionedInitializable   {
         return true;
     }
         
-    function updateSIGHBurnSpeed(uint newBurnSpeed) external onlySighFinanceConfigurator nonReentrant returns (bool) {
+    function updateSIGHBurnSpeed(uint newBurnSpeed) external onlySighFinanceConfigurator returns (bool) {
         require( instrumentStates[address(sigh_Instrument)].initialized, "SIGH Instrument is not initialized yet" );        
         require(updateSIGHBurnSpeedInternal(newBurnSpeed),"Sigh Burn speed was not updated properly");
         return true;
@@ -207,7 +207,7 @@ contract Treasury is ReentrancyGuard, VersionedInitializable   {
 // ###########   4. resetInstrumentDistribution() --> Reset instrument distribution to start a new session (onlySighFinanceConfigurator)  ##################
 // #########################################################################################################################################################
 
-    function initializeInstrumentDistribution (address targetAddress, address instrumentToBeDistributed, uint distributionSpeed) external nonReentrant onlySighFinanceConfigurator returns (bool) {
+    function initializeInstrumentDistribution (address targetAddress, address instrumentToBeDistributed, uint distributionSpeed) external onlySighFinanceConfigurator returns (bool) {
         require(!treasuryDripState.isDripAllowed,"Instrument distribution needs to be reset before it can be initialized Again");
         require( instrumentStates[address(instrumentToBeDistributed)].initialized, "Instrument to be distributed is not initialized yet" );        
         
@@ -227,7 +227,7 @@ contract Treasury is ReentrancyGuard, VersionedInitializable   {
       * @param instrumentToDrip Address of the token to be dripped
       * @return returns the address of the token that will be Dripped
     */    
-    function changeInstrumentBeingDripped(address instrumentToDrip ) external nonReentrant onlySighFinanceConfigurator returns (bool) {
+    function changeInstrumentBeingDripped(address instrumentToDrip ) external onlySighFinanceConfigurator returns (bool) {
         require( instrumentStates[address(instrumentToDrip)].initialized, "Instrument to be distributed is not initialized yet" );        
         if ( treasuryDripState.isDripAllowed ) {  // First Distribute the remaining amount
             drip();
@@ -236,7 +236,7 @@ contract Treasury is ReentrancyGuard, VersionedInitializable   {
         return true;
     }
 
-    function updateDripSpeed (uint DripSpeed_) external nonReentrant onlySighFinanceConfigurator returns (bool) {
+    function updateDripSpeed (uint DripSpeed_) external onlySighFinanceConfigurator returns (bool) {
         if (treasuryDripState.isDripAllowed) {
             drip();
         }
@@ -248,7 +248,7 @@ contract Treasury is ReentrancyGuard, VersionedInitializable   {
       * @notice Switch to Reset (OFF) Dripping
       * @return return is Dripping is allowed or not
     */    
-    function resetInstrumentDistribution() external nonReentrant onlySighFinanceConfigurator returns (bool) {
+    function resetInstrumentDistribution() external onlySighFinanceConfigurator returns (bool) {
         if (!treasuryDripState.isDripAllowed) {
             return true;
         }
@@ -325,7 +325,7 @@ contract Treasury is ReentrancyGuard, VersionedInitializable   {
 // ###########   transferSighTo() : FUNCTION TO TRANSFER SIGH TOKENS     ############################
 // ##################################################################################################
 
-    function initializeInstrumentState(address instrument) external nonReentrant onlySighFinanceConfigurator returns (bool) {
+    function initializeInstrumentState(address instrument) external onlySighFinanceConfigurator returns (bool) {
         require( !instrumentStates[instrument].initialized,"The provided instrument has already been initialized" );
 
         IERC20 instrumentContract = IERC20(instrument);
