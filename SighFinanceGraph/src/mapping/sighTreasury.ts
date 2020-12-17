@@ -26,6 +26,11 @@ import { InstrumentInitialized, InstrumentDistributionInitialized, InstrumentDis
       supportedInstrument = createTreasurySupportedInstruments(event.params.instrument.toHexString())
       supportedInstrument.address = event.params.instrument
       supportedInstrument.sighTreasury = event.address.toHexString()
+
+      let instrumentContract = ERC20Detailed.bind(  event.params.instrument )
+      supportedInstrument.name = instrumentContract.name()
+      supportedInstrument.symbol = instrumentContract.symbol()
+      supportedInstrument.decimals = instrumentContract.decimals()
     }
     let decimalAdj = BigInt.fromI32(10).pow(supportedInstrument.decimals.toI32() as u8).toBigDecimal()
 
@@ -302,40 +307,63 @@ export function handlemaxTransferAmountUpdated(event: maxTransferAmountUpdated):
 // ###########   CREATING ENTITIES   ##########
 // ############################################ 
 
-function createSighTreasury(addressID: string): SIGHTreasury {
-    let Sigh_Treasury = new SIGHTreasury(addressID)
-    let Sigh_Treasury_contract = SIGHTreasuryContract.bind(Address.fromString(addressID))
+function createSighTreasury(addressID: string): SIGHTreasuryState {
+    let Sigh_Treasury = new SIGHTreasuryState(addressID)
 
-    Sigh_Treasury.sightroller_address = Sigh_Treasury_contract.sightroller_address()
-    Sigh_Treasury.sigh_token = Sigh_Treasury_contract.sigh_token()
+    Sigh_Treasury.address = Address.fromString('0x0000000000000000000000000000000000000000',)
 
-    Sigh_Treasury.maxTransferAmount = new BigInt(0)    
+    Sigh_Treasury.sighMaxTransferLimit = BigDecimal.fromString('0')  
 
-    Sigh_Treasury.tokenBeingDripped = Address.fromString('0x0000000000000000000000000000000000000000',)
-    Sigh_Treasury.DripSpeed = new BigInt(0)    
-    Sigh_Treasury.isDripAllowed = false    
+    Sigh_Treasury.isSIGHBurnAllowed = false
+    Sigh_Treasury.SIGHBurnSpeed = BigDecimal.fromString('0')  
+    Sigh_Treasury.totalBurntSIGH = BigDecimal.fromString('0')  
 
-    Sigh_Treasury.recentlySIGHBurned = new BigInt(0)    
-    Sigh_Treasury.totalSIGHBurned = new BigInt(0)    
+    Sigh_Treasury.isDripAllowed = false
+    Sigh_Treasury.targetAddressForDripping = Address.fromString('0x0000000000000000000000000000000000000000',)
+    Sigh_Treasury.instrumentBeingDrippedAddress = Address.fromString('0x0000000000000000000000000000000000000000',)
+    Sigh_Treasury.instrumentBeingDrippedSymbol = null
+    Sigh_Treasury.DripSpeed = BigDecimal.fromString('0')  
+
+    Sigh_Treasury.TVLLockedETH = BigDecimal.fromString('0')  
+    Sigh_Treasury.TVLLockedUSD = BigDecimal.fromString('0')  
+
+    Sigh_Treasury.instrumentInitializedTxHashes = []
+    Sigh_Treasury.instrumentDistributionInitializedTxHashes = []
+    Sigh_Treasury.instrumentDistributionResetTxHashes = []
+    Sigh_Treasury.instrumentForDistributionChangedTxHashes = []
+    Sigh_Treasury.instrumentDistributionSpeedChangedTxHashes = []
+
+    Sigh_Treasury.sighTransferredTxHashes = []
+
+    Sigh_Treasury.sighBurnAllowedSwitchedTxHashes = []
+    Sigh_Treasury.sighBurnSpeedChangedTxHashes = []
+    Sigh_Treasury.sighBurnedTxHashes = []
 
     Sigh_Treasury.save()
-    return Sigh_Treasury as SIGHTreasury
+    return Sigh_Treasury as SIGHTreasuryState
 }
   
-function createTokenBalances(addressID: string) : TokenBalancesData {
-    let Token_Balances = new TokenBalancesData(addressID)
-    let ERC20_contract = cERC20.bind(Address.fromString(addressID))
-
-    Token_Balances.symbol = ERC20_contract.symbol()
-    Token_Balances.balance = new BigInt(0)  
-    Token_Balances.totalDripped = new BigInt(0) 
-    
-    return Token_Balances as TokenBalancesData
-}
 
 
 function createTreasurySupportedInstruments(addressID: string) : TreasurySupportedInstruments {
   let newInstrument = new TreasurySupportedInstruments(addressID);
+  newInstrument.address = Address.fromString('0x0000000000000000000000000000000000000000',)
+
+  newInstrument.name = null
+  newInstrument.symbol = null
+  newInstrument.decimals = BigInt.fromI32(0)
+
+  newInstrument.isBeingDripped = false
+  newInstrument.DripSpeed = BigDecimal.fromString('0')  
+
+  newInstrument.isInitialized = false
+  newInstrument.balanceInTreasury = BigDecimal.fromString('0')  
+  newInstrument.totalAmountDripped = BigDecimal.fromString('0')  
+  newInstrument.totalAmountTransferred = BigDecimal.fromString('0')  
+
+  newInstrument.instrumentDrippedTxHashes = []
+  newInstrument.instrumentBoughtTxHashes = []
+  newInstrument.instrumentSoldTxHashes = [] 
 
   return newInstrument as TreasurySupportedInstruments
 }

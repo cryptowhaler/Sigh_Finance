@@ -570,6 +570,15 @@ export class SIGHTreasuryState extends Entity {
     this.set("address", Value.fromBytes(value));
   }
 
+  get sighMaxTransferLimit(): BigDecimal {
+    let value = this.get("sighMaxTransferLimit");
+    return value.toBigDecimal();
+  }
+
+  set sighMaxTransferLimit(value: BigDecimal) {
+    this.set("sighMaxTransferLimit", Value.fromBigDecimal(value));
+  }
+
   get isSIGHBurnAllowed(): boolean {
     let value = this.get("isSIGHBurnAllowed");
     return value.toBoolean();
@@ -667,6 +676,99 @@ export class SIGHTreasuryState extends Entity {
 
   set TVLLockedUSD(value: BigDecimal) {
     this.set("TVLLockedUSD", Value.fromBigDecimal(value));
+  }
+
+  get instrumentInitializedTxHashes(): Array<Bytes> {
+    let value = this.get("instrumentInitializedTxHashes");
+    return value.toBytesArray();
+  }
+
+  set instrumentInitializedTxHashes(value: Array<Bytes>) {
+    this.set("instrumentInitializedTxHashes", Value.fromBytesArray(value));
+  }
+
+  get instrumentDistributionInitializedTxHashes(): Array<Bytes> {
+    let value = this.get("instrumentDistributionInitializedTxHashes");
+    return value.toBytesArray();
+  }
+
+  set instrumentDistributionInitializedTxHashes(value: Array<Bytes>) {
+    this.set(
+      "instrumentDistributionInitializedTxHashes",
+      Value.fromBytesArray(value)
+    );
+  }
+
+  get instrumentDistributionResetTxHashes(): Array<Bytes> {
+    let value = this.get("instrumentDistributionResetTxHashes");
+    return value.toBytesArray();
+  }
+
+  set instrumentDistributionResetTxHashes(value: Array<Bytes>) {
+    this.set(
+      "instrumentDistributionResetTxHashes",
+      Value.fromBytesArray(value)
+    );
+  }
+
+  get instrumentForDistributionChangedTxHashes(): Array<Bytes> {
+    let value = this.get("instrumentForDistributionChangedTxHashes");
+    return value.toBytesArray();
+  }
+
+  set instrumentForDistributionChangedTxHashes(value: Array<Bytes>) {
+    this.set(
+      "instrumentForDistributionChangedTxHashes",
+      Value.fromBytesArray(value)
+    );
+  }
+
+  get instrumentDistributionSpeedChangedTxHashes(): Array<Bytes> {
+    let value = this.get("instrumentDistributionSpeedChangedTxHashes");
+    return value.toBytesArray();
+  }
+
+  set instrumentDistributionSpeedChangedTxHashes(value: Array<Bytes>) {
+    this.set(
+      "instrumentDistributionSpeedChangedTxHashes",
+      Value.fromBytesArray(value)
+    );
+  }
+
+  get sighTransferredTxHashes(): Array<Bytes> {
+    let value = this.get("sighTransferredTxHashes");
+    return value.toBytesArray();
+  }
+
+  set sighTransferredTxHashes(value: Array<Bytes>) {
+    this.set("sighTransferredTxHashes", Value.fromBytesArray(value));
+  }
+
+  get sighBurnAllowedSwitchedTxHashes(): Array<Bytes> {
+    let value = this.get("sighBurnAllowedSwitchedTxHashes");
+    return value.toBytesArray();
+  }
+
+  set sighBurnAllowedSwitchedTxHashes(value: Array<Bytes>) {
+    this.set("sighBurnAllowedSwitchedTxHashes", Value.fromBytesArray(value));
+  }
+
+  get sighBurnSpeedChangedTxHashes(): Array<Bytes> {
+    let value = this.get("sighBurnSpeedChangedTxHashes");
+    return value.toBytesArray();
+  }
+
+  set sighBurnSpeedChangedTxHashes(value: Array<Bytes>) {
+    this.set("sighBurnSpeedChangedTxHashes", Value.fromBytesArray(value));
+  }
+
+  get sighBurnedTxHashes(): Array<Bytes> {
+    let value = this.get("sighBurnedTxHashes");
+    return value.toBytesArray();
+  }
+
+  set sighBurnedTxHashes(value: Array<Bytes>) {
+    this.set("sighBurnedTxHashes", Value.fromBytesArray(value));
   }
 }
 
@@ -803,6 +905,33 @@ export class TreasurySupportedInstruments extends Entity {
 
   set totalAmountTransferred(value: BigDecimal) {
     this.set("totalAmountTransferred", Value.fromBigDecimal(value));
+  }
+
+  get instrumentDrippedTxHashes(): Array<Bytes> {
+    let value = this.get("instrumentDrippedTxHashes");
+    return value.toBytesArray();
+  }
+
+  set instrumentDrippedTxHashes(value: Array<Bytes>) {
+    this.set("instrumentDrippedTxHashes", Value.fromBytesArray(value));
+  }
+
+  get instrumentBoughtTxHashes(): Array<Bytes> {
+    let value = this.get("instrumentBoughtTxHashes");
+    return value.toBytesArray();
+  }
+
+  set instrumentBoughtTxHashes(value: Array<Bytes>) {
+    this.set("instrumentBoughtTxHashes", Value.fromBytesArray(value));
+  }
+
+  get instrumentSoldTxHashes(): Array<Bytes> {
+    let value = this.get("instrumentSoldTxHashes");
+    return value.toBytesArray();
+  }
+
+  set instrumentSoldTxHashes(value: Array<Bytes>) {
+    this.set("instrumentSoldTxHashes", Value.fromBytesArray(value));
   }
 }
 

@@ -114,6 +114,12 @@ type SIGHTreasuryState @entity {
     instrumentForDistributionChangedTxHashes: [Bytes!]!
     instrumentDistributionSpeedChangedTxHashes: [Bytes!]!
 
+    sighTransferredTxHashes: [Bytes!]!
+
+    sighBurnAllowedSwitchedTxHashes: [Bytes!]!
+    sighBurnSpeedChangedTxHashes: [Bytes!]!
+    sighBurnedTxHashes: [Bytes!]!
+
 }
 
 type TreasurySupportedInstruments @entity { 
@@ -134,6 +140,9 @@ type TreasurySupportedInstruments @entity {
     totalAmountTransferred: BigDecimal!
 
     instrumentDrippedTxHashes: [Bytes!]!
+    instrumentBoughtTxHashes: [Bytes!]!
+    instrumentSoldTxHashes: [Bytes!]!
+
 }
 
 
