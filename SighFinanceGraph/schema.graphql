@@ -90,6 +90,7 @@ type SpeedControllerSupportedProtocols @entity {
 type SIGHTreasuryState @entity { 
     id: ID!
     address: Bytes!
+    sighBalance: BigDecimal!
 
     sighMaxTransferLimit: BigDecimal!
 

@@ -570,6 +570,15 @@ export class SIGHTreasuryState extends Entity {
     this.set("address", Value.fromBytes(value));
   }
 
+  get sighBalance(): BigDecimal {
+    let value = this.get("sighBalance");
+    return value.toBigDecimal();
+  }
+
+  set sighBalance(value: BigDecimal) {
+    this.set("sighBalance", Value.fromBigDecimal(value));
+  }
+
   get sighMaxTransferLimit(): BigDecimal {
     let value = this.get("sighMaxTransferLimit");
     return value.toBigDecimal();

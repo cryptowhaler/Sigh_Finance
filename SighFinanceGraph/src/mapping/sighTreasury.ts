@@ -4,6 +4,7 @@ import { InstrumentInitialized, InstrumentDistributionInitialized, InstrumentDis
   SIGHTransferred, TokensBought, TokensSold, SIGHBurnAllowedSwitched, SIGH_Burned, SIGHBurnSpeedChanged } from "../../generated/SIGHTreasury/SIGHTreasury"
 
   import { SIGHTreasuryState,TreasurySupportedInstruments, SIGH_Instrument } from "../../generated/schema"
+  import { SIGHTreasury } from '../../generated/SIGHTreasury/SIGHTreasury'
   import { ERC20Detailed } from '../../generated/Lending_Pool_Core/ERC20Detailed'
 
 
@@ -30,7 +31,7 @@ import { InstrumentInitialized, InstrumentDistributionInitialized, InstrumentDis
       let instrumentContract = ERC20Detailed.bind(  event.params.instrument )
       supportedInstrument.name = instrumentContract.name()
       supportedInstrument.symbol = instrumentContract.symbol()
-      supportedInstrument.decimals = instrumentContract.decimals()
+      supportedInstrument.decimals = BigInt.fromI32(instrumentContract.decimals())
     }
     let decimalAdj = BigInt.fromI32(10).pow(supportedInstrument.decimals.toI32() as u8).toBigDecimal()
 
@@ -41,6 +42,7 @@ import { InstrumentInitialized, InstrumentDistributionInitialized, InstrumentDis
 
     supportedInstrument.save()
     SighTreasury.save()
+    UpdateSIGHBalance(event.address.toHexString())
   }
 
 
@@ -73,6 +75,7 @@ import { InstrumentInitialized, InstrumentDistributionInitialized, InstrumentDis
 
     supportedInstrument.save()
     SighTreasury.save()
+    UpdateSIGHBalance(event.address.toHexString())
   }
 
 
@@ -100,6 +103,7 @@ import { InstrumentInitialized, InstrumentDistributionInitialized, InstrumentDis
 
     supportedInstrument.save()
     SighTreasury.save()
+    UpdateSIGHBalance(event.address.toHexString())
   }
 
 
@@ -131,6 +135,7 @@ import { InstrumentInitialized, InstrumentDistributionInitialized, InstrumentDis
     prevSupportedInstrument.save()
     supportedInstrument.save()
     SighTreasury.save()
+    UpdateSIGHBalance(event.address.toHexString())
   }
 
 
@@ -152,6 +157,7 @@ import { InstrumentInitialized, InstrumentDistributionInitialized, InstrumentDis
 
     supportedInstrument.save()
     SighTreasury.save()
+    UpdateSIGHBalance(event.address.toHexString())
   }
 
 
@@ -170,6 +176,7 @@ import { InstrumentInitialized, InstrumentDistributionInitialized, InstrumentDis
     supportedInstrument.totalAmountDripped = event.params.totalAmountDripped.toBigDecimal().div( decimalAdj )
 
     supportedInstrument.save()
+    UpdateSIGHBalance(event.address.toHexString())
   }
 
 
@@ -237,6 +244,8 @@ export function handlemaxTransferAmountUpdated(event: maxTransferAmountUpdated):
 
     SighTreasury.save()
     supportedInstrument.save()
+
+    UpdateSIGHBalance(event.address.toHexString())
   }
 
 
@@ -254,6 +263,8 @@ export function handlemaxTransferAmountUpdated(event: maxTransferAmountUpdated):
 
     SighTreasury.isSIGHBurnAllowed = event.params.newBurnAllowed
     SighTreasury.save()
+
+    UpdateSIGHBalance(event.address.toHexString())
   }
 
   export function handleSIGHBurnSpeedChanged(event: SIGHBurnSpeedChanged): void {
@@ -277,6 +288,8 @@ export function handlemaxTransferAmountUpdated(event: maxTransferAmountUpdated):
     sighInstrument.currentBurnSpeed_WEI = event.params.newSpeed
     sighInstrument.currentBurnSpeed = SighTreasury.SIGHBurnSpeed
     sighInstrument.save()
+
+    UpdateSIGHBalance(event.address.toHexString())
   }
 
   export function handleSIGH_Burned(event: SIGH_Burned): void {
@@ -295,11 +308,21 @@ export function handlemaxTransferAmountUpdated(event: maxTransferAmountUpdated):
 
     SighTreasury.totalBurntSIGH = event.params.amount.toBigDecimal().div(decimalAdj)
     SighTreasury.save()
+
+    UpdateSIGHBalance(event.address.toHexString())
   }
 
 
 
-
+  function UpdateSIGHBalance( ID: string ) : void {
+    let decimalAdj = BigInt.fromI32(10).pow(18 as u8).toBigDecimal()
+  
+    let SighTreasury_ = SIGHTreasuryState.load(ID)
+    let contractAddress = SighTreasury_.address as Address
+    let _TreasuryContract = SIGHTreasury.bind(contractAddress)
+    SighTreasury_.sighBalance = _TreasuryContract.getSIGHBalance().toBigDecimal().div(decimalAdj)  
+    SighTreasury_.save()
+  }
 
 
 
