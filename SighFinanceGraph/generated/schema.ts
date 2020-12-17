@@ -531,6 +531,281 @@ export class SpeedControllerSupportedProtocols extends Entity {
   }
 }
 
+export class SIGHTreasuryState extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save SIGHTreasuryState entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save SIGHTreasuryState entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("SIGHTreasuryState", id.toString(), this);
+  }
+
+  static load(id: string): SIGHTreasuryState | null {
+    return store.get("SIGHTreasuryState", id) as SIGHTreasuryState | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get address(): Bytes {
+    let value = this.get("address");
+    return value.toBytes();
+  }
+
+  set address(value: Bytes) {
+    this.set("address", Value.fromBytes(value));
+  }
+
+  get isSIGHBurnAllowed(): boolean {
+    let value = this.get("isSIGHBurnAllowed");
+    return value.toBoolean();
+  }
+
+  set isSIGHBurnAllowed(value: boolean) {
+    this.set("isSIGHBurnAllowed", Value.fromBoolean(value));
+  }
+
+  get SIGHBurnSpeed(): BigDecimal {
+    let value = this.get("SIGHBurnSpeed");
+    return value.toBigDecimal();
+  }
+
+  set SIGHBurnSpeed(value: BigDecimal) {
+    this.set("SIGHBurnSpeed", Value.fromBigDecimal(value));
+  }
+
+  get totalBurntSIGH(): BigDecimal {
+    let value = this.get("totalBurntSIGH");
+    return value.toBigDecimal();
+  }
+
+  set totalBurntSIGH(value: BigDecimal) {
+    this.set("totalBurntSIGH", Value.fromBigDecimal(value));
+  }
+
+  get isDripAllowed(): boolean {
+    let value = this.get("isDripAllowed");
+    return value.toBoolean();
+  }
+
+  set isDripAllowed(value: boolean) {
+    this.set("isDripAllowed", Value.fromBoolean(value));
+  }
+
+  get targetAddressForDripping(): Bytes {
+    let value = this.get("targetAddressForDripping");
+    return value.toBytes();
+  }
+
+  set targetAddressForDripping(value: Bytes) {
+    this.set("targetAddressForDripping", Value.fromBytes(value));
+  }
+
+  get instrumentBeingDrippedAddress(): Bytes {
+    let value = this.get("instrumentBeingDrippedAddress");
+    return value.toBytes();
+  }
+
+  set instrumentBeingDrippedAddress(value: Bytes) {
+    this.set("instrumentBeingDrippedAddress", Value.fromBytes(value));
+  }
+
+  get instrumentBeingDrippedSymbol(): string {
+    let value = this.get("instrumentBeingDrippedSymbol");
+    return value.toString();
+  }
+
+  set instrumentBeingDrippedSymbol(value: string) {
+    this.set("instrumentBeingDrippedSymbol", Value.fromString(value));
+  }
+
+  get DripSpeed(): BigDecimal {
+    let value = this.get("DripSpeed");
+    return value.toBigDecimal();
+  }
+
+  set DripSpeed(value: BigDecimal) {
+    this.set("DripSpeed", Value.fromBigDecimal(value));
+  }
+
+  get instrumentsSupportedByTreasury(): Array<string> {
+    let value = this.get("instrumentsSupportedByTreasury");
+    return value.toStringArray();
+  }
+
+  set instrumentsSupportedByTreasury(value: Array<string>) {
+    this.set("instrumentsSupportedByTreasury", Value.fromStringArray(value));
+  }
+
+  get TVLLockedETH(): BigDecimal {
+    let value = this.get("TVLLockedETH");
+    return value.toBigDecimal();
+  }
+
+  set TVLLockedETH(value: BigDecimal) {
+    this.set("TVLLockedETH", Value.fromBigDecimal(value));
+  }
+
+  get TVLLockedUSD(): BigDecimal {
+    let value = this.get("TVLLockedUSD");
+    return value.toBigDecimal();
+  }
+
+  set TVLLockedUSD(value: BigDecimal) {
+    this.set("TVLLockedUSD", Value.fromBigDecimal(value));
+  }
+}
+
+export class TreasurySupportedInstruments extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id !== null,
+      "Cannot save TreasurySupportedInstruments entity without an ID"
+    );
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save TreasurySupportedInstruments entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("TreasurySupportedInstruments", id.toString(), this);
+  }
+
+  static load(id: string): TreasurySupportedInstruments | null {
+    return store.get(
+      "TreasurySupportedInstruments",
+      id
+    ) as TreasurySupportedInstruments | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get address(): Bytes {
+    let value = this.get("address");
+    return value.toBytes();
+  }
+
+  set address(value: Bytes) {
+    this.set("address", Value.fromBytes(value));
+  }
+
+  get sighTreasury(): string {
+    let value = this.get("sighTreasury");
+    return value.toString();
+  }
+
+  set sighTreasury(value: string) {
+    this.set("sighTreasury", Value.fromString(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    return value.toString();
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
+  get symbol(): string {
+    let value = this.get("symbol");
+    return value.toString();
+  }
+
+  set symbol(value: string) {
+    this.set("symbol", Value.fromString(value));
+  }
+
+  get decimals(): BigInt {
+    let value = this.get("decimals");
+    return value.toBigInt();
+  }
+
+  set decimals(value: BigInt) {
+    this.set("decimals", Value.fromBigInt(value));
+  }
+
+  get isBeingDripped(): boolean {
+    let value = this.get("isBeingDripped");
+    return value.toBoolean();
+  }
+
+  set isBeingDripped(value: boolean) {
+    this.set("isBeingDripped", Value.fromBoolean(value));
+  }
+
+  get DripSpeed(): BigDecimal {
+    let value = this.get("DripSpeed");
+    return value.toBigDecimal();
+  }
+
+  set DripSpeed(value: BigDecimal) {
+    this.set("DripSpeed", Value.fromBigDecimal(value));
+  }
+
+  get isInitialized(): boolean {
+    let value = this.get("isInitialized");
+    return value.toBoolean();
+  }
+
+  set isInitialized(value: boolean) {
+    this.set("isInitialized", Value.fromBoolean(value));
+  }
+
+  get balanceInTreasury(): BigDecimal {
+    let value = this.get("balanceInTreasury");
+    return value.toBigDecimal();
+  }
+
+  set balanceInTreasury(value: BigDecimal) {
+    this.set("balanceInTreasury", Value.fromBigDecimal(value));
+  }
+
+  get totalAmountDripped(): BigDecimal {
+    let value = this.get("totalAmountDripped");
+    return value.toBigDecimal();
+  }
+
+  set totalAmountDripped(value: BigDecimal) {
+    this.set("totalAmountDripped", Value.fromBigDecimal(value));
+  }
+
+  get totalAmountTransferred(): BigDecimal {
+    let value = this.get("totalAmountTransferred");
+    return value.toBigDecimal();
+  }
+
+  set totalAmountTransferred(value: BigDecimal) {
+    this.set("totalAmountTransferred", Value.fromBigDecimal(value));
+  }
+}
+
 export class SIGH_FINANCE extends Entity {
   constructor(id: string) {
     super();

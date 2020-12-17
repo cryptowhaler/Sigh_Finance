@@ -143,7 +143,7 @@ type SIGH_Instrument @entity {
     blocksPerCycle: BigInt!
 
     sighTreasuryDistributionSpeed: BigDecimal!
-    sighVolatilityHarvestsSpeed: BigDecimal!
+    sighVolatilityHarvestsDistributionSpeed: BigDecimal!
 
     currentCycle: BigInt!
     currentSchedule: BigInt!

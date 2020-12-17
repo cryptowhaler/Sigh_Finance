@@ -8,7 +8,6 @@ pragma solidity ^0.5.16;
  */
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
 
 import "./EIP20InterfaceSIGH.sol";
@@ -26,7 +25,6 @@ contract Treasury is VersionedInitializable   {
     // STATE OF THE INSTRUMENTS HELD IN THE TREASURY
     struct instrumentState {
         bool initialized;
-        string name;
         uint balance;
         uint totalAmountDripped;
         uint totalAmountTransferred;
@@ -65,13 +63,13 @@ contract Treasury is VersionedInitializable   {
     
 
 
-    event InstrumentInitialized( address instrument, string name, uint balance, uint totalAmountDripped, uint totalAmountTransferred  );
+    event InstrumentInitialized( address instrument, uint balance, uint totalAmountDripped, uint totalAmountTransferred  );
 
     event InstrumentDistributionInitialized(bool isDripAllowed, address targetAddressForDripping, address instrumentBeingDripped,  uint dripSpeed, uint initializationBlockNumber);
     event InstrumentDistributionReset(bool isDripAllowed, address targetAddressForDripping, address instrumentBeingDripped,  uint dripSpeed, uint blockNumber); 
-    event instrumentBeingDistributedChanged(address newInstrumentToBeDripped, uint blockNumber);
+    event instrumentBeingDistributedChanged(address newInstrumentToBeDripped, uint dripSpeed, uint blockNumber);
     event DripSpeedChanged(uint prevDripSpeed , uint curDripSpeed,  uint blockNumber ); 
-    event AmountDripped(address targetAddress, address instrumentBeingDripped, uint currentBalance , uint AmountDripped, uint totalAmountDripped ); 
+    event AmountDripped(address targetAddress, address instrumentBeingDripped, uint AmountDripped , uint currentBalance, uint totalAmountDripped ); 
 
     event maxTransferAmountUpdated(uint prevmaxTransferLimit, uint newmaxTransferLimit, uint sighBalance);
     event SIGHTransferred(address indexed TargetAddress, uint amountTransferred, uint blockNumber);
@@ -109,7 +107,7 @@ contract Treasury is VersionedInitializable   {
 
     event SIGHTreasuryInitialized(address msgSender, address addressesProvider, address SIGH, address sighDistributionHandler);
 
-    uint256 constant private DATA_PROVIDER_REVISION = 0x1;
+    uint256 constant private DATA_PROVIDER_REVISION = 0x3;
 
     function getRevision() internal pure returns(uint256) {
         return DATA_PROVIDER_REVISION;
@@ -280,7 +278,7 @@ contract Treasury is VersionedInitializable   {
         treasuryDripState.instrumentBeingDripped = instrumentToDrip;                    // STATE UPDATE : INSTRUMENT BEING DRIPPED UPDATED
         require(treasuryDripState.instrumentBeingDripped == instrumentToDrip, 'Address for the instrument to be Dripped not assigned properly');
 
-        emit instrumentBeingDistributedChanged(treasuryDripState.instrumentBeingDripped, block.number);
+        emit instrumentBeingDistributedChanged(treasuryDripState.instrumentBeingDripped, treasuryDripState.DripSpeed,  block.number);
         return true;
     }  
 
@@ -331,13 +329,12 @@ contract Treasury is VersionedInitializable   {
         require( !instrumentStates[instrument].initialized,"The provided instrument has already been initialized" );
 
         IERC20 instrumentContract = IERC20(instrument);
-        ERC20Detailed instrumentContractDetailed = ERC20Detailed(instrument);
 
         // STATE UPDATE : NEW INSTRUMENT INITIALIZED
-        instrumentStates[instrument] = instrumentState({ initialized: true, name: instrumentContractDetailed.name(), balance: instrumentContract.balanceOf(address(this)), totalAmountDripped: uint(0), totalAmountTransferred: uint(0) });
+        instrumentStates[instrument] = instrumentState({ initialized: true, balance: instrumentContract.balanceOf(address(this)), totalAmountDripped: uint(0), totalAmountTransferred: uint(0) });
         allInstruments.push(instrument);        // STATE UPDATE : INSTRUMENT ADDED TO THE LIST
         
-        emit InstrumentInitialized( instrument, instrumentStates[instrument].name, instrumentStates[instrument].balance, instrumentStates[instrument].totalAmountDripped, instrumentStates[instrument].totalAmountTransferred  );
+        emit InstrumentInitialized( instrument, instrumentStates[instrument].balance, instrumentStates[instrument].totalAmountDripped, instrumentStates[instrument].totalAmountTransferred  );
         return true;
     }
     
@@ -412,7 +409,7 @@ contract Treasury is VersionedInitializable   {
         uint dif = sub(blockNumber, periodInitializationBlock, 'underflow');
         
         if ( dif > periodLength )   {
-            uint currentBalance = sigh_Instrument.balanceOf(address(this)); // get total Supply
+            uint currentBalance = sigh_Instrument.balanceOf(address(this)); // get current SIGH Balance of Treasury
             uint prevmaxTransferLimit = maxSIGHTransferLimit;
             maxSIGHTransferLimit = div(currentBalance,25,'updatemaxTransferAmount: Division returned error');  // STATE UPDATE : MAXIMUM SIGH THAT CAN BE TRANSFERRED UPDATED (4% in a day is the max)
             periodInitializationBlock = block.number;                                                                  // STATE UPDATE: Block number when this period begins is stored
@@ -424,8 +421,7 @@ contract Treasury is VersionedInitializable   {
         else {
             uint maxTradeSize = sub(maxSIGHTransferLimit,totalSighTradedAndTransferred,"Error when subtracting current amount of sigh trade/transferred from max sigh transfer limit " );
             uint currentTradeSize = min( maxTradeSize, sigh_amount);
-            uint prevtotalSighTradedAndTransferred = totalSighTradedAndTransferred;
-            totalSighTradedAndTransferred = add(prevtotalSighTradedAndTransferred,currentTradeSize,"Error when updating total Sigh amount traded / transferred during the current period " );
+            totalSighTradedAndTransferred = add(totalSighTradedAndTransferred,currentTradeSize,"Error when updating total Sigh amount traded / transferred during the current period " );
             return currentTradeSize;
         }
     }
@@ -437,10 +433,10 @@ contract Treasury is VersionedInitializable   {
 
     // INSTRUMENT STATE RELATED VIEW FUNCTIONS
     
-    function getInstrumentState(address instrument) external view returns ( bool initialized, string memory name, uint balance, uint totalAmountDripped, uint totalAmountTransferred) {
+    function getInstrumentState(address instrument) external view returns ( bool initialized, uint balance, uint totalAmountDripped, uint totalAmountTransferred) {
         IERC20 instrumentContract = IERC20(instrument);
         uint balance_ = instrumentContract.balanceOf(address(this)); // get current balance of INSTRUMENT
-        return (instrumentStates[instrument].initialized , instrumentStates[instrument].name , balance_ , instrumentStates[instrument].totalAmountDripped , instrumentStates[instrument].totalAmountTransferred  );
+        return (instrumentStates[instrument].initialized , balance_ , instrumentStates[instrument].totalAmountDripped , instrumentStates[instrument].totalAmountTransferred  );
     }
 
     function getAllInstruments() external view returns (address[] memory) {

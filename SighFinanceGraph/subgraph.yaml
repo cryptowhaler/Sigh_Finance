@@ -131,6 +131,54 @@ dataSources:
           handler: handleDripped     
 
   - kind: ethereum/contract
+    name: SIGHTreasury
+    network: kovan
+    source:
+      address: "0x9384cc955D80A6bE5d3ca5f00565A0238994cf91"
+      abi: SIGHTreasury
+      startBlock: 22601871
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping/SIGHTreasury.ts
+      entities:
+        - SIGH_Instrument
+      abis:
+      - name: SIGHTreasury
+        file: ./abis/SIGHTreasury.json
+      eventHandlers:
+        - event: SIGHBurnAllowedSwitched(bool,uint256)
+          handler: handleSIGHBurnAllowedSwitched
+        - event: SIGH_Burned(address,uint256,uint256,uint256,uint256)
+          handler: handleSIGH_Burned
+        - event: SIGHBurnSpeedChanged(uint256,uint256,uint256)
+          handler: handleSIGHBurnSpeedChanged      
+        - event: InstrumentInitialized(address,uint256,uint256,uint256)
+          handler: handleInstrumentInitialized       
+        - event: InstrumentDistributionInitialized(bool,address,address,uint256,uint256)
+          handler: handleInstrumentDistributionInitialized    
+        - event: InstrumentDistributionInitialized(bool,address,address,uint256,uint256)
+          handler: handleInstrumentDistributionInitialized    
+        - event: InstrumentDistributionReset(bool,address,address,uint256,uint256)
+          handler: handleInstrumentDistributionReset   
+        - event: instrumentBeingDistributedChanged(address,uint256)
+          handler: handleinstrumentBeingDistributedChanged 
+        - event: DripSpeedChanged(uint256,uint256,uint256)
+          handler: handleDripSpeedChanged 
+        - event: AmountDripped(address,address,uint256,uint256,uint256)
+          handler: handleAmountDripped
+        - event: maxTransferAmountUpdated(uint256,uint256,uint256)
+          handler: handlemaxTransferAmountUpdated
+        - event: SIGHTransferred(indexed address,uint256,uint256)
+          handler: handleSIGHTransferred
+        - event: TokensBought(address,uint256,uint256)
+          handler: handleTokensBought
+        - event: TokensSold(address,uint256,uint256)
+          handler: handleTokensSold
+
+
+  - kind: ethereum/contract
     name: Lending_Pool_Core
     network: kovan
     source:

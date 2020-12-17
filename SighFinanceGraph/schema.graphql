@@ -45,6 +45,13 @@ type AddressesProvider @entity {
     SIGH_Treasury_Impl: Bytes!
 }
 
+
+
+
+
+
+
+
 type SIGHSpeedControllerState @entity {
     id: ID!
     address: Bytes!
@@ -74,6 +81,70 @@ type SpeedControllerSupportedProtocols @entity {
     updateDripSpeedTxHistory: [String!]!
     dripTxHistory: [String!]!
 }
+
+
+
+
+
+
+type SIGHTreasuryState @entity { 
+    id: ID!
+    address: Bytes!
+
+    sighMaxTransferLimit: BigDecimal!
+
+    isSIGHBurnAllowed: Boolean!
+    SIGHBurnSpeed: BigDecimal!
+    totalBurntSIGH: BigDecimal!
+
+    isDripAllowed: Boolean!
+    targetAddressForDripping: Bytes!
+    instrumentBeingDrippedAddress: Bytes!
+    instrumentBeingDrippedSymbol: String!
+    DripSpeed: BigDecimal!
+
+    instrumentsSupportedByTreasury: [TreasurySupportedInstruments!]! @derivedFrom(field:"sighTreasury")
+
+    TVLLockedETH: BigDecimal!
+    TVLLockedUSD: BigDecimal!
+
+    instrumentInitializedTxHashes: [Bytes!]!
+    instrumentDistributionInitializedTxHashes: [Bytes!]!
+    instrumentDistributionResetTxHashes: [Bytes!]!
+    instrumentForDistributionChangedTxHashes: [Bytes!]!
+    instrumentDistributionSpeedChangedTxHashes: [Bytes!]!
+
+}
+
+type TreasurySupportedInstruments @entity { 
+    id: ID!
+    address: Bytes!
+    sighTreasury: SIGHTreasuryState!
+
+    name: String!
+    symbol: String!
+    decimals: BigInt!
+
+    isBeingDripped: Boolean!
+    DripSpeed: BigDecimal!
+    
+    isInitialized: Boolean!
+    balanceInTreasury: BigDecimal!
+    totalAmountDripped: BigDecimal!
+    totalAmountTransferred: BigDecimal!
+
+    instrumentDrippedTxHashes: [Bytes!]!
+}
+
+
+
+
+
+
+
+
+
+
 
 
 type SIGH_FINANCE @entity {    

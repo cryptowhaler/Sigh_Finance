@@ -29,6 +29,7 @@ export function handleNewProtocolSupported(event: NewProtocolSupported): void {
     Sigh_SpeedController.address = event.address as Address 
   }
 
+  // support protocol Tx Hash
   let supportNewProtocolTxHistoryHashes = Sigh_SpeedController.supportNewProtocolTxHistory
   supportNewProtocolTxHistoryHashes.push( event.transaction.hash.toHexString() )
   Sigh_SpeedController.supportNewProtocolTxHistory = supportNewProtocolTxHistoryHashes
@@ -81,9 +82,10 @@ export function handleProtocolRemoved(event: ProtocolRemoved): void {
 
   let Sigh_SpeedController = SIGHSpeedControllerState.load(event.address.toHexString())
 
+  // remove protocol Tx Hash
   let removeProtocolTxHistoryHashes = Sigh_SpeedController.removeProtocolTxHistory
   removeProtocolTxHistoryHashes.push( event.transaction.hash.toHexString() )
-  Sigh_SpeedController.supportNewProtocolTxHistory = removeProtocolTxHistoryHashes
+  Sigh_SpeedController.removeProtocolTxHistory = removeProtocolTxHistoryHashes
 
   Sigh_SpeedController.totalProtocolsSupported = Sigh_SpeedController.totalProtocolsSupported.minus(BigInt.fromI32(1))
 

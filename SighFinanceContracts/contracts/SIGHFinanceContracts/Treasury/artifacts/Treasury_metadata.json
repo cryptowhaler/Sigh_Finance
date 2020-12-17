@@ -152,12 +152,6 @@
 					},
 					{
 						"indexed": false,
-						"internalType": "string",
-						"name": "name",
-						"type": "string"
-					},
-					{
-						"indexed": false,
 						"internalType": "uint256",
 						"name": "balance",
 						"type": "uint256"
@@ -604,11 +598,6 @@
 						"internalType": "bool",
 						"name": "initialized",
 						"type": "bool"
-					},
-					{
-						"internalType": "string",
-						"name": "name",
-						"type": "string"
 					},
 					{
 						"internalType": "uint256",
@@ -1117,7 +1106,7 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
@@ -1131,10 +1120,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Treasury/TreasuryV1Impl.sol": {
-			"keccak256": "0x0965645cee5a44d7757d860b0bb50ad7f2e539f5da8ad5565303746508ae4aef",
+			"keccak256": "0xea0d53746d819b88fd40d60b945ff53507aa9e1e15669d8e3b2dddd3a72ad9a2",
 			"urls": [
-				"bzz-raw://38766bf07a468481ecd9de7fc903880bf4b2a56e7bdc0c617b4a5bb35acf09ce",
-				"dweb:/ipfs/Qmezgxsn8DUk3VGJ3Tqq8sduV1LKm7wViX4aoqJUfb3Yxc"
+				"bzz-raw://05ece2f8695af39ed792735bfbe50cedcf8e04f00688b307eaeaff02cd87ebd2",
+				"dweb:/ipfs/QmQFoqLfkyAAcu2wnTHvMQcSbL1p4zCcjfsHvYgBTDMWNr"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {
@@ -1205,13 +1194,6 @@
 			"urls": [
 				"bzz-raw://c7b50d4feda87e8875541afeb44f802ab539272bfb22f7c7da84c3d26e03a266",
 				"dweb:/ipfs/QmdSYn9D1Q3FRXRNDLYGGFoYb8rsN4U2MYdxciuZBTSg83"
-			]
-		},
-		"openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol": {
-			"keccak256": "0x4f4577659871ebf814a4adfb96bfec76b5a5e9dd7a414ca545152fe4ba1b932d",
-			"urls": [
-				"bzz-raw://d188138f791cdab03f888e06417d5eedfb378a3ed6f0d8e063da6403b4c6b9c6",
-				"dweb:/ipfs/Qme3scJo781TbYD8Svx86JhLvyY1Tk1ekXvw5novFwaS9Y"
 			]
 		},
 		"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
