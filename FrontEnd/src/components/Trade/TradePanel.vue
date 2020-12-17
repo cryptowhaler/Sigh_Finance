@@ -45,6 +45,8 @@ export default {
                       currentBurnSpeed
 
                       # blocksPerCycle
+                      sighTreasuryDistributionSpeed
+                      sighVolatilityHarvestsDistributionSpeed
 
                       isUpperCheckForVolatilitySet
                       cryptoMarketSentiment

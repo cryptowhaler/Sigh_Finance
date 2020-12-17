@@ -967,6 +967,27 @@ export class SIGH_Instrument extends Entity {
     this.set("blocksPerCycle", Value.fromBigInt(value));
   }
 
+  get sighTreasuryDistributionSpeed(): BigDecimal {
+    let value = this.get("sighTreasuryDistributionSpeed");
+    return value.toBigDecimal();
+  }
+
+  set sighTreasuryDistributionSpeed(value: BigDecimal) {
+    this.set("sighTreasuryDistributionSpeed", Value.fromBigDecimal(value));
+  }
+
+  get sighVolatilityHarvestsDistributionSpeed(): BigDecimal {
+    let value = this.get("sighVolatilityHarvestsDistributionSpeed");
+    return value.toBigDecimal();
+  }
+
+  set sighVolatilityHarvestsDistributionSpeed(value: BigDecimal) {
+    this.set(
+      "sighVolatilityHarvestsDistributionSpeed",
+      Value.fromBigDecimal(value)
+    );
+  }
+
   get currentCycle(): BigInt {
     let value = this.get("currentCycle");
     return value.toBigInt();

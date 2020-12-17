@@ -1,6 +1,6 @@
 import { Address, BigDecimal, BigInt, log } from "@graphprotocol/graph-ts"
 import { DistributionInitialized, NewProtocolSupported, ProtocolRemoved, DistributionSpeedChanged, Dripped } from "../../generated/SIGHSpeedController/SIGHSpeedController"
-import { SIGHSpeedControllerState, SpeedControllerSupportedProtocols } from "../../generated/schema"
+import { SIGHSpeedControllerState, SpeedControllerSupportedProtocols, SIGH_Instrument } from "../../generated/schema"
 import { SIGHSpeedController } from '../../generated/SIGHSpeedController/SIGHSpeedController'
 
 
@@ -55,6 +55,17 @@ export function handleNewProtocolSupported(event: NewProtocolSupported): void {
   supportedProtocolState.sighSpeed = event.params.sighSpeed.toBigDecimal().div(decimalAdj)
   supportedProtocolState.totalDistributedAmount = event.params.totalDrippedAmount.toBigDecimal().div(decimalAdj)
 
+  if (supportedProtocolState.name == 'SIGH Treasury') {
+    let sighInstrument = SIGH_Instrument.load('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba')
+    sighInstrument.sighTreasuryDistributionSpeed = supportedProtocolState.sighSpeed
+    sighInstrument.save()
+  }
+  if (supportedProtocolState.name == 'SIGH Volatility Harvests') {
+    let sighInstrument = SIGH_Instrument.load('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba')
+    sighInstrument.sighVolatilityHarvestsDistributionSpeed = supportedProtocolState.sighSpeed
+    sighInstrument.save()
+  }
+
   Sigh_SpeedController.totalSighDripSpeed = Sigh_SpeedController.totalSighDripSpeed.plus( supportedProtocolState.sighSpeed )
 
   supportedProtocolState.save()
@@ -85,6 +96,17 @@ export function handleProtocolRemoved(event: ProtocolRemoved): void {
   supportedProtocolState.sighSpeed = BigDecimal.fromString('0')
   supportedProtocolState.totalDistributedAmount = event.params.totalDrippedToProtocol.toBigDecimal().div(decimalAdj)
 
+  if (supportedProtocolState.name == 'SIGH Treasury') {
+    let sighInstrument = SIGH_Instrument.load('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba')
+    sighInstrument.sighTreasuryDistributionSpeed = supportedProtocolState.sighSpeed
+    sighInstrument.save()
+  }
+  if (supportedProtocolState.name == 'SIGH Volatility Harvests') {
+    let sighInstrument = SIGH_Instrument.load('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba')
+    sighInstrument.sighVolatilityHarvestsDistributionSpeed = supportedProtocolState.sighSpeed
+    sighInstrument.save()
+  }
+
   supportedProtocolState.save()
   Sigh_SpeedController.save()
   UpdateSIGHBalance(event.address.toHexString())  // Updates current SIGH Balance (for SIGH Speed Controller)
@@ -106,6 +128,17 @@ export function handleDistributionSpeedChanged(event: DistributionSpeedChanged):
   supportedProtocolState.updateDripSpeedTxHistory = updateDripSpeedTxHistoryHashes
 
   Sigh_SpeedController.totalSighDripSpeed = Sigh_SpeedController.totalSighDripSpeed.plus( supportedProtocolState.sighSpeed )
+
+  if (supportedProtocolState.name == 'SIGH Treasury') {
+    let sighInstrument = SIGH_Instrument.load('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba')
+    sighInstrument.sighTreasuryDistributionSpeed = supportedProtocolState.sighSpeed
+    sighInstrument.save()
+  }
+  if (supportedProtocolState.name == 'SIGH Volatility Harvests') {
+    let sighInstrument = SIGH_Instrument.load('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba')
+    sighInstrument.sighVolatilityHarvestsDistributionSpeed = supportedProtocolState.sighSpeed
+    sighInstrument.save()
+  }
 
   supportedProtocolState.save()
   Sigh_SpeedController.save()

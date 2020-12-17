@@ -216,6 +216,9 @@ export function createSIGH(addressID: string): SIGH_Instrument {
 
   sigh_token_contract.oracle = Address.fromString('0x667Dc203721D94Ea30055E25477c89732aC1C030',) 
 
+  sigh_token_contract.sighTreasuryDistributionSpeed = BigDecimal.fromString('0')
+  sigh_token_contract.sighVolatilityHarvestsDistributionSpeed = BigDecimal.fromString('0')
+  
   sigh_token_contract.maxSighVolatilityHarvestSpeedWEI = BigDecimal.fromString('0')
   sigh_token_contract.maxSighVolatilityHarvestSpeed = BigDecimal.fromString('0')
 

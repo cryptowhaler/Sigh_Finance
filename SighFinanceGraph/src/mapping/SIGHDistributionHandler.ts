@@ -233,7 +233,7 @@ export function handleInstrumentVolatilityCalculated(event: InstrumentVolatility
     instrumentState.present_total24HrSentimentVolatilityUSD = currentSighDistributionSnapshot.total24HrSentimentVolatilityUSD 
 
     // SIGH INSTRUMENT PARAMTERS : CUMULATIVE BULL AND BEAR VOLATILITY
-    let sighInstrument = SIGH_Instrument.load('0x4ebc60b9d2efa92b9eb681bf5b26aeb11de23bfd')
+    let sighInstrument = SIGH_Instrument.load('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba')
     // Resetting values when $SIGH speed is refreshed
     if ( event.block.number > sighInstrument.blockNumberWhenInstrumentVolatilityWasRefreshed  ) {
         sighInstrument.blockNumberWhenInstrumentVolatilityWasRefreshed = event.block.number
@@ -276,7 +276,7 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
     let instrumentState = Instrument.load(instrumentId)
 
     // SIGH INSTRUMENT PARAMTERS : 
-    let sighInstrument = SIGH_Instrument.load('0x4ebc60b9d2efa92b9eb681bf5b26aeb11de23bfd')
+    let sighInstrument = SIGH_Instrument.load('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba')
     if (event.block.number > BigInt.fromI32(22496079) ) {
         let sighDistributionHandlerAddress = Address.fromString('0x3FB401042D520c49E753cC449A032C56c87f36C6') 
         let sighDistributionHandlerContract = SIGHDistributionHandler.bind(sighDistributionHandlerAddress)
@@ -366,8 +366,8 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
         }
         let SIGHPriceETH = BigDecimal.fromString('1')
         if (event.block.number > BigInt.fromI32(22482561) ) {
-            SIGHPriceETH = oracleContract.getAssetPrice(Address.fromString('0x4Ebc60b9d2efA92B9eB681BF5b26AEB11DE23BFd')).toBigDecimal()
-            let SIGHPriceETHDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x4Ebc60b9d2efA92B9eB681BF5b26AEB11DE23BFd'))
+            SIGHPriceETH = oracleContract.getAssetPrice(Address.fromString('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba')).toBigDecimal()
+            let SIGHPriceETHDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba'))
             SIGHPriceETH = SIGHPriceETH.div(  BigInt.fromI32(10).pow(SIGHPriceETHDecimals as u8).toBigDecimal() )    
         }
 
@@ -479,7 +479,7 @@ export function handleAccuredSIGHTransferredToTheUser(event: AccuredSIGHTransfer
 
 
 export function handleSIGHSpeedUpdated(event: SIGHSpeedUpdated): void {
-    let sighInstrument = SIGH_Instrument.load('0x4ebc60b9d2efa92b9eb681bf5b26aeb11de23bfd')
+    let sighInstrument = SIGH_Instrument.load('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba')
     sighInstrument.maxSighVolatilityHarvestSpeedWEI =  event.params.newSIGHSpeed.toBigDecimal()
     sighInstrument.maxSighVolatilityHarvestSpeed =  sighInstrument.maxSighVolatilityHarvestSpeedWEI.div( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
     sighInstrument.save()
@@ -488,7 +488,7 @@ export function handleSIGHSpeedUpdated(event: SIGHSpeedUpdated): void {
 
 
 export function handleCryptoMarketSentimentUpdated(event: CryptoMarketSentimentUpdated): void {
-    let sighInstrument = SIGH_Instrument.load('0x4ebc60b9d2efa92b9eb681bf5b26aeb11de23bfd')
+    let sighInstrument = SIGH_Instrument.load('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba')
     sighInstrument.isUpperCheckForVolatilitySet = event.params.previsSpeedUpperCheckAllowed
     sighInstrument.cryptoMarketSentiment =  event.params.cryptoMarketSentiment.divDecimal( (BigInt.fromI32(10).pow(16 as u8).toBigDecimal()) )
     sighInstrument.save()
@@ -497,7 +497,7 @@ export function handleCryptoMarketSentimentUpdated(event: CryptoMarketSentimentU
 
 // WORKS AS EXPECTED
 export function handleMinimumBlocksForSpeedRefreshUpdated(event: minimumBlocksForSpeedRefreshUpdated): void {
-    let sighInstrument = SIGH_Instrument.load('0x4ebc60b9d2efa92b9eb681bf5b26aeb11de23bfd')
+    let sighInstrument = SIGH_Instrument.load('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba')
     sighInstrument.minimumBlocksBeforeSpeedRefresh = event.params.newDeltaBlocksForSpeed
     sighInstrument.save()
 }
@@ -505,7 +505,7 @@ export function handleMinimumBlocksForSpeedRefreshUpdated(event: minimumBlocksFo
 
 
 export function handleMaxSIGHSpeedCalculated(event: MaxSIGHSpeedCalculated): void {
-    let sighInstrument = SIGH_Instrument.load('0x4ebc60b9d2efa92b9eb681bf5b26aeb11de23bfd')
+    let sighInstrument = SIGH_Instrument.load('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba')
 
     sighInstrument.blockNumberWhenSighVolatilityHarvestSpeedWasRefreshed = event.block.number
 
@@ -517,10 +517,10 @@ export function handleMaxSIGHSpeedCalculated(event: MaxSIGHSpeedCalculated): voi
     sighInstrument.maxHarvestSizePossibleETH = event.params._max_SIGHDistributionLimitDecimalsAdjusted.divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) )
 
     // GETTING ETH PRICE IN USD
-    let oracleAddress = Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12',) 
+    let oracleAddress = Address.fromString('0x667dc203721d94ea30055e25477c89732ac1c030',) 
     let oracleContract = PriceOracleGetter.bind( oracleAddress)
-    let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12')).toBigDecimal()
-    let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0x9803DB21B6b535923D3c69Cc1b000d4bd45CCb12'))
+    let ETH_PriceInUSD = oracleContract.getAssetPrice(Address.fromString('0xBFa39B812Cab46cf930fd50e0Cd868A06bFe60e0')).toBigDecimal()
+    let ETH_PriceInUSDDecimals = oracleContract.getAssetPriceDecimals(Address.fromString('0xBFa39B812Cab46cf930fd50e0Cd868A06bFe60e0'))
     let ETHPriceInUSD = ETH_PriceInUSD.div(  BigInt.fromI32(10).pow(ETH_PriceInUSDDecimals as u8).toBigDecimal() )
 
     sighInstrument.totalLendingProtocolSentimentVolatilityPerBlockUSD = sighInstrument.totalLendingProtocolSentimentVolatilityPerBlockETH.times(ETHPriceInUSD)

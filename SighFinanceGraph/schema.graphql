@@ -142,6 +142,9 @@ type SIGH_Instrument @entity {
 
     blocksPerCycle: BigInt!
 
+    sighTreasuryDistributionSpeed: BigDecimal!
+    sighVolatilityHarvestsDistributionSpeed: BigDecimal!
+
     currentCycle: BigInt!
     currentSchedule: BigInt!
     currentInflation: BigDecimal!

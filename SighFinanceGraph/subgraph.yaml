@@ -114,6 +114,7 @@ dataSources:
       entities:
         - SIGHSpeedControllerState
         - SpeedControllerSupportedProtocols
+        - SIGH_Instrument
       abis:
       - name: SIGHSpeedController
         file: ./abis/SIGHSpeedController.json
