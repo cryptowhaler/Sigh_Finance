@@ -6,37 +6,34 @@ import { SIGHSpeedController } from '../../generated/SIGHSpeedController/SIGHSpe
 
 
 export function handleDistributionInitialized(event: DistributionInitialized): void {
-  log.info("in handleDistributionInitialized-1,",[])
   let Sigh_SpeedController = SIGHSpeedControllerState.load(event.address.toHexString())
   if (Sigh_SpeedController == null) {
     Sigh_SpeedController = createSigh_SpeedController(event.address.toHexString())
     Sigh_SpeedController.address = event.address as Address 
   }
-  log.info("in handleDistributionInitialized-2,{}",[event.address.toHexString()])
   Sigh_SpeedController.isDripAllowed = true
   Sigh_SpeedController.initializationBlockNumber = event.params.blockNumber
-  log.info("in handleDistributionInitialized-3: {},",[Sigh_SpeedController.initializationBlockNumber.toString()])
-
   Sigh_SpeedController.save()
-  log.info("in handleDistributionInitialized-4,",[])
 
-  // UpdateSIGHBalance(event.address.toHexString())  // Updates current SIGH Balance (for SIGH Speed Controller)
+  UpdateSIGHBalance(event.address.toHexString())  // Updates current SIGH Balance (for SIGH Speed Controller)
 }
 
 
 
 export function handleNewProtocolSupported(event: NewProtocolSupported): void {
-  log.info("in handleNewProtocolSupported - 1,",[])
   let decimalAdj = BigInt.fromI32(10).pow(18 as u8).toBigDecimal()
-  log.info("in handleNewProtocolSupported-2, {}",[decimalAdj.toString()])
 
   let Sigh_SpeedController = SIGHSpeedControllerState.load(event.address.toHexString())
   if (Sigh_SpeedController == null) {
     Sigh_SpeedController = createSigh_SpeedController(event.address.toHexString())
     Sigh_SpeedController.address = event.address as Address 
   }
-  log.info("in handleNewProtocolSupported-3,",[])
-  Sigh_SpeedController.supportNewProtocolTxHistory.push( event.transaction.hash )
+
+  let supportNewProtocolTxHistoryHashes = Sigh_SpeedController.supportNewProtocolTxHistory
+  supportNewProtocolTxHistoryHashes.push( event.transaction.hash.toHexString() )
+  Sigh_SpeedController.supportNewProtocolTxHistory = supportNewProtocolTxHistoryHashes
+
+  log.info("in handleNewProtocolSupported : {}",[event.transaction.hash.toHexString()])
   Sigh_SpeedController.totalProtocolsSupported = Sigh_SpeedController.totalProtocolsSupported.plus(BigInt.fromI32(1))
 
   let supportedProtocolID = event.params.protocolAddress.toHexString()
@@ -44,9 +41,14 @@ export function handleNewProtocolSupported(event: NewProtocolSupported): void {
   if (supportedProtocolState == null ) {
     supportedProtocolState = createSupportedProtocolState(supportedProtocolID)
     supportedProtocolState.speedController = event.address.toHexString()
+    if ( supportedProtocolID == '0xce0281e5f7d490aeb44296a4fc08c907cf2de0bc' ) {
+      supportedProtocolState.name = 'SIGH Treasury'
+    }
+    if ( supportedProtocolID == '0xfeb7cf0eba9a65dc2977a85fac38566c5bb9a679' ) {
+      supportedProtocolState.name = 'SIGH Volatility Harvests'
+    }
   }
   Sigh_SpeedController.totalSighDripSpeed = Sigh_SpeedController.totalSighDripSpeed.minus( supportedProtocolState.sighSpeed )
-  log.info("in handleNewProtocolSupported-4,",[])
 
   supportedProtocolState.isSupported = true
   supportedProtocolState.address = event.params.protocolAddress
@@ -58,7 +60,7 @@ export function handleNewProtocolSupported(event: NewProtocolSupported): void {
   supportedProtocolState.save()
   Sigh_SpeedController.save()
 
-  // UpdateSIGHBalance(event.address.toHexString())  // Updates current SIGH Balance (for SIGH Speed Controller)
+  UpdateSIGHBalance(event.address.toHexString())  // Updates current SIGH Balance (for SIGH Speed Controller)
 }
 
 
@@ -67,7 +69,11 @@ export function handleProtocolRemoved(event: ProtocolRemoved): void {
   let decimalAdj = BigInt.fromI32(10).pow(18 as u8).toBigDecimal()
 
   let Sigh_SpeedController = SIGHSpeedControllerState.load(event.address.toHexString())
-  Sigh_SpeedController.removeProtocolTxHistory.push( event.transaction.hash )
+
+  let removeProtocolTxHistoryHashes = Sigh_SpeedController.removeProtocolTxHistory
+  removeProtocolTxHistoryHashes.push( event.transaction.hash.toHexString() )
+  Sigh_SpeedController.supportNewProtocolTxHistory = removeProtocolTxHistoryHashes
+
   Sigh_SpeedController.totalProtocolsSupported = Sigh_SpeedController.totalProtocolsSupported.minus(BigInt.fromI32(1))
 
   let supportedProtocolID = event.params.protocolAddress.toHexString()
@@ -94,7 +100,10 @@ export function handleDistributionSpeedChanged(event: DistributionSpeedChanged):
   Sigh_SpeedController.totalSighDripSpeed = Sigh_SpeedController.totalSighDripSpeed.minus( supportedProtocolState.sighSpeed )
 
   supportedProtocolState.sighSpeed = event.params.newSpeed.toBigDecimal().div(decimalAdj)
-  supportedProtocolState.updateDripSpeedTxHistory.push( event.transaction.hash )
+
+  let updateDripSpeedTxHistoryHashes = supportedProtocolState.updateDripSpeedTxHistory
+  updateDripSpeedTxHistoryHashes.push( event.transaction.hash.toHexString() )
+  supportedProtocolState.updateDripSpeedTxHistory = updateDripSpeedTxHistoryHashes
 
   Sigh_SpeedController.totalSighDripSpeed = Sigh_SpeedController.totalSighDripSpeed.plus( supportedProtocolState.sighSpeed )
 
@@ -112,7 +121,10 @@ export function handleDripped(event: Dripped): void {
   let supportedProtocolState = SpeedControllerSupportedProtocols.load(supportedProtocolID)
 
   supportedProtocolState.totalDistributedAmount = event.params.totalAmountDripped.toBigDecimal().div(decimalAdj)
-  supportedProtocolState.dripTxHistory.push( event.transaction.hash )
+
+  let dripTxHistoryHashes = supportedProtocolState.dripTxHistory
+  dripTxHistoryHashes.push( event.transaction.hash.toHexString() )
+  supportedProtocolState.dripTxHistory = dripTxHistoryHashes
 
   supportedProtocolState.save()
   Sigh_SpeedController.save()
@@ -123,18 +135,12 @@ export function handleDripped(event: Dripped): void {
 
 
 function UpdateSIGHBalance( ID: string ) : void {
-  log.info("in UpdateSIGHBalance-1, {}",[])
-
-  // Getting SIGH Balance
   let decimalAdj = BigInt.fromI32(10).pow(18 as u8).toBigDecimal()
+
   let Sigh_SpeedController = SIGHSpeedControllerState.load(ID)
-  log.info("in UpdateSIGHBalance-2, {}",[Sigh_SpeedController.address.toHexString()])
   let contractAddress = Sigh_SpeedController.address as Address
   let _SighSpeedControllerContract = SIGHSpeedController.bind(contractAddress)
-  log.info("in UpdateSIGHBalance-3, {}",[])
   Sigh_SpeedController.currentSIGHbalance = _SighSpeedControllerContract.getSIGHBalance().toBigDecimal().div(decimalAdj)  
-  log.info("in UpdateSIGHBalance-4, {}",[Sigh_SpeedController.currentSIGHbalance.toString()])
-
   Sigh_SpeedController.save()
 }
 
