@@ -10,15 +10,21 @@ pragma solidity ^0.5.16;
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
 import "../Interfaces/ISighSpeedController.sol";
 import "../../configuration/IGlobalAddressesProvider.sol";
- 
+
+import "../Interfaces/ISighDistributionHandler.sol"; 
+
 contract SighSpeedController is ISighSpeedController {
 
-  /// @notice Reference to SIGH
-  IERC20 private sighInstrument;
   IGlobalAddressesProvider private addressesProvider;
+
+  IERC20 private sighInstrument;                                         // SIGH INSTRUMENT CONTRACT
+  ISighDistributionHandler private sighDistributionHandlerContract;      // SIGH DISTRIBUTION HANDLER CONTRACT
+  address private treasuryAddress;                                       // SIGH TREASURY ADDRESS
 
   bool private isDripAllowed = false;  
   uint private lastDripBlockNumber;    
+  
+  Exp private treasurySpeedRatio = Exp({ mantissa: 50e18 });
     
   struct protocolState {
     bool isSupported;
@@ -30,17 +36,26 @@ contract SighSpeedController is ISighSpeedController {
   mapping (address => protocolState) private supportedProtocols;
   address[] private storedSupportedProtocols; 
 
+   uint private totalDrippedToTreasury;                 // TOTAL $SIGH DRIPPED TO TREASURY
+   uint private recentlyDrippedToTreasury;              // $SIGH RECENTLY DRIPPED TO TREASURY
+
+    struct Exp {
+        uint mantissa;
+    }
+
 // ########################
 // ####### EVENTS #########
 // ########################
 
   event DistributionInitialized(uint blockNumber);
+  event TreasurySpeedRatioUpdated(uint newTreasurySpeedRatio );
 
   event NewProtocolSupported (address protocolAddress, uint sighSpeed, uint totalDrippedAmount, uint blockNumber);
   event ProtocolRemoved(address protocolAddress, uint totalDrippedToProtocol, uint blockNumber);
   
   event DistributionSpeedChanged(address protocolAddress, uint prevSpeed , uint newSpeed, uint blockNumber );  
   event Dripped(address protocolAddress, uint deltaBlocks, uint distributionSpeed, uint AmountDripped, uint totalAmountDripped, uint blockNumber ); 
+  event DrippedToTreasury(address treasuryAddress,uint deltaBlocks,uint treasuryDistributionSpeed,uint recentlyDrippedToTreasury ,uint totalDrippedToTreasury,uint blockNumber_ ); 
 
 // ########################
 // ####### MODIFIER #######
@@ -74,13 +89,25 @@ contract SighSpeedController is ISighSpeedController {
 // ###########   SIGH DISTRIBUTION : INITIALIZED DRIPPING (Can be called only once)   ##########
 // #############################################################################################
 
-  function beginDripping () external onlySighFinanceConfigurator returns (bool) {
+  function beginDripping ( address treasuryAddress_, address sighDistributionHandler_ ) external onlySighFinanceConfigurator returns (bool) {
     require(!isDripAllowed,"Dripping can only be initialized once");
+    require(treasuryAddress_ != address(0),"Treasury Address not valid");
+    require(sighDistributionHandler_ != address(0),"Treasury Address not valid");
 
     isDripAllowed = true;
+    treasuryAddress = treasuryAddress_;
+    sighDistributionHandlerContract = ISighDistributionHandler(sighDistributionHandler_);
+
     lastDripBlockNumber = block.number;
 
     emit DistributionInitialized( lastDripBlockNumber );
+    return true;
+  }
+
+  function setTreasurySpeedRatio(uint newRatio) external onlySighFinanceConfigurator returns (bool) {
+    require( 1e18 <= newRatio <=100e18,"Dripping can only be initialized once");
+    treasurySpeedRatio = Exp({mantissa: newRatio });  
+    emit TreasurySpeedRatioUpdated( treasurySpeedRatio.mantissa );
     return true;
   }
 
@@ -174,7 +201,38 @@ contract SighSpeedController is ISighSpeedController {
   function drip() public {
     require(isDripAllowed,'Dripping has not been initialized by the SIGH Finance Manager');    
     dripInternal();
+    dripToTreasuryInternal();
   }
+
+  function dripToTreasuryInternal() internal {
+    if ( treasuryAddress == address(0) || address(sighDistributionHandlerContract) == address(0) ) {
+      return true;
+    }
+    if (lastDripBlockNumber == block.number) {
+        return;
+    }
+
+    uint treasuryDistributionSpeed = sighDistributionHandlerContract.getSIGHSpeedUsed();
+
+      
+    IERC20 sighInstrument_ = sighInstrument;
+    
+    uint blockNumber_ = block.number;
+    uint reservoirBalance_ = sighInstrument_.balanceOf(address(this)); 
+    uint deltaBlocks = sub(blockNumber_,lastDripBlockNumber,"Delta Blocks gave error");
+                                    
+    uint deltaDrip_ = mul(treasuryDistributionSpeed, deltaBlocks , "dripTotal overflow");
+    uint toDrip_ = min(reservoirBalance_, deltaDrip_);
+            
+    require(reservoirBalance_ != 0, 'Protocol Transfer: The reservoir currently does not have any SIGH Instruments' );
+    require(sighInstrument_.transfer(treasuryAddress, toDrip_), 'Protocol Transfer: The transfer did not complete.' );
+                
+    totalDrippedToTreasury = add(totalDrippedToTreasury,toDrip_,"Overflow");
+    recentlyDrippedToTreasury = toDrip_;
+
+    emit DrippedToTreasury( treasuryAddress, deltaBlocks, treasuryDistributionSpeed, recentlyDrippedToTreasury , totalDrippedToTreasury, blockNumber_ ); 
+  }
+
   
   function dripInternal() internal {
      
@@ -215,6 +273,8 @@ contract SighSpeedController is ISighSpeedController {
     
     lastDripBlockNumber = block.number;
   }
+
+
 
 
 // ###############################################################
@@ -301,6 +361,11 @@ contract SighSpeedController is ISighSpeedController {
     require(c / a == b, errorMessage);
     return c;
   }
+
+  function mul_(uint a, Exp memory b) pure internal returns (uint) {
+      return mul_(a, b.mantissa) / expScale;
+  }
+
 
   function min(uint a, uint b) internal pure returns (uint) {
     if (a <= b) {
