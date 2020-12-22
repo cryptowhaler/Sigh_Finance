@@ -30,7 +30,7 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
     
   struct protocolState {
     bool isSupported;
-    Exp sighSpeedRatio = Exp({ mantissa: 1e18 });
+    Exp sighSpeedRatio;
     uint totalDrippedAmount;
     uint recentlyDrippedAmount;
   }
@@ -44,6 +44,8 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
     struct Exp {
         uint mantissa;
     }
+    
+    uint private expScale = 1e18;
 
 // ########################
 // ####### EVENTS #########
@@ -74,7 +76,7 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
 // ####### CONSTRUCTOR #######
 // ###########################
 
-    uint256 public constant REVISION = 0x1;             // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
+    uint256 public constant REVISION = 0x3;             // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
 
     function getRevision() internal pure returns (uint256) {        // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
         return REVISION;
@@ -84,12 +86,12 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
     * @dev this function is invoked by the proxy contract when the LendingPool contract is added to the AddressesProvider.
     * @param _addressesProvider the address of the GlobalAddressesProvider registry
     **/
-    function initialize(GlobalAddressesProvider _addressesProvider) public initializer {
+    function initialize(IGlobalAddressesProvider _addressesProvider) public initializer {
         addressesProvider = _addressesProvider;
         refreshConfigInternal();
     }
 
-  refreshConfigInternal() internal {
+  function refreshConfigInternal() internal {
     sighInstrument = IERC20(addressesProvider.getSIGHAddress());
     require(address(sighInstrument) != address(0), " SIGH Instrument not initialized Properly ");
     require(address(addressesProvider) != address(0), " AddressesProvider not initialized Properly ");    
@@ -124,11 +126,13 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
 
   function supportNewProtocol( address newProtocolAddress, uint sighSpeedRatio ) external onlySighFinanceConfigurator returns (bool)  {
     require (!supportedProtocols[newProtocolAddress].isSupported, 'This Protocol is already supported by the Sigh Speed Controller');
-    require ( sighSpeedRatio == 0 || ( 0.01e18 <=sighSpeedRatio <= 2e18 )  , "Invalid 'SIGH Volatiltiy harvesting - Speed Ratio' provided. ");
+    require (  sighSpeedRatio == 0 || ( 0.01e18 <= sighSpeedRatio && sighSpeedRatio <= 2e18 ), "Invalid 'SIGH Volatiltiy harvesting - Speed Ratio' provided. ");
 
 
     if (isDripAllowed) {
         dripInternal();
+        dripToVolatilityHarvesterInternal();
+        lastDripBlockNumber = block.number;
     }
     
     storedSupportedProtocols.push(newProtocolAddress);                              // ADDED TO THE LIST
@@ -141,7 +145,6 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
         supportedProtocols[newProtocolAddress] = protocolState({ isSupported: true, sighSpeedRatio: Exp({ mantissa: sighSpeedRatio }), totalDrippedAmount: uint(0), recentlyDrippedAmount: uint(0) });
     }
     
-    lastDripBlockNumber = block.number; // EITHER THIS WAS ALREADY DONE IN DRIPINTERNAL() OR WE DO IT HERE IF DRIPPING IS NOT ALLOWED AND A PROTOCOL IS BEING ADDED
     require (supportedProtocols[newProtocolAddress].isSupported, 'Error occured when adding the new protocol');
     require (supportedProtocols[newProtocolAddress].sighSpeedRatio.mantissa == sighSpeedRatio, 'SIGH Volatiltiy harvesting - Speed Ratio, for the new protocol was not initialized properly.');
     
@@ -155,6 +158,8 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
     
     if (isDripAllowed) {
         dripInternal();
+        dripToVolatilityHarvesterInternal();
+        lastDripBlockNumber = block.number;
     }
     
     uint index = 0;
@@ -173,7 +178,7 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
     require(storedSupportedProtocols.length == newLength, 'The length of the list was not properly decremented.' );
     
     supportedProtocols[protocolAddress_].isSupported = false;
-    supportedProtocols[protocolAddress_].sighSpeedRatio = Exp({ mantissa: 0 });;
+    supportedProtocols[protocolAddress_].sighSpeedRatio = Exp({ mantissa: 0 });
     require (supportedProtocols[protocolAddress_].isSupported == false, 'Error occured when removing the protocol.');
     require (supportedProtocols[protocolAddress_].sighSpeedRatio.mantissa == 0, 'SIGH Volatiltiy harvesting - Speed Ratio was not properly assigned to 0.');
 
@@ -187,8 +192,12 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
 
   function changeProtocolSIGHSpeedRatio (address targetAddress, uint newRatio_) external onlySighFinanceConfigurator returns (bool) {
     require(supportedProtocols[targetAddress].isSupported,'The Protocol is not Supported by the Sigh Speed Controller' );
+    require (  newRatio_ == 0 || ( 0.01e18 <= newRatio_ && newRatio_ <= 2e18 ), "Invalid 'SIGH Volatiltiy harvesting - Speed Ratio' provided. ");
+
     if (isDripAllowed) {
         dripInternal();
+        dripToVolatilityHarvesterInternal();
+        lastDripBlockNumber = block.number;
     }
     uint prevSpeed = supportedProtocols[targetAddress].sighSpeedRatio.mantissa;
     supportedProtocols[targetAddress].sighSpeedRatio.mantissa = newRatio_;
@@ -259,7 +268,7 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
             if ( supportedProtocols[ current_protocol ].isSupported ) {
                 
                 reservoirBalance_ = sighInstrument.balanceOf(address(this));
-                uint distributionSpeed = mul_(currentVolatilityHarvestSpeed, supportedProtocols[current_protocol].sighSpeedRatio )        // current Harvest Speed * Ratio / 1e18
+                uint distributionSpeed = mul_(currentVolatilityHarvestSpeed, supportedProtocols[current_protocol].sighSpeedRatio );       // current Harvest Speed * Ratio / 1e18
                 uint deltaDrip_ = mul(distributionSpeed, deltaBlocks , "dripTotal overflow");
                 uint toDrip_ = min(reservoirBalance_, deltaDrip_);
             
@@ -310,10 +319,17 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
   }
 
   function isThisProtocolSupported(address protocolAddress) external view returns (bool) {
+    if (protocolAddress == address(sighVolatilityHarvester) ) {
+        return true;
+    }
     return supportedProtocols[protocolAddress].isSupported;
   }
 
   function getSupportedProtocolState(address protocolAddress) external view returns (bool isSupported,uint sighHarvestingSpeedRatio,uint totalDrippedAmount,uint recentlyDrippedAmount ) {
+    if (protocolAddress == address(sighVolatilityHarvester) ) {
+        return (true, 1e18,totalDrippedToVolatilityHarvester,recentlyDrippedToVolatilityHarvester  );
+    }
+
   return (supportedProtocols[protocolAddress].isSupported,
           supportedProtocols[protocolAddress].sighSpeedRatio.mantissa,
           supportedProtocols[protocolAddress].totalDrippedAmount,
@@ -321,15 +337,24 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
   
   }
 
-  function getTotalAmountDistributedToProtocol(address protocolAddress) external view returns (uint) {
+  function getTotalAmountDistributedToProtocol(address protocolAddress) external view returns (uint) { 
+    if (protocolAddress == address(sighVolatilityHarvester) ) {
+        return totalDrippedToVolatilityHarvester;
+    }
     return supportedProtocols[protocolAddress].totalDrippedAmount;
   }
 
   function getRecentAmountDistributedToProtocol(address protocolAddress) external view returns (uint) {
+    if (protocolAddress == address(sighVolatilityHarvester) ) {
+        return recentlyDrippedToVolatilityHarvester;
+    }
     return supportedProtocols[protocolAddress].recentlyDrippedAmount;
   }
   
   function getSIGHSpeedRatioForProtocol(address protocolAddress) external view returns (uint) {
+    if (protocolAddress == address(sighVolatilityHarvester) ) {
+        return 1e18;
+    }
       return supportedProtocols[protocolAddress].sighSpeedRatio.mantissa;
   }
   
@@ -372,8 +397,8 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
     return c;
   }
 
-  function mul_(uint a, Exp memory b) pure internal returns (uint) {
-      return mul_(a, b.mantissa) / expScale;
+  function mul_(uint a, Exp memory b) internal  returns (uint) {
+      return mul(a, b.mantissa,'Exp multiplication failed') / expScale;
   }
 
 

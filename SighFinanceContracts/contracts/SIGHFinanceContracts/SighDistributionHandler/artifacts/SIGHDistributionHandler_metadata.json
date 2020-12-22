@@ -35,12 +35,6 @@
 				"inputs": [
 					{
 						"indexed": false,
-						"internalType": "bool",
-						"name": "previsSpeedUpperCheckAllowed",
-						"type": "bool"
-					},
-					{
-						"indexed": false,
 						"internalType": "uint256",
 						"name": "cryptoMarketSentiment",
 						"type": "uint256"
@@ -1162,11 +1156,6 @@
 				"constant": false,
 				"inputs": [
 					{
-						"internalType": "bool",
-						"name": "isSpeedUpperCheckAllowed_",
-						"type": "bool"
-					},
-					{
 						"internalType": "uint256",
 						"name": "cryptoMarketSentiment_",
 						"type": "uint256"
@@ -1401,10 +1390,10 @@
 			]
 		},
 		"localhost/contracts/Configuration/GlobalAddressesProvider.sol": {
-			"keccak256": "0x7212661ab967282a1020cd673c58fe003d4324aee365413406fd5e86071645c6",
+			"keccak256": "0x67e342721ca253f34cde0609cb93eb92b23b3ebd9f8fbd49394177fba368b03b",
 			"urls": [
-				"bzz-raw://dbc516c3b7d6b4b44cc373714e90817e8c6bac2a5ca089f49e0ea3a3b4ac764c",
-				"dweb:/ipfs/QmZGNCyZzfxEozzdUxi6E7ZqWX6cUjw6hvD4xyN2YNxcwD"
+				"bzz-raw://2c611ba95e8e2740c2f590ba2824477509430b898443e46ad33ec7ef5ad47dff",
+				"dweb:/ipfs/QmU26JJD9ZDz683TEnAHZkCYNofVpfg2QdUfKNcsFctuHx"
 			]
 		},
 		"localhost/contracts/Configuration/IGlobalAddressesProvider.sol": {
@@ -1464,10 +1453,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighDistributionHandler/SighDistributionHandler.sol": {
-			"keccak256": "0x0a9d22bbab6b03798c34127b041a5b4a39c34687eca51f779960fb0118223829",
+			"keccak256": "0x136706530b608269ea6f893cb78cd8444d9ee516b86985cc744e9637e8c9ea47",
 			"urls": [
-				"bzz-raw://9aa90dee691c37052d79e59a68ad67ba4b9d39dcb802c298b12c3f9dbb70d2d6",
-				"dweb:/ipfs/QmefAhiAF7ZYs21KSRR4T6Hd5LfCWF3N5Ra5bKKGpeuN51"
+				"bzz-raw://2940db4a0d537a69631a64eaa12378ebda6126e520a027c0d4d88974d7b055bf",
+				"dweb:/ipfs/QmNs2bXAyXGbaPpX5Qbh219D3PDcMVudLUz87cUREUk94A"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {
@@ -1545,6 +1534,13 @@
 			"urls": [
 				"bzz-raw://f060c6ee3ca16eb001823e2c0f8b642ecf3ead486721bab6f6be5220158d4421",
 				"dweb:/ipfs/QmWv1ms6aLAfjZ49dNnffbg49XiKmuEWHeu4wi6EinkEek"
+			]
+		},
+		"openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol": {
+			"keccak256": "0xe8319a13d4d3a9a518dafb829afffd958264b2675114abe5c322178cc6c3519f",
+			"urls": [
+				"bzz-raw://25e5847db15af6119dfadd8929642c20d731b61d11c8187dbf8064d3458cb094",
+				"dweb:/ipfs/QmQhu9fnpHXp7wDKmqbaK7BAs8zWxLShRUUEdYiPiytBww"
 			]
 		}
 	},

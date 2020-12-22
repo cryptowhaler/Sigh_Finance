@@ -70,7 +70,7 @@
 			"removeInstrument(address)": "26562793",
 			"totalInstrumentsSupported()": "eeabe79f",
 			"transferSighTotheUser(address,address,uint256)": "b482e0d1",
-			"updateCryptoMarketSentiment(bool,uint256)": "d74d6d3f",
+			"updateCryptoMarketSentiment(uint256)": "ccc91f72",
 			"updateDeltaBlocksForSpeedRefresh(uint256)": "1e7faed9",
 			"updateSIGHBorrowIndex(address)": "7c52b668",
 			"updateSIGHSpeed(uint256)": "2df0f9a9",
@@ -660,11 +660,6 @@
 		{
 			"constant": false,
 			"inputs": [
-				{
-					"internalType": "bool",
-					"name": "isActivated",
-					"type": "bool"
-				},
 				{
 					"internalType": "uint256",
 					"name": "cryptoMarketSentiment_",

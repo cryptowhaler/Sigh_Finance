@@ -587,11 +587,6 @@
 				"constant": false,
 				"inputs": [
 					{
-						"internalType": "bool",
-						"name": "isActivated",
-						"type": "bool"
-					},
-					{
 						"internalType": "uint256",
 						"name": "cryptoMarketSentiment_",
 						"type": "uint256"
@@ -745,10 +740,10 @@
 	},
 	"sources": {
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0xbdc7e8bdbc66cefb781558eb416b45b187217b20bfa4a6d06f8d0682f1eac7c1",
+			"keccak256": "0x6cfec861a027e786273a17c7b9481a9dfbc31cf2a523978c6448f5f7b92e9a0f",
 			"urls": [
-				"bzz-raw://d3d584a429b4a5d148b5d08353024c38b1440253409d191cff5ad273f732ad24",
-				"dweb:/ipfs/Qme1Z7rvf8dJR4kvvzXDdvfMwyCagYx8YJ5wg2orhd9pqD"
+				"bzz-raw://b75fd9625d0f968e2e005160e9d1bc450708c66dc0f60a68be42d4b746978f54",
+				"dweb:/ipfs/Qmek51CqiKMQCHuvPZTUhf3ncZfdKbukAZURZHe8uX7uR4"
 			]
 		}
 	},

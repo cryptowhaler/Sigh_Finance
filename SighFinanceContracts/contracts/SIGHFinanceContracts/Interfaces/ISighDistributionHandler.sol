@@ -18,7 +18,7 @@ interface ISighDistributionHandler {
 
     function updateSIGHSpeed(uint SIGHSpeed_) external returns (bool);                                                      // onlySighFinanceConfigurator
     function updateStakingSpeedForAnInstrument(address instrument_, uint newStakingSpeed) external returns (bool);          // onlySighFinanceConfigurator
-    function updateCryptoMarketSentiment( bool isActivated, uint cryptoMarketSentiment_ ) external returns (bool);                      // onlySighFinanceConfigurator
+    function updateCryptoMarketSentiment(  uint cryptoMarketSentiment_ ) external returns (bool);                      // onlySighFinanceConfigurator
     function updateDeltaBlocksForSpeedRefresh(uint deltaBlocksLimit) external returns (bool);                               // onlySighFinanceConfigurator
 
     function refreshSIGHSpeeds() external returns (bool);

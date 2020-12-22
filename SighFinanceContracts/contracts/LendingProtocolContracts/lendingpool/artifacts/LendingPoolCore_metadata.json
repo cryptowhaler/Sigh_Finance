@@ -2363,10 +2363,10 @@
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/lendingpool/LendingPoolCore.sol": {
-			"keccak256": "0x300a19309c7df49399101ecaac48a4fcd0edb408a85b786c9af72c72f150e767",
+			"keccak256": "0x420d9af1440f9ddb31ef33568e18e0e3769f1a6bdaaca97b0b00018d747610f0",
 			"urls": [
-				"bzz-raw://d4f1c0715ccdad1e00aa24a138e455d6506519ceb0e97a8bf342b34079d4e69c",
-				"dweb:/ipfs/QmaiDoh1LLv6sPnf7Ku519RrmUdzRRxWsg2Dkj19REc9ht"
+				"bzz-raw://b33a8caf748a293ffc8a1b37c3477ca29238691a013677f82388b05fdc3a575d",
+				"dweb:/ipfs/QmSCydKbCY2gALqhtLwjSFdhGMXVAjAHRTBDM7rfytvuxU"
 			]
 		},
 		"localhost/contracts/LendingProtocolContracts/libraries/CoreLibrary.sol": {
@@ -2391,10 +2391,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0xbdc7e8bdbc66cefb781558eb416b45b187217b20bfa4a6d06f8d0682f1eac7c1",
+			"keccak256": "0x6cfec861a027e786273a17c7b9481a9dfbc31cf2a523978c6448f5f7b92e9a0f",
 			"urls": [
-				"bzz-raw://d3d584a429b4a5d148b5d08353024c38b1440253409d191cff5ad273f732ad24",
-				"dweb:/ipfs/Qme1Z7rvf8dJR4kvvzXDdvfMwyCagYx8YJ5wg2orhd9pqD"
+				"bzz-raw://b75fd9625d0f968e2e005160e9d1bc450708c66dc0f60a68be42d4b746978f54",
+				"dweb:/ipfs/Qmek51CqiKMQCHuvPZTUhf3ncZfdKbukAZURZHe8uX7uR4"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {
@@ -2405,10 +2405,10 @@
 			]
 		},
 		"localhost/contracts/configuration/GlobalAddressesProvider.sol": {
-			"keccak256": "0x7212661ab967282a1020cd673c58fe003d4324aee365413406fd5e86071645c6",
+			"keccak256": "0x67e342721ca253f34cde0609cb93eb92b23b3ebd9f8fbd49394177fba368b03b",
 			"urls": [
-				"bzz-raw://dbc516c3b7d6b4b44cc373714e90817e8c6bac2a5ca089f49e0ea3a3b4ac764c",
-				"dweb:/ipfs/QmZGNCyZzfxEozzdUxi6E7ZqWX6cUjw6hvD4xyN2YNxcwD"
+				"bzz-raw://2c611ba95e8e2740c2f590ba2824477509430b898443e46ad33ec7ef5ad47dff",
+				"dweb:/ipfs/QmU26JJD9ZDz683TEnAHZkCYNofVpfg2QdUfKNcsFctuHx"
 			]
 		},
 		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {

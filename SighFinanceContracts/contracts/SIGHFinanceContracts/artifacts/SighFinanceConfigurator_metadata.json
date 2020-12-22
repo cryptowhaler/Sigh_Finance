@@ -62,11 +62,6 @@
 				"constant": false,
 				"inputs": [
 					{
-						"internalType": "bool",
-						"name": "isActivated",
-						"type": "bool"
-					},
-					{
 						"internalType": "uint256",
 						"name": "maxVolatilityProtocolLimit_",
 						"type": "uint256"
@@ -124,11 +119,11 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "newSpeed_",
+						"name": "newRatio_",
 						"type": "uint256"
 					}
 				],
-				"name": "changeProtocolSIGHSpeedInSIGHSpeedController",
+				"name": "changeProtocolSIGHSpeedRatioInSIGHSpeedController",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -359,7 +354,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "sighSpeed",
+						"name": "sighSpeedRatio",
 						"type": "uint256"
 					}
 				],
@@ -501,6 +496,27 @@
 				"constant": false,
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "newSpeed_",
+						"type": "uint256"
+					}
+				],
+				"name": "updateSighVolatilityDistributionSpeedInSIGHSpeedController",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "instrument_",
 						"type": "address"
@@ -548,17 +564,17 @@
 	},
 	"sources": {
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
-			"keccak256": "0xbdc7e8bdbc66cefb781558eb416b45b187217b20bfa4a6d06f8d0682f1eac7c1",
+			"keccak256": "0x6cfec861a027e786273a17c7b9481a9dfbc31cf2a523978c6448f5f7b92e9a0f",
 			"urls": [
-				"bzz-raw://d3d584a429b4a5d148b5d08353024c38b1440253409d191cff5ad273f732ad24",
-				"dweb:/ipfs/Qme1Z7rvf8dJR4kvvzXDdvfMwyCagYx8YJ5wg2orhd9pqD"
+				"bzz-raw://b75fd9625d0f968e2e005160e9d1bc450708c66dc0f60a68be42d4b746978f54",
+				"dweb:/ipfs/Qmek51CqiKMQCHuvPZTUhf3ncZfdKbukAZURZHe8uX7uR4"
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighSpeedController.sol": {
-			"keccak256": "0xb2733186b95be314fa2641cfce71cf044cceef3f07a45733f86b71fa91cfd619",
+			"keccak256": "0x6647939d091b57036ad5d0cb9cbb33aed384786a58212791e9209d79347306d5",
 			"urls": [
-				"bzz-raw://e6a8c90fd192c7671d4a9e976e03d522980b6199a93403a5bbc3190f43e57c92",
-				"dweb:/ipfs/QmfEZZD5Q6AcCRoa26n7wAXZXsSnExEjcNqNNx66mPnGjK"
+				"bzz-raw://75e345e12ca7e90e444aa99d2a67450d2ed56b98af7091bd6a3af765149eb381",
+				"dweb:/ipfs/QmSVdykP1e1TUUegWEU5vnV8RtLtxX3Ce93sY2VGpVjxex"
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighStaking.sol": {
@@ -576,10 +592,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SighFinanceConfigurator.sol": {
-			"keccak256": "0xa3854d6a7252e66b486aa847465d92a81b74a78c7c7fda9d65e6aa74e93d6111",
+			"keccak256": "0xbc44b4956dc89c3f476b2ed5bc69a22bf876bf25ad429070c8f66ff309b0fb08",
 			"urls": [
-				"bzz-raw://3896059c149910b520f84e777284c92fc18bca76f84463df88c5bfe547c8d136",
-				"dweb:/ipfs/QmZAAFnESZBF616id7WUr61YFd6AB8GSCq8txc5vVW5ACB"
+				"bzz-raw://26559dca25d219497e1af02f820888d01a7430b5b01b6e13c8a374fd787d5cd2",
+				"dweb:/ipfs/QmSGi2c1ED33xu3LSNF7yBWS26RfGW94pRPNWyx9y6W5YK"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {
@@ -590,10 +606,10 @@
 			]
 		},
 		"localhost/contracts/configuration/GlobalAddressesProvider.sol": {
-			"keccak256": "0x7212661ab967282a1020cd673c58fe003d4324aee365413406fd5e86071645c6",
+			"keccak256": "0x67e342721ca253f34cde0609cb93eb92b23b3ebd9f8fbd49394177fba368b03b",
 			"urls": [
-				"bzz-raw://dbc516c3b7d6b4b44cc373714e90817e8c6bac2a5ca089f49e0ea3a3b4ac764c",
-				"dweb:/ipfs/QmZGNCyZzfxEozzdUxi6E7ZqWX6cUjw6hvD4xyN2YNxcwD"
+				"bzz-raw://2c611ba95e8e2740c2f590ba2824477509430b898443e46ad33ec7ef5ad47dff",
+				"dweb:/ipfs/QmU26JJD9ZDz683TEnAHZkCYNofVpfg2QdUfKNcsFctuHx"
 			]
 		},
 		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {

@@ -747,10 +747,10 @@
 			]
 		},
 		"localhost/contracts/configuration/GlobalAddressesProvider.sol": {
-			"keccak256": "0x7212661ab967282a1020cd673c58fe003d4324aee365413406fd5e86071645c6",
+			"keccak256": "0x67e342721ca253f34cde0609cb93eb92b23b3ebd9f8fbd49394177fba368b03b",
 			"urls": [
-				"bzz-raw://dbc516c3b7d6b4b44cc373714e90817e8c6bac2a5ca089f49e0ea3a3b4ac764c",
-				"dweb:/ipfs/QmZGNCyZzfxEozzdUxi6E7ZqWX6cUjw6hvD4xyN2YNxcwD"
+				"bzz-raw://2c611ba95e8e2740c2f590ba2824477509430b898443e46ad33ec7ef5ad47dff",
+				"dweb:/ipfs/QmU26JJD9ZDz683TEnAHZkCYNofVpfg2QdUfKNcsFctuHx"
 			]
 		},
 		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {

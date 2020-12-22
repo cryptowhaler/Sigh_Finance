@@ -6,25 +6,14 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "sighInstrument_",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_addressesProvider",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "constructor"
-			},
-			{
 				"anonymous": false,
 				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "sighVolatilityHarvesterAddress",
+						"type": "address"
+					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
@@ -47,13 +36,13 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "prevSpeed",
+						"name": "prevSpeedRatio",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "newSpeed",
+						"name": "newSpeedRatio",
 						"type": "uint256"
 					},
 					{
@@ -63,7 +52,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "DistributionSpeedChanged",
+				"name": "DistributionSpeedRatioChanged",
 				"type": "event"
 			},
 			{
@@ -79,6 +68,12 @@
 						"indexed": false,
 						"internalType": "uint256",
 						"name": "deltaBlocks",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "sighSpeedRatio",
 						"type": "uint256"
 					},
 					{
@@ -115,13 +110,56 @@
 					{
 						"indexed": false,
 						"internalType": "address",
+						"name": "sighVolatilityHarvesterAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "deltaBlocks",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "harvestDistributionSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "recentlyDrippedToVolatilityHarvester",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalDrippedToVolatilityHarvester",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber_",
+						"type": "uint256"
+					}
+				],
+				"name": "DrippedToVolatilityHarvester",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
 						"name": "protocolAddress",
 						"type": "address"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "sighSpeed",
+						"name": "sighSpeedRatio",
 						"type": "uint256"
 					},
 					{
@@ -166,6 +204,34 @@
 				"type": "event"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newTreasurySpeedRatio",
+						"type": "uint256"
+					}
+				],
+				"name": "SighVolatilityHarvestsSpeedUpdated",
+				"type": "event"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "REVISION",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"constant": true,
 				"inputs": [],
 				"name": "_isDripAllowed",
@@ -182,7 +248,13 @@
 			},
 			{
 				"constant": false,
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "sighVolatilityHarvesterAddress_",
+						"type": "address"
+					}
+				],
 				"name": "beginDripping",
 				"outputs": [
 					{
@@ -205,11 +277,11 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "newSpeed_",
+						"name": "newRatio_",
 						"type": "uint256"
 					}
 				],
-				"name": "changeProtocolSIGHSpeed",
+				"name": "changeProtocolSIGHSpeedRatio",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -290,7 +362,22 @@
 						"type": "address"
 					}
 				],
-				"name": "getSIGHSpeedForProtocol",
+				"name": "getSIGHSpeedRatioForProtocol",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getSIGHVolatilityHarvestingSpeed",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -306,6 +393,21 @@
 				"constant": true,
 				"inputs": [],
 				"name": "getSighAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getSighVolatilityHarvester",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -335,7 +437,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "distributionSpeed",
+						"name": "sighHarvestingSpeedRatio",
 						"type": "uint256"
 					},
 					{
@@ -405,6 +507,21 @@
 				"type": "function"
 			},
 			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "contract IGlobalAddressesProvider",
+						"name": "_addressesProvider",
+						"type": "address"
+					}
+				],
+				"name": "initialize",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"constant": true,
 				"inputs": [
 					{
@@ -456,7 +573,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "sighSpeed",
+						"name": "sighSpeedRatio",
 						"type": "uint256"
 					}
 				],
@@ -486,24 +603,44 @@
 				"payable": false,
 				"stateMutability": "view",
 				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "updateSighVolatilityDistributionSpeed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
 			"methods": {
-				"constructor": {
-					"params": {
-						"_addressesProvider": "The global addresses provider",
-						"sighInstrument_": "The token to drip"
-					}
-				},
 				"drip()": {
 					"details": "Note: this will only drip up to the amount of sighInstruments available."
+				},
+				"initialize(address)": {
+					"details": "this function is invoked by the proxy contract when the LendingPool contract is added to the AddressesProvider.",
+					"params": {
+						"_addressesProvider": "the address of the GlobalAddressesProvider registry*"
+					}
 				}
 			}
 		},
 		"userdoc": {
 			"methods": {
-				"constructor": "Constructs a Reservoir",
 				"drip()": {
 					"notice": "Drips the maximum amount of sighInstruments to match the drip rate since inception"
 				}
@@ -523,18 +660,25 @@
 		"remappings": []
 	},
 	"sources": {
-		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighSpeedController.sol": {
-			"keccak256": "0xb2733186b95be314fa2641cfce71cf044cceef3f07a45733f86b71fa91cfd619",
+		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
+			"keccak256": "0x6cfec861a027e786273a17c7b9481a9dfbc31cf2a523978c6448f5f7b92e9a0f",
 			"urls": [
-				"bzz-raw://e6a8c90fd192c7671d4a9e976e03d522980b6199a93403a5bbc3190f43e57c92",
-				"dweb:/ipfs/QmfEZZD5Q6AcCRoa26n7wAXZXsSnExEjcNqNNx66mPnGjK"
+				"bzz-raw://b75fd9625d0f968e2e005160e9d1bc450708c66dc0f60a68be42d4b746978f54",
+				"dweb:/ipfs/Qmek51CqiKMQCHuvPZTUhf3ncZfdKbukAZURZHe8uX7uR4"
+			]
+		},
+		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighSpeedController.sol": {
+			"keccak256": "0x6647939d091b57036ad5d0cb9cbb33aed384786a58212791e9209d79347306d5",
+			"urls": [
+				"bzz-raw://75e345e12ca7e90e444aa99d2a67450d2ed56b98af7091bd6a3af765149eb381",
+				"dweb:/ipfs/QmSVdykP1e1TUUegWEU5vnV8RtLtxX3Ce93sY2VGpVjxex"
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SIGH_Instrument/SighSpeedController.sol": {
-			"keccak256": "0x31b7e8e4beaf92eccb8248eb06122778b7f2b08c923258b02950386c6e3cda4f",
+			"keccak256": "0x71a9a32598cfd0c4fe3e35a224f7733ad1c38e1f8d8f47b7ab141b3400487b92",
 			"urls": [
-				"bzz-raw://823ce6b899c0c2e3c33beeca664bfc3e8ba6580c8edb5c82683726774e70a0b4",
-				"dweb:/ipfs/QmdohVcJT8BRf4SWqDX8oSsnNvBe5KmYdL2cPWK3BcuUye"
+				"bzz-raw://531851a4285e7480c2584966902dcee5650016fcbd49cd02da6d24b87eb3d2f9",
+				"dweb:/ipfs/QmQZTWiLoKS7JwuAjzJthGfDJh3ztDmb5kSKjPMiuGTSLq"
 			]
 		},
 		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {
@@ -544,11 +688,25 @@
 				"dweb:/ipfs/QmPwRF6AHfvUqco3YP9XZCe818juptqY5UUD75XQwmqg5u"
 			]
 		},
+		"localhost/contracts/openzeppelin-upgradeability/VersionedInitializable.sol": {
+			"keccak256": "0x3f7fa91853dcdf84684887deaa056f5b3803b46e7efb71704dcc625a63eeac55",
+			"urls": [
+				"bzz-raw://c7b50d4feda87e8875541afeb44f802ab539272bfb22f7c7da84c3d26e03a266",
+				"dweb:/ipfs/QmdSYn9D1Q3FRXRNDLYGGFoYb8rsN4U2MYdxciuZBTSg83"
+			]
+		},
 		"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
 			"keccak256": "0xe92a180661a6e21051d45be08a572dbf8d61e04c142d4284e503f615aed587fd",
 			"urls": [
 				"bzz-raw://003c6da07a3cbc576a9a59f462ed67d9041ff89e106463817ce9f005e24d83c8",
 				"dweb:/ipfs/QmemQazcc1Cww2Umgc4UFYpwF8WRqajPB6z5TNdC13XJCR"
+			]
+		},
+		"openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol": {
+			"keccak256": "0xe8319a13d4d3a9a518dafb829afffd958264b2675114abe5c322178cc6c3519f",
+			"urls": [
+				"bzz-raw://25e5847db15af6119dfadd8929642c20d731b61d11c8187dbf8064d3458cb094",
+				"dweb:/ipfs/QmQhu9fnpHXp7wDKmqbaK7BAs8zWxLShRUUEdYiPiytBww"
 			]
 		}
 	},
