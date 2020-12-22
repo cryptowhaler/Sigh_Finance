@@ -345,6 +345,7 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
     function setSIGHAddress(address sighAddress) external onlySIGHFinanceManager {     // LATER CHANGE TO MAKE IT INITIALIZABLE ONLY ONCE
         // require (!isSighInitialized, "SIGH Instrument address can only be initialized once.");
         isSighInitialized  = true;
+        // updateImplInternal(SIGH, sighAddress);
         _setAddress(SIGH, sighAddress);
         emit SIGHAddressUpdated(sighAddress);
     }
@@ -388,8 +389,9 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
     **/
     function setSIGHSpeedController(address _SIGHSpeedController) external onlySIGHFinanceManager {
         // require (!isSighSpeedControllerInitialized, "SIGH Speed Controller address can only be initialized once.");
-        isSighSpeedControllerInitialized  = true;
-        _setAddress(SIGH_SPEED_CONTROLLER, _SIGHSpeedController);
+        // isSighSpeedControllerInitialized  = true;
+        updateImplInternal(SIGH_SPEED_CONTROLLER, _SIGHSpeedController);
+        // _setAddress(SIGH_SPEED_CONTROLLER, _SIGHSpeedController);
         emit SIGHSpeedControllerUpdated(_SIGHSpeedController);
     }
 

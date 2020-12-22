@@ -6,7 +6,9 @@ pragma solidity ^0.5.16;
  * @dev Accures SIGH for the supported markets based on losses made every 24 hours, along with Staking speeds. This accuring speed is updated every hour
  * @author SIGH Finance
  */
- 
+
+import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
+
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol"; 
 import "../Math/Exponential.sol";
@@ -19,7 +21,7 @@ import "../../LendingProtocolContracts/interfaces/ILendingPoolCore.sol";
 import "../Interfaces/ISighStaking.sol";       
 
 
-contract SIGHDistributionHandler is Exponential, VersionedInitializable {       // 
+contract SIGHDistributionHandler is Exponential, ReentrancyGuard, VersionedInitializable {       // 
     
 // ######## CONTRACT ADDRESSES ########
     GlobalAddressesProvider public addressesProvider;
@@ -29,8 +31,6 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
 
     uint constant sighInitialIndex = 1e36;            ///  The initial SIGH index for a market
 
-    // SIGH Speed Upper Check
-    bool private isSpeedUpperCheckAllowed = false;
     Exp private cryptoMarketSentiment = Exp({mantissa: 1e18 });  
 
     // TOTAL Protocol Volatility Values (Current Session)
@@ -101,7 +101,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     event InstrumentSIGHStateUpdated( address instrument_, bool isSIGHMechanismActivated, uint bearSentiment, uint bullSentiment );
 
     event SIGHSpeedUpdated(uint oldSIGHSpeed, uint newSIGHSpeed, uint blockNumber_);     /// Emitted when SIGH speed is changed
-    event CryptoMarketSentimentUpdated(bool previsSpeedUpperCheckAllowed, uint cryptoMarketSentiment );
+    event CryptoMarketSentimentUpdated( uint cryptoMarketSentiment );
     event minimumBlocksForSpeedRefreshUpdated( uint prevDeltaBlocksForSpeed,uint newDeltaBlocksForSpeed, uint blockNumber );
 
     event StakingSpeedUpdated(address instrumentAddress_ , uint prevStakingSpeed, uint new_staking_Speed, uint blockNumber );
@@ -326,13 +326,12 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         return true;
     }
 
-    function updateCryptoMarketSentiment (bool isSpeedUpperCheckAllowed_ , uint cryptoMarketSentiment_ ) external onlySighFinanceConfigurator returns (bool) {
+    function updateCryptoMarketSentiment ( uint cryptoMarketSentiment_ ) external onlySighFinanceConfigurator returns (bool) {
         require( cryptoMarketSentiment_ >= 0.01e18, 'The new Volatility Limit for Borrowers must be greater than 0.01e18 (1%)');
         require( cryptoMarketSentiment_ <= 10e18, 'The new Volatility Limit for Borrowers must be less than 10e18 (10x)');
         
-        isSpeedUpperCheckAllowed = isSpeedUpperCheckAllowed_;
         cryptoMarketSentiment = Exp({mantissa: cryptoMarketSentiment_ });  
-        emit CryptoMarketSentimentUpdated( isSpeedUpperCheckAllowed, cryptoMarketSentiment.mantissa );
+        emit CryptoMarketSentimentUpdated( cryptoMarketSentiment.mantissa );
         return true;
     }
 
@@ -343,7 +342,7 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
     /**
      * @notice Recalculate and update SIGH speeds for all Supported SIGH markets
      */
-    function refreshSIGHSpeeds() public returns (bool) {
+    function refreshSIGHSpeeds() public nonReentrant returns (bool) {
         uint blockNumber = block.number;
         uint256 blocksElapsedSinceLastRefresh = sub_(blockNumber , prevSpeedRefreshBlock, "Refresh SIGH Speeds : Subtraction underflow for blocks"); 
 
@@ -449,10 +448,8 @@ contract SIGHDistributionHandler is Exponential, VersionedInitializable {       
         // STATE UPDATE :: CALCULATING SIGH SPEED WHICH IS TO BE USED FOR CALCULATING EACH INSTRUMENT's SIGH DISTRIBUTION SPEEDS
         SIGHSpeedUsed = SIGHSpeed;
 
-        if (isSpeedUpperCheckAllowed) {                     // SIGH SPEED BASED ON UPPER CHECK AND ADDITIONAL PROFIT POTENTIAL
-            (MathError error, Exp memory totalVolatilityLimitPerBlock) = divScalar(Exp({mantissa: last24HrsSentimentProtocolVolatility }) , deltaBlocks_);   // Total Volatility per Block
-            calculateMaxSighSpeedInternal( totalVolatilityLimitPerBlock.mantissa ); 
-        }
+        (MathError error, Exp memory totalVolatilityLimitPerBlock) = divScalar(Exp({mantissa: last24HrsSentimentProtocolVolatility }) , deltaBlocks_);   // Total Volatility per Block
+        calculateMaxSighSpeedInternal( totalVolatilityLimitPerBlock.mantissa ); 
         
         // ###### Updates the Speed (Volatility Driven) for the Supported Instruments ######
         updateSIGHDistributionSpeeds();

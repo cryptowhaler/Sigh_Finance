@@ -7,37 +7,39 @@ pragma solidity ^0.5.16;
  * @author SighFinance
  */
 
+import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
+import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
+
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
 import "../Interfaces/ISighSpeedController.sol";
 import "../../configuration/IGlobalAddressesProvider.sol";
 
 import "../Interfaces/ISighDistributionHandler.sol"; 
 
-contract SighSpeedController is ISighSpeedController {
+contract SighSpeedController is ISighSpeedController, ReentrancyGuard, VersionedInitializable  {
 
   IGlobalAddressesProvider private addressesProvider;
 
   IERC20 private sighInstrument;                                         // SIGH INSTRUMENT CONTRACT
-  ISighDistributionHandler private sighDistributionHandlerContract;      // SIGH DISTRIBUTION HANDLER CONTRACT
-  address private treasuryAddress;                                       // SIGH TREASURY ADDRESS
 
   bool private isDripAllowed = false;  
   uint private lastDripBlockNumber;    
-  
-  Exp private treasurySpeedRatio = Exp({ mantissa: 50e18 });
+
+  ISighDistributionHandler private sighVolatilityHarvester;      // SIGH DISTRIBUTION HANDLER CONTRACT
+  uint256 private sighVolatilityHarvestingSpeed;
     
   struct protocolState {
     bool isSupported;
-    uint distributionSpeed;
+    Exp sighSpeedRatio = Exp({ mantissa: 1e18 });
     uint totalDrippedAmount;
     uint recentlyDrippedAmount;
   }
 
-  mapping (address => protocolState) private supportedProtocols;
   address[] private storedSupportedProtocols; 
+  mapping (address => protocolState) private supportedProtocols;
 
-   uint private totalDrippedToTreasury;                 // TOTAL $SIGH DRIPPED TO TREASURY
-   uint private recentlyDrippedToTreasury;              // $SIGH RECENTLY DRIPPED TO TREASURY
+   uint private totalDrippedToVolatilityHarvester;                 // TOTAL $SIGH DRIPPED TO SIGH VOLATILTIY HARVESTER
+   uint private recentlyDrippedToVolatilityHarvester;              // $SIGH RECENTLY DRIPPED TO SIGH VOLATILTIY HARVESTER
 
     struct Exp {
         uint mantissa;
@@ -47,15 +49,16 @@ contract SighSpeedController is ISighSpeedController {
 // ####### EVENTS #########
 // ########################
 
-  event DistributionInitialized(uint blockNumber);
-  event TreasurySpeedRatioUpdated(uint newTreasurySpeedRatio );
+  event DistributionInitialized(address sighVolatilityHarvesterAddress, uint blockNumber);
 
-  event NewProtocolSupported (address protocolAddress, uint sighSpeed, uint totalDrippedAmount, uint blockNumber);
+  event SighVolatilityHarvestsSpeedUpdated(uint newTreasurySpeedRatio );
+
+  event NewProtocolSupported (address protocolAddress, uint sighSpeedRatio, uint totalDrippedAmount, uint blockNumber);
   event ProtocolRemoved(address protocolAddress, uint totalDrippedToProtocol, uint blockNumber);
   
-  event DistributionSpeedChanged(address protocolAddress, uint prevSpeed , uint newSpeed, uint blockNumber );  
-  event Dripped(address protocolAddress, uint deltaBlocks, uint distributionSpeed, uint AmountDripped, uint totalAmountDripped, uint blockNumber ); 
-  event DrippedToTreasury(address treasuryAddress,uint deltaBlocks,uint treasuryDistributionSpeed,uint recentlyDrippedToTreasury ,uint totalDrippedToTreasury,uint blockNumber_ ); 
+  event DistributionSpeedRatioChanged(address protocolAddress, uint prevSpeedRatio , uint newSpeedRatio, uint blockNumber );  
+  event Dripped(address protocolAddress, uint deltaBlocks, uint sighSpeedRatio, uint distributionSpeed, uint AmountDripped, uint totalAmountDripped, uint blockNumber ); 
+  event DrippedToVolatilityHarvester(address sighVolatilityHarvesterAddress,uint deltaBlocks,uint harvestDistributionSpeed,uint recentlyDrippedToVolatilityHarvester ,uint totalDrippedToVolatilityHarvester,uint blockNumber_ ); 
 
 // ########################
 // ####### MODIFIER #######
@@ -71,17 +74,25 @@ contract SighSpeedController is ISighSpeedController {
 // ####### CONSTRUCTOR #######
 // ###########################
 
-  /**
-    * @notice Constructs a Reservoir
-    * @param sighInstrument_ The token to drip
-    * @param _addressesProvider The global addresses provider
-    */
-  constructor(address sighInstrument_, address _addressesProvider ) public {
-    sighInstrument = IERC20(sighInstrument_);
-    addressesProvider = IGlobalAddressesProvider(_addressesProvider);
-    require(address(sighInstrument) == sighInstrument_, " SIGH Instrument not initialized Properly ");
-    require(address(addressesProvider) == _addressesProvider, " AddressesProvider not initialized Properly ");
-    
+    uint256 public constant REVISION = 0x1;             // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
+
+    function getRevision() internal pure returns (uint256) {        // NEEDED AS PART OF UPGRADABLE CONTRACTS FUNCTIONALITY ( VersionedInitializable )
+        return REVISION;
+    }
+
+    /**
+    * @dev this function is invoked by the proxy contract when the LendingPool contract is added to the AddressesProvider.
+    * @param _addressesProvider the address of the GlobalAddressesProvider registry
+    **/
+    function initialize(GlobalAddressesProvider _addressesProvider) public initializer {
+        addressesProvider = _addressesProvider;
+        refreshConfigInternal();
+    }
+
+  refreshConfigInternal() internal {
+    sighInstrument = IERC20(addressesProvider.getSIGHAddress());
+    require(address(sighInstrument) != address(0), " SIGH Instrument not initialized Properly ");
+    require(address(addressesProvider) != address(0), " AddressesProvider not initialized Properly ");    
   }
 
 
@@ -89,25 +100,21 @@ contract SighSpeedController is ISighSpeedController {
 // ###########   SIGH DISTRIBUTION : INITIALIZED DRIPPING (Can be called only once)   ##########
 // #############################################################################################
 
-  function beginDripping ( address treasuryAddress_, address sighDistributionHandler_ ) external onlySighFinanceConfigurator returns (bool) {
+  function beginDripping ( address sighVolatilityHarvesterAddress_ ) external onlySighFinanceConfigurator returns (bool) {
     require(!isDripAllowed,"Dripping can only be initialized once");
-    require(treasuryAddress_ != address(0),"Treasury Address not valid");
-    require(sighDistributionHandler_ != address(0),"Treasury Address not valid");
+    require(sighVolatilityHarvesterAddress_ != address(0),"SIGH Volatility Harvester Address not valid");
 
     isDripAllowed = true;
-    treasuryAddress = treasuryAddress_;
-    sighDistributionHandlerContract = ISighDistributionHandler(sighDistributionHandler_);
-
+    sighVolatilityHarvester = ISighDistributionHandler(sighVolatilityHarvesterAddress_);
     lastDripBlockNumber = block.number;
 
-    emit DistributionInitialized( lastDripBlockNumber );
+    emit DistributionInitialized( sighVolatilityHarvesterAddress_ ,  lastDripBlockNumber );
     return true;
   }
 
-  function setTreasurySpeedRatio(uint newRatio) external onlySighFinanceConfigurator returns (bool) {
-    require( 1e18 <= newRatio <=100e18,"Dripping can only be initialized once");
-    treasurySpeedRatio = Exp({mantissa: newRatio });  
-    emit TreasurySpeedRatioUpdated( treasurySpeedRatio.mantissa );
+  function updateSighVolatilityDistributionSpeed(uint newSpeed) external onlySighFinanceConfigurator returns (bool) {
+    sighVolatilityHarvestingSpeed = newSpeed;  
+    emit SighVolatilityHarvestsSpeedUpdated( sighVolatilityHarvestingSpeed );
     return true;
   }
 
@@ -115,8 +122,10 @@ contract SighSpeedController is ISighSpeedController {
 // ###########   SIGH DISTRIBUTION : ADDING / REMOVING NEW PROTOCOL WHICH WILL RECEIVE SIGH INSTRUMENTS   ##########
 // ############################################################################################################
 
-  function supportNewProtocol( address newProtocolAddress, uint sighSpeed ) external onlySighFinanceConfigurator returns (bool)  {
+  function supportNewProtocol( address newProtocolAddress, uint sighSpeedRatio ) external onlySighFinanceConfigurator returns (bool)  {
     require (!supportedProtocols[newProtocolAddress].isSupported, 'This Protocol is already supported by the Sigh Speed Controller');
+    require ( sighSpeedRatio == 0 || ( 0.01e18 <=sighSpeedRatio <= 2e18 )  , "Invalid 'SIGH Volatiltiy harvesting - Speed Ratio' provided. ");
+
 
     if (isDripAllowed) {
         dripInternal();
@@ -126,17 +135,17 @@ contract SighSpeedController is ISighSpeedController {
     
     if ( supportedProtocols[newProtocolAddress].totalDrippedAmount > 0 ) {
         supportedProtocols[newProtocolAddress].isSupported = true;
-        supportedProtocols[newProtocolAddress].distributionSpeed = sighSpeed;
+        supportedProtocols[newProtocolAddress].sighSpeedRatio = Exp({ mantissa: sighSpeedRatio });
     }
     else {
-        supportedProtocols[newProtocolAddress] = protocolState({ isSupported: true, distributionSpeed: sighSpeed, totalDrippedAmount: uint(0), recentlyDrippedAmount: uint(0) });
+        supportedProtocols[newProtocolAddress] = protocolState({ isSupported: true, sighSpeedRatio: Exp({ mantissa: sighSpeedRatio }), totalDrippedAmount: uint(0), recentlyDrippedAmount: uint(0) });
     }
     
     lastDripBlockNumber = block.number; // EITHER THIS WAS ALREADY DONE IN DRIPINTERNAL() OR WE DO IT HERE IF DRIPPING IS NOT ALLOWED AND A PROTOCOL IS BEING ADDED
     require (supportedProtocols[newProtocolAddress].isSupported, 'Error occured when adding the new protocol');
-    require (supportedProtocols[newProtocolAddress].distributionSpeed == sighSpeed, 'SIGH Speed for the new protocol was not initialized properly.');
+    require (supportedProtocols[newProtocolAddress].sighSpeedRatio.mantissa == sighSpeedRatio, 'SIGH Volatiltiy harvesting - Speed Ratio, for the new protocol was not initialized properly.');
     
-    emit NewProtocolSupported(newProtocolAddress, supportedProtocols[newProtocolAddress].distributionSpeed, supportedProtocols[newProtocolAddress].totalDrippedAmount, block.number);
+    emit NewProtocolSupported(newProtocolAddress, supportedProtocols[newProtocolAddress].sighSpeedRatio.mantissa, supportedProtocols[newProtocolAddress].totalDrippedAmount, block.number);
     return true;
   }
   
@@ -164,9 +173,9 @@ contract SighSpeedController is ISighSpeedController {
     require(storedSupportedProtocols.length == newLength, 'The length of the list was not properly decremented.' );
     
     supportedProtocols[protocolAddress_].isSupported = false;
-    supportedProtocols[protocolAddress_].distributionSpeed = 0;
+    supportedProtocols[protocolAddress_].sighSpeedRatio = Exp({ mantissa: 0 });;
     require (supportedProtocols[protocolAddress_].isSupported == false, 'Error occured when removing the protocol.');
-    require (supportedProtocols[protocolAddress_].distributionSpeed == 0, 'SIGH Speed was not properly assigned to 0.');
+    require (supportedProtocols[protocolAddress_].sighSpeedRatio.mantissa == 0, 'SIGH Volatiltiy harvesting - Speed Ratio was not properly assigned to 0.');
 
     emit ProtocolRemoved( protocolAddress_,  supportedProtocols[protocolAddress_].totalDrippedAmount,  block.number );
     return true;
@@ -176,16 +185,16 @@ contract SighSpeedController is ISighSpeedController {
 // ###########   SIGH DISTRIBUTION : FUNCTIONS TO UPDATE DISTRIBUTION SPEEDS   ##########
 // ######################################################################################
 
-  function changeProtocolSIGHSpeed (address targetAddress, uint newSpeed_) external onlySighFinanceConfigurator returns (bool) {
+  function changeProtocolSIGHSpeedRatio (address targetAddress, uint newRatio_) external onlySighFinanceConfigurator returns (bool) {
     require(supportedProtocols[targetAddress].isSupported,'The Protocol is not Supported by the Sigh Speed Controller' );
     if (isDripAllowed) {
         dripInternal();
     }
-    uint prevSpeed = supportedProtocols[targetAddress].distributionSpeed;
-    supportedProtocols[targetAddress].distributionSpeed = newSpeed_;
+    uint prevSpeed = supportedProtocols[targetAddress].sighSpeedRatio.mantissa;
+    supportedProtocols[targetAddress].sighSpeedRatio.mantissa = newRatio_;
 
-    require(supportedProtocols[targetAddress].distributionSpeed == newSpeed_, " Protocol's SIGH speed was not properly updated");
-    emit DistributionSpeedChanged(targetAddress, prevSpeed , supportedProtocols[targetAddress].distributionSpeed, block.number );
+    require(supportedProtocols[targetAddress].sighSpeedRatio.mantissa == newRatio_, "SIGH Volatiltiy harvesting - Speed Ratio was not properly updated");
+    emit DistributionSpeedRatioChanged(targetAddress, prevSpeed , supportedProtocols[targetAddress].sighSpeedRatio.mantissa, block.number );
     return true;
   }
 
@@ -198,39 +207,32 @@ contract SighSpeedController is ISighSpeedController {
     * @notice Drips the maximum amount of sighInstruments to match the drip rate since inception
     * @dev Note: this will only drip up to the amount of sighInstruments available.
     */
-  function drip() public {
+  function drip() nonReentrant public {
     require(isDripAllowed,'Dripping has not been initialized by the SIGH Finance Manager');    
     dripInternal();
-    dripToTreasuryInternal();
+    dripToVolatilityHarvesterInternal();
+    lastDripBlockNumber = block.number;
   }
 
-  function dripToTreasuryInternal() internal {
-    if ( treasuryAddress == address(0) || address(sighDistributionHandlerContract) == address(0) ) {
-      return true;
+  function dripToVolatilityHarvesterInternal() internal {
+    if ( address(sighVolatilityHarvester) == address(0) || lastDripBlockNumber == block.number ) {
+      return;
     }
-    if (lastDripBlockNumber == block.number) {
-        return;
-    }
-
-    uint treasuryDistributionSpeed = sighDistributionHandlerContract.getSIGHSpeedUsed();
-
-      
-    IERC20 sighInstrument_ = sighInstrument;
     
     uint blockNumber_ = block.number;
-    uint reservoirBalance_ = sighInstrument_.balanceOf(address(this)); 
+    uint reservoirBalance_ = sighInstrument.balanceOf(address(this)); 
     uint deltaBlocks = sub(blockNumber_,lastDripBlockNumber,"Delta Blocks gave error");
                                     
-    uint deltaDrip_ = mul(treasuryDistributionSpeed, deltaBlocks , "dripTotal overflow");
+    uint deltaDrip_ = mul(sighVolatilityHarvestingSpeed, deltaBlocks , "dripTotal overflow");
     uint toDrip_ = min(reservoirBalance_, deltaDrip_);
             
-    require(reservoirBalance_ != 0, 'Protocol Transfer: The reservoir currently does not have any SIGH Instruments' );
-    require(sighInstrument_.transfer(treasuryAddress, toDrip_), 'Protocol Transfer: The transfer did not complete.' );
+    require(reservoirBalance_ != 0, 'Protocol Transfer: The reservoir currently does not have any SIGH' );
+    require(sighInstrument.transfer(address(sighVolatilityHarvester), toDrip_), 'Protocol Transfer: The transfer did not complete.' );
                 
-    totalDrippedToTreasury = add(totalDrippedToTreasury,toDrip_,"Overflow");
-    recentlyDrippedToTreasury = toDrip_;
+    totalDrippedToVolatilityHarvester = add(totalDrippedToVolatilityHarvester,toDrip_,"Overflow");
+    recentlyDrippedToVolatilityHarvester = toDrip_;
 
-    emit DrippedToTreasury( treasuryAddress, deltaBlocks, treasuryDistributionSpeed, recentlyDrippedToTreasury , totalDrippedToTreasury, blockNumber_ ); 
+    emit DrippedToVolatilityHarvester( address(sighVolatilityHarvester), deltaBlocks, sighVolatilityHarvestingSpeed, recentlyDrippedToVolatilityHarvester , totalDrippedToVolatilityHarvester, blockNumber_ ); 
   }
 
   
@@ -239,39 +241,39 @@ contract SighSpeedController is ISighSpeedController {
     if (lastDripBlockNumber == block.number) {
         return;
     }
-      
-    IERC20 sighInstrument_ = sighInstrument;
-    
+          
     address[] memory protocols = storedSupportedProtocols;
     uint length = protocols.length;
+
+    uint currentVolatilityHarvestSpeed = sighVolatilityHarvester.getSIGHSpeedUsed();
     uint reservoirBalance_; 
+
     uint blockNumber_ = block.number;
     uint deltaBlocks = sub(blockNumber_,lastDripBlockNumber,"Delta Blocks gave error");
     
-    if (length > 0) {
+    if (length > 0 && currentVolatilityHarvestSpeed > 0) {
         
         for ( uint i=0; i < length; i++) {
             address current_protocol = protocols[i];
             
             if ( supportedProtocols[ current_protocol ].isSupported ) {
                 
-                reservoirBalance_ = sighInstrument_.balanceOf(address(this));
-                uint deltaDrip_ = mul(supportedProtocols[ current_protocol ].distributionSpeed, deltaBlocks , "dripTotal overflow");
+                reservoirBalance_ = sighInstrument.balanceOf(address(this));
+                uint distributionSpeed = mul_(currentVolatilityHarvestSpeed, supportedProtocols[current_protocol].sighSpeedRatio )        // current Harvest Speed * Ratio / 1e18
+                uint deltaDrip_ = mul(distributionSpeed, deltaBlocks , "dripTotal overflow");
                 uint toDrip_ = min(reservoirBalance_, deltaDrip_);
             
                 require(reservoirBalance_ != 0, 'Protocol Transfer: The reservoir currently does not have any SIGH Instruments' );
-                require(sighInstrument_.transfer(current_protocol, toDrip_), 'Protocol Transfer: The transfer did not complete.' );
+                require(sighInstrument.transfer(current_protocol, toDrip_), 'Protocol Transfer: The transfer did not complete.' );
                 
-                uint prevDrippedAmount = supportedProtocols[current_protocol].totalDrippedAmount;
-                supportedProtocols[current_protocol].totalDrippedAmount = add(prevDrippedAmount,toDrip_,"Overflow");
+                supportedProtocols[current_protocol].totalDrippedAmount = add(supportedProtocols[current_protocol].totalDrippedAmount , toDrip_,"Overflow");
                 supportedProtocols[current_protocol].recentlyDrippedAmount = toDrip_;
 
-                emit Dripped( current_protocol, deltaBlocks, supportedProtocols[ current_protocol ].distributionSpeed, toDrip_ , supportedProtocols[current_protocol].totalDrippedAmount, blockNumber_ ); 
+                emit Dripped( current_protocol, deltaBlocks, supportedProtocols[ current_protocol ].sighSpeedRatio.mantissa, distributionSpeed , toDrip_ , supportedProtocols[current_protocol].totalDrippedAmount, blockNumber_ ); 
             }
         }
     }
     
-    lastDripBlockNumber = block.number;
   }
 
 
@@ -289,6 +291,14 @@ contract SighSpeedController is ISighSpeedController {
     return address(addressesProvider);
   }
 
+  function getSighVolatilityHarvester() external view returns (address) {
+    return address(sighVolatilityHarvester);
+  }
+
+  function getSIGHVolatilityHarvestingSpeed() external view returns (uint) {
+    return sighVolatilityHarvestingSpeed;
+  }
+
   function getSIGHBalance() external view returns (uint) {
     IERC20 sighInstrument_ = sighInstrument;   
     uint balance = sighInstrument_.balanceOf(address(this));
@@ -303,9 +313,9 @@ contract SighSpeedController is ISighSpeedController {
     return supportedProtocols[protocolAddress].isSupported;
   }
 
-  function getSupportedProtocolState(address protocolAddress) external view returns (bool isSupported,uint distributionSpeed,uint totalDrippedAmount,uint recentlyDrippedAmount ) {
+  function getSupportedProtocolState(address protocolAddress) external view returns (bool isSupported,uint sighHarvestingSpeedRatio,uint totalDrippedAmount,uint recentlyDrippedAmount ) {
   return (supportedProtocols[protocolAddress].isSupported,
-          supportedProtocols[protocolAddress].distributionSpeed,
+          supportedProtocols[protocolAddress].sighSpeedRatio.mantissa,
           supportedProtocols[protocolAddress].totalDrippedAmount,
           supportedProtocols[protocolAddress].recentlyDrippedAmount  );
   
@@ -319,13 +329,13 @@ contract SighSpeedController is ISighSpeedController {
     return supportedProtocols[protocolAddress].recentlyDrippedAmount;
   }
   
-  function getSIGHSpeedForProtocol(address protocolAddress) external view returns (uint) {
-      return supportedProtocols[protocolAddress].distributionSpeed;
+  function getSIGHSpeedRatioForProtocol(address protocolAddress) external view returns (uint) {
+      return supportedProtocols[protocolAddress].sighSpeedRatio.mantissa;
   }
   
   function totalProtocolsSupported() external view returns (uint) {
       uint len = storedSupportedProtocols.length;
-      return len;
+      return len + 1;
   }
   
 

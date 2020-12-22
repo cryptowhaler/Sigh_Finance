@@ -69,13 +69,19 @@ contract SighFinanceConfigurator is VersionedInitializable {
     // CALLED ONLY ONCE
     function beginDrippingFromSIGHSpeedController() external onlySIGHFinanceManager returns (bool) { 
         ISighSpeedController sigh_speed_Controller = ISighSpeedController( globalAddressesProvider.getSIGHSpeedController() );
-        require(sigh_speed_Controller.beginDripping(), "SIGH Dripping initialization from SIGH Speed Controller failed." );
+        require(sigh_speed_Controller.beginDripping(globalAddressesProvider.getSIGHMechanismHandler() ), "SIGH Dripping initialization from SIGH Speed Controller failed." );
         return true;
     }
 
-    function supportNewProtocolInSIGHSpeedController( address newProtocolAddress, uint sighSpeed ) external onlySIGHFinanceManager returns (bool) { 
+    function updateSighVolatilityDistributionSpeedInSIGHSpeedController(uint newSpeed_) external onlySIGHFinanceManager returns (bool) { 
         ISighSpeedController sigh_speed_Controller = ISighSpeedController( globalAddressesProvider.getSIGHSpeedController() );
-        require(sigh_speed_Controller.supportNewProtocol(newProtocolAddress, sighSpeed), "New Protocol addition to SIGH Speed Controller failed." );
+        require(sigh_speed_Controller.updateSighVolatilityDistributionSpeed(newSpeed_), " SIGH Volatility Distribution Speed update in SIGH Speed Controller failed." );
+        return true;
+    }    
+
+    function supportNewProtocolInSIGHSpeedController( address newProtocolAddress, uint sighSpeedRatio ) external onlySIGHFinanceManager returns (bool) { 
+        ISighSpeedController sigh_speed_Controller = ISighSpeedController( globalAddressesProvider.getSIGHSpeedController() );
+        require(sigh_speed_Controller.supportNewProtocol(newProtocolAddress, sighSpeedRatio), "New Protocol addition to SIGH Speed Controller failed." );
         return true;
     }
     
@@ -85,9 +91,9 @@ contract SighFinanceConfigurator is VersionedInitializable {
         return true;
     }    
 
-    function changeProtocolSIGHSpeedInSIGHSpeedController(address targetAddress, uint newSpeed_) external onlySIGHFinanceManager returns (bool) { 
+    function changeProtocolSIGHSpeedRatioInSIGHSpeedController(address targetAddress, uint newRatio_) external onlySIGHFinanceManager returns (bool) { 
         ISighSpeedController sigh_speed_Controller = ISighSpeedController( globalAddressesProvider.getSIGHSpeedController() );
-        require(sigh_speed_Controller.changeProtocolSIGHSpeed(targetAddress, newSpeed_), " Protocol SIGH Distribution speed update in SIGH Speed Controller failed." );
+        require(sigh_speed_Controller.changeProtocolSIGHSpeedRatio(targetAddress, newRatio_), " Protocol SIGH Distribution Ratio speed update in SIGH Speed Controller failed." );
         return true;
     }    
 
@@ -120,9 +126,9 @@ contract SighFinanceConfigurator is VersionedInitializable {
         return true;
     }        
 
-    function UpdateCryptoMarketSentiment_In_SIGH_Distribution_Handler(bool isActivated, uint maxVolatilityProtocolLimit_) external onlySIGHFinanceManager returns (bool) { 
+    function UpdateCryptoMarketSentiment_In_SIGH_Distribution_Handler( uint maxVolatilityProtocolLimit_) external onlySIGHFinanceManager returns (bool) { 
         ISighDistributionHandler sigh_distribution_mechanism = ISighDistributionHandler( globalAddressesProvider.getSIGHMechanismHandler() );
-        require(sigh_distribution_mechanism.updateCryptoMarketSentiment( isActivated, maxVolatilityProtocolLimit_ ), "updateCryptoMarketSentiment() execution failed." );
+        require(sigh_distribution_mechanism.updateCryptoMarketSentiment( maxVolatilityProtocolLimit_ ), "updateCryptoMarketSentiment() execution failed." );
         return true;
     }        
 
