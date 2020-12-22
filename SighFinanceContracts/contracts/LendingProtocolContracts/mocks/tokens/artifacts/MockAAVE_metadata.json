@@ -353,7 +353,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/contracts/LendingProtocolContracts/mocks/tokens/MockAAVE.sol": "MockAAVE"
+			"localhost/contracts/LendingProtocolContracts/mocks/tokens/MockBNB.sol": "MockAAVE"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -371,11 +371,11 @@
 				"dweb:/ipfs/QmfTkt3Vax2KhajrqCoJDgJdswkTVSDgrM3LsaNvHvXGgA"
 			]
 		},
-		"localhost/contracts/LendingProtocolContracts/mocks/tokens/MockAAVE.sol": {
-			"keccak256": "0xe9cbc9714fd07c343ace048b689fb6c9b90bc2570833e2e96dccc58879822ab8",
+		"localhost/contracts/LendingProtocolContracts/mocks/tokens/MockBNB.sol": {
+			"keccak256": "0xe418dc91969c3d2f61c152f12cfdd2de1aed1d0d77d4af6e133328eefcc3f390",
 			"urls": [
-				"bzz-raw://2d395cdb4d0edc115bd267d2fa0dd8ebd4f3378f4c84083c35cb6efcb2a00393",
-				"dweb:/ipfs/QmbiAaZ1rLvmpepNJ3x4SbVppLaPruBzbGafPsiMBwUqKZ"
+				"bzz-raw://ef7204e9157065924ce8fc0f678258d3b68e2230130a910409525625e3db2ba0",
+				"dweb:/ipfs/QmXTdr2AP19JR3oxZs54Xyw3UQiYG7pXVTdABanHbmiNUf"
 			]
 		},
 		"openzeppelin-solidity/contracts/GSN/Context.sol": {

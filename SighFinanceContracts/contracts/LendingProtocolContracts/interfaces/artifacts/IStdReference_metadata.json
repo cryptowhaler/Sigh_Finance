@@ -1,0 +1,131 @@
+{
+	"compiler": {
+		"version": "0.5.17+commit.d19bba13"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_base",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_quote",
+						"type": "string"
+					}
+				],
+				"name": "getReferenceData",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "rate",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "lastUpdatedBase",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "lastUpdatedQuote",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct IStdReference.ReferenceData",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "string[]",
+						"name": "_bases",
+						"type": "string[]"
+					},
+					{
+						"internalType": "string[]",
+						"name": "_quotes",
+						"type": "string[]"
+					}
+				],
+				"name": "getReferenceDataBulk",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "rate",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "lastUpdatedBase",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "lastUpdatedQuote",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct IStdReference.ReferenceData[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"methods": {}
+		},
+		"userdoc": {
+			"methods": {
+				"getReferenceData(string,string)": {
+					"notice": "Returns the price data for the given base/quote pair. Revert if not available."
+				},
+				"getReferenceDataBulk(string[],string[])": {
+					"notice": "Similar to getReferenceData, but with multiple base/quote pairs at once."
+				}
+			}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/LendingProtocolContracts/interfaces/IStdReference.sol": "IStdReference"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/LendingProtocolContracts/interfaces/IStdReference.sol": {
+			"keccak256": "0x6b950315b5f67db0f41e8967d6bd15c6b9367a5dbb023a7a63cd90c2c9037854",
+			"urls": [
+				"bzz-raw://e9c056ab0545ed138c0eb104fbe45ed762c1e3bc305f29aa8e6a6baf1eb90416",
+				"dweb:/ipfs/QmRTjYfABDSW2zQ6DsC5n4d8AJCgjruYrFDHeALZaLWbyr"
+			]
+		}
+	},
+	"version": 1
+}

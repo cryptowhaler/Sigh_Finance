@@ -353,7 +353,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/contracts/LendingProtocolContracts/mocks/tokens/MockWBTC.sol": "MockWBTC"
+			"localhost/contracts/LendingProtocolContracts/mocks/tokens/MockBTC.sol": "MockBTC"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -371,11 +371,11 @@
 				"dweb:/ipfs/QmfTkt3Vax2KhajrqCoJDgJdswkTVSDgrM3LsaNvHvXGgA"
 			]
 		},
-		"localhost/contracts/LendingProtocolContracts/mocks/tokens/MockWBTC.sol": {
-			"keccak256": "0xb01742eb09837c67311b4e1de0f770acd7670a59d24650bf6eae8f8a82a5db49",
+		"localhost/contracts/LendingProtocolContracts/mocks/tokens/MockBTC.sol": {
+			"keccak256": "0x651ea53c253efffc7cf3eec78a36b7b5a75d4796ce6d5a27e6b1b55a4e48263e",
 			"urls": [
-				"bzz-raw://e068440134cf9b1beb1591dbcd5ae827cda8ee154033eb606a8f4566839c2cbf",
-				"dweb:/ipfs/QmRStV5RUzPfKxSnh5mB4FFXx8xQbxKMDuKTN3BaT6YbhN"
+				"bzz-raw://fe23fa307737c998029120efdc2090f250d94eaf007ae3c7d3d386881c4bdc51",
+				"dweb:/ipfs/QmYXWgEaEYH6NcPaTYqBEDGFLkhxb8CtCrqn4Qw662aiwj"
 			]
 		},
 		"openzeppelin-solidity/contracts/GSN/Context.sol": {

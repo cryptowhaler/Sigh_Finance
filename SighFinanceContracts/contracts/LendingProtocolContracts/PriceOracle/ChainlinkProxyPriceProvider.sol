@@ -1,9 +1,10 @@
 pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
 
 import "../../configuration/IGlobalAddressesProvider.sol";
+import "../interfaces/IStdReference.sol";
 import "../interfaces/IPriceOracleGetter.sol";
-import "../interfaces/IAggregatorV2V3Interface.sol";
-import "../libraries/EthAddressLib.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol"; 
 
 /// @title ChainlinkProxyPriceProvider
 /// @author Aave, SIGH Finance
@@ -14,8 +15,8 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
 
     IGlobalAddressesProvider public globalAddressesProvider;
 
-    mapping(address => IAggregatorV2V3Interface) private assetsSources;
-    IPriceOracleGetter private fallbackOracle;
+    mapping(address => IStdReference) private assetsSources;
+    IStdReference private fallbackOracle;
 
     event AssetSourceUpdated(address indexed asset, address indexed source);
     event FallbackOracleUpdated(address indexed fallbackOracle);
@@ -69,7 +70,7 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
     function internalSetAssetsSources(address[] memory _assets, address[] memory _sources) internal {
         require(_assets.length == _sources.length, "INCONSISTENT_PARAMS_LENGTH");
         for (uint256 i = 0; i < _assets.length; i++) {
-            assetsSources[_assets[i]] = IAggregatorV2V3Interface(_sources[i]);
+            assetsSources[_assets[i]] = IStdReference(_sources[i]);
             emit AssetSourceUpdated(_assets[i], _sources[i]);
         }
     }
@@ -77,7 +78,7 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
     /// @notice Internal function to set the fallbackOracle
     /// @param _fallbackOracle The address of the fallbackOracle
     function internalSetFallbackOracle(address _fallbackOracle) internal {
-        fallbackOracle = IPriceOracleGetter(_fallbackOracle);
+        fallbackOracle = IStdReference(_fallbackOracle);
         emit FallbackOracleUpdated(_fallbackOracle);
     }
 
@@ -88,30 +89,21 @@ contract ChainlinkProxyPriceProvider is IPriceOracleGetter {
     /// @notice Gets an asset price by address
     /// @param _asset The asset address
     function getAssetPrice(address _asset) public view returns(uint256) {
-        IAggregatorV2V3Interface source = assetsSources[_asset];
-        if (_asset == EthAddressLib.ethAddress()) {
-            return 1 ether;
-        } 
-        else {
-            if (address(source) == address(0)) {                // If there is no registered source for the asset, call the fallbackOracle
-                return IPriceOracleGetter(fallbackOracle).getAssetPrice(_asset);
-            } 
-            else {
-                int256 _price = IAggregatorV2V3Interface(source).latestAnswer();
-                if (_price > 0) {
-                    return uint256(_price);
-                } 
-                else {
-                    return IPriceOracleGetter(fallbackOracle).getAssetPrice(_asset);
-                }
+        IStdReference source = assetsSources[_asset];
+
+        if (address(source) != address(0)) {                // If there is no registered source for the asset, call the fallbackOracle
+            ERC20Detailed contract_ = ERC20Detailed(_asset);
+            string memory tokenSymbol = contract_.symbol();
+            if ( keccak256(abi.encodePacked(tokenSymbol))  == keccak256(abi.encodePacked('SIGH')) ) {
+                tokenSymbol = 'DOT';
             }
+            IStdReference.ReferenceData memory data = IStdReference(source).getReferenceData(tokenSymbol,'USD');
+            return uint256(data.rate);
         }
     }
     
     function getAssetPriceDecimals (address _asset) external view returns(uint8) {
-        IAggregatorV2V3Interface source = assetsSources[_asset];
-        uint8 decimals = IAggregatorV2V3Interface(source).decimals();
-        return decimals;
+        return uint8(18);
     }
 
     /// @notice Gets a list of prices from a list of assets addresses

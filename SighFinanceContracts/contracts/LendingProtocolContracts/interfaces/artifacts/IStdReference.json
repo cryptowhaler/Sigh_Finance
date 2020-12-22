@@ -1,0 +1,139 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"görli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"deployedBytecode": {
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"gasEstimates": null,
+		"methodIdentifiers": {
+			"getReferenceData(string,string)": "65555bcc",
+			"getReferenceDataBulk(string[],string[])": "e42a071b"
+		}
+	},
+	"abi": [
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "string",
+					"name": "_base",
+					"type": "string"
+				},
+				{
+					"internalType": "string",
+					"name": "_quote",
+					"type": "string"
+				}
+			],
+			"name": "getReferenceData",
+			"outputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "rate",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "lastUpdatedBase",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "lastUpdatedQuote",
+							"type": "uint256"
+						}
+					],
+					"internalType": "struct IStdReference.ReferenceData",
+					"name": "",
+					"type": "tuple"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"internalType": "string[]",
+					"name": "_bases",
+					"type": "string[]"
+				},
+				{
+					"internalType": "string[]",
+					"name": "_quotes",
+					"type": "string[]"
+				}
+			],
+			"name": "getReferenceDataBulk",
+			"outputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "rate",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "lastUpdatedBase",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "lastUpdatedQuote",
+							"type": "uint256"
+						}
+					],
+					"internalType": "struct IStdReference.ReferenceData[]",
+					"name": "",
+					"type": "tuple[]"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		}
+	]
+}
