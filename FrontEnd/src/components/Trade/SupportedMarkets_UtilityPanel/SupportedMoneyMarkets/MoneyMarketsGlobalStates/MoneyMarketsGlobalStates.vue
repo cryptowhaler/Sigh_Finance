@@ -144,6 +144,18 @@ async refresh() {
     },
 
     toggle() {
+      let instrumentAddresses = this.$store.state.supportedInstrumentAddresses;
+      console.log(instrumentAddresses);
+      if (instrumentAddresses && instrumentAddresses.length>0) {
+        this.instrumentGlobalStates = [];
+        for (let i=0; i< instrumentAddresses.length; i++) { 
+          let currentInstrument = instrumentAddresses[i];
+          let currentInstrumentGlobalState = this.$store.state.supportedInstrumentGlobalStates.get(currentInstrument);
+          this.instrumentGlobalStates.push(currentInstrumentGlobalState);
+          console.log(currentInstrumentGlobalState);          
+        }
+          console.log(this.instrumentGlobalStates);          
+      }
       this.displayInUSD = !this.displayInUSD;
     },   
     

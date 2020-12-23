@@ -876,8 +876,8 @@ const store = new Vuex.Store({
         instrumentGlobalBalances.totalLiquidity = BigNumber(instrumentGlobalState.totalLiquidity).shiftedBy((-1)*Number(instrumentState.decimals)).toNumber() ;        
         instrumentGlobalBalances.totalBorrowsStable = BigNumber(instrumentGlobalState.totalBorrowsStable).shiftedBy((-1)*Number(instrumentState.decimals)).toNumber() ;        
         instrumentGlobalBalances.totalBorrowsVariable = BigNumber(instrumentGlobalState.totalBorrowsVariable).shiftedBy((-1)*Number(instrumentState.decimals)).toNumber() ;        
-        instrumentGlobalBalances.totalCompoundedBorrows = Number(instrumentGlobalState.totalBorrowsStable) + Number(instrumentGlobalState.totalBorrowsVariable) ;
-        instrumentGlobalBalances.totalBorrows = Number(instrumentGlobalState.totalBorrowsStable) + Number(instrumentGlobalState.totalBorrowsVariable) ;
+        instrumentGlobalBalances.totalCompoundedBorrows = Number(instrumentGlobalBalances.totalBorrowsStable) + Number(instrumentGlobalBalances.totalBorrowsVariable) ;
+        instrumentGlobalBalances.totalBorrows = Number(instrumentGlobalBalances.totalBorrowsStable) + Number(instrumentGlobalBalances.totalBorrowsVariable) ;
         instrumentGlobalBalances.availableLiquidity = BigNumber(instrumentGlobalState.availableLiquidity).shiftedBy((-1)*Number(instrumentState.decimals)).toNumber() ;        
         instrumentGlobalBalances.supplyInterestRatePercent = BigNumber(instrumentGlobalState.liquidityRate).shiftedBy(-25) ;        
         instrumentGlobalBalances.variableBorrowRate = BigNumber(instrumentGlobalState.variableBorrowRate).shiftedBy(-25) ;   
@@ -895,6 +895,13 @@ const store = new Vuex.Store({
         instrumentSighState.borrowindex = curInstrumentSIGHState.borrowindex;
         instrumentSighState.supplyindex = curInstrumentSIGHState.supplyindex;
         instrumentConfiguration.isSIGHMechanismActivated = curInstrumentSIGHState.isSIGHMechanismActivated;
+
+
+        instrumentState.borrowingEnabled = instrumentConfiguration.borrowingEnabled;
+        instrumentState.stableBorrowRateEnabled = instrumentConfiguration.stableBorrowRateEnabled;
+        instrumentState.isSIGHMechanismActivated = instrumentConfiguration.isSIGHMechanismActivated;
+        instrumentState.stableBorrowInterestPercent = instrumentGlobalBalances.stableBorrowRate;
+        instrumentState.variableBorrowInterestPercent = instrumentGlobalBalances.variableBorrowRate;
 
         // curInstrumentSIGHState = await store.dispatch("SIGHDistributionHandler_getInstrumentSighMechansimStates",{instrument_:instrumentAddress });  
         // instrumentSighState.percentageTotalVolatility = curInstrumentSIGHState.percentTotalVolatility;
@@ -1208,7 +1215,7 @@ const store = new Vuex.Store({
 
         cur_user_instrument_state.borrowRateMode =  response.borrowRateMode ;
         cur_user_instrument_state.borrowRate =  response.borrowRate ;
-        cur_user_instrument_state.supplyInterestRatePercent =  response.supplyInterestRatePercent ;
+        cur_user_instrument_state.liquidityRate =  response.supplyInterestRatePercent ;
         cur_user_instrument_state.originationFeeWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.originationFee) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,cur_user_instrument_state.priceDecimals)   });     
         cur_user_instrument_state.variableBorrowIndex =  response.variableBorrowIndex ;      
         cur_user_instrument_state.usageAsCollateralEnabled = response.usageAsCollateralEnabled ;       
