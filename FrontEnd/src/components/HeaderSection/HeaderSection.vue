@@ -89,7 +89,7 @@ export default {
       }
       else if (!this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showErrorMsg({title:"Network not Supported", message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName, timeout: 4000 }); 
-        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) ", timeout: 4000 }); 
+        this.$showInfoMsg({message: " Networks currently supported - Binance Smart Chain testnet (97) ", timeout: 4000 }); 
         return;
       }      else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
         this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance . Try re-connecting your Wallet or connect with our support team through our Discord Server in case of any queries! "}); 
@@ -139,7 +139,7 @@ export default {
       }
       else if (this.$store.state.web3 && !this.$store.getters.isNetworkSupported ) {
         this.$showErrorMsg({title:"Network Not Supported", message:" SIGH Finance is currently not available on the connected blockchain network!"});
-        this.$showInfoMsg({title:"Please Connect to Ethereum's KOVAN Test Network to interact with SIGH Finance!", message:"", timeout: 14000 });
+        this.$showInfoMsg({title:"Please Connect to Binance Smart Chain's Test Network to interact with SIGH Finance!", message:"", timeout: 14000 });
         this.$showInfoMsg({message:"Reach out to our team through our Discord Server in-case you need any help!", timeout: 10000 });
       }
     },

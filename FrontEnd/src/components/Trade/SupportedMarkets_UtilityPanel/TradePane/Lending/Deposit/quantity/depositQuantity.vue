@@ -99,7 +99,7 @@ export default {
       }
       else if (!this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showErrorMsg({title:"Network not Supported", message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName, timeout: 4000 }); 
-        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) ", timeout: 4000 }); 
+        this.$showInfoMsg({message: " Networks currently supported - Binance Smart Chain testnet (97) ", timeout: 4000 }); 
         return;
       }
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
@@ -146,7 +146,7 @@ export default {
       }
       else if (!this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showErrorMsg({title:"Network not Supported", message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName, timeout: 4000 }); 
-        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) ", timeout: 4000 }); 
+        this.$showInfoMsg({message: " Networks currently supported - Binance Smart Chain testnet (97) ", timeout: 4000 }); 
         return;
       }
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
@@ -186,7 +186,7 @@ export default {
       }
       else if (!this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showErrorMsg({title:"Network not Supported", message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName, timeout: 4000 }); 
-        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) ", timeout: 4000 }); 
+        this.$showInfoMsg({message: " Networks currently supported - Binance Smart Chain testnet (97) ", timeout: 4000 }); 
         return;
       }
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
@@ -220,7 +220,7 @@ export default {
       }
       else if (!this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
         this.$showErrorMsg({title:"Network not Supported", message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName, timeout: 4000 }); 
-        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) ", timeout: 4000 }); 
+        this.$showInfoMsg({message: " Networks currently supported - Binance Smart Chain testnet (97) ", timeout: 4000 }); 
         return;
       }
       else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
