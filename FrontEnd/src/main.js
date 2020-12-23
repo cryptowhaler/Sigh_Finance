@@ -68,6 +68,6 @@ import AsyncComputed from 'vue-async-computed';
   new Vue({
     router,
     store,
-    apolloProvider,
+    // apolloProvider,
     render: h => h(App),
   }).$mount('#app');

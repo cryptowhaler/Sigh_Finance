@@ -101,7 +101,7 @@ export default {
 
     displayWelcomeMessage() {
         this.$showSuccessMsg({title: 'Hey, Welcome to SIGH Finance!', message:"" });
-        this.$showInfoMsg({title: 'Onboarding Info :' ,message:"The protocol is currently Live on Ethereum's KOVAN Test Network. Please connect to the KOVAN Network to interact with SIGH Finance!" });
+        this.$showInfoMsg({title: 'Onboarding Info :' ,message:"The protocol is currently Live on Ethereum's KOVAN Testnet and Binance Smart Chain's testnet. Please connect to the KOVAN Network or the BSC's test network to interact with SIGH Finance!" });
     },
 
     // Connects to WEB3, Wallet, and initiates balance polling

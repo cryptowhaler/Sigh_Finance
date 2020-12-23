@@ -80,7 +80,7 @@ const store = new Vuex.Store({
       userBalanceWorth: 0,
       userDepositedBalance: 0,
       userDepositedBalanceWorth: 0,
-      liquidityRate: 0,
+      supplyInterestRatePercent: 0,
       usageAsCollateralEnabled: false,
       principalBorrowBalance: 0,
       principalBorrowBalanceWorth: 0,
@@ -98,11 +98,11 @@ const store = new Vuex.Store({
     GlobalAddressesProviderContractKovan: "0x8d25D2262D6c1a2486C633DD34E26e069E3647e7",
     ethereumPriceOracleAddressKovan: "0xBFa39B812Cab46cf930fd50e0Cd868A06bFe60e0",
     GlobalAddressesProviderContractMainNet: null,
-    ethereumPriceOracleAddressMainNet: "",
-    GlobalAddressesProviderContractBSCTestnet: null,
-    ethereumPriceOracleAddressBSCTestnet: "",
+    ethereumPriceOracleAddressMainNet: null,
+    GlobalAddressesProviderContractBSCTestnet: "0x0F27Cf50ff6E800001a66081B333Ffe6F592Fb42",
+    ethereumPriceOracleAddressBSCTestnet: null,
     GlobalAddressesProviderContractBSC: null,
-    ethereumPriceOracleAddressBSC: "",
+    ethereumPriceOracleAddressBSC: null,
 
     GlobalAddressesProviderAddress: null,
     EthereumPriceOracleAddress: null,
@@ -136,12 +136,13 @@ const store = new Vuex.Store({
     NETWORKS : { '1': 'Main Net', '2': 'Deprecated Morden test network','3': 'Ropsten test network',
       '4': 'Rinkeby test network','42': 'Kovan test network', '1337': 'Tokamak network', '4447': 'Truffle Develop Network','5777': 'Ganache Blockchain',
       '56':'Binance Smart Chain Main Network','97':'Binance Smart Chain Test Network'},
-    supportedNetworks: ['42'],
+    supportedNetworks: ['42','97'],
     // SESSION DATA 
     supportedInstrumentAddresses: null,    //          INSTRUMENT                    // Array of Addresses
     supportedInstruments : [],             //          INSTRUMENT                    // INSTRUMENTS SUPPORTED BY THE PROTOCOL (FOR LENDING - ITOKEN & INSTRUMENT ADDRESSES + SYMBOL/NAME WILL BE STORED)
     supportedInstrumentSIGHStates: new Map(),       //   INSTRUMENT                    // SIGH Speeds etc
     supportedInstrumentConfigs: new Map(),        //   INSTRUMENT                    // Instrument Address -> Instrument Config  MAPPING  (instrument's liquidation threshold etc)
+    supportedInstrumentGlobalStates: new Map(),   //   INSTRUMENT
     walletInstrumentStates: new Map(),            //   WALLET - INSTRUMENT           // CONNECTED WALLET --> "EACH INSTRUMENT" STATE MAPPING ( deposited, balance, borrowed, fee, etc )
     walletSIGH_FinanceState: {},                //   WALLET - SIGH FINANCE         // CONNECTED WALLET --> "SIGH FINANCE" STATE MAPPING (total deposited, total borrowed, lifeTime Deposit, lifeTime Borrowed,  )
     walletSIGHState: {},                        //   WALLET - SIGH Token           // CONNECTED WALLET --> "SIGH" STATE MAPPING (sigh balance, lifeTimeSighVolume, contributionRatio = lifeTimeSighVolume/ SighGlobalTradeVolume)
@@ -287,6 +288,13 @@ const store = new Vuex.Store({
     getSupportedInstruments(state) {
       return state.supportedInstruments;
     },
+    // SUPPRTED INSTRUMENTS - GLOBAL STATE
+    getsupportedInstrumentGlobalStates(state) {
+      return state.supportedInstrumentGlobalStates;
+    },
+    getsupportedInstrumentGlobalState(state,instrumentAddress) {
+      return state.supportedInstrumentGlobalStates.get(instrumentAddress);
+    },    
     // SUPPRTED INSTRUMENTS - SIGH STATE
     getsupportedInstrumentSIGHStates(state) {
       return state.supportedInstrumentSIGHStates;
@@ -307,7 +315,7 @@ const store = new Vuex.Store({
     },
     getWalletInstrumentState(state,instrumentAddress) {
       return state.walletInstrumentStates.get(instrumentAddress);
-    },
+    },    
     // WALLET  - SIGH FINANCE   
     getWalletSIGH_FinanceState(state) {
       return state.walletSIGH_FinanceState;
@@ -502,6 +510,16 @@ const store = new Vuex.Store({
       state.supportedInstruments = [];
       console.log('In resetSupportedInstrumentsArray -');
     },
+    // SUPPRTED INSTRUMENTS - GLOBAL STATE (MAP)
+    addToSupportedInstrumentGlobalStates(state,{instrumentAddress, instrumentGlobalState}) {
+      state.supportedInstrumentGlobalStates.set(instrumentAddress,instrumentGlobalState);
+      console.log('In addToSupportedInstrumentGlobalStates (MUTATION)');
+      console.log(instrumentGlobalState);
+    },
+    resetSupportedInstrumentGlobalStates(state) {
+      state.supportedInstrumentGlobalStates = new Map();
+      console.log('In resetSupportedInstrumentGlobalStates -');
+    },    
     // SUPPRTED INSTRUMENTS - SIGH STATE (MAP)
     addToSupportedInstrumentSIGHStates(state,{instrumentAddress, instrumentSIGHState}) {
       state.supportedInstrumentSIGHStates.set(instrumentAddress,instrumentSIGHState);
@@ -716,6 +734,189 @@ const store = new Vuex.Store({
   },
 
   // [TESTED. WORKING AS EXPECTED] fetches and stores the SIGH FINANCE GLOBAL STATE 
+  fetchSighFinanceProtocolState: async ({state,commit}) => {
+
+    if (state.GlobalAddressesProviderAddress) {
+      try {
+        // FETCHING "SIGH INSTRUMENT" STATE
+        console.log(" SIGH INSTRUMENT : STATE FETCHED (SESSION INITIALIALIZATION)");
+        let sighDetails = await store.dispatch("refresh_SIGH_State");
+        commit("setSIGHState",sighDetails);
+  
+   
+        // FETCHING "SUPPRTED INSTRUMENT ADDRESSES" 
+        let supportedInstrumentAddresses =  await store.dispatch("LendingPool_getInstruments"); ;
+        commit("setSupportedInstrumentAddresses",supportedInstrumentAddresses);
+        commit("resetSupportedInstrumentsArray"); 
+        // FETCHING "SUPPRTED INSTRUMENT" STATES  : STATE, GLOBAL BALANCES, CONFIG
+        for (let i=0; i<supportedInstrumentAddresses.length; i++) {
+
+          let data = await store.dispatch('refershInstrumentState',{instrumentAddress: supportedInstrumentAddresses[i] });
+          console.log(" SUPPORTED INSTRUMENT - " + i + " : STATE FETCHED (SESSION INITIALIALIZATION)");
+          console.log(data);
+  
+          console.log(" SUPPORTED INSTRUMENT - " + i + " : BASIC STATE");
+          commit("addToSupportedInstrumentsArray",data.instrumentState);
+  
+          console.log(" SUPPORTED INSTRUMENT - " + i + " : CONFIGURATION");
+          commit("addToSupportedInstrumentConfigs",{instrumentAddress: supportedInstrumentAddresses[i] , instrumentConfig: data.instrumentConfiguration});
+  
+          console.log(" SUPPORTED INSTRUMENT - " + i + " : GLOBAL BALANCES");          // console.log(data.instrumentGlobalBalances);
+          commit("addToSupportedInstrumentGlobalStates",{instrumentAddress: supportedInstrumentAddresses[i] , instrumentGlobalState: data.instrumentGlobalBalances});
+
+          // console.log(" SUPPORTED INSTRUMENT - " + i + " : SIGH STATES");          // console.log(data.instrumentGlobalBalances);
+          // commit("addToSupportedInstrumentSIGHStates",{instrumentAddress: supportedInstrumentAddresses[i] , instrumentSIGHState: data.instrumentSighState});
+        }
+  
+        // LENDING PROTOCOL TOTAL STATE
+        // commit("addToSupportedInstrumentGlobalStates",instrumentGlobalBalances);
+  
+        // 
+        commit('updateSelectedInstrument',state.supportedInstruments[0]); // THE FIRST INSTRUMENT IS BY DEFAULT THE SELECTED INSTRUMENT
+  
+        // ETH/USD : PRICE & PRICE DECIMALS
+        if (!state.EthereumPriceOracleAddress) {
+          commit('setEthPriceDecimals',0);                  // ETH Price Decimals
+          commit('updateETHPrice',1);                             // ETH/USD Price   
+        }
+        else {
+          let ethPriceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: state.EthereumPriceOracleAddress});   
+          commit('setEthPriceDecimals',ethPriceDecimals);                  // ETH Price Decimals
+          let ethPriceUSD = await store.dispatch("getInstrumentPrice",{_instrumentAddress: state.EthereumPriceOracleAddress}); 
+          commit('updateETHPrice',ethPriceUSD);                             // ETH/USD Price   
+        }
+
+        // INITIATE POLLING : ETH Price, Blocks Remaining, Transaction States
+        store.dispatch('initiatePolling_ETHPrice_SpeedRefresh_Transactions');
+        return true;
+      }
+      catch (error) {
+        console.log(error);
+        return false;
+      }
+    }
+    else {
+      return false;
+    }
+  },
+
+
+  // FETCHES SIGH FINANCE STATE ( SIGH SPEED CONTROLLER, TREASURY, DISTRIBUTION HANDLER )
+  refresh_SIGH_State: async ({commit,state}) => {
+    let sighDetails = {};
+    if ( state.web3 && state.isNetworkSupported ) {
+      sighDetails.name = await store.dispatch("ERC20_name",{tokenAddress: state.SIGHContractAddress}); 
+      sighDetails.symbol = await store.dispatch("ERC20_symbol",{tokenAddress: state.SIGHContractAddress}); 
+      sighDetails.decimals = await store.dispatch("ERC20_decimals",{tokenAddress: state.SIGHContractAddress}); 
+      sighDetails.treasuryAddress = await store.dispatch("getSIGHInstrumentTreasury",{tokenAddress: state.SIGHContractAddress}); 
+      sighDetails.SIGHDistributionHandlerAddress = state.SIGHDistributionHandlerAddress;        
+      sighDetails.speedControllerAddress = await store.dispatch("getSighInstrumentSpeedController",{tokenAddress: state.SIGHContractAddress}); 
+      sighDetails.priceETH = await store.dispatch("getInstrumentPrice",{_instrumentAddress: state.SIGHContractAddress}); 
+      sighDetails.priceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: state.SIGHContractAddress});   
+      console.log('refresh_SIGH_State - 1'); 
+      console.log(sighDetails); 
+      let response1 = await store.dispatch("getCurrentCycle");
+      let response2 = await store.dispatch("getMintSnapshotForCycle",{cycle: (Number(response1) - 1) });
+      sighDetails.cycle = response1;
+      sighDetails.era = response2.era;
+      sighDetails.inflationRate = response2.inflationRate;
+      sighDetails.mintedAmount = response2.mintedAmount;
+      sighDetails.prevMintSpeed = response2.mintSpeed;
+      sighDetails.newTotalSupply = response2.newTotalSupply;
+      sighDetails.minter = response2.minter;
+      sighDetails.blockNumber = response2.blockNumber;
+      console.log('refresh_SIGH_State - 2'); 
+      console.log(sighDetails); 
+      sighDetails.totalSighBurnt = await store.dispatch("getTotalSighBurnt");
+      sighDetails.blocksRemainingToMint = await store.dispatch("getBlocksRemainingToMint");
+      sighDetails.currentMintSpeed = await store.dispatch("getCurrentMintSpeed");
+      console.log('refresh_SIGH_State - 3'); 
+      console.log(sighDetails); 
+    }
+    return sighDetails;
+  },
+
+
+    // FETCHES THE DATA FOR AN INSTRUMENT (CONFIGURATION & BALANCES)
+    refershInstrumentState: async ({commit,state},{instrumentAddress}) => {
+      let instrumentState = {};    
+      let instrumentConfiguration = {};    
+      let instrumentGlobalBalances = {};   
+      let instrumentSighState = {}; 
+    
+      if ( state.web3 && instrumentAddress && instrumentAddress!= '0x0000000000000000000000000000000000000000') {
+        // INSTRUMENT BASIC DATA
+        instrumentState.instrumentAddress = instrumentAddress;
+        instrumentState.name = await store.dispatch("ERC20_name",{tokenAddress: instrumentAddress}); 
+        instrumentState.symbol =  await store.dispatch("ERC20_symbol",{tokenAddress: instrumentAddress}); 
+        instrumentState.decimals =  await store.dispatch("ERC20_decimals",{tokenAddress: instrumentAddress}); 
+        instrumentState.priceETH = await store.dispatch("getInstrumentPrice",{_instrumentAddress: instrumentAddress}); 
+        instrumentState.priceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: instrumentAddress}); 
+        instrumentState.iTokenName = 'CROP I-' + instrumentState.symbol;
+
+        // INSTRUMENT CONFIGURATION          
+        let instrumentConfig = await store.dispatch("LendingPool_getInstrumentConfigurationData",{_instrumentAddress: instrumentAddress });  
+        instrumentConfiguration.interestRateStrategyAddress = instrumentConfig.interestRateStrategyAddress;
+        instrumentConfiguration.liquidationThreshold = instrumentConfig.liquidationThreshold;
+        instrumentConfiguration.liquidationBonus = instrumentConfig.liquidationBonus;
+        instrumentConfiguration.ltv = instrumentConfig.ltv;
+        instrumentConfiguration.usageAsCollateralEnabled = instrumentConfig.usageAsCollateralEnabled;
+        instrumentConfiguration.borrowingEnabled = instrumentConfig.borrowingEnabled;
+        instrumentConfiguration.stableBorrowRateEnabled = instrumentConfig.stableBorrowRateEnabled;
+        instrumentConfiguration.isActive = instrumentConfig.isActive;
+        instrumentConfiguration.symbol = instrumentState.symbol;
+    
+        // INSTRUMENT GLOBAL BALANCES   
+        let instrumentGlobalState = await store.dispatch("LendingPool_getInstrumentData",{_instrumentAddress:instrumentAddress });           
+        instrumentState.iTokenAddress = instrumentGlobalState.iTokenAddress;
+        console.log( '\n \n instrumentGlobalState \n \n '  );        
+        console.log( instrumentGlobalState );        
+        instrumentGlobalBalances.iTokenAddress = instrumentGlobalState.iTokenAddress;        
+        instrumentGlobalBalances.totalCompoundedLiquidity = BigNumber(instrumentGlobalState.totalLiquidity).shiftedBy((-1)*Number(instrumentState.decimals)).toNumber() ;        
+        instrumentGlobalBalances.totalLiquidity = BigNumber(instrumentGlobalState.totalLiquidity).shiftedBy((-1)*Number(instrumentState.decimals)).toNumber() ;        
+        instrumentGlobalBalances.totalBorrowsStable = BigNumber(instrumentGlobalState.totalBorrowsStable).shiftedBy((-1)*Number(instrumentState.decimals)).toNumber() ;        
+        instrumentGlobalBalances.totalBorrowsVariable = BigNumber(instrumentGlobalState.totalBorrowsVariable).shiftedBy((-1)*Number(instrumentState.decimals)).toNumber() ;        
+        instrumentGlobalBalances.totalCompoundedBorrows = Number(instrumentGlobalState.totalBorrowsStable) + Number(instrumentGlobalState.totalBorrowsVariable) ;
+        instrumentGlobalBalances.totalBorrows = Number(instrumentGlobalState.totalBorrowsStable) + Number(instrumentGlobalState.totalBorrowsVariable) ;
+        instrumentGlobalBalances.availableLiquidity = BigNumber(instrumentGlobalState.availableLiquidity).shiftedBy((-1)*Number(instrumentState.decimals)).toNumber() ;        
+        instrumentGlobalBalances.supplyInterestRatePercent = BigNumber(instrumentGlobalState.liquidityRate).shiftedBy(-25) ;        
+        instrumentGlobalBalances.variableBorrowRate = BigNumber(instrumentGlobalState.variableBorrowRate).shiftedBy(-25) ;   
+        instrumentGlobalBalances.stableBorrowRate = BigNumber(instrumentGlobalState.stableBorrowRate).shiftedBy(-25) ;   
+        instrumentGlobalBalances.averageStableBorrowRate = BigNumber(instrumentGlobalState.averageStableBorrowRate).shiftedBy(-25) ;   
+        instrumentGlobalBalances.utilizationRate = instrumentGlobalState.utilizationRate;
+        instrumentGlobalBalances.liquidityIndex = instrumentGlobalState.liquidityIndex;
+        instrumentGlobalBalances.variableBorrowIndex = instrumentGlobalState.variableBorrowIndex;  
+        instrumentGlobalBalances.priceUSD = Number( instrumentState.priceETH / Math.pow(10,Number(instrumentState.priceDecimals)) ).toFixed(3);
+        instrumentGlobalBalances.symbol = instrumentState.symbol;
+  
+        // INSTRUMENT - SIGH STATE         
+        let curInstrumentSIGHState = await store.dispatch("SIGHDistributionHandler_getInstrumentData",{instrument_:instrumentAddress });           
+        instrumentSighState.isSIGHMechanismActivated = curInstrumentSIGHState.isSIGHMechanismActivated;
+        instrumentSighState.borrowindex = curInstrumentSIGHState.borrowindex;
+        instrumentSighState.supplyindex = curInstrumentSIGHState.supplyindex;
+        instrumentConfiguration.isSIGHMechanismActivated = curInstrumentSIGHState.isSIGHMechanismActivated;
+
+        // curInstrumentSIGHState = await store.dispatch("SIGHDistributionHandler_getInstrumentSighMechansimStates",{instrument_:instrumentAddress });  
+        // instrumentSighState.percentageTotalVolatility = curInstrumentSIGHState.percentTotalVolatility;
+        // instrumentSighState.losses_24_hrs_ETH = Number(curInstrumentSIGHState._24HrVolatility) / (10**18);
+        // instrumentSighState.losses_24_hrs_USD = await store.dispatch("convertToUSD",{ETHValue: instrumentSighState.losses_24_hrs_ETH }); 
+        // instrumentSighState.side = curInstrumentSIGHState.side;
+        // instrumentSighState.suppliers_Speed = curInstrumentSIGHState.suppliers_speed;
+        // instrumentSighState.borrowers_Speed = curInstrumentSIGHState.borroweers_speed;
+        // instrumentSighState.staking_Speed = curInstrumentSIGHState.staking_speed;
+        // instrumentSighState.totalsighYieldSpeed =  (Number(instrumentSighState.suppliers_Speed) + Number(instrumentSighState.borrowers_Speed) + Number(instrumentSighState.staking_Speed)) / Math.pow(10,18)  ;
+        // instrumentSighState.totalsighYield_ETH = Number(instrumentSighState.totalsighYieldSpeed) * Number(state.SIGHState.priceETH) / Math.pow(10,state.SIGHState.priceDecimals);
+        // instrumentSighState.symbol = instrumentState.symbol;      
+      }
+      // console.log(instrumentState);
+      // console.log(instrumentConfiguration);
+      // console.log(instrumentGlobalBalances);
+      return {instrumentState, instrumentConfiguration,instrumentGlobalBalances};  // ,instrumentSighState
+    },
+
+
+
+  // [TESTED. WORKING AS EXPECTED] fetches and stores the SIGH FINANCE GLOBAL STATE 
   initiateSighFinancePolling: async ({state,commit}) => {
 
     if (state.GlobalAddressesProviderAddress) {
@@ -726,17 +927,17 @@ const store = new Vuex.Store({
         commit("setSupportedInstrumentAddresses",supportedInstrumentAddresses);
     
         // ETH/USD : PRICE & PRICE DECIMALS
-        let ethPriceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: state.EthereumPriceOracleAddress});   
-        commit('setEthPriceDecimals',ethPriceDecimals);                  // ETH Price Decimals
-        let ethPriceUSD = await store.dispatch("getInstrumentPrice",{_instrumentAddress: state.EthereumPriceOracleAddress}); 
-        commit('updateETHPrice',ethPriceUSD);                             // ETH/USD Price 
+        if (!state.EthereumPriceOracleAddress) {
+          commit('setEthPriceDecimals',0);                  // ETH Price Decimals
+          commit('updateETHPrice',1);                             // ETH/USD Price   
+        }
+        else {
+          let ethPriceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: state.EthereumPriceOracleAddress});   
+          commit('setEthPriceDecimals',ethPriceDecimals);                  // ETH Price Decimals
+          let ethPriceUSD = await store.dispatch("getInstrumentPrice",{_instrumentAddress: state.EthereumPriceOracleAddress}); 
+          commit('updateETHPrice',ethPriceUSD);                             // ETH/USD Price   
+        }
 
-        // SIGH/ETH : PRICE & PRICE DECIMALS
-        // let sighPriceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: state.SIGHContractAddress});   
-        // commit('setSIGHPriceDecimals',sighPriceDecimals);                  // SIGH/ETH Price Decimals
-        // let sighPriceETH = await store.dispatch("getInstrumentPrice",{_instrumentAddress: state.EthereumPriceOracleAddress}); 
-        // commit('updateSIGHPrice',sighPriceETH);                             // SIGH/ETH Price
-        
         // INITIATE POLLING : ETH Price, Blocks Remaining, Transaction States
         store.dispatch('initiatePolling_ETHPrice_SpeedRefresh_Transactions');
         return true;
@@ -815,7 +1016,7 @@ const store = new Vuex.Store({
         if (state.web3 && state.isNetworkSupported) {
           let contractsInitialized = await store.dispatch("getContractsBasedOnNetwork");
           if (contractsInitialized) {
-            let protocolStateInitialized = await store.dispatch("initiateSighFinancePolling");
+            let protocolStateInitialized = await store.dispatch("fetchSighFinanceProtocolState");
             if (protocolStateInitialized) {
               await store.dispatch("getConnectedWalletState");
             }
@@ -934,16 +1135,18 @@ const store = new Vuex.Store({
       try {
         let walletSighState = {};
         walletSighState.sighBalance = await store.dispatch("ERC20_balanceOf",{tokenAddress: state.SIGHContractAddress , account: state.connectedWallet});
+        console.log('111111');
         walletSighState.sighBalanceWorth = Number(walletSighState.sighBalance) * (Number(state.SIGHState.priceETH) / Math.pow(10,Number(state.SIGHState.priceDecimals))) * (Number(state.ethereumPriceUSD) / Math.pow(10,state.ethPriceDecimals));
 
-        walletSighState.sighStaked = await store.dispatch("SIGHStaking_getStakedBalanceForStaker",{ _user: state.connectedWallet});
-        walletSighState.sighStakedWorth = Number(walletSighState.sighStaked) * (Number(state.SIGHState.priceETH) / Math.pow(10,Number(state.SIGHState.priceDecimals))) * (Number(state.ethereumPriceUSD) / Math.pow(10,state.ethPriceDecimals));
+        console.log('222222');
+        walletSighState.sighStaked = 0; // await store.dispatch("SIGHStaking_getStakedBalanceForStaker",{ _user: state.connectedWallet});
+        walletSighState.sighStakedWorth = 0; // Number(walletSighState.sighStaked) * (Number(state.SIGHState.priceETH) / Math.pow(10,Number(state.SIGHState.priceDecimals))) * (Number(state.ethereumPriceUSD) / Math.pow(10,state.ethPriceDecimals));
+        console.log('333333');
 
-        walletSighState.sighStakingAllowance = await store.dispatch("ERC20_getAllowance",{tokenAddress: state.SIGHContractAddress , owner: state.connectedWallet, spender: state.sighStakingContractAddress });
+        walletSighState.sighStakingAllowance = 0; // await store.dispatch("ERC20_getAllowance",{tokenAddress: state.SIGHContractAddress , owner: state.connectedWallet, spender: state.sighStakingContractAddress });
 
         walletSighState.sighStakedAPY = 0 ;  //await store.dispatch("SIGHStaking_getStakedBalanceForStaker",{ _user: state.connectedWallet});
         walletSighState.yourSighStakedAPY =  0;  // Number(walletSighState.sighStaked) * (Number(state.SIGHState.priceETH) / Math.pow(10,Number(state.SIGHState.priceDecimals))) * (Number(state.ethereumPriceUSD) / Math.pow(10,state.ethPriceDecimals));
-
         commit("resetWalletInstrumentStates"); // RESETTING WALLET - INSTRUMENT STATE
         for (let i=0; i < state.supportedInstruments.length; i++) { 
           let currentUserInstrumentState = await store.dispatch("refresh_User_Instrument_State",{cur_instrument: state.supportedInstruments[i]  }); 
@@ -997,16 +1200,16 @@ const store = new Vuex.Store({
         cur_user_instrument_state.userBalance = await store.dispatch("ERC20_balanceOf",{tokenAddress: cur_instrument.instrumentAddress , account: state.connectedWallet});
         cur_user_instrument_state.userAvailableAllowance = await store.dispatch("ERC20_getAllowance",{tokenAddress: cur_instrument.instrumentAddress , owner: state.connectedWallet, spender: state.LendingPoolCoreContractAddress });
 
-        cur_user_instrument_state.userBalanceWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.userBalance) * Number(cur_user_instrument_state.priceETH)  });
-        cur_user_instrument_state.userAvailableAllowanceWorth = await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.userAvailableAllowance) * Number(cur_user_instrument_state.priceETH) });     
-        cur_user_instrument_state.userDepositedBalanceWorth = await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.userDepositedBalance) * Number(cur_user_instrument_state.priceETH) }); 
-        cur_user_instrument_state.principalBorrowBalanceWorth = await  store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.principalBorrowBalance) * Number(cur_user_instrument_state.priceETH) });
-        cur_user_instrument_state.currentBorrowBalanceWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.currentBorrowBalance) * Number(cur_user_instrument_state.priceETH) }); 
+        cur_user_instrument_state.userBalanceWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.userBalance) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,cur_user_instrument_state.priceDecimals)  });
+        cur_user_instrument_state.userAvailableAllowanceWorth = await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.userAvailableAllowance) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,cur_user_instrument_state.priceDecimals)   });     
+        cur_user_instrument_state.userDepositedBalanceWorth = await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.userDepositedBalance) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,cur_user_instrument_state.priceDecimals)   }); 
+        cur_user_instrument_state.principalBorrowBalanceWorth = await  store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.principalBorrowBalance) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,cur_user_instrument_state.priceDecimals)   });
+        cur_user_instrument_state.currentBorrowBalanceWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.currentBorrowBalance) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,cur_user_instrument_state.priceDecimals)   }); 
 
         cur_user_instrument_state.borrowRateMode =  response.borrowRateMode ;
         cur_user_instrument_state.borrowRate =  response.borrowRate ;
-        cur_user_instrument_state.liquidityRate =  response.liquidityRate ;
-        cur_user_instrument_state.originationFeeWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.originationFee) * Number(cur_user_instrument_state.priceETH) });     
+        cur_user_instrument_state.supplyInterestRatePercent =  response.supplyInterestRatePercent ;
+        cur_user_instrument_state.originationFeeWorth =  await store.dispatch("convertToUSD",{ETHValue: Number(cur_user_instrument_state.originationFee) * Number(cur_user_instrument_state.priceETH) / Math.pow(10,cur_user_instrument_state.priceDecimals)   });     
         cur_user_instrument_state.variableBorrowIndex =  response.variableBorrowIndex ;      
         cur_user_instrument_state.usageAsCollateralEnabled = response.usageAsCollateralEnabled ;       
   
@@ -1126,7 +1329,7 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => { 
       console.log(response);
       if (Number(response.liquidityRate) > 0 || Number(response.borrowRate) > 0 ) {
         response.borrowRate = BigNumber(Number(response.borrowRate)).shiftedBy(-25);
-        response.liquidityRate = BigNumber(Number(response.liquidityRate)).shiftedBy(-25);
+        response.supplyInterestRatePercent = BigNumber(Number(response.liquidityRate)).shiftedBy(-25);
       }
       return response;
     }

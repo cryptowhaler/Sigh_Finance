@@ -90,7 +90,7 @@ export default {
       }
 
       if (!this.$store.state.web3) {
-        this.$showErrorMsg({title:"Not Connected to Web3", message: " You need to first connect to WEB3 (Ethereum Network) to interact with SIGH Finance!", timeout: 4000 });  
+        this.$showErrorMsg({title:"Not Connected to Web3", message: " You need to first connect to WEB3 (BSC Network) to interact with SIGH Finance!", timeout: 4000 });  
         this.$showInfoMsg({message: "Please install METAMASK Wallet to interact with SIGH Finance!", timeout: 4000 }); 
       }
       else if (!this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
@@ -166,7 +166,7 @@ export default {
 
     async approve() {   //APPROVE (WORKS PROPERLY) - calls increaseAllowance() Function  // Need to handle tokens which do not have it implemented
       if (!this.$store.state.web3) {
-        this.$showErrorMsg({title:"Not Connected to Web3", message: " You need to first connect to WEB3 (Ethereum Network) to interact with SIGH Finance!", timeout: 4000 });  
+        this.$showErrorMsg({title:"Not Connected to Web3", message: " You need to first connect to WEB3 (BSC Network) to interact with SIGH Finance!", timeout: 4000 });  
         this.$showInfoMsg({message: "Please install METAMASK Wallet to interact with SIGH Finance!", timeout: 4000 }); 
       }
       else if (!this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check

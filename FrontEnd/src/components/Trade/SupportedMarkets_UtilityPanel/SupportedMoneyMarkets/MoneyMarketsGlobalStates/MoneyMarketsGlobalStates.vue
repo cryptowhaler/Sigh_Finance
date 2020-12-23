@@ -24,6 +24,8 @@ export default {
       displayInUSD: true,
       sighPriceInUSD: 0,
 
+      instrumentGlobalStates: [],
+
       SIGH_Pay_Rate: 0,               //  Interest Percent for SIGH Rewards
       SIGH_Pay_Amount_Day: 0,         // Instrument Tokens being paid per day as SIGH Rewards
       SIGH_Pay_Amount_Year: 0,       // Instrument Tokens being paid per year as SIGH Rewards
@@ -44,62 +46,62 @@ export default {
   },
 
 
-  apollo: {
-    $subscribe: {
-      instruments: {
-        query: gql`subscription {
-                    instruments {
-                      name
-                      symbol
-                      underlyingInstrumentName
-                      underlyingInstrumentSymbol
-                      priceUSD
+  // apollo: {
+  //   $subscribe: {
+  //     instruments: {
+  //       query: gql`subscription {
+  //                   instruments {
+  //                     name
+  //                     symbol
+  //                     underlyingInstrumentName
+  //                     underlyingInstrumentSymbol
+  //                     priceUSD
 
-                      bearSentimentPercent
-                      bullSentimentPercent
-                      isSIGHMechanismActivated
+  //                     bearSentimentPercent
+  //                     bullSentimentPercent
+  //                     isSIGHMechanismActivated
 
-                      totalCompoundedLiquidity
-                      totalCompoundedLiquidityUSD
-                      totalCompoundedBorrows
-                      totalCompoundedBorrowsUSD
+  //                     totalCompoundedLiquidity
+  //                     totalCompoundedLiquidityUSD
+  //                     totalCompoundedBorrows
+  //                     totalCompoundedBorrowsUSD
 
-                      stableBorrowInterestPercent
-                      variableBorrowInterestPercent
-                      supplyInterestRatePercent
-                      sighPayInterestRatePercent
+  //                     stableBorrowInterestPercent
+  //                     variableBorrowInterestPercent
+  //                     supplyInterestRatePercent
+  //                     sighPayInterestRatePercent
 
-                      average24SnapsSuppliersHarvestAPY
-                      average24SnapsBorrowersHarvestAPY
+  //                     average24SnapsSuppliersHarvestAPY
+  //                     average24SnapsBorrowersHarvestAPY
 
-                      averageMonthlySnapsSuppliersHarvestAPY
-                      averageMonthlySnapsBorrowersHarvestAPY
+  //                     averageMonthlySnapsSuppliersHarvestAPY
+  //                     averageMonthlySnapsBorrowersHarvestAPY
 
-                      present_SIGH_Side
-                      present_DeltaBlocks
-                      present_SIGH_Suppliers_Speed
-                      present_SIGH_Borrowers_Speed
-                      present_SIGH_Staking_Speed
-                      isSIGHMechanismActivated
-                    }
-                  }`,
+  //                     present_SIGH_Side
+  //                     present_DeltaBlocks
+  //                     present_SIGH_Suppliers_Speed
+  //                     present_SIGH_Borrowers_Speed
+  //                     present_SIGH_Staking_Speed
+  //                     isSIGHMechanismActivated
+  //                   }
+  //                 }`,
 
-        result({data,loading,}) {
-          if (loading) {
-            console.log('loading');
-          }
-          else {
-          console.log("IN SUBSCRIPTIONS : INSTRUMENTS GLOBAL STATES");
-          console.log(data);
-          let instruments_ = data.instruments;
-          if (instruments_) {
-            this.instruments = instruments_;
-          }
-          }
-        },
-      },
-    },
-  },
+  //       result({data,loading,}) {
+  //         if (loading) {
+  //           console.log('loading');
+  //         }
+  //         else {
+  //         console.log("IN SUBSCRIPTIONS : INSTRUMENTS GLOBAL STATES");
+  //         console.log(data);
+  //         let instruments_ = data.instruments;
+  //         if (instruments_) {
+  //           this.instruments = instruments_;
+  //         }
+  //         }
+  //       },
+  //     },
+  //   },
+  // },
 
   // watch: {
   //   parentHeight: function(newVal) {
@@ -110,6 +112,36 @@ export default {
 
 
   methods: {
+
+    ...mapActions(['fetchSighFinanceProtocolState']),
+
+async refresh() {
+      if (!this.$store.state.web3) {
+        this.$showErrorMsg({title:"Not Connected to Web3", message: " You need to first connect to WEB3 (BSC Network) to interact with SIGH Finance!", timeout: 4000 });  
+        this.$showInfoMsg({message: "Please install METAMASK Wallet to interact with SIGH Finance!", timeout: 4000 }); 
+        return;
+      }
+      else if (!this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        this.$showErrorMsg({title:"Network not Supported", message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName, timeout: 4000 }); 
+        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) ", timeout: 4000 }); 
+        return;
+      }
+      this.showLoader = true;
+      await this.fetchSighFinanceProtocolState();
+      let instrumentAddresses = this.$store.state.supportedInstrumentAddresses;
+      console.log(instrumentAddresses);
+      if (instrumentAddresses && instrumentAddresses.length>0) {
+        this.instrumentGlobalStates = [];
+        for (let i=0; i< instrumentAddresses.length; i++) { 
+          let currentInstrument = instrumentAddresses[i];
+          let currentInstrumentGlobalState = this.$store.state.supportedInstrumentGlobalStates.get(currentInstrument);
+          this.instrumentGlobalStates.push(currentInstrumentGlobalState);
+          console.log(currentInstrumentGlobalState);          
+        }
+          console.log(this.instrumentGlobalStates);          
+      }
+      this.showLoader = false;
+    },
 
     toggle() {
       this.displayInUSD = !this.displayInUSD;

@@ -4,6 +4,7 @@
         <!-- Live markets heading  uk-text-center-->
         <h3 class="uk-panel-title uk-text-center" style="font-weight: 700;  font-size: 24px !important;">
             <span  style="font-weight: 700; padding-bottom: 20px; color: greenyellow; font-size: 24px !important;"> CONFIGURATION INFO-GRAPHICS </span> 
+            <button class="uk-button " style="background-color: darkblue; font-size: 13px; color: greenyellow; margin-right:10px;"  @click="refresh()">Refresh</button>
         </h3>
         <div style="margin:17px; text-align: center;" >
             <span style="color: ivory; padding-right:24px;" > <u>Read About Configuration Parameters Here</u>  : </span>  <span style="color:yellow">Article Coming Soon </span>
@@ -34,8 +35,8 @@
                     </thead>
                     <tbody>
                         <!-- live instruments content -->
-                        <tr v-for="instrument in instruments">
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.underlyingInstrumentSymbol }}</td>
+                        <tr v-for="instrument in instrumentConfigStates">
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.symbol }}</td>
                             <td v-if="instrument.isActive" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.isActive }} </td>
                             <td v-if="!instrument.isActive" class="uk-text-center c-red" style="line-height: 4;" > {{ instrument.isActive }} </td>
                             <td v-if="instrument.isFreezed" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.isFreezed }} </td>
@@ -44,9 +45,9 @@
                             <td v-if="!instrument.usageAsCollateralEnabled" class="uk-text-center c-red" style="line-height: 4;" > {{ instrument.usageAsCollateralEnabled }} </td>
                             <td v-if="instrument.borrowingEnabled" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.borrowingEnabled }} </td>
                             <td v-if="!instrument.borrowingEnabled" class="uk-text-center c-red" style="line-height: 4;" > {{ instrument.borrowingEnabled }} </td>
-                            <td v-if="instrument.isStableBorrowRateEnabled" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.isStableBorrowRateEnabled }} </td>
-                            <td v-if="!instrument.isStableBorrowRateEnabled" class="uk-text-center c-red" style="line-height: 4;" > {{ instrument.isStableBorrowRateEnabled }} </td>
-                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.baseLTVasCollateral  }} %  </td>
+                            <td v-if="instrument.isStableBorrowRateEnabled" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.stableBorrowRateEnabled }} </td>
+                            <td v-if="!instrument.isStableBorrowRateEnabled" class="uk-text-center c-red" style="line-height: 4;" > {{ instrument.stableBorrowRateEnabled }} </td>
+                            <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.ltv  }} %  </td>
                             <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.liquidationThreshold  }} % </td>
                             <td class="uk-text-center c-white" style="line-height: 4;" >{{ instrument.liquidationBonus  }} %  </td>
                             <td v-if="instrument.isSIGHMechanismActivated" class="uk-text-center c-green" style="line-height: 4;" > {{ instrument.isSIGHMechanismActivated }} </td>

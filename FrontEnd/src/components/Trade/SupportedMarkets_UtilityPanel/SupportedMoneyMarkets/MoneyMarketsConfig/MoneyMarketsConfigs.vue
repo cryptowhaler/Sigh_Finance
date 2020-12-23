@@ -20,6 +20,7 @@ export default {
     return {
       instruments: [],      
       showLoader:false,
+      instrumentConfigStates: [],
     };
   },
 
@@ -113,6 +114,31 @@ export default {
 
 
   methods: {
+    
+    async refresh() {
+      if (!this.$store.state.web3) {
+        this.$showErrorMsg({title:"Not Connected to Web3", message: " You need to first connect to WEB3 (BSC Network) to interact with SIGH Finance!", timeout: 4000 });  
+        this.$showInfoMsg({message: "Please install METAMASK Wallet to interact with SIGH Finance!", timeout: 4000 }); 
+        return;
+      }
+      else if (!this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        this.$showErrorMsg({title:"Network not Supported", message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName, timeout: 4000 }); 
+        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) ", timeout: 4000 }); 
+        return;
+      }
+      let instrumentAddresses = this.$store.state.supportedInstrumentAddresses;
+      console.log(instrumentAddresses);
+      if (instrumentAddresses && instrumentAddresses.length>0) {
+        this.instrumentConfigStates = [];
+        for (let i=0; i< instrumentAddresses.length; i++) { 
+          let currentInstrument = instrumentAddresses[i];
+          let currentInstrumentConfigState = this.$store.state.supportedInstrumentConfigs.get(currentInstrument);
+          this.instrumentConfigStates.push(currentInstrumentConfigState);
+          console.log(currentInstrumentConfigState);          
+        }
+          console.log(this.instrumentConfigStates);          
+      }
+    },
 
     // INSTRUMENT  STATE
     addToSupportedInstruments(instruments) {

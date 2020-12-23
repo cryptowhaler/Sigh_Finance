@@ -8,7 +8,9 @@
             <!-- <span  style="font-weight: 700; padding-bottom: 1px; color: greenyellow; font-size: 24px !important;">FRACTIONAL BANKING</span>  -->
 
             <span style="float:right; padding-right:10%;">               
-                <img v-if="showLoader" style="width: 7%; margin-left: 17%;" src="https://image.ibb.co/dc02hd/30.gif" />
+                <img v-if="showLoader" style="width: 17%; margin-left: 21%; margin-right: 17%;" src="https://image.ibb.co/dc02hd/30.gif" />
+                <button v-else class="uk-button " style="background-color: darkblue; font-size: 13px; color: greenyellow; margin-right:10px;"  @click="refresh()">Refresh</button>
+                
                 <button v-if="!displayInUSD" class="uk-button " style="background-color: darkblue; font-size: 13px; color: greenyellow;"  @click="toggle()">Display (USD)</button>
                 <button v-if="displayInUSD" class="uk-button " style="background-color: darkblue; font-size: 13px; color: greenyellow;"  @click="toggle()">Display (Numbers)</button>
             </span>
@@ -43,37 +45,37 @@
                     </thead>
                     <tbody>
                         <!-- live instruments content -->
-                        <tr v-if="!displayInUSD"  v-for="instrument in instruments">
+                        <tr v-if="!displayInUSD"  v-for="instrument in instrumentGlobalStates">
                             <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" >{{ instrument.symbol }}</td>
                             <td class="uk-text-center c-white" style="line-height: 1.5; font-size: 15px !important; color: violet !important; font-weight: 400;" > {{ getBalanceString(instrument.totalCompoundedLiquidity) }} 
-                                <br/> <span style="color:red; font-size:12px; font-weight: 300;"> bear: {{ Number(instrument.bearSentimentPercent).toFixed(2) }} % </span> 
+                                <br/> <span style="color:red; font-size:12px; font-weight: 300;"> bear: 50 % </span> 
                             </td>
                             <td class="uk-text-center c-white" style="line-height: 1.5; font-size: 15px !important; color: violet !important; font-weight: 400;"  > {{ getBalanceString(instrument.totalCompoundedBorrows) }}
-                                <br/> <span style="color:#66ff00; font-size:12px; font-weight: 300;"> bull: {{ Number(instrument.bullSentimentPercent).toFixed(2) }} % </span> 
+                                <br/> <span style="color:#66ff00; font-size:12px; font-weight: 300;"> bull: 50 % </span> 
                             </td>                           
                             <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.supplyInterestRatePercent).toFixed(2)  }} % </td>
-                            <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.stableBorrowInterestPercent).toFixed(2)  }} % </td>
-                            <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.variableBorrowInterestPercent).toFixed(2)  }} %  </td>
-                            <td class="uk-text-center" style="line-height: 2.9; color: red; font-size: 13px !important; font-weight: 400;" > {{ Number(instrument.sighPayInterestRatePercent).toFixed(2) }} % </td>
-                            <td class="uk-text-center c-green" style="line-height: 1.5; font-size: 13px !important; font-weight: 400;">  {{ Number(instrument.average24SnapsSuppliersHarvestAPY ).toFixed(2) }} % <br> <span style="color:cornsilk; font-size: 10px;"> 30 day Avg- {{ Number(instrument.averageMonthlySnapsSuppliersHarvestAPY).toFixed(2) }} % </span> </td>
-                            <td class="uk-text-center c-green" style="line-height: 1.5; font-size: 13px !important; font-weight: 400;">  {{ Number( instrument.average24SnapsBorrowersHarvestAPY ).toFixed(2) }} % <br> <span style="color:cornsilk; font-size: 10px;"> 30 day Avg- {{ Number(instrument.averageMonthlySnapsBorrowersHarvestAPY).toFixed(2) }} % </span> </td>
+                            <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.stableBorrowRate).toFixed(2)  }} % </td>
+                            <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.variableBorrowRate).toFixed(2)  }} %  </td>
+                            <td class="uk-text-center" style="line-height: 2.9; color: red; font-size: 13px !important; font-weight: 400;" > {{ 1 }} % </td>
+                            <td class="uk-text-center c-green" style="line-height: 1.5; font-size: 13px !important; font-weight: 400;">  45.54 % <br> <span style="color:cornsilk; font-size: 10px;"> 30 day Avg- 14.9 % </span> </td>
+                            <td class="uk-text-center c-green" style="line-height: 1.5; font-size: 13px !important; font-weight: 400;">  37.21 % <br> <span style="color:cornsilk; font-size: 10px;"> 30 day Avg- 19.7 % </span> </td>
                         </tr>
 
-                        <tr v-if="displayInUSD" v-for="instrument in instruments">
+                        <tr v-if="displayInUSD" v-for="instrument in instrumentGlobalStates">
                             <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;" >{{ instrument.symbol }}</td>
-                            <td class="uk-text-center c-white" style="line-height: 1.5; font-size: 15px !important; color: violet !important; font-weight: 400;" > $ {{ getBalanceString(instrument.totalCompoundedLiquidityUSD) }} 
-                                <br/> <span style="color:red; font-size:12px; font-weight: 300;"> bear: {{ Number(instrument.bearSentimentPercent).toFixed(2) }} % </span> 
+                            <td class="uk-text-center c-white" style="line-height: 1.5; font-size: 15px !important; color: violet !important; font-weight: 400;" > $ {{ getBalanceString(Number(instrument.totalCompoundedLiquidity) * Number(instrument.priceUSD) )  }} 
+                                <br/> <span style="color:red; font-size:12px; font-weight: 300;"> bear: 50 % </span> 
                             </td>
-                            <td class="uk-text-center c-white" style="line-height: 1.5; font-size: 15px !important; color: violet !important; font-weight: 400;"  > $ {{ getBalanceString(instrument.totalCompoundedBorrowsUSD) }} 
-                                <br/> <span style="color:#66ff00; font-size:12px; font-weight: 300;"> bull: {{ Number(instrument.bullSentimentPercent).toFixed(2) }} % </span> 
+                            <td class="uk-text-center c-white" style="line-height: 1.5; font-size: 15px !important; color: violet !important; font-weight: 400;"  > $ {{ getBalanceString( Number(instrument.totalCompoundedBorrows) * Number(instrument.priceUSD) ) }} 
+                                <br/> <span style="color:#66ff00; font-size:12px; font-weight: 300;"> bull: 50 % </span> 
                             </td>
                             <!-- <td class="uk-text-center c-white" style="line-height: 2.9; font-size: 13px !important; font-weight: 400;"  > {{ Number(instrument.utilizationRatePercent).toFixed(2) }} % </td> -->
                             <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.supplyInterestRatePercent).toFixed(2)  }} % </td>
-                            <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.stableBorrowInterestPercent).toFixed(2)  }} % </td>
-                            <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.variableBorrowInterestPercent).toFixed(2)  }} %  </td>
-                            <td class="uk-text-center" style="line-height: 2.9; color: red; font-size: 13px !important; font-weight: 400;" >  {{ Number(instrument.sighPayInterestRatePercent).toFixed(2) }} %   </td>
-                            <td class="uk-text-center c-green" style="line-height: 1.5; font-size: 13px !important; font-weight: 400;">  {{ Number(instrument.average24SnapsSuppliersHarvestAPY ).toFixed(2) }} % <br> <span style="color:cornsilk; font-size: 10px;"> 30 day Avg- {{ Number(instrument.averageMonthlySnapsSuppliersHarvestAPY).toFixed(2) }} % </span> </td>
-                            <td class="uk-text-center c-green" style="line-height: 1.5; font-size: 13px !important; font-weight: 400;">  {{ Number( instrument.average24SnapsBorrowersHarvestAPY ).toFixed(2) }} % <br> <span style="color:cornsilk; font-size: 10px;"> 30 day Avg- {{ Number(instrument.averageMonthlySnapsBorrowersHarvestAPY).toFixed(2) }} % </span> </td>
+                            <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.stableBorrowRate).toFixed(2)  }} % </td>
+                            <td class="uk-text-center" style="line-height: 2.9; color: darkturquoise; font-size: 13px !important; font-weight: 400;" >{{ Number(instrument.variableBorrowRate).toFixed(2)  }} %  </td>
+                            <td class="uk-text-center" style="line-height: 2.9; color: red; font-size: 13px !important; font-weight: 400;" >  1 %   </td>
+                            <td class="uk-text-center c-green" style="line-height: 1.5; font-size: 13px !important; font-weight: 400;">   45.54 % <br> <span style="color:cornsilk; font-size: 10px;"> 30 day Avg- 14.9 %  </span> </td>
+                            <td class="uk-text-center c-green" style="line-height: 1.5; font-size: 13px !important; font-weight: 400;">  37.21 % <br> <span style="color:cornsilk; font-size: 10px;"> 30 day Avg- 19.7 % </span> </td>
                         </tr>
                     </tbody>
                 </table>

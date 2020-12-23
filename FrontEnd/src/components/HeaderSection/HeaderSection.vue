@@ -18,6 +18,7 @@ export default {
       statusCode: 'CONNECT WALLET',
       selectedTransaction: null,
       sighInstrument: {},
+      showLoader: false,
     };
   },
 
@@ -44,13 +45,14 @@ export default {
     EventBus.$off(EventNames.userWalletDisconnected, this.WalletDisconnectedListener);           //AUTH    
   },
   methods: {
-    ...mapActions(['loadWeb3','getContractsBasedOnNetwork','initiateSighFinancePolling','getWalletConfig','getConnectedWalletState','SIGHDistributionHandler_refreshSighSpeeds','SIGHSpeedController_drip']),
+    ...mapActions(['loadWeb3','getContractsBasedOnNetwork','fetchSighFinanceProtocolState','initiateSighFinancePolling','getWalletConfig','getConnectedWalletState','SIGHDistributionHandler_refreshSighSpeeds','SIGHSpeedController_drip']),
 
     async connectToWeb3() {
       await this.handleWeb3();   
       if (this.$store.state.isNetworkSupported) {
-        await this.fetchSessionUserStateData(); 
+        await this.fetchSessionUserStateData();         
       }
+      this.showLoader = false;
     },
 
 
@@ -58,6 +60,10 @@ export default {
       console.log(this.selectedTransaction);
       if (this.selectedTransaction && this.$store.state.networkId == '42') {
         window.open('https://kovan.etherscan.io/tx/'  + this.selectedTransaction.hash  , '_blank');
+        window.focus();
+      }
+      if (this.selectedTransaction && this.$store.state.networkId == '97') {
+        window.open('https://testnet.bscscan.com/tx/'  + this.selectedTransaction.hash  , '_blank');
         window.focus();
       }
     },
@@ -77,11 +83,15 @@ export default {
 
 
     async dripMintedSIGH() {
-      if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
-        this.$showErrorMsg({message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName }); 
-        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) " }); 
+      if (!this.$store.state.web3) {
+        this.$showErrorMsg({title:"Not Connected to Web3", message: " You need to first connect to WEB3 (BSC Network) to interact with SIGH Finance!", timeout: 4000 });  
+        this.$showInfoMsg({message: "Please install METAMASK Wallet to interact with SIGH Finance!", timeout: 4000 }); 
       }
-      else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
+      else if (!this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
+        this.$showErrorMsg({title:"Network not Supported", message: " SIGH Finance currently doesn't support the connected Decentralized Network. Currently connected to \" +" + this.$store.getters.networkName, timeout: 4000 }); 
+        this.$showInfoMsg({message: " Networks currently supported - Ethereum :  Kovan Testnet (42) ", timeout: 4000 }); 
+        return;
+      }      else if ( !Web3.utils.isAddress(this.$store.state.connectedWallet) ) {       // Connected Account not Valid
         this.$showErrorMsg({message: " The wallet currently connected to the protocol is not supported by SIGH Finance . Try re-connecting your Wallet or connect with our support team through our Discord Server in case of any queries! "}); 
       }       
       else {       // WHEN ABOVE CONDITIONS ARE MET SO THE TRANSACTION GOES THROUGH
@@ -100,20 +110,21 @@ export default {
 
     // Connects to WEB3, Wallet, and initiates balance polling
     async handleWeb3() {
+      this.showLoader = true;
       console.log('handleWeb3() in Header');
       let isWeb3loaded = await this.loadWeb3();
 
       if (isWeb3loaded == 'EthereumEnabled') {
-          this.$showSuccessMsg({title:"Connection Successful", message:"  Successfully connected to the Ethereum Network : " + this.$store.getters.networkName, timeout: 3000 });
+          this.$showSuccessMsg({title:"Connection Successful", message:"  Successfully connected to the " + this.$store.getters.networkName, timeout: 3000 });
       }
       if (isWeb3loaded == 'EthereumNotEnabled') {
           this.$showErrorMsg({title:"Permission Denied", message:'  Permission to connect your wallet denied. In case you have security concerns or are facing any issues, connect with our Team through our Discord Server or write to us at contact@sigh.finance!', timeout: 17000 });
       }
       if (isWeb3loaded == 'BSCConnected') {
-        this.$showSuccessMsg({title:"Connection Successful", message:"  Successfully connected to the Binance Smart Chain : " + this.$store.getters.networkName, timeout: 3000 });
+        this.$showSuccessMsg({title:"Connection Successful", message:"  Successfully connected to the " + this.$store.getters.networkName, timeout: 3000 });
       }
       if (isWeb3loaded == 'Web3Connected') {
-        this.$showSuccessMsg({title:"Connection Successful", message:"Successfully connected to the Ethereum Network's " + this.$store.getters.networkName  + " (not a Metamask wallet) !"});
+        this.$showSuccessMsg({title:"Connection Successful", message:"Successfully connected to the " + this.$store.getters.networkName  + " (not a Metamask wallet) !"});
       }
       if (isWeb3loaded == 'false') {
         this.$showErrorMsg({title:"Install METAMASK", message:'  No Web3 Object injected into browser. Read-only access. Please install MetaMask browser extension to interact with SIGH Finance!'});
@@ -141,7 +152,7 @@ export default {
         let contractAddressesInitialized = await this.getContractsBasedOnNetwork();  // Fetches Addresses & Instrument states
         if (contractAddressesInitialized) {
           this.$showSuccessMsg({title:"Transactions now possible!", message: " SIGH Finance Contracts fetched successfully for the network " + id + " - " + this.$store.getters.networkName, timeout: 3000  });
-          let response = await this.initiateSighFinancePolling();
+          let response = await this.fetchSighFinanceProtocolState();
           if (response) {
             this.$showInfoMsg({title:"Loading User Session..." , message:"Please wait a bit while we fetch your instrument balances from the Network!", timeout: 70000  });
             return true;
