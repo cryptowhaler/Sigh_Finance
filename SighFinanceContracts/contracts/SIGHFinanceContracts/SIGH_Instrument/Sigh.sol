@@ -12,8 +12,10 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
     using Address for address;
 
     address private _owner;
-    address private treasury; 
+    address private pendingOwner;
     address private SpeedController;
+
+    mapping(address => bool) private blockList;
 
     uint256 private constant INITIAL_SUPPLY = 5 * 10**6 * 10**18; // 5 Million (with 18 decimals)
     uint256 private prize_amount = 500 * 10**18;
@@ -52,7 +54,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
     Schedule[11] private _schedules;
 
     event NewSchedule(uint newSchedule, uint newDivisibilityFactor, uint blockNumber, uint timeStamp );
-    event MintingInitialized(address speedController, address treasury, uint256 blockNumber);
+    event MintingInitialized(address speedController, uint256 blockNumber);
     event SIGHMinted( address minter, uint256 cycle, uint256 Schedule, uint inflationRate, uint256 amountMinted, uint mintSpeed, uint256 current_supply, uint256 block_number);
     event SIGHBurned( uint256 burntAmount, uint256 totalBurnedAmount, uint256 currentSupply, uint blockNumber);
 
@@ -65,14 +67,12 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
     // #######   FUNCTIONS TO INITIATE MINTING  #######
     // ################################################
 
-    function initMinting(address newSpeedController, address _treasury) public returns (bool) {
+    function initMinting(address newSpeedController) public returns (bool) {
         require(_msgSender() == _owner,"Mining can only be initialized by the owner." );
         require(newSpeedController != address(0), "Not a valid Speed Controller address");
-        require(_treasury != address(0), "Not a valid Treasury address");
         require(!mintingActivated, "Minting can only be initialized once" );
 
         SpeedController = newSpeedController;
-        treasury = _treasury;
         _initSchedules();
 
         _mint(SpeedController,INITIAL_SUPPLY);
@@ -81,7 +81,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
         emit SIGHMinted(currentMintSnapshot.minter, currentMintSnapshot.cycle, currentMintSnapshot.schedule, currentMintSnapshot.inflationRate, currentMintSnapshot.mintedAmount, currentMintSnapshot.mintSpeed, currentMintSnapshot.newTotalSupply,currentMintSnapshot.blockNumber );
 
         
-        emit MintingInitialized(SpeedController, treasury, block.number );
+        emit MintingInitialized(SpeedController, block.number );
         mintingActivated = true;
     }
 
@@ -93,12 +93,26 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
         _schedules[4] = Schedule(1195, 1560, 1600 );        // 4th Mint Schedule
     }
 
+    function blockAnAccount(address _account) external returns (bool) {
+        require(msg.sender == addressProvider.getSIGHFinanceManager(), 'Only SIGH Finance Manager can call this function');
+        blockList[_account] = true;
+        emit accountBlocked(_account, balance[_account] );
+    }
+
+    function unBlockAnAccount(address _account) external returns (bool) {
+        require(msg.sender == addressProvider.getSIGHFinanceManager(), 'Only SIGH Finance Manager can call this function');
+        blockList[_account] = false;
+        emit accountUnBlocked(_account, balance[_account] );
+    }
+
 
     // ############################################################
     // ############   OVER-LOADING TRANSFER FUNCTON    ############
     // ############################################################
 
     function _transfer(address sender, address recipient, uint256 amount) internal {
+        require(!blockList[sender],'Address from which this transaction originated has been freezed. SIGH cannot be moved from this account');
+        require(!blockList[recipient],'Recepient address has been freezed. No new SIGH can be deposited to this account');
         if (isMintingPossible()) {
              mintNewCoins();
         }
@@ -180,8 +194,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
     // ################################################
     
     function burn(uint amount) external returns (bool) {
-        require( msg.sender == treasury,"Only Treasury can burn SIGH Tokens");
-        _burn(treasury, amount) ;
+        _burn(msg.sender, amount);
         totalAmountBurnt = add(totalAmountBurnt , amount, 'burn : Total Number of tokens burnt gave addition overflow');
         emit SIGHBurned( amount, totalAmountBurnt, totalSupply(), block.number );
         return true;
@@ -270,11 +283,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
    function getSpeedController() external view returns (address) {
         return SpeedController;
     }
-    
-   function getTreasury() external view returns (address) {
-        return treasury;
-    }
-    
+        
     
     // ##################################################################
     // ###########   nternal helper functions for safe math   ###########
