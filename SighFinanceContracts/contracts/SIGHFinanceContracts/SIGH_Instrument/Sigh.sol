@@ -1,5 +1,6 @@
 pragma solidity ^0.5.16;
 
+import "../../configuration/IGlobalAddressesProvider.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol"; 
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol"; 
 
@@ -11,8 +12,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
     using SafeMath for uint256;    // Time based calculations
     using Address for address;
 
-    address private _owner;
-    address private treasury; 
+    IGlobalAddressesProvider private addressesProvider; 
     address private SpeedController;
 
     uint256 private constant INITIAL_SUPPLY = 5 * 10**6 * 10**18; // 5 Million (with 18 decimals)
@@ -49,39 +49,37 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
         uint256 divisibilityFactor;
     }
 
-    Schedule[11] private _schedules;
+    Schedule[5] private _schedules;
 
     event NewSchedule(uint newSchedule, uint newDivisibilityFactor, uint blockNumber, uint timeStamp );
     event MintingInitialized(address speedController, address treasury, uint256 blockNumber);
     event SIGHMinted( address minter, uint256 cycle, uint256 Schedule, uint inflationRate, uint256 amountMinted, uint mintSpeed, uint256 current_supply, uint256 block_number);
     event SIGHBurned( uint256 burntAmount, uint256 totalBurnedAmount, uint256 currentSupply, uint blockNumber);
 
-    // constructing  
-    constructor () public {
-        _owner = _msgSender();
+    constructor (address addressesProvider_) public {
+        addressesProvider = IGlobalAddressesProvider(addressesProvider_);
+        address SIGH_manager = addressesProvider.getSIGHFinanceManager();
+        require(SIGH_manager!=address(0),'SIGH Manager address is not valid');
+
+        _mint(SIGH_manager,INITIAL_SUPPLY);
+        mintSnapshot  memory currentMintSnapshot = mintSnapshot({ cycle:Current_Cycle, schedule:Current_Schedule, inflationRate: uint(0), mintedAmount:INITIAL_SUPPLY, mintSpeed:uint(0), newTotalSupply:totalSupply(), minter: msg.sender, blockNumber: block.number });
+        mintSnapshots.push(currentMintSnapshot);                                                    // MINT SNAPSHOT ADDED TO THE ARRAY
+        emit SIGHMinted(currentMintSnapshot.minter, currentMintSnapshot.cycle, currentMintSnapshot.schedule, currentMintSnapshot.inflationRate, currentMintSnapshot.mintedAmount, currentMintSnapshot.mintSpeed, currentMintSnapshot.newTotalSupply,currentMintSnapshot.blockNumber );
     }
 
     // ################################################
     // #######   FUNCTIONS TO INITIATE MINTING  #######
     // ################################################
 
-    function initMinting(address newSpeedController, address _treasury) public returns (bool) {
-        require(_msgSender() == _owner,"Mining can only be initialized by the owner." );
+    function initMinting(address newSpeedController) public returns (bool) {
+        require(_msgSender() == addressesProvider.getSIGHFinanceManager(),"Mining can only be initialized by the SIGH Finance Manager" );
         require(newSpeedController != address(0), "Not a valid Speed Controller address");
-        require(_treasury != address(0), "Not a valid Treasury address");
         require(!mintingActivated, "Minting can only be initialized once" );
 
         SpeedController = newSpeedController;
-        treasury = _treasury;
         _initSchedules();
-
-        _mint(SpeedController,INITIAL_SUPPLY);
-        mintSnapshot  memory currentMintSnapshot = mintSnapshot({ cycle:Current_Cycle, schedule:Current_Schedule, inflationRate: uint(0), mintedAmount:INITIAL_SUPPLY, mintSpeed:uint(0), newTotalSupply:totalSupply(), minter: msg.sender, blockNumber: block.number });
-        mintSnapshots.push(currentMintSnapshot);                                                    // MINT SNAPSHOT ADDED TO THE ARRAY
-        emit SIGHMinted(currentMintSnapshot.minter, currentMintSnapshot.cycle, currentMintSnapshot.schedule, currentMintSnapshot.inflationRate, currentMintSnapshot.mintedAmount, currentMintSnapshot.mintSpeed, currentMintSnapshot.newTotalSupply,currentMintSnapshot.blockNumber );
-
         
-        emit MintingInitialized(SpeedController, treasury, block.number );
+        emit MintingInitialized(SpeedController, block.number );
         mintingActivated = true;
     }
 
@@ -93,12 +91,27 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
         _schedules[4] = Schedule(1195, 1560, 1600 );        // 4th Mint Schedule
     }
 
+    function addToBlockList(address account) external returns (bool) {
+        require(!blockList[account], 'The provided account has already been restricted from transferring SIGH');
+        require(_msgSender() == addressesProvider.getSIGHFinanceManager(),"Block List can only be edited by the SIGH Finance Manager" );
+        blockList[account] = true;
+        emit accountBlocked(account);
+    }
+
+    function removeFromBlockList(address account) external returns (bool) {
+        require(blockList[account], 'The provided account has not been restricted from transferring SIGH');
+        require(_msgSender() == addressesProvider.getSIGHFinanceManager(),"Block List can only be edited by the SIGH Finance Manager" );
+        blockList[account] = false;
+        emit accountUnBlocked(account);
+    }
 
     // ############################################################
     // ############   OVER-LOADING TRANSFER FUNCTON    ############
     // ############################################################
 
     function _transfer(address sender, address recipient, uint256 amount) internal {
+        require(!blockList[sender],'Sender address has been restricted from accessing its SIGH Tokens');
+        require(!blockList[recipient],'Recepients address has been restricted from accessing its SIGH Tokens');
         if (isMintingPossible()) {
              mintNewCoins();
         }
