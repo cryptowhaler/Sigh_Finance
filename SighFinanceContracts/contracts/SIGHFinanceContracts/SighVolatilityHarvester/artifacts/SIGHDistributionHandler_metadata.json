@@ -1382,7 +1382,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/contracts/SIGHFinanceContracts/SighDistributionHandler/SighDistributionHandler.sol": "SIGHDistributionHandler"
+			"localhost/contracts/SIGHFinanceContracts/SIGHVolatilityHarvester/SIGHVolatilityHarvester.sol": "SIGHVolatilityHarvester"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -1463,7 +1463,7 @@
 				"dweb:/ipfs/QmVsaomWuGu3sQRdQ3BWtkTNLG9KB3MWu5hKZwiqSmbob4"
 			]
 		},
-		"localhost/contracts/SIGHFinanceContracts/SighDistributionHandler/SighDistributionHandler.sol": {
+		"localhost/contracts/SIGHFinanceContracts/SIGHVolatilityHarvester/SIGHVolatilityHarvester.sol": {
 			"keccak256": "0x0a9d22bbab6b03798c34127b041a5b4a39c34687eca51f779960fb0118223829",
 			"urls": [
 				"bzz-raw://9aa90dee691c37052d79e59a68ad67ba4b9d39dcb802c298b12c3f9dbb70d2d6",

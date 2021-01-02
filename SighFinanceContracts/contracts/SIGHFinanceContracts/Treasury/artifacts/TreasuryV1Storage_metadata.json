@@ -8,7 +8,7 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "SIGHDistributionHandler_address",
+				"name": "SIGHVolatilityHarvester_address",
 				"outputs": [
 					{
 						"internalType": "address",

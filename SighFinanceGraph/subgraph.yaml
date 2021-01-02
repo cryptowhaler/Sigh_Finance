@@ -306,19 +306,19 @@ dataSources:
     network: kovan
     source:
       address: "0xFEb7CF0eBa9A65Dc2977A85fAc38566C5bB9a679"
-      abi: SIGHDistributionHandler
+      abi: SIGHVolatilityHarvester
       startBlock: 22601871
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/mapping/SIGHDistributionHandler.ts
+      file: ./src/mapping/SIGHVolatilityHarvester.ts
       entities:
         - Instruments
         - userInstrumentState
       abis:
-      - name: SIGHDistributionHandler
-        file: ./abis/SIGHDistributionHandler.json
+      - name: SIGHVolatilityHarvester
+        file: ./abis/SIGHVolatilityHarvester.json
       - name: PriceOracleGetter
         file: ./abis/PriceOracleGetter.json
       - name: ERC20Detailed

@@ -15,6 +15,8 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
     IGlobalAddressesProvider private addressesProvider; 
     address private SpeedController;
 
+    mapping (address => bool) private blockList;
+
     uint256 private constant INITIAL_SUPPLY = 5 * 10**6 * 10**18; // 5 Million (with 18 decimals)
     uint256 private prize_amount = 500 * 10**18;
 
@@ -52,9 +54,12 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
     Schedule[5] private _schedules;
 
     event NewSchedule(uint newSchedule, uint newDivisibilityFactor, uint blockNumber, uint timeStamp );
-    event MintingInitialized(address speedController, address treasury, uint256 blockNumber);
+    event MintingInitialized(address speedController, uint256 blockNumber);
     event SIGHMinted( address minter, uint256 cycle, uint256 Schedule, uint inflationRate, uint256 amountMinted, uint mintSpeed, uint256 current_supply, uint256 block_number);
     event SIGHBurned( uint256 burntAmount, uint256 totalBurnedAmount, uint256 currentSupply, uint blockNumber);
+
+    event accountBlocked(address account);    
+    event accountUnBlocked(address account);
 
     constructor (address addressesProvider_) public {
         addressesProvider = IGlobalAddressesProvider(addressesProvider_);
@@ -111,7 +116,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
 
     function _transfer(address sender, address recipient, uint256 amount) internal {
         require(!blockList[sender],'Sender address has been restricted from accessing its SIGH Tokens');
-        require(!blockList[recipient],'Recepients address has been restricted from accessing its SIGH Tokens');
+        require(!blockList[recipient],'Recepient address has been restricted from accessing its SIGH Tokens');
         if (isMintingPossible()) {
              mintNewCoins();
         }
@@ -193,8 +198,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
     // ################################################
     
     function burn(uint amount) external returns (bool) {
-        require( msg.sender == treasury,"Only Treasury can burn SIGH Tokens");
-        _burn(treasury, amount) ;
+        _burn(msg.sender, amount) ;
         totalAmountBurnt = add(totalAmountBurnt , amount, 'burn : Total Number of tokens burnt gave addition overflow');
         emit SIGHBurned( amount, totalAmountBurnt, totalSupply(), block.number );
         return true;
@@ -284,10 +288,13 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
         return SpeedController;
     }
     
-   function getTreasury() external view returns (address) {
-        return treasury;
+   function getAddressesProvider() external view returns (address) {
+        return address(addressesProvider);
     }
     
+    function isAccountBlocked(address account_) external view returns (bool) {
+        return blockList[account_];
+    }
     
     // ##################################################################
     // ###########   nternal helper functions for safe math   ###########

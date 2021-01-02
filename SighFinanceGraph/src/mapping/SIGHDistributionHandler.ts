@@ -1,11 +1,11 @@
 import { Address, BigInt,BigDecimal, log } from "@graphprotocol/graph-ts"
 import { InstrumentAdded, InstrumentRemoved, InstrumentSIGHStateUpdated, SIGHSpeedUpdated, StakingSpeedUpdated, CryptoMarketSentimentUpdated
  , minimumBlocksForSpeedRefreshUpdated , PriceSnapped, SIGHBorrowIndexUpdated, AccuredSIGHTransferredToTheUser, InstrumentVolatilityCalculated,
- MaxSIGHSpeedCalculated, refreshingSighSpeeds , SIGHSupplyIndexUpdated } from "../../generated/Sigh_Distribution_Handler/SIGHDistributionHandler"
+ MaxSIGHSpeedCalculated, refreshingSighSpeeds , SIGHSupplyIndexUpdated } from "../../generated/Sigh_Distribution_Handler/SIGHVolatilityHarvester"
 import { SIGH_Instrument, Instrument,SIGH_Distribution_SnapShot, userInstrumentState } from "../../generated/schema"
 import { createInstrument,updatePrice } from "./LendingPoolConfigurator"
 import { PriceOracleGetter } from '../../generated/Lending_Pool_Configurator/PriceOracleGetter'
-import { SIGHDistributionHandler } from '../../generated/Sigh_Distribution_Handler/SIGHDistributionHandler'
+import { SIGHVolatilityHarvester } from '../../generated/Sigh_Distribution_Handler/SIGHVolatilityHarvester'
 import {createUser} from './LendingPool'
 
 // FINAL v0. To be Tested : WEI ONLY
@@ -278,11 +278,11 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
     // SIGH INSTRUMENT PARAMTERS : 
     let sighInstrument = SIGH_Instrument.load('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba')
     if (event.block.number > BigInt.fromI32(22496079) ) {
-        let sighDistributionHandlerAddress = Address.fromString('0x3FB401042D520c49E753cC449A032C56c87f36C6') 
-        let sighDistributionHandlerContract = SIGHDistributionHandler.bind(sighDistributionHandlerAddress)
-        let deltaBlockslast24HrSession = sighDistributionHandlerContract.getDeltaBlockslast24HrSession()
+        let SIGHVolatilityHarvesterAddress = Address.fromString('0x3FB401042D520c49E753cC449A032C56c87f36C6') 
+        let SIGHVolatilityHarvesterContract = SIGHVolatilityHarvester.bind(SIGHVolatilityHarvesterAddress)
+        let deltaBlockslast24HrSession = SIGHVolatilityHarvesterContract.getDeltaBlockslast24HrSession()
 
-        let totalLendingProtocolVolatilityETH = sighDistributionHandlerContract.getLast24HrsTotalProtocolVolatility()
+        let totalLendingProtocolVolatilityETH = SIGHVolatilityHarvesterContract.getLast24HrsTotalProtocolVolatility()
         sighInstrument.totalLendingProtocolVolatilityPerBlockETH = totalLendingProtocolVolatilityETH.div(deltaBlockslast24HrSession).divDecimal( BigInt.fromI32(10).pow(18 as u8).toBigDecimal() ) 
         sighInstrument.totalLendingProtocolVolatilityPerBlockUSD = sighInstrument.totalLendingProtocolVolatilityPerBlockETH.times(instrumentState.ETHPriceInUSD)
 
@@ -292,12 +292,12 @@ export function handleRefreshingSighSpeeds(event: refreshingSighSpeeds): void {
                     
                 let limitLendingProtocolVolatilityETH = BigInt.fromI32(22516595)
                 if (event.block.number > BigInt.fromI32(22516595)) {
-                    limitLendingProtocolVolatilityETH = sighDistributionHandlerContract.getLast24HrsTotalSentimentProtocolVolatility()
+                    limitLendingProtocolVolatilityETH = SIGHVolatilityHarvesterContract.getLast24HrsTotalSentimentProtocolVolatility()
                 }
                 sighInstrument.totalLendingProtocolSentimentVolatilityPerBlockETH = limitLendingProtocolVolatilityETH.div(deltaBlockslast24HrSession).divDecimal( (BigInt.fromI32(10).pow(18 as u8).toBigDecimal()) ) 
                 sighInstrument.totalLendingProtocolSentimentVolatilityPerBlockUSD = sighInstrument.totalLendingProtocolSentimentVolatilityPerBlockETH.times(instrumentState.ETHPriceInUSD)
 
-                let sighSpeedUsed = sighDistributionHandlerContract.getSIGHSpeedUsed()        
+                let sighSpeedUsed = SIGHVolatilityHarvesterContract.getSIGHSpeedUsed()        
                 sighInstrument.currentSighVolatilityHarvestSpeedWEI = sighSpeedUsed.toBigDecimal()
                 sighInstrument.currentSighVolatilityHarvestSpeed =  sighInstrument.currentSighVolatilityHarvestSpeedWEI.div( BigInt.fromI32(10).pow(18 as u8).toBigDecimal() ) 
             

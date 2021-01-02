@@ -3,7 +3,7 @@ pragma solidity ^0.5.0;
 import "../openzeppelin-upgradeability/VersionedInitializable.sol";
 
 import "../Configuration/IGlobalAddressesProvider.sol";
-import "../SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol";
+import "../SIGHFinanceContracts/Interfaces/ISIGHVolatilityHarvester.sol";
 import "./interfaces/ILendingPoolCore.sol";
 import "./interfaces/ITokenInterface.sol";
 
@@ -29,7 +29,7 @@ contract SighStream is ISighStream, VersionedInitializable {
     ITokenInterface public iToken;
 
     IGlobalAddressesProvider private globalAddressesProvider;     // Only used in Constructor()
-    ISighDistributionHandler public sighDistributionHandlerContract; // Fetches Instrument Indexes/ Calls Function to transfer accured SIGH
+    ISIGHVolatilityHarvester public SIGHVolatilityHarvesterContract; // Fetches Instrument Indexes/ Calls Function to transfer accured SIGH
     ILendingPoolCore private core;                                  // Fetches user borrow Balances
 
     struct Double {
@@ -107,7 +107,7 @@ contract SighStream is ISighStream, VersionedInitializable {
     function initialize(IGlobalAddressesProvider _globalAddressesProvider, address _underlyingAsset, address _iTokenAddress) public initializer {
         globalAddressesProvider = _globalAddressesProvider;
         core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
-        sighDistributionHandlerContract = ISighDistributionHandler(globalAddressesProvider.getSIGHMechanismHandler());
+        SIGHVolatilityHarvesterContract = ISIGHVolatilityHarvester(globalAddressesProvider.getSIGHMechanismHandler());
         iToken = ITokenInterface(_iTokenAddress) ;
 
         underlyingInstrumentAddress = _underlyingAsset;
@@ -280,7 +280,7 @@ contract SighStream is ISighStream, VersionedInitializable {
 
 
     function accure_SIGH_For_LiquidityStream_Internal( address user, uint256 currentCompoundedBalance ) internal  {
-        uint supplyIndex = sighDistributionHandlerContract.getInstrumentSupplyIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHDistributionHandler Contract
+        uint supplyIndex = SIGHVolatilityHarvesterContract.getInstrumentSupplyIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHVolatilityHarvester Contract
         require(supplyIndex > 0, "SIGH Distribution Handler returned invalid supply Index for the instrument");
 
         // Total Balance = SUM(Redirected balances) + User's Balance (Only if it is not redirected)
@@ -456,7 +456,7 @@ contract SighStream is ISighStream, VersionedInitializable {
     }
 
     function accure_SIGH_For_BorrowingStreamInternal(address user, uint compoundedBalance) internal {
-        uint borrowIndex = sighDistributionHandlerContract.getInstrumentBorrowIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHDistributionHandler Contract
+        uint borrowIndex = SIGHVolatilityHarvesterContract.getInstrumentBorrowIndex( underlyingInstrumentAddress );      // Instrument index retreived from the SIGHVolatilityHarvester Contract
         require(borrowIndex > 0, "SIGH Distribution Handler returned invalid borrow Index for the instrument");
 
         // Total Balance = SUM(Redirected balances) + User's Balance (Only if it is not redirected)
@@ -512,7 +512,7 @@ contract SighStream is ISighStream, VersionedInitializable {
         accureLiquiditySighStreamInternal(user, balanceIncrease, currentBalance );
         accureBorrowingSighStreamInternal(user);
         if (AccuredSighBalance[user] > 0) {
-            AccuredSighBalance[user] = sighDistributionHandlerContract.transferSighTotheUser( underlyingInstrumentAddress, user, AccuredSighBalance[user] ); // Pending Amount Not Transferred is returned
+            AccuredSighBalance[user] = SIGHVolatilityHarvesterContract.transferSighTotheUser( underlyingInstrumentAddress, user, AccuredSighBalance[user] ); // Pending Amount Not Transferred is returned
         }
     }
 
@@ -525,7 +525,7 @@ contract SighStream is ISighStream, VersionedInitializable {
         AccuredSighBalance[user] = AccuredSighBalance[user].add(accuredSighAmount);   // Accured SIGH added to the redirected user's sigh balance                    
         emit SighAccured( underlyingInstrumentAddress, user, isLiquidityStream, accuredSighAmount, AccuredSighBalance[user] );
         if ( AccuredSighBalance[user] > sigh_Transfer_Threshold ) {   // SIGH is Transferred if SIGH_ACCURED_BALANCE > 1e18 SIGH
-            AccuredSighBalance[user] = sighDistributionHandlerContract.transferSighTotheUser( underlyingInstrumentAddress, user, AccuredSighBalance[user] ); // Pending Amount Not Transferred is returned
+            AccuredSighBalance[user] = SIGHVolatilityHarvesterContract.transferSighTotheUser( underlyingInstrumentAddress, user, AccuredSighBalance[user] ); // Pending Amount Not Transferred is returned
         }
     }
 

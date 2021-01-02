@@ -264,7 +264,7 @@
 			{
 				"constant": false,
 				"inputs": [],
-				"name": "refreshSIGHDistributionHandlerConfig",
+				"name": "refreshSIGHVolatilityHarvesterConfig",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -537,7 +537,7 @@
 		},
 		"userdoc": {
 			"methods": {},
-			"notice": "Executes configuration methods for SIGH FINANCE contract, SIGHDistributionHandler and the SighStaking Contract to efficiently regulate the SIGH economics*"
+			"notice": "Executes configuration methods for SIGH FINANCE contract, SIGHVolatilityHarvester and the SighStaking Contract to efficiently regulate the SIGH economics*"
 		}
 	},
 	"settings": {
@@ -553,7 +553,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
+		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISIGHVolatilityHarvester.sol": {
 			"keccak256": "0x9d0aa9c01420096ea2fb48c683d5d993a89263e515cc42f1740240f76831307c",
 			"urls": [
 				"bzz-raw://8c2543f98e68df1145f3e60d02976ec91576a391acf1608cfb8150713c208384",

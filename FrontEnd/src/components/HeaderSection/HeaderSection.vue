@@ -45,7 +45,7 @@ export default {
     EventBus.$off(EventNames.userWalletDisconnected, this.WalletDisconnectedListener);           //AUTH    
   },
   methods: {
-    ...mapActions(['loadWeb3','getContractsBasedOnNetwork','fetchSighFinanceProtocolState','initiateSighFinancePolling','getWalletConfig','getConnectedWalletState','SIGHDistributionHandler_refreshSighSpeeds','SIGHSpeedController_drip']),
+    ...mapActions(['loadWeb3','getContractsBasedOnNetwork','fetchSighFinanceProtocolState','initiateSighFinancePolling','getWalletConfig','getConnectedWalletState','SIGHVolatilityHarvester_refreshSighSpeeds','SIGHSpeedController_drip']),
 
     async connectToWeb3() {
       await this.handleWeb3();   

@@ -508,7 +508,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_SIGHDistributionHandler",
+						"name": "_SIGHVolatilityHarvester",
 						"type": "address"
 					}
 				],
@@ -538,7 +538,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_SIGHDistributionHandler",
+						"name": "_SIGHVolatilityHarvester",
 						"type": "address"
 					}
 				],

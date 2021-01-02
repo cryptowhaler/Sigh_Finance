@@ -21,7 +21,7 @@ import "../../LendingProtocolContracts/interfaces/ILendingPoolCore.sol";
 import "../Interfaces/ISighStaking.sol";       
 
 
-contract SIGHDistributionHandler is Exponential, ReentrancyGuard, VersionedInitializable {       // 
+contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedInitializable {       // 
     
 // ######## CONTRACT ADDRESSES ########
     GlobalAddressesProvider public addressesProvider;

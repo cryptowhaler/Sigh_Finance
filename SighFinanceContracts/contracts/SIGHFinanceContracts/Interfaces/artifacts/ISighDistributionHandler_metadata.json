@@ -733,7 +733,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": "ISighDistributionHandler"
+			"localhost/contracts/SIGHFinanceContracts/Interfaces/ISIGHVolatilityHarvester.sol": "ISIGHVolatilityHarvester"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -744,7 +744,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
+		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISIGHVolatilityHarvester.sol": {
 			"keccak256": "0xbdc7e8bdbc66cefb781558eb416b45b187217b20bfa4a6d06f8d0682f1eac7c1",
 			"urls": [
 				"bzz-raw://d3d584a429b4a5d148b5d08353024c38b1440253409d191cff5ad273f732ad24",

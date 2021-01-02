@@ -94,7 +94,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['SIGHDistributionHandler_refreshSighSpeeds']),
+    ...mapActions(['SIGHVolatilityHarvester_refreshSighSpeeds']),
 
       async refresh_SIGH_Speeds() {
       if ( !this.$store.state.web3 || !this.$store.state.isNetworkSupported ) {       // Network Currently Connected To Check
@@ -106,7 +106,7 @@ export default {
       }       
       else {       // WHEN ABOVE CONDITIONS ARE MET SO THE TRANSACTION GOES THROUGH
         this.showLoader = true;
-        let response =  await this.SIGHDistributionHandler_refreshSighSpeeds();
+        let response =  await this.SIGHVolatilityHarvester_refreshSighSpeeds();
         if (response.status) {      
           this.$showSuccessMsg({message: "SIGH Speeds refreshed successfully for the supported Instruments" });
           this.speedRefreshed = true;

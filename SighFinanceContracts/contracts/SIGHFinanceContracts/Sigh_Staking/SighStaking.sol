@@ -86,7 +86,7 @@ contract SighStaking is  VersionedInitializable, Exponential  {
         _;
     }
 
-    modifier onlySighDistributionHandler {
+    modifier onlySIGHVolatilityHarvester {
         require(addressesProvider.getSIGHMechanismHandler() == msg.sender, "The caller must be the SIGH Distribution Handler Contract");
         _;
     }
@@ -138,7 +138,7 @@ contract SighStaking is  VersionedInitializable, Exponential  {
         return true;
     }
 
-    function updateStakedBalanceForStreaming(address staker, uint amount) onlySighDistributionHandler external returns (bool) {
+    function updateStakedBalanceForStreaming(address staker, uint amount) onlySIGHVolatilityHarvester external returns (bool) {
 
         updateRewardIndexInternal();                             // UPDATES INSTRUMENT INDEX
         if (stakingBalances[staker].alreadyAStaker) {

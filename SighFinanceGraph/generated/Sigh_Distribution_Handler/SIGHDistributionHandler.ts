@@ -434,7 +434,7 @@ export class refreshingSighSpeeds__Params {
   }
 }
 
-export class SIGHDistributionHandler__getInstrumentDataResult {
+export class SIGHVolatilityHarvester__getInstrumentDataResult {
   value0: string;
   value1: Address;
   value2: BigInt;
@@ -470,7 +470,7 @@ export class SIGHDistributionHandler__getInstrumentDataResult {
   }
 }
 
-export class SIGHDistributionHandler__getInstrumentSighLimitsResult {
+export class SIGHVolatilityHarvester__getInstrumentSighLimitsResult {
   value0: BigInt;
   value1: BigInt;
 
@@ -487,7 +487,7 @@ export class SIGHDistributionHandler__getInstrumentSighLimitsResult {
   }
 }
 
-export class SIGHDistributionHandler__getInstrumentSpeedsResult {
+export class SIGHVolatilityHarvester__getInstrumentSpeedsResult {
   value0: i32;
   value1: BigInt;
   value2: BigInt;
@@ -513,7 +513,7 @@ export class SIGHDistributionHandler__getInstrumentSpeedsResult {
   }
 }
 
-export class SIGHDistributionHandler__getInstrumentVolatilityStatesResult {
+export class SIGHVolatilityHarvester__getInstrumentVolatilityStatesResult {
   value0: i32;
   value1: BigInt;
   value2: BigInt;
@@ -548,9 +548,9 @@ export class SIGHDistributionHandler__getInstrumentVolatilityStatesResult {
   }
 }
 
-export class SIGHDistributionHandler extends ethereum.SmartContract {
-  static bind(address: Address): SIGHDistributionHandler {
-    return new SIGHDistributionHandler("SIGHDistributionHandler", address);
+export class SIGHVolatilityHarvester extends ethereum.SmartContract {
+  static bind(address: Address): SIGHVolatilityHarvester {
+    return new SIGHVolatilityHarvester("SIGHVolatilityHarvester", address);
   }
 
   Instrument_SIGH_StateUpdated(
@@ -943,14 +943,14 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
 
   getInstrumentData(
     instrument_: Address
-  ): SIGHDistributionHandler__getInstrumentDataResult {
+  ): SIGHVolatilityHarvester__getInstrumentDataResult {
     let result = super.call(
       "getInstrumentData",
       "getInstrumentData(address):(string,address,uint256,bool,uint256,uint256)",
       [ethereum.Value.fromAddress(instrument_)]
     );
 
-    return new SIGHDistributionHandler__getInstrumentDataResult(
+    return new SIGHVolatilityHarvester__getInstrumentDataResult(
       result[0].toString(),
       result[1].toAddress(),
       result[2].toBigInt(),
@@ -962,7 +962,7 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
 
   try_getInstrumentData(
     instrument_: Address
-  ): ethereum.CallResult<SIGHDistributionHandler__getInstrumentDataResult> {
+  ): ethereum.CallResult<SIGHVolatilityHarvester__getInstrumentDataResult> {
     let result = super.tryCall(
       "getInstrumentData",
       "getInstrumentData(address):(string,address,uint256,bool,uint256,uint256)",
@@ -973,7 +973,7 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new SIGHDistributionHandler__getInstrumentDataResult(
+      new SIGHVolatilityHarvester__getInstrumentDataResult(
         value[0].toString(),
         value[1].toAddress(),
         value[2].toBigInt(),
@@ -986,14 +986,14 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
 
   getInstrumentSighLimits(
     instrument: Address
-  ): SIGHDistributionHandler__getInstrumentSighLimitsResult {
+  ): SIGHVolatilityHarvester__getInstrumentSighLimitsResult {
     let result = super.call(
       "getInstrumentSighLimits",
       "getInstrumentSighLimits(address):(uint256,uint256)",
       [ethereum.Value.fromAddress(instrument)]
     );
 
-    return new SIGHDistributionHandler__getInstrumentSighLimitsResult(
+    return new SIGHVolatilityHarvester__getInstrumentSighLimitsResult(
       result[0].toBigInt(),
       result[1].toBigInt()
     );
@@ -1002,7 +1002,7 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
   try_getInstrumentSighLimits(
     instrument: Address
   ): ethereum.CallResult<
-    SIGHDistributionHandler__getInstrumentSighLimitsResult
+    SIGHVolatilityHarvester__getInstrumentSighLimitsResult
   > {
     let result = super.tryCall(
       "getInstrumentSighLimits",
@@ -1014,7 +1014,7 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new SIGHDistributionHandler__getInstrumentSighLimitsResult(
+      new SIGHVolatilityHarvester__getInstrumentSighLimitsResult(
         value[0].toBigInt(),
         value[1].toBigInt()
       )
@@ -1023,14 +1023,14 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
 
   getInstrumentSpeeds(
     instrument: Address
-  ): SIGHDistributionHandler__getInstrumentSpeedsResult {
+  ): SIGHVolatilityHarvester__getInstrumentSpeedsResult {
     let result = super.call(
       "getInstrumentSpeeds",
       "getInstrumentSpeeds(address):(uint8,uint256,uint256,uint256)",
       [ethereum.Value.fromAddress(instrument)]
     );
 
-    return new SIGHDistributionHandler__getInstrumentSpeedsResult(
+    return new SIGHVolatilityHarvester__getInstrumentSpeedsResult(
       result[0].toI32(),
       result[1].toBigInt(),
       result[2].toBigInt(),
@@ -1040,7 +1040,7 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
 
   try_getInstrumentSpeeds(
     instrument: Address
-  ): ethereum.CallResult<SIGHDistributionHandler__getInstrumentSpeedsResult> {
+  ): ethereum.CallResult<SIGHVolatilityHarvester__getInstrumentSpeedsResult> {
     let result = super.tryCall(
       "getInstrumentSpeeds",
       "getInstrumentSpeeds(address):(uint8,uint256,uint256,uint256)",
@@ -1051,7 +1051,7 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new SIGHDistributionHandler__getInstrumentSpeedsResult(
+      new SIGHVolatilityHarvester__getInstrumentSpeedsResult(
         value[0].toI32(),
         value[1].toBigInt(),
         value[2].toBigInt(),
@@ -1087,14 +1087,14 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
 
   getInstrumentVolatilityStates(
     instrument: Address
-  ): SIGHDistributionHandler__getInstrumentVolatilityStatesResult {
+  ): SIGHVolatilityHarvester__getInstrumentVolatilityStatesResult {
     let result = super.call(
       "getInstrumentVolatilityStates",
       "getInstrumentVolatilityStates(address):(uint8,uint256,uint256,uint256,uint256)",
       [ethereum.Value.fromAddress(instrument)]
     );
 
-    return new SIGHDistributionHandler__getInstrumentVolatilityStatesResult(
+    return new SIGHVolatilityHarvester__getInstrumentVolatilityStatesResult(
       result[0].toI32(),
       result[1].toBigInt(),
       result[2].toBigInt(),
@@ -1106,7 +1106,7 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
   try_getInstrumentVolatilityStates(
     instrument: Address
   ): ethereum.CallResult<
-    SIGHDistributionHandler__getInstrumentVolatilityStatesResult
+    SIGHVolatilityHarvester__getInstrumentVolatilityStatesResult
   > {
     let result = super.tryCall(
       "getInstrumentVolatilityStates",
@@ -1118,7 +1118,7 @@ export class SIGHDistributionHandler extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new SIGHDistributionHandler__getInstrumentVolatilityStatesResult(
+      new SIGHVolatilityHarvester__getInstrumentVolatilityStatesResult(
         value[0].toI32(),
         value[1].toBigInt(),
         value[2].toBigInt(),

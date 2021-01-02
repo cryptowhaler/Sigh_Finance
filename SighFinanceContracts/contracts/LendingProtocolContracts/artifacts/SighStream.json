@@ -70,7 +70,7 @@
 				"returnPrincipalBalance(address)": "infinite",
 				"returnUserBalance(address)": "infinite",
 				"returnUserCumulateBalance(address)": "infinite",
-				"sighDistributionHandlerContract()": "1103",
+				"SIGHVolatilityHarvesterContract()": "1103",
 				"sigh_Transfer_Threshold()": "1108",
 				"underlyingInstrumentAddress()": "1149",
 				"updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(address,uint256,uint256)": "infinite",
@@ -114,7 +114,7 @@
 			"returnPrincipalBalance(address)": "b3d8bca2",
 			"returnUserBalance(address)": "900e039f",
 			"returnUserCumulateBalance(address)": "7d183d36",
-			"sighDistributionHandlerContract()": "d821eb97",
+			"SIGHVolatilityHarvesterContract()": "d821eb97",
 			"sigh_Transfer_Threshold()": "e2bd79a3",
 			"underlyingInstrumentAddress()": "6722b4fa",
 			"updateRedirectedBalanceOfBorrowingSIGHStreamRedirectionAddress(address,uint256,uint256)": "67e6aeed",
@@ -837,10 +837,10 @@
 		{
 			"constant": true,
 			"inputs": [],
-			"name": "sighDistributionHandlerContract",
+			"name": "SIGHVolatilityHarvesterContract",
 			"outputs": [
 				{
-					"internalType": "contract ISighDistributionHandler",
+					"internalType": "contract ISIGHVolatilityHarvester",
 					"name": "",
 					"type": "address"
 				}

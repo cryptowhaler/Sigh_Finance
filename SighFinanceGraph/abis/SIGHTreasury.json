@@ -377,7 +377,7 @@
 			{
 				"indexed": false,
 				"internalType": "address",
-				"name": "sighDistributionHandler",
+				"name": "SIGHVolatilityHarvester",
 				"type": "address"
 			}
 		],

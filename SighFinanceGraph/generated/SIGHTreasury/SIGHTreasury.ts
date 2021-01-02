@@ -267,7 +267,7 @@ export class SIGHTreasuryInitialized__Params {
     return this._event.parameters[2].value.toAddress();
   }
 
-  get sighDistributionHandler(): Address {
+  get SIGHVolatilityHarvester(): Address {
     return this._event.parameters[3].value.toAddress();
   }
 }

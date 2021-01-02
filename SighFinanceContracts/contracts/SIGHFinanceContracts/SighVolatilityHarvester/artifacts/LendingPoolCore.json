@@ -1663,7 +1663,7 @@
 			"name": "sighMechanism",
 			"outputs": [
 				{
-					"internalType": "contract ISighDistributionHandler",
+					"internalType": "contract ISIGHVolatilityHarvester",
 					"name": "",
 					"type": "address"
 				}

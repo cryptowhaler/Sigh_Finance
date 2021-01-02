@@ -15,7 +15,7 @@ import "../interfaces/ILendingRateOracle.sol";
 import "../interfaces/I_InstrumentInterestRateStrategy.sol";
 import "../interfaces/ITokenInterface.sol";
 
-import "../../SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol";
+import "../../SIGHFinanceContracts/Interfaces/ISIGHVolatilityHarvester.sol";
 
 /**
 * @title LendingPoolCore contract
@@ -37,7 +37,7 @@ contract LendingPoolCore is VersionedInitializable {
 
     GlobalAddressesProvider public addressesProvider;
     address public lendingPoolAddress;
-    ISighDistributionHandler public sighMechanism;          // ADDED BY SIGH FINANCE
+    ISIGHVolatilityHarvester public sighMechanism;          // ADDED BY SIGH FINANCE
 
     address[] public instrumentsList;
     mapping(address => CoreLibrary.InstrumentData) internal reserves;
@@ -1218,7 +1218,7 @@ contract LendingPoolCore is VersionedInitializable {
     // updates the internal configuration of the core (lendingPool Address and SIGH Mechanism Address)
     function refreshConfigInternal() internal {
         lendingPoolAddress = addressesProvider.getLendingPool();
-        sighMechanism = ISighDistributionHandler( addressesProvider.getSIGHMechanismHandler()  );        // ADDED BY SIGH FINANCE
+        sighMechanism = ISIGHVolatilityHarvester( addressesProvider.getSIGHMechanismHandler()  );        // ADDED BY SIGH FINANCE
     }    
 
     // ###########      ADDING & INITITALIZING A NEW INSTRUMENT      ###########

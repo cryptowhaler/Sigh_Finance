@@ -1366,7 +1366,7 @@
 				"name": "sighMechanism",
 				"outputs": [
 					{
-						"internalType": "contract ISighDistributionHandler",
+						"internalType": "contract ISIGHVolatilityHarvester",
 						"name": "",
 						"type": "address"
 					}
@@ -2368,7 +2368,7 @@
 				"dweb:/ipfs/QmeZie4G7caYQsuFbaVqt3YRnrr2s42VAgVHeW1WAq3BRh"
 			]
 		},
-		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighDistributionHandler.sol": {
+		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISIGHVolatilityHarvester.sol": {
 			"keccak256": "0x00e23698d82f3478a2f13c42ee2dba44103625ada5502656d70e3ef639ad48cd",
 			"urls": [
 				"bzz-raw://2aef56131f9c98e40ad9a13abbcefbb2bd254ffd887006f3e3b1b8358adc3ac9",

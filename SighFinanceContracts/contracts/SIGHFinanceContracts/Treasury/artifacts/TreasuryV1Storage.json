@@ -49,7 +49,7 @@
 				"totalCost": "161850"
 			},
 			"external": {
-				"SIGHDistributionHandler_address()": "1075",
+				"SIGHVolatilityHarvester_address()": "1075",
 				"admin()": "1119",
 				"pendingAdmin()": "1031",
 				"sigh_token()": "1053",
@@ -57,7 +57,7 @@
 			}
 		},
 		"methodIdentifiers": {
-			"SIGHDistributionHandler_address()": "c3fe921a",
+			"SIGHVolatilityHarvester_address()": "c3fe921a",
 			"admin()": "f851a440",
 			"pendingAdmin()": "26782247",
 			"sigh_token()": "4079141c",
@@ -68,7 +68,7 @@
 		{
 			"constant": true,
 			"inputs": [],
-			"name": "SIGHDistributionHandler_address",
+			"name": "SIGHVolatilityHarvester_address",
 			"outputs": [
 				{
 					"internalType": "address",

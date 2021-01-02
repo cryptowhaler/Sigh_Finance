@@ -12,7 +12,7 @@ import SIGHInstrument from '@/contracts/SIGH.json'; // SIGH Contract ABI
 import SighSpeedController from '@/contracts/ISighSpeedController.json'; // SighSpeedController Interface ABI
 import SighStakingInterface from '@/contracts/ISighStaking.json'; // SighStaking Interface ABI
 import SighTreasuryInterface from '@/contracts/ISighTreasury.json'; // SighTreasury Interface ABI
-import SighDistributionHandlerInterface from '@/contracts/ISighDistributionHandler.json'; // SighDistributionHandler Interface ABI
+import SIGHVolatilityHarvesterInterface from '@/contracts/ISIGHVolatilityHarvester.json'; // SIGHVolatilityHarvester Interface ABI
 
 import LendingPool from '@/contracts/LendingPool.json'; // LendingPool Contract ABI
 import LendingPoolCore from '@/contracts/LendingPoolCore.json'; // LendingPoolCore Contract ABI
@@ -110,7 +110,7 @@ const store = new Vuex.Store({
     SIGHSpeedControllerAddress: null,                  // Drip
     sighStakingContractAddress: null,                          // Stake, Unstake, ClaimAllAccumulatedInstruments
     SIGHTreasuryContractAddress: null,                         // Mainly queries
-    SIGHDistributionHandlerAddress: null,              // RefreshSpeeds
+    SIGHVolatilityHarvesterAddress: null,              // RefreshSpeeds
     // SIGHFinanceConfiguratorContract: null,
     // SIGHFinanceManager: null,    
 
@@ -244,8 +244,8 @@ const store = new Vuex.Store({
     SIGHTreasuryContractAddress(state) {         
       return state.SIGHTreasuryContractAddress;    
     },    
-    SIGHDistributionHandler(state) {         
-      return state.SIGHDistributionHandlerAddress;    
+    SIGHVolatilityHarvester(state) {         
+      return state.SIGHVolatilityHarvesterAddress;    
     },    
     ITokenContracts(state) {         
       return state.ITokenContracts;    
@@ -439,9 +439,9 @@ const store = new Vuex.Store({
       state.SIGHTreasuryContractAddress = newContractAddress;
       console.log("In updateSIGHTreasuryContractAddress - " + state.SIGHTreasuryContractAddress);
     },    
-    updateSIGHDistributionHandlerAddress(state,newContractAddress) {         
-      state.SIGHDistributionHandlerAddress = newContractAddress;
-      console.log("In updateSIGHDistributionHandlerAddress - " + state.SIGHDistributionHandlerAddress);
+    updateSIGHVolatilityHarvesterAddress(state,newContractAddress) {         
+      state.SIGHVolatilityHarvesterAddress = newContractAddress;
+      console.log("In updateSIGHVolatilityHarvesterAddress - " + state.SIGHVolatilityHarvesterAddress);
     },    
     updateLendingPoolContractAddress(state,newContractAddress) {         
       state.LendingPoolContractAddress = newContractAddress;
@@ -710,8 +710,8 @@ const store = new Vuex.Store({
         const sighTreasuryAddress = await currentGlobalAddressesProviderContract.methods.getSIGHTreasury().call();        
         commit('updateSIGHTreasuryContractAddress',sighTreasuryAddress);
   
-        const sighDistributionHandlerAddress = await currentGlobalAddressesProviderContract.methods.getSIGHMechanismHandler().call();        
-        commit('updateSIGHDistributionHandlerAddress',sighDistributionHandlerAddress);
+        const SIGHVolatilityHarvesterAddress = await currentGlobalAddressesProviderContract.methods.getSIGHMechanismHandler().call();        
+        commit('updateSIGHVolatilityHarvesterAddress',SIGHVolatilityHarvesterAddress);
   
         const lendingPoolAddress = await currentGlobalAddressesProviderContract.methods.getLendingPool().call();        
         commit('updateLendingPoolContractAddress',lendingPoolAddress);
@@ -809,7 +809,7 @@ const store = new Vuex.Store({
       sighDetails.symbol = await store.dispatch("ERC20_symbol",{tokenAddress: state.SIGHContractAddress}); 
       sighDetails.decimals = await store.dispatch("ERC20_decimals",{tokenAddress: state.SIGHContractAddress}); 
       sighDetails.treasuryAddress = await store.dispatch("getSIGHInstrumentTreasury",{tokenAddress: state.SIGHContractAddress}); 
-      sighDetails.SIGHDistributionHandlerAddress = state.SIGHDistributionHandlerAddress;        
+      sighDetails.SIGHVolatilityHarvesterAddress = state.SIGHVolatilityHarvesterAddress;        
       sighDetails.speedControllerAddress = await store.dispatch("getSighInstrumentSpeedController",{tokenAddress: state.SIGHContractAddress}); 
       sighDetails.priceETH = await store.dispatch("getInstrumentPrice",{_instrumentAddress: state.SIGHContractAddress}); 
       sighDetails.priceDecimals = await store.dispatch("getInstrumentPriceDecimals",{_instrumentAddress: state.SIGHContractAddress});   
@@ -890,7 +890,7 @@ const store = new Vuex.Store({
         instrumentGlobalBalances.symbol = instrumentState.symbol;
   
         // INSTRUMENT - SIGH STATE         
-        let curInstrumentSIGHState = await store.dispatch("SIGHDistributionHandler_getInstrumentData",{instrument_:instrumentAddress });           
+        let curInstrumentSIGHState = await store.dispatch("SIGHVolatilityHarvester_getInstrumentData",{instrument_:instrumentAddress });           
         instrumentSighState.isSIGHMechanismActivated = curInstrumentSIGHState.isSIGHMechanismActivated;
         instrumentSighState.borrowindex = curInstrumentSIGHState.borrowindex;
         instrumentSighState.supplyindex = curInstrumentSIGHState.supplyindex;
@@ -903,7 +903,7 @@ const store = new Vuex.Store({
         instrumentState.stableBorrowInterestPercent = instrumentGlobalBalances.stableBorrowRate;
         instrumentState.variableBorrowInterestPercent = instrumentGlobalBalances.variableBorrowRate;
 
-        // curInstrumentSIGHState = await store.dispatch("SIGHDistributionHandler_getInstrumentSighMechansimStates",{instrument_:instrumentAddress });  
+        // curInstrumentSIGHState = await store.dispatch("SIGHVolatilityHarvester_getInstrumentSighMechansimStates",{instrument_:instrumentAddress });  
         // instrumentSighState.percentageTotalVolatility = curInstrumentSIGHState.percentTotalVolatility;
         // instrumentSighState.losses_24_hrs_ETH = Number(curInstrumentSIGHState._24HrVolatility) / (10**18);
         // instrumentSighState.losses_24_hrs_USD = await store.dispatch("convertToUSD",{ETHValue: instrumentSighState.losses_24_hrs_ETH }); 
@@ -981,8 +981,8 @@ const store = new Vuex.Store({
       //   }
       // }
       // POLLING BLOCKS REMAINING TO REFRESH $SIGH SPEEDS
-      if (state.SIGHDistributionHandlerAddress) {
-        let blocksRemaining_ = await store.dispatch('SIGHDistributionHandler_getBlocksRemainingToNextSpeedRefresh');
+      if (state.SIGHVolatilityHarvesterAddress) {
+        let blocksRemaining_ = await store.dispatch('SIGHVolatilityHarvester_getBlocksRemainingToNextSpeedRefresh');
         commit("updateBlocksRemainingForSIGHSpeedRefresh",blocksRemaining_);
         console.log( " BLOCKS REMAINING (SIGH SPEED REFRESH) : " + blocksRemaining_);
       }
@@ -1443,18 +1443,18 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => { 
 
     
 // ######################################################
-// ############ SIGHDISTRIBUTIONHANDLER --- REFRESHSIGHSPEEDS() FUNCTION 
+// ############ SIGHVolatilityHarvester --- REFRESHSIGHSPEEDS() FUNCTION 
 // ######################################################
 
-    SIGHDistributionHandler_refreshSighSpeeds: async ({commit,state}) => {
-      if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
-        const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
+    SIGHVolatilityHarvester_refreshSighSpeeds: async ({commit,state}) => {
+      if (state.web3 && state.SIGHVolatilityHarvesterAddress && state.SIGHVolatilityHarvesterAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const SIGHVolatilityHarvesterContract = new state.web3.eth.Contract(SIGHVolatilityHarvesterInterface.abi, state.SIGHVolatilityHarvesterAddress );
         try {
-          let response = await sighDistributionHandlerContract.methods.refreshSIGHSpeeds().send({from: state.connectedWallet}).on('transactionHash',function(hash) {
+          let response = await SIGHVolatilityHarvesterContract.methods.refreshSIGHSpeeds().send({from: state.connectedWallet}).on('transactionHash',function(hash) {
             let transaction = {hash : hash, function : '$SIGH Speeds : Refresh' , amount : null  }; 
             commit('addToSessionPendingTransactions',transaction);
           });
-            console.log("SIGHDistributionHandler_refreshSighSpeeds");
+            console.log("SIGHVolatilityHarvester_refreshSighSpeeds");
             console.log(response);
             return response;
           }  
@@ -1470,14 +1470,14 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => { 
     },
 
     // DECIMAL ADJUSTED
-    SIGHDistributionHandler_getSIGHBalance: async ({commit,state}) => {
-      if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
-        const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
-        let response = await sighDistributionHandlerContract.methods.getSIGHBalance().call();
-        console.log("sighDistributionHandler SIGH Balance = " + response );   
+    SIGHVolatilityHarvester_getSIGHBalance: async ({commit,state}) => {
+      if (state.web3 && state.SIGHVolatilityHarvesterAddress && state.SIGHVolatilityHarvesterAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const SIGHVolatilityHarvesterContract = new state.web3.eth.Contract(SIGHVolatilityHarvesterInterface.abi, state.SIGHVolatilityHarvesterAddress );
+        let response = await SIGHVolatilityHarvesterContract.methods.getSIGHBalance().call();
+        console.log("SIGHVolatilityHarvester SIGH Balance = " + response );   
         let balance = BigNumber(response);
         balance = balance.shiftedBy(-18);
-        console.log("sighDistributionHandler SIGH Balance  (Decimal Adjusted) = " + balance );   
+        console.log("SIGHVolatilityHarvester SIGH Balance  (Decimal Adjusted) = " + balance );   
         return balance;            
       }
       else {
@@ -1486,14 +1486,14 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => { 
       }
     },
 
-    SIGHDistributionHandler_getSIGHSpeed: async ({commit,state}) => {
-      if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
-        const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
-        let response = await sighDistributionHandlerContract.methods.getSIGHSpeed().call();
-        console.log("sighDistributionHandler SIGH Speed = " + response );        
+    SIGHVolatilityHarvester_getSIGHSpeed: async ({commit,state}) => {
+      if (state.web3 && state.SIGHVolatilityHarvesterAddress && state.SIGHVolatilityHarvesterAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const SIGHVolatilityHarvesterContract = new state.web3.eth.Contract(SIGHVolatilityHarvesterInterface.abi, state.SIGHVolatilityHarvesterAddress );
+        let response = await SIGHVolatilityHarvesterContract.methods.getSIGHSpeed().call();
+        console.log("SIGHVolatilityHarvester SIGH Speed = " + response );        
         let sighSpeed = BigNumber(response);
         sighSpeed = sighSpeed.shiftedBy(-18);
-        console.log("sighDistributionHandler SIGH Speed (Decimal Adjusted) = " + sighSpeed );        
+        console.log("SIGHVolatilityHarvester SIGH Speed (Decimal Adjusted) = " + sighSpeed );        
         return sighSpeed;            
       }
       else {
@@ -1502,12 +1502,12 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => { 
       }
     },
 
-    SIGHDistributionHandler_getBlocksRemainingToNextSpeedRefresh: async ({commit,state}) => {
-      if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
-        const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
-        // console.log(sighDistributionHandlerContract);
-        let response = await sighDistributionHandlerContract.methods.getBlocksRemainingToNextSpeedRefresh().call();
-        console.log("sighDistributionHandler Blocks remaining to refresh = " + response );        
+    SIGHVolatilityHarvester_getBlocksRemainingToNextSpeedRefresh: async ({commit,state}) => {
+      if (state.web3 && state.SIGHVolatilityHarvesterAddress && state.SIGHVolatilityHarvesterAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const SIGHVolatilityHarvesterContract = new state.web3.eth.Contract(SIGHVolatilityHarvesterInterface.abi, state.SIGHVolatilityHarvesterAddress );
+        // console.log(SIGHVolatilityHarvesterContract);
+        let response = await SIGHVolatilityHarvesterContract.methods.getBlocksRemainingToNextSpeedRefresh().call();
+        console.log("SIGHVolatilityHarvester Blocks remaining to refresh = " + response );        
         return response;            
       }
       else {
@@ -1516,12 +1516,12 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => { 
       }
     },
 
-    SIGHDistributionHandler_getInstrumentData: async ({commit,state},{instrument_}) => {
-      if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
-        const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
-        // console.log(sighDistributionHandlerContract);
-        let response = await sighDistributionHandlerContract.methods.getInstrumentData(instrument_).call();
-        console.log("sighDistributionHandler INSTRUMENT Data = " );
+    SIGHVolatilityHarvester_getInstrumentData: async ({commit,state},{instrument_}) => {
+      if (state.web3 && state.SIGHVolatilityHarvesterAddress && state.SIGHVolatilityHarvesterAddress!= "0x0000000000000000000000000000000000000000" ) {
+        const SIGHVolatilityHarvesterContract = new state.web3.eth.Contract(SIGHVolatilityHarvesterInterface.abi, state.SIGHVolatilityHarvesterAddress );
+        // console.log(SIGHVolatilityHarvesterContract);
+        let response = await SIGHVolatilityHarvesterContract.methods.getInstrumentData(instrument_).call();
+        console.log("SIGHVolatilityHarvester INSTRUMENT Data = " );
         console.log(response);   
         return response;            
       }
@@ -1531,11 +1531,11 @@ getUserInstrumentState: async ({commit,state},{_instrumentAddress, _user}) => { 
       }
     },    
 
-    // SIGHDistributionHandler_getInstrumentSighMechansimStates: async ({commit,state},{instrument_}) => {
-    //   if (state.web3 && state.SIGHDistributionHandlerAddress && state.SIGHDistributionHandlerAddress!= "0x0000000000000000000000000000000000000000" ) {
-    //     const sighDistributionHandlerContract = new state.web3.eth.Contract(SighDistributionHandlerInterface.abi, state.SIGHDistributionHandlerAddress );
-    //     let response = await sighDistributionHandlerContract.methods.getInstrumentSighMechansimStates(instrument_).call();
-    //     console.log("sighDistributionHandler INSTRUMENT Data = " );
+    // SIGHVolatilityHarvester_getInstrumentSighMechansimStates: async ({commit,state},{instrument_}) => {
+    //   if (state.web3 && state.SIGHVolatilityHarvesterAddress && state.SIGHVolatilityHarvesterAddress!= "0x0000000000000000000000000000000000000000" ) {
+    //     const SIGHVolatilityHarvesterContract = new state.web3.eth.Contract(SIGHVolatilityHarvesterInterface.abi, state.SIGHVolatilityHarvesterAddress );
+    //     let response = await SIGHVolatilityHarvesterContract.methods.getInstrumentSighMechansimStates(instrument_).call();
+    //     console.log("SIGHVolatilityHarvester INSTRUMENT Data = " );
     //     console.log(response);                
     //     return response;            
     //   }
