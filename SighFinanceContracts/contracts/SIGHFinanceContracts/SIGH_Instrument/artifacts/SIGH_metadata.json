@@ -6,7 +6,13 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "addressesProvider_",
+						"type": "address"
+					}
+				],
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "constructor"
@@ -43,12 +49,6 @@
 						"indexed": false,
 						"internalType": "address",
 						"name": "speedController",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "treasury",
 						"type": "address"
 					},
 					{
@@ -204,6 +204,32 @@
 				"type": "event"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "accountBlocked",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "accountUnBlocked",
+				"type": "event"
+			},
+			{
 				"constant": true,
 				"inputs": [],
 				"name": "CYCLE_BLOCKS",
@@ -231,6 +257,27 @@
 				],
 				"payable": false,
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "addToBlockList",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -366,6 +413,21 @@
 				],
 				"payable": false,
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getAddressesProvider",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -575,21 +637,6 @@
 				"type": "function"
 			},
 			{
-				"constant": true,
-				"inputs": [],
-				"name": "getTreasury",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"constant": false,
 				"inputs": [
 					{
@@ -617,18 +664,7 @@
 			},
 			{
 				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "newSpeedController",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_treasury",
-						"type": "address"
-					}
-				],
+				"inputs": [],
 				"name": "initMinting",
 				"outputs": [
 					{
@@ -639,6 +675,27 @@
 				],
 				"payable": false,
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account_",
+						"type": "address"
+					}
+				],
+				"name": "isAccountBlocked",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -684,6 +741,27 @@
 				],
 				"payable": false,
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "removeFromBlockList",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -822,17 +900,24 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"localhost/contracts/SIGHFinanceContracts/SIGH_Instrument/Sigh.sol": {
-			"keccak256": "0x651d33cee2b9f691e112a3e86e0314d53de2ae8d7e2d483e9c958ef12a366733",
+			"keccak256": "0x98d830f7a8741efa557c0ff6f9ee4a8457945d6e033130f33222b6c571bc7525",
 			"urls": [
-				"bzz-raw://ad1e540e13790981ec44b2224e1463e2f6232e6ed9ae3bde1a13fcb251be4037",
-				"dweb:/ipfs/QmVDHpEYf743u6XpnVix3CMoZBW3itvgqdmbT8J2cMXoHL"
+				"bzz-raw://49a7b42fae8582a72b350eadd598cdb80b5d2f3c51e8d01b354e98d03e18e1e1",
+				"dweb:/ipfs/Qmdi9XsWKsoVhDnrmLgr4bJUQqW4DkLFYC9qAP59smRmSU"
+			]
+		},
+		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {
+			"keccak256": "0x7476e3b5d5fc8f3c0b53e24a3328bba586b63076a9edd01a3ff9eb65e575e714",
+			"urls": [
+				"bzz-raw://a8d35785d188d6f3a6b5f9818a40e0ad0f468d53a7538a2dd47f784da4d49a42",
+				"dweb:/ipfs/QmWxondRZPdCGqNMWdZQ2zBPwTjUA9rHAH86sQ9WtntubY"
 			]
 		},
 		"openzeppelin-solidity/contracts/GSN/Context.sol": {

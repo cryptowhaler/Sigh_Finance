@@ -1074,10 +1074,10 @@
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/Sigh_Staking/SighStaking.sol": {
-			"keccak256": "0x24be5b8f7088dcf697c0ff635635707f6dd8dea2638368d3d1c487e2b87ababf",
+			"keccak256": "0x55c4be0ce7e6f5001be54e72c03956024665e160367eec5f8ad12b7a84887b2f",
 			"urls": [
-				"bzz-raw://cb83a425ddc212a418321a8e25e564421214247ae3eae6d79b4f8a9a9e366c4f",
-				"dweb:/ipfs/QmY4Ki4WH9vGJELKe29JuGWf7oW4pHE3jbkUsUimTHpNmf"
+				"bzz-raw://09940a14e13afc2b4b4cc1bc7a450a6bc66619641a7cc5bb70856b5b3940bc20",
+				"dweb:/ipfs/QmPhavNsnLiNsjmoZVhZYGQZgbf81AaeYNhM9KWfx9CS8X"
 			]
 		},
 		"localhost/contracts/configuration/AddressStorage.sol": {
@@ -1088,17 +1088,17 @@
 			]
 		},
 		"localhost/contracts/configuration/GlobalAddressesProvider.sol": {
-			"keccak256": "0x7212661ab967282a1020cd673c58fe003d4324aee365413406fd5e86071645c6",
+			"keccak256": "0x32f5ad05ae4f54cab9cde493d89e1306379ec99b4cc417c9db28a255af238044",
 			"urls": [
-				"bzz-raw://dbc516c3b7d6b4b44cc373714e90817e8c6bac2a5ca089f49e0ea3a3b4ac764c",
-				"dweb:/ipfs/QmZGNCyZzfxEozzdUxi6E7ZqWX6cUjw6hvD4xyN2YNxcwD"
+				"bzz-raw://ce8ee4ac238083185b44dc489793c37eae0b4306f86e0e1a1310be40804174cc",
+				"dweb:/ipfs/QmXodiGb7Jua97Mgi5byMBqApa8AajnbR7QUKaTq52u8qe"
 			]
 		},
 		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {
-			"keccak256": "0x30385d394fe30ea120fd04ef3d9f3e6006a90d08c6795ed9b3c586fb98a56512",
+			"keccak256": "0x7476e3b5d5fc8f3c0b53e24a3328bba586b63076a9edd01a3ff9eb65e575e714",
 			"urls": [
-				"bzz-raw://433194f95571c81d390832741a81d152e40c540722354e4f3c914d83600983a4",
-				"dweb:/ipfs/QmPwRF6AHfvUqco3YP9XZCe818juptqY5UUD75XQwmqg5u"
+				"bzz-raw://a8d35785d188d6f3a6b5f9818a40e0ad0f468d53a7538a2dd47f784da4d49a42",
+				"dweb:/ipfs/QmWxondRZPdCGqNMWdZQ2zBPwTjUA9rHAH86sQ9WtntubY"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

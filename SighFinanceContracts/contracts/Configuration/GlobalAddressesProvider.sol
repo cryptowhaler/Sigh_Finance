@@ -34,7 +34,7 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
     event SIGHFinanceConfiguratorUpdated(address indexed sighFinanceConfigAddress);       // ADDED BY SIGH FINANCE
     event SIGHAddressUpdated(address indexed sighAddress);                               // ADDED BY SIGH FINANCE
     event SIGHSpeedControllerUpdated(address indexed speedControllerAddress);
-    event SIGHMechanismHandlerImplUpdated(address indexed newAddress);                   // ADDED BY SIGH FINANCE
+    event SIGHVolatilityHarvesterImplUpdated(address indexed newAddress);                   // ADDED BY SIGH FINANCE
     event SIGHTreasuryImplUpdated(address indexed newAddress);                           // ADDED BY SIGH FINANCE
     event SIGHStakingImplUpdated(address indexed SIGHStakingAddress);                    // ADDED BY SIGH FINANCE
 
@@ -59,11 +59,11 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
     bytes32 private constant LENDING_RATE_ORACLE = "LENDING_RATE_ORACLE";
     bytes32 private constant FEE_PROVIDER = "FEE_PROVIDER";
 
-    bytes32 private constant SIGH = "SIGH";                                             // ADDED BY SIGH FINANCE
-    bytes32 private constant SIGH_SPEED_CONTROLLER = "SIGH_SPEED_CONTROLLER";           // ADDED BY SIGH FINANCE
-    bytes32 private constant SIGH_MECHANISM_HANDLER = "SIGH_MECHANISM_HANDLER";         // ADDED BY SIGH FINANCE
-    bytes32 private constant SIGH_TREASURY = "SIGH_TREASURY";                           // ADDED BY SIGH FINANCE
-    bytes32 private constant SIGH_STAKING = "SIGH_STAKING";                             // ADDED BY SIGH FINANCE
+    bytes32 private constant SIGH = "SIGH";                                                     // ADDED BY SIGH FINANCE
+    bytes32 private constant SIGH_SPEED_CONTROLLER = "SIGH_SPEED_CONTROLLER";                   // ADDED BY SIGH FINANCE
+    bytes32 private constant SIGH_VOLATILITY_HARVESTER = "SIGH_VOLATILITY_HARVESTER";           // ADDED BY SIGH FINANCE
+    bytes32 private constant SIGH_TREASURY = "SIGH_TREASURY";                                   // ADDED BY SIGH FINANCE
+    bytes32 private constant SIGH_STAKING = "SIGH_STAKING";                                     // ADDED BY SIGH FINANCE
 
     bytes32 private constant PRICE_ORACLE = "PRICE_ORACLE";
 
@@ -418,17 +418,17 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
 // ######  SIGHMechanismHandler proxy #######     ADDED BY SIGH FINANCE
 // #############################################  ADDED BY SIGH FINANCE 
 
-    function getSIGHMechanismHandler() external view returns (address) {
-        return getAddress(SIGH_MECHANISM_HANDLER);
+    function getSIGHVolatilityHarvester() external view returns (address) {
+        return getAddress(SIGH_VOLATILITY_HARVESTER);
     }
 
     /**
-    * @dev updates the address of the SIGH Distribution Handler Contract (Manages the SIGH Speeds)
-    * @param _SIGHMechanismHandler the new SIGH Distribution Handler (Impl) Address
+    * @dev updates the address of the SIGH Volatility Harvester Contract (Manages the SIGH Speeds)
+    * @param _SIGHVolatilityHarvester the new SIGH Volatility Harvester (Impl) Address
     **/
-    function setSIGHMechanismHandlerImpl(address _SIGHMechanismHandler) external onlySIGHFinanceManager  {   
-        updateImplInternal(SIGH_MECHANISM_HANDLER, _SIGHMechanismHandler);
-        emit SIGHMechanismHandlerImplUpdated(_SIGHMechanismHandler);
+    function setSIGHVolatilityHarvesterImpl(address _SIGHVolatilityHarvester) external onlySIGHFinanceManager  {   
+        updateImplInternal(SIGH_VOLATILITY_HARVESTER, _SIGHVolatilityHarvester);
+        emit SIGHVolatilityHarvesterImplUpdated(_SIGHVolatilityHarvester);
     }
 
 // #############################################  ADDED BY SIGH FINANCE 

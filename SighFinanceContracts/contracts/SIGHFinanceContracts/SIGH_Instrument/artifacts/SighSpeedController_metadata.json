@@ -6,25 +6,14 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "sighInstrument_",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_addressesProvider",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "constructor"
-			},
-			{
 				"anonymous": false,
 				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "sighVolatilityHarvesterAddress",
+						"type": "address"
+					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
@@ -47,13 +36,13 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "prevSpeed",
+						"name": "prevSpeedRatio",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "newSpeed",
+						"name": "newSpeedRatio",
 						"type": "uint256"
 					},
 					{
@@ -63,7 +52,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "DistributionSpeedChanged",
+				"name": "DistributionSpeedRatioChanged",
 				"type": "event"
 			},
 			{
@@ -79,6 +68,12 @@
 						"indexed": false,
 						"internalType": "uint256",
 						"name": "deltaBlocks",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "sighSpeedRatio",
 						"type": "uint256"
 					},
 					{
@@ -115,13 +110,56 @@
 					{
 						"indexed": false,
 						"internalType": "address",
+						"name": "sighVolatilityHarvesterAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "deltaBlocks",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "harvestDistributionSpeed",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "recentlyDrippedToVolatilityHarvester",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalDrippedToVolatilityHarvester",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "blockNumber_",
+						"type": "uint256"
+					}
+				],
+				"name": "DrippedToVolatilityHarvester",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
 						"name": "protocolAddress",
 						"type": "address"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "sighSpeed",
+						"name": "sighSpeedRatio",
 						"type": "uint256"
 					},
 					{
@@ -166,6 +204,34 @@
 				"type": "event"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newSIGHVolatilityharvestSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "SighVolatilityHarvestsSpeedUpdated",
+				"type": "event"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "REVISION",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"constant": true,
 				"inputs": [],
 				"name": "_isDripAllowed",
@@ -178,6 +244,27 @@
 				],
 				"payable": false,
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "sighVolatilityHarvesterAddress_",
+						"type": "address"
+					}
+				],
+				"name": "beginDripping",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -205,11 +292,11 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "newSpeed_",
+						"name": "newRatio_",
 						"type": "uint256"
 					}
 				],
-				"name": "changeProtocolSIGHSpeed",
+				"name": "changeProtocolSIGHSpeedRatio",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -290,7 +377,22 @@
 						"type": "address"
 					}
 				],
-				"name": "getSIGHSpeedForProtocol",
+				"name": "getSIGHSpeedRatioForProtocol",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getSIGHVolatilityHarvestingSpeed",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -306,6 +408,21 @@
 				"constant": true,
 				"inputs": [],
 				"name": "getSighAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getSighVolatilityHarvester",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -335,7 +452,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "distributionSpeed",
+						"name": "sighHarvestingSpeedRatio",
 						"type": "uint256"
 					},
 					{
@@ -405,6 +522,21 @@
 				"type": "function"
 			},
 			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "contract GlobalAddressesProvider",
+						"name": "_addressesProvider",
+						"type": "address"
+					}
+				],
+				"name": "initialize",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"constant": true,
 				"inputs": [
 					{
@@ -456,7 +588,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "sighSpeed",
+						"name": "sighSpeedRatio",
 						"type": "uint256"
 					}
 				],
@@ -486,24 +618,44 @@
 				"payable": false,
 				"stateMutability": "view",
 				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newSpeed",
+						"type": "uint256"
+					}
+				],
+				"name": "updateSighVolatilityDistributionSpeed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
 			"methods": {
-				"constructor": {
-					"params": {
-						"_addressesProvider": "The global addresses provider",
-						"sighInstrument_": "The token to drip"
-					}
-				},
 				"drip()": {
 					"details": "Note: this will only drip up to the amount of sighInstruments available."
+				},
+				"initialize(address)": {
+					"details": "this function is invoked by the proxy contract when the LendingPool contract is added to the AddressesProvider.",
+					"params": {
+						"_addressesProvider": "the address of the GlobalAddressesProvider registry*"
+					}
 				}
 			}
 		},
 		"userdoc": {
 			"methods": {
-				"constructor": "Constructs a Reservoir",
 				"drip()": {
 					"notice": "Drips the maximum amount of sighInstruments to match the drip rate since inception"
 				}
@@ -523,25 +675,95 @@
 		"remappings": []
 	},
 	"sources": {
-		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighSpeedController.sol": {
-			"keccak256": "0xb2733186b95be314fa2641cfce71cf044cceef3f07a45733f86b71fa91cfd619",
+		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISIGHVolatilityHarvester.sol": {
+			"keccak256": "0xd629deb471cfacd2b419edb2c969f61560adb44bd448e1b9ca1921369d264df7",
 			"urls": [
-				"bzz-raw://e6a8c90fd192c7671d4a9e976e03d522980b6199a93403a5bbc3190f43e57c92",
-				"dweb:/ipfs/QmfEZZD5Q6AcCRoa26n7wAXZXsSnExEjcNqNNx66mPnGjK"
+				"bzz-raw://9ac75ebbf87c87b508d624d40debf5bf3a4a9db601f92348510df67f8758771c",
+				"dweb:/ipfs/QmRswZQto4cr3eCsSLvJHHtHHJ2KJhE4Y5sRrQFo7YAA9p"
+			]
+		},
+		"localhost/contracts/SIGHFinanceContracts/Interfaces/ISighSpeedController.sol": {
+			"keccak256": "0x6647939d091b57036ad5d0cb9cbb33aed384786a58212791e9209d79347306d5",
+			"urls": [
+				"bzz-raw://75e345e12ca7e90e444aa99d2a67450d2ed56b98af7091bd6a3af765149eb381",
+				"dweb:/ipfs/QmSVdykP1e1TUUegWEU5vnV8RtLtxX3Ce93sY2VGpVjxex"
 			]
 		},
 		"localhost/contracts/SIGHFinanceContracts/SIGH_Instrument/SighSpeedController.sol": {
-			"keccak256": "0x31b7e8e4beaf92eccb8248eb06122778b7f2b08c923258b02950386c6e3cda4f",
+			"keccak256": "0x21d8746ed60a27270b4292d6d0a0644126596da6be5bc5e796da3f1020f97263",
 			"urls": [
-				"bzz-raw://823ce6b899c0c2e3c33beeca664bfc3e8ba6580c8edb5c82683726774e70a0b4",
-				"dweb:/ipfs/QmdohVcJT8BRf4SWqDX8oSsnNvBe5KmYdL2cPWK3BcuUye"
+				"bzz-raw://3a3efad0267bd6e3cfcdc7bf6227b5be5ff7b66acafaa5af42063775b52f9f77",
+				"dweb:/ipfs/QmRw8eoVjL7mt9Xv6o8iNZeTYWwT98D2W4roNtb6doivqW"
+			]
+		},
+		"localhost/contracts/configuration/AddressStorage.sol": {
+			"keccak256": "0x0d0b40ccc403e45861faf71d042f5c419ff51930a45896633052c91b7ed6eae4",
+			"urls": [
+				"bzz-raw://ad8c170f6b3b87ec85076f3fdcd006fcef61ef47c978a9da8971df22682cf657",
+				"dweb:/ipfs/QmRWUQzdk7GHfcyrPzE6vw9ipfrW6Kiq1Jyp9xzbWqmv5p"
+			]
+		},
+		"localhost/contracts/configuration/GlobalAddressesProvider.sol": {
+			"keccak256": "0x32f5ad05ae4f54cab9cde493d89e1306379ec99b4cc417c9db28a255af238044",
+			"urls": [
+				"bzz-raw://ce8ee4ac238083185b44dc489793c37eae0b4306f86e0e1a1310be40804174cc",
+				"dweb:/ipfs/QmXodiGb7Jua97Mgi5byMBqApa8AajnbR7QUKaTq52u8qe"
 			]
 		},
 		"localhost/contracts/configuration/IGlobalAddressesProvider.sol": {
-			"keccak256": "0x30385d394fe30ea120fd04ef3d9f3e6006a90d08c6795ed9b3c586fb98a56512",
+			"keccak256": "0x7476e3b5d5fc8f3c0b53e24a3328bba586b63076a9edd01a3ff9eb65e575e714",
 			"urls": [
-				"bzz-raw://433194f95571c81d390832741a81d152e40c540722354e4f3c914d83600983a4",
-				"dweb:/ipfs/QmPwRF6AHfvUqco3YP9XZCe818juptqY5UUD75XQwmqg5u"
+				"bzz-raw://a8d35785d188d6f3a6b5f9818a40e0ad0f468d53a7538a2dd47f784da4d49a42",
+				"dweb:/ipfs/QmWxondRZPdCGqNMWdZQ2zBPwTjUA9rHAH86sQ9WtntubY"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {
+			"keccak256": "0x6bb623c8fe336eeba953283dbe3014ab18e882d3a3f27f38234672a5a69885d1",
+			"urls": [
+				"bzz-raw://2810308c8de3ef8291356ea30e866a0b20e2729223caffc43b0f6513f7b0aaeb",
+				"dweb:/ipfs/QmT6AD9CxgeeUndEj6F6z9zd8eJLDxUxJcHekcBRGop3ch"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/BaseUpgradeabilityProxy.sol": {
+			"keccak256": "0x99e393b97e79374c0dd133282f83ac48f15777d3894eafb9257768a1bf7acff5",
+			"urls": [
+				"bzz-raw://1c9d283b3442e71b7c611f8f79e792b248d97e1502a14d8507f131161b288f8b",
+				"dweb:/ipfs/QmWxuFrfdLHmhJrpoGwHRujeV6zpdFydVM1DY3N5RBwNs5"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/InitializableAdminUpgradeabilityProxy.sol": {
+			"keccak256": "0x7928dfc5736d1ec6a29672f41458b7de688ef2d0ec31b3e4a16e6bc554b87df1",
+			"urls": [
+				"bzz-raw://712ce2645eeb72c5c12e40ef1e04f7161ab9f8aaae3413b82f6a1b48956d6c38",
+				"dweb:/ipfs/QmcTNBeHbqBUj2UUgNob1s22oMjj4UpcLMNdXTBC2m1b6p"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/InitializableUpgradeabilityProxy.sol": {
+			"keccak256": "0x46052d95ea9b770116913041555f808f1b099c0a35e5c7ecbfc04ffef64a83bd",
+			"urls": [
+				"bzz-raw://67c2cacee01c1c8972a195be9f018abeae6917f45e45a4dc22b462fbb148150f",
+				"dweb:/ipfs/QmZhM5vvrvjFbTXjzYDB3ZTtNbTf3j54v76SZoDSbFTjdU"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/Proxy.sol": {
+			"keccak256": "0xd8dcdaaf2f03c606a569d91506958bf78df9adfb41df76727857e5dfe956e872",
+			"urls": [
+				"bzz-raw://1d780033022b07478621ce08cd4e668603fc899ae3212a883eea23347937e8d5",
+				"dweb:/ipfs/QmVZkBHpdDjko87qT4597e3UZ5uYdrEfPYbamEjBep52Se"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/UpgradeabilityProxy.sol": {
+			"keccak256": "0x5829b59012f64d1ce3ae6b98a61ddf5d6daa6e6f1a54e336ce910c8afd415c69",
+			"urls": [
+				"bzz-raw://28cba7d1f3d67aab91a4f88df4cb63762b443c31cb62a87e957add0b43dc8e1a",
+				"dweb:/ipfs/QmUXzpQDBXA2xGSNRqjn3VMJ3o8RXmpATieU9ovvk6QDAD"
+			]
+		},
+		"localhost/contracts/openzeppelin-upgradeability/VersionedInitializable.sol": {
+			"keccak256": "0x3f7fa91853dcdf84684887deaa056f5b3803b46e7efb71704dcc625a63eeac55",
+			"urls": [
+				"bzz-raw://c7b50d4feda87e8875541afeb44f802ab539272bfb22f7c7da84c3d26e03a266",
+				"dweb:/ipfs/QmdSYn9D1Q3FRXRNDLYGGFoYb8rsN4U2MYdxciuZBTSg83"
 			]
 		},
 		"openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
@@ -549,6 +771,20 @@
 			"urls": [
 				"bzz-raw://003c6da07a3cbc576a9a59f462ed67d9041ff89e106463817ce9f005e24d83c8",
 				"dweb:/ipfs/QmemQazcc1Cww2Umgc4UFYpwF8WRqajPB6z5TNdC13XJCR"
+			]
+		},
+		"openzeppelin-solidity/contracts/utils/Address.sol": {
+			"keccak256": "0x58543a8d0f0fc465618566ee6b3c04071965cd26ba20d1de3f9768014ed807e4",
+			"urls": [
+				"bzz-raw://f060c6ee3ca16eb001823e2c0f8b642ecf3ead486721bab6f6be5220158d4421",
+				"dweb:/ipfs/QmWv1ms6aLAfjZ49dNnffbg49XiKmuEWHeu4wi6EinkEek"
+			]
+		},
+		"openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol": {
+			"keccak256": "0xe8319a13d4d3a9a518dafb829afffd958264b2675114abe5c322178cc6c3519f",
+			"urls": [
+				"bzz-raw://25e5847db15af6119dfadd8929642c20d731b61d11c8187dbf8064d3458cb094",
+				"dweb:/ipfs/QmQhu9fnpHXp7wDKmqbaK7BAs8zWxLShRUUEdYiPiytBww"
 			]
 		}
 	},

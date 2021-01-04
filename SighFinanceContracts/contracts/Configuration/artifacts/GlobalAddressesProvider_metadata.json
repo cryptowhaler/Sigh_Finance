@@ -255,19 +255,6 @@
 					{
 						"indexed": true,
 						"internalType": "address",
-						"name": "newAddress",
-						"type": "address"
-					}
-				],
-				"name": "SIGHMechanismHandlerImplUpdated",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
 						"name": "speedControllerAddress",
 						"type": "address"
 					}
@@ -299,6 +286,19 @@
 					}
 				],
 				"name": "SIGHTreasuryImplUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newAddress",
+						"type": "address"
+					}
+				],
+				"name": "SIGHVolatilityHarvesterImplUpdated",
 				"type": "event"
 			},
 			{
@@ -641,6 +641,21 @@
 				"type": "function"
 			},
 			{
+				"constant": true,
+				"inputs": [],
+				"name": "getSIGHVolatilityHarvester",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"constant": false,
 				"inputs": [
 					{
@@ -855,7 +870,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_SIGHMechanismHandler",
+						"name": "_SIGHVolatilityHarvester",
 						"type": "address"
 					}
 				],
@@ -905,6 +920,21 @@
 					}
 				],
 				"name": "setSIGHTreasuryImpl",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_SIGHVolatilityHarvester",
+						"type": "address"
+					}
+				],
+				"name": "setSIGHVolatilityHarvesterImpl",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -1001,12 +1031,6 @@
 						"_configurator": "the new lending pool configurator implementation*"
 					}
 				},
-				"setSIGHMechanismHandlerImpl(address)": {
-					"details": "updates the address of the SIGH Distribution Handler Contract (Manages the SIGH Speeds)",
-					"params": {
-						"_SIGHMechanismHandler": "the new SIGH Distribution Handler (Impl) Address*"
-					}
-				},
 				"setSIGHSpeedController(address)": {
 					"details": "sets the address of the SIGH Speed Controller",
 					"params": {
@@ -1024,6 +1048,12 @@
 					"params": {
 						"_SIGHTreasury": "the new SIGH Treasury Contract address*"
 					}
+				},
+				"setSIGHVolatilityHarvesterImpl(address)": {
+					"details": "updates the address of the SIGH Volatility Harvester Contract (Manages the SIGH Speeds)",
+					"params": {
+						"_SIGHVolatilityHarvester": "the new SIGH Volatility Harvester (Impl) Address*"
+					}
 				}
 			},
 			"title": "GlobalAddressesProvider contract (Taken from Aave, Modified by SIGH Finance)"
@@ -1040,7 +1070,7 @@
 		"evmVersion": "istanbul",
 		"libraries": {},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
@@ -1054,17 +1084,17 @@
 			]
 		},
 		"localhost/contracts/Configuration/GlobalAddressesProvider.sol": {
-			"keccak256": "0x7212661ab967282a1020cd673c58fe003d4324aee365413406fd5e86071645c6",
+			"keccak256": "0x32f5ad05ae4f54cab9cde493d89e1306379ec99b4cc417c9db28a255af238044",
 			"urls": [
-				"bzz-raw://dbc516c3b7d6b4b44cc373714e90817e8c6bac2a5ca089f49e0ea3a3b4ac764c",
-				"dweb:/ipfs/QmZGNCyZzfxEozzdUxi6E7ZqWX6cUjw6hvD4xyN2YNxcwD"
+				"bzz-raw://ce8ee4ac238083185b44dc489793c37eae0b4306f86e0e1a1310be40804174cc",
+				"dweb:/ipfs/QmXodiGb7Jua97Mgi5byMBqApa8AajnbR7QUKaTq52u8qe"
 			]
 		},
 		"localhost/contracts/Configuration/IGlobalAddressesProvider.sol": {
-			"keccak256": "0x30385d394fe30ea120fd04ef3d9f3e6006a90d08c6795ed9b3c586fb98a56512",
+			"keccak256": "0x7476e3b5d5fc8f3c0b53e24a3328bba586b63076a9edd01a3ff9eb65e575e714",
 			"urls": [
-				"bzz-raw://433194f95571c81d390832741a81d152e40c540722354e4f3c914d83600983a4",
-				"dweb:/ipfs/QmPwRF6AHfvUqco3YP9XZCe818juptqY5UUD75XQwmqg5u"
+				"bzz-raw://a8d35785d188d6f3a6b5f9818a40e0ad0f468d53a7538a2dd47f784da4d49a42",
+				"dweb:/ipfs/QmWxondRZPdCGqNMWdZQ2zBPwTjUA9rHAH86sQ9WtntubY"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

@@ -14,7 +14,7 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
 
     IGlobalAddressesProvider private addressesProvider; 
     address private SpeedController;
-
+ 
     mapping (address => bool) private blockList;
 
     uint256 private constant INITIAL_SUPPLY = 5 * 10**6 * 10**18; // 5 Million (with 18 decimals)
@@ -76,12 +76,12 @@ contract SIGH is ERC20, ERC20Detailed('SIGH : A free distributor of future expec
     // #######   FUNCTIONS TO INITIATE MINTING  #######
     // ################################################
 
-    function initMinting(address newSpeedController) public returns (bool) {
+    function initMinting() public returns (bool) {
         require(_msgSender() == addressesProvider.getSIGHFinanceManager(),"Mining can only be initialized by the SIGH Finance Manager" );
-        require(newSpeedController != address(0), "Not a valid Speed Controller address");
         require(!mintingActivated, "Minting can only be initialized once" );
 
-        SpeedController = newSpeedController;
+        SpeedController = addressesProvider.getSIGHSpeedController();
+        require(SpeedController != address(0),'SIGH Speed Controller not properly set in Addresses Provider Contract' );
         _initSchedules();
         
         emit MintingInitialized(SpeedController, block.number );

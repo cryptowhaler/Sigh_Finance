@@ -12,15 +12,16 @@ import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol"; 
 import "../Interfaces/ISighSpeedController.sol";
-import "../../configuration/IGlobalAddressesProvider.sol";
+import "../../configuration/GlobalAddressesProvider.sol";
 
 import "../Interfaces/ISIGHVolatilityHarvester.sol"; 
 
 contract SighSpeedController is ISighSpeedController, ReentrancyGuard, VersionedInitializable  {
 
-  IGlobalAddressesProvider private addressesProvider;
+  GlobalAddressesProvider private addressesProvider;
 
   IERC20 private sighInstrument;                                         // SIGH INSTRUMENT CONTRACT
+  uint constant expScale = 1e18;
 
   bool private isDripAllowed = false;  
   uint private lastDripBlockNumber;    
@@ -51,7 +52,7 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
 
   event DistributionInitialized(address sighVolatilityHarvesterAddress, uint blockNumber);
 
-  event SighVolatilityHarvestsSpeedUpdated(uint newTreasurySpeedRatio );
+  event SighVolatilityHarvestsSpeedUpdated(uint newSIGHVolatilityharvestSpeed );
 
   event NewProtocolSupported (address protocolAddress, uint sighSpeedRatio, uint totalDrippedAmount, uint blockNumber);
   event ProtocolRemoved(address protocolAddress, uint totalDrippedToProtocol, uint blockNumber);
@@ -100,8 +101,9 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
 // ###########   SIGH DISTRIBUTION : INITIALIZED DRIPPING (Can be called only once)   ##########
 // #############################################################################################
 
-  function beginDripping ( address sighVolatilityHarvesterAddress_ ) external onlySighFinanceConfigurator returns (bool) {
+  function beginDripping () external onlySighFinanceConfigurator returns (bool) {
     require(!isDripAllowed,"Dripping can only be initialized once");
+    address sighVolatilityHarvesterAddress_ = addressesProvider.getSIGHVolatilityHarvester();
     require(sighVolatilityHarvesterAddress_ != address(0),"SIGH Volatility Harvester Address not valid");
 
     isDripAllowed = true;
@@ -124,7 +126,7 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
 
   function supportNewProtocol( address newProtocolAddress, uint sighSpeedRatio ) external onlySighFinanceConfigurator returns (bool)  {
     require (!supportedProtocols[newProtocolAddress].isSupported, 'This Protocol is already supported by the Sigh Speed Controller');
-    require ( sighSpeedRatio == 0 || ( 0.01e18 <=sighSpeedRatio <= 2e18 )  , "Invalid 'SIGH Volatiltiy harvesting - Speed Ratio' provided. ");
+    require ( sighSpeedRatio == 0 || ( 0.01e18 <=sighSpeedRatio && sighSpeedRatio <= 2e18 )  , "Invalid 'SIGH Volatiltiy harvesting - Speed Ratio' provided. ");
 
 
     if (isDripAllowed) {
@@ -173,7 +175,7 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
     require(storedSupportedProtocols.length == newLength, 'The length of the list was not properly decremented.' );
     
     supportedProtocols[protocolAddress_].isSupported = false;
-    supportedProtocols[protocolAddress_].sighSpeedRatio = Exp({ mantissa: 0 });;
+    supportedProtocols[protocolAddress_].sighSpeedRatio = Exp({ mantissa: 0 });
     require (supportedProtocols[protocolAddress_].isSupported == false, 'Error occured when removing the protocol.');
     require (supportedProtocols[protocolAddress_].sighSpeedRatio.mantissa == 0, 'SIGH Volatiltiy harvesting - Speed Ratio was not properly assigned to 0.');
 
@@ -259,7 +261,7 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
             if ( supportedProtocols[ current_protocol ].isSupported ) {
                 
                 reservoirBalance_ = sighInstrument.balanceOf(address(this));
-                uint distributionSpeed = mul_(currentVolatilityHarvestSpeed, supportedProtocols[current_protocol].sighSpeedRatio )        // current Harvest Speed * Ratio / 1e18
+                uint distributionSpeed = mul_(currentVolatilityHarvestSpeed, supportedProtocols[current_protocol].sighSpeedRatio );        // current Harvest Speed * Ratio / 1e18
                 uint deltaDrip_ = mul(distributionSpeed, deltaBlocks , "dripTotal overflow");
                 uint toDrip_ = min(reservoirBalance_, deltaDrip_);
             
@@ -373,7 +375,7 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
   }
 
   function mul_(uint a, Exp memory b) pure internal returns (uint) {
-      return mul_(a, b.mantissa) / expScale;
+      return mul(a, b.mantissa, 'Multiplication error' ) / expScale;
   }
 
 
