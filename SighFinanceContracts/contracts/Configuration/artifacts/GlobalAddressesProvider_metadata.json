@@ -583,21 +583,6 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "getSIGHMechanismHandler",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
 				"name": "getSIGHSpeedController",
 				"outputs": [
 					{
@@ -870,21 +855,6 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_SIGHVolatilityHarvester",
-						"type": "address"
-					}
-				],
-				"name": "setSIGHMechanismHandlerImpl",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"internalType": "address",
 						"name": "_SIGHSpeedController",
 						"type": "address"
 					}
@@ -1091,10 +1061,10 @@
 			]
 		},
 		"localhost/contracts/Configuration/IGlobalAddressesProvider.sol": {
-			"keccak256": "0x7476e3b5d5fc8f3c0b53e24a3328bba586b63076a9edd01a3ff9eb65e575e714",
+			"keccak256": "0x50e848216e5d50ed34ab3bc9f078dbd6f01feb799bd464d6ce45b851cc4f8792",
 			"urls": [
-				"bzz-raw://a8d35785d188d6f3a6b5f9818a40e0ad0f468d53a7538a2dd47f784da4d49a42",
-				"dweb:/ipfs/QmWxondRZPdCGqNMWdZQ2zBPwTjUA9rHAH86sQ9WtntubY"
+				"bzz-raw://b163b787cdcb938e25ed747ddaf41e2b1d62ffccba73bd2aa29c066b604f8162",
+				"dweb:/ipfs/QmY7zppmMwqaKLVJaM3D2tMhG4xw3iDdnbayiCwG792qDX"
 			]
 		},
 		"localhost/contracts/openzeppelin-upgradeability/BaseAdminUpgradeabilityProxy.sol": {

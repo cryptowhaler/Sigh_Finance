@@ -81,8 +81,8 @@ interface IGlobalAddressesProvider  {
     function getSIGHTreasury() external view returns (address);                                 //  ADDED FOR SIGH FINANCE 
     function setSIGHTreasuryImpl(address _SIGHTreasury) external;                                   //  ADDED FOR SIGH FINANCE 
 
-    function getSIGHMechanismHandler() external view returns (address);                      //  ADDED FOR SIGH FINANCE 
-    function setSIGHMechanismHandlerImpl(address _SIGHVolatilityHarvester) external;             //  ADDED FOR SIGH FINANCE 
+    function getSIGHVolatilityHarvester() external view returns (address);                      //  ADDED FOR SIGH FINANCE 
+    function setSIGHVolatilityHarvesterImpl(address _SIGHVolatilityHarvester) external;             //  ADDED FOR SIGH FINANCE 
 
     function getSIGHStaking() external view returns (address);                      //  ADDED FOR SIGH FINANCE 
     function setSIGHStaking(address _SIGHVolatilityHarvester) external;             //  ADDED FOR SIGH FINANCE 

@@ -236,7 +236,7 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "getSIGHFinanceManager",
+				"name": "getSIGHFinanceFeeCollector",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -251,7 +251,7 @@
 			{
 				"constant": true,
 				"inputs": [],
-				"name": "getSIGHMechanismHandler",
+				"name": "getSIGHFinanceManager",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -297,6 +297,21 @@
 				"constant": true,
 				"inputs": [],
 				"name": "getSIGHTreasury",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getSIGHVolatilityHarvester",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -508,11 +523,11 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_SIGHVolatilityHarvester",
+						"name": "_feeCollector",
 						"type": "address"
 					}
 				],
-				"name": "setSIGHMechanismHandlerImpl",
+				"name": "setSIGHFinanceFeeCollector",
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
@@ -562,6 +577,21 @@
 				"payable": false,
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_SIGHVolatilityHarvester",
+						"type": "address"
+					}
+				],
+				"name": "setSIGHVolatilityHarvesterImpl",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -587,10 +617,10 @@
 	},
 	"sources": {
 		"localhost/contracts/Configuration/IGlobalAddressesProvider.sol": {
-			"keccak256": "0xefeb61dea52cfa0dcc34ea94d1f402389f598cf8ba238a7a6473cced72d2b73d",
+			"keccak256": "0x50e848216e5d50ed34ab3bc9f078dbd6f01feb799bd464d6ce45b851cc4f8792",
 			"urls": [
-				"bzz-raw://a8e77e69d2855a84c0f1ab2e833ecb6656f46512ac4583e2ea7c8c5aa800f655",
-				"dweb:/ipfs/Qme7SjV9Ax6nPoirbgg8WBQ2UxTQESUC6KbDNSwcrzVyp9"
+				"bzz-raw://b163b787cdcb938e25ed747ddaf41e2b1d62ffccba73bd2aa29c066b604f8162",
+				"dweb:/ipfs/QmY7zppmMwqaKLVJaM3D2tMhG4xw3iDdnbayiCwG792qDX"
 			]
 		}
 	},

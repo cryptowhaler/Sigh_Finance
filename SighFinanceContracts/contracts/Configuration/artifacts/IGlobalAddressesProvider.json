@@ -60,11 +60,12 @@
 			"getPriceOracle()": "fca513a8",
 			"getSIGHAddress()": "841aa40c",
 			"getSIGHFinanceConfigurator()": "db49224b",
+			"getSIGHFinanceFeeCollector()": "145d02f0",
 			"getSIGHFinanceManager()": "87854354",
-			"getSIGHMechanismHandler()": "a0375c6d",
 			"getSIGHSpeedController()": "ab3802cb",
 			"getSIGHStaking()": "1db4f569",
 			"getSIGHTreasury()": "59e6130c",
+			"getSIGHVolatilityHarvester()": "d72e2802",
 			"setFeeProviderImpl(address)": "2a62c636",
 			"setLendingPoolConfiguratorImpl(address)": "c12542df",
 			"setLendingPoolCoreImpl(address)": "1c827204",
@@ -78,10 +79,11 @@
 			"setPriceOracle(address)": "530e784f",
 			"setSIGHAddress(address)": "723130ac",
 			"setSIGHFinanceConfiguratorImpl(address)": "832b705a",
-			"setSIGHMechanismHandlerImpl(address)": "f425474d",
+			"setSIGHFinanceFeeCollector(address)": "39c06e28",
 			"setSIGHSpeedController(address)": "d557d56d",
 			"setSIGHStaking(address)": "343c1596",
-			"setSIGHTreasuryImpl(address)": "c5b3f337"
+			"setSIGHTreasuryImpl(address)": "c5b3f337",
+			"setSIGHVolatilityHarvesterImpl(address)": "39ac577e"
 		}
 	},
 	"abi": [
@@ -316,7 +318,7 @@
 		{
 			"constant": true,
 			"inputs": [],
-			"name": "getSIGHFinanceManager",
+			"name": "getSIGHFinanceFeeCollector",
 			"outputs": [
 				{
 					"internalType": "address",
@@ -331,7 +333,7 @@
 		{
 			"constant": true,
 			"inputs": [],
-			"name": "getSIGHMechanismHandler",
+			"name": "getSIGHFinanceManager",
 			"outputs": [
 				{
 					"internalType": "address",
@@ -377,6 +379,21 @@
 			"constant": true,
 			"inputs": [],
 			"name": "getSIGHTreasury",
+			"outputs": [
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "getSIGHVolatilityHarvester",
 			"outputs": [
 				{
 					"internalType": "address",
@@ -588,11 +605,11 @@
 			"inputs": [
 				{
 					"internalType": "address",
-					"name": "_SIGHVolatilityHarvester",
+					"name": "_feeCollector",
 					"type": "address"
 				}
 			],
-			"name": "setSIGHMechanismHandlerImpl",
+			"name": "setSIGHFinanceFeeCollector",
 			"outputs": [],
 			"payable": false,
 			"stateMutability": "nonpayable",
@@ -638,6 +655,21 @@
 				}
 			],
 			"name": "setSIGHTreasuryImpl",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_SIGHVolatilityHarvester",
+					"type": "address"
+				}
+			],
+			"name": "setSIGHVolatilityHarvesterImpl",
 			"outputs": [],
 			"payable": false,
 			"stateMutability": "nonpayable",
