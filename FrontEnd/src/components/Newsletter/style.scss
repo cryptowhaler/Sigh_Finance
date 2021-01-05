@@ -1,0 +1,158 @@
+
+  .container {
+    box-sizing: content-box;
+  }
+
+  .text-slate {
+    color: rgb(82, 95, 127);
+  }
+  
+  .text-slate-dark {
+    color: rgb(50, 50, 93);
+  }
+  
+  .heading-big {
+    font-weight: 600;
+    font-size: 1.25rem;
+    line-height: 27px;
+  }
+
+  .newsletter {
+    position: relative;
+  }
+  
+  .contact-container {
+    margin-top: -450px;
+    box-sizing: border-box;
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+  
+  .contact-wrapper {
+    border-radius: 20px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(107, 83, 254, 0.1) 0px 0px 94px 6px;
+  }
+  
+  .footer-extender {
+    margin-top: -210px;
+  }
+  
+  .contact-container__email-bg {
+    font-weight: 500;
+    color: rgb(52, 61, 72);
+    background: rgb(243, 242, 250);
+    padding: 5px 15px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(233, 227, 254);
+    border-radius: 10px;
+  }
+  
+  .contact-container__email-input {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    display: block;
+  }
+  
+  .contact-container__submit {
+    background-color: rgb(106, 82, 253);
+    border-radius: 6px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 500;
+    justify-content: center;
+    min-height: 46px;
+    min-width: 48px;
+  }
+  
+  .page-map li a {
+    text-decoration: none;
+    font-size: 0.875rem;
+  }
+  
+  @media (min-width: 992px) {
+    .heading-bigger {
+      font-size: 2.5rem;
+      font-weight: bold;
+      line-height: 3.5rem;
+    }
+  
+    .contact-container__submit {
+      position: absolute;
+      right: 27px;
+      height: 60px;
+      top: 12px;
+      line-height: 1rem;
+    }
+  }
+  
+  @media (max-width: 1440px) {
+    .transactions {
+      padding: 80px 0px 50px;
+    }
+  
+    .page-map {
+      padding-top: 80px;
+    }
+  }
+  
+  @media (max-width: 1200px) {
+    #testimonials {
+      margin-top: -90px;
+      font-size: 150%;
+    }
+  
+    .footer-extender {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .owl-two img {
+      height: auto;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    #testimonials .testimonials-carousel {
+      width: 90%;
+    }
+  
+    .transactions {
+      padding: 80px 0px 0px;
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .container {
+      box-sizing: border-box;
+    }
+  
+    #testimonials {
+      margin-top: 50px;
+    }
+  }
+  
+  @media (max-width: 340px) {
+    .container {
+      box-sizing: border-box;
+    }
+  
+    #testimonials {
+      margin-top: 50px;
+    }
+  
+    .download-wrapper img:last-of-type {
+      margin-top: 1rem;
+    }
+  }
+  
+
+
+  

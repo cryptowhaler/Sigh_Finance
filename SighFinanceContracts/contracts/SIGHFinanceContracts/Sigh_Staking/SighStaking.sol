@@ -87,7 +87,7 @@ contract SighStaking is  VersionedInitializable, Exponential  {
     }
 
     modifier onlySIGHVolatilityHarvester {
-        require(addressesProvider.getSIGHMechanismHandler() == msg.sender, "The caller must be the SIGH Distribution Handler Contract");
+        require(addressesProvider.getSIGHVolatilityHarvester() == msg.sender, "The caller must be the SIGH Distribution Handler Contract");
         _;
     }
     

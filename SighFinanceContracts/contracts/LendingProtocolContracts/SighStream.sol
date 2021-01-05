@@ -107,7 +107,7 @@ contract SighStream is ISighStream, VersionedInitializable {
     function initialize(IGlobalAddressesProvider _globalAddressesProvider, address _underlyingAsset, address _iTokenAddress) public initializer {
         globalAddressesProvider = _globalAddressesProvider;
         core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
-        SIGHVolatilityHarvesterContract = ISIGHVolatilityHarvester(globalAddressesProvider.getSIGHMechanismHandler());
+        SIGHVolatilityHarvesterContract = ISIGHVolatilityHarvester(globalAddressesProvider.getSIGHVolatilityHarvester());
         iToken = ITokenInterface(_iTokenAddress) ;
 
         underlyingInstrumentAddress = _underlyingAsset;

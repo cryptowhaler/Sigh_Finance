@@ -472,7 +472,7 @@
     {
       "constant": true,
       "inputs": [],
-      "name": "getSIGHMechanismHandler",
+      "name": "getSIGHVolatilityHarvester",
       "outputs": [
         {
           "internalType": "address",
@@ -493,7 +493,7 @@
           "type": "address"
         }
       ],
-      "name": "setSIGHMechanismHandlerImpl",
+      "name": "setSIGHVolatilityHarvesterImpl",
       "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
@@ -590,25 +590,25 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[],\"name\":\"acceptLendingPoolManager\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"acceptSIGHFinanceManager\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getFeeProvider\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLendingPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLendingPoolConfigurator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLendingPoolCore\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLendingPoolDataProvider\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLendingPoolLiquidationManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLendingPoolManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLendingPoolParametersProvider\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLendingRateOracle\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getPendingLendingPoolManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getPendingSIGHFinanceManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getPriceOracle\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getSIGHAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getSIGHFinanceConfigurator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getSIGHFinanceFeeCollector\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getSIGHFinanceManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getSIGHMechanismHandler\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getSIGHSpeedController\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getSIGHStaking\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getSIGHTreasury\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_feeProvider\",\"type\":\"address\"}],\"name\":\"setFeeProviderImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_configurator\",\"type\":\"address\"}],\"name\":\"setLendingPoolConfiguratorImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_lendingPoolCore\",\"type\":\"address\"}],\"name\":\"setLendingPoolCoreImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_provider\",\"type\":\"address\"}],\"name\":\"setLendingPoolDataProviderImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_pool\",\"type\":\"address\"}],\"name\":\"setLendingPoolImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_manager\",\"type\":\"address\"}],\"name\":\"setLendingPoolLiquidationManager\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_parametersProvider\",\"type\":\"address\"}],\"name\":\"setLendingPoolParametersProviderImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_lendingRateOracle\",\"type\":\"address\"}],\"name\":\"setLendingRateOracle\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_pendinglendingPoolManager\",\"type\":\"address\"}],\"name\":\"setPendingLendingPoolManager\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_PendingSIGHFinanceManager\",\"type\":\"address\"}],\"name\":\"setPendingSIGHFinanceManager\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_priceOracle\",\"type\":\"address\"}],\"name\":\"setPriceOracle\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"sighAddress\",\"type\":\"address\"}],\"name\":\"setSIGHAddress\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"sighAddress\",\"type\":\"address\"}],\"name\":\"setSIGHFinanceConfiguratorImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_feeCollector\",\"type\":\"address\"}],\"name\":\"setSIGHFinanceFeeCollector\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_SIGHVolatilityHarvester\",\"type\":\"address\"}],\"name\":\"setSIGHMechanismHandlerImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_SIGHSpeedController\",\"type\":\"address\"}],\"name\":\"setSIGHSpeedController\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_SIGHVolatilityHarvester\",\"type\":\"address\"}],\"name\":\"setSIGHStaking\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_SIGHTreasury\",\"type\":\"address\"}],\"name\":\"setSIGHTreasuryImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{},\"title\":\"GlobalAddressesProvider interface\"},\"userdoc\":{\"methods\":{},\"notice\":\"provides the interface to fetch the LendingPoolCore address\"}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Configuration/IGlobalAddressesProvider.sol\":\"IGlobalAddressesProvider\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Configuration/IGlobalAddressesProvider.sol\":{\"keccak256\":\"0x30385d394fe30ea120fd04ef3d9f3e6006a90d08c6795ed9b3c586fb98a56512\",\"urls\":[\"bzz-raw://433194f95571c81d390832741a81d152e40c540722354e4f3c914d83600983a4\",\"dweb:/ipfs/QmPwRF6AHfvUqco3YP9XZCe818juptqY5UUD75XQwmqg5u\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[],\"name\":\"acceptLendingPoolManager\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"acceptSIGHFinanceManager\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getFeeProvider\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLendingPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLendingPoolConfigurator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLendingPoolCore\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLendingPoolDataProvider\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLendingPoolLiquidationManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLendingPoolManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLendingPoolParametersProvider\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getLendingRateOracle\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getPendingLendingPoolManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getPendingSIGHFinanceManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getPriceOracle\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getSIGHAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getSIGHFinanceConfigurator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getSIGHFinanceFeeCollector\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getSIGHFinanceManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getSIGHSpeedController\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getSIGHStaking\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getSIGHTreasury\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getSIGHVolatilityHarvester\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_feeProvider\",\"type\":\"address\"}],\"name\":\"setFeeProviderImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_configurator\",\"type\":\"address\"}],\"name\":\"setLendingPoolConfiguratorImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_lendingPoolCore\",\"type\":\"address\"}],\"name\":\"setLendingPoolCoreImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_provider\",\"type\":\"address\"}],\"name\":\"setLendingPoolDataProviderImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_pool\",\"type\":\"address\"}],\"name\":\"setLendingPoolImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_manager\",\"type\":\"address\"}],\"name\":\"setLendingPoolLiquidationManager\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_parametersProvider\",\"type\":\"address\"}],\"name\":\"setLendingPoolParametersProviderImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_lendingRateOracle\",\"type\":\"address\"}],\"name\":\"setLendingRateOracle\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_pendinglendingPoolManager\",\"type\":\"address\"}],\"name\":\"setPendingLendingPoolManager\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_PendingSIGHFinanceManager\",\"type\":\"address\"}],\"name\":\"setPendingSIGHFinanceManager\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_priceOracle\",\"type\":\"address\"}],\"name\":\"setPriceOracle\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"sighAddress\",\"type\":\"address\"}],\"name\":\"setSIGHAddress\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"sighAddress\",\"type\":\"address\"}],\"name\":\"setSIGHFinanceConfiguratorImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_feeCollector\",\"type\":\"address\"}],\"name\":\"setSIGHFinanceFeeCollector\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_SIGHSpeedController\",\"type\":\"address\"}],\"name\":\"setSIGHSpeedController\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_SIGHVolatilityHarvester\",\"type\":\"address\"}],\"name\":\"setSIGHStaking\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_SIGHTreasury\",\"type\":\"address\"}],\"name\":\"setSIGHTreasuryImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_SIGHVolatilityHarvester\",\"type\":\"address\"}],\"name\":\"setSIGHVolatilityHarvesterImpl\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{},\"title\":\"GlobalAddressesProvider interface\"},\"userdoc\":{\"methods\":{},\"notice\":\"provides the interface to fetch the LendingPoolCore address\"}},\"settings\":{\"compilationTarget\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Configuration/IGlobalAddressesProvider.sol\":\"IGlobalAddressesProvider\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Configuration/IGlobalAddressesProvider.sol\":{\"keccak256\":\"0x50e848216e5d50ed34ab3bc9f078dbd6f01feb799bd464d6ce45b851cc4f8792\",\"urls\":[\"bzz-raw://b163b787cdcb938e25ed747ddaf41e2b1d62ffccba73bd2aa29c066b604f8162\",\"dweb:/ipfs/QmY7zppmMwqaKLVJaM3D2tMhG4xw3iDdnbayiCwG792qDX\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.5.6;\n\n/**\n@title GlobalAddressesProvider interface\n@notice provides the interface to fetch the LendingPoolCore address\n */\n\ninterface IGlobalAddressesProvider  {\n    \n// ########################################################################################                                                   \n// #########  PROTOCOL MANAGERS ( LendingPool Manager and SighFinance Manager ) ###########                                              \n// ########################################################################################\n\n    function getLendingPoolManager() external view returns (address);\n    function getPendingLendingPoolManager() external view returns (address);\n\n    function setPendingLendingPoolManager(address _pendinglendingPoolManager) external;    \n    function acceptLendingPoolManager() external;    \n\n    function getSIGHFinanceManager() external view returns (address);\n    function getPendingSIGHFinanceManager() external view returns (address);\n\n    function setPendingSIGHFinanceManager(address _PendingSIGHFinanceManager) external;    \n    function acceptSIGHFinanceManager() external;    \n\n// #########################################################################\n// ####___________ LENDING POOL PROTOCOL CONTRACTS _____________############\n// ########## 1. LendingPoolConfigurator (Upgradagble) #####################\n// ########## 2. LendingPoolCore (Upgradagble) #############################\n// ########## 3. LendingPool (Upgradagble) #################################\n// ########## 4. LendingPoolDataProvider (Upgradagble) #####################\n// ########## 5. LendingPoolParametersProvider (Upgradagble) ###############\n// ########## 6. FeeProvider (Upgradagble) #################################\n// ########## 7. LendingPoolLiquidationManager (Directly Changed) ##########\n// ########## 8. LendingRateOracle (Directly Changed) ######################\n// #########################################################################\n\n    function getLendingPoolConfigurator() external view returns (address);\n    function setLendingPoolConfiguratorImpl(address _configurator) external;\n\n    function getLendingPoolCore() external view returns (address payable);\n    function setLendingPoolCoreImpl(address _lendingPoolCore) external;\n\n    function getLendingPool() external view returns (address);\n    function setLendingPoolImpl(address _pool) external;\n\n    function getLendingPoolDataProvider() external view returns (address);\n    function setLendingPoolDataProviderImpl(address _provider) external;\n\n    function getLendingPoolParametersProvider() external view returns (address);\n    function setLendingPoolParametersProviderImpl(address _parametersProvider) external;\n\n    function getFeeProvider() external view returns (address);\n    function setFeeProviderImpl(address _feeProvider) external;\n\n    function getLendingPoolLiquidationManager() external view returns (address);\n    function setLendingPoolLiquidationManager(address _manager) external;\n\n    function getLendingRateOracle() external view returns (address);\n    function setLendingRateOracle(address _lendingRateOracle) external;\n\n// ####################################################################################\n// ####___________ SIGH FINANCE RELATED CONTRACTS _____________########################\n// ########## 1. SIGH (Initialized only once) #########################################\n// ########## 2. SIGH Finance Configurator (Upgradagble) ################################\n// ########## 2. SIGH Speed Controller (Initialized only once) ######################## \n// ########## 3. SIGH Treasury (Upgradagble) ###########################################\n// ########## 4. SIGH Mechanism Handler (Upgradagble) ###################################\n// ########## 5. SIGH Staking (Upgradagble) ###################################\n// ####################################################################################\n\n    function getSIGHAddress() external view returns (address);\n    function setSIGHAddress(address sighAddress) external;    \n\n    function getSIGHFinanceConfigurator() external view returns (address);\n    function setSIGHFinanceConfiguratorImpl(address sighAddress) external;    \n    \n    function getSIGHSpeedController() external view returns (address);\n    function setSIGHSpeedController(address _SIGHSpeedController) external;\n\n    function getSIGHTreasury() external view returns (address);                                 //  ADDED FOR SIGH FINANCE \n    function setSIGHTreasuryImpl(address _SIGHTreasury) external;                                   //  ADDED FOR SIGH FINANCE \n\n    function getSIGHMechanismHandler() external view returns (address);                      //  ADDED FOR SIGH FINANCE \n    function setSIGHMechanismHandlerImpl(address _SIGHVolatilityHarvester) external;             //  ADDED FOR SIGH FINANCE \n\n    function getSIGHStaking() external view returns (address);                      //  ADDED FOR SIGH FINANCE \n    function setSIGHStaking(address _SIGHVolatilityHarvester) external;             //  ADDED FOR SIGH FINANCE \n\n// #######################################################\n// ####___________ PRICE ORACLE CONTRACT _____________####\n// ####_____ SIGH FINANCE FEE COLLECTOR : ADDRESS ____####\n// #######################################################\n\n    function getPriceOracle() external view returns (address);\n    function setPriceOracle(address _priceOracle) external;\n\n\n    // SIGH FINANCE FEE COLLECTOR - BORROWING / FLASH LOAN FEE TRANSERRED TO THIS ADDRESS\n    function getSIGHFinanceFeeCollector() external view returns (address) ;\n    function setSIGHFinanceFeeCollector(address _feeCollector) external ;\n\n}",
+  "source": "pragma solidity ^0.5.6;\n\n/**\n@title GlobalAddressesProvider interface\n@notice provides the interface to fetch the LendingPoolCore address\n */\n\ninterface IGlobalAddressesProvider  {\n    \n// ########################################################################################                                                   \n// #########  PROTOCOL MANAGERS ( LendingPool Manager and SighFinance Manager ) ###########                                              \n// ########################################################################################\n\n    function getLendingPoolManager() external view returns (address);\n    function getPendingLendingPoolManager() external view returns (address);\n\n    function setPendingLendingPoolManager(address _pendinglendingPoolManager) external;    \n    function acceptLendingPoolManager() external;    \n\n    function getSIGHFinanceManager() external view returns (address);\n    function getPendingSIGHFinanceManager() external view returns (address);\n\n    function setPendingSIGHFinanceManager(address _PendingSIGHFinanceManager) external;    \n    function acceptSIGHFinanceManager() external;    \n\n// #########################################################################\n// ####___________ LENDING POOL PROTOCOL CONTRACTS _____________############\n// ########## 1. LendingPoolConfigurator (Upgradagble) #####################\n// ########## 2. LendingPoolCore (Upgradagble) #############################\n// ########## 3. LendingPool (Upgradagble) #################################\n// ########## 4. LendingPoolDataProvider (Upgradagble) #####################\n// ########## 5. LendingPoolParametersProvider (Upgradagble) ###############\n// ########## 6. FeeProvider (Upgradagble) #################################\n// ########## 7. LendingPoolLiquidationManager (Directly Changed) ##########\n// ########## 8. LendingRateOracle (Directly Changed) ######################\n// #########################################################################\n\n    function getLendingPoolConfigurator() external view returns (address);\n    function setLendingPoolConfiguratorImpl(address _configurator) external;\n\n    function getLendingPoolCore() external view returns (address payable);\n    function setLendingPoolCoreImpl(address _lendingPoolCore) external;\n\n    function getLendingPool() external view returns (address);\n    function setLendingPoolImpl(address _pool) external;\n\n    function getLendingPoolDataProvider() external view returns (address);\n    function setLendingPoolDataProviderImpl(address _provider) external;\n\n    function getLendingPoolParametersProvider() external view returns (address);\n    function setLendingPoolParametersProviderImpl(address _parametersProvider) external;\n\n    function getFeeProvider() external view returns (address);\n    function setFeeProviderImpl(address _feeProvider) external;\n\n    function getLendingPoolLiquidationManager() external view returns (address);\n    function setLendingPoolLiquidationManager(address _manager) external;\n\n    function getLendingRateOracle() external view returns (address);\n    function setLendingRateOracle(address _lendingRateOracle) external;\n\n// ####################################################################################\n// ####___________ SIGH FINANCE RELATED CONTRACTS _____________########################\n// ########## 1. SIGH (Initialized only once) #########################################\n// ########## 2. SIGH Finance Configurator (Upgradagble) ################################\n// ########## 2. SIGH Speed Controller (Initialized only once) ######################## \n// ########## 3. SIGH Treasury (Upgradagble) ###########################################\n// ########## 4. SIGH Mechanism Handler (Upgradagble) ###################################\n// ########## 5. SIGH Staking (Upgradagble) ###################################\n// ####################################################################################\n\n    function getSIGHAddress() external view returns (address);\n    function setSIGHAddress(address sighAddress) external;    \n\n    function getSIGHFinanceConfigurator() external view returns (address);\n    function setSIGHFinanceConfiguratorImpl(address sighAddress) external;    \n    \n    function getSIGHSpeedController() external view returns (address);\n    function setSIGHSpeedController(address _SIGHSpeedController) external;\n\n    function getSIGHTreasury() external view returns (address);                                 //  ADDED FOR SIGH FINANCE \n    function setSIGHTreasuryImpl(address _SIGHTreasury) external;                                   //  ADDED FOR SIGH FINANCE \n\n    function getSIGHVolatilityHarvester() external view returns (address);                      //  ADDED FOR SIGH FINANCE \n    function setSIGHVolatilityHarvesterImpl(address _SIGHVolatilityHarvester) external;             //  ADDED FOR SIGH FINANCE \n\n    function getSIGHStaking() external view returns (address);                      //  ADDED FOR SIGH FINANCE \n    function setSIGHStaking(address _SIGHVolatilityHarvester) external;             //  ADDED FOR SIGH FINANCE \n\n// #######################################################\n// ####___________ PRICE ORACLE CONTRACT _____________####\n// ####_____ SIGH FINANCE FEE COLLECTOR : ADDRESS ____####\n// #######################################################\n\n    function getPriceOracle() external view returns (address);\n    function setPriceOracle(address _priceOracle) external;\n\n\n    // SIGH FINANCE FEE COLLECTOR - BORROWING / FLASH LOAN FEE TRANSERRED TO THIS ADDRESS\n    function getSIGHFinanceFeeCollector() external view returns (address) ;\n    function setSIGHFinanceFeeCollector(address _feeCollector) external ;\n\n}",
   "sourcePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Configuration/IGlobalAddressesProvider.sol",
   "ast": {
     "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Configuration/IGlobalAddressesProvider.sol",
     "exportedSymbols": {
       "IGlobalAddressesProvider": [
-        1135
+        1140
       ]
     },
-    "id": 1136,
+    "id": 1141,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 938,
+        "id": 943,
         "literals": [
           "solidity",
           "^",
@@ -624,9 +624,9 @@
         "contractKind": "interface",
         "documentation": "@title GlobalAddressesProvider interface\n@notice provides the interface to fetch the LendingPoolCore address",
         "fullyImplemented": false,
-        "id": 1135,
+        "id": 1140,
         "linearizedBaseContracts": [
-          1135
+          1140
         ],
         "name": "IGlobalAddressesProvider",
         "nodeType": "ContractDefinition",
@@ -634,28 +634,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 943,
+            "id": 948,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLendingPoolManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 939,
+              "id": 944,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "594:2:2"
             },
             "returnParameters": {
-              "id": 942,
+              "id": 947,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 941,
+                  "id": 946,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 943,
+                  "scope": 948,
                   "src": "620:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -664,7 +664,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 940,
+                    "id": 945,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "620:7:2",
@@ -680,7 +680,7 @@
               ],
               "src": "619:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "564:65:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -689,28 +689,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 948,
+            "id": 953,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getPendingLendingPoolManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 944,
+              "id": 949,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "671:2:2"
             },
             "returnParameters": {
-              "id": 947,
+              "id": 952,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 946,
+                  "id": 951,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 948,
+                  "scope": 953,
                   "src": "697:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -719,7 +719,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 945,
+                    "id": 950,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "697:7:2",
@@ -735,7 +735,7 @@
               ],
               "src": "696:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "634:72:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -744,22 +744,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 953,
+            "id": 958,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setPendingLendingPoolManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 951,
+              "id": 956,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 950,
+                  "id": 955,
                   "name": "_pendinglendingPoolManager",
                   "nodeType": "VariableDeclaration",
-                  "scope": 953,
+                  "scope": 958,
                   "src": "750:34:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -768,7 +768,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 949,
+                    "id": 954,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "750:7:2",
@@ -785,40 +785,13 @@
               "src": "749:36:2"
             },
             "returnParameters": {
-              "id": 952,
+              "id": 957,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "794:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "712:83:2",
-            "stateMutability": "nonpayable",
-            "superFunction": null,
-            "visibility": "external"
-          },
-          {
-            "body": null,
-            "documentation": null,
-            "id": 956,
-            "implemented": false,
-            "kind": "function",
-            "modifiers": [],
-            "name": "acceptLendingPoolManager",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 954,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "837:2:2"
-            },
-            "returnParameters": {
-              "id": 955,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "848:0:2"
-            },
-            "scope": 1135,
-            "src": "804:45:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -830,24 +803,51 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
+            "name": "acceptLendingPoolManager",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 959,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "837:2:2"
+            },
+            "returnParameters": {
+              "id": 960,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "848:0:2"
+            },
+            "scope": 1140,
+            "src": "804:45:2",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 966,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
             "name": "getSIGHFinanceManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 957,
+              "id": 962,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "889:2:2"
             },
             "returnParameters": {
-              "id": 960,
+              "id": 965,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 959,
+                  "id": 964,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 961,
+                  "scope": 966,
                   "src": "915:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -856,7 +856,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 958,
+                    "id": 963,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "915:7:2",
@@ -872,7 +872,7 @@
               ],
               "src": "914:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "859:65:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -881,28 +881,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 966,
+            "id": 971,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getPendingSIGHFinanceManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 962,
+              "id": 967,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "966:2:2"
             },
             "returnParameters": {
-              "id": 965,
+              "id": 970,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 964,
+                  "id": 969,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 966,
+                  "scope": 971,
                   "src": "992:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -911,7 +911,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 963,
+                    "id": 968,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "992:7:2",
@@ -927,7 +927,7 @@
               ],
               "src": "991:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "929:72:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -936,22 +936,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 971,
+            "id": 976,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setPendingSIGHFinanceManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 969,
+              "id": 974,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 968,
+                  "id": 973,
                   "name": "_PendingSIGHFinanceManager",
                   "nodeType": "VariableDeclaration",
-                  "scope": 971,
+                  "scope": 976,
                   "src": "1045:34:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -960,7 +960,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 967,
+                    "id": 972,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1045:7:2",
@@ -977,40 +977,13 @@
               "src": "1044:36:2"
             },
             "returnParameters": {
-              "id": 970,
+              "id": 975,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1089:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "1007:83:2",
-            "stateMutability": "nonpayable",
-            "superFunction": null,
-            "visibility": "external"
-          },
-          {
-            "body": null,
-            "documentation": null,
-            "id": 974,
-            "implemented": false,
-            "kind": "function",
-            "modifiers": [],
-            "name": "acceptSIGHFinanceManager",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 972,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "1132:2:2"
-            },
-            "returnParameters": {
-              "id": 973,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "1143:0:2"
-            },
-            "scope": 1135,
-            "src": "1099:45:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -1022,24 +995,51 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
+            "name": "acceptSIGHFinanceManager",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 977,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1132:2:2"
+            },
+            "returnParameters": {
+              "id": 978,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1143:0:2"
+            },
+            "scope": 1140,
+            "src": "1099:45:2",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 984,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
             "name": "getLendingPoolConfigurator",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 975,
+              "id": 980,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2037:2:2"
             },
             "returnParameters": {
-              "id": 978,
+              "id": 983,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 977,
+                  "id": 982,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 979,
+                  "scope": 984,
                   "src": "2063:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1048,7 +1048,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 976,
+                    "id": 981,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2063:7:2",
@@ -1064,7 +1064,7 @@
               ],
               "src": "2062:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2002:70:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -1073,22 +1073,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 984,
+            "id": 989,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setLendingPoolConfiguratorImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 982,
+              "id": 987,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 981,
+                  "id": 986,
                   "name": "_configurator",
                   "nodeType": "VariableDeclaration",
-                  "scope": 984,
+                  "scope": 989,
                   "src": "2117:21:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1097,7 +1097,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 980,
+                    "id": 985,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2117:7:2",
@@ -1114,12 +1114,12 @@
               "src": "2116:23:2"
             },
             "returnParameters": {
-              "id": 983,
+              "id": 988,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2148:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2077:72:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -1128,28 +1128,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 989,
+            "id": 994,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLendingPoolCore",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 985,
+              "id": 990,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2182:2:2"
             },
             "returnParameters": {
-              "id": 988,
+              "id": 993,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 987,
+                  "id": 992,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 989,
+                  "scope": 994,
                   "src": "2208:15:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1158,7 +1158,7 @@
                     "typeString": "address payable"
                   },
                   "typeName": {
-                    "id": 986,
+                    "id": 991,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2208:15:2",
@@ -1174,7 +1174,7 @@
               ],
               "src": "2207:17:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2155:70:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -1183,22 +1183,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 994,
+            "id": 999,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setLendingPoolCoreImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 992,
+              "id": 997,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 991,
+                  "id": 996,
                   "name": "_lendingPoolCore",
                   "nodeType": "VariableDeclaration",
-                  "scope": 994,
+                  "scope": 999,
                   "src": "2262:24:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1207,7 +1207,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 990,
+                    "id": 995,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2262:7:2",
@@ -1224,12 +1224,12 @@
               "src": "2261:26:2"
             },
             "returnParameters": {
-              "id": 993,
+              "id": 998,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2296:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2230:67:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -1238,28 +1238,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 999,
+            "id": 1004,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLendingPool",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 995,
+              "id": 1000,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2326:2:2"
             },
             "returnParameters": {
-              "id": 998,
+              "id": 1003,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 997,
+                  "id": 1002,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 999,
+                  "scope": 1004,
                   "src": "2352:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1268,7 +1268,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 996,
+                    "id": 1001,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2352:7:2",
@@ -1284,7 +1284,7 @@
               ],
               "src": "2351:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2303:58:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -1293,22 +1293,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1004,
+            "id": 1009,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setLendingPoolImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1002,
+              "id": 1007,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1001,
+                  "id": 1006,
                   "name": "_pool",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1004,
+                  "scope": 1009,
                   "src": "2394:13:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1317,7 +1317,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1000,
+                    "id": 1005,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2394:7:2",
@@ -1334,12 +1334,12 @@
               "src": "2393:15:2"
             },
             "returnParameters": {
-              "id": 1003,
+              "id": 1008,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2417:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2366:52:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -1348,28 +1348,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1009,
+            "id": 1014,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLendingPoolDataProvider",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1005,
+              "id": 1010,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2459:2:2"
             },
             "returnParameters": {
-              "id": 1008,
+              "id": 1013,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1007,
+                  "id": 1012,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1009,
+                  "scope": 1014,
                   "src": "2485:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1378,7 +1378,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1006,
+                    "id": 1011,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2485:7:2",
@@ -1394,7 +1394,7 @@
               ],
               "src": "2484:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2424:70:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -1403,22 +1403,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1014,
+            "id": 1019,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setLendingPoolDataProviderImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1012,
+              "id": 1017,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1011,
+                  "id": 1016,
                   "name": "_provider",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1014,
+                  "scope": 1019,
                   "src": "2539:17:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1427,7 +1427,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1010,
+                    "id": 1015,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2539:7:2",
@@ -1444,12 +1444,12 @@
               "src": "2538:19:2"
             },
             "returnParameters": {
-              "id": 1013,
+              "id": 1018,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2566:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2499:68:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -1458,28 +1458,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1019,
+            "id": 1024,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLendingPoolParametersProvider",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1015,
+              "id": 1020,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2614:2:2"
             },
             "returnParameters": {
-              "id": 1018,
+              "id": 1023,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1017,
+                  "id": 1022,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1019,
+                  "scope": 1024,
                   "src": "2640:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1488,7 +1488,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1016,
+                    "id": 1021,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2640:7:2",
@@ -1504,7 +1504,7 @@
               ],
               "src": "2639:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2573:76:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -1513,22 +1513,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1024,
+            "id": 1029,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setLendingPoolParametersProviderImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1022,
+              "id": 1027,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1021,
+                  "id": 1026,
                   "name": "_parametersProvider",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1024,
+                  "scope": 1029,
                   "src": "2700:27:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1537,7 +1537,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1020,
+                    "id": 1025,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2700:7:2",
@@ -1554,12 +1554,12 @@
               "src": "2699:29:2"
             },
             "returnParameters": {
-              "id": 1023,
+              "id": 1028,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2737:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2654:84:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -1568,28 +1568,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1029,
+            "id": 1034,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getFeeProvider",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1025,
+              "id": 1030,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2767:2:2"
             },
             "returnParameters": {
-              "id": 1028,
+              "id": 1033,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1027,
+                  "id": 1032,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1029,
+                  "scope": 1034,
                   "src": "2793:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1598,7 +1598,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1026,
+                    "id": 1031,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2793:7:2",
@@ -1614,7 +1614,7 @@
               ],
               "src": "2792:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2744:58:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -1623,22 +1623,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1034,
+            "id": 1039,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setFeeProviderImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1032,
+              "id": 1037,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1031,
+                  "id": 1036,
                   "name": "_feeProvider",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1034,
+                  "scope": 1039,
                   "src": "2835:20:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1647,7 +1647,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1030,
+                    "id": 1035,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2835:7:2",
@@ -1664,12 +1664,12 @@
               "src": "2834:22:2"
             },
             "returnParameters": {
-              "id": 1033,
+              "id": 1038,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2865:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2807:59:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -1678,28 +1678,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1039,
+            "id": 1044,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLendingPoolLiquidationManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1035,
+              "id": 1040,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2913:2:2"
             },
             "returnParameters": {
-              "id": 1038,
+              "id": 1043,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1037,
+                  "id": 1042,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1039,
+                  "scope": 1044,
                   "src": "2939:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1708,7 +1708,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1036,
+                    "id": 1041,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2939:7:2",
@@ -1724,7 +1724,7 @@
               ],
               "src": "2938:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2872:76:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -1733,22 +1733,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1044,
+            "id": 1049,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setLendingPoolLiquidationManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1042,
+              "id": 1047,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1041,
+                  "id": 1046,
                   "name": "_manager",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1044,
+                  "scope": 1049,
                   "src": "2995:16:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1757,7 +1757,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1040,
+                    "id": 1045,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2995:7:2",
@@ -1774,12 +1774,12 @@
               "src": "2994:18:2"
             },
             "returnParameters": {
-              "id": 1043,
+              "id": 1048,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "3021:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2953:69:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -1788,28 +1788,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1049,
+            "id": 1054,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLendingRateOracle",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1045,
+              "id": 1050,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "3057:2:2"
             },
             "returnParameters": {
-              "id": 1048,
+              "id": 1053,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1047,
+                  "id": 1052,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1049,
+                  "scope": 1054,
                   "src": "3083:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1818,7 +1818,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1046,
+                    "id": 1051,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "3083:7:2",
@@ -1834,7 +1834,7 @@
               ],
               "src": "3082:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "3028:64:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -1843,22 +1843,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1054,
+            "id": 1059,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setLendingRateOracle",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1052,
+              "id": 1057,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1051,
+                  "id": 1056,
                   "name": "_lendingRateOracle",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1054,
+                  "scope": 1059,
                   "src": "3127:26:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1867,7 +1867,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1050,
+                    "id": 1055,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "3127:7:2",
@@ -1884,12 +1884,12 @@
               "src": "3126:28:2"
             },
             "returnParameters": {
-              "id": 1053,
+              "id": 1058,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "3163:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "3097:67:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -1898,28 +1898,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1059,
+            "id": 1064,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getSIGHAddress",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1055,
+              "id": 1060,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "3984:2:2"
             },
             "returnParameters": {
-              "id": 1058,
+              "id": 1063,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1057,
+                  "id": 1062,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1059,
+                  "scope": 1064,
                   "src": "4010:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1928,7 +1928,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1056,
+                    "id": 1061,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "4010:7:2",
@@ -1944,7 +1944,7 @@
               ],
               "src": "4009:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "3961:58:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -1953,22 +1953,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1064,
+            "id": 1069,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setSIGHAddress",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1062,
+              "id": 1067,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1061,
+                  "id": 1066,
                   "name": "sighAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1064,
+                  "scope": 1069,
                   "src": "4048:19:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1977,7 +1977,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1060,
+                    "id": 1065,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "4048:7:2",
@@ -1994,12 +1994,12 @@
               "src": "4047:21:2"
             },
             "returnParameters": {
-              "id": 1063,
+              "id": 1068,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "4077:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "4024:54:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -2008,28 +2008,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1069,
+            "id": 1074,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getSIGHFinanceConfigurator",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1065,
+              "id": 1070,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "4123:2:2"
             },
             "returnParameters": {
-              "id": 1068,
+              "id": 1073,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1067,
+                  "id": 1072,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1069,
+                  "scope": 1074,
                   "src": "4149:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2038,7 +2038,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1066,
+                    "id": 1071,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "4149:7:2",
@@ -2054,7 +2054,7 @@
               ],
               "src": "4148:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "4088:70:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -2063,22 +2063,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1074,
+            "id": 1079,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setSIGHFinanceConfiguratorImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1072,
+              "id": 1077,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1071,
+                  "id": 1076,
                   "name": "sighAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1074,
+                  "scope": 1079,
                   "src": "4203:19:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2087,7 +2087,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1070,
+                    "id": 1075,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "4203:7:2",
@@ -2104,12 +2104,12 @@
               "src": "4202:21:2"
             },
             "returnParameters": {
-              "id": 1073,
+              "id": 1078,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "4232:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "4163:70:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -2118,28 +2118,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1079,
+            "id": 1084,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getSIGHSpeedController",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1075,
+              "id": 1080,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "4278:2:2"
             },
             "returnParameters": {
-              "id": 1078,
+              "id": 1083,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1077,
+                  "id": 1082,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1079,
+                  "scope": 1084,
                   "src": "4304:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2148,7 +2148,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1076,
+                    "id": 1081,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "4304:7:2",
@@ -2164,7 +2164,7 @@
               ],
               "src": "4303:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "4247:66:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -2173,22 +2173,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1084,
+            "id": 1089,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setSIGHSpeedController",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1082,
+              "id": 1087,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1081,
+                  "id": 1086,
                   "name": "_SIGHSpeedController",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1084,
+                  "scope": 1089,
                   "src": "4350:28:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2197,7 +2197,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1080,
+                    "id": 1085,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "4350:7:2",
@@ -2214,12 +2214,12 @@
               "src": "4349:30:2"
             },
             "returnParameters": {
-              "id": 1083,
+              "id": 1088,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "4388:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "4318:71:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -2228,28 +2228,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1089,
+            "id": 1094,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getSIGHTreasury",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1085,
+              "id": 1090,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "4419:2:2"
             },
             "returnParameters": {
-              "id": 1088,
+              "id": 1093,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1087,
+                  "id": 1092,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1089,
+                  "scope": 1094,
                   "src": "4445:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2258,7 +2258,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1086,
+                    "id": 1091,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "4445:7:2",
@@ -2274,7 +2274,7 @@
               ],
               "src": "4444:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "4395:59:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -2283,22 +2283,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1094,
+            "id": 1099,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setSIGHTreasuryImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1092,
+              "id": 1097,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1091,
+                  "id": 1096,
                   "name": "_SIGHTreasury",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1094,
+                  "scope": 1099,
                   "src": "4548:21:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2307,7 +2307,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1090,
+                    "id": 1095,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "4548:7:2",
@@ -2324,69 +2324,14 @@
               "src": "4547:23:2"
             },
             "returnParameters": {
-              "id": 1093,
+              "id": 1098,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "4579:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "4519:61:2",
             "stateMutability": "nonpayable",
-            "superFunction": null,
-            "visibility": "external"
-          },
-          {
-            "body": null,
-            "documentation": null,
-            "id": 1099,
-            "implemented": false,
-            "kind": "function",
-            "modifiers": [],
-            "name": "getSIGHMechanismHandler",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 1095,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "4680:2:2"
-            },
-            "returnParameters": {
-              "id": 1098,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 1097,
-                  "name": "",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 1099,
-                  "src": "4706:7:2",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  },
-                  "typeName": {
-                    "id": 1096,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "4706:7:2",
-                    "stateMutability": "nonpayable",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "4705:9:2"
-            },
-            "scope": 1135,
-            "src": "4648:67:2",
-            "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           },
@@ -2397,19 +2342,25 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "setSIGHMechanismHandlerImpl",
+            "name": "getSIGHVolatilityHarvester",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1102,
+              "id": 1100,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "4683:2:2"
+            },
+            "returnParameters": {
+              "id": 1103,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1101,
-                  "name": "_SIGHVolatilityHarvester",
+                  "id": 1102,
+                  "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 1104,
-                  "src": "4806:32:2",
+                  "src": "4709:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2417,10 +2368,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1100,
+                    "id": 1101,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "4806:7:2",
+                    "src": "4709:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -2431,17 +2382,11 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "4805:34:2"
+              "src": "4708:9:2"
             },
-            "returnParameters": {
-              "id": 1103,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "4848:0:2"
-            },
-            "scope": 1135,
-            "src": "4769:80:2",
-            "stateMutability": "nonpayable",
+            "scope": 1140,
+            "src": "4648:70:2",
+            "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           },
@@ -2452,25 +2397,19 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "getSIGHStaking",
+            "name": "setSIGHVolatilityHarvesterImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1105,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "4918:2:2"
-            },
-            "returnParameters": {
-              "id": 1108,
+              "id": 1107,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1107,
-                  "name": "",
+                  "id": 1106,
+                  "name": "_SIGHVolatilityHarvester",
                   "nodeType": "VariableDeclaration",
                   "scope": 1109,
-                  "src": "4944:7:2",
+                  "src": "4812:32:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2478,10 +2417,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1106,
+                    "id": 1105,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "4944:7:2",
+                    "src": "4812:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -2492,11 +2431,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "4943:9:2"
+              "src": "4811:34:2"
             },
-            "scope": 1135,
-            "src": "4895:58:2",
-            "stateMutability": "view",
+            "returnParameters": {
+              "id": 1108,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "4854:0:2"
+            },
+            "scope": 1140,
+            "src": "4772:83:2",
+            "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           },
@@ -2507,19 +2452,25 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "setSIGHStaking",
+            "name": "getSIGHStaking",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1112,
+              "id": 1110,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "4924:2:2"
+            },
+            "returnParameters": {
+              "id": 1113,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1111,
-                  "name": "_SIGHVolatilityHarvester",
+                  "id": 1112,
+                  "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 1114,
-                  "src": "5031:32:2",
+                  "src": "4950:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2527,10 +2478,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1110,
+                    "id": 1111,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "5031:7:2",
+                    "src": "4950:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -2541,17 +2492,11 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "5030:34:2"
+              "src": "4949:9:2"
             },
-            "returnParameters": {
-              "id": 1113,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "5073:0:2"
-            },
-            "scope": 1135,
-            "src": "5007:67:2",
-            "stateMutability": "nonpayable",
+            "scope": 1140,
+            "src": "4901:58:2",
+            "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           },
@@ -2562,25 +2507,19 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "getPriceOracle",
+            "name": "setSIGHStaking",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1115,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "5380:2:2"
-            },
-            "returnParameters": {
-              "id": 1118,
+              "id": 1117,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1117,
-                  "name": "",
+                  "id": 1116,
+                  "name": "_SIGHVolatilityHarvester",
                   "nodeType": "VariableDeclaration",
                   "scope": 1119,
-                  "src": "5406:7:2",
+                  "src": "5037:32:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2588,10 +2527,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1116,
+                    "id": 1115,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "5406:7:2",
+                    "src": "5037:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -2602,11 +2541,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "5405:9:2"
+              "src": "5036:34:2"
             },
-            "scope": 1135,
-            "src": "5357:58:2",
-            "stateMutability": "view",
+            "returnParameters": {
+              "id": 1118,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "5079:0:2"
+            },
+            "scope": 1140,
+            "src": "5013:67:2",
+            "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           },
@@ -2617,19 +2562,25 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "setPriceOracle",
+            "name": "getPriceOracle",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1122,
+              "id": 1120,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "5386:2:2"
+            },
+            "returnParameters": {
+              "id": 1123,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1121,
-                  "name": "_priceOracle",
+                  "id": 1122,
+                  "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 1124,
-                  "src": "5444:20:2",
+                  "src": "5412:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2637,10 +2588,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1120,
+                    "id": 1121,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "5444:7:2",
+                    "src": "5412:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -2651,17 +2602,11 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "5443:22:2"
+              "src": "5411:9:2"
             },
-            "returnParameters": {
-              "id": 1123,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "5474:0:2"
-            },
-            "scope": 1135,
-            "src": "5420:55:2",
-            "stateMutability": "nonpayable",
+            "scope": 1140,
+            "src": "5363:58:2",
+            "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           },
@@ -2672,25 +2617,19 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "getSIGHFinanceFeeCollector",
+            "name": "setPriceOracle",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1125,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "5607:2:2"
-            },
-            "returnParameters": {
-              "id": 1128,
+              "id": 1127,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1127,
-                  "name": "",
+                  "id": 1126,
+                  "name": "_priceOracle",
                   "nodeType": "VariableDeclaration",
                   "scope": 1129,
-                  "src": "5633:7:2",
+                  "src": "5450:20:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2698,10 +2637,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1126,
+                    "id": 1125,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "5633:7:2",
+                    "src": "5450:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -2712,11 +2651,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "5632:9:2"
+              "src": "5449:22:2"
             },
-            "scope": 1135,
-            "src": "5572:71:2",
-            "stateMutability": "view",
+            "returnParameters": {
+              "id": 1128,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "5480:0:2"
+            },
+            "scope": 1140,
+            "src": "5426:55:2",
+            "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           },
@@ -2727,19 +2672,25 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "setSIGHFinanceFeeCollector",
+            "name": "getSIGHFinanceFeeCollector",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1132,
+              "id": 1130,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "5613:2:2"
+            },
+            "returnParameters": {
+              "id": 1133,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1131,
-                  "name": "_feeCollector",
+                  "id": 1132,
+                  "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 1134,
-                  "src": "5684:21:2",
+                  "src": "5639:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2747,10 +2698,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1130,
+                    "id": 1131,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "5684:7:2",
+                    "src": "5639:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -2761,39 +2712,88 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "5683:23:2"
+              "src": "5638:9:2"
+            },
+            "scope": 1140,
+            "src": "5578:71:2",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 1139,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setSIGHFinanceFeeCollector",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1137,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1136,
+                  "name": "_feeCollector",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1139,
+                  "src": "5690:21:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1135,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5690:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5689:23:2"
             },
             "returnParameters": {
-              "id": 1133,
+              "id": 1138,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "5716:0:2"
+              "src": "5722:0:2"
             },
-            "scope": 1135,
-            "src": "5648:69:2",
+            "scope": 1140,
+            "src": "5654:69:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 1136,
-        "src": "143:5577:2"
+        "scope": 1141,
+        "src": "143:5583:2"
       }
     ],
-    "src": "0:5720:2"
+    "src": "0:5726:2"
   },
   "legacyAST": {
     "absolutePath": "/Users/apple/Desktop/GITCOIN/Sigh_Finance/SighFinanceContracts/contracts/Configuration/IGlobalAddressesProvider.sol",
     "exportedSymbols": {
       "IGlobalAddressesProvider": [
-        1135
+        1140
       ]
     },
-    "id": 1136,
+    "id": 1141,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 938,
+        "id": 943,
         "literals": [
           "solidity",
           "^",
@@ -2809,9 +2809,9 @@
         "contractKind": "interface",
         "documentation": "@title GlobalAddressesProvider interface\n@notice provides the interface to fetch the LendingPoolCore address",
         "fullyImplemented": false,
-        "id": 1135,
+        "id": 1140,
         "linearizedBaseContracts": [
-          1135
+          1140
         ],
         "name": "IGlobalAddressesProvider",
         "nodeType": "ContractDefinition",
@@ -2819,28 +2819,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 943,
+            "id": 948,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLendingPoolManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 939,
+              "id": 944,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "594:2:2"
             },
             "returnParameters": {
-              "id": 942,
+              "id": 947,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 941,
+                  "id": 946,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 943,
+                  "scope": 948,
                   "src": "620:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2849,7 +2849,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 940,
+                    "id": 945,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "620:7:2",
@@ -2865,7 +2865,7 @@
               ],
               "src": "619:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "564:65:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -2874,28 +2874,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 948,
+            "id": 953,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getPendingLendingPoolManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 944,
+              "id": 949,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "671:2:2"
             },
             "returnParameters": {
-              "id": 947,
+              "id": 952,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 946,
+                  "id": 951,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 948,
+                  "scope": 953,
                   "src": "697:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2904,7 +2904,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 945,
+                    "id": 950,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "697:7:2",
@@ -2920,7 +2920,7 @@
               ],
               "src": "696:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "634:72:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -2929,22 +2929,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 953,
+            "id": 958,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setPendingLendingPoolManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 951,
+              "id": 956,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 950,
+                  "id": 955,
                   "name": "_pendinglendingPoolManager",
                   "nodeType": "VariableDeclaration",
-                  "scope": 953,
+                  "scope": 958,
                   "src": "750:34:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2953,7 +2953,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 949,
+                    "id": 954,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "750:7:2",
@@ -2970,40 +2970,13 @@
               "src": "749:36:2"
             },
             "returnParameters": {
-              "id": 952,
+              "id": 957,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "794:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "712:83:2",
-            "stateMutability": "nonpayable",
-            "superFunction": null,
-            "visibility": "external"
-          },
-          {
-            "body": null,
-            "documentation": null,
-            "id": 956,
-            "implemented": false,
-            "kind": "function",
-            "modifiers": [],
-            "name": "acceptLendingPoolManager",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 954,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "837:2:2"
-            },
-            "returnParameters": {
-              "id": 955,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "848:0:2"
-            },
-            "scope": 1135,
-            "src": "804:45:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -3015,24 +2988,51 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
+            "name": "acceptLendingPoolManager",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 959,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "837:2:2"
+            },
+            "returnParameters": {
+              "id": 960,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "848:0:2"
+            },
+            "scope": 1140,
+            "src": "804:45:2",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 966,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
             "name": "getSIGHFinanceManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 957,
+              "id": 962,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "889:2:2"
             },
             "returnParameters": {
-              "id": 960,
+              "id": 965,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 959,
+                  "id": 964,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 961,
+                  "scope": 966,
                   "src": "915:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3041,7 +3041,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 958,
+                    "id": 963,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "915:7:2",
@@ -3057,7 +3057,7 @@
               ],
               "src": "914:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "859:65:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -3066,28 +3066,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 966,
+            "id": 971,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getPendingSIGHFinanceManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 962,
+              "id": 967,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "966:2:2"
             },
             "returnParameters": {
-              "id": 965,
+              "id": 970,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 964,
+                  "id": 969,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 966,
+                  "scope": 971,
                   "src": "992:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3096,7 +3096,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 963,
+                    "id": 968,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "992:7:2",
@@ -3112,7 +3112,7 @@
               ],
               "src": "991:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "929:72:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -3121,22 +3121,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 971,
+            "id": 976,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setPendingSIGHFinanceManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 969,
+              "id": 974,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 968,
+                  "id": 973,
                   "name": "_PendingSIGHFinanceManager",
                   "nodeType": "VariableDeclaration",
-                  "scope": 971,
+                  "scope": 976,
                   "src": "1045:34:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3145,7 +3145,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 967,
+                    "id": 972,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1045:7:2",
@@ -3162,40 +3162,13 @@
               "src": "1044:36:2"
             },
             "returnParameters": {
-              "id": 970,
+              "id": 975,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1089:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "1007:83:2",
-            "stateMutability": "nonpayable",
-            "superFunction": null,
-            "visibility": "external"
-          },
-          {
-            "body": null,
-            "documentation": null,
-            "id": 974,
-            "implemented": false,
-            "kind": "function",
-            "modifiers": [],
-            "name": "acceptSIGHFinanceManager",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 972,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "1132:2:2"
-            },
-            "returnParameters": {
-              "id": 973,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "1143:0:2"
-            },
-            "scope": 1135,
-            "src": "1099:45:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -3207,24 +3180,51 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
+            "name": "acceptSIGHFinanceManager",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 977,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1132:2:2"
+            },
+            "returnParameters": {
+              "id": 978,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1143:0:2"
+            },
+            "scope": 1140,
+            "src": "1099:45:2",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 984,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
             "name": "getLendingPoolConfigurator",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 975,
+              "id": 980,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2037:2:2"
             },
             "returnParameters": {
-              "id": 978,
+              "id": 983,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 977,
+                  "id": 982,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 979,
+                  "scope": 984,
                   "src": "2063:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3233,7 +3233,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 976,
+                    "id": 981,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2063:7:2",
@@ -3249,7 +3249,7 @@
               ],
               "src": "2062:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2002:70:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -3258,22 +3258,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 984,
+            "id": 989,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setLendingPoolConfiguratorImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 982,
+              "id": 987,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 981,
+                  "id": 986,
                   "name": "_configurator",
                   "nodeType": "VariableDeclaration",
-                  "scope": 984,
+                  "scope": 989,
                   "src": "2117:21:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3282,7 +3282,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 980,
+                    "id": 985,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2117:7:2",
@@ -3299,12 +3299,12 @@
               "src": "2116:23:2"
             },
             "returnParameters": {
-              "id": 983,
+              "id": 988,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2148:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2077:72:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -3313,28 +3313,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 989,
+            "id": 994,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLendingPoolCore",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 985,
+              "id": 990,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2182:2:2"
             },
             "returnParameters": {
-              "id": 988,
+              "id": 993,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 987,
+                  "id": 992,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 989,
+                  "scope": 994,
                   "src": "2208:15:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3343,7 +3343,7 @@
                     "typeString": "address payable"
                   },
                   "typeName": {
-                    "id": 986,
+                    "id": 991,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2208:15:2",
@@ -3359,7 +3359,7 @@
               ],
               "src": "2207:17:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2155:70:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -3368,22 +3368,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 994,
+            "id": 999,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setLendingPoolCoreImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 992,
+              "id": 997,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 991,
+                  "id": 996,
                   "name": "_lendingPoolCore",
                   "nodeType": "VariableDeclaration",
-                  "scope": 994,
+                  "scope": 999,
                   "src": "2262:24:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3392,7 +3392,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 990,
+                    "id": 995,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2262:7:2",
@@ -3409,12 +3409,12 @@
               "src": "2261:26:2"
             },
             "returnParameters": {
-              "id": 993,
+              "id": 998,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2296:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2230:67:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -3423,28 +3423,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 999,
+            "id": 1004,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLendingPool",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 995,
+              "id": 1000,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2326:2:2"
             },
             "returnParameters": {
-              "id": 998,
+              "id": 1003,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 997,
+                  "id": 1002,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 999,
+                  "scope": 1004,
                   "src": "2352:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3453,7 +3453,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 996,
+                    "id": 1001,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2352:7:2",
@@ -3469,7 +3469,7 @@
               ],
               "src": "2351:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2303:58:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -3478,22 +3478,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1004,
+            "id": 1009,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setLendingPoolImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1002,
+              "id": 1007,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1001,
+                  "id": 1006,
                   "name": "_pool",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1004,
+                  "scope": 1009,
                   "src": "2394:13:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3502,7 +3502,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1000,
+                    "id": 1005,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2394:7:2",
@@ -3519,12 +3519,12 @@
               "src": "2393:15:2"
             },
             "returnParameters": {
-              "id": 1003,
+              "id": 1008,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2417:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2366:52:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -3533,28 +3533,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1009,
+            "id": 1014,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLendingPoolDataProvider",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1005,
+              "id": 1010,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2459:2:2"
             },
             "returnParameters": {
-              "id": 1008,
+              "id": 1013,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1007,
+                  "id": 1012,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1009,
+                  "scope": 1014,
                   "src": "2485:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3563,7 +3563,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1006,
+                    "id": 1011,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2485:7:2",
@@ -3579,7 +3579,7 @@
               ],
               "src": "2484:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2424:70:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -3588,22 +3588,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1014,
+            "id": 1019,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setLendingPoolDataProviderImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1012,
+              "id": 1017,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1011,
+                  "id": 1016,
                   "name": "_provider",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1014,
+                  "scope": 1019,
                   "src": "2539:17:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3612,7 +3612,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1010,
+                    "id": 1015,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2539:7:2",
@@ -3629,12 +3629,12 @@
               "src": "2538:19:2"
             },
             "returnParameters": {
-              "id": 1013,
+              "id": 1018,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2566:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2499:68:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -3643,28 +3643,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1019,
+            "id": 1024,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLendingPoolParametersProvider",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1015,
+              "id": 1020,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2614:2:2"
             },
             "returnParameters": {
-              "id": 1018,
+              "id": 1023,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1017,
+                  "id": 1022,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1019,
+                  "scope": 1024,
                   "src": "2640:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3673,7 +3673,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1016,
+                    "id": 1021,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2640:7:2",
@@ -3689,7 +3689,7 @@
               ],
               "src": "2639:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2573:76:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -3698,22 +3698,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1024,
+            "id": 1029,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setLendingPoolParametersProviderImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1022,
+              "id": 1027,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1021,
+                  "id": 1026,
                   "name": "_parametersProvider",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1024,
+                  "scope": 1029,
                   "src": "2700:27:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3722,7 +3722,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1020,
+                    "id": 1025,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2700:7:2",
@@ -3739,12 +3739,12 @@
               "src": "2699:29:2"
             },
             "returnParameters": {
-              "id": 1023,
+              "id": 1028,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2737:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2654:84:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -3753,28 +3753,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1029,
+            "id": 1034,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getFeeProvider",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1025,
+              "id": 1030,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2767:2:2"
             },
             "returnParameters": {
-              "id": 1028,
+              "id": 1033,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1027,
+                  "id": 1032,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1029,
+                  "scope": 1034,
                   "src": "2793:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3783,7 +3783,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1026,
+                    "id": 1031,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2793:7:2",
@@ -3799,7 +3799,7 @@
               ],
               "src": "2792:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2744:58:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -3808,22 +3808,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1034,
+            "id": 1039,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setFeeProviderImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1032,
+              "id": 1037,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1031,
+                  "id": 1036,
                   "name": "_feeProvider",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1034,
+                  "scope": 1039,
                   "src": "2835:20:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3832,7 +3832,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1030,
+                    "id": 1035,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2835:7:2",
@@ -3849,12 +3849,12 @@
               "src": "2834:22:2"
             },
             "returnParameters": {
-              "id": 1033,
+              "id": 1038,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2865:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2807:59:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -3863,28 +3863,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1039,
+            "id": 1044,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLendingPoolLiquidationManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1035,
+              "id": 1040,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2913:2:2"
             },
             "returnParameters": {
-              "id": 1038,
+              "id": 1043,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1037,
+                  "id": 1042,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1039,
+                  "scope": 1044,
                   "src": "2939:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3893,7 +3893,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1036,
+                    "id": 1041,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2939:7:2",
@@ -3909,7 +3909,7 @@
               ],
               "src": "2938:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2872:76:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -3918,22 +3918,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1044,
+            "id": 1049,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setLendingPoolLiquidationManager",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1042,
+              "id": 1047,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1041,
+                  "id": 1046,
                   "name": "_manager",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1044,
+                  "scope": 1049,
                   "src": "2995:16:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3942,7 +3942,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1040,
+                    "id": 1045,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2995:7:2",
@@ -3959,12 +3959,12 @@
               "src": "2994:18:2"
             },
             "returnParameters": {
-              "id": 1043,
+              "id": 1048,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "3021:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "2953:69:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -3973,28 +3973,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1049,
+            "id": 1054,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getLendingRateOracle",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1045,
+              "id": 1050,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "3057:2:2"
             },
             "returnParameters": {
-              "id": 1048,
+              "id": 1053,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1047,
+                  "id": 1052,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1049,
+                  "scope": 1054,
                   "src": "3083:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -4003,7 +4003,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1046,
+                    "id": 1051,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "3083:7:2",
@@ -4019,7 +4019,7 @@
               ],
               "src": "3082:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "3028:64:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -4028,22 +4028,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1054,
+            "id": 1059,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setLendingRateOracle",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1052,
+              "id": 1057,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1051,
+                  "id": 1056,
                   "name": "_lendingRateOracle",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1054,
+                  "scope": 1059,
                   "src": "3127:26:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -4052,7 +4052,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1050,
+                    "id": 1055,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "3127:7:2",
@@ -4069,12 +4069,12 @@
               "src": "3126:28:2"
             },
             "returnParameters": {
-              "id": 1053,
+              "id": 1058,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "3163:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "3097:67:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -4083,28 +4083,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1059,
+            "id": 1064,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getSIGHAddress",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1055,
+              "id": 1060,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "3984:2:2"
             },
             "returnParameters": {
-              "id": 1058,
+              "id": 1063,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1057,
+                  "id": 1062,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1059,
+                  "scope": 1064,
                   "src": "4010:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -4113,7 +4113,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1056,
+                    "id": 1061,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "4010:7:2",
@@ -4129,7 +4129,7 @@
               ],
               "src": "4009:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "3961:58:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -4138,22 +4138,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1064,
+            "id": 1069,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setSIGHAddress",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1062,
+              "id": 1067,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1061,
+                  "id": 1066,
                   "name": "sighAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1064,
+                  "scope": 1069,
                   "src": "4048:19:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -4162,7 +4162,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1060,
+                    "id": 1065,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "4048:7:2",
@@ -4179,12 +4179,12 @@
               "src": "4047:21:2"
             },
             "returnParameters": {
-              "id": 1063,
+              "id": 1068,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "4077:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "4024:54:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -4193,28 +4193,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1069,
+            "id": 1074,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getSIGHFinanceConfigurator",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1065,
+              "id": 1070,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "4123:2:2"
             },
             "returnParameters": {
-              "id": 1068,
+              "id": 1073,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1067,
+                  "id": 1072,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1069,
+                  "scope": 1074,
                   "src": "4149:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -4223,7 +4223,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1066,
+                    "id": 1071,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "4149:7:2",
@@ -4239,7 +4239,7 @@
               ],
               "src": "4148:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "4088:70:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -4248,22 +4248,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1074,
+            "id": 1079,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setSIGHFinanceConfiguratorImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1072,
+              "id": 1077,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1071,
+                  "id": 1076,
                   "name": "sighAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1074,
+                  "scope": 1079,
                   "src": "4203:19:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -4272,7 +4272,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1070,
+                    "id": 1075,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "4203:7:2",
@@ -4289,12 +4289,12 @@
               "src": "4202:21:2"
             },
             "returnParameters": {
-              "id": 1073,
+              "id": 1078,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "4232:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "4163:70:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -4303,28 +4303,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1079,
+            "id": 1084,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getSIGHSpeedController",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1075,
+              "id": 1080,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "4278:2:2"
             },
             "returnParameters": {
-              "id": 1078,
+              "id": 1083,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1077,
+                  "id": 1082,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1079,
+                  "scope": 1084,
                   "src": "4304:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -4333,7 +4333,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1076,
+                    "id": 1081,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "4304:7:2",
@@ -4349,7 +4349,7 @@
               ],
               "src": "4303:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "4247:66:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -4358,22 +4358,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1084,
+            "id": 1089,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setSIGHSpeedController",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1082,
+              "id": 1087,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1081,
+                  "id": 1086,
                   "name": "_SIGHSpeedController",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1084,
+                  "scope": 1089,
                   "src": "4350:28:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -4382,7 +4382,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1080,
+                    "id": 1085,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "4350:7:2",
@@ -4399,12 +4399,12 @@
               "src": "4349:30:2"
             },
             "returnParameters": {
-              "id": 1083,
+              "id": 1088,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "4388:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "4318:71:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -4413,28 +4413,28 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1089,
+            "id": 1094,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getSIGHTreasury",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1085,
+              "id": 1090,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "4419:2:2"
             },
             "returnParameters": {
-              "id": 1088,
+              "id": 1093,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1087,
+                  "id": 1092,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1089,
+                  "scope": 1094,
                   "src": "4445:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -4443,7 +4443,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1086,
+                    "id": 1091,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "4445:7:2",
@@ -4459,7 +4459,7 @@
               ],
               "src": "4444:9:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "4395:59:2",
             "stateMutability": "view",
             "superFunction": null,
@@ -4468,22 +4468,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1094,
+            "id": 1099,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setSIGHTreasuryImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1092,
+              "id": 1097,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1091,
+                  "id": 1096,
                   "name": "_SIGHTreasury",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1094,
+                  "scope": 1099,
                   "src": "4548:21:2",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -4492,7 +4492,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1090,
+                    "id": 1095,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "4548:7:2",
@@ -4509,69 +4509,14 @@
               "src": "4547:23:2"
             },
             "returnParameters": {
-              "id": 1093,
+              "id": 1098,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "4579:0:2"
             },
-            "scope": 1135,
+            "scope": 1140,
             "src": "4519:61:2",
             "stateMutability": "nonpayable",
-            "superFunction": null,
-            "visibility": "external"
-          },
-          {
-            "body": null,
-            "documentation": null,
-            "id": 1099,
-            "implemented": false,
-            "kind": "function",
-            "modifiers": [],
-            "name": "getSIGHMechanismHandler",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 1095,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "4680:2:2"
-            },
-            "returnParameters": {
-              "id": 1098,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 1097,
-                  "name": "",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 1099,
-                  "src": "4706:7:2",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  },
-                  "typeName": {
-                    "id": 1096,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "4706:7:2",
-                    "stateMutability": "nonpayable",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "4705:9:2"
-            },
-            "scope": 1135,
-            "src": "4648:67:2",
-            "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           },
@@ -4582,19 +4527,25 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "setSIGHMechanismHandlerImpl",
+            "name": "getSIGHVolatilityHarvester",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1102,
+              "id": 1100,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "4683:2:2"
+            },
+            "returnParameters": {
+              "id": 1103,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1101,
-                  "name": "_SIGHVolatilityHarvester",
+                  "id": 1102,
+                  "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 1104,
-                  "src": "4806:32:2",
+                  "src": "4709:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -4602,10 +4553,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1100,
+                    "id": 1101,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "4806:7:2",
+                    "src": "4709:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -4616,17 +4567,11 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "4805:34:2"
+              "src": "4708:9:2"
             },
-            "returnParameters": {
-              "id": 1103,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "4848:0:2"
-            },
-            "scope": 1135,
-            "src": "4769:80:2",
-            "stateMutability": "nonpayable",
+            "scope": 1140,
+            "src": "4648:70:2",
+            "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           },
@@ -4637,25 +4582,19 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "getSIGHStaking",
+            "name": "setSIGHVolatilityHarvesterImpl",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1105,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "4918:2:2"
-            },
-            "returnParameters": {
-              "id": 1108,
+              "id": 1107,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1107,
-                  "name": "",
+                  "id": 1106,
+                  "name": "_SIGHVolatilityHarvester",
                   "nodeType": "VariableDeclaration",
                   "scope": 1109,
-                  "src": "4944:7:2",
+                  "src": "4812:32:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -4663,10 +4602,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1106,
+                    "id": 1105,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "4944:7:2",
+                    "src": "4812:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -4677,11 +4616,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "4943:9:2"
+              "src": "4811:34:2"
             },
-            "scope": 1135,
-            "src": "4895:58:2",
-            "stateMutability": "view",
+            "returnParameters": {
+              "id": 1108,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "4854:0:2"
+            },
+            "scope": 1140,
+            "src": "4772:83:2",
+            "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           },
@@ -4692,19 +4637,25 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "setSIGHStaking",
+            "name": "getSIGHStaking",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1112,
+              "id": 1110,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "4924:2:2"
+            },
+            "returnParameters": {
+              "id": 1113,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1111,
-                  "name": "_SIGHVolatilityHarvester",
+                  "id": 1112,
+                  "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 1114,
-                  "src": "5031:32:2",
+                  "src": "4950:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -4712,10 +4663,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1110,
+                    "id": 1111,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "5031:7:2",
+                    "src": "4950:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -4726,17 +4677,11 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "5030:34:2"
+              "src": "4949:9:2"
             },
-            "returnParameters": {
-              "id": 1113,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "5073:0:2"
-            },
-            "scope": 1135,
-            "src": "5007:67:2",
-            "stateMutability": "nonpayable",
+            "scope": 1140,
+            "src": "4901:58:2",
+            "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           },
@@ -4747,25 +4692,19 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "getPriceOracle",
+            "name": "setSIGHStaking",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1115,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "5380:2:2"
-            },
-            "returnParameters": {
-              "id": 1118,
+              "id": 1117,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1117,
-                  "name": "",
+                  "id": 1116,
+                  "name": "_SIGHVolatilityHarvester",
                   "nodeType": "VariableDeclaration",
                   "scope": 1119,
-                  "src": "5406:7:2",
+                  "src": "5037:32:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -4773,10 +4712,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1116,
+                    "id": 1115,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "5406:7:2",
+                    "src": "5037:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -4787,11 +4726,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "5405:9:2"
+              "src": "5036:34:2"
             },
-            "scope": 1135,
-            "src": "5357:58:2",
-            "stateMutability": "view",
+            "returnParameters": {
+              "id": 1118,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "5079:0:2"
+            },
+            "scope": 1140,
+            "src": "5013:67:2",
+            "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           },
@@ -4802,19 +4747,25 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "setPriceOracle",
+            "name": "getPriceOracle",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1122,
+              "id": 1120,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "5386:2:2"
+            },
+            "returnParameters": {
+              "id": 1123,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1121,
-                  "name": "_priceOracle",
+                  "id": 1122,
+                  "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 1124,
-                  "src": "5444:20:2",
+                  "src": "5412:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -4822,10 +4773,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1120,
+                    "id": 1121,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "5444:7:2",
+                    "src": "5412:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -4836,17 +4787,11 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "5443:22:2"
+              "src": "5411:9:2"
             },
-            "returnParameters": {
-              "id": 1123,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "5474:0:2"
-            },
-            "scope": 1135,
-            "src": "5420:55:2",
-            "stateMutability": "nonpayable",
+            "scope": 1140,
+            "src": "5363:58:2",
+            "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           },
@@ -4857,25 +4802,19 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "getSIGHFinanceFeeCollector",
+            "name": "setPriceOracle",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1125,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "5607:2:2"
-            },
-            "returnParameters": {
-              "id": 1128,
+              "id": 1127,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1127,
-                  "name": "",
+                  "id": 1126,
+                  "name": "_priceOracle",
                   "nodeType": "VariableDeclaration",
                   "scope": 1129,
-                  "src": "5633:7:2",
+                  "src": "5450:20:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -4883,10 +4822,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1126,
+                    "id": 1125,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "5633:7:2",
+                    "src": "5450:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -4897,11 +4836,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "5632:9:2"
+              "src": "5449:22:2"
             },
-            "scope": 1135,
-            "src": "5572:71:2",
-            "stateMutability": "view",
+            "returnParameters": {
+              "id": 1128,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "5480:0:2"
+            },
+            "scope": 1140,
+            "src": "5426:55:2",
+            "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           },
@@ -4912,19 +4857,25 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "setSIGHFinanceFeeCollector",
+            "name": "getSIGHFinanceFeeCollector",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1132,
+              "id": 1130,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "5613:2:2"
+            },
+            "returnParameters": {
+              "id": 1133,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1131,
-                  "name": "_feeCollector",
+                  "id": 1132,
+                  "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 1134,
-                  "src": "5684:21:2",
+                  "src": "5639:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -4932,10 +4883,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1130,
+                    "id": 1131,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "5684:7:2",
+                    "src": "5639:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -4946,26 +4897,75 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "5683:23:2"
+              "src": "5638:9:2"
+            },
+            "scope": 1140,
+            "src": "5578:71:2",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 1139,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setSIGHFinanceFeeCollector",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1137,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1136,
+                  "name": "_feeCollector",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1139,
+                  "src": "5690:21:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1135,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5690:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5689:23:2"
             },
             "returnParameters": {
-              "id": 1133,
+              "id": 1138,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "5716:0:2"
+              "src": "5722:0:2"
             },
-            "scope": 1135,
-            "src": "5648:69:2",
+            "scope": 1140,
+            "src": "5654:69:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 1136,
-        "src": "143:5577:2"
+        "scope": 1141,
+        "src": "143:5583:2"
       }
     ],
-    "src": "0:5720:2"
+    "src": "0:5726:2"
   },
   "compiler": {
     "name": "solc",
@@ -4973,7 +4973,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-12-03T08:10:19.127Z",
+  "updatedAt": "2021-01-05T05:29:52.086Z",
   "devdoc": {
     "methods": {},
     "title": "GlobalAddressesProvider interface"

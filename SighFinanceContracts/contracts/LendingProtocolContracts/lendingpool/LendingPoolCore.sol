@@ -1218,7 +1218,7 @@ contract LendingPoolCore is VersionedInitializable {
     // updates the internal configuration of the core (lendingPool Address and SIGH Mechanism Address)
     function refreshConfigInternal() internal {
         lendingPoolAddress = addressesProvider.getLendingPool();
-        sighMechanism = ISIGHVolatilityHarvester( addressesProvider.getSIGHMechanismHandler()  );        // ADDED BY SIGH FINANCE
+        sighMechanism = ISIGHVolatilityHarvester( addressesProvider.getSIGHVolatilityHarvester()  );        // ADDED BY SIGH FINANCE
     }    
 
     // ###########      ADDING & INITITALIZING A NEW INSTRUMENT      ###########
