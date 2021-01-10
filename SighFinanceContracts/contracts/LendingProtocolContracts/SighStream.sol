@@ -145,7 +145,8 @@ contract SighStream is ISighStream, VersionedInitializable {
     * @dev redirects the Liquidity $SIGH Stream being generated to a target address. 
     * @param _to the address to which the Liquidity $SIGH Stream will be redirected
     **/
-    function redirectLiquiditySIGHStream(address _from, address _to) external onlyITokenContract {
+    function redirectLiquiditySIGHStream(address _from, address _to) external onlyITokenContract {     
+        require(user_SIGH_States[_from].userLiquiditySIGHStreamRedirectionAllowance == address(0),'Administrator right is currently delegated to another account. Reset your administration right to be able to re-direct your SIGH Liquidity Stream.');
         redirectLiquiditySIGHStreamInternal(_from, _to);
     }
 
@@ -333,6 +334,7 @@ contract SighStream is ISighStream, VersionedInitializable {
     * @param _to the address to which the Borrowing $SIGH Stream will be redirected
     **/
     function redirectBorrowingSIGHStream(address user, address _to) external onlyITokenContract {
+        require(user_SIGH_States[user].userBorrowingSIGHStreamRedirectionAllowance == address(0),'Administrator right is currently delegated to another account. Reset your administration right to be able to re-direct your SIGH Borrowing Stream.');
         redirectBorrowingSIGHStreamInternal(user, _to);
     }
 

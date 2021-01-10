@@ -339,6 +339,7 @@ contract IToken is ERC20, ERC20Detailed {
     * @param _to the address to which the interest will be redirected
     **/
     function redirectInterestStream(address _to) external {
+        require(interestRedirectionAllowances[msg.sender] == address(0),'Administrator right is currently delegated to another account. Reset your administration right to be able to re-direct your Interest Stream.');
         redirectInterestStreamInternal(msg.sender, _to);
     }
 
