@@ -7,7 +7,7 @@ pragma solidity ^0.5.16;
  * @author SIGH Finance
  */
 
-interface ISighDistributionHandler {
+interface ISighVolatilityHarvester {
 
     function refreshConfig() external;
     

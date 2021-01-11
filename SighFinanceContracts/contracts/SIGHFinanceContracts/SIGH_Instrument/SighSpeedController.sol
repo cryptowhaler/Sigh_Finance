@@ -14,7 +14,7 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "../Interfaces/ISighSpeedController.sol";
 import "../../configuration/IGlobalAddressesProvider.sol";
 
-import "../Interfaces/ISighDistributionHandler.sol"; 
+import "../Interfaces/ISighVolatilityHarvester.sol"; 
 
 contract SighSpeedController is ISighSpeedController, ReentrancyGuard, VersionedInitializable  {
 
@@ -25,7 +25,7 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
   bool private isDripAllowed = false;  
   uint private lastDripBlockNumber;    
 
-  ISighDistributionHandler private sighVolatilityHarvester;      // SIGH DISTRIBUTION HANDLER CONTRACT
+  ISighVolatilityHarvester private sighVolatilityHarvester;      // SIGH DISTRIBUTION HANDLER CONTRACT
   uint256 private sighVolatilityHarvestingSpeed;
     
   struct protocolState {
@@ -107,7 +107,7 @@ contract SighSpeedController is ISighSpeedController, ReentrancyGuard, Versioned
     require(sighVolatilityHarvesterAddress_ != address(0),"SIGH Volatility Harvester Address not valid");
 
     isDripAllowed = true;
-    sighVolatilityHarvester = ISighDistributionHandler(sighVolatilityHarvesterAddress_);
+    sighVolatilityHarvester = ISighVolatilityHarvester(sighVolatilityHarvesterAddress_);
     lastDripBlockNumber = block.number;
 
     emit DistributionInitialized( sighVolatilityHarvesterAddress_ ,  lastDripBlockNumber );

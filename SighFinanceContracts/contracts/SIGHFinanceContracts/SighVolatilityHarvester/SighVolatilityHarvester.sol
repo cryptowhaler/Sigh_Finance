@@ -1,7 +1,7 @@
 pragma solidity ^0.5.16;
 
 /**
- * @title Sigh Distribution Handler Contract
+ * @title Sigh Volatility Harvester Contract
  * @notice Handles the SIGH Loss Minimizing Mechanism for the Lending Protocol
  * @dev Accures SIGH for the supported markets based on losses made every 24 hours, along with Staking speeds. This accuring speed is updated every hour
  * @author SIGH Finance
@@ -21,7 +21,7 @@ import "../../LendingProtocolContracts/interfaces/ILendingPoolCore.sol";
 import "../Interfaces/ISighStaking.sol";       
 
 
-contract SIGHDistributionHandler is Exponential, ReentrancyGuard, VersionedInitializable {       // 
+contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedInitializable {       // 
     
 // ######## CONTRACT ADDRESSES ########
     GlobalAddressesProvider public addressesProvider;
@@ -75,21 +75,21 @@ contract SIGHDistributionHandler is Exponential, ReentrancyGuard, VersionedIniti
 // ######## SIGH DISTRIBUTION SPEED FOR EACH INSTRUMENT ########
 
     struct Instrument_Sigh_Mechansim_State {
-        uint8 side;                                         // side = enum{Suppliers,Borrowers,inactive}
+        uint8 side;                                          // side = enum{Suppliers,Borrowers,inactive}
         uint256 bearSentiment;                               // Volatility Limit Ratio = bearSentiment (if side == Suppliers)
-        uint256 bullSentiment;                 // Volatility Limit Ratio = bearSentiment (if side == Borrowers)
+        uint256 bullSentiment;                               // Volatility Limit Ratio = bearSentiment (if side == Borrowers)
         uint256 _total24HrVolatility;                        // TOTAL VOLATILITY = Total Compounded Balance * Price Difference
-        uint256 _total24HrSentimentVolatility;                  // Volatility Limit Amount = TOTAL VOLATILITY * (Volatility Limit Ratio) / 1e18
+        uint256 _total24HrSentimentVolatility;               // Volatility Limit Amount = TOTAL VOLATILITY * (Volatility Limit Ratio) / 1e18
         uint256 percentTotalVolatility;                      // TOTAL VOLATILITY / last24HrsTotalProtocolVolatility
-        uint256 percentTotalSentimentVolatility;           // Volatility Limit Amount / last24HrsSentimentProtocolVolatility
+        uint256 percentTotalSentimentVolatility;             // Volatility Limit Amount / last24HrsSentimentProtocolVolatility
         uint256 suppliers_Speed;
         uint256 borrowers_Speed;
         uint256 staking_Speed;
     }
 
     mapping(address => Instrument_Sigh_Mechansim_State) private Instrument_Sigh_Mechansim_States;
-    uint256 private deltaBlocksForSpeed = 1; // 60 * 60 
-    uint256 private prevSpeedRefreshBlock;
+    uint256 private deltaTimestamp = 3600; // 60 * 60 
+    uint256 private prevHarvestRefreshTimestamp;
 
 
     // ####################################
@@ -102,7 +102,7 @@ contract SIGHDistributionHandler is Exponential, ReentrancyGuard, VersionedIniti
 
     event SIGHSpeedUpdated(uint oldSIGHSpeed, uint newSIGHSpeed, uint blockNumber_);     /// Emitted when SIGH speed is changed
     event CryptoMarketSentimentUpdated( uint cryptoMarketSentiment );
-    event minimumBlocksForSpeedRefreshUpdated( uint prevDeltaBlocksForSpeed,uint newDeltaBlocksForSpeed, uint blockNumber );
+    event minimumBlocksForSpeedRefreshUpdated( uint prevdeltaTimestamp,uint newdeltaTimestamp, uint blockNumber );
 
     event StakingSpeedUpdated(address instrumentAddress_ , uint prevStakingSpeed, uint new_staking_Speed, uint blockNumber );
     
@@ -280,7 +280,7 @@ contract SIGHDistributionHandler is Exponential, ReentrancyGuard, VersionedIniti
 // ##############        GLOBAL SIGH SPEED AND SIGH SPEED RATIO FOR A MARKET          ########################################
 // ##############        1. updateSIGHSpeed() : Governed by Sigh Finance Manager          ####################################
 // ##############        3. updateStakingSpeedForAnInstrument():  Decided by the SIGH Finance Manager          ###############
-// ##############        5. updateDeltaBlocksForSpeedRefresh() : Decided by the SIGH Finance Manager           ###############
+// ##############        5. updatedeltaTimestampRefresh() : Decided by the SIGH Finance Manager           ###############
 // ###########################################################################################################################
 
     /**
@@ -318,11 +318,11 @@ contract SIGHDistributionHandler is Exponential, ReentrancyGuard, VersionedIniti
      * can call this function through the Sigh Finance Configurator
      * @param deltaBlocksLimit The new Minimum blocks limit
      */   
-    function updateDeltaBlocksForSpeedRefresh(uint deltaBlocksLimit) external onlySighFinanceConfigurator returns (bool) {      // 
+    function updatedeltaTimestampRefresh(uint deltaBlocksLimit) external onlySighFinanceConfigurator returns (bool) {      // 
         refreshSIGHSpeeds();
-        uint prevdeltaBlocksForSpeed = deltaBlocksForSpeed;
-        deltaBlocksForSpeed = deltaBlocksLimit;                                         // STATE UPDATED
-        emit minimumBlocksForSpeedRefreshUpdated( prevdeltaBlocksForSpeed,deltaBlocksForSpeed, getBlockNumber()  );
+        uint prevdeltaTimestamp = deltaTimestamp;
+        deltaTimestamp = deltaBlocksLimit;                                         // STATE UPDATED
+        emit minimumBlocksForSpeedRefreshUpdated( prevdeltaTimestamp,deltaTimestamp, getBlockNumber()  );
         return true;
     }
 
@@ -344,11 +344,11 @@ contract SIGHDistributionHandler is Exponential, ReentrancyGuard, VersionedIniti
      */
     function refreshSIGHSpeeds() public nonReentrant returns (bool) {
         uint blockNumber = block.number;
-        uint256 blocksElapsedSinceLastRefresh = sub_(blockNumber , prevSpeedRefreshBlock, "Refresh SIGH Speeds : Subtraction underflow for blocks"); 
+        uint256 blocksElapsedSinceLastRefresh = sub_(blockNumber , prevHarvestRefreshTimestamp, "Refresh SIGH Speeds : Subtraction underflow for blocks"); 
 
-        if ( blocksElapsedSinceLastRefresh >= deltaBlocksForSpeed) {
+        if ( blocksElapsedSinceLastRefresh >= deltaTimestamp) {
             refreshSIGHSpeedsInternal();
-            prevSpeedRefreshBlock = blockNumber;                                        // STATE UPDATED
+            prevHarvestRefreshTimestamp = blockNumber;                                        // STATE UPDATED
             return true;
         }
         return false;
@@ -758,18 +758,18 @@ contract SIGHDistributionHandler is Exponential, ReentrancyGuard, VersionedIniti
         return instrumentPriceCycles[instrument_].initializationCounter;
     }
 
-    function getDeltaBlocksForSpeed() external view returns (uint) {
-        return deltaBlocksForSpeed;
+    function getdeltaTimestamp() external view returns (uint) {
+        return deltaTimestamp;
     }  
 
-    function getPrevSpeedRefreshBlock() external view returns (uint) {
-        return prevSpeedRefreshBlock;
+    function getprevHarvestRefreshTimestamp() external view returns (uint) {
+        return prevHarvestRefreshTimestamp;
     }  
 
     function getBlocksRemainingToNextSpeedRefresh() external view returns (uint) {
-        uint blocksElapsed = sub_(block.number,prevSpeedRefreshBlock); 
-        if ( deltaBlocksForSpeed > blocksElapsed) {
-            return sub_(deltaBlocksForSpeed,blocksElapsed);
+        uint blocksElapsed = sub_(block.number,prevHarvestRefreshTimestamp); 
+        if ( deltaTimestamp > blocksElapsed) {
+            return sub_(deltaTimestamp,blocksElapsed);
         }
         return uint(0);
     }

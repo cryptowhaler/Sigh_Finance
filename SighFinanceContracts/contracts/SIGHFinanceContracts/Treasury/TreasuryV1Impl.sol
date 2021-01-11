@@ -105,7 +105,7 @@ contract Treasury is ReentrancyGuard, VersionedInitializable   {
 // ###############################################################################################
 
 
-    event SIGHTreasuryInitialized(address msgSender, address addressesProvider, address SIGH, address sighDistributionHandler);
+    event SIGHTreasuryInitialized(address msgSender, address addressesProvider, address SIGH, address sighVolatilityHarvester);
 
     uint256 constant private DATA_PROVIDER_REVISION = 0x5;
 
