@@ -1,39 +1,65 @@
-pragma solidity ^0.5.0;
+pragma solidity 0.6.12;
+pragma experimental ABIEncoderV2;
 
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
-import "openzeppelin-solidity/contracts/utils/Address.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import {SafeMath} from '../../dependencies/openzeppelin/contracts/SafeMath.sol';
+import {IERC20} from '../../dependencies/openzeppelin/contracts/IERC20.sol';
+import {SafeERC20} from '../../dependencies/openzeppelin/contracts/SafeERC20.sol';
+import {Address} from '../../dependencies/openzeppelin/contracts/Address.sol';
 
-import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
-import "../libraries/CoreLibrary.sol";
-import "../libraries/WadRayMath.sol";
-import "../libraries/EthAddressLib.sol";
+import {IGlobalAddressesProvider} from '../../interfaces/IGlobalAddressesProvider.sol';
+import {IAToken} from '../../interfaces/IAToken.sol';
+import {IVariableDebtToken} from '../../interfaces/IVariableDebtToken.sol';
+import {IPriceOracleGetter} from '../../interfaces/IPriceOracleGetter.sol';
+import {IStableDebtToken} from '../../interfaces/IStableDebtToken.sol';
+import {ILendingPool} from '../../interfaces/ILendingPool.sol';
 
-import "../../configuration/GlobalAddressesProvider.sol";
-import "../interfaces/ILendingPoolParametersProvider.sol";
-import "../interfaces/ITokenInterface.sol";
-import "../interfaces/IFeeProvider.sol";
-import "../interfaces/ILendingPoolCore.sol";
-import "../interfaces/ILendingPoolDataProvider.sol";
-import "../interfaces/ILendingPool.sol";
+import {VersionedInitializable} from '../libraries/aave-upgradeability/VersionedInitializable.sol';
+import {Helpers} from '../libraries/helpers/Helpers.sol';
+import {Errors} from '../libraries/helpers/Errors.sol';
+import {WadRayMath} from '../libraries/math/WadRayMath.sol';
+import {PercentageMath} from '../libraries/math/PercentageMath.sol';
+import {ReserveLogic} from '../libraries/logic/ReserveLogic.sol';
+import {GenericLogic} from '../libraries/logic/GenericLogic.sol';
+import {ValidationLogic} from '../libraries/logic/ValidationLogic.sol';
+import {ReserveConfiguration} from '../libraries/configuration/ReserveConfiguration.sol';
+import {UserConfiguration} from '../libraries/configuration/UserConfiguration.sol';
+import {DataTypes} from '../libraries/types/DataTypes.sol';
 
-import "../flashloan/interfaces/IFlashLoanReceiver.sol";
-
-import "./LendingPoolLiquidationManager.sol";
-
+import {IFlashLoanReceiver} from '../../flashloan/interfaces/IFlashLoanReceiver.sol';
+import {LendingPoolStorage} from './LendingPoolStorage.sol';
 
 /**
 * @title LendingPool contract (Created by Aave, modified by SIGH Finance)
 * @notice Implements the actions of the LendingPool, and exposes accessory methods to fetch the users and financial instruments data
+ * @dev Main point of interaction with an Aave protocol's market
+ * - Users can:
+ *   # Deposit
+ *   # Withdraw
+ *   # Borrow
+ *   # Repay
+ *   # Swap their loans between variable and stable rate
+ *   # Enable/disable their deposits as collateral rebalance stable rate borrow positions
+ *   # Liquidate positions
+ *   # Execute Flash Loans
+ * - To be covered by a proxy contract, owned by the LendingPoolAddressesProvider of the specific market
+ * - All admin functions are callable by the LendingPoolConfigurator contract defined also in the
+ *   LendingPoolAddressesProvider
 * @author Aave, SIGH Finance
  **/
 
-contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
+contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable {
 
     using SafeMath for uint256;
     using WadRayMath for uint256;
-    using Address for address;
+    using PercentageMath for uint256;    
+    using SafeERC20 for IERC20;
+
+    //main configuration parameters
+    uint256 public constant MAX_STABLE_RATE_BORROW_SIZE_PERCENT = 2500;
+    uint256 public constant FLASHLOAN_PREMIUM_TOTAL = 9;
+    uint256 public constant MAX_NUMBER_RESERVES = 128;
+
+    uint256 public constant UINT_MAX_VALUE = uint256(-1);
 
     GlobalAddressesProvider public addressesProvider;
     ILendingPoolCore public core;
@@ -172,49 +198,56 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
 // ######  MODIFIERS ######
 // ########################
 
-    /**
-    * @dev functions affected by this modifier can only be invoked by the IToken.sol contract
-    * @param _instrument the address of the instrument
-    **/
-    modifier onlyOverlyingIToken(address _instrument) {
-        require( msg.sender == core.getInstrumentITokenAddress(_instrument), "The caller of this function can only be the IToken contract of this instrument" );
-        _;
-    }
-
-    /**
-    * @dev functions affected by this modifier can only be invoked if the instrument is active
-    * @param _instrument the address of the instrument
-    **/
-    modifier onlyActiveInstrument(address _instrument) {
-        requireInstrumentActiveInternal(_instrument);
-        _;
-    }
-
-    /**
-    * @dev functions affected by this modifier can only be invoked if the instrument is not freezed.
-    * A freezed instrument only allows redeems, repays, rebalances and liquidations.
-    * @param _instrument the address of the instrument
-    **/
-    modifier onlyUnfreezedInstrument(address _instrument) {
-        requireInstrumentNotFreezedInternal(_instrument);
-        _;
-    }
-
-    /**
-    * @dev functions affected by this modifier can only be invoked if the provided _amount input parameter is not zero.
-    * @param _amount the amount provided
-    **/
-    modifier onlyAmountGreaterThanZero(uint256 _amount) {
-        requireAmountGreaterThanZeroInternal(_amount);
-        _;
-    }
-
     modifier onlyLendingPoolConfigurator() {
-        require( msg.sender == addressesProvider.getLendingPoolConfigurator(), "Only Lending Pool Configurator can refresh the configuration" );
+        require( msg.sender == addressesProvider.getLendingPoolConfigurator(), "Only Lending Pool Configurator can call this function" );
         _;
     }    
 
-    uint256 public constant UINT_MAX_VALUE = uint256(-1);
+    modifier whenNotPaused() {
+        require(!_paused, "Lending Pool is currently paused");
+        _;
+    }    
+
+    // /**
+    // * @dev functions affected by this modifier can only be invoked by the IToken.sol contract
+    // * @param _instrument the address of the instrument
+    // **/
+    // modifier onlyOverlyingIToken(address _instrument) {
+    //     require( msg.sender == core.getInstrumentITokenAddress(_instrument), "The caller of this function can only be the IToken contract of this instrument" );
+    //     _;
+    // }
+
+    // /**
+    // * @dev functions affected by this modifier can only be invoked if the instrument is active
+    // * @param _instrument the address of the instrument
+    // **/
+    // modifier onlyActiveInstrument(address _instrument) {
+    //     requireInstrumentActiveInternal(_instrument);
+    //     _;
+    // }
+
+    // /**
+    // * @dev functions affected by this modifier can only be invoked if the instrument is not freezed.
+    // * A freezed instrument only allows redeems, repays, rebalances and liquidations.
+    // * @param _instrument the address of the instrument
+    // **/
+    // modifier onlyUnfreezedInstrument(address _instrument) {
+    //     requireInstrumentNotFreezedInternal(_instrument);
+    //     _;
+    // }
+
+    // /**
+    // * @dev functions affected by this modifier can only be invoked if the provided _amount input parameter is not zero.
+    // * @param _amount the amount provided
+    // **/
+    // modifier onlyAmountGreaterThanZero(uint256 _amount) {
+    //     requireAmountGreaterThanZeroInternal(_amount);
+    //     _;
+    // }
+
+
+
+
 
 // ############################################################################################################
 // ######  initialize() function called by proxy contract when LendingPool is added to AddressesProvider ######
@@ -255,263 +288,213 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
     * @param _amount the amount to be deposited
     * @param _referralCode integrators are assigned a referral code and can potentially receive rewards.
     **/
-    function deposit(address _instrument, uint256 _amount, uint16 _referralCode) external payable nonReentrant
-        onlyActiveInstrument(_instrument)
-        onlyUnfreezedInstrument(_instrument)
-        onlyAmountGreaterThanZero(_amount)
-    {
-        ITokenInterface iToken = ITokenInterface(core.getInstrumentITokenAddress(_instrument));
-        bool isFirstDeposit = iToken.balanceOf(msg.sender) == 0;
-        bool isETH = EthAddressLib.ethAddress() == _instrument;
+    function deposit( address _instrument, uint256 _amount, address onBehalfOf ) external whenNotPaused  {
 
-        uint256 depositFee = feeProvider.calculateDepositFee(msg.sender, _amount);
+        DataTypes.ReserveData storage reserve = _reserves[_instrument];
+        ValidationLogic.validateDeposit(reserve, _amount);
+
+        address aToken = reserve.aTokenAddress;
+
+        // Split Deposit fee in staking reward and platform fee
+        uint256 depositFee = feeProvider.calculateDepositFee(onBehalfOf, _amount);
         require(depositFee > 0, "The amount to deposit is too small");
-        core.transferToFeeCollectionAddress.value( isETH ? depositFee : 0)( _instrument, msg.sender, depositFee,  addressesProvider.getSIGHFinanceFeeCollector() );
+        IERC20(_instrument).safeTransferFrom(msg.sender, addressesProvider.getSIGHFinanceFeeCollector(), depositFee );
 
-        core.updateStateOnDeposit(_instrument, msg.sender, _amount.sub(depositFee), isFirstDeposit);
-        iToken.mintOnDeposit(msg.sender, _amount.sub(depositFee));                                          //minting IToken to user 1:1 with the specific exchange rate
-        core.transferToReserve.value(msg.value)(_instrument, msg.sender, _amount.sub(depositFee));          //transfer to the core contract
+        reserve.updateState();
+        reserve.updateInterestRates(_instrument, aToken, _amount.sub(depositFee), 0);
 
-        emit Deposit(_instrument, msg.sender, _amount.sub(depositFee), depositFee , _referralCode, block.timestamp);
+        IERC20(_instrument).safeTransferFrom(msg.sender, aToken, _amount.sub(depositFee));
+        bool isFirstDeposit = IAToken(aToken).mint(onBehalfOf, _amount.sub(depositFee) , reserve.liquidityIndex);
 
+        if (isFirstDeposit) {
+            _usersConfig[onBehalfOf].setUsingAsCollateral(reserve.id, true);
+            emit ReserveUsedAsCollateralEnabled(_instrument, onBehalfOf);
+        }
+
+        emit Deposit(_instrument, msg.sender, onBehalfOf,  _amount.sub(depositFee), depositFee );
     }
 
+
+
+
+
+
     /**
-    * @dev Redeems the underlying amount of assets requested by _user.
+    * @dev Withdraws the underlying amount of assets requested by _user.
     * This function is executed by the overlying IToken contract in response to a redeem action.
     * @param _instrument the address of the instrument (underlying instrument address)
     * @param _user the address of the user performing the action
     * @param _amount the underlying amount to be redeemed
     **/
-    function redeemUnderlying( address _instrument,address payable _user,uint256 _amount, uint256 _ITokenBalanceAfterRedeem) external nonReentrant
-        onlyOverlyingIToken(_instrument)
-        onlyActiveInstrument(_instrument)
-        onlyAmountGreaterThanZero(_amount)
-    {
-        uint256 currentAvailableLiquidity = core.getInstrumentAvailableLiquidity(_instrument);
-        require( currentAvailableLiquidity >= _amount, "There is not enough liquidity available to redeem" );
+    function withdraw( address _instrument, uint256 _amount, address _user) external override whenNotPaused returns(uint256) {
 
-        core.updateStateOnRedeem(_instrument, _user, _amount, _ITokenBalanceAfterRedeem == 0);
-        core.transferToUser(_instrument, _user, _amount);
+        DataTypes.ReserveData storage reserve = _reserves[_instrument];
+        address aToken = reserve.aTokenAddress;
 
-        emit RedeemUnderlying(_instrument, _user, _amount, block.timestamp);
+        uint256 userBalance = IAToken(aToken).balanceOf(msg.sender);
+        uint256 amountToWithdraw = amount;
+
+        if (amount == type(uint256).max) {
+            amountToWithdraw = userBalance;
+        }
+
+        ValidationLogic.validateWithdraw( _instrument, amountToWithdraw, userBalance, _reserves, _usersConfig[msg.sender], _reservesList, _reservesCount, _addressesProvider.getPriceOracle() );
+
+        reserve.updateState();
+        reserve.updateInterestRates(_instrument, aToken, 0, amountToWithdraw);
+
+        if (amountToWithdraw == userBalance) {
+            _usersConfig[msg.sender].setUsingAsCollateral(reserve.id, false);
+            emit ReserveUsedAsCollateralDisabled(_instrument, msg.sender);
+        }
+
+        IAToken(aToken).burn(msg.sender, to, amountToWithdraw, reserve.liquidityIndex);
+
+        emit Withdraw(_instrument, msg.sender, to, amountToWithdraw);
+
+        return amountToWithdraw;
     }
 
 // #########################################
 // ######  BORROW and REPAY FUNCTIONS ######
 // #########################################
 
-    /**
-    * @dev data structures for local computations in the borrow() method.
-    */
+  /**
+   * @dev Allows users to borrow a specific `amount` of the reserve underlying asset, provided that the borrower
+   * already deposited enough collateral, or he was given enough allowance by a credit delegator on the
+   * corresponding debt token (StableDebtToken or VariableDebtToken)
+   * - E.g. User borrows 100 USDC passing as `onBehalfOf` his own address, receiving the 100 USDC in his wallet
+   *   and 100 stable/variable debt tokens, depending on the `interestRateMode`
+   * @param asset The address of the underlying asset to borrow
+   * @param amount The amount to be borrowed
+   * @param interestRateMode The interest rate mode at which the user wants to borrow: 1 for Stable, 2 for Variable
+   * @param referralCode Code used to register the integrator originating the operation, for potential rewards.
+   *   0 if the action is executed directly by the user, without any middle-man
+   * @param onBehalfOf Address of the user who will receive the debt. Should be the address of the borrower itself
+   * calling the function if he wants to borrow against his own collateral, or the address of the credit delegator
+   * if he has been given credit delegation allowance
+   **/
+  function borrow( address asset, uint256 amount, uint256 interestRateMode, uint16 referralCode, address onBehalfOf ) external override whenNotPaused {
+        DataTypes.ReserveData storage reserve = _reserves[asset];
 
-    struct BorrowLocalVars {
-        uint256 principalBorrowBalance;
-        uint256 currentLtv;
-        uint256 currentLiquidationThreshold;
-        uint256 borrowFee;
-        uint256 requestedBorrowAmountETH;
-        uint256 amountOfCollateralNeededETH;
-        uint256 userCollateralBalanceETH;
-        uint256 userBorrowBalanceETH;
-        uint256 userTotalFeesETH;
-        uint256 borrowBalanceIncrease;
-        uint256 currentInstrumentStableRate;
-        uint256 availableLiquidity;
-        uint256 instrumentDecimals;
-        uint256 finalUserBorrowRate;
-        CoreLibrary.InterestRateMode rateMode;
-        bool healthFactorBelowThreshold;
+        _executeBorrow( ExecuteBorrowParams( asset, msg.sender, onBehalfOf, amount, interestRateMode, reserve.aTokenAddress, referralCode, true) );
+  }
+
+
+  /**
+   * @notice Repays a borrowed `amount` on a specific reserve, burning the equivalent debt tokens owned
+   * - E.g. User repays 100 USDC, burning 100 variable/stable debt tokens of the `onBehalfOf` address
+   * @param asset The address of the borrowed underlying asset previously borrowed
+   * @param amount The amount to repay
+   * - Send the value type(uint256).max in order to repay the whole debt for `asset` on the specific `debtMode`
+   * @param rateMode The interest rate mode at of the debt the user wants to repay: 1 for Stable, 2 for Variable
+   * @param onBehalfOf Address of the user who will get his debt reduced/removed. Should be the address of the
+   * user calling the function if he wants to reduce/remove his own debt, or the address of any other
+   * other borrower whose debt should be removed
+   * @return The final amount repaid
+   **/
+  function repay( address asset, uint256 amount, uint256 rateMode, address onBehalfOf ) external override whenNotPaused returns (uint256) {
+    DataTypes.ReserveData storage reserve = _reserves[asset];
+
+    (uint256 stableDebt, uint256 variableDebt) = Helpers.getUserCurrentDebt(onBehalfOf, reserve);
+
+    DataTypes.InterestRateMode interestRateMode = DataTypes.InterestRateMode(rateMode);
+
+    ValidationLogic.validateRepay(  reserve, amount, interestRateMode, onBehalfOf, stableDebt, variableDebt);
+
+    uint256 paybackAmount = interestRateMode == DataTypes.InterestRateMode.STABLE ? stableDebt : variableDebt;
+
+    if (amount < paybackAmount) {
+      paybackAmount = amount;
     }
 
-    /**
-    * @dev Allows users to borrow a specific amount of the instrument currency, provided that the borrower already deposited enough collateral.
-    * @param _instrument the address of the instrument
-    * @param _amount the amount to be borrowed
-    * @param _interestRateMode the interest rate mode at which the user wants to borrow. Can be 0 (STABLE) or 1 (VARIABLE)
-    **/
-    function borrow(address _instrument,uint256 _amount,uint256 _interestRateMode,uint16 _referralCode) external nonReentrant 
-        onlyActiveInstrument(_instrument)
-        onlyUnfreezedInstrument(_instrument)
-        onlyAmountGreaterThanZero(_amount)
-    {
-        
-        BorrowLocalVars memory vars;            // Usage of a memory struct of vars to avoid "Stack too deep" errors due to local variables
-        require(core.isInstrumentBorrowingEnabled(_instrument), "Instrument is not enabled for borrowing");     //check that the instrument is enabled for borrowing
+    reserve.updateState();
 
-        //validate interest rate mode
-        require( uint256(CoreLibrary.InterestRateMode.VARIABLE) == _interestRateMode || uint256(CoreLibrary.InterestRateMode.STABLE) == _interestRateMode, "Invalid interest rate mode selected");
-        vars.rateMode = CoreLibrary.InterestRateMode(_interestRateMode);                //cast the rateMode to coreLibrary.interestRateMode
-
-        vars.availableLiquidity = core.getInstrumentAvailableLiquidity(_instrument);    //check that the amount is available in the core contract
-        require( vars.availableLiquidity >= _amount,"There is not enough liquidity available in the Instrument's reserve");
-
-        ( , vars.userCollateralBalanceETH,  vars.userBorrowBalanceETH,  vars.userTotalFeesETH,  vars.currentLtv, vars.currentLiquidationThreshold,  , vars.healthFactorBelowThreshold  ) = dataProvider.calculateUserGlobalData(msg.sender);
-
-        require(vars.userCollateralBalanceETH > 0, "The collateral balance is 0");
-        require( !vars.healthFactorBelowThreshold, "The borrower can already be liquidated so he cannot borrow more");
-
-        vars.borrowFee = feeProvider.calculateLoanOriginationFee(msg.sender, _amount);          //calculating fees
-        require(vars.borrowFee > 0, "The amount to borrow is too small");
-
-        vars.amountOfCollateralNeededETH = dataProvider.calculateCollateralNeededInETH( _instrument,  _amount, vars.borrowFee, vars.userBorrowBalanceETH, vars.userTotalFeesETH, vars.currentLtv);
-        require(vars.amountOfCollateralNeededETH <= vars.userCollateralBalanceETH, "There is not enough collateral to cover a new borrow");
-
-        /**
-        * Following conditions need to be met if the user is borrowing at a stable rate:
-        * 1. Financial Instrument must be enabled for stable rate borrowing
-        * 2. Users cannot borrow from the instrument's reserve if their collateral is (mostly) the same instrument they are borrowing, to prevent abuses.
-        * 3. Users will be able to borrow only a relatively small, configurable amount of the total liquidity
-        **/
-
-        if (vars.rateMode == CoreLibrary.InterestRateMode.STABLE) {         //check if the borrow mode is stable and if stable rate borrowing is enabled on this instrument
-            require( core.isUserAllowedToBorrowAtStable(_instrument, msg.sender, _amount), "User cannot borrow the selected amount with a stable rate" );
-
-            //calculate the max available loan size in stable rate mode as a percentage of the available liquidity
-            uint256 maxLoanPercent = parametersProvider.getMaxStableRateBorrowSizePercent();        
-            uint256 maxLoanSizeStable = vars.availableLiquidity.mul(maxLoanPercent).div(100);
-            require(  _amount <= maxLoanSizeStable, "User is trying to borrow too much liquidity at a stable rate");
-        }
-
-        //all conditions passed - borrow is accepted
-        (vars.finalUserBorrowRate, vars.borrowBalanceIncrease) = core.updateStateOnBorrow( _instrument, msg.sender, _amount, vars.borrowFee, vars.rateMode);
-        core.transferToUser(_instrument, msg.sender, _amount);      //if we reached this point, we can transfer
-
-        emit Borrow( _instrument, msg.sender, _amount, _interestRateMode, vars.finalUserBorrowRate, vars.borrowFee, vars.borrowBalanceIncrease, _referralCode, block.timestamp);
+    if (interestRateMode == DataTypes.InterestRateMode.STABLE) {
+      IStableDebtToken(reserve.stableDebtTokenAddress).burn(onBehalfOf, paybackAmount);
+    } 
+    else {
+      IVariableDebtToken(reserve.variableDebtTokenAddress).burn( onBehalfOf, paybackAmount, reserve.variableBorrowIndex );
     }
 
-    /**
-    * @notice repays a borrow on the specific instrument, for the specified amount (or for the whole amount, if uint256(-1) is specified).
-    * @dev the target user is defined by _onBehalfOf. If there is no repayment on behalf of another account,
-    * _onBehalfOf must be equal to msg.sender.
-    * @param _instrument the address of the instrument on which the user borrowed
-    * @param _amount the amount to repay, or uint256(-1) if the user wants to repay everything
-    * @param _onBehalfOf the address for which msg.sender is repaying.
-    **/
+    address aToken = reserve.aTokenAddress;
+    reserve.updateInterestRates(asset, aToken, paybackAmount, 0);
 
-    struct RepayLocalVars {
-        uint256 principalBorrowBalance;
-        uint256 compoundedBorrowBalance;
-        uint256 borrowBalanceIncrease;
-        bool isETH;
-        uint256 paybackAmount;
-        uint256 paybackAmountMinusFees;
-        uint256 currentStableRate;
-        uint256 borrowFee;
+    if (stableDebt.add(variableDebt).sub(paybackAmount) == 0) {
+      _usersConfig[onBehalfOf].setBorrowing(reserve.id, false);
     }
 
-    function repay(address _instrument, uint256 _amount, address payable _onBehalfOf) external payable nonReentrant 
-    onlyActiveInstrument(_instrument) 
-    onlyAmountGreaterThanZero(_amount) {
-        
-        RepayLocalVars memory vars;     // Usage of a memory struct of vars to avoid "Stack too deep" errors due to local variables
-        ( vars.principalBorrowBalance, vars.compoundedBorrowBalance, vars.borrowBalanceIncrease ) = core.getUserBorrowBalances(_instrument, _onBehalfOf);
+    IERC20(asset).safeTransferFrom(msg.sender, aToken, paybackAmount);
 
-        vars.borrowFee = core.getUserBorrowFee(_instrument, _onBehalfOf);
-        vars.isETH = EthAddressLib.ethAddress() == _instrument;
+    emit Repay(asset, onBehalfOf, msg.sender, paybackAmount);
 
-        require(vars.compoundedBorrowBalance > 0, "The user does not have any borrow pending");
-        require( _amount != UINT_MAX_VALUE || msg.sender == _onBehalfOf, "To repay on behalf of an user an explicit amount to repay is needed.");
-
-        vars.paybackAmount = vars.compoundedBorrowBalance.add(vars.borrowFee);     //default to max amount
-
-        if (_amount != UINT_MAX_VALUE && _amount < vars.paybackAmount) {
-            vars.paybackAmount = _amount;
-        }
-
-        require( !vars.isETH || msg.value >= vars.paybackAmount, "Invalid msg.value sent for the repayment");
-
-        //if the amount is smaller than the origination fee, just transfer the amount to the fee destination address
-        if (vars.paybackAmount <= vars.borrowFee) {
-            core.updateStateOnRepay( _instrument, _onBehalfOf, 0, vars.paybackAmount, vars.borrowBalanceIncrease, false);
-            core.transferToFeeCollectionAddress.value( vars.isETH ? vars.paybackAmount : 0)( _instrument, _onBehalfOf, vars.paybackAmount,  addressesProvider.getSIGHFinanceFeeCollector() );
-
-            emit Repay(_instrument, _onBehalfOf, msg.sender, 0, vars.paybackAmount, vars.borrowBalanceIncrease, block.timestamp );
-            return;
-        }
-
-        vars.paybackAmountMinusFees = vars.paybackAmount.sub(vars.borrowFee);
-        core.updateStateOnRepay( _instrument, _onBehalfOf, vars.paybackAmountMinusFees, vars.borrowFee, vars.borrowBalanceIncrease, vars.compoundedBorrowBalance == vars.paybackAmountMinusFees);
-
-        //if the user didn't repay the origination fee, transfer the fee to the fee collection address
-        if(vars.borrowFee > 0) {
-            core.transferToFeeCollectionAddress.value(vars.isETH ? vars.borrowFee : 0)( _instrument, _onBehalfOf, vars.borrowFee, addressesProvider.getSIGHFinanceFeeCollector() );
-        }
-
-        //sending the total msg.value if the transfer is ETH.
-        //the transferToReserve() function will take care of sending the excess ETH back to the caller
-        core.transferToReserve.value(vars.isETH ? msg.value.sub(vars.borrowFee) : 0)( _instrument, msg.sender, vars.paybackAmountMinusFees );
-        emit Repay( _instrument, _onBehalfOf, msg.sender, vars.paybackAmountMinusFees, vars.borrowFee, vars.borrowBalanceIncrease, block.timestamp);
-    }
-
+    return paybackAmount;
+  }
 
 // ####################################################################
 // ######  1. SWAP BETWEEN STABLE AND VARIABLE BORROW RATE MODES ######
 // ######  2. REBALANCES THE STABLE INTEREST RATE OF A USER      ######
 // ####################################################################
 
-    /**
-    * @dev borrowers can user this function to swap between stable and variable borrow rate modes.
-    * @param _instrument the address of the instrument on which the user borrowed
-    **/
-    function swapBorrowRateMode(address _instrument) external nonReentrant 
-    onlyActiveInstrument(_instrument) 
-    onlyUnfreezedInstrument(_instrument) {
-        (uint256 principalBorrowBalance, uint256 compoundedBorrowBalance, uint256 borrowBalanceIncrease) = core.getUserBorrowBalances(_instrument, msg.sender);
+  /**
+   * @dev Allows a borrower to swap his debt between stable and variable mode, or viceversa
+   * @param asset The address of the underlying asset borrowed
+   * @param rateMode The rate mode that the user wants to swap to
+   **/
+  function swapBorrowRateMode(address asset, uint256 rateMode) external override whenNotPaused {
+    DataTypes.ReserveData storage reserve = _reserves[asset];
 
-        require( compoundedBorrowBalance > 0,"User does not have a borrow in progress on this instrument");
-        CoreLibrary.InterestRateMode currentRateMode = core.getUserCurrentBorrowRateMode(_instrument, msg.sender);
+    (uint256 stableDebt, uint256 variableDebt) = Helpers.getUserCurrentDebt(msg.sender, reserve);
 
-        if (currentRateMode == CoreLibrary.InterestRateMode.VARIABLE) {
-            /**
-            * user wants to swap to stable, before swapping we need to ensure that
-            * 1. stable borrow rate is enabled on the instrument
-            * 2. user is not trying to abuse the instrument by depositing
-            * more collateral than he is borrowing, artificially lowering
-            * the interest rate, borrowing at variable, and switching to stable
-            **/
-            require(core.isUserAllowedToBorrowAtStable(_instrument, msg.sender, compoundedBorrowBalance), "User cannot borrow the selected amount at stable");
-        }
+    DataTypes.InterestRateMode interestRateMode = DataTypes.InterestRateMode(rateMode);
 
-        (CoreLibrary.InterestRateMode newRateMode, uint256 newBorrowRate) = core.updateStateOnSwapRate(_instrument, msg.sender, principalBorrowBalance, compoundedBorrowBalance, borrowBalanceIncrease, currentRateMode );
-        emit Swap( _instrument, msg.sender, uint256(newRateMode), newBorrowRate, borrowBalanceIncrease, block.timestamp);
+    ValidationLogic.validateSwapRateMode( reserve, _usersConfig[msg.sender], stableDebt, variableDebt, interestRateMode);
+
+    reserve.updateState();
+
+    if (interestRateMode == DataTypes.InterestRateMode.STABLE) {
+      IStableDebtToken(reserve.stableDebtTokenAddress).burn(msg.sender, stableDebt);
+      IVariableDebtToken(reserve.variableDebtTokenAddress).mint( msg.sender, msg.sender, stableDebt, reserve.variableBorrowIndex );
+    } 
+    else {
+      IVariableDebtToken(reserve.variableDebtTokenAddress).burn( msg.sender, variableDebt, reserve.variableBorrowIndex);
+      IStableDebtToken(reserve.stableDebtTokenAddress).mint( msg.sender, msg.sender, variableDebt, reserve.currentStableBorrowRate);
     }
 
-    /**
-    * @dev rebalances the stable interest rate of a user if current liquidity rate > user stable rate.
-    * this is regulated by Aave to ensure that the protocol is not abused, and the user is paying a fair
-    * rate. Anyone can call this function though.
-    * @param _instrument the address of the instrument
-    * @param _user the address of the user to be rebalanced
-    **/
-    function rebalanceStableBorrowRate(address _instrument, address _user) external nonReentrant 
-    onlyActiveInstrument(_instrument) {
-        (, uint256 compoundedBalance, uint256 borrowBalanceIncrease) = core.getUserBorrowBalances(_instrument, _user);
+    reserve.updateInterestRates(asset, reserve.aTokenAddress, 0, 0);
 
-        //step 1: user must be borrowing on _instrument at a stable rate
-        require(compoundedBalance > 0, "User does not have any borrow for this instrument");
-        require( core.getUserCurrentBorrowRateMode(_instrument, _user) == CoreLibrary.InterestRateMode.STABLE,"The user borrow is variable and cannot be rebalanced" );
+    emit Swap(asset, msg.sender, rateMode);
+  }
 
-        uint256 userCurrentStableRate = core.getUserCurrentStableBorrowRate(_instrument, _user);
-        uint256 liquidityRate = core.getInstrumentCurrentLiquidityRate(_instrument);
-        uint256 instrumentCurrentStableRate = core.getInstrumentCurrentStableBorrowRate(_instrument);
-        uint256 rebalanceDownRateThreshold = instrumentCurrentStableRate.rayMul( WadRayMath.ray().add( parametersProvider.getRebalanceDownRateDelta() ) );
+  /**
+   * @dev Rebalances the stable interest rate of a user to the current stable rate defined on the reserve.
+   * - Users can be rebalanced if the following conditions are satisfied:
+   *     1. Usage ratio is above 95%
+   *     2. the current deposit APY is below REBALANCE_UP_THRESHOLD * maxVariableBorrowRate, which means that too much has been
+   *        borrowed at a stable rate and depositors are not earning enough
+   * @param asset The address of the underlying asset borrowed
+   * @param user The address of the user to be rebalanced
+   **/
+  function rebalanceStableBorrowRate(address asset, address user) external override whenNotPaused {
+    DataTypes.ReserveData storage reserve = _reserves[asset];
 
-        //step 2: we have two possible situations to rebalance:
+    IERC20 stableDebtToken = IERC20(reserve.stableDebtTokenAddress);
+    IERC20 variableDebtToken = IERC20(reserve.variableDebtTokenAddress);
+    address aTokenAddress = reserve.aTokenAddress;
 
-        //1. user stable borrow rate is below the current liquidity rate. The loan needs to be rebalanced,
-        //as this situation can be abused (user putting back the borrowed liquidity in the same instrument to earn on it)
-        //2. user stable rate is above the market avg borrow rate of a certain delta, and utilization rate is low.
-        //In this case, the user is paying an interest that is too high, and needs to be rescaled down.
-        if ( userCurrentStableRate < liquidityRate || userCurrentStableRate > rebalanceDownRateThreshold) {
-            uint256 newStableRate = core.updateStateOnRebalance( _instrument, _user, borrowBalanceIncrease );
+    uint256 stableDebt = IERC20(stableDebtToken).balanceOf(user);
 
-            emit RebalanceStableBorrowRate( _instrument, _user, newStableRate, borrowBalanceIncrease, block.timestamp );
-            return;
-        }
+    ValidationLogic.validateRebalanceStableBorrowRate(reserve,asset,stableDebtToken,variableDebtToken,aTokenAddress);
 
-        revert("Interest rate rebalance conditions were not met");
-    }
+    reserve.updateState();
+
+    IStableDebtToken(address(stableDebtToken)).burn(user, stableDebt);
+    IStableDebtToken(address(stableDebtToken)).mint(user,user,stableDebt,reserve.currentStableBorrowRate);
+
+    reserve.updateInterestRates(asset, aTokenAddress, 0, 0);
+
+    emit RebalanceStableBorrowRate(asset, user);
+  }
 
 // #####################################################################################################
 // ######  1. DEPOSITORS CAN ENABLE DISABLE SPECIFIC DEPOSIT AS COLLATERAL                  ############
@@ -523,95 +506,106 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
     * @param _instrument the address of the instrument
     * @param _useAsCollateral true if the user wants to user the deposit as collateral, false otherwise.
     **/
-    function setUserUseInstrumentAsCollateral(address _instrument, bool _useAsCollateral) external nonReentrant 
-    onlyActiveInstrument(_instrument)  onlyUnfreezedInstrument(_instrument) {
-       
-        uint256 underlyingBalance = core.getUserUnderlyingAssetBalance(_instrument, msg.sender);
+    function setUserUseInstrumentAsCollateral(address _instrument, bool _useAsCollateral) external override whenNotPaused {
+        DataTypes.ReserveData storage reserve = _reserves[asset];
 
-        require(underlyingBalance > 0, "User does not have any liquidity deposited");
-        require( dataProvider.balanceDecreaseAllowed(_instrument, msg.sender, underlyingBalance), "User deposit is already being used as collateral");
+        ValidationLogic.validateSetUseReserveAsCollateral(reserve,asset,useAsCollateral,_reserves,_usersConfig[msg.sender],_reservesList,_reservesCount,_addressesProvider.getPriceOracle() );
 
-        core.setUserUseInstrumentAsCollateral(_instrument, msg.sender, _useAsCollateral);
+        _usersConfig[msg.sender].setUsingAsCollateral(reserve.id, useAsCollateral);
 
-        if (_useAsCollateral) {
-            emit InstrumentUsedAsCollateralEnabled(_instrument, msg.sender);
+        if (useAsCollateral) {
+            emit ReserveUsedAsCollateralEnabled(asset, msg.sender);
         } 
         else {
-            emit InstrumentUsedAsCollateralDisabled(_instrument, msg.sender);
+            emit ReserveUsedAsCollateralDisabled(asset, msg.sender);
         }
     }
 
-    /**
-    * @dev users can invoke this function to liquidate an undercollateralized position.
-    * @param _collateral the address of the collateral to liquidated
-    * @param _instrument the address of the principal instrument
-    * @param _user the address of the borrower
-    * @param _purchaseAmount the amount of principal that the liquidator wants to repay
-    * @param _receiveIToken true if the liquidators wants to receive the ITokens, false if
-    * he wants to receive the underlying asset directly
-    **/
-    function liquidationCall( address _collateral, address _instrument, address _user, uint256 _purchaseAmount, bool _receiveIToken ) external payable nonReentrant 
-        onlyActiveInstrument(_instrument) 
-        onlyActiveInstrument(_collateral) {
+  /**
+   * @dev Function to liquidate a non-healthy position collateral-wise, with Health Factor below 1
+   * - The caller (liquidator) covers `debtToCover` amount of debt of the user getting liquidated, and receives
+   *   a proportionally amount of the `collateralAsset` plus a bonus to cover market risk
+   * @param collateralAsset The address of the underlying asset used as collateral, to receive as result of the liquidation
+   * @param debtAsset The address of the underlying borrowed asset to be repaid with the liquidation
+   * @param user The address of the borrower getting liquidated
+   * @param debtToCover The debt amount of borrowed `asset` the liquidator wants to cover
+   * @param receiveAToken `true` if the liquidators wants to receive the collateral aTokens, `false` if he wants
+   * to receive the underlying collateral asset directly
+   **/
+    function liquidationCall( address collateralAsset, address debtAsset, address user, uint256 debtToCover, bool _receiveIToken ) external override whenNotPaused {
+        address collateralManager = _addressesProvider.getLendingPoolCollateralManager();
 
-        address liquidationManager = addressesProvider.getLendingPoolLiquidationManager();
-        (bool success, bytes memory result) = liquidationManager.delegatecall( abi.encodeWithSignature("liquidationCall(address,address,address,uint256,bool)",  _collateral, _instrument, _user, _purchaseAmount, _receiveIToken ) );
-        require(success, "Liquidation call failed");
+        (bool success, bytes memory result) =
+        collateralManager.delegatecall( abi.encodeWithSignature('liquidationCall(address,address,address,uint256,bool)', collateralAsset, debtAsset, user, debtToCover, receiveAToken ) );
+        require(success, Errors.LP_LIQUIDATION_CALL_FAILED);
 
         (uint256 returnCode, string memory returnMessage) = abi.decode(result, (uint256, string));
 
-        if (returnCode != 0) {      //error found
-            revert(string(abi.encodePacked("Liquidation failed: ", returnMessage)));
-        }
-    }
+        require(returnCode == 0, string(abi.encodePacked(returnMessage)));
+  }
 
 // ################################################################################################################
 // ######  1. FLASH LOAN (total fee = protocol fee + fee distributed among depositors)                 ############
 // ################################################################################################################
-    /**
-    * @dev allows smartcontracts to access the liquidity of the pool within one transaction,
-    * as long as the amount taken plus a fee is returned. NOTE There are security concerns for developers of flashloan receiver contracts
-    * that must be kept into consideration. For further details please visit https://developers.aave.com
-    * @param _receiver The address of the contract receiving the funds. The receiver should implement the IFlashLoanReceiver interface.
-    * @param _instrument the address of the principal instrument
-    * @param _amount the amount requested for this flashloan
-    **/
-    function flashLoan(address _receiver, address _instrument, uint256 _amount, bytes memory _params)  public nonReentrant
-        onlyActiveInstrument(_instrument)
-        onlyAmountGreaterThanZero(_amount)
-    {
-        //check that the instrument has enough available liquidity
-        //we avoid using the getAvailableLiquidity() function in LendingPoolCore to save gas
-        uint256 availableLiquidityBefore = _instrument == EthAddressLib.ethAddress() ? address(core).balance : IERC20(_instrument).balanceOf(address(core));
 
-        require( availableLiquidityBefore >= _amount, "There is not enough liquidity available to borrow");
+  /**
+   * @dev Allows smartcontracts to access the liquidity of the pool within one transaction,
+   * as long as the amount taken plus a fee is returned.
+   * IMPORTANT There are security concerns for developers of flashloan receiver contracts that must be kept into consideration.
+   * For further details please visit https://developers.aave.com
+   * @param receiverAddress The address of the contract receiving the funds, implementing the IFlashLoanReceiver interface
+   * @param assets The addresses of the assets being flash-borrowed
+   * @param amounts The amounts amounts being flash-borrowed
+   * @param modes Types of the debt to open if the flash loan is not returned:
+   *   0 -> Don't open any debt, just revert if funds can't be transferred from the receiver
+   *   1 -> Open debt at stable rate for the value of the amount flash-borrowed to the `onBehalfOf` address
+   *   2 -> Open debt at variable rate for the value of the amount flash-borrowed to the `onBehalfOf` address
+   * @param onBehalfOf The address  that will receive the debt in the case of using on `modes` 1 or 2
+   * @param params Variadic packed params to pass to the receiver as extra information
+   * @param referralCode Code used to register the integrator originating the operation, for potential rewards.
+   *   0 if the action is executed directly by the user, without any middle-man
+   **/
+  function flashLoan( address receiverAddress, address[] calldata assets, uint256[] calldata amounts, uint256[] calldata modes, address onBehalfOf, bytes calldata params, uint16 referralCode) external override whenNotPaused {
+    FlashLoanLocalVars memory vars;
 
-        (uint256 totalFeeBips, uint256 protocolFeeBips) = parametersProvider.getFlashLoanFeesInBips();
-        uint256 amountFee = _amount.mul(totalFeeBips).div(10000);           //calculate amount fee (0.5%)
-        uint256 protocolFee = amountFee.mul(protocolFeeBips).div(10000);    //protocol fee is the 50% of the amountFee, i.e 0.25%
-        require( amountFee > 0 && protocolFee > 0, "The requested amount is too small for a flashLoan." );
+    ValidationLogic.validateFlashloan(assets, amounts);
 
-        //get the FlashLoanReceiver instance
-        IFlashLoanReceiver receiver = IFlashLoanReceiver(_receiver);
-        address payable userPayable = address(uint160(_receiver));
+    address[] memory aTokenAddresses = new address[](assets.length);
+    uint256[] memory premiums = new uint256[](assets.length);
 
-        //transfer funds to the receiver
-        core.transferToUser(_instrument, userPayable, _amount);
+    vars.receiver = IFlashLoanReceiver(receiverAddress);
 
-        //execute action of the receiver
-        receiver.executeOperation(_instrument, _amount, amountFee, _params);
-
-        //check that the actual balance of the core contract includes the returned amount
-        uint256 availableLiquidityAfter = _instrument == EthAddressLib.ethAddress() ? address(core).balance : IERC20(_instrument).balanceOf(address(core));
-        require( availableLiquidityAfter == availableLiquidityBefore.add(amountFee), "The actual balance of the protocol is inconsistent");
-
-        core.updateStateOnFlashLoan( _instrument, availableLiquidityBefore, amountFee.sub(protocolFee), protocolFee );
-        emit FlashLoan(_receiver, _instrument, _amount, amountFee, protocolFee, block.timestamp);
+    for (vars.i = 0; vars.i < assets.length; vars.i++) {
+        aTokenAddresses[vars.i] = _reserves[assets[vars.i]].aTokenAddress;
+        premiums[vars.i] = amounts[vars.i].mul(FLASHLOAN_PREMIUM_TOTAL).div(10000);
+        IAToken(aTokenAddresses[vars.i]).transferUnderlyingTo(receiverAddress, amounts[vars.i]);
     }
 
-    function transferSIGHPayToStakingContract(address _instrument)  public nonReentrant onlyActiveInstrument(_instrument) {
-            core.transferSIGHPayToStakingContract(_instrument);
+    require( vars.receiver.executeOperation(assets, amounts, premiums, msg.sender, params), Errors.LP_INVALID_FLASH_LOAN_EXECUTOR_RETURN);
+
+    for (vars.i = 0; vars.i < assets.length; vars.i++) {
+        vars.currentAsset = assets[vars.i];
+        vars.currentAmount = amounts[vars.i];
+        vars.currentPremium = premiums[vars.i];
+        vars.currentATokenAddress = aTokenAddresses[vars.i];
+        vars.currentAmountPlusPremium = vars.currentAmount.add(vars.currentPremium);
+
+      if (DataTypes.InterestRateMode(modes[vars.i]) == DataTypes.InterestRateMode.NONE) {
+        _reserves[vars.currentAsset].updateState();
+        _reserves[vars.currentAsset].cumulateToLiquidityIndex( IERC20(vars.currentATokenAddress).totalSupply(), vars.currentPremium );
+        _reserves[vars.currentAsset].updateInterestRates(  vars.currentAsset, vars.currentATokenAddress, vars.currentAmountPlusPremium, 0 );
+
+        IERC20(vars.currentAsset).safeTransferFrom( receiverAddress, vars.currentATokenAddress,
+          vars.currentAmountPlusPremium
+        );
+      } 
+      else {
+        // If the user chose to not return the funds, the system checks if there is enough collateral and eventually opens a debt position
+        _executeBorrow( ExecuteBorrowParams( vars.currentAsset, msg.sender, onBehalfOf, vars.currentAmount, modes[vars.i], vars.currentATokenAddress, referralCode, false ) );
+      }
+      emit FlashLoan(  receiverAddress, msg.sender, vars.currentAsset, vars.currentAmount, vars.currentPremium, referralCode );
     }
+  }
 
 
 
@@ -623,56 +617,210 @@ contract LendingPool is ILendingPool, ReentrancyGuard, VersionedInitializable {
 // ######  4. getUserInstrumentData()  ############
 // ######  5. getUserInstrumentData()  ############
 // ####################################################################
+
+
+    // Returns the state and configuration of the reserve
+    function getInstrumentData(address _instrument) external view returns (DataTypes.ReserveData memory) {
+        return _reserves[asset];
+    }
+
+
+    // Returns the user account data across all the reserves
+    function getUserAccountData(address _user) external view returns ( uint256 totalCollateralETH, uint256 totalDebtETH, uint256 availableBorrowsETH, uint256 currentLiquidationThreshold, uint256 ltv, uint256 healthFactor ) {
+        ( totalCollateralETH, totalDebtETH, ltv, currentLiquidationThreshold, healthFactor ) = GenericLogic.calculateUserAccountData( user, _reserves, _usersConfig[user], _reservesList, _reservesCount, _addressesProvider.getPriceOracle() );
+        availableBorrowsETH = GenericLogic.calculateAvailableBorrowsETH( totalCollateralETH, totalDebtETH, ltv );
+    }
+
+    function getInstrumentConfiguration(address _instrument) external view returns ( DataTypes.ReserveConfigurationMap memory ) {
+        return _reserves[asset].configuration;
+    }
+
+    // Returns the configuration of the user across all the reserves
+    function getUserConfiguration(address user) external view override returns (DataTypes.UserConfigurationMap memory) {
+        return _usersConfig[user];
+    }
+
+   // Returns the normalized income per unit of asset
+    function getReserveNormalizedIncome(address asset) external view virtual override returns (uint256) {
+        return _reserves[asset].getNormalizedIncome();
+    }
+
+  
+   // Returns the normalized variable debt per unit of asset
+    function getReserveNormalizedVariableDebt(address asset) external view override returns (uint256) {
+        return _reserves[asset].getNormalizedDebt();
+    }
+
+   // Returns if the LendingPool is paused
+    function paused() external view override returns (bool) {
+        return _paused;
+    }
+
+    // Returns the list of the initialized reserves
+    function getReservesList() external view override returns (address[] memory) {
+        address[] memory _activeReserves = new address[](_reservesCount);
+
+        for (uint256 i = 0; i < _reservesCount; i++) {
+            _activeReserves[i] = _reservesList[i];
+        }
+        return _activeReserves;
+    }
+
+    // Returns the cached LendingPoolAddressesProvider connected to this contract
+    function getAddressesProvider() external view override returns (ILendingPoolAddressesProvider) {
+        return _addressesProvider;
+    }
+
     /**
-    * @dev accessory functions to fetch data from the core contract
+    * @dev Validates and finalizes an aToken transfer
+    * - Only callable by the overlying aToken of the `asset`
+    * @param asset The address of the underlying asset of the aToken
+    * @param from The user from which the aTokens are transferred
+    * @param to The user receiving the aTokens
+    * @param amount The amount being transferred/withdrawn
+    * @param balanceFromBefore The aToken balance of the `from` user before the transfer
+    * @param balanceToBefore The aToken balance of the `to` user before the transfer
+    */
+    function finalizeTransfer( address asset, address from,  address to, uint256 amount,  uint256 balanceFromBefore, uint256 balanceToBefore ) external override whenNotPaused {
+        require(msg.sender == _reserves[asset].aTokenAddress, "Only the associated IToken can call this function");
+
+        ValidationLogic.validateTransfer( from, _reserves, _usersConfig[from], _reservesList, _reservesCount, _addressesProvider.getPriceOracle() );
+
+        uint256 reserveId = _reserves[asset].id;
+
+        if (from != to) {
+            if (balanceFromBefore.sub(amount) == 0) {
+                DataTypes.UserConfigurationMap storage fromConfig = _usersConfig[from];
+                fromConfig.setUsingAsCollateral(reserveId, false);
+                emit ReserveUsedAsCollateralDisabled(asset, from);
+            }
+
+            if (balanceToBefore == 0 && amount != 0) {
+                DataTypes.UserConfigurationMap storage toConfig = _usersConfig[to];
+                toConfig.setUsingAsCollateral(reserveId, true);
+                emit ReserveUsedAsCollateralEnabled(asset, to);
+            }
+        }
+    }
+
+    /**
+    * @dev Initializes a reserve, activating it, assigning an aToken and debt tokens and an interest rate strategy
+    * - Only callable by the LendingPoolConfigurator contract
+    * @param asset The address of the underlying asset of the reserve
+    * @param aTokenAddress The address of the aToken that will be assigned to the reserve
+    * @param stableDebtAddress The address of the StableDebtToken that will be assigned to the reserve
+    * @param aTokenAddress The address of the VariableDebtToken that will be assigned to the reserve
+    * @param interestRateStrategyAddress The address of the interest rate strategy contract
     **/
-
-    function getInstrumentConfigurationData(address _instrument) external view returns (
-            uint256 ltv,
-            uint256 liquidationThreshold,
-            uint256 liquidationBonus,
-            address interestRateStrategyAddress,
-            bool usageAsCollateralEnabled,
-            bool borrowingEnabled,
-            bool stableBorrowRateEnabled,
-            bool isActive
-        )
-    {
-        return dataProvider.getInstrumentConfigurationData(_instrument);
+    function initReserve(  address asset,  address aTokenAddress,  address stableDebtAddress,  address variableDebtAddress, address interestRateStrategyAddress ) external override onlyLendingPoolConfigurator {
+        require(Address.isContract(asset), Errors.LP_NOT_CONTRACT);
+        _reserves[asset].init( aTokenAddress, stableDebtAddress, variableDebtAddress, interestRateStrategyAddress );
+        _addReserveToList(asset);
     }
 
-    function getInstrumentData(address _instrument) external view returns (
-            uint256 totalLiquidity,
-            uint256 availableLiquidity,
-            uint256 totalBorrowsStable,
-            uint256 totalBorrowsVariable,
-            uint256 liquidityRate,
-            uint256 variableBorrowRate,
-            uint256 stableBorrowRate,
-            uint256 averageStableBorrowRate,
-            uint256 utilizationRate,
-            uint256 liquidityIndex,
-            uint256 variableBorrowIndex,
-            address iTokenAddress,
-            uint40 lastUpdateTimestamp
-        )
-    {
-        return dataProvider.getInstrumentData(_instrument);
+    /**
+    * @dev Updates the address of the interest rate strategy contract. Only callable by the LendingPoolConfigurator contract
+    * @param asset The address of the underlying asset of the reserve
+    * @param rateStrategyAddress The address of the interest rate strategy contract
+    **/
+    function setReserveInterestRateStrategyAddress(address asset, address rateStrategyAddress) external override onlyLendingPoolConfigurator {
+        _reserves[asset].interestRateStrategyAddress = rateStrategyAddress;
     }
 
-    function getUserAccountData(address _user) external view returns (
-            uint256 totalLiquidityETH,
-            uint256 totalCollateralETH,
-            uint256 totalBorrowsETH,
-            uint256 totalFeesETH,
-            uint256 availableBorrowsETH,
-            uint256 currentLiquidationThreshold,
-            uint256 ltv,
-            uint256 healthFactor
-        )
-    {
-        return dataProvider.getUserAccountData(_user);
+    /**
+    * @dev Sets the configuration bitmap of the reserve as a whole. Only callable by the LendingPoolConfigurator contract
+    * @param asset The address of the underlying asset of the reserve
+    * @param configuration The new configuration bitmap
+    **/
+    function setConfiguration(address asset, uint256 configuration) external override onlyLendingPoolConfigurator {
+        _reserves[asset].configuration.data = configuration;
     }
+
+    /**
+    * @dev Set the _pause state of a reserve. Only callable by the LendingPoolConfigurator contract
+    * @param val `true` to pause the reserve, `false` to un-pause it
+    */
+    function setPause(bool val) external override onlyLendingPoolConfigurator {
+        _paused = val;
+        if (_paused) {
+            emit Paused();
+        } 
+        else {
+            emit Unpaused();
+        }
+    }
+
+    struct ExecuteBorrowParams {
+        address asset;
+        address user;
+        address onBehalfOf;
+        uint256 amount;
+        uint256 interestRateMode;
+        address aTokenAddress;
+        uint16 referralCode;
+        bool releaseUnderlying;
+    }
+
+    function _executeBorrow(ExecuteBorrowParams memory vars) internal {
+        DataTypes.ReserveData storage reserve = _reserves[vars.asset];
+        DataTypes.UserConfigurationMap storage userConfig = _usersConfig[vars.onBehalfOf];
+
+        address oracle = _addressesProvider.getPriceOracle();
+
+        uint256 amountInETH = IPriceOracleGetter(oracle).getAssetPrice(vars.asset).mul(vars.amount).div(  10**reserve.configuration.getDecimals() );
+
+        ValidationLogic.validateBorrow( vars.asset, reserve, vars.onBehalfOf, vars.amount, amountInETH, vars.interestRateMode, MAX_STABLE_RATE_BORROW_SIZE_PERCENT, _reserves, userConfig, _reservesList, _reservesCount, oracle );
+        reserve.updateState();
+
+        uint256 currentStableRate = 0;
+        bool isFirstBorrowing = false;
+
+        if (DataTypes.InterestRateMode(vars.interestRateMode) == DataTypes.InterestRateMode.STABLE) {
+            currentStableRate = reserve.currentStableBorrowRate;
+            isFirstBorrowing = IStableDebtToken(reserve.stableDebtTokenAddress).mint( vars.user, vars.onBehalfOf, vars.amount, currentStableRate );
+        } 
+        else {
+            isFirstBorrowing = IVariableDebtToken(reserve.variableDebtTokenAddress).mint( vars.user, vars.onBehalfOf, vars.amount, reserve.variableBorrowIndex );
+        }
+
+        if (isFirstBorrowing) {
+            userConfig.setBorrowing(reserve.id, true);
+        }
+
+        reserve.updateInterestRates( vars.asset, vars.aTokenAddress, 0, vars.releaseUnderlying ? vars.amount : 0 );
+
+        if (vars.releaseUnderlying) {
+            IAToken(vars.aTokenAddress).transferUnderlyingTo(vars.user, vars.amount);
+        }
+
+        emit Borrow( vars.asset, vars.user, vars.onBehalfOf, vars.amount, vars.interestRateMode, DataTypes.InterestRateMode(vars.interestRateMode) == DataTypes.InterestRateMode.STABLE ? currentStableRate : reserve.currentVariableBorrowRate, vars.referralCode );
+    }
+
+    function _addReserveToList(address asset) internal {
+        uint256 reservesCount = _reservesCount;
+        require(reservesCount < MAX_NUMBER_RESERVES, Errors.LP_NO_MORE_RESERVES_ALLOWED);
+        bool reserveAlreadyAdded = _reserves[asset].id != 0 || _reservesList[0] == asset;
+
+        if (!reserveAlreadyAdded) {
+            _reserves[asset].id = uint8(reservesCount);
+            _reservesList[reservesCount] = asset;
+            _reservesCount = reservesCount + 1;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     function getUserInstrumentData(address _instrument, address _user) external view returns (
             uint256 currentITokenBalance,
