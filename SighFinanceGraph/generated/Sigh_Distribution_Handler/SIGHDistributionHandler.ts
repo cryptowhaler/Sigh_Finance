@@ -370,16 +370,16 @@ export class StakingSpeedUpdated__Params {
   }
 }
 
-export class minimumBlocksForSpeedRefreshUpdated extends ethereum.Event {
-  get params(): minimumBlocksForSpeedRefreshUpdated__Params {
-    return new minimumBlocksForSpeedRefreshUpdated__Params(this);
+export class minimumTimestampForSpeedRefreshUpdated extends ethereum.Event {
+  get params(): minimumTimestampForSpeedRefreshUpdated__Params {
+    return new minimumTimestampForSpeedRefreshUpdated__Params(this);
   }
 }
 
-export class minimumBlocksForSpeedRefreshUpdated__Params {
-  _event: minimumBlocksForSpeedRefreshUpdated;
+export class minimumTimestampForSpeedRefreshUpdated__Params {
+  _event: minimumTimestampForSpeedRefreshUpdated;
 
-  constructor(event: minimumBlocksForSpeedRefreshUpdated) {
+  constructor(event: minimumTimestampForSpeedRefreshUpdated) {
     this._event = event;
   }
 

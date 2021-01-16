@@ -27,9 +27,10 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
     GlobalAddressesProvider public addressesProvider;
     IERC20 public Sigh_Address;
     IPriceOracleGetter public oracle;
+    address private Eth_Oracle_Address;
     ILendingPoolCore public lendingPoolCore;
 
-    uint constant sighInitialIndex = 1e36;            ///  The initial SIGH index for a market
+    uint constant sighInitialIndex = 1e36;                              ///  The initial SIGH index for an instrument
 
     Exp private cryptoMarketSentiment = Exp({mantissa: 1e18 });  
 
@@ -46,20 +47,20 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
 
 // ######## INDIVIDUAL INSTRUMENT STATE ########
 
-    struct SIGHInstrument {
+    struct SupportedInstrument {
         bool isListed;
-        string name;
+        bool isSIGHMechanismActivated;
+        string symbol;
+        uint256 decimals;
         address iTokenAddress;
         address sighStreamAddress;
-        uint256 decimals;
-        bool isSIGHMechanismActivated;
         uint supplyindex;
         uint256 supplylastupdatedblock;
         uint borrowindex;
         uint256 borrowlastupdatedblock;
     }
 
-    mapping (address => SIGHInstrument) private financial_instruments;    // FINANCIAL INSTRUMENTS
+    mapping (address => SupportedInstrument) private crypto_instruments;    // FINANCIAL INSTRUMENTS
     
 // ######## 24 HOUR PRICE HISTORY FOR EACH INSTRUMENT AND THE BLOCK NUMBER WHEN THEY WERE TAKEN ########
 
@@ -71,6 +72,7 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
     mapping(address => InstrumentPriceCycle) private instrumentPriceCycles;    
     uint256[24] private blockNumbersForPriceSnapshots_;
     uint224 private curClock;
+    uint256 private curEpoch;    
 
 // ######## SIGH DISTRIBUTION SPEED FOR EACH INSTRUMENT ########
 
@@ -100,15 +102,15 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
     event InstrumentRemoved(address _instrument, uint blockNumber); 
     event InstrumentSIGHStateUpdated( address instrument_, bool isSIGHMechanismActivated, uint bearSentiment, uint bullSentiment );
 
-    event SIGHSpeedUpdated(uint oldSIGHSpeed, uint newSIGHSpeed, uint blockNumber_);     /// Emitted when SIGH speed is changed
+    event SIGHSpeedUpdated(uint oldSIGHSpeed, uint newSIGHSpeed, uint timestamp);     /// Emitted when SIGH speed is changed
     event CryptoMarketSentimentUpdated( uint cryptoMarketSentiment );
-    event minimumBlocksForSpeedRefreshUpdated( uint prevdeltaTimestamp,uint newdeltaTimestamp, uint blockNumber );
-
+    event minimumTimestampForSpeedRefreshUpdated( uint prevdeltaTimestamp,uint newdeltaTimestamp );
+    event EthereumOracleAddressUpdated(address ethOracleAddress);
     event StakingSpeedUpdated(address instrumentAddress_ , uint prevStakingSpeed, uint new_staking_Speed, uint blockNumber );
     
     event PriceSnapped(address instrument, uint prevPrice, uint currentPrice, uint deltaBlocks, uint currentClock );   
     event MaxSIGHSpeedCalculated(uint _SIGHSpeed, uint _SIGHSpeedUsed, uint _totalVolatilityLimitPerBlock, uint _maxVolatilityToAddressPerBlock, uint _max_SIGHDistributionLimitDecimalsAdjusted );
-    event InstrumentVolatilityCalculated(address _Instrument, uint _total24HrVolatility , uint _total24HrSentimentVolatility);
+    event InstrumentVolatilityCalculated(address _Instrument, uint bullSentiment, uint bearSentiment, uint _total24HrVolatility , uint _total24HrSentimentVolatility);
     event refreshingSighSpeeds( address _Instrument, uint8 side,  uint supplierSpeed, uint borrowerSpeed, uint _percentTotalSentimentVolatility, uint _percentTotalVolatility );
     
 
@@ -135,7 +137,7 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
 
     // This function can only be called by the Instrument's IToken Contract
     modifier onlySighStreamContract(address instrument) {
-           SIGHInstrument memory currentInstrument = financial_instruments[instrument];
+           SupportedInstrument memory currentInstrument = crypto_instruments[instrument];
            require( currentInstrument.isListed, "This instrument is not supported by SIGH Distribution Handler");
            require( msg.sender == currentInstrument.sighStreamAddress, "This function can only be called by the Instrument's SIGH Streams Handler Contract");
         _;
@@ -181,14 +183,14 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
     * @param _decimals the number of decimals of the underlying asset
     **/
     function addInstrument( address _instrument, address _iTokenAddress, address _sighStreamAddress, uint256 _decimals ) external onlyLendingPoolCore returns (bool) {
-        require(!financial_instruments[_instrument].isListed ,"Instrument already supported.");
+        require(!crypto_instruments[_instrument].isListed ,"Instrument already supported.");
 
         all_Instruments.push(_instrument); // ADD THE INSTRUMENT TO THE LIST OF SUPPORTED INSTRUMENTS
         ERC20Detailed instrumentContract = ERC20Detailed(_iTokenAddress);
 
         // STATE UPDATED : INITIALIZE INNSTRUMENT DATA
-        financial_instruments[_instrument] = SIGHInstrument( {  isListed: true, 
-                                                                name: instrumentContract.name(),
+        crypto_instruments[_instrument] = SupportedInstrument( {  isListed: true, 
+                                                                symbol: instrumentContract.symbol(),
                                                                 iTokenAddress: _iTokenAddress,
                                                                 sighStreamAddress: _sighStreamAddress,
                                                                 decimals: _decimals, 
@@ -227,8 +229,8 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
     * @dev removes an instrument - Called by LendingPool Core when an instrument is removed from the Lending Protocol
     * @param _instrument the instrument object
     **/
-    function removeInstrument( address _instrument ) external onlyLendingPoolCore returns (bool) {   // 
-        require(financial_instruments[_instrument].isListed ,"Instrument already supported.");
+    function removeInstrument( address _instrument ) external onlyLendingPoolCore returns (bool) {    
+        require(crypto_instruments[_instrument].isListed ,"Instrument already supported.");
         require(updatedInstrumentIndexesInternal(), "Updating Instrument Indexes Failed");       //  accure the indexes 
 
         uint index = 0;
@@ -244,7 +246,7 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
         uint newLen = length_ - 1;
         require(all_Instruments.length == newLen,"Instrument not properly removed from the list of instruments supported");
         
-        delete financial_instruments[_instrument];
+        delete crypto_instruments[_instrument];
         delete Instrument_Sigh_Mechansim_States[_instrument];
         delete instrumentPriceCycles[_instrument];
 
@@ -260,18 +262,18 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
     * @param instrument_ the instrument object
     **/
     function Instrument_SIGH_StateUpdated(address instrument_, uint _bearSentiment,uint _bullSentiment, bool _isSIGHMechanismActivated  ) external onlySighFinanceConfigurator returns (bool) {                   // 
-        require(financial_instruments[instrument_].isListed ,"Instrument not supported.");
+        require(crypto_instruments[instrument_].isListed ,"Instrument not supported.");
         require( _bearSentiment >= 0.01e18, 'The new Volatility Limit for Suppliers must be greater than 0.01e18 (1%)');
         require( _bearSentiment <= 10e18, 'The new Volatility Limit for Suppliers must be less than 10e18 (10x)');
         require( _bullSentiment >= 0.01e18, 'The new Volatility Limit for Borrowers must be greater than 0.01e18 (1%)');
         require( _bullSentiment <= 10e18, 'The new Volatility Limit for Borrowers must be less than 10e18 (10x)');
         refreshSIGHSpeeds(); 
         
-        financial_instruments[instrument_].isSIGHMechanismActivated = _isSIGHMechanismActivated;                       // STATE UPDATED
+        crypto_instruments[instrument_].isSIGHMechanismActivated = _isSIGHMechanismActivated;                       // STATE UPDATED
         Instrument_Sigh_Mechansim_States[instrument_].bearSentiment = _bearSentiment;      // STATE UPDATED
         Instrument_Sigh_Mechansim_States[instrument_].bullSentiment = _bullSentiment;      // STATE UPDATED
         
-        emit InstrumentSIGHStateUpdated( instrument_, financial_instruments[instrument_].isSIGHMechanismActivated, Instrument_Sigh_Mechansim_States[instrument_].bearSentiment, Instrument_Sigh_Mechansim_States[instrument_].bullSentiment );
+        emit InstrumentSIGHStateUpdated( instrument_, crypto_instruments[instrument_].isSIGHMechanismActivated, Instrument_Sigh_Mechansim_States[instrument_].bearSentiment, Instrument_Sigh_Mechansim_States[instrument_].bullSentiment );
         return true;
     }
     
@@ -292,7 +294,7 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
         refreshSIGHSpeeds();
         uint oldSpeed = SIGHSpeed;
         SIGHSpeed = SIGHSpeed_;                                 // STATE UPDATED
-        emit SIGHSpeedUpdated(oldSpeed, SIGHSpeed, getBlockNumber());         
+        emit SIGHSpeedUpdated(oldSpeed, SIGHSpeed, block.timestamp );         
         return true;
     }
     
@@ -303,7 +305,7 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
      * @param newStakingSpeed The additional SIGH staking speed assigned to the Instrument
      */
     function updateStakingSpeedForAnInstrument(address instrument_, uint newStakingSpeed) external onlySighFinanceConfigurator returns (bool) {     // 
-        require(financial_instruments[instrument_].isListed ,"Instrument not supported.");
+        require(crypto_instruments[instrument_].isListed ,"Instrument not supported.");
         
         uint prevStakingSpeed = Instrument_Sigh_Mechansim_States[instrument_].staking_Speed;
         Instrument_Sigh_Mechansim_States[instrument_].staking_Speed = newStakingSpeed;                    // STATE UPDATED
@@ -318,20 +320,30 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
      * can call this function through the Sigh Finance Configurator
      * @param deltaBlocksLimit The new Minimum blocks limit
      */   
-    function updatedeltaTimestampRefresh(uint deltaBlocksLimit) external onlySighFinanceConfigurator returns (bool) {      // 
+    function updatedeltaTimestampRefresh(uint deltaTimestampLimit) external onlySighFinanceConfigurator returns (bool) {      // 
         refreshSIGHSpeeds();
         uint prevdeltaTimestamp = deltaTimestamp;
-        deltaTimestamp = deltaBlocksLimit;                                         // STATE UPDATED
-        emit minimumBlocksForSpeedRefreshUpdated( prevdeltaTimestamp,deltaTimestamp, getBlockNumber()  );
+        deltaTimestamp = deltaTimestampLimit;                                         // STATE UPDATED
+        emit minimumTimestampForSpeedRefreshUpdated( prevdeltaTimestamp,deltaTimestamp );
         return true;
     }
 
-    function updateCryptoMarketSentiment ( uint cryptoMarketSentiment_ ) external onlySighFinanceConfigurator returns (bool) {
+    function updateCryptoMarketSentiment( uint cryptoMarketSentiment_ ) external onlySighFinanceConfigurator returns (bool) {
         require( cryptoMarketSentiment_ >= 0.01e18, 'The new Volatility Limit for Borrowers must be greater than 0.01e18 (1%)');
         require( cryptoMarketSentiment_ <= 10e18, 'The new Volatility Limit for Borrowers must be less than 10e18 (10x)');
         
         cryptoMarketSentiment = Exp({mantissa: cryptoMarketSentiment_ });  
         emit CryptoMarketSentimentUpdated( cryptoMarketSentiment.mantissa );
+        return true;
+    }
+
+    function updateETHOracleAddress( address _EthOracleAddress ) external onlySighFinanceConfigurator returns (bool) {
+        require( _EthOracleAddress != address(0), 'ETH Oracle address not valid');
+        require(oracle.getAssetPrice(_EthOracleAddress) > 0, 'Oracle returned invalid price');   
+        require(oracle.getAssetPriceDecimals(_EthOracleAddress) > 0, 'Oracle returned invalid decimals');   
+        
+        Eth_Oracle_Address = _EthOracleAddress;       
+        emit EthereumOracleAddressUpdated( Eth_Oracle_Address );
         return true;
     }
 
@@ -343,12 +355,11 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
      * @notice Recalculate and update SIGH speeds for all Supported SIGH markets
      */
     function refreshSIGHSpeeds() public nonReentrant returns (bool) {
-        uint blockNumber = block.number;
-        uint256 blocksElapsedSinceLastRefresh = sub_(blockNumber , prevHarvestRefreshTimestamp, "Refresh SIGH Speeds : Subtraction underflow for blocks"); 
+        uint256 timeElapsedSinceLastRefresh = sub_(now , prevHarvestRefreshTimestamp, "Refresh SIGH Speeds : Subtraction underflow for timestamps"); 
 
-        if ( blocksElapsedSinceLastRefresh >= deltaTimestamp) {
+        if ( timeElapsedSinceLastRefresh >= deltaTimestamp) {
             refreshSIGHSpeedsInternal();
-            prevHarvestRefreshTimestamp = blockNumber;                                        // STATE UPDATED
+            prevHarvestRefreshTimestamp = now;                                        // STATE UPDATED
             return true;
         }
         return false;
@@ -369,8 +380,8 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
      */    
     function refreshSIGHSpeedsInternal() internal {
         address[] memory all_Instruments_ = all_Instruments;
-        uint deltaBlocks_ = sub_(block.number , blockNumbersForPriceSnapshots_[curClock], "DeltaBlocks resulted in Underflow");       // Delta Blocks over past 24 hours
-        blockNumbersForPriceSnapshots_[curClock] = block.number;                                                                    // STATE UPDATE : Block Number for the priceSnapshot Updated
+        uint deltaBlocks_ = sub_( now , blockNumbersForPriceSnapshots_[curClock], "DeltaTimestamp resulted in Underflow");       // Delta Blocks over past 24 hours
+        blockNumbersForPriceSnapshots_[curClock] = now;                                                                    // STATE UPDATE : Block Number for the priceSnapshot Updated
 
         require(updatedInstrumentIndexesInternal(), "Updating Instrument Indexes Failed");       //  accure the indexes 
 
@@ -388,14 +399,16 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
             address _currentInstrument = all_Instruments_[i];       // Current Instrument
             
             // UPDATING PRICE SNAPSHOTS
-            Exp memory previousPriceETH = Exp({ mantissa: instrumentPriceCycles[_currentInstrument].recordedPriceSnapshot[curClock] });            // 24hr old price snapshot
-            Exp memory currentPriceETH = Exp({ mantissa: oracle.getAssetPrice( _currentInstrument ) });                                            // current price from the oracle
-            require ( currentPriceETH.mantissa > 0, "refreshSIGHSpeedsInternal : Oracle returned Invalid Price" );
-            instrumentPriceCycles[_currentInstrument].recordedPriceSnapshot[curClock] =  uint256(currentPriceETH.mantissa); //  STATE UPDATED : PRICE SNAPSHOT TAKEN        
-            emit PriceSnapped(_currentInstrument, previousPriceETH.mantissa, instrumentPriceCycles[_currentInstrument].recordedPriceSnapshot[curClock], deltaBlocks_, curClock );
+            Exp memory previousPriceUSD = Exp({ mantissa: instrumentPriceCycles[_currentInstrument].recordedPriceSnapshot[curClock] });            // 24hr old price snapshot
+            Exp memory currentPriceUSD = Exp({ mantissa: oracle.getAssetPrice( _currentInstrument ) });                                            // current price from the oracle
+            require ( currentPriceUSD.mantissa > 0, "refreshSIGHSpeedsInternal : Oracle returned Invalid Price" );
+            instrumentPriceCycles[_currentInstrument].recordedPriceSnapshot[curClock] =  uint256(currentPriceUSD.mantissa); //  STATE UPDATED : PRICE SNAPSHOT TAKEN        
+            emit PriceSnapped(_currentInstrument, previousPriceUSD.mantissa, instrumentPriceCycles[_currentInstrument].recordedPriceSnapshot[curClock], deltaBlocks_, curClock );
 
-            if ( !financial_instruments[_currentInstrument].isSIGHMechanismActivated || instrumentPriceCycles[_currentInstrument].initializationCounter != uint32(24) ) {     // if LOSS MINIMIZNG MECHANISM IS NOT ACTIVATED FOR THIS INSTRUMENT
+            if ( !crypto_instruments[_currentInstrument].isSIGHMechanismActivated || instrumentPriceCycles[_currentInstrument].initializationCounter != uint32(24) ) {     // if LOSS MINIMIZNG MECHANISM IS NOT ACTIVATED FOR THIS INSTRUMENT
                 // STATE UPDATE
+                Instrument_Sigh_Mechansim_States[_currentInstrument].bearSentiment = 1e18;
+                Instrument_Sigh_Mechansim_States[_currentInstrument].bullSentiment = 1e18;
                 Instrument_Sigh_Mechansim_States[_currentInstrument].side = uint8(0);
                 Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility =  uint(0);
                 Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrSentimentVolatility =  uint(0);
@@ -410,40 +423,57 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
                 Exp memory lossPerInstrument = Exp({mantissa: 0});   
                 Exp memory instrumentVolatilityLimit = Exp({mantissa: 0});
                 
-                if ( greaterThanExp(previousPriceETH , currentPriceETH) ) {   // i.e the price has decreased so we calculate Losses accured by Suppliers of the Instrument
-                    uint totalCompoundedLiquidity = IERC20(financial_instruments[_currentInstrument].iTokenAddress).totalSupply(); // Total Compounded Liquidity
-                    ( error, lossPerInstrument) = subExp( previousPriceETH , currentPriceETH );       
+                if ( greaterThanExp(previousPriceUSD , currentPriceUSD) ) {   // i.e the price has decreased so we calculate Losses accured by Suppliers of the Instrument
+                    uint totalCompoundedLiquidity = IERC20(crypto_instruments[_currentInstrument].iTokenAddress).totalSupply(); // Total Compounded Liquidity
+                    ( error, lossPerInstrument) = subExp( previousPriceUSD , currentPriceUSD );       
                     ( error, volatility ) = mulScalar( lossPerInstrument, totalCompoundedLiquidity );
                     instrumentVolatilityLimit = Exp({mantissa: Instrument_Sigh_Mechansim_States[_currentInstrument].bearSentiment });
                     // STATE UPDATE
-                    Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility =  adjustForDecimalsInternal(volatility.mantissa, financial_instruments[_currentInstrument].decimals , oracle.getAssetPriceDecimals(_currentInstrument) );
+                    Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility =  adjustForDecimalsInternal(volatility.mantissa, crypto_instruments[_currentInstrument].decimals , oracle.getAssetPriceDecimals(_currentInstrument) );
                     Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrSentimentVolatility =  mul_(Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility , instrumentVolatilityLimit );
                     Instrument_Sigh_Mechansim_States[_currentInstrument].side = uint8(1);
+
+                    uint256 _bear = mul_(Instrument_Sigh_Mechansim_States[_currentInstrument].bearSentiment,167);
+                    _bear = add_(_bear,1e18);
+                    Instrument_Sigh_Mechansim_States[_currentInstrument].bearSentiment = div_(_bear,168);
+
+                    uint256 _bull = mul_(Instrument_Sigh_Mechansim_States[_currentInstrument].bullSentiment,167);
+                    Instrument_Sigh_Mechansim_States[_currentInstrument].bullSentiment = div_(_bull,168);
+
                 }
                 else {                                              // i.e the price has increased so we calculate Losses accured by Borrowers of the Instrument
                     uint totalVariableBorrows =  lendingPoolCore.getInstrumentCompoundedBorrowsVariable(_currentInstrument);
                     uint totalStableBorrows =  lendingPoolCore.getInstrumentCompoundedBorrowsStable(_currentInstrument);
                     uint totalCompoundedBorrows =  add_(totalVariableBorrows,totalStableBorrows,'Compounded Borrows Addition gave error'); 
-                    ( error, lossPerInstrument) = subExp( currentPriceETH, previousPriceETH );       
+                    ( error, lossPerInstrument) = subExp( currentPriceUSD, previousPriceUSD );       
                     ( error, volatility ) = mulScalar( lossPerInstrument, totalCompoundedBorrows );
                     instrumentVolatilityLimit = Exp({mantissa: Instrument_Sigh_Mechansim_States[_currentInstrument].bullSentiment });
                     // STATE UPDATE
-                    Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility = adjustForDecimalsInternal(volatility.mantissa , financial_instruments[_currentInstrument].decimals , oracle.getAssetPriceDecimals(_currentInstrument) );
+                    Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility = adjustForDecimalsInternal(volatility.mantissa , crypto_instruments[_currentInstrument].decimals , oracle.getAssetPriceDecimals(_currentInstrument) );
                     Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrSentimentVolatility =  mul_(Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility , instrumentVolatilityLimit );
                     Instrument_Sigh_Mechansim_States[_currentInstrument].side = uint8(2);
+
+                    uint256 _bull = mul_(Instrument_Sigh_Mechansim_States[_currentInstrument].bullSentiment,167);
+                    _bull = add_(_bull,1e18);
+                    Instrument_Sigh_Mechansim_States[_currentInstrument].bullSentiment = div_(_bull,168);
+
+                    uint256 _bear = mul_(Instrument_Sigh_Mechansim_States[_currentInstrument].bearSentiment,167);
+                    Instrument_Sigh_Mechansim_States[_currentInstrument].bearSentiment = div_(_bear,168);
+
                 }
                 //  Total Protocol Volatility  += Instrument Volatility 
                 totalProtocolVolatility = add_(totalProtocolVolatility, Exp({mantissa: Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility}) );            
                 //  Total Protocol Volatility Limit  += Instrument Volatility Limit Amount                 
                  totalProtocolVolatilityLimit = add_(totalProtocolVolatilityLimit, Exp({mantissa: Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrSentimentVolatility})) ;            
             }
-            emit InstrumentVolatilityCalculated(_currentInstrument, Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility , Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrSentimentVolatility);
+            
+            emit InstrumentVolatilityCalculated(_currentInstrument, Instrument_Sigh_Mechansim_States[_currentInstrument].bullSentiment, Instrument_Sigh_Mechansim_States[_currentInstrument].bearSentiment, Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrVolatility , Instrument_Sigh_Mechansim_States[_currentInstrument]._total24HrSentimentVolatility);
         }
         
        
         last24HrsTotalProtocolVolatility = totalProtocolVolatility.mantissa;              // STATE UPDATE : Last 24 Hrs Protocol Volatility  (i.e SUM(_total24HrVolatility for Instruments))  Updated
         last24HrsSentimentProtocolVolatility = totalProtocolVolatilityLimit.mantissa;     // STATE UPDATE : Last 24 Hrs Protocol Volatility Limit (i.e SUM(_total24HrSentimentVolatility for Instruments)) Updated
-        deltaBlockslast24HrSession = deltaBlocks_;                               // STATE UPDATE :
+        deltaBlockslast24HrSession = deltaBlocks_;                                        // STATE UPDATE :
         
         // STATE UPDATE :: CALCULATING SIGH SPEED WHICH IS TO BE USED FOR CALCULATING EACH INSTRUMENT's SIGH DISTRIBUTION SPEEDS
         SIGHSpeedUsed = SIGHSpeed;
@@ -511,15 +541,24 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
     // returns the currently maximum possible SIGH Distribution speed. Called only when upper check is activated
     // Updated the Global "SIGHSpeedUsed" Variable & "last24HrsSentimentProtocolVolatilityAddressedPerBlock" Variable
     function calculateMaxSighSpeedInternal( uint totalVolatilityLimitPerBlock ) internal {
+
         uint current_Sigh_PriceETH = oracle.getAssetPrice( address(Sigh_Address) );   
-        ERC20Detailed sighContract = ERC20Detailed(address(Sigh_Address));
-        uint priceDecimals = oracle.getAssetPriceDecimals(address(Sigh_Address));
-        uint sighDecimals =  sighContract.decimals();
+        uint sighEthPriceDecimals = oracle.getAssetPriceDecimals(address(Sigh_Address));
         require(current_Sigh_PriceETH > 0,"Oracle returned invalid $SIGH Price!");
 
+        uint current_ETH_PriceUSD = oracle.getAssetPrice( address(Eth_Oracle_Address) );   
+        uint ethPriceDecimals = oracle.getAssetPriceDecimals(address(Eth_Oracle_Address));
+        require(current_ETH_PriceUSD > 0,"Oracle returned invalid ETH Price!");
+
+        uint currentSIGH_price_USD = mul_( current_Sigh_PriceETH, current_ETH_PriceUSD), "SIGH Price : SIGH ETH Price to USD multiplication gave error" );
+        currentSIGH_price_USD = div_( currentSIGH_price_USD, uint( 10**(sighEthPriceDecimals) ), "Max Volatility : SIGH decimal Division gave error");
+
+        ERC20Detailed sighContract = ERC20Detailed(address(Sigh_Address));
+        uint sighDecimals =  sighContract.decimals();
+
         // MAX Value that can be distributed per block through SIGH Distribution
-        uint max_SIGHDistributionLimit = mul_( current_Sigh_PriceETH, SIGHSpeed );   
-        uint max_SIGHDistributionLimitDecimalsAdjusted = adjustForDecimalsInternal( max_SIGHDistributionLimit,sighDecimals , priceDecimals  );
+        uint max_SIGHDistributionLimit = mul_( currentSIGH_price_USD, SIGHSpeed );   
+        uint max_SIGHDistributionLimitDecimalsAdjusted = adjustForDecimalsInternal( max_SIGHDistributionLimit, sighDecimals , ethPriceDecimals  );
 
         // MAX Volatility that is allowed to be covered through SIGH Distribution (% of the Harvestable Volatility)
         uint maxVolatilityToAddressPerBlock = mul_(totalVolatilityLimitPerBlock, cryptoMarketSentiment ); // (a * b)/1e18 [b is in Exp Scale]
@@ -527,9 +566,9 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
 
         if ( max_SIGHDistributionLimitDecimalsAdjusted >  maxVolatilityToAddressPerBlock ) {
             uint maxVolatilityToAddress_SIGHdecimalsMul = mul_( maxVolatilityToAddressPerBlock, uint(10**(sighDecimals)), "Max Volatility : SIGH Decimals multiplication gave error" );
-            uint maxVolatilityToAddress_PricedecimalsMul = mul_( maxVolatilityToAddress_SIGHdecimalsMul, uint(10**(priceDecimals)), "Max Volatility : Price Decimals multiplication gave error" );
+            uint maxVolatilityToAddress_PricedecimalsMul = mul_( maxVolatilityToAddress_SIGHdecimalsMul, uint(10**(ethPriceDecimals)), "Max Volatility : Price Decimals multiplication gave error" );
             uint maxVolatilityToAddress_DecimalsDiv = div_( maxVolatilityToAddress_PricedecimalsMul, uint(10**18), "Max Volatility : Decimals division gave error" );
-            SIGHSpeedUsed = div_( maxVolatilityToAddress_DecimalsDiv, current_Sigh_PriceETH, "Max Speed division gave error" );
+            SIGHSpeedUsed = div_( maxVolatilityToAddress_DecimalsDiv, currentSIGH_price_USD, "Max Speed division gave error" );
         }
 
         emit MaxSIGHSpeedCalculated(SIGHSpeed, SIGHSpeedUsed, totalVolatilityLimitPerBlock, maxVolatilityToAddressPerBlock, max_SIGHDistributionLimitDecimalsAdjusted  );
@@ -567,7 +606,7 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
      * @param currentInstrument The Instrument whose supply index to update
      */
     function updateSIGHSupplyIndex(address currentInstrument) external onlyLendingPoolCore returns (bool) { //     // Called on each Deposit, Redeem and Liquidation (collateral)
-        require(financial_instruments[currentInstrument].isListed ,"Instrument not supported.");
+        require(crypto_instruments[currentInstrument].isListed ,"Instrument not supported.");
         require(updateSIGHSupplyIndexInternal( currentInstrument ), "Updating Sigh Supply Indexes operation failed" );
         return true;
     }
@@ -575,18 +614,18 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
     function updateSIGHSupplyIndexInternal(address currentInstrument) internal returns (bool) {
         uint blockNumber = getBlockNumber();
 
-        if ( financial_instruments[currentInstrument].supplylastupdatedblock == blockNumber ) {    // NO NEED TO ACCUR AGAIN
+        if ( crypto_instruments[currentInstrument].supplylastupdatedblock == blockNumber ) {    // NO NEED TO ACCUR AGAIN
             return true;
         }
 
-        SIGHInstrument storage instrumentState = financial_instruments[currentInstrument];
+        SupportedInstrument storage instrumentState = crypto_instruments[currentInstrument];
         uint supplySpeed = add_(Instrument_Sigh_Mechansim_States[currentInstrument].suppliers_Speed, Instrument_Sigh_Mechansim_States[currentInstrument].staking_Speed,"Supplier speed addition with staking speed overflow" );
         uint deltaBlocks = sub_(blockNumber, uint( instrumentState.supplylastupdatedblock ), 'updateSIGHSupplyIndex : Block Subtraction Underflow');    // Delta Blocks 
         
         // WE UPDATE INDEX ONLY IF $SIGH IS ACCURING
         if (deltaBlocks > 0 && supplySpeed > 0) {       // In case SIGH would have accured
             uint sigh_Accrued = mul_(deltaBlocks, supplySpeed);                                                                         // SIGH Accured
-            uint totalCompoundedLiquidity = IERC20(financial_instruments[currentInstrument].iTokenAddress).totalSupply();                           // Total amount supplied 
+            uint totalCompoundedLiquidity = IERC20(crypto_instruments[currentInstrument].iTokenAddress).totalSupply();                           // Total amount supplied 
             Double memory ratio = totalCompoundedLiquidity > 0 ? fraction(sigh_Accrued, totalCompoundedLiquidity) : Double({mantissa: 0});    // SIGH Accured per Supplied Instrument Token
             Double memory newIndex = add_(Double({mantissa: instrumentState.supplyindex}), ratio);                                      // Updated Index
             emit SIGHSupplyIndexUpdated( currentInstrument, totalCompoundedLiquidity, sigh_Accrued, ratio.mantissa , newIndex.mantissa, blockNumber );  
@@ -605,7 +644,7 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
      * @param currentInstrument The market whose borrow index to update
      */
     function updateSIGHBorrowIndex(address currentInstrument) external  onlyLendingPoolCore returns (bool) {  //     // Called during Borrow, repay, SwapRate, Rebalance, Liquidation
-        require(financial_instruments[currentInstrument].isListed ,"Instrument not supported.");
+        require(crypto_instruments[currentInstrument].isListed ,"Instrument not supported.");
         require( updateSIGHBorrowIndexInternal(currentInstrument), "Updating Sigh Borrow Indexes operation failed" ) ;
         return true;
     }
@@ -613,11 +652,11 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
     function updateSIGHBorrowIndexInternal(address currentInstrument) internal returns(bool) {
         uint blockNumber = getBlockNumber();
 
-        if ( financial_instruments[currentInstrument].borrowlastupdatedblock == blockNumber ) {    // NO NEED TO ACCUR AGAIN
+        if ( crypto_instruments[currentInstrument].borrowlastupdatedblock == blockNumber ) {    // NO NEED TO ACCUR AGAIN
             return true;
         }
 
-        SIGHInstrument storage instrumentState = financial_instruments[currentInstrument];
+        SupportedInstrument storage instrumentState = crypto_instruments[currentInstrument];
         uint borrowSpeed = add_(Instrument_Sigh_Mechansim_States[currentInstrument].borrowers_Speed, Instrument_Sigh_Mechansim_States[currentInstrument].staking_Speed, "Supplier speed addition with staking speed overflow" );
         uint deltaBlocks = sub_(blockNumber, uint(instrumentState.borrowlastupdatedblock), 'updateSIGHBorrowIndex : Block Subtraction Underflow');         // DELTA BLOCKS
         
@@ -675,13 +714,13 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
         return all_Instruments; 
     }
     
-    function getInstrumentData (address instrument_) external view returns (string memory name, address iTokenAddress, uint decimals, bool isSIGHMechanismActivated,uint256 supplyindex, uint256 borrowindex  ) {
-        return ( financial_instruments[instrument_].name,
-                 financial_instruments[instrument_].iTokenAddress,    
-                 financial_instruments[instrument_].decimals,    
-                 financial_instruments[instrument_].isSIGHMechanismActivated,
-                 financial_instruments[instrument_].supplyindex,
-                 financial_instruments[instrument_].borrowindex
+    function getInstrumentData (address instrument_) external view returns (string memory symbol, address iTokenAddress, uint decimals, bool isSIGHMechanismActivated,uint256 supplyindex, uint256 borrowindex  ) {
+        return ( crypto_instruments[instrument_].symbol,
+                 crypto_instruments[instrument_].iTokenAddress,    
+                 crypto_instruments[instrument_].decimals,    
+                 crypto_instruments[instrument_].isSIGHMechanismActivated,
+                 crypto_instruments[instrument_].supplyindex,
+                 crypto_instruments[instrument_].borrowindex
                 ); 
     }
 
@@ -724,7 +763,7 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
 
 
     function isInstrumentSupported (address instrument_) external view returns (bool) {
-        return financial_instruments[instrument_].isListed;
+        return crypto_instruments[instrument_].isListed;
     } 
 
     function totalInstrumentsSupported() external view returns (uint) {
@@ -732,15 +771,15 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
     }    
 
     function getInstrumentSupplyIndex(address instrument_) external view returns (uint) {
-        if (financial_instruments[instrument_].isListed) { //"The provided instrument address is not supported");
-            return financial_instruments[instrument_].supplyindex;
+        if (crypto_instruments[instrument_].isListed) { //"The provided instrument address is not supported");
+            return crypto_instruments[instrument_].supplyindex;
         }
         return uint(0);
     }
 
     function getInstrumentBorrowIndex(address instrument_) external view returns (uint) {
-        if (financial_instruments[instrument_].isListed) { //,"The provided instrument address is not supported");
-            return financial_instruments[instrument_].borrowindex;
+        if (crypto_instruments[instrument_].isListed) { //,"The provided instrument address is not supported");
+            return crypto_instruments[instrument_].borrowindex;
         }
         return uint(0);
     }
@@ -782,7 +821,7 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
         return last24HrsSentimentProtocolVolatility;
     }
     
-    function getDeltaBlockslast24HrSession() external view returns (uint) {
+    function getdeltaBlockslast24HrSession() external view returns (uint) {
         return deltaBlockslast24HrSession;
     }
 

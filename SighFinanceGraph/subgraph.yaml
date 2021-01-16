@@ -336,8 +336,8 @@ dataSources:
           handler: handleStakingSpeedUpdated
         - event: CryptoMarketSentimentUpdated(bool,uint256)
           handler: handleCryptoMarketSentimentUpdated
-        - event: minimumBlocksForSpeedRefreshUpdated(uint256,uint256,uint256)
-          handler: handleMinimumBlocksForSpeedRefreshUpdated
+        - event: minimumTimestampForSpeedRefreshUpdated(uint256,uint256,uint256)
+          handler: handleminimumTimestampForSpeedRefreshUpdated
         - event: PriceSnapped(address,uint256,uint256,uint256,uint256)
           handler: handlePriceSnapped
         - event: MaxSIGHSpeedCalculated(uint256,uint256,uint256,uint256,uint256)

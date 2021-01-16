@@ -1,6 +1,6 @@
 import { Address, BigInt,BigDecimal, log } from "@graphprotocol/graph-ts"
 import { InstrumentAdded, InstrumentRemoved, InstrumentSIGHStateUpdated, SIGHSpeedUpdated, StakingSpeedUpdated, CryptoMarketSentimentUpdated
- , minimumBlocksForSpeedRefreshUpdated , PriceSnapped, SIGHBorrowIndexUpdated, AccuredSIGHTransferredToTheUser, InstrumentVolatilityCalculated,
+ , minimumTimestampForSpeedRefreshUpdated , PriceSnapped, SIGHBorrowIndexUpdated, AccuredSIGHTransferredToTheUser, InstrumentVolatilityCalculated,
  MaxSIGHSpeedCalculated, refreshingSighSpeeds , SIGHSupplyIndexUpdated } from "../../generated/Sigh_Distribution_Handler/SIGHDistributionHandler"
 import { SIGH_Instrument, Instrument,SIGH_Distribution_SnapShot, userInstrumentState } from "../../generated/schema"
 import { createInstrument,updatePrice } from "./LendingPoolConfigurator"
@@ -496,7 +496,7 @@ export function handleCryptoMarketSentimentUpdated(event: CryptoMarketSentimentU
 
 
 // WORKS AS EXPECTED
-export function handleMinimumBlocksForSpeedRefreshUpdated(event: minimumBlocksForSpeedRefreshUpdated): void {
+export function handleminimumTimestampForSpeedRefreshUpdated(event: minimumTimestampForSpeedRefreshUpdated): void {
     let sighInstrument = SIGH_Instrument.load('0x043906ab5a1ba7a5c52ff2ef839d2b0c2a19ceba')
     sighInstrument.minimumBlocksBeforeSpeedRefresh = event.params.newDeltaBlocksForSpeed
     sighInstrument.save()
