@@ -2,7 +2,7 @@
 pragma solidity 0.6.12;
 
 library DataTypes {
-  struct ReserveData {
+  struct InstrumentData {
     
     ReserveConfigurationMap configuration;      //stores the reserve configuration
     

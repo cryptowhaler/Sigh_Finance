@@ -109,13 +109,13 @@ contract LendingPoolLiquidationManager is   ILendingPoolLiquidationManager, Vers
     * @param _receiveIToken true if the liquidators wants to receive the iTokens, false if he wants to receive the underlying asset directly
     **/
     function liquidationCall(     address collateralAsset, address debtAsset, address user, uint256 debtToCover, bool receiveAToken ) external payable returns (uint256, string memory) {
-        DataTypes.ReserveData storage collateralReserve = _reserves[collateralAsset];
-        DataTypes.ReserveData storage debtReserve = _reserves[debtAsset];
+        DataTypes.InstrumentData storage collateralReserve =_instruments[collateralAsset];
+        DataTypes.InstrumentData storage debtReserve =_instruments[debtAsset];
         DataTypes.UserConfigurationMap storage userConfig = _usersConfig[user];       
 
         LiquidationCallLocalVars memory vars;        // Usage of a memory struct of vars to avoid "Stack too deep" errors due to local variables
 
-        (, , , , vars.healthFactor) = GenericLogic.calculateUserAccountData( user, _reserves, userConfig, _reservesList, _reservesCount, _addressesProvider.getPriceOracle() );
+        (, , , , vars.healthFactor) = GenericLogic.calculateUserAccountData( user,_instruments, userConfig,_instrumentsList,_instrumentsCount, _addressesProvider.getPriceOracle() );
         (vars.userStableDebt, vars.userVariableDebt) = Helpers.getUserCurrentDebt(user, debtReserve);
         (vars.errorCode, vars.errorMsg) = ValidationLogic.validateLiquidationCall( collateralReserve, debtReserve, userConfig, vars.healthFactor, vars.userStableDebt, vars.userVariableDebt );
 
@@ -232,7 +232,7 @@ contract LendingPoolLiquidationManager is   ILendingPoolLiquidationManager, Vers
     * @return collateralAmount: The maximum amount that is possible to liquidate given all the liquidation constraints  (user balance, close factor)
     *         debtAmountNeeded: The amount to repay with the liquidation
     **/
-    function _calculateAvailableCollateralToLiquidate(  DataTypes.ReserveData storage collateralReserve,  DataTypes.ReserveData storage debtReserve,  address collateralAsset,  address debtAsset, uint256 debtToCover, uint256 userCollateralBalance ) internal view returns (uint256, uint256) {
+    function _calculateAvailableCollateralToLiquidate(  DataTypes.InstrumentData storage collateralReserve,  DataTypes.InstrumentData storage debtReserve,  address collateralAsset,  address debtAsset, uint256 debtToCover, uint256 userCollateralBalance ) internal view returns (uint256, uint256) {
         uint256 collateralAmount = 0;
         uint256 debtAmountNeeded = 0;
         IPriceOracleGetter oracle = IPriceOracleGetter(_addressesProvider.getPriceOracle());

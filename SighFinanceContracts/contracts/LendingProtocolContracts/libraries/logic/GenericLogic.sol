@@ -19,7 +19,7 @@ import {DataTypes} from '../types/DataTypes.sol';
  */
 library GenericLogic {
 
-    using ReserveLogic for DataTypes.ReserveData;
+    using ReserveLogic for DataTypes.InstrumentData;
     using SafeMath for uint256;
     using WadRayMath for uint256;
     using PercentageMath for uint256;
@@ -53,7 +53,7 @@ library GenericLogic {
     * @param oracle The address of the oracle contract
     * @return true if the decrease of the balance is allowed
     **/
-    function balanceDecreaseAllowed( address asset, address user, uint256 amount, mapping(address => DataTypes.ReserveData) storage reservesData, DataTypes.UserConfigurationMap calldata userConfig, mapping(uint256 => address) storage reserves,  uint256 reservesCount, address oracle) external view returns (bool) {
+    function balanceDecreaseAllowed( address asset, address user, uint256 amount, mapping(address => DataTypes.InstrumentData) storage reservesData, DataTypes.UserConfigurationMap calldata userConfig, mapping(uint256 => address) storage reserves,  uint256 reservesCount, address oracle) external view returns (bool) {
         if (!userConfig.isBorrowingAny() || !userConfig.isUsingAsCollateral(reservesData[asset].id)) {
             return true;
         }
@@ -118,7 +118,7 @@ library GenericLogic {
     * @param oracle The price oracle address
     * @return The total collateral and total debt of the user in ETH, the avg ltv, liquidation threshold and the HF
     **/
-    function calculateUserAccountData( address user, mapping(address => DataTypes.ReserveData) storage reservesData, DataTypes.UserConfigurationMap memory userConfig, mapping(uint256 => address) storage reserves, uint256 reservesCount, address oracle ) internal view returns ( uint256, uint256, uint256, uint256, uint256) {
+    function calculateUserAccountData( address user, mapping(address => DataTypes.InstrumentData) storage reservesData, DataTypes.UserConfigurationMap memory userConfig, mapping(uint256 => address) storage reserves, uint256 reservesCount, address oracle ) internal view returns ( uint256, uint256, uint256, uint256, uint256) {
         CalculateUserAccountDataVars memory vars;
 
         if (userConfig.isEmpty()) {
@@ -131,7 +131,7 @@ library GenericLogic {
             }
 
             vars.currentReserveAddress = reserves[vars.i];
-            DataTypes.ReserveData storage currentReserve = reservesData[vars.currentReserveAddress];
+            DataTypes.InstrumentData storage currentReserve = reservesData[vars.currentReserveAddress];
 
             (vars.ltv, vars.liquidationThreshold, , vars.decimals, ) = currentReserve.configuration.getParams();
             vars.tokenUnit = 10**vars.decimals;

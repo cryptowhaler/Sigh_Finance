@@ -35,9 +35,9 @@ library ReserveLogic {
     * @param liquidityIndex The new liquidity index
     * @param variableBorrowIndex The new variable borrow index
     **/
-    event ReserveDataUpdated(address indexed asset,uint256 liquidityRate, uint256 stableBorrowRate, uint256 variableBorrowRate,uint256 liquidityIndex, uint256 variableBorrowIndex);
+    event InstrumentDataUpdated(address indexed asset,uint256 liquidityRate, uint256 stableBorrowRate, uint256 variableBorrowRate,uint256 liquidityIndex, uint256 variableBorrowIndex);
 
-    using ReserveLogic for DataTypes.ReserveData;
+    using ReserveLogic for DataTypes.InstrumentData;
     using ReserveConfiguration for DataTypes.ReserveConfigurationMap;
 
     /**
@@ -47,7 +47,7 @@ library ReserveLogic {
     * @param reserve The reserve object
     * @return the normalized income. expressed in ray
     **/
-    function getNormalizedIncome(DataTypes.ReserveData storage reserve) internal view returns (uint256) {
+    function getNormalizedIncome(DataTypes.InstrumentData storage reserve) internal view returns (uint256) {
         uint40 timestamp = reserve.lastUpdateTimestamp;
 
         if (timestamp == uint40(block.timestamp)) {
@@ -65,7 +65,7 @@ library ReserveLogic {
     * @param reserve The reserve object
     * @return The normalized variable debt. expressed in ray
     **/
-    function getNormalizedDebt(DataTypes.ReserveData storage reserve) internal view returns (uint256) {
+    function getNormalizedDebt(DataTypes.InstrumentData storage reserve) internal view returns (uint256) {
         uint40 timestamp = reserve.lastUpdateTimestamp;
 
         if (timestamp == uint40(block.timestamp)) {
@@ -80,7 +80,7 @@ library ReserveLogic {
     * @dev Updates the liquidity cumulative index and the variable borrow index.
     * @param reserve the reserve object
     **/
-    function updateState(DataTypes.ReserveData storage reserve) internal {
+    function updateState(DataTypes.InstrumentData storage reserve) internal {
         uint256 scaledVariableDebt = IVariableDebtToken(reserve.variableDebtTokenAddress).scaledTotalSupply();
         uint256 previousVariableBorrowIndex = reserve.variableBorrowIndex;
         uint256 previousLiquidityIndex = reserve.liquidityIndex;
@@ -98,7 +98,7 @@ library ReserveLogic {
     * @param totalLiquidity The total liquidity available in the reserve
     * @param amount The amount to accomulate
     **/
-    function cumulateToLiquidityIndex( DataTypes.ReserveData storage reserve, uint256 totalLiquidity, uint256 amount ) internal {
+    function cumulateToLiquidityIndex( DataTypes.InstrumentData storage reserve, uint256 totalLiquidity, uint256 amount ) internal {
         uint256 amountToLiquidityRatio = amount.wadToRay().rayDiv(totalLiquidity.wadToRay());
         uint256 result = amountToLiquidityRatio.add(WadRayMath.ray());
 
@@ -114,7 +114,7 @@ library ReserveLogic {
     * @param aTokenAddress The address of the overlying atoken contract
     * @param interestRateStrategyAddress The address of the interest rate strategy contract
     **/
-    function init( DataTypes.ReserveData storage reserve, address aTokenAddress, address stableDebtTokenAddress, address variableDebtTokenAddress, address interestRateStrategyAddress) external {
+    function init( DataTypes.InstrumentData storage reserve, address aTokenAddress, address stableDebtTokenAddress, address variableDebtTokenAddress, address interestRateStrategyAddress) external {
         require(reserve.aTokenAddress == address(0), Errors.RL_RESERVE_ALREADY_INITIALIZED);
 
         reserve.liquidityIndex = uint128(WadRayMath.ray());
@@ -142,7 +142,7 @@ library ReserveLogic {
     * @param liquidityAdded The amount of liquidity added to the protocol (deposit or repay) in the previous action
     * @param liquidityTaken The amount of liquidity taken from the protocol (redeem or borrow)
     **/
-    function updateInterestRates( DataTypes.ReserveData storage reserve, address reserveAddress, address aTokenAddress, uint256 liquidityAdded, uint256 liquidityTaken ) internal {
+    function updateInterestRates( DataTypes.InstrumentData storage reserve, address reserveAddress, address aTokenAddress, uint256 liquidityAdded, uint256 liquidityTaken ) internal {
         UpdateInterestRatesLocalVars memory vars;
 
         vars.stableDebtTokenAddress = reserve.stableDebtTokenAddress;
@@ -171,7 +171,7 @@ library ReserveLogic {
         reserve.currentStableBorrowRate = uint128(vars.newStableRate);
         reserve.currentVariableBorrowRate = uint128(vars.newVariableRate);
 
-        emit ReserveDataUpdated( reserveAddress, vars.newLiquidityRate, vars.newStableRate,  vars.newVariableRate,  reserve.liquidityIndex,  reserve.variableBorrowIndex );
+        emit InstrumentDataUpdated( reserveAddress, vars.newLiquidityRate, vars.newStableRate,  vars.newVariableRate,  reserve.liquidityIndex,  reserve.variableBorrowIndex );
     }
 
     struct MintToTreasuryLocalVars {
@@ -197,7 +197,7 @@ library ReserveLogic {
     * @param newLiquidityIndex The new liquidity index
     * @param newVariableBorrowIndex The variable borrow index after the last accumulation of the interest
     **/
-    function _mintToTreasury( DataTypes.ReserveData storage reserve, uint256 scaledVariableDebt, uint256 previousVariableBorrowIndex, uint256 newLiquidityIndex, uint256 newVariableBorrowIndex, uint40 timestamp ) internal {
+    function _mintToTreasury( DataTypes.InstrumentData storage reserve, uint256 scaledVariableDebt, uint256 previousVariableBorrowIndex, uint256 newLiquidityIndex, uint256 newVariableBorrowIndex, uint40 timestamp ) internal {
         MintToTreasuryLocalVars memory vars;
 
         vars.reserveFactor = reserve.configuration.getReserveFactor();
@@ -236,7 +236,7 @@ library ReserveLogic {
     * @param liquidityIndex The last stored liquidity index
     * @param variableBorrowIndex The last stored variable borrow index
     **/
-    function _updateIndexes( DataTypes.ReserveData storage reserve, uint256 scaledVariableDebt, uint256 liquidityIndex, uint256 variableBorrowIndex, uint40 timestamp) internal returns (uint256, uint256) {
+    function _updateIndexes( DataTypes.InstrumentData storage reserve, uint256 scaledVariableDebt, uint256 liquidityIndex, uint256 variableBorrowIndex, uint40 timestamp) internal returns (uint256, uint256) {
         uint256 currentLiquidityRate = reserve.currentLiquidityRate;
 
         uint256 newLiquidityIndex = liquidityIndex;

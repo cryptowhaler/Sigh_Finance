@@ -27,7 +27,7 @@ library ValidationLogic {
     using WadRayMath for uint256;
     using PercentageMath for uint256;
 
-    using ReserveLogic for DataTypes.ReserveData;
+    using ReserveLogic for DataTypes.InstrumentData;
     using SafeERC20 for IERC20;
     using ReserveConfiguration for DataTypes.ReserveConfigurationMap;
     using UserConfiguration for DataTypes.UserConfigurationMap;
@@ -40,7 +40,7 @@ library ValidationLogic {
     * @param reserve The reserve object on which the user is depositing
     * @param amount The amount to be deposited
     */
-    function validateDeposit(DataTypes.ReserveData storage reserve, uint256 amount) external view {
+    function validateDeposit(DataTypes.InstrumentData storage reserve, uint256 amount) external view {
         (bool isActive, bool isFrozen, , ) = reserve.configuration.getFlags();
 
         require(amount != 0, Errors.VL_INVALID_AMOUNT);
@@ -59,7 +59,7 @@ library ValidationLogic {
     * @param reservesCount The number of reserves
     * @param oracle The price oracle
     */
-    function validateWithdraw( address reserveAddress, uint256 amount, uint256 userBalance, mapping(address => DataTypes.ReserveData) storage reservesData, DataTypes.UserConfigurationMap storage userConfig, mapping(uint256 => address) storage reserves, uint256 reservesCount, address oracle ) external view {
+    function validateWithdraw( address reserveAddress, uint256 amount, uint256 userBalance, mapping(address => DataTypes.InstrumentData) storage reservesData, DataTypes.UserConfigurationMap storage userConfig, mapping(uint256 => address) storage reserves, uint256 reservesCount, address oracle ) external view {
         require(amount != 0, Errors.VL_INVALID_AMOUNT);
         require(amount <= userBalance, Errors.VL_NOT_ENOUGH_AVAILABLE_USER_BALANCE);
 
@@ -105,7 +105,7 @@ library ValidationLogic {
     * @param oracle The price oracle
     */
 
-    function validateBorrow( address asset, DataTypes.ReserveData storage reserve, address userAddress, uint256 amount, uint256 amountInETH, uint256 interestRateMode, uint256 maxStableLoanPercent, mapping(address => DataTypes.ReserveData) storage reservesData, DataTypes.UserConfigurationMap storage userConfig,  mapping(uint256 => address) storage reserves, uint256 reservesCount, address oracle  ) external view {
+    function validateBorrow( address asset, DataTypes.InstrumentData storage reserve, address userAddress, uint256 amount, uint256 amountInETH, uint256 interestRateMode, uint256 maxStableLoanPercent, mapping(address => DataTypes.InstrumentData) storage reservesData, DataTypes.UserConfigurationMap storage userConfig,  mapping(uint256 => address) storage reserves, uint256 reservesCount, address oracle  ) external view {
         ValidateBorrowLocalVars memory vars;
 
         (vars.isActive, vars.isFrozen, vars.borrowingEnabled, vars.stableRateBorrowingEnabled) = reserve.configuration.getFlags();
@@ -162,7 +162,7 @@ library ValidationLogic {
     * @param stableDebt The borrow balance of the user
     * @param variableDebt The borrow balance of the user
     */
-    function validateRepay( DataTypes.ReserveData storage reserve, uint256 amountSent, DataTypes.InterestRateMode rateMode, address onBehalfOf, uint256 stableDebt, uint256 variableDebt) external view {
+    function validateRepay( DataTypes.InstrumentData storage reserve, uint256 amountSent, DataTypes.InterestRateMode rateMode, address onBehalfOf, uint256 stableDebt, uint256 variableDebt) external view {
         bool isActive = reserve.configuration.getActive();
 
         require(isActive, Errors.VL_NO_ACTIVE_RESERVE);
@@ -179,7 +179,7 @@ library ValidationLogic {
     * @param variableDebt The variable debt of the user
     * @param currentRateMode The rate mode of the borrow
     */
-    function validateSwapRateMode( DataTypes.ReserveData storage reserve, DataTypes.UserConfigurationMap storage userConfig, uint256 stableDebt, uint256 variableDebt, DataTypes.InterestRateMode currentRateMode) external view {
+    function validateSwapRateMode( DataTypes.InstrumentData storage reserve, DataTypes.UserConfigurationMap storage userConfig, uint256 stableDebt, uint256 variableDebt, DataTypes.InterestRateMode currentRateMode) external view {
         (bool isActive, bool isFrozen, , bool stableRateEnabled) = reserve.configuration.getFlags();
 
         require(isActive, Errors.VL_NO_ACTIVE_RESERVE);
@@ -213,7 +213,7 @@ library ValidationLogic {
     * @param variableDebtToken The variable debt token instance
     * @param aTokenAddress The address of the aToken contract
     */
-    function validateRebalanceStableBorrowRate( DataTypes.ReserveData storage reserve,  address reserveAddress, IERC20 stableDebtToken, IERC20 variableDebtToken, address aTokenAddress) external view {
+    function validateRebalanceStableBorrowRate( DataTypes.InstrumentData storage reserve,  address reserveAddress, IERC20 stableDebtToken, IERC20 variableDebtToken, address aTokenAddress) external view {
         (bool isActive, , , ) = reserve.configuration.getFlags();
 
         require(isActive, Errors.VL_NO_ACTIVE_RESERVE);
@@ -240,7 +240,7 @@ library ValidationLogic {
     * @param reserves The addresses of all the active reserves
     * @param oracle The price oracle
     */
-    function validateSetUseReserveAsCollateral(  DataTypes.ReserveData storage reserve, address reserveAddress, bool useAsCollateral, mapping(address => DataTypes.ReserveData) storage reservesData, DataTypes.UserConfigurationMap storage userConfig, mapping(uint256 => address) storage reserves,  uint256 reservesCount, address oracle) external view {
+    function validateSetUseReserveAsCollateral(  DataTypes.InstrumentData storage reserve, address reserveAddress, bool useAsCollateral, mapping(address => DataTypes.InstrumentData) storage reservesData, DataTypes.UserConfigurationMap storage userConfig, mapping(uint256 => address) storage reserves,  uint256 reservesCount, address oracle) external view {
         uint256 underlyingBalance = IERC20(reserve.aTokenAddress).balanceOf(msg.sender);
 
         require(underlyingBalance > 0, Errors.VL_UNDERLYING_BALANCE_NOT_GREATER_THAN_0);
@@ -265,7 +265,7 @@ library ValidationLogic {
     * @param userStableDebt Total stable debt balance of the user
     * @param userVariableDebt Total variable debt balance of the user
     **/
-    function validateLiquidationCall( DataTypes.ReserveData storage collateralReserve, DataTypes.ReserveData storage principalReserve, DataTypes.UserConfigurationMap storage userConfig, uint256 userHealthFactor, uint256 userStableDebt, uint256 userVariableDebt ) internal view returns (uint256, string memory) {
+    function validateLiquidationCall( DataTypes.InstrumentData storage collateralReserve, DataTypes.InstrumentData storage principalReserve, DataTypes.UserConfigurationMap storage userConfig, uint256 userHealthFactor, uint256 userStableDebt, uint256 userVariableDebt ) internal view returns (uint256, string memory) {
 
         if ( !collateralReserve.configuration.getActive() || !principalReserve.configuration.getActive() ) {
             return (  uint256(Errors.CollateralManagerErrors.NO_ACTIVE_RESERVE),  Errors.VL_NO_ACTIVE_RESERVE );
@@ -297,7 +297,7 @@ library ValidationLogic {
     * @param reserves The addresses of all the active reserves
     * @param oracle The price oracle
     */
-    function validateTransfer( address from, mapping(address => DataTypes.ReserveData) storage reservesData, DataTypes.UserConfigurationMap storage userConfig, mapping(uint256 => address) storage reserves, uint256 reservesCount, address oracle ) internal view {
+    function validateTransfer( address from, mapping(address => DataTypes.InstrumentData) storage reservesData, DataTypes.UserConfigurationMap storage userConfig, mapping(uint256 => address) storage reserves, uint256 reservesCount, address oracle ) internal view {
         (, , , , uint256 healthFactor) = GenericLogic.calculateUserAccountData( from,  reservesData,  userConfig,  reserves,  reservesCount,  oracle );
         require( healthFactor >= GenericLogic.HEALTH_FACTOR_LIQUIDATION_THRESHOLD, Errors.VL_TRANSFER_NOT_ALLOWED );
     }

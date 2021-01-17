@@ -15,11 +15,11 @@ library Helpers {
    * @param reserve The reserve data object
    * @return The stable and variable debt balance
    **/
-  function getUserCurrentDebt(address user, DataTypes.ReserveData storage reserve) internal view returns (uint256, uint256) {
+  function getUserCurrentDebt(address user, DataTypes.InstrumentData storage reserve) internal view returns (uint256, uint256) {
     return ( IERC20(reserve.stableDebtTokenAddress).balanceOf(user), IERC20(reserve.variableDebtTokenAddress).balanceOf(user) );
   }
 
-  function getUserCurrentDebtMemory(address user, DataTypes.ReserveData memory reserve) internal view returns (uint256, uint256) {
+  function getUserCurrentDebtMemory(address user, DataTypes.InstrumentData memory reserve) internal view returns (uint256, uint256) {
     return ( IERC20(reserve.stableDebtTokenAddress).balanceOf(user), IERC20(reserve.variableDebtTokenAddress).balanceOf(user) );
   }
 }

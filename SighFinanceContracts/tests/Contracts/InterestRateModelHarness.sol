@@ -23,18 +23,18 @@ contract InterestRateModelHarness is InterestRateModel {
         borrowRate = borrowRate_;
     }
 
-    function getBorrowRate(uint _cash, uint _borrows, uint _reserves) public view returns (uint) {
+    function getBorrowRate(uint _cash, uint _borrows, uint_instruments) public view returns (uint) {
         _cash;     // unused
         _borrows;  // unused
-        _reserves; // unused
+       _instruments; // unused
         require(!failBorrowRate, "INTEREST_RATE_MODEL_ERROR");
         return borrowRate;
     }
 
-    function getSupplyRate(uint _cash, uint _borrows, uint _reserves, uint _reserveFactor) external view returns (uint) {
+    function getSupplyRate(uint _cash, uint _borrows, uint_instruments, uint _reserveFactor) external view returns (uint) {
         _cash;     // unused
         _borrows;  // unused
-        _reserves; // unused
+       _instruments; // unused
         return borrowRate * (1 - _reserveFactor);
     }
 }
