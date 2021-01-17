@@ -5,11 +5,11 @@ import {Errors} from '../helpers/Errors.sol';
 import {DataTypes} from '../types/DataTypes.sol';
 
   /**
-  * @title ReserveConfiguration library
+  * @title InstrumentConfiguration library
   * @author Aave
   * @notice Implements the bitmap logic to handle the reserve configuration
   */
-  library ReserveConfiguration {
+  library InstrumentConfiguration {
 
       uint256 constant LTV_MASK =                   0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000; // prettier-ignore
       uint256 constant LIQUIDATION_THRESHOLD_MASK = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000FFFF; // prettier-ignore

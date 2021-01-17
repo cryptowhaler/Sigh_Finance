@@ -36,9 +36,14 @@ contract SIGHNFTBoosters is IERC721Metadata,IERC721Enumerable, Ownable {
     mapping (uint256 => string) private _BoostURIs;
     string private _baseURI;
 
-    mapping (string => bool) boosters;      // Different type of Boosters supported by SIGH Finance
-    mapping (string => uint256) totalBoosters;      // Different type of Boosters supported by SIGH Finance
-    mapping (uint256 => string) private _BoosterCategory;
+    struct boosterCategory {
+        bool isSupported;
+        uint256 totalBoosters;
+        uint256 discountMultiplier;
+    }
+
+    mapping (string => boosterCategory) boosterCategories;
+    mapping (string => uint256) totalBoosters;      // (Booster Category => boosters Available) Mapping
     
     mapping (uint256 => address) private _BoosterApprovals;                       // Mapping from BoosterID to approved address
     mapping (address => mapping (address => bool)) private _operatorApprovals;    // Mapping from owner to operator approvals
@@ -65,7 +70,7 @@ contract SIGHNFTBoosters is IERC721Metadata,IERC721Enumerable, Ownable {
     // #################################
 
     function createNewSIGHBooster(address _owner, string memory _type,  string memory boosterURI ) public onlyOwner returns (uint256) {
-        require(boosters[_type],'Not a valid Booster Type');
+        require(boosterCategories[_type].isSupported,'Not a valid Booster Type');
 
         _boosterIds.increment();
         uint256 newItemId = _boosterIds.current();
@@ -74,24 +79,28 @@ contract SIGHNFTBoosters is IERC721Metadata,IERC721Enumerable, Ownable {
         _setBoosterURI(newItemId,boosterURI);
         _setType(newItemId,_type);
 
-        totalBoosters[_type] = totalBoosters[_type].add(1);
+        boosterCategories[_type].totalBoosters = boosterCategories[_type].totalBoosters.add(1);
 
         return newItemId;
     }
 
-    function addNewBoosterType(string memory _type) public onlyOwner returns (bool) {
-        require(!boosters[_type],"Booster Type already exists");
-        boosters[_type] = true;
-        totalBoosters[_type] = 0;
+    function addNewBoosterType(string memory _type, uint256 _discountMultiplier) public onlyOwner returns (bool) {
+        require(!boosterCategories[_type].isSupported,"SIGH BOOSTERS: Booster Type already exists");
+        require(_discountMultiplier > 0,"SIGH BOOSTERS: Discount Multiplier cannot be 0");
+        boosterCategories[_type] =  boosterCategory({isSupported: true, totalBoosters:0, discountMultiplier: _discountMultiplier });
         return true;
     }
 
     function updateBoosterURI(uint256 boosterId, string memory boosterURI )  public onlyOwner returns (bool) {
-        require(_exists(boosterId), "ERC721: URI set of nonexistent token");
+        require(_exists(boosterId), "SIGH BOOSTERS: URI set of nonexistent token");
         _setBoosterURI(boosterId,boosterURI);
-
      }
 
+    function updateDiscountMultiplier(string memory _type, uint256 _discountMultiplier)  public onlyOwner returns (bool) {
+        require(!boosterCategories[_type].isSupported,"SIGH BOOSTERS: Booster Type doesn't exist");
+        require(_discountMultiplier > 0,"SIGH BOOSTERS: Discount Multiplier cannot be 0");
+        boosterCategories[_type]._discountMultiplier = _discountMultiplier;
+     }
 
     // ###########################################
     // ######## STANDARD ERC721 FUNCTIONS ########
@@ -198,7 +207,7 @@ contract SIGHNFTBoosters is IERC721Metadata,IERC721Enumerable, Ownable {
     // Returns the number of Boosters of a particular category owned by the owner address
     function totalBoostersOwnedOfType(address owner, string memory _category) external view returns (bool) {
         require(owner != address(0), "SIGH BOOSTERS: balance query for the zero address");
-        require(boosters[_category], "Not a valid Booster Type");
+        require(boosterCategories[_type].isSupported, "Not a valid Booster Type");
 
         EnumerableSet.BoosterSet memory boostersOwned = farmersWithBoosts[owner];
 
@@ -223,11 +232,26 @@ contract SIGHNFTBoosters is IERC721Metadata,IERC721Enumerable, Ownable {
          ( farmer, boosterType ) =  boostersData.get(boosterId);
     }
 
-    function isValidBoosterType(string memory _category) external view returns (bool) {
-        return boosters[_category];
+    function isCategorySupported(string memory _category) external view returns (bool) {
+        return boosterCategories[_type].isSupported;
     }
 
+    function totalBoostersAvailable(string memory _category) external view returns (uint256) {
+        return boosterCategories[_type].totalBoosters;
+    }
 
+    
+
+    // get Booster Type
+    function getBoosterCategory(uint256 boosterId) public view returns ( string memory boosterType ) {
+         ( , boosterType ) =  boostersData.get(boosterId);
+    }
+
+    // get Booster Discount Multiplier
+    function getDiscountMultiplierForBooster(uint256 boosterId) external view returns ( uint discountMultiplier ) {
+        require(!_exists(boosterId), "SIGH BOOSTERS: Booster doesn't exist");
+        discountMultiplier =  boosterCategories[getBoosterCategory(boosterId)]._discountMultiplier;
+    }
 
 
 

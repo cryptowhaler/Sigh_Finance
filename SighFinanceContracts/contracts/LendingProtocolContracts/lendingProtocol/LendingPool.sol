@@ -21,7 +21,7 @@ import {PercentageMath} from '../libraries/math/PercentageMath.sol';
 import {ReserveLogic} from '../libraries/logic/ReserveLogic.sol';
 import {GenericLogic} from '../libraries/logic/GenericLogic.sol';
 import {ValidationLogic} from '../libraries/logic/ValidationLogic.sol';
-import {ReserveConfiguration} from '../libraries/configuration/ReserveConfiguration.sol';
+import {InstrumentConfiguration} from '../libraries/configuration/InstrumentConfiguration.sol';
 import {UserConfiguration} from '../libraries/configuration/UserConfiguration.sol';
 import {DataTypes} from '../libraries/types/DataTypes.sol';
 
@@ -105,8 +105,6 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
     }
 
     function refreshConfigInternal() internal {
-        dataProvider = ILendingPoolDataProvider(addressesProvider.getLendingPoolDataProvider());
-        parametersProvider = ILendingPoolParametersProvider(addressesProvider.getLendingPoolParametersProvider());
         feeProvider = IFeeProvider(addressesProvider.getFeeProvider());
     }
 
@@ -123,27 +121,27 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
     function deposit( address _instrument, uint256 _amount, address onBehalfOf, uint256 boosterId ) external whenNotPaused  {
 
         DataTypes.InstrumentData storage instrument =_instruments[_instrument];
-        ValidationLogic.validateDeposit(instrument, _amount);
+        ValidationLogic.validateDeposit(instrument, _amount);                       // Makes the deposit checks
 
-        address aToken = instrument.iTokenAddress;
+        address iToken = instrument.iTokenAddress;
 
-        // Split Deposit fee in staking reward and platform fee
-        uint256 depositFee = feeProvider.calculateDepositFee(onBehalfOf, _amount, boosterId);
-        require(depositFee > 0, "The amount to deposit is too small");
-        IERC20(_instrument).safeTransferFrom(msg.sender, addressesProvider.getSIGHFinanceFeeCollector(), depositFee );
+        // Split Deposit fee in SIGH Pay and platform fee. Calculations based on the discount (if any) provided by the boosterId 
+        (uint256 totalFee, uint256 depositFee, uint256 sighPay) = feeProvider.calculateDepositFee(msg.sender,_instrument, _amount, boosterId);
+        IERC20(_instrument).safeTransferFrom( msg.sender, addressesProvider.getSIGHFinanceFeeCollector(), depositFee );
+        IERC20(_instrument).safeTransferFrom( msg.sender, addressesProvider.getSIGHPayAggregator(), sighPay );
 
         instrument.updateState();
-        instrument.updateInterestRates(_instrument, aToken, _amount.sub(depositFee), 0);
+        instrument.updateInterestRates(_instrument, iToken, _amount.sub(totalFee), 0);
 
-        IERC20(_instrument).safeTransferFrom(msg.sender, aToken, _amount.sub(depositFee));
-        bool isFirstDeposit = IAToken(aToken).mint(onBehalfOf, _amount.sub(depositFee) , instrument.liquidityIndex);
+        IERC20(_instrument).safeTransferFrom(msg.sender, iToken, _amount.sub(totalFee));
+        bool isFirstDeposit = IAToken(iToken).mint(onBehalfOf, _amount.sub(totalFee) , instrument.liquidityIndex);
 
         if (isFirstDeposit) {
             _usersConfig[onBehalfOf].setUsingAsCollateral(instrument.id, true);
             emit InstrumentUsedAsCollateralEnabled(_instrument, onBehalfOf);
         }
 
-        emit Deposit(_instrument, msg.sender, onBehalfOf,  _amount.sub(depositFee), depositFee, boosterId );
+        emit Deposit(_instrument, msg.sender, onBehalfOf,  _amount.sub(totalFee), depositFee, sighPay, boosterId );
     }
 
 
@@ -161,9 +159,9 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
     function withdraw( address _instrument, uint256 _amount, address _user) external override whenNotPaused returns(uint256) {
 
         DataTypes.InstrumentData storage reserve =_instruments[_instrument];
-        address aToken = reserve.iTokenAddress;
+        address iToken = reserve.iTokenAddress;
 
-        uint256 userBalance = IAToken(aToken).balanceOf(msg.sender);
+        uint256 userBalance = IAToken(iToken).balanceOf(msg.sender);
         uint256 amountToWithdraw = amount;
 
         if (amount == type(uint256).max) {
@@ -173,14 +171,14 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
         ValidationLogic.validateWithdraw( _instrument, amountToWithdraw, userBalance,_instruments, _usersConfig[msg.sender],_instrumentsList,_instrumentsCount, _addressesProvider.getPriceOracle() );
 
         reserve.updateState();
-        reserve.updateInterestRates(_instrument, aToken, 0, amountToWithdraw);
+        reserve.updateInterestRates(_instrument, iToken, 0, amountToWithdraw);
 
         if (amountToWithdraw == userBalance) {
             _usersConfig[msg.sender].setUsingAsCollateral(reserve.id, false);
             emit ReserveUsedAsCollateralDisabled(_instrument, msg.sender);
         }
 
-        IAToken(aToken).burn(msg.sender, to, amountToWithdraw, reserve.liquidityIndex);
+        IAToken(iToken).burn(msg.sender, to, amountToWithdraw, reserve.liquidityIndex);
 
         emit Withdraw(_instrument, msg.sender, to, amountToWithdraw);
 
@@ -248,14 +246,14 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
       IVariableDebtToken(reserve.variableDebtTokenAddress).burn( onBehalfOf, paybackAmount, reserve.variableBorrowIndex );
     }
 
-    address aToken = reserve.iTokenAddress;
-    reserve.updateInterestRates(asset, aToken, paybackAmount, 0);
+    address iToken = reserve.iTokenAddress;
+    reserve.updateInterestRates(asset, iToken, paybackAmount, 0);
 
     if (stableDebt.add(variableDebt).sub(paybackAmount) == 0) {
       _usersConfig[onBehalfOf].setBorrowing(reserve.id, false);
     }
 
-    IERC20(asset).safeTransferFrom(msg.sender, aToken, paybackAmount);
+    IERC20(asset).safeTransferFrom(msg.sender, iToken, paybackAmount);
 
     emit Repay(asset, onBehalfOf, msg.sender, paybackAmount);
 
@@ -360,7 +358,7 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
    * @param debtAsset The address of the underlying borrowed asset to be repaid with the liquidation
    * @param user The address of the borrower getting liquidated
    * @param debtToCover The debt amount of borrowed `asset` the liquidator wants to cover
-   * @param receiveAToken `true` if the liquidators wants to receive the collateral aTokens, `false` if he wants
+   * @param receiveAToken `true` if the liquidators wants to receive the collateral iTokens, `false` if he wants
    * to receive the underlying collateral asset directly
    **/
     function liquidationCall( address collateralAsset, address debtAsset, address user, uint256 debtToCover, bool _receiveIToken ) external override whenNotPaused {
@@ -503,14 +501,14 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
     }
 
     /**
-    * @dev Validates and finalizes an aToken transfer
-    * - Only callable by the overlying aToken of the `asset`
-    * @param asset The address of the underlying asset of the aToken
-    * @param from The user from which the aTokens are transferred
-    * @param to The user receiving the aTokens
+    * @dev Validates and finalizes an iToken transfer
+    * - Only callable by the overlying iToken of the `asset`
+    * @param asset The address of the underlying asset of the iToken
+    * @param from The user from which the iTokens are transferred
+    * @param to The user receiving the iTokens
     * @param amount The amount being transferred/withdrawn
-    * @param balanceFromBefore The aToken balance of the `from` user before the transfer
-    * @param balanceToBefore The aToken balance of the `to` user before the transfer
+    * @param balanceFromBefore The iToken balance of the `from` user before the transfer
+    * @param balanceToBefore The iToken balance of the `to` user before the transfer
     */
     function finalizeTransfer( address asset, address from,  address to, uint256 amount,  uint256 balanceFromBefore, uint256 balanceToBefore ) external override whenNotPaused {
         require(msg.sender ==_instruments[asset].iTokenAddress, "Only the associated IToken can call this function");
@@ -535,10 +533,10 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
     }
 
     /**
-    * @dev Initializes a reserve, activating it, assigning an aToken and debt tokens and an interest rate strategy
+    * @dev Initializes a reserve, activating it, assigning an iToken and debt tokens and an interest rate strategy
     * - Only callable by the LendingPoolConfigurator contract
     * @param asset The address of the underlying asset of the reserve
-    * @param iTokenAddress The address of the aToken that will be assigned to the reserve
+    * @param iTokenAddress The address of the iToken that will be assigned to the reserve
     * @param stableDebtAddress The address of the StableDebtToken that will be assigned to the reserve
     * @param iTokenAddress The address of the VariableDebtToken that will be assigned to the reserve
     * @param interestRateStrategyAddress The address of the interest rate strategy contract

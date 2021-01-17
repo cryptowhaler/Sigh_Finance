@@ -38,7 +38,7 @@ contract SIGHBoostersSale is Ownable {
     // #################################
 
     function addBoostersForSale(string memory _BoosterType, string[] memory boosterids, uint256 _price ) external onlyOwner {
-        require( _SIGH_NFT_BoostersContract.isValidBoosterType(_Boostertype),"SIGH Finance : Not a valid Booster Type");
+        require( _SIGH_NFT_BoostersContract.isCategorySupported(_Boostertype),"SIGH Finance : Not a valid Booster Type");
 
         if (!boosterTypes[_BoosterType]) {
             boosterTypes[_BoosterType] = true;
@@ -59,7 +59,7 @@ contract SIGHBoostersSale is Ownable {
 
     // Updates the Sale price for '_BoosterType' type of Boosters. Only owner can call this function
     function updateSalePrice(string memory _BoosterType, uint256 _price ) external onlyOwner {
-        require( _SIGH_NFT_BoostersContract.isValidBoosterType(_Boostertype),"SIGH Finance : Not a valid Booster Type");
+        require( _SIGH_NFT_BoostersContract.isCategorySupported(_Boostertype),"SIGH Finance : Not a valid Booster Type");
         require( boosterTypes[_BoosterType] ,"SIGH Finance : Booster Type not initialized yet");
 
         listOfBoosters[_type].salePrice = _price;
@@ -99,7 +99,7 @@ contract SIGHBoostersSale is Ownable {
     // #########################################
 
     function getBoosterSaleDetails(string memory _Boostertype) external view returns (uint256 available,uint256 price, uint256 sold) {
-        require( _SIGH_NFT_BoostersContract.isValidBoosterType(_Boostertype),"SIGH Finance : Not a valid Booster Type");
+        require( _SIGH_NFT_BoostersContract.isCategorySupported(_Boostertype),"SIGH Finance : Not a valid Booster Type");
         available = listOfBoosters[_Boostertype].totalAvailable;
         price = listOfBoosters[_Boostertype].salePrice;
         sold = listOfBoosters[_Boostertype].totalBoostersSold;

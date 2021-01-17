@@ -67,7 +67,7 @@ interface ISIGHNFTBoosters {
     // Returns farmer address who owns this Booster and its boosterType 
     function getBoosterInfo(uint256 boosterId) external view returns (address farmer, string memory boosterType );
 
-    function isValidBoosterType(string memory _category) external view returns (bool);
+    function isCategorySupported(string memory _category) external view returns (bool);
 
      function getAllBoosterTypesSupported() external view returns (string[] memory) ;
 

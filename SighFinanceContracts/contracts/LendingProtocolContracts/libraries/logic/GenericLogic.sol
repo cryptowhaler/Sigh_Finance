@@ -5,7 +5,7 @@ pragma experimental ABIEncoderV2;
 import {SafeMath} from '../../../dependencies/openzeppelin/contracts/SafeMath.sol';
 import {IERC20} from '../../../dependencies/openzeppelin/contracts/IERC20.sol';
 import {ReserveLogic} from './ReserveLogic.sol';
-import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
+import {InstrumentConfiguration} from '../configuration/InstrumentConfiguration.sol';
 import {UserConfiguration} from '../configuration/UserConfiguration.sol';
 import {WadRayMath} from '../math/WadRayMath.sol';
 import {PercentageMath} from '../math/PercentageMath.sol';
@@ -23,7 +23,7 @@ library GenericLogic {
     using SafeMath for uint256;
     using WadRayMath for uint256;
     using PercentageMath for uint256;
-    using ReserveConfiguration for DataTypes.InstrumentConfigurationMap;
+    using InstrumentConfiguration for DataTypes.InstrumentConfigurationMap;
     using UserConfiguration for DataTypes.UserConfigurationMap;
 
     uint256 public constant HEALTH_FACTOR_LIQUIDATION_THRESHOLD = 1 ether;

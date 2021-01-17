@@ -8,7 +8,7 @@ import {IAToken} from '../../../interfaces/IAToken.sol';
 import {IStableDebtToken} from '../../../interfaces/IStableDebtToken.sol';
 import {IVariableDebtToken} from '../../../interfaces/IVariableDebtToken.sol';
 import {IReserveInterestRateStrategy} from '../../../interfaces/IReserveInterestRateStrategy.sol';
-import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
+import {InstrumentConfiguration} from '../configuration/InstrumentConfiguration.sol';
 import {MathUtils} from '../math/MathUtils.sol';
 import {WadRayMath} from '../math/WadRayMath.sol';
 import {PercentageMath} from '../math/PercentageMath.sol';
@@ -38,7 +38,7 @@ library ReserveLogic {
     event InstrumentDataUpdated(address indexed asset,uint256 liquidityRate, uint256 stableBorrowRate, uint256 variableBorrowRate,uint256 liquidityIndex, uint256 variableBorrowIndex);
 
     using ReserveLogic for DataTypes.InstrumentData;
-    using ReserveConfiguration for DataTypes.InstrumentConfigurationMap;
+    using InstrumentConfiguration for DataTypes.InstrumentConfigurationMap;
 
     /**
     * @dev Returns the ongoing normalized income for the reserve

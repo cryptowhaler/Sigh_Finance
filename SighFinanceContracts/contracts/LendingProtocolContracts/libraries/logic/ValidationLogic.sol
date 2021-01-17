@@ -9,7 +9,7 @@ import {GenericLogic} from './GenericLogic.sol';
 import {WadRayMath} from '../math/WadRayMath.sol';
 import {PercentageMath} from '../math/PercentageMath.sol';
 import {SafeERC20} from '../../../dependencies/openzeppelin/contracts/SafeERC20.sol';
-import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
+import {InstrumentConfiguration} from '../configuration/InstrumentConfiguration.sol';
 import {UserConfiguration} from '../configuration/UserConfiguration.sol';
 import {Errors} from '../helpers/Errors.sol';
 import {Helpers} from '../helpers/Helpers.sol';
@@ -17,7 +17,7 @@ import {IReserveInterestRateStrategy} from '../../../interfaces/IReserveInterest
 import {DataTypes} from '../types/DataTypes.sol';
 
 /**
- * @title ReserveLogic library
+ * @title ValidationLogic library
  * @author Aave
  * @notice Implements functions to validate the different actions of the protocol
  */
@@ -29,7 +29,7 @@ library ValidationLogic {
 
     using ReserveLogic for DataTypes.InstrumentData;
     using SafeERC20 for IERC20;
-    using ReserveConfiguration for DataTypes.InstrumentConfigurationMap;
+    using InstrumentConfiguration for DataTypes.InstrumentConfigurationMap;
     using UserConfiguration for DataTypes.UserConfigurationMap;
 
     uint256 public constant REBALANCE_UP_LIQUIDITY_RATE_THRESHOLD = 4000;
@@ -37,15 +37,15 @@ library ValidationLogic {
 
     /**
     * @dev Validates a deposit action
-    * @param reserve The reserve object on which the user is depositing
+    * @param instrument The instrument object on which the user is depositing
     * @param amount The amount to be deposited
     */
-    function validateDeposit(DataTypes.InstrumentData storage reserve, uint256 amount) external view {
-        (bool isActive, bool isFrozen, , ) = reserve.configuration.getFlags();
+    function validateDeposit(DataTypes.InstrumentData storage instrument, uint256 amount) external view {
+        (bool isActive, bool isFrozen, , ) = instrument.configuration.getFlags();
 
-        require(amount != 0, Errors.VL_INVALID_AMOUNT);
-        require(isActive, Errors.VL_NO_ACTIVE_RESERVE);
-        require(!isFrozen, Errors.VL_RESERVE_FROZEN);
+        require(amount != 0, "Amount needs to be greater than 0");
+        require(isActive, "Instrument not Active");
+        require(!isFrozen, "Instrument Frozen");
     }
 
     /**
@@ -60,11 +60,11 @@ library ValidationLogic {
     * @param oracle The price oracle
     */
     function validateWithdraw( address reserveAddress, uint256 amount, uint256 userBalance, mapping(address => DataTypes.InstrumentData) storage reservesData, DataTypes.UserConfigurationMap storage userConfig, mapping(uint256 => address) storage reserves, uint256 reservesCount, address oracle ) external view {
-        require(amount != 0, Errors.VL_INVALID_AMOUNT);
+        require(amount != 0, "Amount needs to be greater than 0");
         require(amount <= userBalance, Errors.VL_NOT_ENOUGH_AVAILABLE_USER_BALANCE);
 
         (bool isActive, , , ) = reservesData[reserveAddress].configuration.getFlags();
-        require(isActive, Errors.VL_NO_ACTIVE_RESERVE);
+        require(isActive, "Instrument not Active");
 
         require( GenericLogic.balanceDecreaseAllowed( reserveAddress, msg.sender, amount, reservesData, userConfig, reserves, reservesCount, oracle ), Errors.VL_TRANSFER_NOT_ALLOWED );
     }
@@ -110,9 +110,9 @@ library ValidationLogic {
 
         (vars.isActive, vars.isFrozen, vars.borrowingEnabled, vars.stableRateBorrowingEnabled) = reserve.configuration.getFlags();
 
-        require(vars.isActive, Errors.VL_NO_ACTIVE_RESERVE);
-        require(!vars.isFrozen, Errors.VL_RESERVE_FROZEN);
-        require(amount != 0, Errors.VL_INVALID_AMOUNT);
+        require(vars.isActive, "Instrument not Active");
+        require(!vars.isFrozen, "Instrument Frozen");
+        require(amount != 0, "Amount needs to be greater than 0");
 
         require(vars.borrowingEnabled, Errors.VL_BORROWING_NOT_ENABLED);
 
@@ -165,8 +165,8 @@ library ValidationLogic {
     function validateRepay( DataTypes.InstrumentData storage reserve, uint256 amountSent, DataTypes.InterestRateMode rateMode, address onBehalfOf, uint256 stableDebt, uint256 variableDebt) external view {
         bool isActive = reserve.configuration.getActive();
 
-        require(isActive, Errors.VL_NO_ACTIVE_RESERVE);
-        require(amountSent > 0, Errors.VL_INVALID_AMOUNT);
+        require(isActive, "Instrument not Active");
+        require(amountSent > 0, "Amount needs to be greater than 0");
         require( (stableDebt > 0 &&  DataTypes.InterestRateMode(rateMode) == DataTypes.InterestRateMode.STABLE) ||  (variableDebt > 0 &&  DataTypes.InterestRateMode(rateMode) == DataTypes.InterestRateMode.VARIABLE),  Errors.VL_NO_DEBT_OF_SELECTED_TYPE );
         require( amountSent != uint256(-1) || msg.sender == onBehalfOf, Errors.VL_NO_EXPLICIT_AMOUNT_TO_REPAY_ON_BEHALF );
     }
@@ -182,8 +182,8 @@ library ValidationLogic {
     function validateSwapRateMode( DataTypes.InstrumentData storage reserve, DataTypes.UserConfigurationMap storage userConfig, uint256 stableDebt, uint256 variableDebt, DataTypes.InterestRateMode currentRateMode) external view {
         (bool isActive, bool isFrozen, , bool stableRateEnabled) = reserve.configuration.getFlags();
 
-        require(isActive, Errors.VL_NO_ACTIVE_RESERVE);
-        require(!isFrozen, Errors.VL_RESERVE_FROZEN);
+        require(isActive, "Instrument not Active");
+        require(!isFrozen, "Instrument Frozen");
 
         if (currentRateMode == DataTypes.InterestRateMode.STABLE) {
             require(stableDebt > 0, Errors.VL_NO_STABLE_RATE_LOAN_IN_RESERVE);
@@ -216,7 +216,7 @@ library ValidationLogic {
     function validateRebalanceStableBorrowRate( DataTypes.InstrumentData storage reserve,  address reserveAddress, IERC20 stableDebtToken, IERC20 variableDebtToken, address iTokenAddress) external view {
         (bool isActive, , , ) = reserve.configuration.getFlags();
 
-        require(isActive, Errors.VL_NO_ACTIVE_RESERVE);
+        require(isActive, "Instrument not Active");
 
         //if the usage ratio is below 95%, no rebalances are needed
         uint256 totalDebt = stableDebtToken.totalSupply().add(variableDebtToken.totalSupply()).wadToRay();
@@ -268,7 +268,7 @@ library ValidationLogic {
     function validateLiquidationCall( DataTypes.InstrumentData storage collateralReserve, DataTypes.InstrumentData storage principalReserve, DataTypes.UserConfigurationMap storage userConfig, uint256 userHealthFactor, uint256 userStableDebt, uint256 userVariableDebt ) internal view returns (uint256, string memory) {
 
         if ( !collateralReserve.configuration.getActive() || !principalReserve.configuration.getActive() ) {
-            return (  uint256(Errors.CollateralManagerErrors.NO_ACTIVE_RESERVE),  Errors.VL_NO_ACTIVE_RESERVE );
+            return (  uint256(Errors.CollateralManagerErrors.NO_ACTIVE_RESERVE),  "Instrument not Active" );
         }
 
         if (userHealthFactor >= GenericLogic.HEALTH_FACTOR_LIQUIDATION_THRESHOLD) {

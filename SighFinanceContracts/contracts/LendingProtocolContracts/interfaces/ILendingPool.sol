@@ -11,14 +11,15 @@ interface ILendingPool {
 
   /**
    * @dev Emitted on deposit()
-   * @param reserve The address of the underlying asset of the reserve
+   * @param instrument The address of the underlying asset of the instrument
    * @param user The address initiating the deposit
-   * @param onBehalfOf The beneficiary of the deposit, receiving the aTokens
+   * @param onBehalfOf The beneficiary of the deposit, receiving the iTokens
    * @param amount The amount deposited
-   * @param depositFee The fee paid
+   * @param depositFee The platform fee paid
+   * @param sighPay The SIGH PAY fee paid
    * @param _boosterId The ID of the Booster used to get discount
    **/
-  event Deposit( address indexed reserve, address indexed user,  uint256 amount, , uint256 depositFee, uint16 _boosterId);
+  event Deposit( address indexed instrument, address indexed user, address indexed onBehalfOf,  uint256 amount, uint256 depositFee, uint256 sighPay, uint16 _boosterId);
 
 
     /**
@@ -31,7 +32,7 @@ interface ILendingPool {
 
   /**
    * @dev Emitted on borrow() and flashLoan() when debt needs to be opened
-   * @param reserve The address of the underlying asset being borrowed
+   * @param instrument The address of the underlying asset being borrowed
    * @param user The address of the user initiating the borrow(), receiving the funds on borrow() or just
    * initiator of the transaction on flashLoan()
    * @param onBehalfOf The address that will be getting the debt
@@ -41,45 +42,45 @@ interface ILendingPool {
    * @param _borrowFee The fee paid   
    * @param _boosterId The ID of the Booster used to get discount
    **/
-  event Borrow( address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint256 borrowRateMode, uint256 borrowRate, uint256 _borrowFee, uint16 _boosterId );
+  event Borrow( address indexed instrument, address user, address indexed onBehalfOf, uint256 amount, uint256 borrowRateMode, uint256 borrowRate, uint256 _borrowFee, uint16 _boosterId );
 
   /**
    * @dev Emitted on repay()
-   * @param reserve The address of the underlying asset of the reserve
+   * @param instrument The address of the underlying asset of the instrument
    * @param user The beneficiary of the repayment, getting his debt reduced
    * @param repayer The address of the user initiating the repay(), providing the funds
    * @param amount The amount repaid
    **/
-  event Repay( address indexed reserve, address indexed user, address indexed repayer, uint256 amount);
+  event Repay( address indexed instrument, address indexed user, address indexed repayer, uint256 amount);
 
   /**
    * @dev Emitted on swapBorrowRateMode()
-   * @param reserve The address of the underlying asset of the reserve
+   * @param instrument The address of the underlying asset of the instrument
    * @param user The address of the user swapping his rate mode
    * @param rateMode The rate mode that the user wants to swap to
    **/
-  event Swap(address indexed reserve, address indexed user, uint256 rateMode);
+  event Swap(address indexed instrument, address indexed user, uint256 rateMode);
 
   /**
    * @dev Emitted on setUserUseReserveAsCollateral()
-   * @param reserve The address of the underlying asset of the reserve
+   * @param instrument The address of the underlying asset of the instrument
    * @param user The address of the user enabling the usage as collateral
    **/
-  event ReserveUsedAsCollateralEnabled(address indexed reserve, address indexed user);
+  event ReserveUsedAsCollateralEnabled(address indexed instrument, address indexed user);
 
   /**
    * @dev Emitted on setUserUseReserveAsCollateral()
-   * @param reserve The address of the underlying asset of the reserve
+   * @param instrument The address of the underlying asset of the instrument
    * @param user The address of the user enabling the usage as collateral
    **/
-  event ReserveUsedAsCollateralDisabled(address indexed reserve, address indexed user);
+  event ReserveUsedAsCollateralDisabled(address indexed instrument, address indexed user);
 
   /**
    * @dev Emitted on rebalanceStableBorrowRate()
-   * @param reserve The address of the underlying asset of the reserve
+   * @param instrument The address of the underlying asset of the instrument
    * @param user The address of the user for which the rebalance has been executed
    **/
-  event RebalanceStableBorrowRate(address indexed reserve, address indexed user);
+  event RebalanceStableBorrowRate(address indexed instrument, address indexed user);
 
   /**
    * @dev Emitted on flashLoan()
@@ -102,24 +103,24 @@ interface ILendingPool {
    * @param debtToCover The debt amount of borrowed `asset` the liquidator wants to cover
    * @param liquidatedCollateralAmount The amount of collateral received by the liiquidator
    * @param liquidator The address of the liquidator
-   * @param receiveAToken `true` if the liquidators wants to receive the collateral aTokens, `false` if he wants
+   * @param receiveAToken `true` if the liquidators wants to receive the collateral iTokens, `false` if he wants
    * to receive the underlying collateral asset directly
    **/
   event LiquidationCall(  address indexed collateralAsset,  address indexed debtAsset,  address indexed user,  uint256 debtToCover,  uint256 liquidatedCollateralAmount,  address liquidator,  bool receiveAToken );
 
   /**
-   * @dev Emitted when the state of a reserve is updated. NOTE: This event is actually declared
+   * @dev Emitted when the state of a instrument is updated. NOTE: This event is actually declared
    * in the ReserveLogic library and emitted in the updateInterestRates() function. Since the function is internal,
    * the event will actually be fired by the LendingPool contract. The event is therefore replicated here so it
    * gets added to the LendingPool ABI
-   * @param reserve The address of the underlying asset of the reserve
+   * @param instrument The address of the underlying asset of the instrument
    * @param liquidityRate The new liquidity rate
    * @param stableBorrowRate The new stable borrow rate
    * @param variableBorrowRate The new variable borrow rate
    * @param liquidityIndex The new liquidity index
    * @param variableBorrowIndex The new variable borrow index
    **/
-  event ReserveDataUpdated( address indexed reserve, uint256 liquidityRate, uint256 stableBorrowRate, uint256 variableBorrowRate, uint256 liquidityIndex, uint256 variableBorrowIndex);
+  event ReserveDataUpdated( address indexed instrument, uint256 liquidityRate, uint256 stableBorrowRate, uint256 variableBorrowRate, uint256 liquidityIndex, uint256 variableBorrowIndex);
 
 
   /**

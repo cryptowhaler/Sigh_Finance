@@ -1,7 +1,7 @@
 pragma solidity 0.6.12;
 
 import {UserConfiguration} from '../libraries/configuration/UserConfiguration.sol';
-import {ReserveConfiguration} from '../libraries/configuration/ReserveConfiguration.sol';
+import {InstrumentConfiguration} from '../libraries/configuration/InstrumentConfiguration.sol';
 import {ReserveLogic} from '../libraries/logic/ReserveLogic.sol';
 import {IGlobalAddressesProvider} from '../../interfaces/IGlobalAddressesProvider.sol';
 import {DataTypes} from '../libraries/types/DataTypes.sol';
@@ -9,7 +9,7 @@ import {DataTypes} from '../libraries/types/DataTypes.sol';
 contract LendingPoolStorage {
 
     using ReserveLogic for DataTypes.InstrumentData;
-    using ReserveConfiguration for DataTypes.InstrumentConfigurationMap;
+    using InstrumentConfiguration for DataTypes.InstrumentConfigurationMap;
     using UserConfiguration for DataTypes.UserConfigurationMap;
 
     IGlobalAddressesProvider internal _addressesProvider;
