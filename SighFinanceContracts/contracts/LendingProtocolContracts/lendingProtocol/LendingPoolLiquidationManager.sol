@@ -123,7 +123,7 @@ contract LendingPoolLiquidationManager is   ILendingPoolLiquidationManager, Vers
             return (vars.errorCode, vars.errorMsg);
         }
 
-        vars.collateralAtoken = IAToken(collateralReserve.aTokenAddress);
+        vars.collateralAtoken = IAToken(collateralReserve.iTokenAddress);
         vars.userCollateralBalance = vars.collateralAtoken.balanceOf(user);
 
         vars.maxLiquidatableDebt = vars.userStableDebt.add(vars.userVariableDebt).percentMul(  LIQUIDATION_CLOSE_FACTOR_PERCENT );
@@ -160,7 +160,7 @@ contract LendingPoolLiquidationManager is   ILendingPoolLiquidationManager, Vers
             IStableDebtToken(debtReserve.stableDebtTokenAddress).burn( user, vars.actualDebtToLiquidate.sub(vars.userVariableDebt) );
         }
 
-        debtReserve.updateInterestRates( debtAsset, debtReserve.aTokenAddress, vars.actualDebtToLiquidate, 0 );
+        debtReserve.updateInterestRates( debtAsset, debtReserve.iTokenAddress, vars.actualDebtToLiquidate, 0 );
 
         if (receiveAToken) {
             vars.liquidatorPreviousATokenBalance = IERC20(vars.collateralAtoken).balanceOf(msg.sender);
@@ -188,7 +188,7 @@ contract LendingPoolLiquidationManager is   ILendingPoolLiquidationManager, Vers
         }
 
         // Transfers the debt asset being repaid to the aToken, where the liquidity is kept
-        IERC20(debtAsset).safeTransferFrom( msg.sender, debtReserve.aTokenAddress, vars.actualDebtToLiquidate);
+        IERC20(debtAsset).safeTransferFrom( msg.sender, debtReserve.iTokenAddress, vars.actualDebtToLiquidate);
 
         emit LiquidationCall(collateralAsset, debtAsset, user, vars.actualDebtToLiquidate, vars.maxCollateralToLiquidate, msg.sender, receiveAToken);
 

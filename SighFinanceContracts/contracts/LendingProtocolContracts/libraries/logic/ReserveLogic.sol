@@ -38,7 +38,7 @@ library ReserveLogic {
     event InstrumentDataUpdated(address indexed asset,uint256 liquidityRate, uint256 stableBorrowRate, uint256 variableBorrowRate,uint256 liquidityIndex, uint256 variableBorrowIndex);
 
     using ReserveLogic for DataTypes.InstrumentData;
-    using ReserveConfiguration for DataTypes.ReserveConfigurationMap;
+    using ReserveConfiguration for DataTypes.InstrumentConfigurationMap;
 
     /**
     * @dev Returns the ongoing normalized income for the reserve
@@ -111,15 +111,15 @@ library ReserveLogic {
     /**
     * @dev Initializes a reserve
     * @param reserve The reserve object
-    * @param aTokenAddress The address of the overlying atoken contract
+    * @param iTokenAddress The address of the overlying atoken contract
     * @param interestRateStrategyAddress The address of the interest rate strategy contract
     **/
-    function init( DataTypes.InstrumentData storage reserve, address aTokenAddress, address stableDebtTokenAddress, address variableDebtTokenAddress, address interestRateStrategyAddress) external {
-        require(reserve.aTokenAddress == address(0), Errors.RL_RESERVE_ALREADY_INITIALIZED);
+    function init( DataTypes.InstrumentData storage reserve, address iTokenAddress, address stableDebtTokenAddress, address variableDebtTokenAddress, address interestRateStrategyAddress) external {
+        require(reserve.iTokenAddress == address(0), Errors.RL_RESERVE_ALREADY_INITIALIZED);
 
         reserve.liquidityIndex = uint128(WadRayMath.ray());
         reserve.variableBorrowIndex = uint128(WadRayMath.ray());
-        reserve.aTokenAddress = aTokenAddress;
+        reserve.iTokenAddress = iTokenAddress;
         reserve.stableDebtTokenAddress = stableDebtTokenAddress;
         reserve.variableDebtTokenAddress = variableDebtTokenAddress;
         reserve.interestRateStrategyAddress = interestRateStrategyAddress;
@@ -142,7 +142,7 @@ library ReserveLogic {
     * @param liquidityAdded The amount of liquidity added to the protocol (deposit or repay) in the previous action
     * @param liquidityTaken The amount of liquidity taken from the protocol (redeem or borrow)
     **/
-    function updateInterestRates( DataTypes.InstrumentData storage reserve, address reserveAddress, address aTokenAddress, uint256 liquidityAdded, uint256 liquidityTaken ) internal {
+    function updateInterestRates( DataTypes.InstrumentData storage reserve, address reserveAddress, address iTokenAddress, uint256 liquidityAdded, uint256 liquidityTaken ) internal {
         UpdateInterestRatesLocalVars memory vars;
 
         vars.stableDebtTokenAddress = reserve.stableDebtTokenAddress;
@@ -153,7 +153,7 @@ library ReserveLogic {
         //of totalSupply(), as it's noticeably cheaper. Also, the index has been updated by the previous updateState() call
         vars.totalVariableDebt = IVariableDebtToken(reserve.variableDebtTokenAddress).scaledTotalSupply().rayMul(reserve.variableBorrowIndex);
 
-        vars.availableLiquidity = IERC20(reserveAddress).balanceOf(aTokenAddress);
+        vars.availableLiquidity = IERC20(reserveAddress).balanceOf(iTokenAddress);
 
         (vars.newLiquidityRate,vars.newStableRate,vars.newVariableRate) = IReserveInterestRateStrategy(reserve.interestRateStrategyAddress).calculateInterestRates(
                                                                                                                                                 reserveAddress,
@@ -225,7 +225,7 @@ library ReserveLogic {
         vars.amountToMint = vars.totalDebtAccrued.percentMul(vars.reserveFactor);
 
         if (vars.amountToMint != 0) {
-            IAToken(reserve.aTokenAddress).mintToTreasury(vars.amountToMint, newLiquidityIndex);
+            IAToken(reserve.iTokenAddress).mintToTreasury(vars.amountToMint, newLiquidityIndex);
         }
     }
 

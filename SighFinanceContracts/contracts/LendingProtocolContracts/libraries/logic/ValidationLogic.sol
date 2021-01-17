@@ -29,7 +29,7 @@ library ValidationLogic {
 
     using ReserveLogic for DataTypes.InstrumentData;
     using SafeERC20 for IERC20;
-    using ReserveConfiguration for DataTypes.ReserveConfigurationMap;
+    using ReserveConfiguration for DataTypes.InstrumentConfigurationMap;
     using UserConfiguration for DataTypes.UserConfigurationMap;
 
     uint256 public constant REBALANCE_UP_LIQUIDITY_RATE_THRESHOLD = 4000;
@@ -143,9 +143,9 @@ library ValidationLogic {
 
         require(vars.stableRateBorrowingEnabled, Errors.VL_STABLE_BORROWING_NOT_ENABLED);
 
-        require( !userConfig.isUsingAsCollateral(reserve.id) || reserve.configuration.getLtv() == 0 || amount > IERC20(reserve.aTokenAddress).balanceOf(userAddress), Errors.VL_COLLATERAL_SAME_AS_BORROWING_CURRENCY );
+        require( !userConfig.isUsingAsCollateral(reserve.id) || reserve.configuration.getLtv() == 0 || amount > IERC20(reserve.iTokenAddress).balanceOf(userAddress), Errors.VL_COLLATERAL_SAME_AS_BORROWING_CURRENCY );
 
-        vars.availableLiquidity = IERC20(asset).balanceOf(reserve.aTokenAddress);
+        vars.availableLiquidity = IERC20(asset).balanceOf(reserve.iTokenAddress);
 
         //calculate the max available loan size in stable rate mode as a percentage of the available liquidity
         uint256 maxLoanSizeStable = vars.availableLiquidity.percentMul(maxStableLoanPercent);
@@ -198,7 +198,7 @@ library ValidationLogic {
             * the interest rate, borrowing at variable, and switching to stable
             **/
             require(stableRateEnabled, Errors.VL_STABLE_BORROWING_NOT_ENABLED);
-            require(!userConfig.isUsingAsCollateral(reserve.id) || reserve.configuration.getLtv() == 0 || stableDebt.add(variableDebt) > IERC20(reserve.aTokenAddress).balanceOf(msg.sender), Errors.VL_COLLATERAL_SAME_AS_BORROWING_CURRENCY);
+            require(!userConfig.isUsingAsCollateral(reserve.id) || reserve.configuration.getLtv() == 0 || stableDebt.add(variableDebt) > IERC20(reserve.iTokenAddress).balanceOf(msg.sender), Errors.VL_COLLATERAL_SAME_AS_BORROWING_CURRENCY);
         } 
         else {
             revert(Errors.VL_INVALID_INTEREST_RATE_MODE_SELECTED);
@@ -211,16 +211,16 @@ library ValidationLogic {
     * @param reserveAddress The address of the reserve
     * @param stableDebtToken The stable debt token instance
     * @param variableDebtToken The variable debt token instance
-    * @param aTokenAddress The address of the aToken contract
+    * @param iTokenAddress The address of the aToken contract
     */
-    function validateRebalanceStableBorrowRate( DataTypes.InstrumentData storage reserve,  address reserveAddress, IERC20 stableDebtToken, IERC20 variableDebtToken, address aTokenAddress) external view {
+    function validateRebalanceStableBorrowRate( DataTypes.InstrumentData storage reserve,  address reserveAddress, IERC20 stableDebtToken, IERC20 variableDebtToken, address iTokenAddress) external view {
         (bool isActive, , , ) = reserve.configuration.getFlags();
 
         require(isActive, Errors.VL_NO_ACTIVE_RESERVE);
 
         //if the usage ratio is below 95%, no rebalances are needed
         uint256 totalDebt = stableDebtToken.totalSupply().add(variableDebtToken.totalSupply()).wadToRay();
-        uint256 availableLiquidity = IERC20(reserveAddress).balanceOf(aTokenAddress).wadToRay();
+        uint256 availableLiquidity = IERC20(reserveAddress).balanceOf(iTokenAddress).wadToRay();
         uint256 usageRatio = totalDebt == 0 ? 0 : totalDebt.rayDiv(availableLiquidity.add(totalDebt));
 
         //if the liquidity rate is below REBALANCE_UP_THRESHOLD of the max variable APR at 95% usage, then we allow rebalancing of the stable rate positions.
@@ -241,7 +241,7 @@ library ValidationLogic {
     * @param oracle The price oracle
     */
     function validateSetUseReserveAsCollateral(  DataTypes.InstrumentData storage reserve, address reserveAddress, bool useAsCollateral, mapping(address => DataTypes.InstrumentData) storage reservesData, DataTypes.UserConfigurationMap storage userConfig, mapping(uint256 => address) storage reserves,  uint256 reservesCount, address oracle) external view {
-        uint256 underlyingBalance = IERC20(reserve.aTokenAddress).balanceOf(msg.sender);
+        uint256 underlyingBalance = IERC20(reserve.iTokenAddress).balanceOf(msg.sender);
 
         require(underlyingBalance > 0, Errors.VL_UNDERLYING_BALANCE_NOT_GREATER_THAN_0);
         require( useAsCollateral ||  GenericLogic.balanceDecreaseAllowed(reserveAddress,msg.sender,underlyingBalance,reservesData,userConfig,reserves,reservesCount,oracle), Errors.VL_DEPOSIT_ALREADY_IN_USE );

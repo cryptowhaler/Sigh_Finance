@@ -23,7 +23,7 @@ library GenericLogic {
     using SafeMath for uint256;
     using WadRayMath for uint256;
     using PercentageMath for uint256;
-    using ReserveConfiguration for DataTypes.ReserveConfigurationMap;
+    using ReserveConfiguration for DataTypes.InstrumentConfigurationMap;
     using UserConfiguration for DataTypes.UserConfigurationMap;
 
     uint256 public constant HEALTH_FACTOR_LIQUIDATION_THRESHOLD = 1 ether;
@@ -138,7 +138,7 @@ library GenericLogic {
             vars.reserveUnitPrice = IPriceOracleGetter(oracle).getAssetPrice(vars.currentReserveAddress);
 
             if (vars.liquidationThreshold != 0 && userConfig.isUsingAsCollateral(vars.i)) {
-                vars.compoundedLiquidityBalance = IERC20(currentReserve.aTokenAddress).balanceOf(user);
+                vars.compoundedLiquidityBalance = IERC20(currentReserve.iTokenAddress).balanceOf(user);
                 uint256 liquidityBalanceETH = vars.reserveUnitPrice.mul(vars.compoundedLiquidityBalance).div(vars.tokenUnit);
                 vars.totalCollateralInETH = vars.totalCollateralInETH.add(liquidityBalanceETH);
 
