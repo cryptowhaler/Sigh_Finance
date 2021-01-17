@@ -22,17 +22,17 @@ pragma solidity ^0.6.0;
 library EnumerableSet {
     // The Set implementation uses private functions, and user-facing implementations are just wrappers around the underlying Set.
 
-    // ownedBooster contains tokenID and type
+    // ownedBooster contains boostId and type
     struct ownedBooster {
-        uint tokenId;
+        uint boostId;
         string _type;
     }
 
     struct Set {
-        ownedBooster[] _NFTs;   // ownedBooster containing tokenId and category
+        ownedBooster[] _NFTs;   // ownedBooster containing boostId and category
 
         // Position of the value in the `values` array, plus 1 because index 0 means a value is not in the set.
-        // Mapping from tokenId to index
+        // Mapping from boostId to index
         mapping (uint256 => uint256) _indexes;
     }
 
@@ -43,7 +43,7 @@ library EnumerableSet {
     function _add(Set storage set, ownedBooster newNFT) private returns (bool) {
         if (!_contains(set, newNFT)) {
             set._NFTs.push(newNFT);             
-            set._indexes[newNFT.tokenId] = set._NFTs.length;  // The value is stored at length-1, but we add 1 to all indexes and use 0 as a sentinel value
+            set._indexes[newNFT.boostId] = set._NFTs.length;  // The value is stored at length-1, but we add 1 to all indexes and use 0 as a sentinel value
             return true;
         } 
         else {
@@ -56,7 +56,7 @@ library EnumerableSet {
      * Returns true if the value was removed from the set, that is if it was present.
      */
     function _remove(Set storage set, ownedBooster _NFT) private returns (bool) {        
-        uint256 valueIndex = set._indexes[_NFT.tokenId];  // We read and store the value's index to prevent multiple reads from the same storage slot
+        uint256 valueIndex = set._indexes[_NFT.boostId];  // We read and store the value's index to prevent multiple reads from the same storage slot
 
         if (valueIndex != 0) {
             // To delete an element from the _NFTs array in O(1), we swap the element to delete with the last one in the array, and then remove the last element (sometimes called as 'swap and pop').
@@ -71,10 +71,10 @@ library EnumerableSet {
             ownedBooster memory lastvalue = set._NFTs[lastIndex];
             
             set._NFTs[toDeleteIndex] = lastvalue;                 //   Move the last value to the index where the value to delete is
-            set._indexes[lastvalue.tokenId] = toDeleteIndex + 1;    //   Update the index for the moved value. All indexes are 1 - based
+            set._indexes[lastvalue.boostId] = toDeleteIndex + 1;    //   Update the index for the moved value. All indexes are 1 - based
 
             set._NFTs.pop();              // Delete the slot where the moved value was stored
-            delete set._indexes[_NFT.tokenId];     // Delete the index for the deleted slot
+            delete set._indexes[_NFT.boostId];     // Delete the index for the deleted slot
 
             return true;
         } 
@@ -84,10 +84,10 @@ library EnumerableSet {
     }
 
     /**
-     * @dev Returns true if the value is in the set. O(1). Checks performed based on the tokenID 
+     * @dev Returns true if the value is in the set. O(1). Checks performed based on the boostId 
      */
     function _contains(Set storage set, ownedBooster _NFT) private view returns (bool) {
-        return set._indexes[_NFT.tokenId] != 0;
+        return set._indexes[_NFT.boostId] != 0;
     }
 
     /**

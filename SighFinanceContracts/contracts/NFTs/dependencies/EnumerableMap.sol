@@ -174,9 +174,7 @@ library EnumerableMap {
 
    /**
     * @dev Returns the element stored at position `index` in the set. O(1).
-    * Note that there are no guarantees on the ordering of values inside the
-    * array, and it may change when more values are added or removed.
-    *
+    * Note that there are no guarantees on the ordering of values inside the array, and it may change when more values are added or removed.
     * Requirements:
     *
     * - `index` must be strictly less than {length}.
