@@ -1,9 +1,12 @@
 pragma solidity ^0.5.0;
 
 import "../../openzeppelin-upgradeability/VersionedInitializable.sol";
+import {IGlobalAddressesProvider} from '../../Configuration/IGlobalAddressesProvider.sol';
 import "../interfaces/IFeeProvider.sol";
-import "../libraries/WadRayMath.sol";
+import "../libraries/math/PercentageMath.sol";
+import "../libraries/math/Exponential.sol";
 
+import "../interfaces/IPriceOracleGetter.sol";
 
 /**
 * @title FeeProvider contract
@@ -12,15 +15,25 @@ import "../libraries/WadRayMath.sol";
 **/
 contract FeeProvider is IFeeProvider, VersionedInitializable {
 
-    using WadRayMath for uint256;
+    using PercentageMath for uint256;
+    using Exponential for uint256;
 
+    IGlobalAddressesProvider private globalAddressesProvider;
+    IPriceOracleGetter private priceOracle ;
     ISIGHNFTBoosters private SIGHNFTBoosters;
 
     uint256 public originationFeePercentage;        // percentage of the fee to be calculated on the loan amount
-    uint256 public depositFeePercentage;
+    uint256 public totalDepositFeePercent;
+    uint256 public platformFeePercent;
 
     mapping (uint256 => uint256) private boostersTotalFuelRemaining;    // boosterID => Fuel Remaining (Remaining Volume on which discount will be given) Mapping
     mapping (uint256 => uint256) private boostersTotalFuelUsed;    // boosterID => Fuel Used (Volume used by the booster) Mapping
+
+    //only SIGH Distribution Manager can use functions affected by this modifier
+    modifier onlySighFinanceConfigurator {
+        require(globalAddressesProvider.getSIGHFinanceConfigurator() == msg.sender, "The caller must be the SIGH Finanace Configurator");
+        _;
+    }
 
 // ###############################
 // ###### PROXY RELATED ##########
@@ -36,9 +49,14 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
     * @param _addressesProvider the address of the GlobalAddressesProvider
     */
     function initialize(address _addressesProvider) public initializer {
+        globalAddressesProvider = IGlobalAddressesProvider(_addressesProvider);
+        depositFeePercent = 50;           // deposit fee = 0.5%
         originationFeePercentage = 0.0005 * 1e18;           // borrow fee is set as default as 500 basis points of the loan amount (0.05%)
-        depositFeePercentage = 0.0005 * 1e18;           // deposit fee is set as default as 500 basis points of the deposit amount (0.05%)
-        SIGHNFTBoosters = SIGHNFTBoosters;
+    }
+
+    function refreshConfiguration() external onlySighFinanceConfigurator {
+        priceOracle = globalAddressesProvider.getPriceOracle();
+        SIGHNFTBoosters = globalAddressesProvider.getSIGHNFTBoosters();
     }
 
 // ############################################################################################################################
@@ -47,18 +65,37 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
 // ###### 2. getLoanOriginationFeePercentage() : returns the origination fee percentage #######################################
 // ############################################################################################################################
 
-    function calculateDepositFee(address _user,address instrument, uint256 _amount, uint boosterId) external view returns (uint256,uint256,uint256) {
-        if (boosterId > 0) {
-            require( _user == SIGHNFTBoosters.ownerOf(boosterId), "Deposit() caller doesn't have the mentioned SIGH Booster needed to claim the discount. Please check the BoosterID that you provided again." );
+    function calculateDepositFee(address _user,address instrument, uint256 _amount, uint boosterId) external onlyLendingPool returns (uint256 totalFee,uint256 platformFee,uint256 sighPay) {
+
+        totalFee = _amount.percentMul(totalDepositFeePercent);       // totalDepositFeePercent = 50 represents 0.5%
+        platformFee = totalFee.percentMul(platformFeePercent);       // platformFeePercent = 5000 represents 50%
+        sighPay = totalFee.sub_(platformFee);                        
+
+        if (boosterId == 0) {
+            return (totalFee,platformFee,sighPay);
         }
 
+        require( _user == SIGHNFTBoosters.ownerOf(boosterId), "Deposit() caller doesn't have the mentioned SIGH Booster needed to claim the discount. Please check the BoosterID that you provided again." );
 
+        if ( boostersTotalFuelRemaining[boosterId] > 0 ) {
+            uint priceUSD = priceOracle.getAssetPrice(instrument);
+            uint priceDecimals = priceOracle.getAssetPriceDecimals(instrument);
+            require(priceUSD > 0, "Oracle returned invalid price");
 
-        getDiscountMultiplierForBooster
+            uint value = totalFee.mul_(priceUSD * 10**8);              // Adjusted by 8 decimals
+            value = value.div_(10**priceDecimals);                     // Corrected by Price Decimals
 
+            boostersTotalFuelRemaining[boosterId] = boostersTotalFuelRemaining[boosterId] >= value ? boostersTotalFuelRemaining[boosterId].sub_(value) : 0 ;
+            boostersTotalFuelUsed[boosterId] = boostersTotalFuelUsed[boosterId].add_(value);
+            return (0,0,0);
+        }
 
+        (uint platformFeeDiscount, uint sighPayDiscount) = SIGHNFTBoosters.getDiscountRatiosForBooster(boosterId);
+        platformFee = platformFee.sub_( platformFee.div_(platformFeeDiscount) ) ;
+        sighPay = sighPay.sub_( sighPay.div_(sighPayDiscount) ) ;
+        totalFee = platformFee.add_(sighPay);
 
-        return _amount.wadMul(depositFeePercentage);
+        return (totalFee, platformFee,sighPay) ;
     }
 
 
@@ -79,5 +116,18 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
     function getLoanOriginationFeePercentage() external view returns (uint256) {
         return originationFeePercentage;
     }
+
+
+    function updateTotalDepositFeePercent(uint _depositFeePercent) external onlySighFinanceConfigurator {
+        totalDepositFeePercent = _depositFeePercent;
+    }
+
+    function updatePlatformFeePercent(uint _platformFeePercent) external onlySighFinanceConfigurator {
+        platformFeePercent = _platformFeePercent;
+    }
+    
+
+
+
 
 }

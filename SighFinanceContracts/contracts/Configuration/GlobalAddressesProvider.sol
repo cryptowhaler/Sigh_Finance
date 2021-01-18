@@ -39,7 +39,10 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
     event SIGHStakingImplUpdated(address indexed SIGHStakingAddress);                    // ADDED BY SIGH FINANCE
 
     event PriceOracleUpdated(address indexed newAddress);
+
+    event SIGHFinanceNFTBOOSTERSUpdated(address indexed newAddress);
     event SIGHFinanceFeeCollectorUpdated(address indexed newAddress);
+    event SIGHFinanceSIGHPAYAggregatorUpdated(address indexed newAddress);
 
     event ProxyCreated(bytes32 id, address indexed newAddress);
 
@@ -68,6 +71,8 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
     bytes32 private constant PRICE_ORACLE = "PRICE_ORACLE";
 
     bytes32 private constant SIGH_Finance_Fee_Collector = "SIGH_Finance_Fee_Collector";
+    bytes32 private constant SIGH_Finance_NFT_BOOSTERS = "SIGH_Finance_NFT_BOOSTERS";
+    bytes32 private constant SIGH_Finance_SIGHPAY_AGGREGATOR = "SIGH_Finance_SIGHPAY_AGGREGATOR";
 
 // ################################                                                  
 // ######  CONSTRUCTOR ############                                                
@@ -448,6 +453,17 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
         emit SIGHStakingImplUpdated(_SIGHStaking);
     }
 
+    // SIGH FINANCE : SIGH PAY AGGREGATOR - Collects SIGH PAY Payments
+    function getSIGHPAYAggregator() external view returns (address) {
+        return getAddress(SIGH_Finance_SIGHPAY_AGGREGATOR);
+    }
+
+    function setSIGHPAYAggregator(address _SIGHPAYAggregator) external onlySIGHFinanceManager {
+        updateImplInternal(SIGH_Finance_SIGHPAY_AGGREGATOR, _SIGHPAYAggregator);
+        emit SIGHFinanceSIGHPAYAggregatorUpdated(_SIGHPAYAggregator);
+    }
+
+
 // ###################################################################################   
 // ######  THESE CONTRACTS ARE NOT USING PROXY SO ADDRESS ARE DIRECTLY UPDATED #######  
 // ###################################################################################
@@ -476,7 +492,15 @@ contract GlobalAddressesProvider is IGlobalAddressesProvider, AddressStorage {
         emit SIGHFinanceFeeCollectorUpdated(_feeCollector);
     }
 
+    // SIGH FINANCE NFT BOOSTERS - Provide Discount on Deposit & Borrow Fee
+    function getSIGHNFTBoosters() external view returns (address) {
+        return getAddress(SIGH_Finance_Fee_Collector);
+    }
 
+    function setSIGHNFTBoosters(address _SIGHNFTBooster) external onlySIGHFinanceManager {
+        _setAddress(SIGH_Finance_Fee_Collector, _SIGHNFTBooster);
+        emit SIGHFinanceNFTBOOSTERSUpdated(_SIGHNFTBooster);
+    }
 
 // ############################################# 
 // ######  FUNCTION TO UPGRADE THE PROXY #######  

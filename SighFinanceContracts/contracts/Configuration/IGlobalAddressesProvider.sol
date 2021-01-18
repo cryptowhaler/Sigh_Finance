@@ -87,6 +87,9 @@ interface IGlobalAddressesProvider  {
     function getSIGHStaking() external view returns (address);                      //  ADDED FOR SIGH FINANCE 
     function setSIGHStaking(address _SIGHVolatilityHarvester) external;             //  ADDED FOR SIGH FINANCE 
 
+    function getSIGHPAYAggregator() external view returns (address);                      //  ADDED FOR SIGH FINANCE 
+    function setSIGHPAYAggregator(address _SIGHPAYAggregator) external;             //  ADDED FOR SIGH FINANCE 
+
 // #######################################################
 // ####___________ PRICE ORACLE CONTRACT _____________####
 // ####_____ SIGH FINANCE FEE COLLECTOR : ADDRESS ____####
@@ -96,8 +99,12 @@ interface IGlobalAddressesProvider  {
     function setPriceOracle(address _priceOracle) external;
 
 
-    // SIGH FINANCE FEE COLLECTOR - BORROWING / FLASH LOAN FEE TRANSERRED TO THIS ADDRESS
+    // SIGH FINANCE FEE COLLECTOR - DEPOSIT / BORROWING / FLASH LOAN FEE TRANSERRED TO THIS ADDRESS
     function getSIGHFinanceFeeCollector() external view returns (address) ;
     function setSIGHFinanceFeeCollector(address _feeCollector) external ;
+
+    // SIGH FINANCE FEE COLLECTOR - DEPOSIT / BORROWING / FLASH LOAN FEE TRANSERRED TO THIS ADDRESS
+    function getSIGHNFTBoosters() external view returns (address) ;
+    function setSIGHNFTBoosters(address _SIGHNFTBooster) external ;
 
 }

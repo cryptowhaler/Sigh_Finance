@@ -126,9 +126,13 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
         address iToken = instrument.iTokenAddress;
 
         // Split Deposit fee in SIGH Pay and platform fee. Calculations based on the discount (if any) provided by the boosterId 
-        (uint256 totalFee, uint256 depositFee, uint256 sighPay) = feeProvider.calculateDepositFee(msg.sender,_instrument, _amount, boosterId);
-        IERC20(_instrument).safeTransferFrom( msg.sender, addressesProvider.getSIGHFinanceFeeCollector(), depositFee );
-        IERC20(_instrument).safeTransferFrom( msg.sender, addressesProvider.getSIGHPayAggregator(), sighPay );
+        (uint256 totalFee, uint256 platformFee, uint256 sighPay) = feeProvider.calculateDepositFee(msg.sender,_instrument, _amount, boosterId);
+        if (platformFee > 0) {
+            IERC20(_instrument).safeTransferFrom( msg.sender, addressesProvider.getSIGHFinanceFeeCollector(), platformFee );
+        }
+        if (sighPay > 0) {
+            IERC20(_instrument).safeTransferFrom( msg.sender, addressesProvider.getSIGHPayAggregator(), sighPay );
+        }
 
         instrument.updateState();
         instrument.updateInterestRates(_instrument, iToken, _amount.sub(totalFee), 0);
@@ -141,7 +145,7 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
             emit InstrumentUsedAsCollateralEnabled(_instrument, onBehalfOf);
         }
 
-        emit Deposit(_instrument, msg.sender, onBehalfOf,  _amount.sub(totalFee), depositFee, sighPay, boosterId );
+        emit Deposit(_instrument, msg.sender, onBehalfOf,  _amount.sub(totalFee), platformFee, sighPay, boosterId );
     }
 
 

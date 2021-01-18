@@ -39,7 +39,8 @@ contract SIGHNFTBoosters is IERC721Metadata,IERC721Enumerable, Ownable {
     struct boosterCategory {
         bool isSupported;
         uint256 totalBoosters;
-        uint256 discountMultiplier;
+        uint256 _platformFeeDiscount;
+        uint256 _sighPayDiscount;
     }
 
     mapping (string => boosterCategory) boosterCategories;
@@ -47,9 +48,6 @@ contract SIGHNFTBoosters is IERC721Metadata,IERC721Enumerable, Ownable {
     
     mapping (uint256 => address) private _BoosterApprovals;                       // Mapping from BoosterID to approved address
     mapping (address => mapping (address => bool)) private _operatorApprovals;    // Mapping from owner to operator approvals
-
-
-
    
     mapping (address => EnumerableSet.BoosterSet) private farmersWithBoosts;     // Mapping from holder address to their (enumerable) set of owned tokens & categories    
     EnumerableMap.UintToNFTMap private boostersData;                    // Enumerable mapping from token ids to their owners & categories
@@ -84,10 +82,11 @@ contract SIGHNFTBoosters is IERC721Metadata,IERC721Enumerable, Ownable {
         return newItemId;
     }
 
-    function addNewBoosterType(string memory _type, uint256 _discountMultiplier) public onlyOwner returns (bool) {
+    function addNewBoosterType(string memory _type, uint256 _platformFeeDiscount, uint256 _sighPayDiscount) public onlyOwner returns (bool) {
         require(!boosterCategories[_type].isSupported,"SIGH BOOSTERS: Booster Type already exists");
-        require(_discountMultiplier > 0,"SIGH BOOSTERS: Discount Multiplier cannot be 0");
-        boosterCategories[_type] =  boosterCategory({isSupported: true, totalBoosters:0, discountMultiplier: _discountMultiplier });
+        require(_platformFeeDiscount > 0,"SIGH BOOSTERS: Discount Multiplier cannot be 0");
+        require(_sighPayDiscount > 0,"SIGH BOOSTERS: Discount Multiplier cannot be 0");
+        boosterCategories[_type] =  boosterCategory({isSupported: true, totalBoosters:0, _platformFeeDiscount: _platformFeeDiscount_, _sighPayDiscount: _sighPayDiscount_  });
         return true;
     }
 
@@ -96,10 +95,13 @@ contract SIGHNFTBoosters is IERC721Metadata,IERC721Enumerable, Ownable {
         _setBoosterURI(boosterId,boosterURI);
      }
 
-    function updateDiscountMultiplier(string memory _type, uint256 _discountMultiplier)  public onlyOwner returns (bool) {
+    function updateDiscountMultiplier(string memory _type, uint256 _platformFeeDiscount_,uint256 _sighPayDiscount_)  public onlyOwner returns (bool) {
         require(!boosterCategories[_type].isSupported,"SIGH BOOSTERS: Booster Type doesn't exist");
-        require(_discountMultiplier > 0,"SIGH BOOSTERS: Discount Multiplier cannot be 0");
-        boosterCategories[_type]._discountMultiplier = _discountMultiplier;
+        require(_platformFeeDiscount_ > 0,"SIGH BOOSTERS: Platform Fee Discount cannot be 0");
+        require(_sighPayDiscount_ > 0,"SIGH BOOSTERS: SIGH Pay Fee Discount cannot be 0");
+        boosterCategories[_type]._platformFeeDiscount = _platformFeeDiscount_;
+        boosterCategories[_type]._sighPayDiscount = _sighPayDiscount_;
+
      }
 
     // ###########################################
@@ -248,9 +250,10 @@ contract SIGHNFTBoosters is IERC721Metadata,IERC721Enumerable, Ownable {
     }
 
     // get Booster Discount Multiplier
-    function getDiscountMultiplierForBooster(uint256 boosterId) external view returns ( uint discountMultiplier ) {
+    function getDiscountRatiosForBooster(uint256 boosterId) external view returns ( uint platformFeeDiscount, uint sighPayDiscount ) {
         require(!_exists(boosterId), "SIGH BOOSTERS: Booster doesn't exist");
-        discountMultiplier =  boosterCategories[getBoosterCategory(boosterId)]._discountMultiplier;
+        platformFeeDiscount =  boosterCategories[getBoosterCategory(boosterId)]._platformFeeDiscount;
+        sighPayDiscount =  boosterCategories[getBoosterCategory(boosterId)]._sighPayDiscount;
     }
 
 
