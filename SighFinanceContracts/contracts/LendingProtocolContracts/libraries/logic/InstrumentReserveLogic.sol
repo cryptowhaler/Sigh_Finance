@@ -12,15 +12,14 @@ import {InstrumentConfiguration} from '../configuration/InstrumentConfiguration.
 import {MathUtils} from '../math/MathUtils.sol';
 import {WadRayMath} from '../math/WadRayMath.sol';
 import {PercentageMath} from '../math/PercentageMath.sol';
-import {Errors} from '../helpers/Errors.sol';
 import {DataTypes} from '../types/DataTypes.sol';
 
 /**
- * @title ReserveLogic library
+ * @title InstrumentReserveLogic library
  * @author Aave
  * @notice Implements the logic to update the reserves state
  */
-library ReserveLogic {
+library InstrumentReserveLogic {
     using SafeMath for uint256;
     using WadRayMath for uint256;
     using PercentageMath for uint256;
@@ -37,7 +36,7 @@ library ReserveLogic {
     **/
     event InstrumentDataUpdated(address indexed asset,uint256 liquidityRate, uint256 stableBorrowRate, uint256 variableBorrowRate,uint256 liquidityIndex, uint256 variableBorrowIndex);
 
-    using ReserveLogic for DataTypes.InstrumentData;
+    using InstrumentReserveLogic for DataTypes.InstrumentData;
     using InstrumentConfiguration for DataTypes.InstrumentConfigurationMap;
 
     /**
@@ -78,51 +77,49 @@ library ReserveLogic {
 
     /**
     * @dev Updates the liquidity cumulative index and the variable borrow index.
-    * @param reserve the reserve object
+    * @param instrument the instrument object
     **/
-    function updateState(DataTypes.InstrumentData storage reserve) internal {
-        uint256 scaledVariableDebt = IVariableDebtToken(reserve.variableDebtTokenAddress).scaledTotalSupply();
-        uint256 previousVariableBorrowIndex = reserve.variableBorrowIndex;
-        uint256 previousLiquidityIndex = reserve.liquidityIndex;
-        uint40 lastUpdatedTimestamp = reserve.lastUpdateTimestamp;
+    function updateState(DataTypes.InstrumentData storage instrument) internal {
+        uint256 scaledVariableDebt = IVariableDebtToken(instrument.variableDebtTokenAddress).scaledTotalSupply();
+        uint256 previousVariableBorrowIndex = instrument.variableBorrowIndex;
+        uint256 previousLiquidityIndex = instrument.liquidityIndex;
+        uint40 lastUpdatedTimestamp = instrument.lastUpdateTimestamp;
 
-        (uint256 newLiquidityIndex, uint256 newVariableBorrowIndex) = _updateIndexes( reserve, scaledVariableDebt, previousLiquidityIndex, previousVariableBorrowIndex, lastUpdatedTimestamp );
-
-        _mintToTreasury( reserve, scaledVariableDebt, previousVariableBorrowIndex, newLiquidityIndex, newVariableBorrowIndex, lastUpdatedTimestamp );
+        (uint256 newLiquidityIndex, uint256 newVariableBorrowIndex) = _updateIndexes( instrument, scaledVariableDebt, previousLiquidityIndex, previousVariableBorrowIndex, lastUpdatedTimestamp );
+        _mintToTreasury( instrument, scaledVariableDebt, previousVariableBorrowIndex, newLiquidityIndex, newVariableBorrowIndex, lastUpdatedTimestamp );
     }
 
     /**
-    * @dev Accumulates a predefined amount of asset to the reserve as a fixed, instantaneous income. Used for example to accumulate
-    * the flashloan fee to the reserve, and spread it between all the depositors
-    * @param reserve The reserve object
-    * @param totalLiquidity The total liquidity available in the reserve
+    * @dev Accumulates a predefined amount of asset to the reserve of the instrument as a fixed, instantaneous income. Used for example to accumulate the flashloan fee to the reserve, and spread it between all the depositors
+    * @param instrument The instrument object
+    * @param totalLiquidity The total liquidity available in the reserve for the instrument 
     * @param amount The amount to accomulate
     **/
-    function cumulateToLiquidityIndex( DataTypes.InstrumentData storage reserve, uint256 totalLiquidity, uint256 amount ) internal {
+    function cumulateToLiquidityIndex( DataTypes.InstrumentData storage instrument, uint256 totalLiquidity, uint256 amount ) internal {
         uint256 amountToLiquidityRatio = amount.wadToRay().rayDiv(totalLiquidity.wadToRay());
         uint256 result = amountToLiquidityRatio.add(WadRayMath.ray());
 
-        result = result.rayMul(reserve.liquidityIndex);
-        require(result <= type(uint128).max, Errors.RL_LIQUIDITY_INDEX_OVERFLOW);
+        result = result.rayMul(instrument.liquidityIndex);
+        require(result <= type(uint128).max, "Cumulating Indexes : Liquidity Index overflow error");
 
-        reserve.liquidityIndex = uint128(result);
+        instrument.liquidityIndex = uint128(result);
     }
 
     /**
-    * @dev Initializes a reserve
-    * @param reserve The reserve object
+    * @dev Initializes an instrument reserve
+    * @param instrument The instrument object
     * @param iTokenAddress The address of the overlying atoken contract
     * @param interestRateStrategyAddress The address of the interest rate strategy contract
     **/
-    function init( DataTypes.InstrumentData storage reserve, address iTokenAddress, address stableDebtTokenAddress, address variableDebtTokenAddress, address interestRateStrategyAddress) external {
-        require(reserve.iTokenAddress == address(0), Errors.RL_RESERVE_ALREADY_INITIALIZED);
+    function init( DataTypes.InstrumentData storage instrument, address iTokenAddress, address stableDebtTokenAddress, address variableDebtTokenAddress, address interestRateStrategyAddress) external {
+        require(instrument.iTokenAddress == address(0), "The underlying instrument is already supported by SIGH Finance's lending protocol");
 
-        reserve.liquidityIndex = uint128(WadRayMath.ray());
-        reserve.variableBorrowIndex = uint128(WadRayMath.ray());
-        reserve.iTokenAddress = iTokenAddress;
-        reserve.stableDebtTokenAddress = stableDebtTokenAddress;
-        reserve.variableDebtTokenAddress = variableDebtTokenAddress;
-        reserve.interestRateStrategyAddress = interestRateStrategyAddress;
+        instrument.liquidityIndex = uint128(WadRayMath.ray());
+        instrument.variableBorrowIndex = uint128(WadRayMath.ray());
+        instrument.iTokenAddress = iTokenAddress;
+        instrument.stableDebtTokenAddress = stableDebtTokenAddress;
+        instrument.variableDebtTokenAddress = variableDebtTokenAddress;
+        instrument.interestRateStrategyAddress = interestRateStrategyAddress;
     }
 
     struct UpdateInterestRatesLocalVars {
@@ -137,41 +134,39 @@ library ReserveLogic {
     }
 
     /**
-    * @dev Updates the reserve current stable borrow rate, the current variable borrow rate and the current liquidity rate
-    * @param reserve The address of the reserve to be updated
+    * @dev Updates the instrument current stable borrow rate, the current variable borrow rate and the current liquidity rate
+    * @param instrumentAddress The address of the instrument to be updated
     * @param liquidityAdded The amount of liquidity added to the protocol (deposit or repay) in the previous action
     * @param liquidityTaken The amount of liquidity taken from the protocol (redeem or borrow)
     **/
-    function updateInterestRates( DataTypes.InstrumentData storage reserve, address reserveAddress, address iTokenAddress, uint256 liquidityAdded, uint256 liquidityTaken ) internal {
+    function updateInterestRates( DataTypes.InstrumentData storage instrument, address instrumentAddress, address iTokenAddress, uint256 liquidityAdded, uint256 liquidityTaken ) internal {
         UpdateInterestRatesLocalVars memory vars;
 
-        vars.stableDebtTokenAddress = reserve.stableDebtTokenAddress;
-
+        vars.stableDebtTokenAddress = instrument.stableDebtTokenAddress;
         (vars.totalStableDebt, vars.avgStableRate) = IStableDebtToken(vars.stableDebtTokenAddress).getTotalSupplyAndAvgRate();
 
-        //calculates the total variable debt locally using the scaled total supply instead
-        //of totalSupply(), as it's noticeably cheaper. Also, the index has been updated by the previous updateState() call
-        vars.totalVariableDebt = IVariableDebtToken(reserve.variableDebtTokenAddress).scaledTotalSupply().rayMul(reserve.variableBorrowIndex);
+        //calculates the total variable debt locally using the scaled total supply instead of totalSupply(), 
+        // as it's noticeably cheaper. Also, the index has been updated by the previous updateState() call
+        vars.totalVariableDebt = IVariableDebtToken(instrument.variableDebtTokenAddress).scaledTotalSupply().rayMul(instrument.variableBorrowIndex);
+        vars.availableLiquidity = IERC20(instrumentAddress).balanceOf(iTokenAddress);
 
-        vars.availableLiquidity = IERC20(reserveAddress).balanceOf(iTokenAddress);
-
-        (vars.newLiquidityRate,vars.newStableRate,vars.newVariableRate) = IReserveInterestRateStrategy(reserve.interestRateStrategyAddress).calculateInterestRates(
-                                                                                                                                                reserveAddress,
+        (vars.newLiquidityRate, vars.newStableRate, vars.newVariableRate) = IReserveInterestRateStrategy(instrument.interestRateStrategyAddress).calculateInterestRates(
+                                                                                                                                                instrumentAddress,
                                                                                                                                                 vars.availableLiquidity.add(liquidityAdded).sub(liquidityTaken),
                                                                                                                                                 vars.totalStableDebt,
                                                                                                                                                 vars.totalVariableDebt,
                                                                                                                                                 vars.avgStableRate,
-                                                                                                                                                reserve.configuration.getReserveFactor()
+                                                                                                                                                instrument.configuration.getReserveFactor()
                                                                                                                                             );
-        require(vars.newLiquidityRate <= type(uint128).max, Errors.RL_LIQUIDITY_RATE_OVERFLOW);
-        require(vars.newStableRate <= type(uint128).max, Errors.RL_STABLE_BORROW_RATE_OVERFLOW);
-        require(vars.newVariableRate <= type(uint128).max, Errors.RL_VARIABLE_BORROW_RATE_OVERFLOW);
+        require(vars.newLiquidityRate <= type(uint128).max, "Updated Liquidity Rate not valid");
+        require(vars.newStableRate <= type(uint128).max, "Updated Liquidity Rate not valid");
+        require(vars.newVariableRate <= type(uint128).max, "Updated Liquidity Rate not valid");
 
-        reserve.currentLiquidityRate = uint128(vars.newLiquidityRate);
-        reserve.currentStableBorrowRate = uint128(vars.newStableRate);
-        reserve.currentVariableBorrowRate = uint128(vars.newVariableRate);
+        instrument.currentLiquidityRate = uint128(vars.newLiquidityRate);
+        instrument.currentStableBorrowRate = uint128(vars.newStableRate);
+        instrument.currentVariableBorrowRate = uint128(vars.newVariableRate);
 
-        emit InstrumentDataUpdated( reserveAddress, vars.newLiquidityRate, vars.newStableRate,  vars.newVariableRate,  reserve.liquidityIndex,  reserve.variableBorrowIndex );
+        emit InstrumentDataUpdated( instrumentAddress, vars.newLiquidityRate, vars.newStableRate,  vars.newVariableRate,  instrument.liquidityIndex,  instrument.variableBorrowIndex );
     }
 
     struct MintToTreasuryLocalVars {
@@ -189,35 +184,29 @@ library ReserveLogic {
     }
 
     /**
-    * @dev Mints part of the repaid interest to the reserve treasury as a function of the reserveFactor for the
-    * specific asset.
-    * @param reserve The reserve reserve to be updated
+    * @dev Mints part of the repaid interest to the Reserve Treasury as a function of the reserveFactor for the specific asset.
+    * @param instrument The instrument reserve to be updated
     * @param scaledVariableDebt The current scaled total variable debt
     * @param previousVariableBorrowIndex The variable borrow index before the last accumulation of the interest
     * @param newLiquidityIndex The new liquidity index
     * @param newVariableBorrowIndex The variable borrow index after the last accumulation of the interest
     **/
-    function _mintToTreasury( DataTypes.InstrumentData storage reserve, uint256 scaledVariableDebt, uint256 previousVariableBorrowIndex, uint256 newLiquidityIndex, uint256 newVariableBorrowIndex, uint40 timestamp ) internal {
+    function _mintToTreasury( DataTypes.InstrumentData storage instrument, uint256 scaledVariableDebt, uint256 previousVariableBorrowIndex, uint256 newLiquidityIndex, uint256 newVariableBorrowIndex, uint40 timestamp ) internal {
         MintToTreasuryLocalVars memory vars;
-
-        vars.reserveFactor = reserve.configuration.getReserveFactor();
+        vars.reserveFactor = instrument.configuration.getReserveFactor();
 
         if (vars.reserveFactor == 0) {
             return;
         }
 
         //fetching the principal, total stable debt and the avg stable rate
-        ( vars.principalStableDebt, vars.currentStableDebt, vars.avgStableRate, vars.stableSupplyUpdatedTimestamp) = IStableDebtToken(reserve.stableDebtTokenAddress).getSupplyData();
+        ( vars.principalStableDebt, vars.currentStableDebt, vars.avgStableRate, vars.stableSupplyUpdatedTimestamp) = IStableDebtToken(instrument.stableDebtTokenAddress).getSupplyData();        
 
-        //calculate the last principal variable debt
-        vars.previousVariableDebt = scaledVariableDebt.rayMul(previousVariableBorrowIndex);
-
-        //calculate the new total supply after accumulation of the index
-        vars.currentVariableDebt = scaledVariableDebt.rayMul(newVariableBorrowIndex);
+        vars.previousVariableDebt = scaledVariableDebt.rayMul(previousVariableBorrowIndex); //calculate the last principal variable debt
+        vars.currentVariableDebt = scaledVariableDebt.rayMul(newVariableBorrowIndex);       //calculate the new total supply after accumulation of the index
 
         //calculate the stable debt until the last timestamp update
         vars.cumulatedStableInterest = MathUtils.calculateCompoundedInterest(vars.avgStableRate, vars.stableSupplyUpdatedTimestamp, timestamp );
-
         vars.previousStableDebt = vars.principalStableDebt.rayMul(vars.cumulatedStableInterest);
 
         //debt accrued is the sum of the current debt minus the sum of the debt at the last update
@@ -225,42 +214,41 @@ library ReserveLogic {
         vars.amountToMint = vars.totalDebtAccrued.percentMul(vars.reserveFactor);
 
         if (vars.amountToMint != 0) {
-            IAToken(reserve.iTokenAddress).mintToTreasury(vars.amountToMint, newLiquidityIndex);
+            IAToken(instrument.iTokenAddress).mintToTreasury(vars.amountToMint, newLiquidityIndex);
         }
     }
 
     /**
-    * @dev Updates the reserve indexes and the timestamp of the update
-    * @param reserve The reserve reserve to be updated
+    * @dev Updates the instrument's reserve indexes and the timestamp of the update
+    * @param instrument The instrument reserve to be updated
     * @param scaledVariableDebt The scaled variable debt
     * @param liquidityIndex The last stored liquidity index
     * @param variableBorrowIndex The last stored variable borrow index
     **/
-    function _updateIndexes( DataTypes.InstrumentData storage reserve, uint256 scaledVariableDebt, uint256 liquidityIndex, uint256 variableBorrowIndex, uint40 timestamp) internal returns (uint256, uint256) {
-        uint256 currentLiquidityRate = reserve.currentLiquidityRate;
+    function _updateIndexes( DataTypes.InstrumentData storage instrument, uint256 scaledVariableDebt, uint256 liquidityIndex, uint256 variableBorrowIndex, uint40 timestamp) internal returns (uint256, uint256) {
+        uint256 currentLiquidityRate = instrument.currentLiquidityRate;
 
         uint256 newLiquidityIndex = liquidityIndex;
         uint256 newVariableBorrowIndex = variableBorrowIndex;
 
         //only cumulating if there is any income being produced
         if (currentLiquidityRate > 0) {
+
             uint256 cumulatedLiquidityInterest = MathUtils.calculateLinearInterest(currentLiquidityRate, timestamp);
             newLiquidityIndex = cumulatedLiquidityInterest.rayMul(liquidityIndex);
-
-            require(newLiquidityIndex <= type(uint128).max, Errors.RL_LIQUIDITY_INDEX_OVERFLOW);
-            reserve.liquidityIndex = uint128(newLiquidityIndex);
+            require(newLiquidityIndex <= type(uint128).max, "Updating Indexes : Liquidity Index overflow error");
+            instrument.liquidityIndex = uint128(newLiquidityIndex);
 
             //as the liquidity rate might come only from stable rate loans, we need to ensure that there is actual variable debt before accumulating
             if (scaledVariableDebt != 0) {
-                uint256 cumulatedVariableBorrowInterest =
-                MathUtils.calculateCompoundedInterest(reserve.currentVariableBorrowRate, timestamp);
+                uint256 cumulatedVariableBorrowInterest = MathUtils.calculateCompoundedInterest(reserve.currentVariableBorrowRate, timestamp);
                 newVariableBorrowIndex = cumulatedVariableBorrowInterest.rayMul(variableBorrowIndex);
-                require( newVariableBorrowIndex <= type(uint128).max, Errors.RL_VARIABLE_BORROW_INDEX_OVERFLOW);
-                reserve.variableBorrowIndex = uint128(newVariableBorrowIndex);
+                require( newVariableBorrowIndex <= type(uint128).max, "Updating Indexes : Variable Borrow Index overflow error" );
+                instrument.variableBorrowIndex = uint128(newVariableBorrowIndex);
             }
         }
 
-        reserve.lastUpdateTimestamp = uint40(block.timestamp);
+        instrument.lastUpdateTimestamp = uint40(block.timestamp);
         return (newLiquidityIndex, newVariableBorrowIndex);
     }
 }

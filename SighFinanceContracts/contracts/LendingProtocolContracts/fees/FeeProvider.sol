@@ -26,6 +26,8 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
     uint256 public totalDepositFeePercent;
     uint256 public platformFeePercent;
 
+    uint256 public totalFlashLoanFeePercent;        // Flash Loan Fee 
+
     mapping (uint256 => uint256) private boostersTotalFuelRemaining;    // boosterID => Fuel Remaining (Remaining Volume on which discount will be given) Mapping
     mapping (uint256 => uint256) private boostersTotalFuelUsed;    // boosterID => Fuel Used (Volume used by the booster) Mapping
 
@@ -51,6 +53,7 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
     function initialize(address _addressesProvider) public initializer {
         globalAddressesProvider = IGlobalAddressesProvider(_addressesProvider);
         depositFeePercent = 50;           // deposit fee = 0.5%
+        totalFlashLoanFeePercent = 5;     // Flash loan fee = 0.05%
         originationFeePercentage = 0.0005 * 1e18;           // borrow fee is set as default as 500 basis points of the loan amount (0.05%)
     }
 
@@ -65,7 +68,7 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
 // ###### 2. getLoanOriginationFeePercentage() : returns the origination fee percentage #######################################
 // ############################################################################################################################
 
-    function calculateDepositFee(address _user,address instrument, uint256 _amount, uint boosterId) external onlyLendingPool returns (uint256 totalFee,uint256 platformFee,uint256 sighPay) {
+    function calculateDepositFee(address _user,address instrument, uint256 _amount, uint boosterId) external onlyLendingPool returns (uint256 ,uint256 ,uint256 ) {
 
         totalFee = _amount.percentMul(totalDepositFeePercent);       // totalDepositFeePercent = 50 represents 0.5%
         platformFee = totalFee.percentMul(platformFeePercent);       // platformFeePercent = 5000 represents 50%
@@ -99,6 +102,21 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
     }
 
 
+    function calculateFlashLoanFee(address _user, uint256 _amount, uint boosterId) external onlyLendingPool returns (uint256 flashLoanFee) {
+        flashLoanFee = _amount.percentMul(totalFlashLoanFeePercent);       // totalFlashLoanFeePercent = 5 represents 0.05%
+
+        if (boosterId == 0) {
+            return flashLoanFee;
+        }
+
+        require( _user == SIGHNFTBoosters.ownerOf(boosterId), "FlashLoan() caller doesn't have the mentioned SIGH Booster needed to claim the discount on Fee. Please check the BoosterID that you provided again." );
+
+        ( , uint sighPayDiscount) = SIGHNFTBoosters.getDiscountRatiosForBooster(boosterId);
+        flashLoanFee = flashLoanFee.sub_( flashLoanFee.div_(sighPayDiscount) ) ;
+
+    }
+
+
     /**
     * @dev calculates the origination fee for every loan executed on the platform.
     * @param _user can be used in the future to apply discount to the origination fee based on the
@@ -126,6 +144,10 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
         platformFeePercent = _platformFeePercent;
     }
     
+    function updateTotalFlashLoanFeePercent(uint totalFlashLoanFeePercent_ ) external onlySighFinanceConfigurator {
+        totalFlashLoanFeePercent = totalFlashLoanFeePercent_;
+    }
+
 
 
 

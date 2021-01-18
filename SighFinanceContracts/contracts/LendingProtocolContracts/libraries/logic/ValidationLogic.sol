@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import {SafeMath} from '../../../dependencies/openzeppelin/contracts/SafeMath.sol';
 import {IERC20} from '../../../dependencies/openzeppelin/contracts/IERC20.sol';
-import {ReserveLogic} from './ReserveLogic.sol';
+import {InstrumentReserveLogic} from './InstrumentReserveLogic.sol';
 import {GenericLogic} from './GenericLogic.sol';
 import {WadRayMath} from '../math/WadRayMath.sol';
 import {PercentageMath} from '../math/PercentageMath.sol';
@@ -27,7 +27,7 @@ library ValidationLogic {
     using WadRayMath for uint256;
     using PercentageMath for uint256;
 
-    using ReserveLogic for DataTypes.InstrumentData;
+    using InstrumentReserveLogic for DataTypes.InstrumentData;
     using SafeERC20 for IERC20;
     using InstrumentConfiguration for DataTypes.InstrumentConfigurationMap;
     using UserConfiguration for DataTypes.UserConfigurationMap;

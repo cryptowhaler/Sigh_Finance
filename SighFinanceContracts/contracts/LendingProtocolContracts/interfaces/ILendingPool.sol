@@ -73,7 +73,7 @@ interface ILendingPool {
    * @param instrument The address of the underlying asset of the instrument
    * @param user The address of the user enabling the usage as collateral
    **/
-  event ReserveUsedAsCollateralDisabled(address indexed instrument, address indexed user);
+  event InstrumentUsedAsCollateralDisabled(address indexed instrument, address indexed user);
 
   /**
    * @dev Emitted on rebalanceStableBorrowRate()
@@ -110,7 +110,7 @@ interface ILendingPool {
 
   /**
    * @dev Emitted when the state of a instrument is updated. NOTE: This event is actually declared
-   * in the ReserveLogic library and emitted in the updateInterestRates() function. Since the function is internal,
+   * in the InstrumentReserveLogic library and emitted in the updateInterestRates() function. Since the function is internal,
    * the event will actually be fired by the LendingPool contract. The event is therefore replicated here so it
    * gets added to the LendingPool ABI
    * @param instrument The address of the underlying asset of the instrument

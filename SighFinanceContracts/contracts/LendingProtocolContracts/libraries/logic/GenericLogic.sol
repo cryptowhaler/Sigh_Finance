@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import {SafeMath} from '../../../dependencies/openzeppelin/contracts/SafeMath.sol';
 import {IERC20} from '../../../dependencies/openzeppelin/contracts/IERC20.sol';
-import {ReserveLogic} from './ReserveLogic.sol';
+import {InstrumentReserveLogic} from './InstrumentReserveLogic.sol';
 import {InstrumentConfiguration} from '../configuration/InstrumentConfiguration.sol';
 import {UserConfiguration} from '../configuration/UserConfiguration.sol';
 import {WadRayMath} from '../math/WadRayMath.sol';
@@ -19,7 +19,7 @@ import {DataTypes} from '../types/DataTypes.sol';
  */
 library GenericLogic {
 
-    using ReserveLogic for DataTypes.InstrumentData;
+    using InstrumentReserveLogic for DataTypes.InstrumentData;
     using SafeMath for uint256;
     using WadRayMath for uint256;
     using PercentageMath for uint256;

@@ -184,7 +184,7 @@ contract LendingPoolLiquidationManager is   ILendingPoolLiquidationManager, Vers
         // we set the currency as not being used as collateral anymore
         if (vars.maxCollateralToLiquidate == vars.userCollateralBalance) {
             userConfig.setUsingAsCollateral(collateralReserve.id, false);
-            emit ReserveUsedAsCollateralDisabled(collateralAsset, user);
+            emit InstrumentUsedAsCollateralDisabled(collateralAsset, user);
         }
 
         // Transfers the debt asset being repaid to the aToken, where the liquidity is kept
