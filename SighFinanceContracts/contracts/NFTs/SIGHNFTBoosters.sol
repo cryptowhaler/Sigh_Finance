@@ -84,8 +84,8 @@ contract SIGHNFTBoosters is IERC721Metadata,IERC721Enumerable, Ownable {
 
     function addNewBoosterType(string memory _type, uint256 _platformFeeDiscount, uint256 _sighPayDiscount) public onlyOwner returns (bool) {
         require(!boosterCategories[_type].isSupported,"SIGH BOOSTERS: Booster Type already exists");
-        require(_platformFeeDiscount > 0,"SIGH BOOSTERS: Discount Multiplier cannot be 0");
-        require(_sighPayDiscount > 0,"SIGH BOOSTERS: Discount Multiplier cannot be 0");
+        require(_platformFeeDiscount_ > 0,"SIGH BOOSTERS: Platform Fee Discount cannot be 0");
+        require(_sighPayDiscount_ > 0,"SIGH BOOSTERS: SIGH Pay Fee Discount cannot be 0");
         boosterCategories[_type] =  boosterCategory({isSupported: true, totalBoosters:0, _platformFeeDiscount: _platformFeeDiscount_, _sighPayDiscount: _sighPayDiscount_  });
         return true;
     }

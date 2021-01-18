@@ -61,12 +61,12 @@ library ValidationLogic {
     */
     function validateWithdraw( address reserveAddress, uint256 amount, uint256 userBalance, mapping(address => DataTypes.InstrumentData) storage reservesData, DataTypes.UserConfigurationMap storage userConfig, mapping(uint256 => address) storage reserves, uint256 reservesCount, address oracle ) external view {
         require(amount != 0, "Amount needs to be greater than 0");
-        require(amount <= userBalance, Errors.VL_NOT_ENOUGH_AVAILABLE_USER_BALANCE);
+        require(amount <= userBalance, "NOT ENOUGH AVAILABLE USER BALANCE");
 
         (bool isActive, , , ) = reservesData[reserveAddress].configuration.getFlags();
         require(isActive, "Instrument not Active");
 
-        require( GenericLogic.balanceDecreaseAllowed( reserveAddress, msg.sender, amount, reservesData, userConfig, reserves, reservesCount, oracle ), Errors.VL_TRANSFER_NOT_ALLOWED );
+        require( GenericLogic.balanceDecreaseAllowed( reserveAddress, msg.sender, amount, reservesData, userConfig, reserves, reservesCount, oracle ), "TRANSFER NOT ALLOWED" );
     }
 
     struct ValidateBorrowLocalVars {
@@ -114,21 +114,21 @@ library ValidationLogic {
         require(!vars.isFrozen, "Instrument Frozen");
         require(amount != 0, "Amount needs to be greater than 0");
 
-        require(vars.borrowingEnabled, Errors.VL_BORROWING_NOT_ENABLED);
+        require(vars.borrowingEnabled, "Borrowing not enabled");
 
         //validate interest rate mode
-        require( uint256(DataTypes.InterestRateMode.VARIABLE) == interestRateMode || uint256(DataTypes.InterestRateMode.STABLE) == interestRateMode, Errors.VL_INVALID_INTEREST_RATE_MODE_SELECTED );
+        require( uint256(DataTypes.InterestRateMode.VARIABLE) == interestRateMode || uint256(DataTypes.InterestRateMode.STABLE) == interestRateMode, "INVALID INTEREST RATE MODE SELECTED" );
 
         (vars.userCollateralBalanceETH,vars.userBorrowBalanceETH,vars.currentLtv,vars.currentLiquidationThreshold,vars.healthFactor) = GenericLogic.calculateUserAccountData( userAddress, reservesData, userConfig, reserves, reservesCount, oracle );
 
-        require(vars.userCollateralBalanceETH > 0, Errors.VL_COLLATERAL_BALANCE_IS_0);
+        require(vars.userCollateralBalanceETH > 0, "Collateral Balance is 0");
 
-        require( vars.healthFactor > GenericLogic.HEALTH_FACTOR_LIQUIDATION_THRESHOLD, Errors.VL_HEALTH_FACTOR_LOWER_THAN_LIQUIDATION_THRESHOLD );
+        require( vars.healthFactor > GenericLogic.HEALTH_FACTOR_LIQUIDATION_THRESHOLD, "Health Factor less than Liquidation threshold" );
 
         //add the current already borrowed amount to the amount requested to calculate the total collateral needed.
         vars.amountOfCollateralNeededETH = vars.userBorrowBalanceETH.add(amountInETH).percentDiv( vars.currentLtv  ); //LTV is calculated in percentage
 
-        require( vars.amountOfCollateralNeededETH <= vars.userCollateralBalanceETH, Errors.VL_COLLATERAL_CANNOT_COVER_NEW_BORROW);
+        require( vars.amountOfCollateralNeededETH <= vars.userCollateralBalanceETH, "Not sufficient collateral present");
 
         /**
         * Following conditions need to be met if the user is borrowing at a stable rate:
@@ -141,16 +141,16 @@ library ValidationLogic {
         if (vars.rateMode == DataTypes.InterestRateMode.STABLE) {
         //check if the borrow mode is stable and if stable rate borrowing is enabled on this reserve
 
-        require(vars.stableRateBorrowingEnabled, Errors.VL_STABLE_BORROWING_NOT_ENABLED);
+        require(vars.stableRateBorrowingEnabled, "Stable Borrow not enabled.");
 
-        require( !userConfig.isUsingAsCollateral(reserve.id) || reserve.configuration.getLtv() == 0 || amount > IERC20(reserve.iTokenAddress).balanceOf(userAddress), Errors.VL_COLLATERAL_SAME_AS_BORROWING_CURRENCY );
+        require( !userConfig.isUsingAsCollateral(reserve.id) || reserve.configuration.getLtv() == 0 || amount > IERC20(reserve.iTokenAddress).balanceOf(userAddress), "COLLATERAL SAME AS BORROWING CURRENCY" );
 
         vars.availableLiquidity = IERC20(asset).balanceOf(reserve.iTokenAddress);
 
         //calculate the max available loan size in stable rate mode as a percentage of the available liquidity
         uint256 maxLoanSizeStable = vars.availableLiquidity.percentMul(maxStableLoanPercent);
 
-        require(amount <= maxLoanSizeStable, Errors.VL_AMOUNT_BIGGER_THAN_MAX_LOAN_SIZE_STABLE);
+        require(amount <= maxLoanSizeStable, "AMOUNT BIGGER THAN MAX LOAN SIZE STABLE" );
         }
     }
 
@@ -167,8 +167,8 @@ library ValidationLogic {
 
         require(isActive, "Instrument not Active");
         require(amountSent > 0, "Amount needs to be greater than 0");
-        require( (stableDebt > 0 &&  DataTypes.InterestRateMode(rateMode) == DataTypes.InterestRateMode.STABLE) ||  (variableDebt > 0 &&  DataTypes.InterestRateMode(rateMode) == DataTypes.InterestRateMode.VARIABLE),  Errors.VL_NO_DEBT_OF_SELECTED_TYPE );
-        require( amountSent != uint256(-1) || msg.sender == onBehalfOf, Errors.VL_NO_EXPLICIT_AMOUNT_TO_REPAY_ON_BEHALF );
+        require( (stableDebt > 0 &&  DataTypes.InterestRateMode(rateMode) == DataTypes.InterestRateMode.STABLE) ||  (variableDebt > 0 &&  DataTypes.InterestRateMode(rateMode) == DataTypes.InterestRateMode.VARIABLE),  "NO DEBT OF SELECTED TYPE" );
+        require( amountSent != uint256(-1) || msg.sender == onBehalfOf, "NO EXPLICIT AMOUNT TO REPAY ON BEHALF" );
     }
 
     /**
@@ -186,10 +186,10 @@ library ValidationLogic {
         require(!isFrozen, "Instrument Frozen");
 
         if (currentRateMode == DataTypes.InterestRateMode.STABLE) {
-            require(stableDebt > 0, Errors.VL_NO_STABLE_RATE_LOAN_IN_RESERVE);
+            require(stableDebt > 0, "NO STABLE RATE LOAN IN RESERVE");
         } 
         else if (currentRateMode == DataTypes.InterestRateMode.VARIABLE) {
-            require(variableDebt > 0, Errors.VL_NO_VARIABLE_RATE_LOAN_IN_RESERVE);
+            require(variableDebt > 0, "NO VARIABLE RATE LOAN IN RESERVE");
             /**
             * user wants to swap to stable, before swapping we need to ensure that
             * 1. stable borrow rate is enabled on the reserve
@@ -197,11 +197,11 @@ library ValidationLogic {
             * more collateral than he is borrowing, artificially lowering
             * the interest rate, borrowing at variable, and switching to stable
             **/
-            require(stableRateEnabled, Errors.VL_STABLE_BORROWING_NOT_ENABLED);
-            require(!userConfig.isUsingAsCollateral(reserve.id) || reserve.configuration.getLtv() == 0 || stableDebt.add(variableDebt) > IERC20(reserve.iTokenAddress).balanceOf(msg.sender), Errors.VL_COLLATERAL_SAME_AS_BORROWING_CURRENCY);
+            require(stableRateEnabled, " STABLE BORROWING NOT ENABLED");
+            require(!userConfig.isUsingAsCollateral(reserve.id) || reserve.configuration.getLtv() == 0 || stableDebt.add(variableDebt) > IERC20(reserve.iTokenAddress).balanceOf(msg.sender), "COLLATERAL SAME AS BORROWING CURRENCY" );
         } 
         else {
-            revert(Errors.VL_INVALID_INTEREST_RATE_MODE_SELECTED);
+            revert("INVALID INTEREST RATE MODE SELECTED");
         }
     }
 
@@ -228,7 +228,7 @@ library ValidationLogic {
         uint256 currentLiquidityRate = reserve.currentLiquidityRate;
         uint256 maxVariableBorrowRate = IReserveInterestRateStrategy(reserve.interestRateStrategyAddress).getMaxVariableBorrowRate();
 
-        require( usageRatio >= REBALANCE_UP_USAGE_RATIO_THRESHOLD && currentLiquidityRate <= maxVariableBorrowRate.percentMul(REBALANCE_UP_LIQUIDITY_RATE_THRESHOLD), Errors.LP_INTEREST_RATE_REBALANCE_CONDITIONS_NOT_MET);
+        require( usageRatio >= REBALANCE_UP_USAGE_RATIO_THRESHOLD && currentLiquidityRate <= maxVariableBorrowRate.percentMul(REBALANCE_UP_LIQUIDITY_RATE_THRESHOLD), "LP INTEREST RATE REBALANCE CONDITIONS NOT MET");
     }
 
     /**
@@ -243,8 +243,8 @@ library ValidationLogic {
     function validateSetUseReserveAsCollateral(  DataTypes.InstrumentData storage reserve, address reserveAddress, bool useAsCollateral, mapping(address => DataTypes.InstrumentData) storage reservesData, DataTypes.UserConfigurationMap storage userConfig, mapping(uint256 => address) storage reserves,  uint256 reservesCount, address oracle) external view {
         uint256 underlyingBalance = IERC20(reserve.iTokenAddress).balanceOf(msg.sender);
 
-        require(underlyingBalance > 0, Errors.VL_UNDERLYING_BALANCE_NOT_GREATER_THAN_0);
-        require( useAsCollateral ||  GenericLogic.balanceDecreaseAllowed(reserveAddress,msg.sender,underlyingBalance,reservesData,userConfig,reserves,reservesCount,oracle), Errors.VL_DEPOSIT_ALREADY_IN_USE );
+        require(underlyingBalance > 0, " UNDERLYING BALANCE NOT GREATER THAN 0");
+        require( useAsCollateral ||  GenericLogic.balanceDecreaseAllowed(reserveAddress,msg.sender,underlyingBalance,reservesData,userConfig,reserves,reservesCount,oracle), "DEPOSIT ALREADY IN USE" );
     }
 
     /**
@@ -253,7 +253,7 @@ library ValidationLogic {
     * @param amounts The amounts for each asset being borrowed
     **/
     function validateFlashloan(address[] memory assets, uint256[] memory amounts) internal pure {
-        require(assets.length == amounts.length, Errors.VL_INCONSISTENT_FLASHLOAN_PARAMS);
+        require(assets.length == amounts.length, "INCONSISTENT FLASHLOAN PARAMS");
     }
 
     /**
@@ -299,6 +299,6 @@ library ValidationLogic {
     */
     function validateTransfer( address from, mapping(address => DataTypes.InstrumentData) storage reservesData, DataTypes.UserConfigurationMap storage userConfig, mapping(uint256 => address) storage reserves, uint256 reservesCount, address oracle ) internal view {
         (, , , , uint256 healthFactor) = GenericLogic.calculateUserAccountData( from,  reservesData,  userConfig,  reserves,  reservesCount,  oracle );
-        require( healthFactor >= GenericLogic.HEALTH_FACTOR_LIQUIDATION_THRESHOLD, Errors.VL_TRANSFER_NOT_ALLOWED );
+        require( healthFactor >= GenericLogic.HEALTH_FACTOR_LIQUIDATION_THRESHOLD, "TRANSFER NOT ALLOWED" );
     }
 }

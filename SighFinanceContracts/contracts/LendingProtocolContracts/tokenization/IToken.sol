@@ -220,8 +220,7 @@ contract AToken is VersionedInitializable, IncentivizedERC20, IAToken {
     }
 
     /**
-    * @dev Transfers the aTokens between two users. Validates the transfer
-    * (ie checks for valid HF after the transfer) if required
+    * @dev Transfers the aTokens between two users. Validates the transfer (ie checks for valid HF after the transfer) if required
     * @param from The source address
     * @param to The destination address
     * @param amount The amount getting transferred

@@ -606,7 +606,6 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
         DataTypes.UserConfigurationMap storage userConfig = _usersConfig[vars.onBehalfOf];
 
         address oracle = _addressesProvider.getPriceOracle();
-
         uint256 amountInUSD = IPriceOracleGetter(oracle).getAssetPrice(vars.asset).mul(vars.amount).div(  10**instrument.configuration.getDecimals() );
 
         ValidationLogic.validateBorrow( vars.asset, instrument, vars.onBehalfOf, vars.amount, amountInUSD, vars.interestRateMode, MAX_STABLE_RATE_BORROW_SIZE_PERCENT,_instruments, userConfig,_instrumentsList,_instrumentsCount, oracle );
@@ -635,6 +634,8 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
 
         emit Borrow( vars.asset, vars.user, vars.onBehalfOf, vars.amount, vars.interestRateMode, DataTypes.InterestRateMode(vars.interestRateMode) == DataTypes.InterestRateMode.STABLE ? currentStableRate : reserve.currentVariableBorrowRate, vars.boosterId );
     }
+
+
 
     function _addInstrumentToList(address asset) internal {
         uint256 instrumentsCount =_instrumentsCount;
