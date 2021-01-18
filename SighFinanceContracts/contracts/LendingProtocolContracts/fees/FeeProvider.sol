@@ -22,9 +22,9 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
     IPriceOracleGetter private priceOracle ;
     ISIGHNFTBoosters private SIGHNFTBoosters;
 
-    uint256 public originationFeePercentage;        // percentage of the fee to be calculated on the loan amount
-    uint256 public totalDepositFeePercent;
-    uint256 public platformFeePercent;
+    uint256 public totalBorrowFeePercent;           // Borrow Fee
+    uint256 public totalDepositFeePercent;          // Deposit Fee
+    uint256 public platformFeePercent;              // Platform Fee (% of the Borrow Fee / Deposit Fee)
 
     uint256 public totalFlashLoanFeePercent;        // Flash Loan Fee 
 
@@ -63,9 +63,10 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
     }
 
 // ############################################################################################################################
-// ###### EXTERNAL VIEW FUNCTIONS #############################################################################################
-// ###### 1. calculateLoanOriginationFee() : calculates the origination fee for every loan executed on the platform. ##########
-// ###### 2. getLoanOriginationFeePercentage() : returns the origination fee percentage #######################################
+// ###### EXTERNAL FUNCTIONS TO CALCULATE THE FEE #############################################################################################
+// ###### 1. calculateDepositFee() ##########
+// ###### 2. calculateFlashLoanFee() #######################################
+// ###### 1. calculateBorrowFee() ##########
 // ############################################################################################################################
 
     function calculateDepositFee(address _user,address instrument, uint256 _amount, uint boosterId) external onlyLendingPool returns (uint256 ,uint256 ,uint256 ) {
@@ -116,39 +117,80 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
 
     }
 
+    function calculateBorrowFee(address _user, address instrument, uint256 _amount, uint boosterId) external onlyLendingPool returns (uint256 platformFee, uint256 reserveFee) { 
+        totalFee = _amount.percentMul(totalBorrowFeePercent);       // totalDepositFeePercent = 50 represents 0.5%
+        platformFee = totalFee.percentMul(platformFeePercent);       // platformFeePercent = 5000 represents 50%
+        sighPay = totalFee.sub_(platformFee);                        
 
-    /**
-    * @dev calculates the origination fee for every loan executed on the platform.
-    * @param _user can be used in the future to apply discount to the origination fee based on the
-    * _user account (eg. stake AAVE tokens in the lending pool, or deposit > 1M USD etc..)
-    * @param _amount the amount of the loan
-    **/
-    function calculateLoanOriginationFee(address _user, uint256 _amount) external view returns (uint256) {
-        return _amount.wadMul(originationFeePercentage);
+        if (boosterId == 0) {
+            return (totalFee,platformFee,sighPay);
+        }
+
+        require( _user == SIGHNFTBoosters.ownerOf(boosterId), "User against which borrow is being initiated doesn't have the mentioned SIGH Booster needed to claim the discount. Please check the BoosterID that you provided again." );
+
+        if ( boostersTotalFuelRemaining[boosterId] > 0 ) {
+            uint priceUSD = priceOracle.getAssetPrice(instrument);
+            uint priceDecimals = priceOracle.getAssetPriceDecimals(instrument);
+            require(priceUSD > 0, "Oracle returned invalid price");
+
+            uint value = totalFee.mul_(priceUSD * 10**8);              // Adjusted by 8 decimals
+            value = value.div_(10**priceDecimals);                     // Corrected by Price Decimals
+
+            boostersTotalFuelRemaining[boosterId] = boostersTotalFuelRemaining[boosterId] >= value ? boostersTotalFuelRemaining[boosterId].sub_(value) : 0 ;
+            boostersTotalFuelUsed[boosterId] = boostersTotalFuelUsed[boosterId].add_(value);
+            return (0,0,0);
+        }
+
+        (uint platformFeeDiscount, uint sighPayDiscount) = SIGHNFTBoosters.getDiscountRatiosForBooster(boosterId);
+        platformFee = platformFee.sub_( platformFee.div_(platformFeeDiscount) ) ;
+        sighPay = sighPay.sub_( sighPay.div_(sighPayDiscount) ) ;
+
+        return (platformFee,sighPay) ;
     }
 
-
-    /**
-    * @dev returns the origination fee percentage
-    **/
-    function getLoanOriginationFeePercentage() external view returns (uint256) {
-        return originationFeePercentage;
-    }
-
+// #################################
+// ####### ADMIN FUNCTIONS  ########
+// #################################
 
     function updateTotalDepositFeePercent(uint _depositFeePercent) external onlySighFinanceConfigurator {
         totalDepositFeePercent = _depositFeePercent;
+    }
+
+    function updateTotalBorrowFeePercent(uint totalBorrowFeePercent_) external onlySighFinanceConfigurator {
+        totalBorrowFeePercent = totalBorrowFeePercent_;
+    }
+
+    function updateTotalFlashLoanFeePercent(uint totalFlashLoanFeePercent_ ) external onlySighFinanceConfigurator {
+        totalFlashLoanFeePercent = totalFlashLoanFeePercent_;
     }
 
     function updatePlatformFeePercent(uint _platformFeePercent) external onlySighFinanceConfigurator {
         platformFeePercent = _platformFeePercent;
     }
     
-    function updateTotalFlashLoanFeePercent(uint totalFlashLoanFeePercent_ ) external onlySighFinanceConfigurator {
-        totalFlashLoanFeePercent = totalFlashLoanFeePercent_;
+// ###############################
+// ####### EXTERNAL VIEW  ########
+// ###############################
+
+    function getBorrowFeePercentage() external view returns (uint256) {
+        return totalBorrowFeePercent;
     }
 
+    function getDepositFeePercentage() external view returns (uint256) {
+        return totalDepositFeePercent;
+    }
 
+    function getFlashLoanFeePercentage() external view returns (uint256) {
+        return totalFlashLoanFeePercent;
+    }
+
+    function getFuelAvailable(uint boosterID) external view returns (uint256) {
+        return boostersTotalFuelRemaining[boosterID];
+    }
+
+    function getFuelUsed(uint boosterID) external view returns (uint256) {
+        return boostersTotalFuelUsed[boosterID];
+    }
 
 
 

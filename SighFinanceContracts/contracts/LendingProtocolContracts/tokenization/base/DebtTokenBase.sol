@@ -4,7 +4,6 @@ import {ILendingPool} from '../../../interfaces/ILendingPool.sol';
 import {ICreditDelegationToken} from '../../../interfaces/ICreditDelegationToken.sol';
 import { VersionedInitializable} from '../../libraries/aave-upgradeability/VersionedInitializable.sol';
 import {IncentivizedERC20} from '../IncentivizedERC20.sol';
-import {Errors} from '../../libraries/helpers/Errors.sol';
 
 /**
  * @title DebtTokenBase
@@ -18,6 +17,7 @@ abstract contract DebtTokenBase is IncentivizedERC20, VersionedInitializable, IC
   ILendingPool public immutable POOL;
 
   mapping(address => mapping(address => uint256)) internal _borrowAllowances;
+  mapping(address => uint256) internal _borrowFee;
 
   /**
    * @dev Only lending pool can call functions marked by this modifier
@@ -108,7 +108,7 @@ abstract contract DebtTokenBase is IncentivizedERC20, VersionedInitializable, IC
   }
 
   function _decreaseBorrowAllowance(address delegator,address delegatee,uint256 amount) internal {
-    uint256 newAllowance = _borrowAllowances[delegator][delegatee].sub(amount, Errors.BORROW_ALLOWANCE_NOT_ENOUGH);
+    uint256 newAllowance = _borrowAllowances[delegator][delegatee].sub(amount, "BORROW ALLOWANCE NOT ENOUGH");
     _borrowAllowances[delegator][delegatee] = newAllowance;
     emit BorrowAllowanceDelegated(delegator, delegatee, UNDERLYING_ASSET_ADDRESS, newAllowance);
   }

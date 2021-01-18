@@ -2,7 +2,6 @@ pragma solidity 0.6.12;
 
 import {IVariableDebtToken} from '../../interfaces/IVariableDebtToken.sol';
 import {WadRayMath} from '../libraries/math/WadRayMath.sol';
-import {Errors} from '../libraries/helpers/Errors.sol';
 import {DebtTokenBase} from './base/DebtTokenBase.sol';
 
 /**
@@ -51,14 +50,17 @@ contract VariableDebtToken is DebtTokenBase, IVariableDebtToken {
     * @param index The variable debt index of the reserve
     * @return `true` if the the previous balance of the user is 0
     **/
-    function mint( address user,  address onBehalfOf,  uint256 amount,  uint256 index) external override onlyLendingPool returns (bool) {
+    function mint( address user,  address onBehalfOf,  uint256 amount, uint256 borrowFee, uint256 index) external override onlyLendingPool returns (bool) {
+
+        _borrowFee[onBehalfOf] = _borrowFee[onBehalfOf].add(borrowFee); // BORROW FEE
+
         if (user != onBehalfOf) {
             _decreaseBorrowAllowance(onBehalfOf, user, amount);
         }
 
         uint256 previousBalance = super.balanceOf(onBehalfOf);
         uint256 amountScaled = amount.rayDiv(index);
-        require(amountScaled != 0, Errors.CT_INVALID_MINT_AMOUNT);
+        require(amountScaled != 0, "INVALID MINT AMOUNT");
 
         _mint(onBehalfOf, amountScaled);
 
@@ -77,7 +79,7 @@ contract VariableDebtToken is DebtTokenBase, IVariableDebtToken {
     **/
     function burn( address user, uint256 amount, uint256 index ) external override onlyLendingPool {
         uint256 amountScaled = amount.rayDiv(index);
-        require(amountScaled != 0, Errors.CT_INVALID_BURN_AMOUNT);
+        require(amountScaled != 0, "INVALID BURN AMOUNT");
 
         _burn(user, amountScaled);
 

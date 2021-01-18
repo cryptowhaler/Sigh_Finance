@@ -4,7 +4,6 @@ import {DebtTokenBase} from './base/DebtTokenBase.sol';
 
 import {MathUtils} from '../libraries/math/MathUtils.sol';
 import {WadRayMath} from '../libraries/math/WadRayMath.sol';
-import {Errors} from '../libraries/helpers/Errors.sol';
 
 import {IStableDebtToken} from '../../interfaces/IStableDebtToken.sol';
 
@@ -22,6 +21,7 @@ contract StableDebtToken is IStableDebtToken, DebtTokenBase {
     uint256 internal _avgStableRate;
     mapping(address => uint40) internal _timestamps;
     mapping(address => uint256) internal _usersStableRate;
+
     uint40 internal _totalSupplyTimestamp;
 
     constructor(address pool, address underlyingAsset, string memory name, string memory symbol, address incentivesController) public DebtTokenBase(pool, underlyingAsset, name, symbol, incentivesController) 
@@ -93,8 +93,10 @@ contract StableDebtToken is IStableDebtToken, DebtTokenBase {
     * @param amount The amount of debt tokens to mint
     * @param rate The rate of the debt being minted
     **/
-    function mint( address user, address onBehalfOf, uint256 amount, uint256 rate) external override onlyLendingPool returns (bool) {
+    function mint( address user, address onBehalfOf, uint256 amount, uint borrowFee, uint256 rate) external override onlyLendingPool returns (bool) {
         MintLocalVars memory vars;
+
+        _borrowFee[onBehalfOf] = _borrowFee[onBehalfOf].add(borrowFee); // BORROW FEE
 
         if (user != onBehalfOf) {
             _decreaseBorrowAllowance(onBehalfOf, user, amount);
@@ -140,7 +142,7 @@ contract StableDebtToken is IStableDebtToken, DebtTokenBase {
         uint256 userStableRate = _usersStableRate[user];
 
         // Since the total supply and each single user debt accrue separately, there might be accumulation errors so that the last borrower repaying
-        // mght actually try to repay more than the available debt supply.
+        // might actually try to repay more than the available debt supply.
         // In this case we simply set the total supply and the avg stable rate to 0
         if (previousSupply <= amount) {
             _avgStableRate = 0;
@@ -280,7 +282,7 @@ contract StableDebtToken is IStableDebtToken, DebtTokenBase {
     **/
     function _burn( address account, uint256 amount, uint256 oldTotalSupply) internal {
         uint256 oldAccountBalance = _balances[account];
-        _balances[account] = oldAccountBalance.sub(amount, Errors.SDT_BURN_EXCEEDS_BALANCE);
+        _balances[account] = oldAccountBalance.sub(amount, "BURN EXCEEDS BALANCE");
 
         if (address(_incentivesController) != address(0)) {
             _incentivesController.handleAction(account, oldTotalSupply, oldAccountBalance);

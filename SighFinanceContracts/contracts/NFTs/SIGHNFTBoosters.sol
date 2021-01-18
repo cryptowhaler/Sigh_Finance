@@ -256,6 +256,10 @@ contract SIGHNFTBoosters is IERC721Metadata,IERC721Enumerable, Ownable {
         sighPayDiscount =  boosterCategories[getBoosterCategory(boosterId)]._sighPayDiscount;
     }
 
+    function isValidBooster(uint256 boosterId) external view returns (bool) {
+        return _exists(boosterId);
+    }
+
 
 
 
@@ -376,15 +380,6 @@ contract SIGHNFTBoosters is IERC721Metadata,IERC721Enumerable, Ownable {
      * @dev Hook that is called before any token transfer.
     */
     function _beforeTokenTransfer(address from, address to, uint256 boosterId) internal virtual { }
-    
-
-
-
-
-
-
-
-
 
 
 }
