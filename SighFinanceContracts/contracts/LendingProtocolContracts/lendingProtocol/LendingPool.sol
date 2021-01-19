@@ -227,16 +227,44 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
    **/
   function repay( address asset, uint256 amount, uint256 rateMode, address onBehalfOf ) external override whenNotPaused returns (uint256) {
     DataTypes.InstrumentData storage instrument =_instruments[asset];
+    uint platformFeePay;
+    uint reserveFeePay;
 
     (uint256 stableDebt, uint256 variableDebt) = Helpers.getUserCurrentDebt(onBehalfOf, instrument);
     DataTypes.InterestRateMode interestRateMode = DataTypes.InterestRateMode(rateMode);
 
     ValidationLogic.validateRepay(  instrument, amount, interestRateMode, onBehalfOf, stableDebt, variableDebt);
     uint256 paybackAmount = interestRateMode == DataTypes.InterestRateMode.STABLE ? stableDebt : variableDebt;
+    paybackAmount = paybackAmount.add(_usersConfig[onBehalfOf].platformFee.).add(_usersConfig[onBehalfOf].reserveFee);
 
     if (amount < paybackAmount) {
       paybackAmount = amount;
     }
+
+    // PAY PLATFORM FEE
+    if (_usersConfig[onBehalfOf].platformFee > 0) {
+        platformFeePay =  paybackAmount > _usersConfig[onBehalfOf].platformFee ? _usersConfig[onBehalfOf].platformFee : paybackAmount;
+        IERC20(asset).safeTransferFrom( msg.sender, addressesProvider.getSIGHFinanceFeeCollector(), platformFeePay );
+        paybackAmount = paybackAmount.sub(platformFeePay);  // Update payback amount
+
+        if (paybackAmount == 0) {
+            emit Repay(asset, onBehalfOf, msg.sender, platformFeePay, reserveFeePay, paybackAmount);
+            return platformFeePay;
+        }    
+    }
+
+    // PAY RESERVE FEE
+    if (_usersConfig[onBehalfOf].reserveFee > 0) { 
+        reserveFeePay =  paybackAmount > _usersConfig[onBehalfOf].reserveFee ? _usersConfig[onBehalfOf].reserveFee : paybackAmount;
+        IERC20(asset).safeTransferFrom( msg.sender, addressesProvider.getSIGHPayAggregator(), reserveFeePay );
+        paybackAmount = paybackAmount.sub(reserveFee);  // Update payback amount
+
+        if (paybackAmount == 0) {
+            emit Repay(asset, onBehalfOf, msg.sender, platformFeePay, reserveFeePay, paybackAmount);
+            return platformFeePay.add(reserveFeePay);
+        }    
+
+    }    
 
     instrument.updateState();
 
@@ -256,7 +284,7 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
 
     IERC20(asset).safeTransferFrom(msg.sender, iToken, paybackAmount);
 
-    emit Repay(asset, onBehalfOf, msg.sender, paybackAmount);
+    emit Repay(asset, onBehalfOf, msg.sender, platformFeePay, reserveFeePay, paybackAmount);
 
     return paybackAmount;
   }

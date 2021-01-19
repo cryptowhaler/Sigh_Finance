@@ -50,10 +50,7 @@ contract VariableDebtToken is DebtTokenBase, IVariableDebtToken {
     * @param index The variable debt index of the reserve
     * @return `true` if the the previous balance of the user is 0
     **/
-    function mint( address user,  address onBehalfOf,  uint256 amount, uint platformFee, uint reserveFee, uint256 index) external override onlyLendingPool returns (bool) {
-
-        _platformFee[onBehalfOf] = _platformFee[onBehalfOf].add(platformFee);   // PLATFORM FEE
-        _reserveFee[onBehalfOf] = _reserveFee[onBehalfOf].add(_reserveFee);     // RESERVE FEE
+    function mint( address user,  address onBehalfOf,  uint256 amount, uint256 index) external override onlyLendingPool returns (bool) {
 
         if (user != onBehalfOf) {
             _decreaseBorrowAllowance(onBehalfOf, user, amount);

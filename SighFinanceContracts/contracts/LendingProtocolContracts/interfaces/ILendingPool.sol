@@ -51,7 +51,7 @@ interface ILendingPool {
    * @param repayer The address of the user initiating the repay(), providing the funds
    * @param amount The amount repaid
    **/
-  event Repay( address indexed instrument, address indexed user, address indexed repayer, uint256 amount);
+  event Repay( address indexed instrument, address indexed user, address indexed repayer, uint256 platformFeePay, uint256 reserveFeePay, uint256 amount);
 
   /**
    * @dev Emitted on swapBorrowRateMode()
