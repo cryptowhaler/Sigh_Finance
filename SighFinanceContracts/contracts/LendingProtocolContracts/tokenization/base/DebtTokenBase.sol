@@ -17,7 +17,8 @@ abstract contract DebtTokenBase is IncentivizedERC20, VersionedInitializable, IC
   ILendingPool public immutable POOL;
 
   mapping(address => mapping(address => uint256)) internal _borrowAllowances;
-  mapping(address => uint256) internal _borrowFee;
+  mapping(address => uint256) internal _platformFee;
+  mapping(address => uint256) internal _reserveFee;
 
   /**
    * @dev Only lending pool can call functions marked by this modifier

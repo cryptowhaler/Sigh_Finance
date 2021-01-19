@@ -22,14 +22,45 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
     IPriceOracleGetter private priceOracle ;
     ISIGHNFTBoosters private SIGHNFTBoosters;
 
+    uint256 public totalFlashLoanFeePercent;        // Flash Loan Fee 
     uint256 public totalBorrowFeePercent;           // Borrow Fee
     uint256 public totalDepositFeePercent;          // Deposit Fee
     uint256 public platformFeePercent;              // Platform Fee (% of the Borrow Fee / Deposit Fee)
 
-    uint256 public totalFlashLoanFeePercent;        // Flash Loan Fee 
+    address private tokenAccepted; 
 
-    mapping (uint256 => uint256) private boostersTotalFuelRemaining;    // boosterID => Fuel Remaining (Remaining Volume on which discount will be given) Mapping
-    mapping (uint256 => uint256) private boostersTotalFuelUsed;    // boosterID => Fuel Used (Volume used by the booster) Mapping
+    mapping (string => uint) initialFuelAmount;  // Initial Fuel the boosters of a particular category have
+
+
+    struct optionType{
+        uint256 fee;                // Fee Charged for this option
+        uint256 multiplier;         // Fuel multiplier (fuel top up = fee * multiplier). It is adjusted by 2 decimal places.
+                                    // Eq, multiplier = 120, means fuelTopUp = fee * 120/100 = 1.2 * Fee
+    }
+
+    mapping (string => mapping (uint => optionType) ) private fuelTopUpOptions; // BoosterType => ( optionNo => optionType )
+
+    struct booster{
+        bool inititated;                // To check if this booster has ever been used or not
+        uint256 totalFuelRemaining;     // Current Amount of fuel available
+        uint256 totalFuelUsed;          // Total Fuel used
+    }
+
+    mapping (uint256 => booster) private boosterFuelInfo;    // boosterID => Fuel Remaining (Remaining Volume on which discount will be given) Mapping
+
+
+    event depositFeePercentUpdated(uint _depositFeePercent);
+    event borrowFeePercentUpdated(uint totalBorrowFeePercent_);
+    event flashLoanFeePercentUpdated(uint totalFlashLoanFeePercent_);
+    event platformFeePercentUpdated(uint _platformFeePercent);
+
+    event initalFuelForABoosterCategoryUpdated(string categoryName,uint initialFuel);
+    event topUpOptionUpdated(string category, uint optionNo,uint _fee, uint _multiplier);
+    event tokenForPaymentUpdated(address prevToken,address tokenAccepted);
+    event tokensTransferred(address token, address destination, uint amount,uint newBalance );
+
+    event _boosterTopUp( uint boosterID,string category,uint optionNo,uint amount,uint topUp,uint totalFuelRemaining);
+
 
     //only SIGH Distribution Manager can use functions affected by this modifier
     modifier onlySighFinanceConfigurator {
@@ -81,7 +112,13 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
 
         require( _user == SIGHNFTBoosters.ownerOf(boosterId), "Deposit() caller doesn't have the mentioned SIGH Booster needed to claim the discount. Please check the BoosterID that you provided again." );
 
-        if ( boostersTotalFuelRemaining[boosterId] > 0 ) {
+        if ( !boosterFuelInfo[boosterId].inititated ) {
+            string memory category = SIGHNFTBoosters.getBoosterCategory(boosterID);
+            boosterFuelInfo[boosterId].totalFuelRemaining = initialFuelAmount[category];
+            boosterFuelInfo[boosterId].inititated = true;
+        }
+
+        if ( boosterFuelInfo[boosterId].totalFuelRemaining > 0 ) {
             uint priceUSD = priceOracle.getAssetPrice(instrument);
             uint priceDecimals = priceOracle.getAssetPriceDecimals(instrument);
             require(priceUSD > 0, "Oracle returned invalid price");
@@ -89,8 +126,8 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
             uint value = totalFee.mul_(priceUSD * 10**8);              // Adjusted by 8 decimals
             value = value.div_(10**priceDecimals);                     // Corrected by Price Decimals
 
-            boostersTotalFuelRemaining[boosterId] = boostersTotalFuelRemaining[boosterId] >= value ? boostersTotalFuelRemaining[boosterId].sub_(value) : 0 ;
-            boostersTotalFuelUsed[boosterId] = boostersTotalFuelUsed[boosterId].add_(value);
+            boosterFuelInfo[boosterId].totalFuelRemaining = boosterFuelInfo[boosterId].totalFuelRemaining >= value ? boosterFuelInfo[boosterId].totalFuelRemaining.sub_(value) : 0 ;
+            boosterFuelInfo[boosterId].totalFuelUsed = boosterFuelInfo[boosterId].totalFuelUsed.add_(value);
             return (0,0,0);
         }
 
@@ -128,7 +165,13 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
 
         require( _user == SIGHNFTBoosters.ownerOf(boosterId), "User against which borrow is being initiated doesn't have the mentioned SIGH Booster needed to claim the discount. Please check the BoosterID that you provided again." );
 
-        if ( boostersTotalFuelRemaining[boosterId] > 0 ) {
+        if ( !boosterFuelInfo[boosterId].inititated ) {
+            string memory category = SIGHNFTBoosters.getBoosterCategory(boosterID);
+            boosterFuelInfo[boosterId].totalFuelRemaining = initialFuelAmount[category];
+            boosterFuelInfo[boosterId].inititated = true;
+        }
+
+        if (  boosterFuelInfo[boosterId].totalFuelRemaining > 0 ) {
             uint priceUSD = priceOracle.getAssetPrice(instrument);
             uint priceDecimals = priceOracle.getAssetPriceDecimals(instrument);
             require(priceUSD > 0, "Oracle returned invalid price");
@@ -136,8 +179,8 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
             uint value = totalFee.mul_(priceUSD * 10**8);              // Adjusted by 8 decimals
             value = value.div_(10**priceDecimals);                     // Corrected by Price Decimals
 
-            boostersTotalFuelRemaining[boosterId] = boostersTotalFuelRemaining[boosterId] >= value ? boostersTotalFuelRemaining[boosterId].sub_(value) : 0 ;
-            boostersTotalFuelUsed[boosterId] = boostersTotalFuelUsed[boosterId].add_(value);
+            boosterFuelInfo[boosterId].totalFuelRemaining =  boosterFuelInfo[boosterId].totalFuelRemaining >= value ?  boosterFuelInfo[boosterId].totalFuelRemaining.sub_(value) : 0 ;
+            boosterFuelInfo[boosterId].totalFuelUsed = boosterFuelInfo[boosterId].totalFuelUsed.add_(value);
             return (0,0,0);
         }
 
@@ -149,25 +192,93 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
     }
 
 // #################################
+// ####### FUNCTIONS TO INCREASE FUEL LIMIT  ########
+// #################################
+
+    function fuelTopUp(uint optionNo, uint boosterID) external {
+        require( SIGHNFTBoosters.isValidBooster(boosterId) , "Not a Valid Booster" );
+        string memory category = SIGHNFTBoosters.getBoosterCategory(boosterID);
+
+        optionType selectedOption = fuelTopUpOptions[category][optionNo];
+        uint amount = selectedOption.fee;
+        require(amount > 0,"Option selected not valid");
+
+        uint8 decimals = IERC20(tokenAccepted).decimals();
+        amount = amount.mul_(10**decimals);
+
+        uint256 prevBalance = IERC20(tokenAccepted).balanceOf(address(this));
+        IERC20(tokenAccepted).transferFrom(msg.sender,address(this),amount);
+        uint256 newBalance = IERC20(tokenAccepted).balanceOf(address(this));
+        require( newBalance == prevBalance.add(amount),"ERC20 transfer failure");
+
+        uint _multiplier = selectedOption.multiplier;
+        uint topUp = amount.mul_(_multiplier);
+        topUp = topUp.div_(100);                    // topUp = fee * multiplier, where multipler = 120 represents 1.2
+        
+        boosterFuelInfo[boosterID].totalFuelRemaining = boosterFuelInfo[boosterID].totalFuelRemaining.add(topUp);
+        emit _boosterTopUp( boosterID, category, optionNo, amount, topUp, boosterFuelInfo[boosterID].totalFuelRemaining);
+    }
+
+
+
+// #################################
 // ####### ADMIN FUNCTIONS  ########
 // #################################
 
     function updateTotalDepositFeePercent(uint _depositFeePercent) external onlySighFinanceConfigurator {
         totalDepositFeePercent = _depositFeePercent;
+        emit depositFeePercentUpdated(_depositFeePercent);
     }
 
     function updateTotalBorrowFeePercent(uint totalBorrowFeePercent_) external onlySighFinanceConfigurator {
         totalBorrowFeePercent = totalBorrowFeePercent_;
+        emit borrowFeePercentUpdated(totalBorrowFeePercent_);
     }
 
     function updateTotalFlashLoanFeePercent(uint totalFlashLoanFeePercent_ ) external onlySighFinanceConfigurator {
         totalFlashLoanFeePercent = totalFlashLoanFeePercent_;
+        emit flashLoanFeePercentUpdated(totalFlashLoanFeePercent_);
     }
 
     function updatePlatformFeePercent(uint _platformFeePercent) external onlySighFinanceConfigurator {
         platformFeePercent = _platformFeePercent;
+        emit platformFeePercentUpdated(_platformFeePercent);
     }
-    
+
+    function UpdateABoosterCategoryFuelAmount(string categoryName, uint initialFuel ) external onlySighFinanceConfigurator {
+        require(initialFuel > 0, 'Initial Fuel cannot be 0'); 
+        require(SIGHNFTBoosters.isCategorySupported(categoryName),'Category not present');
+        initialFuelAmount[categoryName] = initialFuel;
+
+        emit initalFuelForABoosterCategoryUpdated(categoryName,initialFuel);
+    }
+
+    function updateATopUpOption(string category, uint optionNo, uint _fee, uint _multiplier) external onlySighFinanceConfigurator { 
+        optionType newType = optionType({ fee: _fee, multiplier: _multiplier  });
+        fuelTopUpOptions[category][optionNo] = newType;
+        emit topUpOptionUpdated(category, optionNo, _fee, _multiplier);
+    }
+
+    function updateTokenAccepted(address _token) external onlySighFinanceConfigurator {
+        require(_token != address(0),'Not a valid address');
+        address prevToken = tokenAccepted;
+        tokenAccepted = _token;
+        emit tokenForPaymentUpdated(prevToken, tokenAccepted);
+    }
+
+    function transferFunds(address token, address destination, uint amount) external onlySighFinanceConfigurator {
+        require(_token != address(0),'Not a valid token address');
+        require(destination != address(0),'Not a valid  destination address');
+        require(amount > 0,'Amount needs to be greater than 0');
+
+        uint256 prevBalance = IERC20(token).balanceOf(address(this));
+        IERC20(token).transfer(destination,amount);
+        uint256 newBalance = IERC20(token).balanceOf(address(this));
+        require( newBalance == prevBalance.sub(amount),"ERC20 transfer failure");
+
+        emit tokensTransferred(token, destination, amount, newBalance );
+    }
+
 // ###############################
 // ####### EXTERNAL VIEW  ########
 // ###############################
@@ -192,6 +303,8 @@ contract FeeProvider is IFeeProvider, VersionedInitializable {
         return boostersTotalFuelUsed[boosterID];
     }
 
-
+    function getOptionDetails(string category, uint optionNo) external view returns (uint fee, uint multiplier) {
+        return (fuelTopUpOptions[category][optionNo].fee, fuelTopUpOptions[category][optionNo].multiplier);
+    }
 
 }

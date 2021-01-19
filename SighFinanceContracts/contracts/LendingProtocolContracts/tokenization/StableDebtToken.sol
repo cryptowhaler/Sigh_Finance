@@ -93,10 +93,11 @@ contract StableDebtToken is IStableDebtToken, DebtTokenBase {
     * @param amount The amount of debt tokens to mint
     * @param rate The rate of the debt being minted
     **/
-    function mint( address user, address onBehalfOf, uint256 amount, uint borrowFee, uint256 rate) external override onlyLendingPool returns (bool) {
+    function mint( address user, address onBehalfOf, uint256 amount, uint platformFee, uint reserveFee, uint256 rate) external override onlyLendingPool returns (bool) {
         MintLocalVars memory vars;
 
-        _borrowFee[onBehalfOf] = _borrowFee[onBehalfOf].add(borrowFee); // BORROW FEE
+        _platformFee[onBehalfOf] = _platformFee[onBehalfOf].add(platformFee);   // PLATFORM FEE
+        _reserveFee[onBehalfOf] = _reserveFee[onBehalfOf].add(_reserveFee);     // RESERVE FEE
 
         if (user != onBehalfOf) {
             _decreaseBorrowAllowance(onBehalfOf, user, amount);

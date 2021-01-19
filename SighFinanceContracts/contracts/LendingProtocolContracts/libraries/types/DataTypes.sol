@@ -44,6 +44,8 @@ library DataTypes {
 
   struct UserConfigurationMap {
     uint256 data;
+    uint256 platformFee;
+    uint256 reserveFee;
   }
 
   enum InterestRateMode {NONE, STABLE, VARIABLE}

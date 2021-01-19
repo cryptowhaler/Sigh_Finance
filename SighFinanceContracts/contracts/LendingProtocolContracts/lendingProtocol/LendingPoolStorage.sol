@@ -15,7 +15,7 @@ contract LendingPoolStorage {
     IGlobalAddressesProvider internal _addressesProvider;
 
     mapping(address => DataTypes.InstrumentData) internal _instruments;
-    mapping(address => DataTypes.UserConfigurationMap) internal _usersConfig;
+    mapping(address => DataTypes.UserConfigurationMap) internal _usersConfig;   // User Data
 
     
     mapping(uint256 => address) internal _instrumentsList;      // the list of the available instruments, structured as a mapping for gas savings reasons

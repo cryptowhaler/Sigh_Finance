@@ -283,11 +283,11 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
 
     if (interestRateMode == DataTypes.InterestRateMode.STABLE) {
       IStableDebtToken(instrument.stableDebtTokenAddress).burn(msg.sender, stableDebt);
-      IVariableDebtToken(instrument.variableDebtTokenAddress).mint( msg.sender, msg.sender, stableDebt, 0, instrument.variableBorrowIndex );
+      IVariableDebtToken(instrument.variableDebtTokenAddress).mint( msg.sender, msg.sender, stableDebt, instrument.variableBorrowIndex );
     } 
     else {
       IVariableDebtToken(instrument.variableDebtTokenAddress).burn( msg.sender, variableDebt, instrument.variableBorrowIndex);
-      IStableDebtToken(instrument.stableDebtTokenAddress).mint( msg.sender, msg.sender, variableDebt, 0, instrument.currentStableBorrowRate);
+      IStableDebtToken(instrument.stableDebtTokenAddress).mint( msg.sender, msg.sender, variableDebt, instrument.currentStableBorrowRate);
     }
 
     instrument.updateInterestRates(asset, instrument.iTokenAddress, 0, 0);
@@ -317,7 +317,7 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
     instrument.updateState();
 
     IStableDebtToken(address(stableDebtToken)).burn(user, stableDebt);
-    IStableDebtToken(address(stableDebtToken)).mint(user,user,stableDebt,0, instrument.currentStableBorrowRate);
+    IStableDebtToken(address(stableDebtToken)).mint(user,user,stableDebt, instrument.currentStableBorrowRate);
 
     instrument.updateInterestRates(asset, iTokenAddress, 0, 0);
 
@@ -609,7 +609,9 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
         uint256 amountInUSD = IPriceOracleGetter(oracle).getAssetPrice(vars.asset).mul(vars.amount).div(  10**instrument.configuration.getDecimals() );
 
         (uint256 platformFee, uint256 reserveFee) = feeProvider.calculateBorrowFee(onBehalfOf,_instrument, vars.amount, boosterId);
-        
+        userConfig.platformFee = userConfig.platformFee.add(platformFee);
+        userConfig.reserveFee = userConfig.reserveFee.add(reserveFee); 
+
         ValidationLogic.validateBorrow( vars.asset, instrument, vars.onBehalfOf, vars.amount, amountInUSD, vars.interestRateMode, MAX_STABLE_RATE_BORROW_SIZE_PERCENT,_instruments, userConfig,_instrumentsList,_instrumentsCount, oracle );
         instrument.updateState();
 
@@ -618,10 +620,10 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
 
         if (DataTypes.InterestRateMode(vars.interestRateMode) == DataTypes.InterestRateMode.STABLE) {
             currentStableRate = instrument.currentStableBorrowRate;
-            isFirstBorrowing = IStableDebtToken(instrument.stableDebtTokenAddress).mint( vars.user, vars.onBehalfOf, vars.amount, vars.borrowFee, currentStableRate );
+            isFirstBorrowing = IStableDebtToken(instrument.stableDebtTokenAddress).mint( vars.user, vars.onBehalfOf, vars.amount, currentStableRate );
         } 
         else {
-            isFirstBorrowing = IVariableDebtToken(instrument.variableDebtTokenAddress).mint( vars.user, vars.onBehalfOf, vars.amount, vars.borrowFee, instrument.variableBorrowIndex );
+            isFirstBorrowing = IVariableDebtToken(instrument.variableDebtTokenAddress).mint( vars.user, vars.onBehalfOf, vars.amount, instrument.variableBorrowIndex );
         }
 
         if (isFirstBorrowing) {
