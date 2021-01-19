@@ -223,8 +223,8 @@ contract LendingPoolLiquidationManager is   ILendingPoolLiquidationManager, Vers
     /**
     * @dev Calculates how much of a specific collateral can be liquidated, given a certain amount of debt asset.
     * - This function needs to be called after all the checks to validate the liquidation have been performed, otherwise it might fail.
-    * @param collateralReserve The data of the collateral reserve
-    * @param debtReserve The data of the debt reserve
+    * @param collateralInstrument The data of the collateral reserve
+    * @param debtInstrument The data of the debt reserve
     * @param collateralAsset The address of the underlying asset used as collateral, to receive as result of the liquidation
     * @param debtAsset The address of the underlying borrowed asset to be repaid with the liquidation
     * @param debtToCover The debt amount of borrowed `asset` the liquidator wants to cover
@@ -232,7 +232,7 @@ contract LendingPoolLiquidationManager is   ILendingPoolLiquidationManager, Vers
     * @return collateralAmount: The maximum amount that is possible to liquidate given all the liquidation constraints  (user balance, close factor)
     *         debtAmountNeeded: The amount to repay with the liquidation
     **/
-    function _calculateAvailableCollateralToLiquidate(  DataTypes.InstrumentData storage collateralReserve,  DataTypes.InstrumentData storage debtReserve,  address collateralAsset,  address debtAsset, uint256 debtToCover, uint256 userCollateralBalance ) internal view returns (uint256, uint256) {
+    function _calculateAvailableCollateralToLiquidate(  DataTypes.InstrumentData storage collateralInstrument,  DataTypes.InstrumentData storage debtInstrument,  address collateralAsset,  address debtAsset, uint256 debtToCover, uint256 userCollateralBalance ) internal view returns (uint256, uint256) {
         uint256 collateralAmount = 0;
         uint256 debtAmountNeeded = 0;
         IPriceOracleGetter oracle = IPriceOracleGetter(_addressesProvider.getPriceOracle());
@@ -242,12 +242,11 @@ contract LendingPoolLiquidationManager is   ILendingPoolLiquidationManager, Vers
         vars.collateralPrice = oracle.getAssetPrice(collateralAsset);
         vars.debtAssetPrice = oracle.getAssetPrice(debtAsset);
 
-        (, , vars.liquidationBonus, vars.collateralDecimals, ) = collateralReserve.configuration.getParams();
-        vars.debtAssetDecimals = debtReserve.configuration.getDecimals();
+        (, , vars.liquidationBonus, vars.collateralDecimals, ) = collateralInstrument.configuration.getParams();
+        vars.debtAssetDecimals = debtInstrument.configuration.getDecimals();
 
-        // This is the maximum possible amount of the selected collateral that can be liquidated, given the
-        // max amount of liquidatable debt
-        vars.maxAmountCollateralToLiquidate = vars.debtAssetPrice.mul(debtToCover).mul(10**vars.collateralDecimals).percentMul(vars.liquidationBonus).div(vars.collateralPrice.mul(10**vars.debtAssetDecimals));
+        // This is the maximum possible amount of the selected collateral that can be liquidated, given the max amount of liquidatable debt
+        vars.maxAmountCollateralToLiquidate = vars.debtAssetPrice.mul(debtToCover).mul(10**vars.collateralDecimals).percentMul(vars.liquidationBonus).div( vars.collateralPrice.mul(10**vars.debtAssetDecimals) );
 
         if (vars.maxAmountCollateralToLiquidate > userCollateralBalance) {
             collateralAmount = userCollateralBalance;

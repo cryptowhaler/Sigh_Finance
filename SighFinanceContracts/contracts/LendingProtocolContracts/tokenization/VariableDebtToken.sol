@@ -101,6 +101,22 @@ contract VariableDebtToken is DebtTokenBase, IVariableDebtToken {
         return super.totalSupply().rayMul(POOL.getReserveNormalizedVariableDebt(UNDERLYING_ASSET_ADDRESS));
     }
 
+    function getPlatformFee(address user) public view override returns (uint256) {
+        return platformFee[user];
+    }
+
+    function getReserveFee(address user) public view override returns (uint256) {
+        return reserveFee[user];
+    }
+
+    function updatePlatformFee(address user, uint increaseInFee, uint decreaseInFee) public override onlyLendingPool returns (uint256) {
+        platformFee[user] = platformFee[user].add(increaseInFee).sub(decreaseInFee);
+    }
+
+    function updateReserveFee(address user, uint increaseInFee, uint decreaseInFee) public override onlyLendingPool returns (uint256) {
+        reserveFee[user] = reserveFee[user].add(increaseInFee).sub(decreaseInFee);
+    }
+
     /**
     * @dev Returns the scaled total supply of the variable debt token. Represents sum(debt/index)
     * @return the scaled total supply

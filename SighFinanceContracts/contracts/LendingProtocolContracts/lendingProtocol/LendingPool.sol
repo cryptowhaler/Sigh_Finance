@@ -225,68 +225,91 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
    * user calling the function if he wants to reduce/remove his own debt, or the address of any other other borrower whose debt should be removed
    * @return The final amount repaid
    **/
-  function repay( address asset, uint256 amount, uint256 rateMode, address onBehalfOf ) external override whenNotPaused returns (uint256) {
-    DataTypes.InstrumentData storage instrument =_instruments[asset];
-    uint platformFeePay;
-    uint reserveFeePay;
+    function repay( address asset, uint256 amount, uint256 rateMode, address onBehalfOf ) external override whenNotPaused returns (uint256) {
+        DataTypes.InstrumentData storage instrument =_instruments[asset];
 
-    (uint256 stableDebt, uint256 variableDebt) = Helpers.getUserCurrentDebt(onBehalfOf, instrument);
-    DataTypes.InterestRateMode interestRateMode = DataTypes.InterestRateMode(rateMode);
+        uint platformFeePay;
+        uint reserveFeePay;
 
-    ValidationLogic.validateRepay(  instrument, amount, interestRateMode, onBehalfOf, stableDebt, variableDebt);
-    uint256 paybackAmount = interestRateMode == DataTypes.InterestRateMode.STABLE ? stableDebt : variableDebt;
-    paybackAmount = paybackAmount.add(_usersConfig[onBehalfOf].platformFee.).add(_usersConfig[onBehalfOf].reserveFee);
+        (uint256 stableDebt, uint256 variableDebt) = Helpers.getUserCurrentDebt(onBehalfOf, instrument);
+        DataTypes.InterestRateMode interestRateMode = DataTypes.InterestRateMode(rateMode);
 
-    if (amount < paybackAmount) {
-      paybackAmount = amount;
-    }
+        ValidationLogic.validateRepay(  instrument, amount, interestRateMode, onBehalfOf, stableDebt, variableDebt);
+        uint256 paybackAmount = interestRateMode == DataTypes.InterestRateMode.STABLE ? stableDebt : variableDebt;
 
-    // PAY PLATFORM FEE
-    if (_usersConfig[onBehalfOf].platformFee > 0) {
-        platformFeePay =  paybackAmount > _usersConfig[onBehalfOf].platformFee ? _usersConfig[onBehalfOf].platformFee : paybackAmount;
-        IERC20(asset).safeTransferFrom( msg.sender, addressesProvider.getSIGHFinanceFeeCollector(), platformFeePay );
-        paybackAmount = paybackAmount.sub(platformFeePay);  // Update payback amount
+        // getting platfrom Fee based on if it is a Stable rate loan or variable rate loan
+        uint256 platformFee = interestRateMode == DataTypes.InterestRateMode.STABLE ? 
+                                                IStableDebtToken(instrument.stableDebtTokenAddress).getPlatformFee(onBehalfOf) : 
+                                                IVariableDebtToken(instrument.variableDebtTokenAddress).getPlatformFee(onBehalfOf);
 
-        if (paybackAmount == 0) {
-            emit Repay(asset, onBehalfOf, msg.sender, platformFeePay, reserveFeePay, paybackAmount);
-            return platformFeePay;
+        // getting reserve Fee based on if it is a Stable rate loan or variable rate loan
+        uint256 reserveFee = interestRateMode == DataTypes.InterestRateMode.STABLE ? 
+                                                IStableDebtToken(instrument.stableDebtTokenAddress).getReserveFee(onBehalfOf) : 
+                                                IVariableDebtToken(instrument.variableDebtTokenAddress).getReserveFee(onBehalfOf);
+
+        paybackAmount = paybackAmount.add(platformFee).add(reserveFee);    // Max payback that needs to be made 
+
+        if (amount < paybackAmount) {
+            paybackAmount = amount;
+        }
+
+        // PAY PLATFORM FEE
+        if ( platformFee > 0) {
+            platformFeePay =  paybackAmount >= platformFee ? platformFee : paybackAmount;
+            IERC20(asset).safeTransferFrom( msg.sender, addressesProvider.getSIGHFinanceFeeCollector(), platformFeePay );   // Platform Fee transferred
+            paybackAmount = paybackAmount.sub(platformFeePay);  // Update payback amount
+
+            if (paybackAmount == 0) {
+                emit Repay(asset, onBehalfOf, msg.sender, platformFeePay, reserveFeePay, paybackAmount);
+                return platformFeePay;
+            }    
+        }
+
+        // PAY RESERVE FEE
+        if (reserveFee > 0) { 
+            reserveFeePay =  paybackAmount > reserveFee ? reserveFee : paybackAmount;
+            IERC20(asset).safeTransferFrom( msg.sender, addressesProvider.getSIGHPayAggregator(), reserveFeePay );       // Reserve Fee transferred
+            paybackAmount = paybackAmount.sub(reserveFeePay);  // Update payback amount
+
+            if (paybackAmount == 0) {
+                emit Repay(asset, onBehalfOf, msg.sender, platformFeePay, reserveFeePay, paybackAmount);
+                return platformFeePay.add(reserveFeePay);
+            }    
         }    
-    }
 
-    // PAY RESERVE FEE
-    if (_usersConfig[onBehalfOf].reserveFee > 0) { 
-        reserveFeePay =  paybackAmount > _usersConfig[onBehalfOf].reserveFee ? _usersConfig[onBehalfOf].reserveFee : paybackAmount;
-        IERC20(asset).safeTransferFrom( msg.sender, addressesProvider.getSIGHPayAggregator(), reserveFeePay );
-        paybackAmount = paybackAmount.sub(reserveFee);  // Update payback amount
+        instrument.updateState();
 
-        if (paybackAmount == 0) {
-            emit Repay(asset, onBehalfOf, msg.sender, platformFeePay, reserveFeePay, paybackAmount);
-            return platformFeePay.add(reserveFeePay);
-        }    
+        if (interestRateMode == DataTypes.InterestRateMode.STABLE) {
+            if ( platformFeePay > 0) {          // Update PLATFORM FEE
+                IStableDebtToken(instrument.stableDebtTokenAddress).updatePlatformFee(onBehalfOf, 0 ,platformFeePay);
+            }
+            if (reserveFee > 0) {                // Update RESERVE FEE
+                IStableDebtToken(instrument.stableDebtTokenAddress).updateReserveFee(onBehalfOf, 0 ,reserveFeePay);               
+            }    
+            IStableDebtToken(instrument.stableDebtTokenAddress).burn(onBehalfOf, paybackAmount);
+        } 
+        else {
+            if ( platformFeePay > 0) {          // Update PLATFORM FEE
+                IVariableDebtToken(instrument.variableDebtTokenAddress).updatePlatformFee(onBehalfOf, 0 ,platformFeePay);
+            }
+            if (reserveFee > 0) {                // Update RESERVE FEE
+                IVariableDebtToken(instrument.variableDebtTokenAddress).updateReserveFee(onBehalfOf, 0 ,reserveFeePay);               
+            }    
+            IVariableDebtToken(instrument.variableDebtTokenAddress).burn( onBehalfOf, paybackAmount, instrument.variableBorrowIndex );
+        }
 
-    }    
+        address iToken = instrument.iTokenAddress;
+        instrument.updateInterestRates(asset, iToken, paybackAmount, 0);
 
-    instrument.updateState();
+        if (stableDebt.add(variableDebt).sub(paybackAmount) == 0) {
+        _usersConfig[onBehalfOf].setBorrowing(instrument.id, false);
+        }
 
-    if (interestRateMode == DataTypes.InterestRateMode.STABLE) {
-      IStableDebtToken(instrument.stableDebtTokenAddress).burn(onBehalfOf, paybackAmount);
-    } 
-    else {
-      IVariableDebtToken(instrument.variableDebtTokenAddress).burn( onBehalfOf, paybackAmount, instrument.variableBorrowIndex );
-    }
+        IERC20(asset).safeTransferFrom(msg.sender, iToken, paybackAmount);
 
-    address iToken = instrument.iTokenAddress;
-    instrument.updateInterestRates(asset, iToken, paybackAmount, 0);
+        emit Repay(asset, onBehalfOf, msg.sender, platformFeePay, reserveFeePay, paybackAmount);
 
-    if (stableDebt.add(variableDebt).sub(paybackAmount) == 0) {
-      _usersConfig[onBehalfOf].setBorrowing(instrument.id, false);
-    }
-
-    IERC20(asset).safeTransferFrom(msg.sender, iToken, paybackAmount);
-
-    emit Repay(asset, onBehalfOf, msg.sender, platformFeePay, reserveFeePay, paybackAmount);
-
-    return paybackAmount;
+        return paybackAmount;
   }
 
 // ####################################################################
@@ -636,22 +659,23 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
         address oracle = _addressesProvider.getPriceOracle();
         uint256 amountInUSD = IPriceOracleGetter(oracle).getAssetPrice(vars.asset).mul(vars.amount).div(  10**instrument.configuration.getDecimals() );
 
-        (uint256 platformFee, uint256 reserveFee) = feeProvider.calculateBorrowFee(onBehalfOf,_instrument, vars.amount, boosterId);
-        userConfig.platformFee = userConfig.platformFee.add(platformFee);
-        userConfig.reserveFee = userConfig.reserveFee.add(reserveFee); 
-
         ValidationLogic.validateBorrow( vars.asset, instrument, vars.onBehalfOf, vars.amount, amountInUSD, vars.interestRateMode, MAX_STABLE_RATE_BORROW_SIZE_PERCENT,_instruments, userConfig,_instrumentsList,_instrumentsCount, oracle );
         instrument.updateState();
 
         uint256 currentStableRate = 0;
         bool isFirstBorrowing = false;
+        (uint256 platformFee, uint256 reserveFee) = feeProvider.calculateBorrowFee(onBehalfOf,_instrument, vars.amount, boosterId);
 
         if (DataTypes.InterestRateMode(vars.interestRateMode) == DataTypes.InterestRateMode.STABLE) {
             currentStableRate = instrument.currentStableBorrowRate;
             isFirstBorrowing = IStableDebtToken(instrument.stableDebtTokenAddress).mint( vars.user, vars.onBehalfOf, vars.amount, currentStableRate );
+            IStableDebtToken(instrument.stableDebtTokenAddress).updatePlatformFee(vars.user,platformFee,0);
+            IStableDebtToken(instrument.stableDebtTokenAddress).updateReserveFee(vars.user,reserveFee,0);
         } 
         else {
             isFirstBorrowing = IVariableDebtToken(instrument.variableDebtTokenAddress).mint( vars.user, vars.onBehalfOf, vars.amount, instrument.variableBorrowIndex );
+            IVariableDebtToken(instrument.variableDebtTokenAddress).updatePlatformFee(vars.user,platformFee,0);
+            IVariableDebtToken(instrument.variableDebtTokenAddress).updateReserveFee(vars.user,reserveFee,0);
         }
 
         if (isFirstBorrowing) {
