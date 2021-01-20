@@ -37,7 +37,7 @@ contract LendingPoolLiquidationManager is   ILendingPoolLiquidationManager, Vers
     ILendingPoolCore core;
     ILendingPoolDataProvider dataProvider;
 
-    uint256 constant LIQUIDATION_CLOSE_FACTOR_PERCENT = 5000;
+    uint256 constant LIQUIDATION_CLOSE_FACTOR_PERCENT = 5000;   // 50 % 
 
     struct LiquidationCallLocalVars {
         uint256 userCollateralBalance;
@@ -108,89 +108,107 @@ contract LendingPoolLiquidationManager is   ILendingPoolLiquidationManager, Vers
     * @param _purchaseAmount the amount of principal that the liquidator wants to repay
     * @param _receiveIToken true if the liquidators wants to receive the iTokens, false if he wants to receive the underlying asset directly
     **/
-    function liquidationCall(     address collateralAsset, address debtAsset, address user, uint256 debtToCover, bool receiveAToken ) external payable returns (uint256, string memory) {
-        DataTypes.InstrumentData storage collateralReserve =_instruments[collateralAsset];
-        DataTypes.InstrumentData storage debtReserve =_instruments[debtAsset];
+    function liquidationCall( address collateralAsset, address debtAsset, address user, uint256 debtToCover, bool receiveIToken ) external payable returns (uint256, string memory) {
+
+        DataTypes.InstrumentData storage collateralInstrument =_instruments[collateralAsset];
+        DataTypes.InstrumentData storage debtInstrument =_instruments[debtAsset];
         DataTypes.UserConfigurationMap storage userConfig = _usersConfig[user];       
 
         LiquidationCallLocalVars memory vars;        // Usage of a memory struct of vars to avoid "Stack too deep" errors due to local variables
 
         (, , , , vars.healthFactor) = GenericLogic.calculateUserAccountData( user,_instruments, userConfig,_instrumentsList,_instrumentsCount, _addressesProvider.getPriceOracle() );
-        (vars.userStableDebt, vars.userVariableDebt) = Helpers.getUserCurrentDebt(user, debtReserve);
-        (vars.errorCode, vars.errorMsg) = ValidationLogic.validateLiquidationCall( collateralReserve, debtReserve, userConfig, vars.healthFactor, vars.userStableDebt, vars.userVariableDebt );
+        (vars.userStableDebt, vars.userVariableDebt) = Helpers.getUserCurrentDebt(user, debtInstrument);
+        (vars.errorCode, vars.errorMsg) = ValidationLogic.validateLiquidationCall( collateralInstrument, debtInstrument, userConfig, vars.healthFactor, vars.userStableDebt, vars.userVariableDebt );
 
         if (Errors.CollateralManagerErrors(vars.errorCode) != Errors.CollateralManagerErrors.NO_ERROR) {
             return (vars.errorCode, vars.errorMsg);
         }
 
-        vars.collateralAtoken = IAToken(collateralReserve.iTokenAddress);
+        vars.collateralAtoken = IAToken(collateralInstrument.iTokenAddress);
         vars.userCollateralBalance = vars.collateralAtoken.balanceOf(user);
 
         vars.maxLiquidatableDebt = vars.userStableDebt.add(vars.userVariableDebt).percentMul(  LIQUIDATION_CLOSE_FACTOR_PERCENT );
-
         vars.actualDebtToLiquidate = debtToCover > vars.maxLiquidatableDebt ? vars.maxLiquidatableDebt : debtToCover;
 
-        (  vars.maxCollateralToLiquidate,  vars.debtAmountNeeded) = _calculateAvailableCollateralToLiquidate( collateralReserve, debtReserve, collateralAsset, debtAsset, vars.actualDebtToLiquidate, vars.userCollateralBalance );
+        (  vars.maxCollateralToLiquidate,  vars.debtAmountNeeded) = _calculateAvailableCollateralToLiquidate( collateralInstrument, debtInstrument, collateralAsset, debtAsset, vars.actualDebtToLiquidate, vars.userCollateralBalance );
 
-        // If debtAmountNeeded < actualDebtToLiquidate, there isn't enough
-        // collateral to cover the actual amount that is being liquidated, hence we liquidate a smaller amount
+    // ###########################
+
+        // FEE RELATED
+        (vars.userStableDebtPlatformFee, vars.userVariableDebtPlatformFee) = Helpers.getUserCurrentPlatformFee(user, debtInstrument);
+        (vars.userStableDebtReserveFee, vars.userVariableDebtReserveFee) = Helpers.getUserReserveFee(user, debtInstrument);
+
+        // FEE RELATED
+        vars.maxLiquidatablePlatformFee = vars.userStableDebtPlatformFee.add(vars.userVariableDebtPlatformFee).percentMul(LIQUIDATION_CLOSE_FACTOR_PERCENT);
+        vars.maxLiquidatableReserveFee = vars.userStableDebtReserveFee.add(vars.userVariableDebtReserveFee).percentMul(LIQUIDATION_CLOSE_FACTOR_PERCENT);
+
+        // Platform FEE RELATED
+        if (vars.maxLiquidatablePlatformFee > 0) {
+            (  vars.maxCollateralToLiquidateForPlatformFee,  vars.platformFeeLiquidated) = _calculateAvailableCollateralToLiquidate( collateralInstrument, debtInstrument, collateralAsset, debtAsset, vars.maxLiquidatablePlatformFee, vars.userCollateralBalance.sub(vars.maxCollateralToLiquidate) );
+        } 
+
+        // Reserve FEE RELATED
+        if (vars.maxLiquidatableReserveFee > 0) {
+            (  vars.maxCollateralToLiquidateForReserveFee,  vars.reserveFeeLiquidated) = _calculateAvailableCollateralToLiquidate( collateralInstrument, debtInstrument, collateralAsset, debtAsset, vars.maxLiquidatableReserveFee, vars.userCollateralBalance.sub(vars.maxCollateralToLiquidate).sub(vars.maxCollateralToLiquidateForPlatformFee) );
+        } 
+
+    // ###########################
+
+        // If debtAmountNeeded < actualDebtToLiquidate, there isn't enough collateral to cover the actual amount that is being liquidated, hence we liquidate a smaller amount
         if (vars.debtAmountNeeded < vars.actualDebtToLiquidate) {
             vars.actualDebtToLiquidate = vars.debtAmountNeeded;
         }
 
-        // If the liquidator reclaims the underlying asset, we make sure there is enough available liquidity in the
-        // collateral reserve
-        if (!receiveAToken) {
+        // If the liquidator reclaims the underlying asset, we make sure there is enough available liquidity in the collateral reserve
+        if (!receiveIToken) {
             uint256 currentAvailableCollateral = IERC20(collateralAsset).balanceOf(address(vars.collateralAtoken));
             if (currentAvailableCollateral < vars.maxCollateralToLiquidate) {
                 return (  uint256(Errors.CollateralManagerErrors.NOT_ENOUGH_LIQUIDITY),  Errors.LPCM_NOT_ENOUGH_LIQUIDITY_TO_LIQUIDATE );
             }
         }
 
-        debtReserve.updateState();
+        debtInstrument.updateState();
 
         if (vars.userVariableDebt >= vars.actualDebtToLiquidate) {
-            IVariableDebtToken(debtReserve.variableDebtTokenAddress).burn( user, vars.actualDebtToLiquidate, debtReserve.variableBorrowIndex );
+            IVariableDebtToken(debtInstrument.variableDebtTokenAddress).burn( user, vars.actualDebtToLiquidate, debtInstrument.variableBorrowIndex );
         } 
-        else {
-            // If the user doesn't have variable debt, no need to try to burn variable debt tokens
+        else {      // If the user doesn't have variable debt, no need to try to burn variable debt tokens            
             if (vars.userVariableDebt > 0) {
-                IVariableDebtToken(debtReserve.variableDebtTokenAddress).burn( user, vars.userVariableDebt, debtReserve.variableBorrowIndex );
+                IVariableDebtToken(debtInstrument.variableDebtTokenAddress).burn( user, vars.userVariableDebt, debtInstrument.variableBorrowIndex );
             }
-            IStableDebtToken(debtReserve.stableDebtTokenAddress).burn( user, vars.actualDebtToLiquidate.sub(vars.userVariableDebt) );
+            IStableDebtToken(debtInstrument.stableDebtTokenAddress).burn( user, vars.actualDebtToLiquidate.sub(vars.userVariableDebt) );
         }
 
-        debtReserve.updateInterestRates( debtAsset, debtReserve.iTokenAddress, vars.actualDebtToLiquidate, 0 );
+        debtInstrument.updateInterestRates( debtAsset, debtInstrument.iTokenAddress, vars.actualDebtToLiquidate, 0 );
 
-        if (receiveAToken) {
+        if (receiveIToken) {
             vars.liquidatorPreviousATokenBalance = IERC20(vars.collateralAtoken).balanceOf(msg.sender);
             vars.collateralAtoken.transferOnLiquidation(user, msg.sender, vars.maxCollateralToLiquidate);
 
             if (vars.liquidatorPreviousATokenBalance == 0) {
                 DataTypes.UserConfigurationMap storage liquidatorConfig = _usersConfig[msg.sender];
-                liquidatorConfig.setUsingAsCollateral(collateralReserve.id, true);
+                liquidatorConfig.setUsingAsCollateral(collateralInstrument.id, true);
                 emit ReserveUsedAsCollateralEnabled(collateralAsset, msg.sender);
             }
         } 
         else {
-            collateralReserve.updateState();
-            collateralReserve.updateInterestRates( collateralAsset, address(vars.collateralAtoken), 0, vars.maxCollateralToLiquidate);
+            collateralInstrument.updateState();
+            collateralInstrument.updateInterestRates( collateralAsset, address(vars.collateralAtoken), 0, vars.maxCollateralToLiquidate);
 
             // Burn the equivalent amount of aToken, sending the underlying to the liquidator
-            vars.collateralAtoken.burn(user,msg.sender, vars.maxCollateralToLiquidate, collateralReserve.liquidityIndex);
+            vars.collateralAtoken.burn(user,msg.sender, vars.maxCollateralToLiquidate, collateralInstrument.liquidityIndex);
         }
 
-        // If the collateral being liquidated is equal to the user balance,
-        // we set the currency as not being used as collateral anymore
+        // If the collateral being liquidated is equal to the user balance, we set the currency as not being used as collateral anymore
         if (vars.maxCollateralToLiquidate == vars.userCollateralBalance) {
-            userConfig.setUsingAsCollateral(collateralReserve.id, false);
+            userConfig.setUsingAsCollateral(collateralInstrument.id, false);
             emit InstrumentUsedAsCollateralDisabled(collateralAsset, user);
         }
 
         // Transfers the debt asset being repaid to the aToken, where the liquidity is kept
-        IERC20(debtAsset).safeTransferFrom( msg.sender, debtReserve.iTokenAddress, vars.actualDebtToLiquidate);
+        IERC20(debtAsset).safeTransferFrom( msg.sender, debtInstrument.iTokenAddress, vars.actualDebtToLiquidate);
 
-        emit LiquidationCall(collateralAsset, debtAsset, user, vars.actualDebtToLiquidate, vars.maxCollateralToLiquidate, msg.sender, receiveAToken);
+        emit LiquidationCall(collateralAsset, debtAsset, user, vars.actualDebtToLiquidate, vars.maxCollateralToLiquidate, msg.sender, receiveIToken);
 
         return (uint256(Errors.CollateralManagerErrors.NO_ERROR), Errors.LPCM_NO_ERRORS);
     }

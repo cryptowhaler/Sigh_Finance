@@ -136,6 +136,7 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
 
         instrument.updateState();
         instrument.updateInterestRates(_instrument, iToken, _amount.sub(totalFee), 0);
+        sighVolatiltiyHarvester.updateSIGHSupplyIndex(_instrument);                    // Update SIGH Liquidity Index for Instrument
 
         IERC20(_instrument).safeTransferFrom(msg.sender, iToken, _amount.sub(totalFee));
         bool isFirstDeposit = IAToken(iToken).mint(onBehalfOf, _amount.sub(totalFee) , instrument.liquidityIndex);
@@ -177,6 +178,7 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
 
         instrument.updateState();
         instrument.updateInterestRates(_instrument, iToken, 0, amountToWithdraw);
+        sighVolatiltiyHarvester.updateSIGHSupplyIndex(_instrument);                    // Update SIGH Liquidity Index for Instrument
 
         if (amountToWithdraw == userBalance) {
             _usersConfig[msg.sender].setUsingAsCollateral(instrument.id, false);
@@ -258,48 +260,46 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
             platformFeePay =  paybackAmount >= platformFee ? platformFee : paybackAmount;
             IERC20(asset).safeTransferFrom( msg.sender, addressesProvider.getSIGHFinanceFeeCollector(), platformFeePay );   // Platform Fee transferred
             paybackAmount = paybackAmount.sub(platformFeePay);  // Update payback amount
-
-            if (paybackAmount == 0) {
-                emit Repay(asset, onBehalfOf, msg.sender, platformFeePay, reserveFeePay, paybackAmount);
-                return platformFeePay;
-            }    
         }
 
         // PAY RESERVE FEE
-        if (reserveFee > 0) { 
+        if (reserveFee > 0 && paybackAmount > 0) { 
             reserveFeePay =  paybackAmount > reserveFee ? reserveFee : paybackAmount;
             IERC20(asset).safeTransferFrom( msg.sender, addressesProvider.getSIGHPayAggregator(), reserveFeePay );       // Reserve Fee transferred
             paybackAmount = paybackAmount.sub(reserveFeePay);  // Update payback amount
-
-            if (paybackAmount == 0) {
-                emit Repay(asset, onBehalfOf, msg.sender, platformFeePay, reserveFeePay, paybackAmount);
-                return platformFeePay.add(reserveFeePay);
-            }    
         }    
 
         instrument.updateState();
-
-        if (interestRateMode == DataTypes.InterestRateMode.STABLE) {
-            if ( platformFeePay > 0) {          // Update PLATFORM FEE
-                IStableDebtToken(instrument.stableDebtTokenAddress).updatePlatformFee(onBehalfOf, 0 ,platformFeePay);
+        
+        if (paybackAmount > 0) {
+            if (interestRateMode == DataTypes.InterestRateMode.STABLE) {
+                if ( platformFeePay > 0) {          // Update PLATFORM FEE
+                    IStableDebtToken(instrument.stableDebtTokenAddress).updatePlatformFee(onBehalfOf, 0 ,platformFeePay);
+                }
+                if (reserveFee > 0) {                // Update RESERVE FEE
+                    IStableDebtToken(instrument.stableDebtTokenAddress).updateReserveFee(onBehalfOf, 0 ,reserveFeePay);               
+                }    
+                IStableDebtToken(instrument.stableDebtTokenAddress).burn(onBehalfOf, paybackAmount);
+            } 
+            else {
+                if ( platformFeePay > 0) {          // Update PLATFORM FEE
+                    IVariableDebtToken(instrument.variableDebtTokenAddress).updatePlatformFee(onBehalfOf, 0 ,platformFeePay);
+                }
+                if (reserveFee > 0) {                // Update RESERVE FEE
+                    IVariableDebtToken(instrument.variableDebtTokenAddress).updateReserveFee(onBehalfOf, 0 ,reserveFeePay);               
+                }    
+                IVariableDebtToken(instrument.variableDebtTokenAddress).burn( onBehalfOf, paybackAmount, instrument.variableBorrowIndex );
             }
-            if (reserveFee > 0) {                // Update RESERVE FEE
-                IStableDebtToken(instrument.stableDebtTokenAddress).updateReserveFee(onBehalfOf, 0 ,reserveFeePay);               
-            }    
-            IStableDebtToken(instrument.stableDebtTokenAddress).burn(onBehalfOf, paybackAmount);
-        } 
-        else {
-            if ( platformFeePay > 0) {          // Update PLATFORM FEE
-                IVariableDebtToken(instrument.variableDebtTokenAddress).updatePlatformFee(onBehalfOf, 0 ,platformFeePay);
-            }
-            if (reserveFee > 0) {                // Update RESERVE FEE
-                IVariableDebtToken(instrument.variableDebtTokenAddress).updateReserveFee(onBehalfOf, 0 ,reserveFeePay);               
-            }    
-            IVariableDebtToken(instrument.variableDebtTokenAddress).burn( onBehalfOf, paybackAmount, instrument.variableBorrowIndex );
         }
+        else {
+            emit Repay(asset, onBehalfOf, msg.sender, platformFeePay, reserveFeePay, paybackAmount);
+            return platformFeePay.add(reserveFeePay);
+        }
+
 
         address iToken = instrument.iTokenAddress;
         instrument.updateInterestRates(asset, iToken, paybackAmount, 0);
+        sighVolatiltiyHarvester.updateSIGHBorrowIndex(asset);                    // Update SIGH Borrow Index for Instrument
 
         if (stableDebt.add(variableDebt).sub(paybackAmount) == 0) {
         _usersConfig[onBehalfOf].setBorrowing(instrument.id, false);
@@ -342,6 +342,7 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
     }
 
     instrument.updateInterestRates(asset, instrument.iTokenAddress, 0, 0);
+    sighVolatiltiyHarvester.updateSIGHBorrowIndex(asset);                    // Update SIGH Borrow Index for Instrument
 
     emit Swap(asset, msg.sender, rateMode);
   }
@@ -371,6 +372,7 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
     IStableDebtToken(address(stableDebtToken)).mint(user,user,stableDebt, instrument.currentStableBorrowRate);
 
     instrument.updateInterestRates(asset, iTokenAddress, 0, 0);
+    sighVolatiltiyHarvester.updateSIGHBorrowIndex(asset);                    // Update SIGH Borrow Index for Instrument
 
     emit RebalanceStableBorrowRate(asset, user);
   }
@@ -469,6 +471,7 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
        _instruments[vars.currentAsset].updateState();
        _instruments[vars.currentAsset].cumulateToLiquidityIndex( IERC20(vars.currentiTokenAddress).totalSupply(), vars.currentPremium );
        _instruments[vars.currentAsset].updateInterestRates(  vars.currentAsset, vars.currentiTokenAddress, vars.currentAmountPlusPremium, 0 );
+        sighVolatiltiyHarvester.updateSIGHBorrowIndex(vars.currentAsset);                    // Update SIGH Borrow Index for Instrument
 
         IERC20(vars.currentAsset).safeTransferFrom( receiverAddress, vars.currentiTokenAddress, vars.currentAmountPlusPremium);
       } 
@@ -561,6 +564,7 @@ contract LendingPool is ILendingPool, LendingPoolStorage, VersionedInitializable
         require(msg.sender ==_instruments[asset].iTokenAddress, "Only the associated IToken can call this function");
 
         ValidationLogic.validateTransfer( from,_instruments, _usersConfig[from],_instrumentsList,_instrumentsCount, _addressesProvider.getPriceOracle() );
+        sighVolatiltiyHarvester.updateSIGHSupplyIndex(asset);                    // Update SIGH Supply Index for Instrument
 
         uint256 instrumentId =_instruments[asset].id;
 

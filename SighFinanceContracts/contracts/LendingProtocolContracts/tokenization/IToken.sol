@@ -26,6 +26,8 @@ contract AToken is VersionedInitializable, IncentivizedERC20, IAToken {
 
     address public immutable UNDERLYING_ASSET_ADDRESS;
     address public immutable RESERVE_TREASURY_ADDRESS;
+    address public immutable sighStream;
+
     ILendingPool public immutable POOL;
 
     uint256 public constant UINT_MAX_VALUE = uint256(-1);
@@ -66,9 +68,9 @@ contract AToken is VersionedInitializable, IncentivizedERC20, IAToken {
     }
 
     /**
-    * @dev Burns aTokens from `user` and sends the equivalent amount of underlying to `receiverOfUnderlying`
+    * @dev Burns iTokens from `user` and sends the equivalent amount of underlying to `receiverOfUnderlying`
     * - Only callable by the LendingPool, as extra state updates there need to be managed
-    * @param user The owner of the aTokens, getting them burned
+    * @param user The owner of the iTokens, getting them burned
     * @param receiverOfUnderlying The address that will receive the underlying
     * @param amount The amount being burned
     * @param index The new liquidity index of the reserve
@@ -85,7 +87,7 @@ contract AToken is VersionedInitializable, IncentivizedERC20, IAToken {
     }
 
     /**
-    * @dev Mints `amount` aTokens to `user`
+    * @dev Mints `amount` iTokens to `user`
     * - Only callable by the LendingPool, as extra state updates there need to be managed
     * @param user The address receiving the minted tokens
     * @param amount The amount of tokens getting minted
@@ -106,7 +108,7 @@ contract AToken is VersionedInitializable, IncentivizedERC20, IAToken {
     }
 
     /**
-    * @dev Mints aTokens to the reserve treasury. Only callable by the LendingPool
+    * @dev Mints iTokens to the reserve treasury. Only callable by the LendingPool
     * @param amount The amount of tokens getting minted
     * @param index The new liquidity index of the reserve
     */
@@ -125,8 +127,8 @@ contract AToken is VersionedInitializable, IncentivizedERC20, IAToken {
     }
 
     /**
-    * @dev Transfers aTokens in the event of a borrow being liquidated, in case the liquidators reclaims the aToken. Only callable by the LendingPool
-    * @param from The address getting liquidated, current owner of the aTokens
+    * @dev Transfers iTokens in the event of a borrow being liquidated, in case the liquidators reclaims the iToken. Only callable by the LendingPool
+    * @param from The address getting liquidated, current owner of the iTokens
     * @param to The recipient
     * @param value The amount of tokens getting transferred
     **/
@@ -165,7 +167,7 @@ contract AToken is VersionedInitializable, IncentivizedERC20, IAToken {
     }
 
     /**
-    * @dev calculates the total supply of the specific aToken
+    * @dev calculates the total supply of the specific iToken
     * since the balance of every single user increases over time, the total supply does that too.
     * @return the current total supply
     **/
@@ -190,7 +192,7 @@ contract AToken is VersionedInitializable, IncentivizedERC20, IAToken {
     /**
     * @dev Transfers the underlying asset to `target`. Used by the LendingPool to transfer
     * assets in borrow(), withdraw() and flashLoan()
-    * @param target The recipient of the aTokens
+    * @param target The recipient of the iTokens
     * @param amount The amount getting transferred
     * @return The amount transferred
     **/
@@ -220,7 +222,7 @@ contract AToken is VersionedInitializable, IncentivizedERC20, IAToken {
     }
 
     /**
-    * @dev Transfers the aTokens between two users. Validates the transfer (ie checks for valid HF after the transfer) if required
+    * @dev Transfers the iTokens between two users. Validates the transfer (ie checks for valid HF after the transfer) if required
     * @param from The source address
     * @param to The destination address
     * @param amount The amount getting transferred
@@ -250,4 +252,6 @@ contract AToken is VersionedInitializable, IncentivizedERC20, IAToken {
     function _transfer(address from,address to,uint256 amount) internal override {
         _transfer(from, to, amount, true);
     }
+
+
 }

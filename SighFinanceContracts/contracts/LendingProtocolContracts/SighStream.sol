@@ -27,6 +27,8 @@ contract SighStream is ISighStream, VersionedInitializable {
 
     address public underlyingInstrumentAddress;
     ITokenInterface public iToken;
+    IStableDebtToken public stableDebtToken;
+    IVariableDebtToken public variableDebtToken;
 
     IGlobalAddressesProvider private globalAddressesProvider;     // Only used in Constructor()
     ISighVolatilityHarvester public sighVolatilityHarvesterContract; // Fetches Instrument Indexes/ Calls Function to transfer accured SIGH
@@ -52,7 +54,7 @@ contract SighStream is ISighStream, VersionedInitializable {
     // ----->  => $SIGH Accured += SUM(Liquidity $SIGH Streams re-directed to this account), this SUM is calculated by accuring $SIGH over the cummulated re-directed balance
     // ----->  => $SIGH Accured += SUM(Borrowing $SIGH Streams re-directed to this account), this SUM is calculated by accuring $SIGH over the cummulated re-directed balance
 
-    uint public sigh_Transfer_Threshold = 1e19;                         // SIGH Transferred when accured >= 1 SIGH (in ETH)
+    uint public sigh_Transfer_Threshold = 1e19;                         // SIGH Transferred when accured >= 1 SIGH 
     mapping (address => uint256) private AccuredSighBalance;           // SIGH Collected - ADDED BY SIGH FINANCE
     
     struct user_SIGH_State {
@@ -106,9 +108,10 @@ contract SighStream is ISighStream, VersionedInitializable {
 
     function initialize(IGlobalAddressesProvider _globalAddressesProvider, address _underlyingAsset, address _iTokenAddress) public initializer {
         globalAddressesProvider = _globalAddressesProvider;
-        core = ILendingPoolCore(globalAddressesProvider.getLendingPoolCore());
         sighVolatilityHarvesterContract = ISighVolatilityHarvester(globalAddressesProvider.getSIGHMechanismHandler());
         iToken = ITokenInterface(_iTokenAddress) ;
+        stableDebtToken = IStableDebtToken(_iTokenAddress) ;
+        variableDebtToken = IVariableDebtToken(_iTokenAddress) ;
 
         underlyingInstrumentAddress = _underlyingAsset;
     }
@@ -145,24 +148,9 @@ contract SighStream is ISighStream, VersionedInitializable {
     * @dev redirects the Liquidity $SIGH Stream being generated to a target address. 
     * @param _to the address to which the Liquidity $SIGH Stream will be redirected
     **/
-    function redirectLiquiditySIGHStream(address _from, address _to) external onlyITokenContract {     
-        require(user_SIGH_States[_from].userLiquiditySIGHStreamRedirectionAllowance == address(0),'Administrator right is currently delegated to another account. Reset your administration right to be able to re-direct your SIGH Liquidity Stream.');
-        redirectLiquiditySIGHStreamInternal(_from, _to);
-    }
-
-    /**
-    * @dev gives allowance to an address to execute the Liquidity $SIGH Stream redirection on behalf of the caller.
-    * @param _to the address to which the Liquidity $SIGH Stream redirection permission is given. Pass address(0) to reset the allowance.
-    **/
-    function allowLiquiditySIGHRedirectionTo(address _from, address _to) external onlyITokenContract {
-        if (_to == _from) {
-            user_SIGH_States[_from].userLiquiditySIGHStreamRedirectionAllowance = address(0);
-            _to = address(0);
-        }
-        else {
-            user_SIGH_States[_from].userLiquiditySIGHStreamRedirectionAllowance = _to;
-        }
-        emit LiquiditySIGHStreamRedirectionAllowanceChanged( underlyingInstrumentAddress, _from , _to);
+    function redirectLiquiditySIGHStream( address _to) external {     
+        require(user_SIGH_States[msg.sender].userLiquiditySIGHStreamRedirectionAllowance == address(0),'Administrator right is currently delegated to another account. Reset your administration right to be able to re-direct your SIGH Liquidity Stream.');
+        redirectLiquiditySIGHStreamInternal(msg.sender, _to);
     }
 
     /**
@@ -171,10 +159,27 @@ contract SighStream is ISighStream, VersionedInitializable {
     * @param _from the address of the user whom Liquidity $SIGH Stream is being redirected
     * @param _to the address to which the Liquidity $SIGH Stream will be redirected
     **/
-    function redirectLiquiditySIGHStreamOf(address user, address _from, address _to) external onlyITokenContract {
-        require( user == user_SIGH_States[_from].userLiquiditySIGHStreamRedirectionAllowance , "Caller is not allowed to redirect the Liquidity $SIGH Stream of the user");
+    function redirectLiquiditySIGHStreamOf(address _from, address _to) external {
+        require( msg.sender == user_SIGH_States[_from].userLiquiditySIGHStreamRedirectionAllowance , "Caller is not allowed to redirect the Liquidity $SIGH Stream of the user");
         redirectLiquiditySIGHStreamInternal(_from,_to);
+    }    
+
+    /**
+    * @dev gives allowance to an address to execute the Liquidity $SIGH Stream redirection on behalf of the caller.
+    * @param _to the address to which the Liquidity $SIGH Stream redirection permission is given. Pass address(0) to reset the allowance.
+    **/
+    function allowLiquiditySIGHRedirectionTo( address _to) external {
+        if (_to == msg.sender) {
+            user_SIGH_States[msg.sender].userLiquiditySIGHStreamRedirectionAllowance = address(0);
+            _to = address(0);
+        }
+        else {
+            user_SIGH_States[msg.sender].userLiquiditySIGHStreamRedirectionAllowance = _to;
+        }
+        emit LiquiditySIGHStreamRedirectionAllowanceChanged( underlyingInstrumentAddress, msg.sender , _to);
     }
+
+
 
     event check1(address _from,uint principalBalance,uint currentBalance,uint balanceIncrease);
     /**
@@ -192,21 +197,23 @@ contract SighStream is ISighStream, VersionedInitializable {
         uint principalBalance = iToken.principalBalanceOf(_from);
         uint currentBalance = iToken.balanceOf(_from);
         iToken.cumulateBalance(_from);
+
         // check 2
         require( currentBalance > 0, "Liquidity $SIGH Stream stream can only be redirected if there is a valid Liquidity Balance accuring $SIGH for the user");
         uint balanceIncrease = currentBalance.sub(principalBalance);
 
         emit check1(_from,principalBalance,currentBalance,balanceIncrease);
+
         // if the user is already redirecting the Liquidity $SIGH Stream to someone, before changing the redirection address 
         // 1. Add the interest accured by From Account to the redirected address
         // 1. We accure $SIGH for that address
         // 2. We substract the redirected balance of the from account from that address
         if (currentRedirectionAddress != address(0)) { 
              updateRedirectedBalanceOfLiquiditySIGHStreamRedirectionAddressesInternal(_from, balanceIncrease, 0 );    
-            iToken.cumulateBalance(currentRedirectionAddress);    //cumulates the balance of the user being liquidated
+            iToken.cumulateBalance(currentRedirectionAddress);    //cumulates the balance of the user to which SIGH Stream is currently redirected
             uint256 redirectionAddressAccountBalance = iToken.balanceOf(currentRedirectionAddress);
             accure_SIGH_For_LiquidityStream_Internal(currentRedirectionAddress, redirectionAddressAccountBalance );
-            updateRedirectedBalanceOfLiquiditySIGHStreamRedirectionAddressesInternal(_from,0, currentBalance );
+            updateRedirectedBalanceOfLiquiditySIGHStreamRedirectionAddressesInternal(_from, 0, currentBalance );
         }
 
         //   if the user is redirecting the Liquidity $SIGH Stream back to himself, we simply set to 0 the Liquidity $SIGH Stream redirection address

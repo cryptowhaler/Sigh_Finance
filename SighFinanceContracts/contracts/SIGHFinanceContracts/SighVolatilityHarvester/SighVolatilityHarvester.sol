@@ -52,8 +52,12 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
         bool isSIGHMechanismActivated;
         string symbol;
         uint256 decimals;
+
         address iTokenAddress;
+        address stableDebtTokenAddress;
+        address variableDebtTokenAddress;        
         address sighStreamAddress;
+
         uint supplyindex;
         uint256 supplylastupdatedblock;
         uint borrowindex;
@@ -660,8 +664,8 @@ contract SIGHVolatilityHarvester is Exponential, ReentrancyGuard, VersionedIniti
         uint borrowSpeed = add_(Instrument_Sigh_Mechansim_States[currentInstrument].borrowers_Speed, Instrument_Sigh_Mechansim_States[currentInstrument].staking_Speed, "Supplier speed addition with staking speed overflow" );
         uint deltaBlocks = sub_(blockNumber, uint(instrumentState.borrowlastupdatedblock), 'updateSIGHBorrowIndex : Block Subtraction Underflow');         // DELTA BLOCKS
         
-        uint totalVariableBorrows =  lendingPoolCore.getInstrumentCompoundedBorrowsVariable(currentInstrument);
-        uint totalStableBorrows =  lendingPoolCore.getInstrumentCompoundedBorrowsStable(currentInstrument);
+        uint totalVariableBorrows =  IERC20(crypto_instruments[currentInstrument].stableDebtTokenAddress).totalSupply();
+        uint totalStableBorrows =  IERC20(crypto_instruments[currentInstrument].variableDebtTokenAddress).totalSupply();
         uint totalCompoundedBorrows =  add_(totalVariableBorrows,totalStableBorrows,'Compounded Borrows Addition gave error'); 
         
         if (deltaBlocks > 0 && borrowSpeed > 0) {       // In case SIGH would have accured
