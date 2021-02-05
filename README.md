@@ -1,5 +1,6 @@
 # Sigh_Finance
 
+<img src="https://user-images.githubusercontent.com/53361416/106990423-3a8ee580-679a-11eb-9094-f275331c0919.png" alt="SIGH Finance text" width="240" height="240">
 ![SIGH FINANCE LOGO (2)](https://user-images.githubusercontent.com/53361416/106990423-3a8ee580-679a-11eb-9094-f275331c0919.png =240x240)
 
 ## What is SIGH Finance?
