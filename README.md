@@ -2,6 +2,11 @@
 <img src="https://user-images.githubusercontent.com/53361416/106990423-3a8ee580-679a-11eb-9094-f275331c0919.png" alt="SIGH Finance text" width="240" height="240">
 </p>
 
+Testnet (Kovan) : http://sigh.finance/
+Documentation : http://docs.sigh.finance/
+
+Information regarding the upcoming 'space-fantasy' themed SIGH Boosters NFT Sale will be added in the next few days!
+
 ## What is SIGH Finance?
 SIGH Finance consists of an on-chain lending protocol designed to farm 'Volatility-Risk' of the supported instruments and an off-chain network intelligence infrastructure to study, develop and optimize crypto-econometric models supported by Digital Curation Markets (DCM).
 
@@ -22,6 +27,9 @@ This is accomplished through the parameterization of the yield farming rate of t
 The farmed SIGH instrument will later be used by the Digital Curation Market (DCM) supported by the SIGH Treasury whose goal is to off-set the lending protocol's potential loss curve (simulated off-chain).
 
 ## Introducing Digital Curation Markets (DIMs)
+<p align="center">
+<img src="https://user-images.githubusercontent.com/53361416/106991100-9312b280-679b-11eb-9b17-3667b00912e0.png" alt="BLOCKCHAIN INNOVATION : EVOLUTIONARY PERSPECTIVE" width="720" height="240">
+</p>
 From the perspective of DLT’s evolution, we are currently in the 2nd stage where the emphasis is on the tokenization of financial assets which can then be traded on blockchain. Assets include securities, physical assets, rights to cash flow, utilities and cryptocurrencies. 
 
  The third stage is expected to see the introduction of native Digital Curation Markets (DCMs). 
