@@ -2,8 +2,8 @@
 <img src="https://user-images.githubusercontent.com/53361416/106990423-3a8ee580-679a-11eb-9094-f275331c0919.png" alt="SIGH Finance text" width="240" height="240">
 </p>
 
-Testnet (Kovan) : http://sigh.finance/
-Documentation : http://docs.sigh.finance/
+- Testnet (Kovan) : http://sigh.finance/
+- Documentation : http://docs.sigh.finance/
 
 Information regarding the upcoming 'space-fantasy' themed SIGH Boosters NFT Sale will be added in the next few days!
 
