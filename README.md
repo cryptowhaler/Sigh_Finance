@@ -1,4 +1,6 @@
-<img align="center" src="https://user-images.githubusercontent.com/53361416/106990423-3a8ee580-679a-11eb-9094-f275331c0919.png" alt="SIGH Finance text" width="240" height="240">
+<p align="center">
+<img src="https://user-images.githubusercontent.com/53361416/106990423-3a8ee580-679a-11eb-9094-f275331c0919.png" alt="SIGH Finance text" width="240" height="240">
+</p>
 
 ## What is SIGH Finance?
 SIGH Finance consists of an on-chain lending protocol designed to farm 'Volatility-Risk' of the supported instruments and an off-chain network intelligence infrastructure to study, develop and optimize crypto-econometric models supported by Digital Curation Markets (DCM).
