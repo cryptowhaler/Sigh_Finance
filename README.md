@@ -1,18 +1,19 @@
 # Sigh_Finance
-A money-market protocol with an AI powered liquidity mining pipeline to cover against losses.
 
-![SIGH FINANCE LOGO (2)](https://user-images.githubusercontent.com/53361416/93666418-b31b3100-fa9b-11ea-84fd-0d8b5a973643.png)
+![SIGH FINANCE LOGO (2)](https://user-images.githubusercontent.com/53361416/106990423-3a8ee580-679a-11eb-9094-f275331c0919.png)
 
 ## What is SIGH Finance?
 SIGH Finance consists of an on-chain lending protocol designed to farm 'Volatility-Risk' of the supported instruments and an off-chain network intelligence infrastructure to study, develop and optimize crypto-econometric models supported by Digital Curation Markets (DCM).
+
 Users can participate as either depositors or borrowers with the on-chain lending protocol, where both receive harvested SIGH whenever the underlying market moves against their current position, as a percentage of the Volatility (bull ratio / bear ratio) experienced by the underlying instrument over the past 24 hrs. 
-Depositors provide liquidity to the protocol by depositing any of the supported instruments against which they receive the protocol-issued iTokens which constantly accrue interest and farm SIGH whenever the price of the underlying instrument decreases (-) over the past 24 hrs.
-Borrowers can take loans from the lending protocol against their deposits which act as collateral at either stable or a variable interest rate. They farm SIGH whenever the price of the underlying instrument increases (+) over the past 24 hrs .
+- Depositors provide liquidity to the protocol by depositing any of the supported instruments against which they receive the protocol-issued iTokens which constantly accrue interest and farm SIGH whenever the price of the underlying instrument decreases (-) over the past 24 hrs.
+- Borrowers can take loans from the lending protocol against their deposits which act as collateral at either stable or a variable interest rate. They farm SIGH whenever the price of the underlying instrument increases (+) over the past 24 hrs .
 
 Th SIGH harvest rate is refreshed every hour, and takes into account the instrument's volatility over the past 24 hours. Stable coins, being less volatile, do not farm volatility risk and instead receive SIGH instrument as staking rewards at a pre-determined rate which is decided via Governance. SIGH is the Governance token which is used to decide upon network parameters and its future upgrades through voting.
+
 Later, a community lead Treasury will be added which will use SIGH to support a Digital Investment Market (DIM) designed to off-set the 'Volatility Risk' farmed via the token SIGH. 
 
-Continuous R&D - As part of our off-chain Network Intelligence Infrastructure, we will be developing tools and capabilities to study, develop and optimize digital Curation Markets to develop simulated models and predictive techniques (using A.I) to analyse and then optimize tokenized financial networks / crypto-economic models, starting with initially creating the infrastructure for simulating SIGH's curation market metrics and its potential loss curve to optimize network performance.
+_Continuous R&D_ - As part of our off-chain Network Intelligence Infrastructure, we will be developing tools and capabilities to study, develop and optimize digital Curation Markets to develop simulated models and predictive techniques (using A.I) to analyse and then optimize tokenized financial networks / crypto-economic models, starting with initially creating the infrastructure for simulating SIGH's curation market metrics and its potential loss curve to optimize network performance.
 
 ## What problem is being Addressed by SIGH Finance?
 Currently active money-market protocols provide banking on-chain by providing tokenized lending as a service but none tries to capture / off-set the inherent volatility that these individual crypto-assets have. This implies that the users may still face potential loss even after earning interest by depositing assets in these lending protocols if the price of the underlying instrument decreases over time. 
